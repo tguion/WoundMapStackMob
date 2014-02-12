@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="WMAddress" representedClassName="WMAddress" syncable="YES">
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="postalCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="streetAddressLine" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="streetAddressLine1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmaddress_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="organization" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMOrganization" inverseName="addresses" inverseEntity="WMOrganization" syncable="YES">
+            <userInfo>
+                <entry key="skipXML" value="YES"/>
+            </userInfo>
+        </relationship>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="addresses" inverseEntity="WMPerson" syncable="YES"/>
+    </entity>
+    <entity name="WMId" representedClassName="WMId" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="extension" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="attributeFlag" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="skipXML" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="root" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="attributeFlag" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="wmid_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="organization" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMOrganization" inverseName="ids" inverseEntity="WMOrganization" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="ids" inverseEntity="WMPatient" syncable="YES"/>
+    </entity>
+    <entity name="WMOrganization" representedClassName="WMOrganization" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmorganization_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="addresses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMAddress" inverseName="organization" inverseEntity="WMAddress" syncable="YES">
+            <userInfo>
+                <entry key="elementName" value="addr"/>
+                <entry key="HL7DataType" value="COLL &lt;AD>"/>
+                <entry key="sortRank" value="13"/>
+            </userInfo>
+        </relationship>
+        <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="organization" inverseEntity="WMId" syncable="YES"/>
+        <userInfo>
+            <entry key="determinerCode" value="INSTANCE"/>
+        </userInfo>
+    </entity>
+    <entity name="WMPatient" representedClassName="WMPatient" syncable="YES">
+        <attribute name="archivedFlag" attributeType="Boolean" defaultValueString="NO">
+            <userInfo/>
+        </attribute>
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateOfBirth" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
+            <userInfo/>
+        </attribute>
+        <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
+    </entity>
+    <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="nameFamily" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="attributeName" value="family"/>
+            </userInfo>
+        </attribute>
+        <attribute name="nameGiven" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="attributeName" value="given"/>
+            </userInfo>
+        </attribute>
+        <attribute name="namePrefix" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="attributeName" value="prefix"/>
+            </userInfo>
+        </attribute>
+        <attribute name="nameSuffix" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="attributeName" value="suffix"/>
+            </userInfo>
+        </attribute>
+        <attribute name="wmperson_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="addresses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMAddress" inverseName="person" inverseEntity="WMAddress" syncable="YES">
+            <userInfo>
+                <entry key="attributeName" value="addr"/>
+            </userInfo>
+        </relationship>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="person" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTelecom" inverseName="person" inverseEntity="WMTelecom" syncable="YES"/>
+    </entity>
+    <entity name="WMTelecom" representedClassName="WMTelecom" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="skipXML" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="use" optional="YES" attributeType="String" defaultValueString="DIR" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" defaultValueString="tel:(888)555-1212" syncable="YES"/>
+        <attribute name="wmtelecom_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="telecoms" inverseEntity="WMPerson" syncable="YES"/>
+        <relationship name="telecomType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTelecomType" inverseName="telecoms" inverseEntity="WMTelecomType" syncable="YES">
+            <userInfo>
+                <entry key="skipXML" value="YES"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="WMTelecomType" representedClassName="WMTelecomType" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmtelecomtype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMTelecom" inverseName="telecomType" inverseEntity="WMTelecom" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="User" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMAddress" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMOrganization" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>
