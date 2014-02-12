@@ -27,7 +27,6 @@
 		7DB2063E18A7D3400004DC32 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7DB2063C18A7D3400004DC32 /* InfoPlist.strings */; };
 		7DB2064018A7D3400004DC32 /* WoundMapUSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2063F18A7D3400004DC32 /* WoundMapUSTests.m */; };
 		7DB2068218A7D4000004DC32 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 7DB2064A18A7D3FF0004DC32 /* CHANGELOG.md */; };
-		7DB2068318A7D4000004DC32 /* libstackmob-v2.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068118A7D4000004DC32 /* libstackmob-v2.2.0.a */; };
 		7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068418A7D4320004DC32 /* CoreLocation.framework */; };
 		7DB2068918A7D4320004DC32 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068518A7D4320004DC32 /* MobileCoreServices.framework */; };
 		7DB2068A18A7D4320004DC32 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068618A7D4320004DC32 /* Security.framework */; };
@@ -65,6 +64,7 @@
 		7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074618ABAB8E0004DC32 /* AsyncImageView.m */; };
 		7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */; };
 		7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */; };
+		7DDCDD4518AC28C9001D3BA9 /* libstackmob-v2.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068118A7D4000004DC32 /* libstackmob-v2.2.0.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,12 +228,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DDCDD4518AC28C9001D3BA9 /* libstackmob-v2.2.0.a in Frameworks */,
 				7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */,
 				7DB2068918A7D4320004DC32 /* MobileCoreServices.framework in Frameworks */,
 				7DB2068A18A7D4320004DC32 /* Security.framework in Frameworks */,
 				7DB2068B18A7D4320004DC32 /* SystemConfiguration.framework in Frameworks */,
 				7DB2060B18A7D3400004DC32 /* CoreGraphics.framework in Frameworks */,
-				7DB2068318A7D4000004DC32 /* libstackmob-v2.2.0.a in Frameworks */,
 				7DB2060F18A7D3400004DC32 /* CoreData.framework in Frameworks */,
 				7DB2060D18A7D3400004DC32 /* UIKit.framework in Frameworks */,
 				7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */,
@@ -942,7 +942,7 @@
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/tguion/Documents/Projects/MobileHealthWare/WoundMap\\ StackMob/WoundMapUS/StackMob-v2.2.0",
+					"/Users/tguion/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS/StackMob-v2.2.0",
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -961,7 +961,7 @@
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/tguion/Documents/Projects/MobileHealthWare/WoundMap\\ StackMob/WoundMapUS/StackMob-v2.2.0",
+					"/Users/tguion/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS/StackMob-v2.2.0",
 				);
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1030,6 +1030,7 @@
 				7DB2064518A7D3400004DC32 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7DB2064618A7D3400004DC32 /* Build configuration list for PBXNativeTarget "WoundMapUSTests" */ = {
 			isa = XCConfigurationList;
@@ -1038,6 +1039,7 @@
 				7DB2064818A7D3400004DC32 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
