@@ -171,6 +171,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    // delay until we are signed in as team member
+    if (nil == self.appDelegate.user) {
+        return 0;
+    }
+    // else
     return [[self.fetchedResultsController sections] count];
 }
 
