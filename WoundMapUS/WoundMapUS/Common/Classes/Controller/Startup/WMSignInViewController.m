@@ -81,6 +81,7 @@ typedef enum {
         [actionSheet showInView:self.view];
     }
     if (self.hasNameInput) {
+        NSLog(@"Searching for name matching %@ in %d participants", self.nameInput, [WMParticipant participantCount:self.managedObjectContext persistentStore:nil]);
         self.possibleParticipant = [WMParticipant bestMatchingParticipantForUserName:self.nameInput managedObjectContext:self.managedObjectContext];
     } else {
         self.possibleParticipant = nil;
@@ -420,6 +421,9 @@ typedef enum {
     self.state = SignInViewControllerCreateAccount;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView endUpdates];
 }
 
 - (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController
@@ -483,7 +487,7 @@ typedef enum {
     if (indexPath.row == 2) {
         [WMParticipantType seedDatabase:self.managedObjectContext persistentStore:nil];
         [self.coreDataHelper backgroundSaveContext];
-        if (nil != self.appDelegate.user) {
+        if (nil != self.appDelegate.stackMobUsername) {
             [self.coreDataHelper.stackMobStore syncWithServer];
         }
         WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;

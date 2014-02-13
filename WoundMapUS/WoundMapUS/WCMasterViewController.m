@@ -88,7 +88,7 @@
 {
     [super viewDidAppear:animated];
     // check if logged in
-    if (nil == self.appDelegate.user) {
+    if (nil == self.appDelegate.stackMobUsername) {
         WMUsersViewController *usersViewController = self.usersViewController;
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:usersViewController]
                            animated:YES
@@ -142,9 +142,9 @@
 
 #pragma mark - UserSignInDelegate
 
-- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUser:(User *)user
+- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUsername:(NSString *)username
 {
-    self.appDelegate.user = user;
+    self.appDelegate.stackMobUsername = username;
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];
@@ -162,7 +162,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // delay until we are signed in as team member
-    if (nil == self.appDelegate.user) {
+    if (nil == self.appDelegate.stackMobUsername) {
         return 0;
     }
     // else

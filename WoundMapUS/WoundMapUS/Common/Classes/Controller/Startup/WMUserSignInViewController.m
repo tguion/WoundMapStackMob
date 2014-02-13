@@ -69,7 +69,7 @@
     // ENSURE NETWORK IS REACHABLE
     CoreDataHelper *coreDataHelper = self.coreDataHelper;
     if (!coreDataHelper.stackMobClient.networkMonitor.currentNetworkStatus == SMNetworkStatusReachable) {
-        [self showAlertWithTitle:@"Failed to Create Clinical Group"
+        [self showAlertWithTitle:@"Failed to Create Clinical Team"
                          message:@"The Internet connection appears to be offline."];
         [self updateStatus];
         return;
@@ -81,11 +81,11 @@
                                onSuccess:^(NSArray *results) {
                                    if ([results count] == 1) {
                                        // USER ALREADY EXISTS
-                                       [self showAlertWithTitle:@"Please choose another Clinical Group Name"
-                                                        message:[NSString stringWithFormat:@"Someone has already created a group with the name '%@'", _usernameTextField.text]];
+                                       [self showAlertWithTitle:@"Please choose another Clinical Team Name"
+                                                        message:[NSString stringWithFormat:@"Someone has already created a team with the name '%@'", _usernameTextField.text]];
                                    } else {
                                        // CREATE USER
-                                       self.statusLabel.text = [NSString stringWithFormat:@"Creating Clinical Group '%@'...", _usernameTextField.text];
+                                       self.statusLabel.text = [NSString stringWithFormat:@"Creating Clinical Team '%@'...", _usernameTextField.text];
                                        User *newUser = [User instanceUsername:_usernameTextField.text
                                                                      password:_passwordTextField.text
                                                          managedObjectContext:self.managedObjectContext
@@ -101,13 +101,13 @@
                                            [newUser removePassword];
                                            [self updateStatus];
                                            [self showWait:NO];
-                                           [self showAlertWithTitle:@"Failed to Create Clinical Group"
+                                           [self showAlertWithTitle:@"Failed to Create Clinical Team"
                                                             message:[NSString stringWithFormat:@"%@",error]];
                                        }];
                                    }
                                } onFailure:^(NSError *error) {
                                    // UNSURE IF USER EXISTS
-                                   [self showAlertWithTitle:@"Failed to Check if Clinical Group Exists"
+                                   [self showAlertWithTitle:@"Failed to Check if Clinical Team Exists"
                                                     message:[NSString stringWithFormat:@"%@",error]];
                                }];
 }
@@ -122,7 +122,7 @@
     }
     CoreDataHelper *coreDataHelper = self.coreDataHelper;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    self.statusLabel.text = [NSString stringWithFormat:@"Connecting to Clinical Group '%@'...", _usernameTextField.text];
+    self.statusLabel.text = [NSString stringWithFormat:@"Connecting to Clinical Team '%@'...", _usernameTextField.text];
     [self showWait:YES];
     // ensure new objects are saved prior to an account switch
     [managedObjectContext saveOnSuccess:^{
@@ -131,20 +131,17 @@
                                                  options:[SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyTryNetworkElseCache]
                                                onSuccess:^(NSDictionary *results) {
                                                    NSString *username = [results valueForKey:@"username"];
-                                                   _selectedUser = [User userForUsername:username
-                                                                    managedObjectContext:managedObjectContext
-                                                                         persistentStore:nil];
                                                    [self showAlertWithTitle:@"Success!"
-                                                                    message:[NSString stringWithFormat:@"You're now using Clinical Group '%@'", username]];
+                                                                    message:[NSString stringWithFormat:@"You're now using Clinical Team '%@'", username]];
                                                    [self updateStatus];
                                                    [self showWait:NO];
-                                                   [self.delegate userSignInViewController:self didSignInUser:_selectedUser];
+                                                   [self.delegate userSignInViewController:self didSignInUsername:username];
                                                } onFailure:^(NSError *error) {
                                                    if (error.code == 401) {
-                                                       [self showAlertWithTitle:@"Failed to Enter Clinical Group"
+                                                       [self showAlertWithTitle:@"Failed to Enter Clinical Team"
                                                                         message:@"Access Denied"];
                                                    } else {
-                                                       [self showAlertWithTitle:@"Failed to Enter Clinical Group"
+                                                       [self showAlertWithTitle:@"Failed to Enter Clinical Team"
                                                                         message:[NSString stringWithFormat:@"%@",
                                                                                  error.localizedDescription]];
                                                    }
@@ -170,10 +167,10 @@
             [NSString stringWithFormat:@"You're using '%@'",
              [result objectForKey:@"username"]];
         } onFailure:^(NSError *error) {
-            self.statusLabel.text = @"Create or Enter a Clinical Group";
+            self.statusLabel.text = @"Create or Enter a Clinical Team";
         }];
     } else {
-        self.statusLabel.text = @"Create or Enter a Clinical Group";
+        self.statusLabel.text = @"Create or Enter a Clinical Team";
     }
 }
 
@@ -183,7 +180,7 @@
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     [super viewDidLoad];
-    self.title = (_createNewUserFlag ? @"Create Group":@"Sign In");
+    self.title = (_createNewUserFlag ? @"Create Team":@"Join Team");
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
@@ -191,15 +188,31 @@
     [_passwordTextField setDelegate:self];
     [self hideKeyboardWhenBackgroundIsTapped];
     if (_createNewUserFlag) {
-        [_signInButton setTitle:@"Create Group" forState:UIControlStateNormal];
+        [_signInButton setTitle:@"Create Team" forState:UIControlStateNormal];
         [_signInButton addTarget:self action:@selector(create:) forControlEvents:UIControlEventTouchUpInside];
     } else {
-        [_signInButton setTitle:@"Join Group" forState:UIControlStateNormal];
+        [_signInButton setTitle:@"Join Team" forState:UIControlStateNormal];
         [_signInButton addTarget:self action:@selector(authenticate:) forControlEvents:UIControlEventTouchUpInside];
     }
     _signInButton.enabled = NO;
     _usernameTextField.text = _selectedUser.username;
     [self updateStatus];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    NSString *string = nil;
+    if (_createNewUserFlag) {
+        string = @"Create Team name and password.";
+    } else {
+        if (nil == _selectedUser) {
+            string = @"Enter Team name and password.";
+        } else {
+            string = [NSString stringWithFormat:@"Enter credentials for Team '%@'...", _usernameTextField.text];
+        }
+    }
+    self.statusLabel.text = string;
 }
 
 #pragma mark - Core
@@ -263,8 +276,8 @@
     }
     if ([_usernameTextField.text isEqualToString:@""] ||
         [_passwordTextField.text isEqualToString:@""]) {
-        [self showAlertWithTitle:@"Please Enter a Clinical Group Name and Password"
-                         message:@"If you don't have a Clinical Group you can create one by filling in a Clinical Group Name and a Password, then clicking Create"];
+        [self showAlertWithTitle:@"Please Enter a Clinical Team Name and Password"
+                         message:@"If you don't have a Clinical Team you can create one by filling in a Clinical Team Name and a Password, then clicking Create"];
         return YES;
     }
     return NO;

@@ -11,7 +11,7 @@
 
 @protocol UserSignInDelegate <NSObject>
 
-- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUser:(User *)user;
+- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUsername:(NSString *)username;
 - (void)userSignInViewControllerDidCancel:(WMUserSignInViewController *)viewController;
 
 @end

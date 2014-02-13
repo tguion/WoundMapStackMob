@@ -33,7 +33,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
 
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status
 {
-    if (nil == self.appDelegate.user) {
+    if (nil == self.appDelegate.stackMobUsername) {
         return;
     }
     // else

@@ -187,11 +187,11 @@
 
 #pragma mark - UserSignInDelegate
 
-- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUser:(User *)user
+- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUsername:(NSString *)username
 {
-    self.appDelegate.user = user;
+    self.appDelegate.stackMobUsername = username;
     [self dismissViewControllerAnimated:YES completion:^{
-        [self.delegate userSignInViewController:viewController didSignInUser:user];
+        [self.delegate userSignInViewController:viewController didSignInUsername:username];
     }];
 }
 

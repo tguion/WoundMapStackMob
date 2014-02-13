@@ -1,6 +1,7 @@
 #import "WMParticipant.h"
 #import "WMParticipantType.h"
 #import "WMUtilities.h"
+#import "StackMob.h"
 
 @interface WMParticipant ()
 
@@ -18,7 +19,15 @@
 	if (store) {
 		[managedObjectContext assignObject:participant toPersistentStore:store];
 	}
+    [participant setValue:[participant assignObjectId] forKey:[participant primaryKeyField]];
 	return participant;
+}
+
++ (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
+    return [managedObjectContext countForFetchRequest:request error:NULL];
 }
 
 + (WMParticipant *)bestMatchingParticipantForUserName:(NSString *)name managedObjectContext:(NSManagedObjectContext *)managedObjectContext

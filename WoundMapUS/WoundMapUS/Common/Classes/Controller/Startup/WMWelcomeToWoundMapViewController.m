@@ -10,6 +10,7 @@
 #import "WMSignInViewController.h"
 #import "WMUserSignInViewController.h"
 #import "User.h"
+#import "WMParticipant.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 
@@ -56,7 +57,7 @@
 //    _teamContainerView.hidden = (nil == self.appDelegate.participant);
     self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     self.savePolicy = SMSavePolicyNetworkThenCache;
-    if (nil != self.appDelegate.user) {
+    if (nil != self.appDelegate.stackMobUsername) {
         [self.coreDataHelper.stackMobStore syncWithServer];
     }
 }
@@ -86,10 +87,7 @@
 
 - (NSPersistentStore *)store
 {
-    NSArray *persistentStores = [self.appDelegate.coreDataHelper.stackMobStore.persistentStoreCoordinator persistentStores];
-    NSPersistentStore *store = [persistentStores firstObject];
-    NSAssert1([store isKindOfClass:[SMIncrementalStore class]], @"Unexpected class, expected SMIncrementalStore, found %@", store);
-    return store;
+    return nil;
 }
 
 - (void)setFetchPolicy:(SMFetchPolicy)fetchPolicy
@@ -177,7 +175,9 @@
 
 - (void)signInViewController:(WMSignInViewController *)viewController didSignInParticipant:(WMParticipant *)participant
 {
+    participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
+    [self.coreDataHelper backgroundSaveContext];
     [viewController clearAllReferences];
     BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
     if (isIPadIdiom) {
@@ -192,11 +192,12 @@
 
 #pragma mark - UserSignInDelegate
 
-- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUser:(User *)user
+- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUsername:(NSString *)username
 {
-    self.appDelegate.user = user;
+    self.appDelegate.stackMobUsername = username;
     [self dismissViewControllerAnimated:YES completion:^{
-        // nothing
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        userDefaultsManager.lastTeamName = username;
     }];
 }
 
