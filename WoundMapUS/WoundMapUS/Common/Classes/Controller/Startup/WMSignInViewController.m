@@ -12,6 +12,7 @@
 #import "WMPatient.h"
 #import "UIView+Custom.h"
 #import "CoreDataHelper.h"
+#import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
 typedef enum {
@@ -478,9 +479,18 @@ typedef enum {
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 2) {
+        // update local only
+        SMFetchPolicy fetchPolicy = self.fetchPolicy;
+        SMSavePolicy savePolicy = self.savePolicy;
+        self.coreDataHelper.stackMobStore.fetchPolicy = SMFetchPolicyCacheOnly;
+        self.coreDataHelper.stackMobStore.savePolicy = SMFetchPolicyCacheOnly;
         [WMParticipantType seedDatabase:self.managedObjectContext persistentStore:self.store];
-        // synchronize with StackMob
         [self.coreDataHelper backgroundSaveContext];
+        self.coreDataHelper.stackMobStore.fetchPolicy = fetchPolicy;
+        self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
+        if (nil != self.appDelegate.user) {
+            [self.coreDataHelper.stackMobStore syncWithServer];
+        }
         WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
         [self.navigationController pushViewController:simpleTableViewController animated:YES];
         simpleTableViewController.title = @"Select Role";
