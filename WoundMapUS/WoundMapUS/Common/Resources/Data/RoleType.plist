@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Staff Nurse</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Wound Care Nurse</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Advanced Practice Nurse</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Nursing Attendant</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Physician</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>50</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Non-Clinical</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>60</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Other</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>70</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+</array>
+</plist>

@@ -1,0 +1,6477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Professional Title</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Licensed Practical Nurse</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Registered Nurse</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>registered nurse(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>224535009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Role Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Staff Nurse</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Wound Care Nurse</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Advanced Practice Nurse</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nursing Attendant</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Adherence to Prevention Plan Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Adheres to Plan</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>does comply with treatment(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>386673006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unable to Adhere - Environmental</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>Patient misunderstood treatment instructions(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>182891003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unable to Adhere-Situational</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>unwilling(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>225465005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unable to Adhere-Medical</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>medical contraindication(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>397745006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unable to Adhere - Psychological</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unable to Adhere - Lack of Comprehension</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unable to Adhere - Funding</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unwilling to Adhere</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Consultant Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Advance Practice Nurse</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Physician</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>physician(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>309343006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Physical Therapist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>physiotherapist(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>36682004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Occupational Therapist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>occupational therapist(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>80546007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Dentist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dentist(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>106289002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Speech Therapist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>speech/language therapist(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Social Worker</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>social worker(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>106328005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pharmacist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pharmacist(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>46255001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Technician</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>224606009</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Intervention Event Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Plan</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>development of care plan(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>399684003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Begin</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Provide</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>implementation of planned interventions(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>225304007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Complete</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cancel</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Discontinue</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Continue</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Revise</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Stakeholder Role</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Patient</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>patient(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>116154003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Family Member/Significant Other</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Caregiver</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>caregiver(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>133932002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Skin Intervention Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Education</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>patient education based on identified need(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>372919008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pressure Redistribution</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pressure area care(regime/therapy)</string>
+			<key>SNOMED CT CID</key>
+			<integer>225359006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Skin Protection</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Moisture Management</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nutritional Management</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>nutrition management(regime/therapy)(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>386372009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Intervention Status</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Planned</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>planned(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>397943006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Completed</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>performed(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>398166005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Progress</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>in progress(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>385651009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cancelled</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>cancelled(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>89925002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Discontinued</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>discontinued(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Not Adopted</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>not to be done(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>410521004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Intervention Activity Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Apply</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Assess</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Assist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Encourage</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>giving encouragement(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>225222007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Inspect</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>inspection(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Instruct</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>instruction(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>409073007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Monitor</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>monitoring of patient</string>
+			<key>SNOMED CT CID</key>
+			<integer>182777000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Observe</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Provide</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>provision of care(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>225351009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Remind</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>SNOMED CT FSN</key>
+			<string>reminding(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>223452003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Remove</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>SNOMED CT FSN</key>
+			<string>removal(prodecure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>118292001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Consult Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Wound Care</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Seating</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Dietary</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Prosthetics</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Orthotics</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Discharge</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Social</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pharmacy</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Dental</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dental consultation and report(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>34043003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Psychiatric</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Palliative Care</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Vascular Surgery</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>120</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Orthopedics</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>130</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Podiatry</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>140</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Gastroenterology</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>150</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Physiatry</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>160</integer>
+			<key>SNOMED CT FSN</key>
+			<string>physical medicine consultation and report(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>71318009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Plastic Surgery</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>170</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Urology</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>180</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Physical Therapy</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>190</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Occupational Therapy</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>200</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Speech and Swallowing</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>210</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Other</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>220</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Education Method</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Class</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Demonstration</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Discussion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Handout</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Social Networking</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Video</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Online</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Education Topic</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Follow-up</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pressure Ulcer Prevention Strategies</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Resources</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Risk Factors</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>When to seek Advice</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Bed Elevation</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Not Elevated</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Elevated &lt;= 30 degrees</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Elevated &gt;30 degrees</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Positioning Technique</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Bridge Bony Prominences</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Small Shifts in Weight</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Suspended Part</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Elbow</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>entire elbow region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76248009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Heel</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>entire heel(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>362804005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scrotum</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>entire scrutom(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>265794003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Suspension Device</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Heel Protection Device</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pillow/Bedding</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Wedge</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>wedge(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255296002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Body Position</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>On Right Side</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>right lateral decubitus</string>
+			<key>SNOMED CT CID</key>
+			<integer>102535000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>On Left Side</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>left lateral decubitus</string>
+			<key>SNOMED CT CID</key>
+			<integer>102536004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Prone</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>prone body position(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>1240000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Supine</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>supine body position(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>40199007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trendelenburg</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>trendelenburg position(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>34106002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Inverse Trendelenburg</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>inverse trendelenburg position(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>26527006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Progressive Mobilization Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Active Range of Motion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Passive Range of Motion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Dangle</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Bed in Chair Position</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Out of Bed in Chair</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Walking</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Support Surface Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Mattress</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>mattress, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>17207004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Specialty Bed (Integrated)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Overlay</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chair</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Support Surface Use Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Sitting</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lying</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Support Surface Pressure Redistribution Mechanism</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Air Fluidized</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Alternating Pressure</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lateral Rotation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Low Air Loss</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Support Surface Component</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Air</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>air(substance</string>
+			<key>SNOMED CT CID</key>
+			<integer>15158005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Gel</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Water</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>water(substance)</string>
+			<key>SNOMED CT CID</key>
+			<integer>11713004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Foam</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Dressing Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Film</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Foam</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hydrocolloid</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Silicone</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>silicone dressing(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>391865002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Protective Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Elbow Pads</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Heel Pads/Boots</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Lift Equipment Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Slick Sheet</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trapeze</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>overbed trapeze device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>422915004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Turn Sheet</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Air</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ceiling</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mobile</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sliding Board</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lift Chair</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Dryness Prevention Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Skin Moisturizer</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Seating Alignment Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Feet on Floor, Footstool or Foot Rest</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>options</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Limited Time in Chair Without Pressure Releif</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Non-skid Mat</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Stretchable, Body-Comfortable Cushion Cover</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Local Moisture Management Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Containment Devices</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Frequent Dressing Changes</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Absorbent Dressing</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Frequent Linen Changes</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Absorbent Under-Pad</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Elevation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>elevation(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>103720008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Fecal Management Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Fecal Incontinence Pouch</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Fecal Management System</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Bowel Management Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Scheduled Evacuation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Medication</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>administration of medication</string>
+			<key>SNOMED CT CID</key>
+			<integer>18629005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Dietary Regimen</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dietary regime management</string>
+			<key>SNOMED CT CID</key>
+			<integer>410175003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Diversion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Moisture Protective Barrier Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Cream/Ointment/Spray/Gel</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Skin Sealant</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Urine Management Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Diaper</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>diaper, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>52065008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Collection Device</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Indwelling Catheter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>indwelling urinary catheter(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>23973005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Intermittent Catheter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>External Adhesive Catheter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>External Nonadhesive Catheter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Catheter, Not Otherwise Specified</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>urinary catheter, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>20568009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Non-Local Moisture Management Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Frequent Linen Changes</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Low Air Loss Sleep Surface</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Minimize Layers Under Patient</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Air-fluidized Sleep Surface</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Absorbent Under-pad</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Nutritional Component Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Lipids</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Carbohydrate</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dietary carbohydrate intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>162535007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Protein</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dietary protein intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>162534006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Amino Acids</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>amino acid intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>226321006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Caloric Supplement</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>energy supplementation(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>226280007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Copper</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>copper intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286615007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Iron</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>iron intake(obserbable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286614006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Multivitamin with Minerals</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>multivitamin+mineral preparations(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Vitamin A</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>vitamin A intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286604002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Vitamin C</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>SNOMED CT FSN</key>
+			<string>vitamin C intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286586005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Water</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>SNOMED CT FSN</key>
+			<string>water intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>226354008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Zinc</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>120</integer>
+			<key>SNOMED CT FSN</key>
+			<string>zinc intake(observable entity)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286617004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Nutrition Adequacy Indicator</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Adequate To Meet Estimated Needs</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>well nourished(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>248324001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Inadequate To Meet Estimated Needs</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>undernourished(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>248325000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Nutrition Intake Route</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Oral</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>IV</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>intravenous feeding of patient(regime/therapy)(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>25156005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Tube Feeding</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>tube feeding of patient(regime/therapy)(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>61420007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Nutrition Management Lab Test Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Glucose Status Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>glucose measurement(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>36048009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hepatic Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hydration Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Inflammatory Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Micronutrient Deficiency Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nutritional Anemia Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Renal Markers</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>biochemical evaluation of blood urea/renal function(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>269858003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Weight Trend</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Stable</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>weight steady (finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>271398006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Decreasing</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>weight loss(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>89362005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Increasing</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>weight gain(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>8943002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Healing Status</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Healing</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>finding of wound healing(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>298005009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Not Healing</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>impaired wound healing(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>271618001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Healed</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>wound healed(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>298006005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Pressure Point</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Back of Head</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>occipital region of scalp(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>181486008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chin</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of chin(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>23747009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Shoulder</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of shoulder(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76552005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scapula</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin over scapula(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>181516000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Elbow</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of elbow(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>74757004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sacrum/Coccyx</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of sacrococcygeal region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>50938007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Thoracic Spine</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of dorsal region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>181512003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lumbar Spine</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of lumbar region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286591006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trochanter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hip(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49812005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Iliac Crest</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Buttock</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of buttock(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>22180002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Knee</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>120</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of knee(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>63464009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Heel</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>130</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of heel(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>84607009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ankle</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>140</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of ankle(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>67269001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ear</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>150</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of ear(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>1902009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cheek</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>160</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of cheek(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>36141000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nose</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>170</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of nose(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>113179006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nostril</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>180</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of external naris(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>244091003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Pressure Ulcer Association</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Device Related</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pressure Point Related</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Pressure Ulcer Stage</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Suspected Deep Tissue Injury</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Stage I</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pressure ulcer stage 1(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>421076008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Stage II</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pressure ulcer stage 2(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>420324007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Stage III</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pressure ulcer stage 3(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>421927004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Stage IV</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pressure ulcer stage 4(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>420597008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Unstageable</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>nonstageable pressure ulcer(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>421594008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Visable Internal Structure</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Bone</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>bone(tissue)structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>3138006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Fascia</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>structure of fascia(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>84820005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Joint Capsule</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>structure of articular capsule(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>32551008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Prosthesis</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>prosthesis, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>53350007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pin</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>bone pin, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>77444004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Subcutaneous Tissue</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>subcutaneous tissue structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>71966008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Tendon</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>tendon structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>13024002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Muscle</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>muscle(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>71616004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Medical Psychiatric Condition Kind</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Predisposing Mental/Neurological Condition</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Musculoskeletal Risk Factor</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>disorder of musculoskeletal system(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>928000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Tissue Perfusion Impediment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Uncontrolled Pain</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>chronic intractable pain(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>274665008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Risk Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Perfusion Impediment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>ineffective tissue perfusion (finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>409055009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mobility Impairment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>impaired mobility(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>82971005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Friction Exacerbation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sensory Impairment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Predisposing Mental/Neurological Condition Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Agitation Leading to Constant Friction</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Amytrophic Lateral Sclerosis</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>smyotrophic lateral sclerosis(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>86044005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cerebrovascular Accident</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>cerebrovascular accident(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>230690007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Multiple Sclerosis</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>multiple sclerosis(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>24700007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Parkinson&apos;s Disease</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>parkinson&apos;s disease(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49049000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Spinal Cord Disorder</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>spinal cord disorder(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>48522003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Catatonia</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Depression</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>depressive disorder(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>35489007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Dementia</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dementia(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Musculoskeletal Risk Factor Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Amputation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>amputee(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>41944006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Contracture</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>contracture of joint(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>7890003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Fracture</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>fracture of bone(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>125605004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lordosis</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>lordosis(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>281377006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scoliosis</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>scoliosis deformity of spine(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>298382003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Perfusion Impediment Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Chronic Obstructive Lung Disease</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>chronic obstructive lung disease(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>13645005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Congestive Heart Failure</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>congestive heart failure(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>42343007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Diabetes</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>diabetes mellitus(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>73211009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Edema</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>edema disease(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>57609005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hypotension</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>low blood pressure(disorder)</string>
+			<key>SNOMED CT CID</key>
+			<integer>45007003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cardio-Vascular Disease</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>disorder of cardiovascular system(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49601007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Renal Disease</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>renal disease(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>90708001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Peripheral Vascular Disease</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>peripheral vascular disease(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>400047006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Device Kind</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Restraint</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Line</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Oxygen</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Orthopedic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Monitor</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Gastrointestinal-Genitourinary</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Drain</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Anatomical Location</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Heel</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of heel(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>84607009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Elbow</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of elbow(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>74757004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Vagina</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>vaginal structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76784001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Umbilicus</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of umbilicus(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>315003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Tongue</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>tongue surface region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>314870004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Toes</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of toe(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>52034004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Thigh</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of thigh(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>371305003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Temporal region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of temple(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>244081009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Suprapubic region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hypogastric region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>367578008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sternum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>100</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scalp</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of scalp(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>43067004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Peri-rectum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>120</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Perineum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>130</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of perineum(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>48014002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Penis</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>140</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of penis(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>35900000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pelvic region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>150</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of pelvis(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>82654007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Parietal</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>160</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of parietal region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>21672008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nose</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>170</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of nose(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>113179006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nares</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>180</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nail</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>190</integer>
+			<key>SNOMED CT FSN</key>
+			<string>nail structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>72651009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mucous Membrane</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>200</integer>
+			<key>SNOMED CT FSN</key>
+			<string>mucous membrane structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>414781009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lumbar</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>210</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of lumbar region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286591006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lip</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>220</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of lip(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>88089004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Labia</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>230</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of labium pudendum(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>73058008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Jaw</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>240</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of jaw(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>41935005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Iliac Crest</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>250</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Gum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>260</integer>
+			<key>SNOMED CT FSN</key>
+			<string>gingival structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>113279002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Groin</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>270</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of inguinal region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>39687006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Flank</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>280</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of flank(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>34284005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Finger</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>290</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of finger(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>56213003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Coccyx</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>300</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chin</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>310</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of chin(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>23747009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Calf</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>320</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of calf of leg(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>51059006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Breast</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>330</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of breast(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>82038008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Axilla</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>340</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of axilla(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76261009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Achilles</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>350</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mouth</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>360</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin part of mouth region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>284539009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Arm</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>370</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of upper arm(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>371309009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ankle</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>380</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of ankle(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>67269001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chest</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>390</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Buttocks</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>400</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of buttock(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>22180002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Shoulder</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>410</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of shoulder(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76552005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Rectum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>420</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Neck</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>430</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of neck(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>43081002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Leg</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>440</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hip</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>450</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hip(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49812005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Head</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>460</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of head(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>117551010</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hand</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>470</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hand(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>33712006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Foot</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>480</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of foot(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>60496002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Face</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>490</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of face(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>73897004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Wrist</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>500</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of wrist(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>24785000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Eye</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>510</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of eye region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>362916000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Back</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>520</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of back(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>66643007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Abdomen</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>530</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of abdomen(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>75093004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scarum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>540</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scrotum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>550</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of scrotum(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>81992007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ear</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>560</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of ear(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>1902009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scapula</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>570</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of scapula(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>45980000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Forehead</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>580</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of forehead(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>68698007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Occiptial Region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>590</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of occipital region</string>
+			<key>SNOMED CT CID</key>
+			<integer>79951008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trochanter</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>600</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Malleolus</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>610</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of malleolus(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>419975006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Knee</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>620</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of knee(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>63464009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ischial Tuberosity</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>630</integer>
+		</dict>
+	</array>
+	<key>Anatomical Location Qualifier</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Left</string>
+			<key>common title</key>
+			<string>Left</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>left(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>7771000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Right</string>
+			<key>common title</key>
+			<string>Right</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>right(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>24028007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Upper</string>
+			<key>common title</key>
+			<string>Upper</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>upper(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>261183002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lower</string>
+			<key>common title</key>
+			<string>Lower</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>lower(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>261122009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mid</string>
+			<key>common title</key>
+			<string>Mid</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>mid(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255562008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Anterior</string>
+			<key>common title</key>
+			<string>Front</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>anterior(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255549009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Posterior</string>
+			<key>common title</key>
+			<string>Back</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>posterior(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255551008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Proximal</string>
+			<key>common title</key>
+			<string>Closest to point of origin or attachment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>proximal(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>40415009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Distal</string>
+			<key>common title</key>
+			<string>Farthest away from point or origin or attachment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>distal(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>46053002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Medial</string>
+			<key>common title</key>
+			<string>Middle</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>SNOMED CT FSN</key>
+			<string>medial(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255561001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lateral</string>
+			<key>common title</key>
+			<string>Side</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>SNOMED CT FSN</key>
+			<string>lateral(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49370004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Superior</string>
+			<key>common title</key>
+			<string>Above or higher</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>120</integer>
+			<key>SNOMED CT FSN</key>
+			<string>superior(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>264217000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Inferior</string>
+			<key>common title</key>
+			<string>Below or under</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>130</integer>
+			<key>SNOMED CT FSN</key>
+			<string>inferor(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>261089000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Line Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Central Intravenous</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>central venous catheter, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>52124006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Peripheral Intravenous</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>peripheral intravenous catheter, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>82449006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Intrathecal</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>intrathecal catheter(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>439069008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Epidural</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>epidural catheter(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>30610008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Intraosseous</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Restraint Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Anlke</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Wrist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Oxygen Delivery Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>BIPAP</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>biPAP exygen nasal cannula</string>
+			<key>SNOMED CT CID</key>
+			<integer>425826004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>CPAP</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>CPAP oxygen nasal cannula</string>
+			<key>SNOMED CT CID</key>
+			<integer>426806007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Endotracheal Tube</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>Endotracheal tube</string>
+			<key>SNOMED CT CID</key>
+			<integer>26412008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Face Mask</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>not found</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nasal Cannula</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>Oxygen nasal cannula</string>
+			<key>SNOMED CT CID</key>
+			<integer>336623009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trach Plate</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>not found</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Orthopedic/Neuro Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Arm Board</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>3</integer>
+			<key>placeHolder</key>
+			<string>Specify Arm</string>
+			<key>options</key>
+			<string>Right,Left</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>57395004</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Brace</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Location</string>
+			<key>options</key>
+			<string></string>
+			<key>SNOMED CT FSN</key>
+			<string>brace(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>360316004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cast</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Location</string>
+			<key>options</key>
+			<string></string>
+			<key>SNOMED CT FSN</key>
+			<string>cast(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>118643004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cervical Collar</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>inputTypeCode</key>
+			<integer>0</integer>
+			<key>SNOMED CT FSN</key>
+			<string>cervical collar(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>407741000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>External Fix</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Location</string>
+			<key>options</key>
+			<string></string>
+			<key>SNOMED CT FSN</key>
+			<string>external fixation device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>118383002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Halo</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>inputTypeCode</key>
+			<integer>0</integer>
+			<key>placeHolder</key>
+			<string>Specify</string>
+			<key>options</key>
+			<string></string>
+			<key>SNOMED CT FSN</key>
+			<string>halo brace(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>183187001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Splint</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Location</string>
+			<key>options</key>
+			<string></string>
+			<key>SNOMED CT FSN</key>
+			<string>splint(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>16650009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Traction</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Location</string>
+			<key>options</key>
+			<string></string>
+			<key>SNOMED CT FSN</key>
+			<string>traction unit</string>
+			<key>SNOMED CT CID</key>
+			<integer>63797009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>GI/GU Device Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Fecal Tube/Pouch</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>G-Tube</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>J-Tube</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>jejunostomy tube device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>126065006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>NG</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>nasogastric tube, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>17102003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ostomy Equipment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Type</string>
+			<key>SNOMED CT FSN</key>
+			<string>ostomy appliance, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>35398009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>PEG Tube</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Urinary Catheter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify Type</string>
+			<key>SNOMED CT FSN</key>
+			<string>urinary catheter, device(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>20568009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Monitoring Equipment Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>BP Cuff</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>blood pressure cuff</string>
+			<key>SNOMED CT CID</key>
+			<integer>70665002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Electrode</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>electrode(physical object)</string>
+			<key>SNOMED CT CID</key>
+			<integer>16470007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pulse Oximeter</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Medication Impact Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Perfusion Compromise</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Skin Structure Compromise</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mobility and Sensory Perception Alteration</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>GI Function Alteration</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Therapeutic Class</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Vasopressor</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>vasoconstrictor(Pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>8571001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Steroid</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sedative</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>Sedative(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>349859000</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Paralytic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Anesthetic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>anesthetic(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>5776009</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hypnotic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>hypnotics(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>321088006</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Analgesic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>analgesic(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>53009005</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Antibiotic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string>antibiotic(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255631004</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chemotherapy</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>SNOMED CT FSN</key>
+			<string>Chemotherapeutic agent(pharmaceutical/biologic product)</string>
+			<key>SNOMED CT CID</key>
+			<integer>312059006</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Appetite Stimulant</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>100</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Appetite Depressant</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>110</integer>
+		</dict>
+	</array>
+	<key>Confounding Factor</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Spinal Cord Injury</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>spinal cord injury(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>90584004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Amputation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>amputee(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>41944006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Paraplegia</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Equipment</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>equipment in use(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>397917005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Edema</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>edema(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>267038008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>BMI Category-Adult</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Low (&lt;19)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>High (&gt;=30)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>body mass index 30+ obesity(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>162864005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Within Normal Limits (&gt;=19 and &lt;30)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>normal body mass index(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>35425004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Weight Evaluation</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Emaciated</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>emaciated(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>371597004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Underweight</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>underweight(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>348342006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Healthy Thin</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Within Normal Limits</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>normal weight(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>43664005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Healthy Overweight</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Overweight</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>O/E-overweight(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>275947003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Obese</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>obese(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>414915002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Morbitly Obese</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Hydration Status</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Dehydrated</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>on examination-dehydrated(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>162685008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hydrated</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>on examination-not dehydrated(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>312450001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Informant Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Patient</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>patient(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>116154003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Patient Relative</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>relative(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>125677006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Caregiver</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>caregiver(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>133932002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Patient Friend or Neighbor</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Specify</string>
+			<key>SNOMED CT FSN</key>
+			<string>friend(social context)</string>
+			<key>SNOMED CT CID</key>
+			<integer>113163005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Information Mode</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Automated</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Interview</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>history taking(procedure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>84100007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Transcription</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>System Type</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Paper Chart</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>EHR</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Device</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Clinical System</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Braden Sensory Perception</key>
+	<array/>
+	<key>Braden Moisture</key>
+	<array/>
+	<key>Braden Activity</key>
+	<array/>
+	<key>Braden Mobility</key>
+	<array/>
+	<key>Braden Nutrition</key>
+	<array/>
+	<key>Braden Friction and Shear</key>
+	<array/>
+	<key>Braden Pressure Ulcer Rick Evaluation</key>
+	<array/>
+	<key>Braden Q Friction and Shear</key>
+	<array/>
+	<key>Braden Q Nutrition</key>
+	<array/>
+	<key>Braden Q Pressure Ulcer Rick Evaluation</key>
+	<array/>
+	<key>Braden Q Tissue Perfusion and Oxygenation</key>
+	<array/>
+	<key>Mental Status</key>
+	<array/>
+	<key>Neonatal Braden Mobility</key>
+	<array/>
+	<key>Neonatal Braden Activity</key>
+	<array/>
+	<key>Neonatal Braden Nutrition</key>
+	<array/>
+	<key>Neonatal Braden Moisture</key>
+	<array/>
+	<key>Neonatal Braden Pressure Ulcer Risk Evaluation</key>
+	<array/>
+	<key>Skin Condition</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Dry</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>dry skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>16386004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Extremely Dry</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Normal</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Friable</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>fragine skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Skin Color</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Normal for Ethnic Group</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin normal color(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>297952003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ashen</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cyanotic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>cyanosis of skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>1194119001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Flushed</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>flushed complexion(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>248213001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Jaundiced</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string>jaundicd(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>18165001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mottled</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>SNOMED CT FSN</key>
+			<string>mottling of skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>406128001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pale</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>SNOMED CT FSN</key>
+			<string>pale-symptom(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>267029006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Skin Moistness</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Normal</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Moist</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>moist skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>16514006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Diaphoretic</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>excessing sweating(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Clammy</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Skin Temperature</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Cool</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>cool skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>427733005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Warm(Normal)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>warm skin(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>102599008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cold</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string>feels cold(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>64713002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hot</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>SNOMED CT FSN</key>
+			<string>feels hot(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>373932008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Skin Turgor</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Good Elasticity(Normal)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin turgor normal(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>297956000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Poor, Decreased Elasticity</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string>decreased skin turgor(finding)</string>
+			<key>SNOMED CT CID</key>
+			<integer>425244000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Tenting</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+</dict>
+</plist>

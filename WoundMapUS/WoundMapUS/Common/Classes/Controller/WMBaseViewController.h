@@ -8,13 +8,25 @@
 
 #import "StackMob.h"
 
+@class WCAppDelegate, CoreDataHelper;
+
 @interface WMBaseViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic) SMFetchPolicy fetchPolicy;
 @property (nonatomic) SMSavePolicy savePolicy;
 
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
+@property (readonly, nonatomic) BOOL isIPadIdiom;
+
+@property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSPersistentStore *store;
+
+@property (strong, nonatomic) NSMutableArray *opaqueNotificationObservers;  // observers that do away when the view dissappears
+@property (strong, nonatomic) NSMutableArray *persistantObservers;          // observers that do no go away when the view controller disappears
+
+- (void)clearDataCache;                                                         // clear all cached data for new or nil document
+- (void)clearAllReferences;                                                     // clear all references and all observers
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (readonly, nonatomic) NSString *fetchedResultsControllerEntityName;

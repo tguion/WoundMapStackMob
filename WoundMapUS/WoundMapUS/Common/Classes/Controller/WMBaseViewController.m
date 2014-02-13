@@ -7,8 +7,14 @@
 //
 
 #import "WMBaseViewController.h"
+#import "StackMob.h"
+#import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
+
+@property (strong, nonatomic) NSManagedObjectID *patientObjectID;
+@property (strong, nonatomic) NSManagedObjectID *woundObjectID;
+@property (strong, nonatomic) NSManagedObjectID *woundPhotoObjectID;
 
 @end
 
@@ -38,6 +44,77 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Core
+
+- (BOOL)isIPadIdiom
+{
+    return [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+}
+
+- (void)clearDataCache
+{
+    _patientObjectID = nil;
+    _woundObjectID = nil;
+    _woundPhotoObjectID = nil;
+    _fetchedResultsController.delegate = nil;
+    _fetchedResultsController = nil;
+}
+
+- (void)clearAllReferences
+{
+    [self clearDataCache];
+    [self removeAllObservers];
+}
+
+- (void)removeAllObservers
+{
+    for (id observer in _persistantObservers) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+    }
+    _persistantObservers = nil;
+}
+
+#pragma mark - Accessors
+
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (CoreDataHelper *)coreDataHelper
+{
+    return self.appDelegate.coreDataHelper;
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    return [self.appDelegate.coreDataHelper.stackMobStore contextForCurrentThread];
+}
+
+- (NSPersistentStore *)store
+{
+    NSArray *persistentStores = [self.appDelegate.coreDataHelper.stackMobStore.persistentStoreCoordinator persistentStores];
+    NSPersistentStore *store = [persistentStores firstObject];
+    NSAssert1([store isKindOfClass:[SMIncrementalStore class]], @"Unexpected class, expected SMIncrementalStore, found %@", store);
+    return store;
+}
+
+- (NSMutableArray *)opaqueNotificationObservers
+{
+    if (nil == _opaqueNotificationObservers) {
+        _opaqueNotificationObservers = [[NSMutableArray alloc] initWithCapacity:16];
+    }
+    return _opaqueNotificationObservers;
+}
+
+- (NSMutableArray *)persistantObservers
+{
+    if (nil == _persistantObservers) {
+        _persistantObservers = [[NSMutableArray alloc] initWithCapacity:4];
+    }
+    return _persistantObservers;
 }
 
 #pragma mark - Table view data source

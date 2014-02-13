@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Impaired communication</string>
+		<key>subtitle</key>
+		<string>Does the patient fail to make needs known?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>0</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Social isolation</string>
+		<key>subtitle</key>
+		<string>Does the patient exhibit failure to have relationships?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>1</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Sleep pattern disturbance</string>
+		<key>subtitle</key>
+		<string>Does the patient exhibit disruptive change in sleep/rest pattern?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>2</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Spiritual distress</string>
+		<key>subtitle</key>
+		<string>Does the patient exhibit disturbance in one’s belief system?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>3</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Inability to control behavior and potential for violence</string>
+		<key>subtitle</key>
+		<string>Does the patient exhibit aggressive behavior directed towards oneself or others?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>4</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Stereotyped response to any stressor</string>
+		<key>subtitle</key>
+		<string>Does the patient exhibit the same characteristic response regardless of the stimulus?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>5</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Are there potential psychosocial issues?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>6</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Should the person have a screening?</string>
+		<key>sectionTitle</key>
+		<string>Psychosocial issues</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>7</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>&quot;I am going to say 3 words for you to remember.  Please repeat the words after I have said all three. Sock, blue, and bed.  Now tell me the words&quot;</string>
+		<key>prefixTitle</key>
+		<string>Ask resident:</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>subitemPrompt</key>
+		<string>Number of words repeated after first attempt</string>
+		<key>sortRank</key>
+		<integer>8</integer>
+		<key>valueTypeCode</key>
+		<integer>18</integer>
+		<key>subitems</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>None</string>
+				<key>score</key>
+				<integer>0</integer>
+				<key>sortRank</key>
+				<integer>0</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>One</string>
+				<key>score</key>
+				<integer>1</integer>
+				<key>sortRank</key>
+				<integer>9</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Two</string>
+				<key>score</key>
+				<integer>2</integer>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Three</string>
+				<key>score</key>
+				<integer>3</integer>
+				<key>sortRank</key>
+				<integer>11</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>After the residents first attempt, repeat the words using cues (sock, something to wear; blue, a color; bed, a piece of furniture) You may repeat the words up to 2 more times.</string>
+		<key>prefixTitle</key>
+		<string>Ask resident:</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>subitemPrompt</key>
+		<string>Number of words repeated after second attempt</string>
+		<key>sortRank</key>
+		<integer>12</integer>
+		<key>valueTypeCode</key>
+		<integer>18</integer>
+		<key>subitems</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>None</string>
+				<key>score</key>
+				<integer>0</integer>
+				<key>sortRank</key>
+				<integer>0</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>One</string>
+				<key>score</key>
+				<integer>1</integer>
+				<key>sortRank</key>
+				<integer>1</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Two</string>
+				<key>score</key>
+				<integer>2</integer>
+				<key>sortRank</key>
+				<integer>2</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Three</string>
+				<key>score</key>
+				<integer>3</integer>
+				<key>sortRank</key>
+				<integer>3</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Please tell me what year it is now</string>
+		<key>prefixTitle</key>
+		<string>Ask resident:</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>subitemPrompt</key>
+		<string>Record the answer</string>
+		<key>sortRank</key>
+		<integer>13</integer>
+		<key>valueTypeCode</key>
+		<integer>18</integer>
+		<key>subitems</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Missed by &gt; 5 years or no answer</string>
+				<key>score</key>
+				<integer>0</integer>
+				<key>sortRank</key>
+				<integer>0</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Missed by 2-5 years</string>
+				<key>score</key>
+				<integer>1</integer>
+				<key>sortRank</key>
+				<integer>1</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Missed by 1 year</string>
+				<key>score</key>
+				<integer>2</integer>
+				<key>sortRank</key>
+				<integer>2</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Correct</string>
+				<key>score</key>
+				<integer>3</integer>
+				<key>sortRank</key>
+				<integer>3</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>What month are we in right now</string>
+		<key>prefixTitle</key>
+		<string>Ask resident:</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>subitemPrompt</key>
+		<string>Record the answer</string>
+		<key>sortRank</key>
+		<integer>14</integer>
+		<key>valueTypeCode</key>
+		<integer>18</integer>
+		<key>subitems</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Missed by &gt;1 month or no answer</string>
+				<key>score</key>
+				<integer>0</integer>
+				<key>sortRank</key>
+				<integer>0</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Missed by 6 days to 1 month</string>
+				<key>score</key>
+				<integer>1</integer>
+				<key>sortRank</key>
+				<integer>1</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Correct within 5 days</string>
+				<key>score</key>
+				<integer>2</integer>
+				<key>sortRank</key>
+				<integer>2</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>What day of the week is today</string>
+		<key>prefixTitle</key>
+		<string>Ask resident:</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>subitemPrompt</key>
+		<string>Record the answer</string>
+		<key>sortRank</key>
+		<integer>15</integer>
+		<key>valueTypeCode</key>
+		<integer>18</integer>
+		<key>subitems</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Incorrect or no answer</string>
+				<key>score</key>
+				<integer>0</integer>
+				<key>sortRank</key>
+				<integer>0</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Correct</string>
+				<key>score</key>
+				<integer>1</integer>
+				<key>sortRank</key>
+				<integer>1</integer>
+				<key>valueTypeCode</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>&quot;Lets go back to an earlier question.  What were the 3 words I asked you repeat? If unable to remember a word, give cue (something to wear; a color; a piece of furniture) for the word</string>
+		<key>prefixTitle</key>
+		<string>Ask resident:</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>sortRank</key>
+		<integer>16</integer>
+		<key>valueTypeCode</key>
+		<integer>18</integer>
+		<key>subitems</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Able to recall sock</string>
+				<key>sortRank</key>
+				<integer>0</integer>
+				<key>valueTypeCode</key>
+				<integer>18</integer>
+				<key>subitems</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>No, could not recall</string>
+						<key>score</key>
+						<integer>0</integer>
+						<key>sortRank</key>
+						<integer>0</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Yes, after cuing (something to wear)</string>
+						<key>score</key>
+						<integer>1</integer>
+						<key>sortRank</key>
+						<integer>1</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Yes, no cue required</string>
+						<key>score</key>
+						<integer>2</integer>
+						<key>sortRank</key>
+						<integer>2</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Able to recall blue</string>
+				<key>sortRank</key>
+				<integer>17</integer>
+				<key>valueTypeCode</key>
+				<integer>18</integer>
+				<key>subitems</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>No, could not recall</string>
+						<key>score</key>
+						<integer>0</integer>
+						<key>sortRank</key>
+						<integer>0</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Yes, after cuing (a color)</string>
+						<key>score</key>
+						<integer>1</integer>
+						<key>sortRank</key>
+						<integer>1</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Yes, no cue required</string>
+						<key>score</key>
+						<integer>2</integer>
+						<key>sortRank</key>
+						<integer>2</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Able to recall bed</string>
+				<key>sortRank</key>
+				<integer>18</integer>
+				<key>valueTypeCode</key>
+				<integer>18</integer>
+				<key>subitems</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>No, could not recall</string>
+						<key>score</key>
+						<integer>0</integer>
+						<key>sortRank</key>
+						<integer>0</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Yes, after cuing (a piece of furniture)</string>
+						<key>score</key>
+						<integer>1</integer>
+						<key>sortRank</key>
+						<integer>1</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Yes, no cue required</string>
+						<key>score</key>
+						<integer>2</integer>
+						<key>sortRank</key>
+						<integer>2</integer>
+						<key>valueTypeCode</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Are there potential cognitive issues?</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>19</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Should the person have a full screen?</string>
+		<key>sectionTitle</key>
+		<string>Cognitive test</string>
+		<key>options</key>
+		<string>YES,NO</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>valueTypeCode</key>
+		<integer>17</integer>
+	</dict>
+</array>
+</plist>

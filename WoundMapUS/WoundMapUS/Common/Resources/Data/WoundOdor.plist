@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>None</string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string>wound exudate odor absent(situation)</string>
+		<key>SNOMED CT CID</key>
+		<integer>1411000124109</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Foul</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>SNOMED CT FSN</key>
+		<string>offensive wound odor(finding)</string>
+		<key>SNOMED CT CID</key>
+		<integer>447547000</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+</array>
+</plist>

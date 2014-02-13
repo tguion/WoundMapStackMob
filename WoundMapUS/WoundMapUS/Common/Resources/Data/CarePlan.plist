@@ -1,0 +1,3886 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Mobility</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>subcategories</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Ambulation</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Where Ambulated</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Outside of Room</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Enter times</string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>In Room</string>
+								<key>sortRank</key>
+								<integer>20</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Dangle</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Chair</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Bed in Chair Position</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Active ROM</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Passive ROM</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>70</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Walking</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>80</integer>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>How Tolerated</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Well Tolerated</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Enter times</string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Fatiqued</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Unable to Complete</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Fall Risk</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Assistance Needed</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Independent</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Enter times</string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>1 Person Assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>2 Person Assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Gait Belt</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Walker</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specity</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Repositioning</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Frequency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Turn q _ hrs</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>combineKeyAndValue</key>
+								<true/>
+								<key>placeHolder</key>
+								<string>Enter number hrs</string>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Freq small shifts of position</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Turn to Avoid</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify location</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>How Tolerated</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Tolerated Well</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Patient refused</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Unable to complete</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Assistance Needed</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Independent</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>1 person assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>2 person assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Gait Belt</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Walker</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Transfer Aides</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Type</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Draw sheet</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Transfer Board</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Lift</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Trapeze</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Assistance Needed</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Independent</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>1 person assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>2 person assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Gait Belt</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Walker</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Support Surface Bed</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Type</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Standard Mattress</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string>mattress, device(physical object</string>
+								<key>SNOMED CT CID</key>
+								<integer>17207004</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Overlay</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Mattress replacement</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Bed unit</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Characteristics</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Low air loss</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Alternating Pressure</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Lateral rotation</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Foam</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Gel</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Bariatric</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Order Status</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Ordered</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Placed</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Functioning correctly</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Support Surface Chair</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Type</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Chair Pad</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>W/C Evaluation</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>W/C</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify W/C</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Specialty Chair</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Order Status</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Ordered</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Placed</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Functioning Correctly</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Heels elevated off bed</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>60</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Method</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Pillow</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Boots</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Skin Barrier applied</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Check Frequency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>q _ hours</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>combineKeyAndValue</key>
+								<true/>
+								<key>placeHolder</key>
+								<string>number of hours</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Pad between boney prominences</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>70</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Location</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Knees</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Arms</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Feet</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify Location</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Check Frequency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>q _ hours</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>combineKeyAndValue</key>
+								<true/>
+								<key>placeHolder</key>
+								<string>number of hours</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Pain over bony prominences</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>inputTypeCode</key>
+		<integer>8</integer>
+		<key>inlineFlag</key>
+		<true/>
+		<key>skipSelectionIcon</key>
+		<true/>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Moisture</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>subcategories</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Cream</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Applied To</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Arms/Elbows</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Legs</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Heels/Feet</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Back</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify Where</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Frequency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>inputTypeCode</key>
+						<integer>5</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Q shift</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Q Day</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>As Needed</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Patient Applies</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Product</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>inputTypeCode</key>
+						<integer>5</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Product</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify Product</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Skin Cleansing/Bathing</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Product/Method</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>inputTypeCode</key>
+						<integer>5</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Washcloths</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Prepackaged wipes</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>inputTypeCode</key>
+								<integer>0</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Shower</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Assistance</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>inputTypeCode</key>
+						<integer>5</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Independent</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>1 person assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>2 person assist</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Skin Protective Barrier</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Application Instructions</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Apply after each incontinent eposide</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Apply after bathing</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Apply daily</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Apply q shift</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Other</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Product</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify Product</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Incontinence Management</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Products Used</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Pads</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Briefs</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Underpad</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Catheter</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string>urinary catheter, device(physical object)</string>
+								<key>SNOMED CT CID</key>
+								<integer>20568009</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Condom catheter</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Urostomy</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Prompted voiding</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>70</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Fecal management device</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>80</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Collection device</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>90</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Frequency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Checked When</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Enter Time</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Changed When</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Enter Time</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Bowel Program</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Plan</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Toilet after meals</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Toilet every _ hours</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>combineKeyAndValue</key>
+								<true/>
+								<key>placeHolder</key>
+								<string>number hrs</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Rectal tube</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Colostomy</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Retraining Program</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>placeHolder</key>
+								<string>Specify</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Stool Consistency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Normal</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Soft</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Diarrhea</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Constipation</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Nutrition/Eating</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>subcategories</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Diet</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Regular</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Soft</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Low Sodium</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Puree</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Thickened Liquids</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>50</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Cardiac</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>60</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Diabetic</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>70</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Tube feeding</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>80</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>90</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Aspiration Risk</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Sit up for meals</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Elevate Head</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Thickened Liquids</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Assistance</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Independent</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>1 person assist</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>2 person assits</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Dining Location</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>In Room</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Dining Room</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Hydration</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Offer fluids frequently</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>With each repositioning</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Diet Monitoring</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>60</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Record I &amp; O</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Percent eaten</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Calorie Count</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Dietary Supplement</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>70</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Type</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Frequency</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Route</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+						<key>options</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Oral</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>IV</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>SNOMED CT FSN</key>
+								<string>intravenous feeding of patient(regime/therapy)</string>
+								<key>SNOMED CT CID</key>
+								<integer>25156005</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Tube Feeding</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>inputTypeCode</key>
+								<integer>5</integer>
+								<key>SNOMED CT FSN</key>
+								<string>tube feeding of patient(regime/therapy)(procedure)</string>
+								<key>SNOMED CT CID</key>
+								<integer>61420007</integer>
+								<key>LOINC Code</key>
+								<string></string>
+								<key>options</key>
+								<array>
+									<dict>
+										<key>title</key>
+										<string>NG Tube</string>
+										<key>definition</key>
+										<string></string>
+										<key>sortRank</key>
+										<integer>10</integer>
+										<key>SNOMED CT FSN</key>
+										<string>nasogastric tube, device(physical object)</string>
+										<key>SNOMED CT CID</key>
+										<integer>17102003</integer>
+										<key>LOINC Code</key>
+										<string></string>
+									</dict>
+									<dict>
+										<key>title</key>
+										<string>G tube</string>
+										<key>definition</key>
+										<string></string>
+										<key>sortRank</key>
+										<integer>20</integer>
+										<key>SNOMED CT FSN</key>
+										<string>gastrointestinal tube(physical object)</string>
+										<key>SNOMED CT CID</key>
+										<integer>303699009</integer>
+										<key>LOINC Code</key>
+										<string></string>
+									</dict>
+									<dict>
+										<key>title</key>
+										<string>J tube</string>
+										<key>definition</key>
+										<string></string>
+										<key>sortRank</key>
+										<integer>30</integer>
+										<key>SNOMED CT FSN</key>
+										<string>jejunostomy tube, device(physical object)</string>
+										<key>SNOMED CT CID</key>
+										<integer>126065006</integer>
+										<key>LOINC Code</key>
+										<string></string>
+									</dict>
+								</array>
+							</dict>
+						</array>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Weight Trend</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>80</integer>
+				<key>SNOMED CT FSN</key>
+				<string>weight trend finding(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>365910001</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Stable</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string>wight steady(clinical finding)</string>
+						<key>SNOMED CT CID</key>
+						<integer>271398006</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Increasing</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string>weight gain finding(clinical finding)</string>
+						<key>SNOMED CT CID</key>
+						<integer>8943002</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Decreasing</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string>weight loss finding(clinical finding)</string>
+						<key>SNOMED CT CID</key>
+						<integer>89362005</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Teaching</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>50</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>subcategories</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Taught To</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Patient</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string>patient(social context)</string>
+						<key>SNOMED CT CID</key>
+						<integer>116154003</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Patient Relative</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string>relative(social context)</string>
+						<key>SNOMED CT CID</key>
+						<integer>125677006</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Caregiver</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string>caregiver(social context)</string>
+						<key>SNOMED CT CID</key>
+						<integer>133932002</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Patient Friend or Neighbor</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string>friend(social context)</string>
+						<key>SNOMED CT CID</key>
+						<integer>113163005</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Information Taught</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Repositioning</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Checking Skin</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Nutrition</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Foot Care</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Moisture Management</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>50</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Dressing Application</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>60</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>70</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Method of Teaching</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Pamphlet/handout</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Video</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Demonstration</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Online Information</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Discussion</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>50</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Return Demonstration</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>60</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Class</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>70</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>80</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Consult</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>60</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>subcategories</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Specialists</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>allowMultipleChildSelection</key>
+				<true/>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Wound Care</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>PT</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>OT</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>RD</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Social services</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>50</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Speech</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>60</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Orthopedics</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>70</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Dermatology</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>80</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Plastic Surgery</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>90</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Neurology</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>100</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Vascular Surgery</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>110</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Urology</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>120</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Podiatry</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>130</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Endocrine</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>140</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Psychology</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>150</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Dentist</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>160</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Home Care</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>170</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>180</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Sent by</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>RN</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>LPN</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>CNA</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Other</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>40</integer>
+						<key>inputTypeCode</key>
+						<integer>2</integer>
+						<key>placeHolder</key>
+						<string>Specify</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Status</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>options</key>
+				<array>
+					<dict>
+						<key>title</key>
+						<string>Pending</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>10</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Completed</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>20</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>title</key>
+						<string>Cancelled</string>
+						<key>definition</key>
+						<string></string>
+						<key>sortRank</key>
+						<integer>30</integer>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+</array>
+</plist>

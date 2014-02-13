@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Friction &amp; Shear</string>
+		<key>title</key>
+		<string>No Apparent Problem</string>
+		<key>desc</key>
+		<string>Keep bed linens clean, dry and wrinkle-free.</string>
+		<key>scoreMinimum</key>
+		<integer>15</integer>
+		<key>scoreMaximum</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Friction &amp; Shear</string>
+		<key>title</key>
+		<string>Potential Problem</string>
+		<key>desc</key>
+		<string>Keep bed linens clean, dry and wrinkle-free. No massaging pressure points. Apple transparent dressing or elbow/heel protectors to intact skin over elbows and heels.</string>
+		<key>scoreMinimum</key>
+		<integer>12</integer>
+		<key>scoreMaximum</key>
+		<integer>14</integer>
+		<key>sortRank</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Friction &amp; Shear</string>
+		<key>title</key>
+		<string>Problem</string>
+		<key>desc</key>
+		<string>Minimum of 2 people + draw sheet to pull patient up in bed - consider lifts. Keep bed linens clean, dry and wrinkle-free. Apply Tegederm to intact skin over elbows and heels. Elevate head of bed 30 degrees or less.</string>
+		<key>scoreMinimum</key>
+		<integer>1</integer>
+		<key>scoreMaximum</key>
+		<integer>11</integer>
+		<key>sortRank</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Nutrition</string>
+		<key>title</key>
+		<string>Excellent</string>
+		<key>desc</key>
+		<string>Nutrition consult. Out of bed for all meals. Record intake. Encourage fluids. If NPO for &gt; 24 hours discuss plan for diet advancement with physician.</string>
+		<key>scoreMinimum</key>
+		<integer>17</integer>
+		<key>scoreMaximum</key>
+		<integer>20</integer>
+		<key>sortRank</key>
+		<integer>3</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Nutrition</string>
+		<key>title</key>
+		<string>Adequate</string>
+		<key>desc</key>
+		<string>Nutrition consult. Record intake OR how much tubefeeding or TPN patient is receiving. Encourage fluids. If NPO for &gt; 24 hours discuss plan for diet advancement with physician.</string>
+		<key>scoreMinimum</key>
+		<integer>15</integer>
+		<key>scoreMaximum</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Nutrition</string>
+		<key>title</key>
+		<string>Probably Inadequate</string>
+		<key>desc</key>
+		<string>Nutrition consult. Record dietary intake including snacks and supplements and record I&amp;O if appropriate OR record how much tubefeeding or TPN patient is receiving. Encourage fluids and eating between meals if possible. If NPO for &gt; 24 hours discuss plan for diet advancement with physician.</string>
+		<key>scoreMinimum</key>
+		<integer>12</integer>
+		<key>scoreMaximum</key>
+		<integer>14</integer>
+		<key>sortRank</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Nutrition</string>
+		<key>title</key>
+		<string>Very Poor</string>
+		<key>desc</key>
+		<string>Nutrition consult. Record dietary intake including snacks and supplements and record I&amp;O if appropriate. Make sure nutrition interventions are in place for patient. Encourage additional fluids and eating between meals if possible. If NPO for &gt; 24 hours discuss plan for diet advancement with physician.</string>
+		<key>scoreMinimum</key>
+		<integer>1</integer>
+		<key>scoreMaximum</key>
+		<integer>11</integer>
+		<key>sortRank</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Mobility</string>
+		<key>title</key>
+		<string>No Limitations</string>
+		<key>desc</key>
+		<string>Encourage ambulating outside the room at least TID. Check skin daily. No intervention required.</string>
+		<key>scoreMinimum</key>
+		<integer>17</integer>
+		<key>scoreMaximum</key>
+		<integer>20</integer>
+		<key>sortRank</key>
+		<integer>3</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Mobility</string>
+		<key>title</key>
+		<string>Slightly Limited</string>
+		<key>desc</key>
+		<string>Turn/reposition frequently.</string>
+		<key>scoreMinimum</key>
+		<integer>15</integer>
+		<key>scoreMaximum</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Mobility</string>
+		<key>title</key>
+		<string>Very Limited</string>
+		<key>desc</key>
+		<string>Turn/reposition q 2 hours. Post turning schedule. Elevate heels.</string>
+		<key>scoreMinimum</key>
+		<integer>12</integer>
+		<key>scoreMaximum</key>
+		<integer>14</integer>
+		<key>sortRank</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Mobility</string>
+		<key>title</key>
+		<string>Completely Immobile</string>
+		<key>desc</key>
+		<string>Turn/reposition q 1-2 hours. Post turning schedule. Frequent small shifts of body weight. Elevate heels.</string>
+		<key>scoreMinimum</key>
+		<integer>1</integer>
+		<key>scoreMaximum</key>
+		<integer>11</integer>
+		<key>sortRank</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Activity</string>
+		<key>title</key>
+		<string>Walks Frequently</string>
+		<key>scoreMinimum</key>
+		<integer>17</integer>
+		<key>scoreMaximum</key>
+		<integer>20</integer>
+		<key>sortRank</key>
+		<integer>3</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Activity</string>
+		<key>title</key>
+		<string>Walks Occasionally</string>
+		<key>desc</key>
+		<string>Consider blue chair cushion. Consider physical therapy consult (done by MD). Encourage gait 3-4 x 1 day.</string>
+		<key>scoreMinimum</key>
+		<integer>15</integer>
+		<key>scoreMaximum</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Activity</string>
+		<key>title</key>
+		<string>Chair Fast or Wheelchair</string>
+		<key>desc</key>
+		<string>Consider blue chair cushion. Instruct patient to reposition q 15 mins when in chair. Offload buttocks or stand q hour. Pad boney prominences with rolled blankets or towels. Consider physical therapy consult (done by MD)</string>
+		<key>scoreMinimum</key>
+		<integer>12</integer>
+		<key>scoreMaximum</key>
+		<integer>14</integer>
+		<key>sortRank</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Activity</string>
+		<key>title</key>
+		<string>Bed Fast</string>
+		<key>desc</key>
+		<string>Reposition every 2 hours. HOB no more than 30 degrees. Offload pressure position with pillows. Elevate heels off bed and or heal protectors.</string>
+		<key>scoreMinimum</key>
+		<integer>1</integer>
+		<key>scoreMaximum</key>
+		<integer>11</integer>
+		<key>sortRank</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Moisture</string>
+		<key>title</key>
+		<string>Rarely Moist</string>
+		<key>desc</key>
+		<string>Encourage patient to use skin repair cream to prevent skin cracks. Encourage patient to report any moisture problems (such as under breasts).</string>
+		<key>scoreMinimum</key>
+		<integer>17</integer>
+		<key>scoreMaximum</key>
+		<integer>20</integer>
+		<key>sortRank</key>
+		<integer>3</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Moisture</string>
+		<key>title</key>
+		<string>Occasianally Moist</string>
+		<key>desc</key>
+		<string>Use moisture barrier ointments. Nutrashield ointment (protective barriers). Moisturize dry unbroken skin. Avoid hot water. Use mild soap and soft cloths or package cleanser wipes. Check incontinence pads frequently. Avoid use of diapers. Check incontinence pad frequently and change as needed. If stool incontinence consider bowel traininig and toileting after meals.</string>
+		<key>scoreMinimum</key>
+		<integer>15</integer>
+		<key>scoreMaximum</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Moisture</string>
+		<key>title</key>
+		<string>Moist</string>
+		<key>desc</key>
+		<string>Use protective barrier ointments. Nutrashield ointment (protective barriers). Moisturize dry unbroken skin. Avoid hot water. Use mild soap and soft cloths or package cleanser wipes. Check incontinence pads frequently. Avaiod use of diapers. Check incontinence pads frequently and change as needed. If stool incontinence, consider bowel training and toileting afte meals.</string>
+		<key>scoreMinimum</key>
+		<integer>12</integer>
+		<key>scoreMaximum</key>
+		<integer>14</integer>
+		<key>sortRank</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Moisture</string>
+		<key>title</key>
+		<string>Constantly Moist</string>
+		<key>desc</key>
+		<string>Use Clear skin protectant Nutrashield ointments (protective barriers). Moistrize dry unbroken skin: Nutrashield or skin repair. Avoid hot water. Use mild soap and soft cloths or package cleanser wipes. Check incontinence pads frequently and change as needed. If stool incontinence, consider bowel training and toileting after meals.</string>
+		<key>scoreMinimum</key>
+		<integer>1</integer>
+		<key>scoreMaximum</key>
+		<integer>11</integer>
+		<key>sortRank</key>
+		<integer>0</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Sensory Perception</string>
+		<key>title</key>
+		<string>No Limitations</string>
+		<key>desc</key>
+		<string>Encourage patient to report pain over boney prominences. Check heels daily.</string>
+		<key>scoreMinimum</key>
+		<integer>17</integer>
+		<key>scoreMaximum</key>
+		<integer>20</integer>
+		<key>sortRank</key>
+		<integer>3</integer>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Sensory Perception</string>
+		<key>title</key>
+		<string>Slightly Limited</string>
+		<key>desc</key>
+		<string>Elevate heels and use protectors PRN.</string>
+		<key>scoreMinimum</key>
+		<integer>15</integer>
+		<key>scoreMaximum</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>sortRank</key>
+		<integer>0</integer>
+		<key>scoreMaximum</key>
+		<integer>11</integer>
+		<key>scoreMinimum</key>
+		<integer>1</integer>
+		<key>desc</key>
+		<string>Elevate heels and use protectors PRN. Surface: assess for specialty mattress or bed. Use pillows between knees and boney prominences to avoid direct contact.</string>
+		<key>title</key>
+		<string>Completely Limited</string>
+		<key>sectionTitle</key>
+		<string>Sensory Perception</string>
+	</dict>
+	<dict>
+		<key>sectionTitle</key>
+		<string>Sensory Perception</string>
+		<key>title</key>
+		<string>Very Limited</string>
+		<key>desc</key>
+		<string>Elevate heels and use protectors PRN. Surface: assess for specialty mattress or bed.</string>
+		<key>scoreMinimum</key>
+		<integer>12</integer>
+		<key>scoreMaximum</key>
+		<integer>14</integer>
+		<key>sortRank</key>
+		<integer>1</integer>
+	</dict>
+</array>
+</plist>

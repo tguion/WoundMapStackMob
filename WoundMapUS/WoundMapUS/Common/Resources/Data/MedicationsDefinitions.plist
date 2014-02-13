@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Vassopressor</key>
+	<string>Agent producing vasoconstriction and a rise in blood pressure, usually understood to be systemic arterial pressure unless otherwise specified. (7)</string>
+	<key>Steroid</key>
+	<string></string>
+	<key>Sedative</key>
+	<string>An agent or a drug that produces a soothing, calming, or tranquilizing effect. (7)</string>
+	<key>Paralytic</key>
+	<string>Of or relating to paralysis. (7)</string>
+	<key>Anesthetic</key>
+	<string>A drug or agent used to abolish the sensation of pain, to achieve adequate muscle relaxation during surgery, to calm fear and allay anxiety, and to produce amnesia for the event. (7)</string>
+	<key>Hypnotic</key>
+	<string>A drug that induces sleep or depresses the central nervous system at a cortical level. (7)</string>
+	<key>Analgesic</key>
+	<string>An agent that relieves pain without causing loss of consciousness. (7)</string>
+	<key>Antibiotic</key>
+	<string>A substance that combats bacterial infection by killing bacteria or stopping bacterial growth. (7)</string>
+	<key>Chemotherapeutic Agent</key>
+	<string>Any chemical used to treat cancer. (7)</string>
+	<key>Appetite Stimulant</key>
+	<string>A drug or agent used to increase the drive to eat.</string>
+	<key>Appetite Depressant</key>
+	<string>A drug or agent used to decrease the drive to eat.</string>
+</dict>
+</plist>

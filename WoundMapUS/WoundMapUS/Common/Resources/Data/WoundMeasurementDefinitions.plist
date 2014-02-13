@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Periwound condition</key>
+	<string>The periwound conditition describes the skin around the wound.  Color, induration, warmth and edema should be assessed.  Redness of the surrounding skin can be indicative of unrelieved prssure.  Irritation of the surrounding skin can result from exposure to feces or urine, a reaction to the dressing or tape, or inappropriate removal of dressing or tape.  Redness, tenderness, warmth and swelling are classical clinical signs of infection.  Reference:  Brown, P., 2009 </string>
+	<key>Boggy</key>
+	<string>An area with a wet, spongy, feel;  waterlogged tissue.  </string>
+	<key>Blanched</key>
+	<string>White or pale, as skin or mucous membranes affectd by vasoconstriction.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Blistered</key>
+	<string>Fluid-filled thin-walled structure under or within the epidermis.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Callused</key>
+	<string>A circumscribed thickening of the keratin layer of the epidermis as a result of repeated friction or intermittent pressure.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Dry</key>
+	<string>Free from liquid or mositrue (7)</string>
+	<key>Ecchymotic</key>
+	<string>A purplish patch caused by extravasation of blood into the skin.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Edematous</key>
+	<string>Marked by edema, defined as an accumulation of an excessive amount of watery fluid in cells, tissues or serous cavities.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Erythematous</key>
+	<string>Related to or marked by erythema, defined as redness of the skin due to capillary dilitation.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Excoriated</key>
+	<string>Scratched or otherwise denuded skin by physical means.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Friable</key>
+	<string>Tissue that readily tears, fragmets or bleeds when gently palpated or manipulated.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Hemorrhagic</key>
+	<string>Related to or marked by hemorrhage, defined as an escape of blood through ruptured or unruptured vessel walls.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Indurated</key>
+	<string>Hardening, usually used with reference to soft tissues becoming extremely firm, but not as hard as bone.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Inflammed</key>
+	<string>A fundamental, sterotyped complex of cytologic and chemical reactions that occur in affected blood vessels and adjacent tissues in response to an injuy or abnormal stimulation caused by a physical, chemical, or biologic agent.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Lacerated</key>
+	<string>Torn; rent; having a ragged edge.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Macerated</key>
+	<string>Softened tissue by action of a liquid.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Moist</key>
+	<string>Having a moderate moisture content, slightly wet to the touch. (7)</string>
+	<key>Pain Increase</key>
+	<string>An increase in discomfort</string>
+	<key>Purpuric</key>
+	<string>Relating to or affected with purpura, defined as a condition characterizede by hemorrhage into the skin.  Appearance of the lesions varies with the type of purpura, the duration of the lesions, and the acuteness of onset.  The color is first red, gradually darkens to purple, fades to a brownish yellow, and usually disappears in 2-3 weeks.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Rash</key>
+	<string>Colloquial term for a cutaneous eruption.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Ruptured</key>
+	<string>Spontaneous tearing of an organ or other soft parts.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Scarred</key>
+	<string>Fibrinous tissue replacing normal tissues destroyed by injury or disease.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Swollen</key>
+	<string>Enlarged; a protuberance.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Temperature Increase</key>
+	<string>An increase in temperature of the periwound; as compared to surrounding skin</string>
+	<key>Temperature Decrease</key>
+	<string>A decrease in temperature of the periwound; as compared to surrounding skin</string>
+	<key>Wound Bed Appearance</key>
+	<string>Depends upon the stage of healing; if healing well, may not be differentiated from the edge</string>
+	<key>Approximated </key>
+	<string>Tissue edges close together.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Dehisced</key>
+	<string>Open, split or gaping edge of wound.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Intact</key>
+	<string>Not impaired in any way (7)  Still in place</string>
+	<key>Non-blanchable erythema</key>
+	<string>Continuous redness of wound that does not whiten or pale when palpated.</string>
+	<key>Epithelialization</key>
+	<string>Formation of epithelium over a denuded surface.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Eschar</key>
+	<string>A thick, coagulated crust or slough that develops following a thermal burn orchemical or physical cauterization of the skin.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Fibrinous</key>
+	<string>Pertaining to or composed of fibrin, defined as an elastic filamentous protein derived from fibrinogen by the action of thrombin, which releases fibrinopeptides A and B from fibrinogen in coagulation of the blood.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Granulation</key>
+	<string>The formation of minute, rounded, fleshy connective tissue projections on the surface of a wound, ulcer, or inflammed tissue surface during healing.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Necrotic</key>
+	<string>Pertaining to or affected by necrosis, defined as pathologic death of one or more cells, or a portion of tissue or organ resulting from irreversible damage.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Sloughing</key>
+	<string>Necrosed tissue separated from the living structure; said of dead or necrosed part.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Wound Closure Type</key>
+	<string>Method of wound closure</string>
+	<key>Open </key>
+	<string>No method used to close wound; open wound</string>
+	<key>Glue</key>
+	<string>Method of incision or wound closure using a glue or epoxy</string>
+	<key>Staples</key>
+	<string>Method of incision or wound closure using staples</string>
+	<key>Steri Strips</key>
+	<string>Method of incision or wound closure using steri strips</string>
+	<key>Sutures</key>
+	<string>Method of incision or wound closure using sutures</string>
+	<key>Wound Edge</key>
+	<string>Indistinct (diffuse), attached, not attached, ….(Bates)</string>
+	<key>Attached</key>
+	<string>The edges of the wound are connected to each other.</string>
+	<key>Poorly defined</key>
+	<string>Disseminated; diffuse; spread about; not restricted.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Well-Defined</key>
+	<string>The edges of the wound are sharp and distinct.  Reference:  Brown, P., 2009</string>
+	<key>Rolled</key>
+	<string>The edges or margin of the wound are rolled under.  Reference:  Brown, P., 2009</string>
+	<key>Scabbed</key>
+	<string>A crust formed by coagulation of blood, pus, serum, or a combination of these, on the surface of an ulcer, erosion, or other type of wound.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Wound Tunneling Presence</key>
+	<string>A narrow passageway extending from the open wound under intact tissue; has an end and is dead space.  Reference:  Brown, P., 2009  An elongated passageway, usually open at both ends.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Wound Tunneling Direction</key>
+	<string>Use the face of the clock for orientation with 12 o&apos;clock being toward the head of the patient and 6 o&apos;clock toward the feet.  Syn:  degrees in a circle? Reference:  Brown, P., 2009</string>
+	<key>Undermining Presence</key>
+	<string>A space that extends under the skin or superficial tissue and usually involves a larger area of the border of the wound.  Reference:  Brown, P., 2009</string>
+	<key>Wound Undermining Direction</key>
+	<string>Use the face of the clock for orientation with 12 o&apos;clock being toward the head of the patient and 6 o&apos;clock toward the feet.  Reference:  Brown, P., 2009</string>
+	<key>Wound Exudate</key>
+	<string>Any fluid that has exuded out of a tissue or its capillaries because of injury or inflammation.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Sanguinous</key>
+	<string>Relating to blood; bloody.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Purulent</key>
+	<string>Containing, consisting of, or forming pus.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Serosanguinous</key>
+	<string>Denoting an exudate or a discharge composed of or containing both serum and blood.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Seropurulent</key>
+	<string>Composed of or containing both serum and pus; denoting a discharge of thin watery pus (seropus). (7)</string>
+	<key>Serous</key>
+	<string>Relating to, containing, or producing serum or a substance having a watery consistency.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Viscous</key>
+	<string>Sticky or gummy; having a high degree of viscosity. (7)</string>
+	<key>Dressing Position</key>
+	<string>Need to describe the use case for categories or types of dressings for different purposes.</string>
+	<key>None</key>
+	<string>No dressing on the wound - open to air.</string>
+	<key>Primary Dressing</key>
+	<string>The dressing that is closest to the wound.</string>
+	<key>Secondary Dressing</key>
+	<string>The dressing that is secondary to the wound, after the primary dressing.</string>
+	<key>Compression Dressings</key>
+	<string>Use of circumferential elastic tubing to apply pressure as a treatment of conditions such as burns, lymphedema, edema and venous stasis, and formation of scar tissue.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>ABD Dressing</key>
+	<string>Absorptive gauze pad</string>
+	<key>Antimicrobial</key>
+	<string>Come as creams, ointments, impregnated gauzes or other dressings that are used to control/reduce the number of microorganisms in a wound without damaging healthy tissue.  Reference:  Brown, P., 2009</string>
+	<key>Bandaid</key>
+	<string>Adhesive strip (syn) for bandaid</string>
+	<key>Bismuth Gauze </key>
+	<string>Gauze impregnated with bismuth.  Bismuth Gauze is generic; xeroform is the more common  name.</string>
+	<key>Calcium Alginate</key>
+	<string>Alginates are composed of natural polysaccharide fibers or are derived from seaweed.  They are composed of soft, nonwoven fibers shaped as a rope or pads.  Alginates are highly absorbent and conform to the shape of the wound.  When placed into a wound, an alginate generally interacts with wound exudate to form a gel that maintains a moist healing environment.  There must be enough exudate in the wound to convert the dry alginate fibers into a gel.  They can require a secondary dressing.  Reference:  Brown, P., 2009</string>
+	<key>Compression Dressing</key>
+	<string>Helps to heal venous ulcers by reducing dependent edema and facilitating venous return through the enhancement of the effects of the foot and calf muscle pumps.  (e.g., ace bandage)  Reference:  Brown, P., 2009</string>
+	<key>Dry sterile dressing</key>
+	<string>Generic term - similar to gauze - relates to order - may be used when they do not have a name that fits in with another category</string>
+	<key>Elastic Wrap Bandage</key>
+	<string>Used as a compression dressing; e.g,coban - is this a synonym for compression dressing or pressure dressing?</string>
+	<key>Foam Dressing</key>
+	<string>Nonlinting and absorbent; create a moist environment and provide thermal insulation to the wound.  Reference:  Brown, P., 2009</string>
+	<key>Gauze</key>
+	<string>A light, open-meshed fabric of muslin or similar material. (7)</string>
+	<key>Gauze Packing</key>
+	<string>synonym with non-medicated packing strips</string>
+	<key>Gauze Wrap</key>
+	<string>To use gauze to cover an area by wrapping it around a part of the body</string>
+	<key>Hydrocolloidal</key>
+	<string>Occlusive or semiocclusive dressings composed of materials such as gelatin, pectin, and/or carboxymethylcellulose that provide a moist healing environment that allows clean wounds to granulate and necrotic wounds to debride autolytically.  Reference:  Brown, P., 2009</string>
+	<key>Hydrofiber</key>
+	<string>Sterile, non-woven pads or ribbons composed of sodium carboxymethylcellulose fibers.  They are comfortable and absorbent, and they interact with wound exudate to form a gel.  Reference:  Brown, P., 2009</string>
+	<key>Hydrogel</key>
+	<string>Polymers, water- or glycerin-based amorphous gels, impregnanted gauzes, or sheet dressings.  They do not absorb large amounts of exudate because of their high water content.  They help maintain a moist wound environment and promote granulation and epithelialization.  They generally require a secondary dressing.  Reference:  Brown, P., 2009</string>
+	<key>Hypertonic Hydrogel</key>
+	<string>Having a greater osmotic pressure than a reference solution.   Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Medicated Packing Strips</key>
+	<string>include xeroform, antimicrobial, etc.</string>
+	<key>Moist Saline Gauze</key>
+	<string>Gauze pretreated with saline solution</string>
+	<key>Nonadherent Dressing</key>
+	<string>A dressing designed specifically not to stick to the dried secretions of a wound. (7)</string>
+	<key>Nonadhesive Wrap</key>
+	<string>telfa - nonadhesive surface next to wound</string>
+	<key>Packing Strips</key>
+	<string>Non-medicated - most likely gauze </string>
+	<key>Petrolatum Gauze</key>
+	<string>Gauze impregnated with  petroleum.  Designed to promote a moist healing environment and to facilitate ease in dressing removal without disruption of healing tissue.  They are nonadherent and require a secondary dressing.  Reference:  Brown, P., 2009</string>
+	<key>Pressure Dressing</key>
+	<string></string>
+	<key>Skin Adhesive</key>
+	<string>A topical liquid agent that holds cuts, lesions, wounds, etc. together.</string>
+	<key>Transparent film</key>
+	<string>Adhesive, semipermeable, polyurethane membrane dressings are waterproof and impermeable to contaminants and bacteria.  They permit water vapor and atmospheric gases to cross the barrier.  They do not absorb drainage.  They retain mosture and are to be changed when fluid accumulates beneath them.  Because they are clear, wounds can be assessed without removing the dressing.  Reference:  Brown, P., 2009</string>
+	<key>Tubular Bandage</key>
+	<string></string>
+	<key>VAC (Negative Pressure Device)</key>
+	<string>This is a system that uses controlled negative pressure (vacuum) to help promote wound healing.  The system consists of a computer-controlled therapy unit, canister, sterile plastic tube, foam dressing, and clear V.A.C. drape.  The foam dressing goes inside the wound.  One end of the tube connects to the foam.  The other end of the tube connects to the cannister, which, in turn, connects to the V.A.C.  The VAC system pulls infectious materials and excess interstitial fluid from the wound through the tube and collects them inside the canister.  Reference:  Brown, P., 2009</string>
+	<key>Wet to Moist </key>
+	<string>A dressing that is applied while wet (usually with a wetting agent) and stays moist.</string>
+	<key>Wet to dry</key>
+	<string>A dressing that is applied moist with saline and allowed to dry before it is removed. (7)</string>
+</dict>
+</plist>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Perfusion Compromise</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>Medications</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Vasopressor</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string>vasoconstrictor(Pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>8571001</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Skin Structure/Immune System Compromise</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>Medications</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Steroid</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Chemotherapy</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string>Chemotherapeutic agent(pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>312059006</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Mobility and Sensory Perception Alteration</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>Medications</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Sedative</string>
+				<key>definition</key>
+				<string></string>
+				<key>SNOMED CT FSN</key>
+				<string>Sedative(pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>349859000</integer>
+				<key>sortRank</key>
+				<integer>10</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Paralytic</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Anesthetic</string>
+				<key>definition</key>
+				<string></string>
+				<key>SNOMED CT FSN</key>
+				<string>anesthetic(pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>5776009</integer>
+				<key>sortRank</key>
+				<integer>30</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Hypnotic</string>
+				<key>definition</key>
+				<string></string>
+				<key>SNOMED CT FSN</key>
+				<string>hypnotics(pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>321088006</integer>
+				<key>sortRank</key>
+				<integer>40</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Analgesic</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>SNOMED CT FSN</key>
+				<string>analgesic(pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>53009005</integer>
+				<key>sortRank</key>
+				<integer>50</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>GI Function Alteration</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>Medications</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Antibiotic</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>SNOMED CT FSN</key>
+				<string>antibiotic(pharmaceutical/biologic product)</string>
+				<key>SNOMED CT CID</key>
+				<integer>255631004</integer>
+				<key>sortRank</key>
+				<integer>10</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Appetite depressant</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Appetite stimulant</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>None or Not Applicable</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>50</integer>
+		<key>Medications</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>None</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>exludesOtherValues</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Not Applicable</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>exludesOtherValues</key>
+				<true/>
+			</dict>
+		</array>
+	</dict>
+</array>
+</plist>

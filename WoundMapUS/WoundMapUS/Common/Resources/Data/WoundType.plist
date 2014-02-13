@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Pressure Ulcer</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>valueTypeCode</key>
+		<integer>6</integer>
+		<key>woundTypeCode</key>
+		<integer>0</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>children</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Suspected Deep Tissue Injury</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>woundTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Stage I</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string>pressure ulcer stage 1(disorder)</string>
+				<key>SNOMED CT CID</key>
+				<integer>421076008</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>woundTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Stage II</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string>pressure ulcer stage 2(disorder)</string>
+				<key>SNOMED CT CID</key>
+				<integer>420324007</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>woundTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Stage III</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string>pressure ulcer stage 3(disorder)</string>
+				<key>SNOMED CT CID</key>
+				<integer>421927004</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>woundTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Stage IV</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>SNOMED CT FSN</key>
+				<string>pressure ulcer stage 4(disorder)</string>
+				<key>SNOMED CT CID</key>
+				<integer>420597008</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>woundTypeCode</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Unstageable</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>60</integer>
+				<key>SNOMED CT FSN</key>
+				<string>nonstageable pressure ulcer(disorder)</string>
+				<key>SNOMED CT CID</key>
+				<integer>421594008</integer>
+				<key>LOINC Code</key>
+				<string></string>
+				<key>woundTypeCode</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Arterial</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>woundTypeCode</key>
+		<integer>1</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Venous</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>woundTypeCode</key>
+		<integer>2</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Diabetic</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>woundTypeCode</key>
+		<integer>3</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Skin Tear</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>50</integer>
+		<key>woundTypeCode</key>
+		<integer>4</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Moisture Associated Dermatitis</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>60</integer>
+		<key>woundTypeCode</key>
+		<integer>5</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Burn</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>70</integer>
+		<key>valueTypeCode</key>
+		<integer>5</integer>
+		<key>woundTypeCode</key>
+		<integer>6</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>children</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>First Degree</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>sectionTitle</key>
+				<string>Burn Degree</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Second Degree</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>sectionTitle</key>
+				<string>Burn Degree</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Third Degree</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>sectionTitle</key>
+				<string>Burn Degree</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Unknown</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>sectionTitle</key>
+				<string>Burn Degree</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Heat Burn</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>sectionTitle</key>
+				<string>Burn Type/Source</string>
+				<key>valueTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>Specify source</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Chemical Burn</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>sectionTitle</key>
+				<string>Burn Type/Source</string>
+				<key>valueTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>Specify source</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Electric</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>sectionTitle</key>
+				<string>Burn Type/Source</string>
+				<key>valueTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>Specify source</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Radiation</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>sectionTitle</key>
+				<string>Burn Type/Source</string>
+				<key>valueTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>Specify source</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Surgical</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>80</integer>
+		<key>woundTypeCode</key>
+		<integer>7</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Trauma</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>90</integer>
+		<key>woundTypeCode</key>
+		<integer>8</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Cut</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>100</integer>
+		<key>woundTypeCode</key>
+		<integer>9</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Mixed</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>110</integer>
+		<key>woundTypeCode</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>General Abrasion</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>120</integer>
+		<key>valueTypeCode</key>
+		<integer>2</integer>
+		<key>woundTypeCode</key>
+		<integer>11</integer>
+		<key>placeHolder</key>
+		<string>Abrasion Cause</string>
+		<key>SNOMED CT FSN</key>
+		<string>abrasion and/or friction burn</string>
+		<key>SNOMED CT CID</key>
+		<integer>400181003</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Other</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>130</integer>
+		<key>valueTypeCode</key>
+		<integer>2</integer>
+		<key>placeHolder</key>
+		<string>Specify</string>
+		<key>woundTypeCode</key>
+		<integer>12</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+</array>
+</plist>

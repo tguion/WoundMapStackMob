@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Friction Exacerbation</key>
+	<string>An increase in the severity of a wound caused by friction.</string>
+	<key>Mobility Impairment</key>
+	<string>Any cause, physical or mental, that restricts the ability to move.</string>
+	<key>Perfusion Impediment</key>
+	<string>Any cause that blocks or hinders the act of pouring through or over; especially the passage of a fluid through the vessels of a specific organ. (7)</string>
+	<key>Sensory Impairment</key>
+	<string>Any cause that blocks or hinders the function of a sense (eg, sight, hearing, smell, etc.)</string>
+	<key>Musculoskeletal Risk Factor</key>
+	<string>A condition affecting the musculoskeletal systems and thereby impairing the patient&apos;s mobility.</string>
+	<key>Predisposing Mental/Neurological Condition</key>
+	<string>A neurological condition that increases a patient&apos;s risk of contracting a wound or hindering the healing of a wound</string>
+	<key>Tissure Perfusion Impediment</key>
+	<string>A condition tht impairs perfusion in body tissue</string>
+	<key>Uncontrolled Pain</key>
+	<string>Pain that cannot be or is not effectively controlled with medication of other interventions.</string>
+</dict>
+</plist>

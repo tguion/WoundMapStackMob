@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>identifier</key>
+		<string>pdf report aggregator</string>
+		<key>title</key>
+		<string>PDF Report Credits</string>
+		<key>viewTitle</key>
+		<string>WoundMap Store</string>
+		<key>proposition</key>
+		<string>You may need to get advice from other clinician, or submit patient information into chart.</string>
+		<key>description</key>
+		<string>Welcome to the WoundMap Store! Here you can purchase additional credits to use for printing or e-mailing your patient’s Clinical Assessment Document.  Credits can be purchased in bundles of 5, 10, and 25.</string>
+		<key>descHTML</key>
+		<string>&lt;p style=&apos;text-align:center;&apos;&gt;&lt;strong&gt;Purchase Report Credits&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Purchase credits to share patient data securely.  Packages of 5, 10, or 25 credits are available.  One credit allows one PDF report to be printed or emailed.&lt;/p&gt;</string>
+		<key>aggregatorFlag</key>
+		<true/>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>identifier</key>
+				<string>com.mobilehealthware.woundcare.woundmap.cad.print5.token</string>
+				<key>title</key>
+				<string>Purchase 5 Credits</string>
+				<key>proposition</key>
+				<string>If you want to print or send a copy via an email attachment of a patients wound care data and wound photos, you will want to purchase this product. The PDF document that is created will be useful for getting consultation from other wound care experts, or for filing in a patients chart.</string>
+				<key>description</key>
+				<string>Each credit may be used to print or securely e-mail a patient&apos;s Clinical Assessment Document.</string>
+				<key>descHTML</key>
+				<string>&lt;p&gt;&lt;strong&gt;5 PDF report credits&lt;/strong&gt; to be used to printed or sent as an attachment via email.&lt;/p&gt;&lt;p&gt;Each time you print or e-mail a Clinical Assessment Document your number of credits will go down by one.&lt;/p&gt;</string>
+				<key>tokenCount</key>
+				<integer>5</integer>
+				<key>aggregatorFlag</key>
+				<false/>
+				<key>sortRank</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>com.mobilehealthware.woundcare.woundmap.cad.print10.token</string>
+				<key>title</key>
+				<string>Purchase 10 Credits</string>
+				<key>proposition</key>
+				<string>If you want to print or send a copy via an email attachment of a patients wound care data and wound photos, you will want to purchase this product. The PDF document that is created will be useful for getting consultation from other wound care experts, or for filing in a patients chart.</string>
+				<key>description</key>
+				<string>Each credit may be used to print or securely e-mail a patient&apos;s Clinical Assessment Document.</string>
+				<key>descHTML</key>
+				<string>&lt;p&gt;&lt;strong&gt;10 PDF report credits&lt;/strong&gt; to be used to printed or sent as an attachment via email.&lt;/p&gt;&lt;p&gt;Each time you print or e-mail a Clinical Assessment Document your number of credits will go down by one.&lt;/p&gt;</string>
+				<key>tokenCount</key>
+				<integer>10</integer>
+				<key>aggregatorFlag</key>
+				<false/>
+				<key>sortRank</key>
+				<integer>1</integer>
+			</dict>
+			<dict>
+				<key>identifier</key>
+				<string>com.mobilehealthware.woundcare.woundmap.cad.print25.token</string>
+				<key>title</key>
+				<string>Purchase 25 Credits</string>
+				<key>proposition</key>
+				<string>If you want to print or send a copy via an email attachment of a patients wound care data and wound photos, you will want to purchase this product. The PDF document that is created will be useful for getting consultation from other wound care experts, or for filing in a patients chart.</string>
+				<key>description</key>
+				<string>Each credit may be used to print or securely e-mail a patient&apos;s Clinical Assessment Document.</string>
+				<key>descHTML</key>
+				<string>&lt;p&gt;&lt;strong&gt;25 PDF report credits&lt;/strong&gt; to be used to printed or sent as an attachment via email.&lt;/p&gt;&lt;p&gt;Each time you print or e-mail a Clinical Assessment Document your number of credits will go down by one.&lt;/p&gt;</string>
+				<key>tokenCount</key>
+				<integer>25</integer>
+				<key>aggregatorFlag</key>
+				<false/>
+				<key>sortRank</key>
+				<integer>2</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>woundTypeCode</key>
+		<integer>3</integer>
+		<key>identifier</key>
+		<string>com.etreasure.woundCare.WoundPUMP.diabetes</string>
+		<key>title</key>
+		<string>Diabetic Wound Package</string>
+		<key>viewTitle</key>
+		<string>Diabetic Wound Package</string>
+		<key>proposition</key>
+		<string>This is what is so great and why u want it</string>
+		<key>description</key>
+		<string>This is full description of what you get in HTML</string>
+		<key>descHTML</key>
+		<string>&lt;h1&gt;Diabetes&lt;/h1&gt;&lt;p&gt;Good product.&lt;/p&gt;&lt;p&gt;You will be happy you purchased it.&lt;/p&gt;</string>
+		<key>aggregatorFlag</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>com.etreasure.woundCare.WoundPUMP.pump</string>
+		<key>title</key>
+		<string>FROM PLIST - Risk Assessment Subnodes</string>
+		<key>viewTitle</key>
+		<string>Risk Assessment Subnodes</string>
+		<key>proposition</key>
+		<string>This is really good assessment content so buy it.  </string>
+		<key>description</key>
+		<string>FROM PLIST - Testing case for IAP.  Subnodes of Risk Assessment are getting the same IAP.</string>
+		<key>descHTML</key>
+		<string>&lt;h1&gt;Risk Assessment subnodes&lt;/h1&gt;&lt;p&gt;Good product.&lt;/p&gt;&lt;p&gt;You will be happy you purchased it.&lt;/p&gt;</string>
+		<key>aggregatorFlag</key>
+		<false/>
+	</dict>
+</array>
+</plist>

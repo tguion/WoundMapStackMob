@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Frequency of Assessment</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Qshift</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Qday</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>options</key>
+				<string></string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Other</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>inputTypeCode</key>
+				<integer>2</integer>
+				<key>label</key>
+				<string>Specify</string>
+				<key>placeHolder</key>
+				<string>Specify</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Responsibility</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>RN</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>LPN</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>APRN</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>CNA</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string>some string (some classification)</string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Other</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>inputTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>Specify</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Turgor</string>
+		<key>definition</key>
+		<string>The skin&apos;s ability to change shape and return to normal (elasticity)</string>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>SNOMED CT FSN</key>
+		<string>Skin Turgor(observable entity)</string>
+		<key>SNOMED CT CID</key>
+		<integer>26669000</integer>
+		<key>LOINC Code</key>
+		<string>39109-4</string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Good elasticity (normal)</string>
+				<key>definition</key>
+				<string>Normal skin turgor is present when the skin returns to its original contour rapidly after being pinched</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string>skin turgor normal(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>297956000</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Poor, decreased elasticity</string>
+				<key>definition</key>
+				<string>Decreased skin turgor is present when the skin is released and it remains pinched, and slowly returns to its oniginal contour.  This is an abnormal finding and is mainly caused by dehydration</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string>decreased skin turgor(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>425244000</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Tenting</string>
+				<key>definition</key>
+				<string>Tenting is evidenced by a slow return of the skin to its normal position after being pinched, a sign of either dehydration or aging, or both</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Skin Color</string>
+		<key>definition</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>SNOMED CT FSN</key>
+		<string>color of skin(observable entity)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364533002</integer>
+		<key>LOINC Code</key>
+		<string>39107-8</string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Normal for ethnic group</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string>skin normal color(findings)</string>
+				<key>SNOMED CT CID</key>
+				<integer>297952003</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Ashen</string>
+				<key>definition</key>
+				<string>A grayis cast to the skin is abnormal.  A grayish cast may be associated with chronic anemia.  Dusky may be a synonym for ashen.</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Pale</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string>pale-symptom(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>267029006</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Cyanotic</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string>cyanosis of skin(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>119419001</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Flushed</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>SNOMED CT FSN</key>
+				<string>flushed complexion(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>248213001</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Jaundiced</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>60</integer>
+				<key>SNOMED CT FSN</key>
+				<string>Jaundice(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>18165001</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Mottled</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>70</integer>
+				<key>SNOMED CT FSN</key>
+				<string>mottling of skin(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>406128001</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Temperature</string>
+		<key>definition</key>
+		<string>A Holistic evaluation of the surface temperature of the patient&apos;s skin</string>
+		<key>sortRank</key>
+		<integer>50</integer>
+		<key>SNOMED CT FSN</key>
+		<string>Temperature of the skin(observable entity)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364537001</integer>
+		<key>LOINC Code</key>
+		<string>44968-6</string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Cool</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string>cool skin(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>427733005</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Warm(normal)</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string>warm skin(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>102599008</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Cold</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string>feels cold(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>64713002</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Hot</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string>Feels hot(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>373932008</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Moisture</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>60</integer>
+		<key>SNOMED CT FSN</key>
+		<string>Moistness of skin(observable)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364532007</integer>
+		<key>LOINC Code</key>
+		<string>39129-2</string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Normal</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Moist</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>SNOMED CT FSN</key>
+				<string>moist skin(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>16514006</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Diaphoretic</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>SNOMED CT FSN</key>
+				<string>excessive sweating(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>52613005</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Clammy</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Condition</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>70</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Dry</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>SNOMED CT FSN</key>
+				<string>Dry Skin(finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>16386004</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Extremely Dry</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Normal</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Oily</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Friable</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>SNOMED CT FSN</key>
+				<string>Fragile Skin(clinical finding)</string>
+				<key>SNOMED CT CID</key>
+				<integer>247427007</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+</array>
+</plist>

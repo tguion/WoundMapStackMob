@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Licensed Practical Nurse</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Registered Nurse</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>SNOMED CT FSN</key>
+		<string>some string (some classification)</string>
+		<key>SNOMED CT CID</key>
+		<integer>364535009</integer>
+		<key>LOINC Code</key>
+		<string>72284-3 (Skin assessment panel)</string>
+	</dict>
+</array>
+</plist>

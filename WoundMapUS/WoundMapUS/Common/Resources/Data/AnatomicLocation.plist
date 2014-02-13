@@ -1,0 +1,1725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Location</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Elbow</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of elbow(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>74757004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Heel</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of heel(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>84607009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ischial Tuberosity</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Knee</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of knee(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>63464009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Malleolus</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of malleolus(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>419975006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trochanter</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Occiptial Region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of occipital region</string>
+			<key>SNOMED CT CID</key>
+			<integer>79951008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Forehead</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of forehead(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>68698007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scapula</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of scapula(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>45980000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ear</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of ear(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>1902009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scrotum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of scrotum(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>81992007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sacrum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>120</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Abdomen</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>130</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of abdomen(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>75093004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Back</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>140</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of back(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>66643007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Eye</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>150</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of eye region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>362916000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Wrist</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>160</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of wrist(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>24785000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Face</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>170</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of face(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>73897004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Foot</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>180</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of foot(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>60496002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hand</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>190</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hand(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>33712006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Head</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>200</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of head(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>117551010</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Hip</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>210</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hip(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49812005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Leg</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>220</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Neck</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>230</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of neck(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>43081002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Rectum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>240</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Shoulder</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>250</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of shoulder(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76552005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Buttocks</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>260</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of buttock(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>22180002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chest</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>270</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Ankle</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>280</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of ankle(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>67269001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Arm</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>290</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of upper arm(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>371309009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Forearm</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>290</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of lower arm(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>14975008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mouth</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>300</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin part of mouth region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>284539009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Achilles</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>310</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Axilla</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>320</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of axilla(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76261009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Breast</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>330</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of breast(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>82038008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Calf</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>340</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of calf of leg(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>51059006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Chin</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>350</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of chin(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>23747009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Coccyx</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>360</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>sectionTitle</key>
+			<string>Common Locations</string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Finger</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>370</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of finger(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>56213003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Flank</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>380</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of flank(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>34284005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Groin</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>390</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of inguinal region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>39687006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Gum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>400</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>gingival structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>113279002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Iliac Crest</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>410</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Jaw</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>420</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of jaw(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>41935005</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Labia</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>430</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of labium pudendum(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>73058008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lip</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>440</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of lip(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>88089004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lumbar</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>450</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of lumbar region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>286591006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mucous Membrane</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>460</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>mucous membrane structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>414781009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nail</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>470</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>nail structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>72651009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nares</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>480</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Nose</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>490</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of nose(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>113179006</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Parietal</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>500</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of parietal region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>21672008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pelvic region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>510</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of pelvis(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>82654007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Penis</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>520</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin of penis(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>35900000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Perineum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>530</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of perineum(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>48014002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Peri-rectum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>540</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Scalp</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>550</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of scalp(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>43067004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sternum</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>560</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Suprapubic region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>570</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of hypogastric region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>367578008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Temporal region</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>580</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of temple(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>244081009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Thigh</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>590</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of thigh(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>371305003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Toe</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>600</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of toe(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>52034004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Tongue</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>610</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>tongue surface region(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>314870004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Umbilicus</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>620</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>skin structure of umbilicus(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>315003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Vagina</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>630</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string>vaginal structure(body structure)</string>
+			<key>SNOMED CT CID</key>
+			<integer>76784001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Other</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>640</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>Other Location</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Qualifier</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Left</string>
+			<key>common title</key>
+			<string>Left</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>left(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>7771000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Right</string>
+			<key>common title</key>
+			<string>Right</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>right(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>24028007</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Upper</string>
+			<key>common title</key>
+			<string>Upper</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>upper(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>261183002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Mid</string>
+			<key>common title</key>
+			<string>Mid</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>mid(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255562008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lower</string>
+			<key>common title</key>
+			<string>Lower</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>lower(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>261122009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Anterior</string>
+			<key>common title</key>
+			<string>Front</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>anterior(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255549009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Posterior</string>
+			<key>common title</key>
+			<string>Back</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>70</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>posterior(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255551008</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Proximal</string>
+			<key>common title</key>
+			<string>Inside</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>80</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>proximal(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>40415009</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Distal</string>
+			<key>common title</key>
+			<string>Outside</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>90</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>distal(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>46053002</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Medial</string>
+			<key>common title</key>
+			<string>Middle</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>100</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>medial(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>255561001</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Lateral</string>
+			<key>common title</key>
+			<string>Side</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>110</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>lateral(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>49370004</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Superior</string>
+			<key>common title</key>
+			<string>Above/Higher</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>120</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>superior(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>264217000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Inferior</string>
+			<key>common title</key>
+			<string>Below/Under</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>130</integer>
+			<key>inputTypeCode</key>
+			<integer>11</integer>
+			<key>SNOMED CT FSN</key>
+			<string>inferor(qualifier value)</string>
+			<key>SNOMED CT CID</key>
+			<integer>261089000</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>1</string>
+			<key>common title</key>
+			<string>Digit 1</string>
+			<key>prompt</key>
+			<string>Select Digits</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>140</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>2</string>
+			<key>common title</key>
+			<string>Digit 2</string>
+			<key>prompt</key>
+			<string>Select Digits</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>150</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>3</string>
+			<key>common title</key>
+			<string>Digit 3</string>
+			<key>prompt</key>
+			<string>Select Digits</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>160</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>4</string>
+			<key>common title</key>
+			<string>Digit 4</string>
+			<key>prompt</key>
+			<string>Select Digits</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>170</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>5</string>
+			<key>common title</key>
+			<string>Digit 5</string>
+			<key>prompt</key>
+			<string>Select Digits</string>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>sortRank</key>
+			<integer>180</integer>
+			<key>inputTypeCode</key>
+			<integer>5</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Joins</key>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Elbow</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Heel</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Ischial Tuberosity</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Knee</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Malleolus</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Trochanter</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Occiptial Region</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Forehead</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Scapula</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Ear</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Scrotum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Sacrum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Abdomen</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Back</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Eye</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Wrist</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Face</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Foot</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Hand</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Head</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Hip</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Leg</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Neck</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Rectum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Shoulder</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Buttocks</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Chest</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Ankle</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Arm</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Forearm</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Ankle</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Achilles</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Axilla</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Breast</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Calf</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Chin</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Coccyx</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Flank</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Groin</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Gum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Iliac Crest</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Jaw</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Labia</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Lip</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Lumbar</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Mucous Membrane</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Nail</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Nares</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Nose</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Parietal</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Pelvic region</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Penis</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Perineum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Peri-rectum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Scalp</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Sternum</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Suprapubic region</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Temporal region</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Thigh</string>
+			<key>groups</key>
+			<string>Left,Right|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Tongue</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Umbilicus</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Vagina</string>
+			<key>groups</key>
+			<string>Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Finger</string>
+			<key>groups</key>
+			<string>1,2,3,4,5|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Toe</string>
+			<key>groups</key>
+			<string>1,2,3,4,5|Upper,Mid,Lower|Anterior,Posterior|Proximal,Distal|Medial,Lateral|Superior,Inferior</string>
+		</dict>
+	</array>
+</dict>
+</plist>

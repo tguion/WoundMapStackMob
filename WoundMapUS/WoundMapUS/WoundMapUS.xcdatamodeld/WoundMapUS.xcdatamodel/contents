@@ -61,6 +61,31 @@
             <entry key="determinerCode" value="INSTANCE"/>
         </userInfo>
     </entity>
+    <entity name="WMParticipant" representedClassName="WMParticipant" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateLastSignin" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="permissions" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="wmparticipant_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
+    </entity>
+    <entity name="WMParticipantType" representedClassName="WMParticipantType" syncable="YES">
+        <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmparticipanttype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="participants" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="WMParticipant" inverseName="participantType" inverseEntity="WMParticipant" syncable="YES"/>
+    </entity>
     <entity name="WMPatient" representedClassName="WMPatient" syncable="YES">
         <attribute name="archivedFlag" attributeType="Boolean" defaultValueString="NO">
             <userInfo/>
@@ -142,12 +167,14 @@
     </entity>
     <elements>
         <element name="User" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMAddress" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMOrganization" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMOrganization" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMParticipantType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

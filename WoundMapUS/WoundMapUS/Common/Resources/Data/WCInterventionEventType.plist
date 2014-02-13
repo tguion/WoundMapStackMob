@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Plan</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>10</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Begin</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>20</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Provide</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>30</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Complete</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>40</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Cancel</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>50</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Discontinue</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>60</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Continue</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>70</integer>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Revise</string>
+		<key>loincCode</key>
+		<string></string>
+		<key>snomedCID</key>
+		<integer>0</integer>
+		<key>snomedFSN</key>
+		<string></string>
+		<key>sortRank</key>
+		<integer>80</integer>
+	</dict>
+</array>
+</plist>

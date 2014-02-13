@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Pressure Ulcer</key>
+	<string>A pressure ulcer is localized injury to the skin and/or underlying tissue usually over a bony prominence, as a result of pressure, or pressure in combination with shear. A number of contributing or confounding factors are also associated with pressure ulcers; the significance of these factors is yet to be elucidated. (1)
+</string>
+	<key>Stage I</key>
+	<string>Non-blanchable erythema-Intact skin with non-blanchable redness of a localized area usually over a bony prominence. Darkly pigmented skin may not have visible blanching; its color may differ from the surrounding area. The area may be painful, firm, soft, warmer or cooler as compared to adjacent tissue. Stage I may be difficult to detect in individuals with dark skin tones. May indicate “at risk” persons. (1)</string>
+	<key>Stage II</key>
+	<string>Partial thickness loss of dermis presenting as a shallow open ulcer with a red pink wound bed, without slough. May also present as an intact or open/ruptured serum-filled or sero-sanginous filled blister. Presents as a shiny or dry shallow ulcer without slough or bruising*. This category should not be used to describe skin tears, tape burns, incontinence associated dermatitis, maceration or excoriation. *Bruising indicates deep tissue injury. (1)</string>
+	<key>Stage III</key>
+	<string>Full thickness skin loss-Full thickness tissue loss. Subcutaneous fat may be visible but bone, tendon or muscle are not exposed. Slough may be present but does not obscure the depth of tissue loss. May include undermining and tunneling. The depth of a Category/Stage III pressure ulcer varies by anatomical location. The bridge of the nose, ear, occiput and malleolus do not have (adipose) subcutaneous tissue and Category/Stage III ulcers can be shallow. In contrast, areas of significant adiposity can develop extremely deep Category/Stage III pressure ulcers. Bone/tendon is not visible or directly palpable. (1)</string>
+	<key>Stage IV</key>
+	<string>Full thickness tissue loss-Full thickness tissue loss with exposed bone, tendon or muscle. Slough or eschar may be present. Often includes undermining and tunneling. The depth of a Category/Stage IV pressure ulcer varies by anatomical location. The bridge of the nose, ear, occiput and malleolus do not have (adipose) subcutaneous tissue and these ulcers can be shallow. Category/Stage IV ulcers can extend into muscle and/or supporting structures (e.g., fascia, tendon or joint capsule) making osteomyelitis or osteitis likely to occur. Exposed bone/muscle is visible or directly palpable. (1)</string>
+	<key>Unstageable</key>
+	<string>Full thickness skin or tissue loss – depth unknown-Full thickness tissue loss in which actual depth of the ulcer is completely obscured by slough (yellow, tan, gray, green or brown) and/or eschar (tan, brown or black) in the wound bed. Until enough slough and/or eschar are removed to expose the base of the wound, the true depth cannot be determined; but it will be either a Category/Stage III or IV. Stable (dry, adherent, intact without erythema or fluctuance) eschar on the heels serves as “the body’s natural (biological) cover” and should not be removed. (1)</string>
+	<key>Suspected Deep Tissue Injury(sDTI)</key>
+	<string>Purple or maroon localized area of discolored intact skin or blood-filled blister due to damage of underlying soft tissue from pressure and/or shear. The area may be preceded by tissue that is painful, firm, mushy, boggy, warmer or cooler as compared to adjacent tissue. Deep tissue injury may be difficult to detect in individuals with dark skin tones. Evolution may include a thin blister over a dark wound bed. The wound may further evolve and become covered by thin eschar. Evolution may be rapid exposing additional layers of tissue even with optimal treatment. (1)</string>
+	<key>Arterial</key>
+	<string>Ulcers caused by peripheral arterial disease, which commonly occur on the tips and tops of the toes, tops of the foot, or distal to the medial malleolus. (2)</string>
+	<key>Venous</key>
+	<string>Ulcers caused by peripheral venous disease, which most commonly occur proximal to the medial or lateral malleolus, above the inner or outer ankle, or on the lower calf area of the leg. (2)</string>
+	<key>Diabetic</key>
+	<string>Ulcers caused by the neuropathic and small blood vessel complications of diabetes. Diabetic foot ulcers typically occur over the plantar (bottom) surface of the foot on load bearing areas such as the ball of the foot. Ulcers are usually deep, with necrotic tissue, moderate amounts of exudate, and callused would edges. The wounds are very regular in shape and the wound edges are even with a punched-out appearance. These wounds are typically not painful. (2)</string>
+	<key>Skin Tear</key>
+	<string>Skin tears are a result of shearing, friction or trauma to the skin that causes a separation of the skin layers. They can be partial or full thickness. (2)</string>
+	<key>Moisture Associated Damage</key>
+	<string>Moisture associated skin damage is a result of skin damage caused by moisture rather than pressure. It is caused by sustained exposure to moisture which can be caused, for example, by incontinence, wound exudate and perspiration. MASD is also referred to as incontinence dermatitis. (2)</string>
+	<key>Burn</key>
+	<string>Skin and tissue injury caused by heat or chemicals and may be in any stage of healing. (2) A lesion caused by heat or any cauterizing agent, including friction, caustic agents, electricity or electromagnetic energy.  Types of burns resulting from different agents are relatively specific and diagnostic.  The division of burns into three types (e.g., superficial, partial thickness, and full thickness) reflects the severity of skin damage.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Surgical</key>
+	<string>Any healing and non-healing, open or closed surgical incisions, skin grafts or drainage sites. (2) A cut; a surgical wound; a division of the soft parts made with a knife.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Rash</key>
+	<string>Can range from redness of the skin or small red bumps to swelling, redness, and larger blisters.  Can be from multiple causes. Colloquial term for a cutaneous eruption.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Trauma</key>
+	<string>(Abrasion) Caused by friction against rough surface; Superficial; Example Road rash - lines of scraped skin with tiny spots of bleeding. (3) An excoriation, or circumscribed removal of the superficial layers of skin or mucous membranes; A scraping away of a portion of the surface.  Reference:  Stedman&apos;s Medical Dictionary</string>
+	<key>Cut</key>
+	<string>(Laceration) A torn or jagged wound, tear. Caused by blunt trauma (such as a blow, fall, or collision; little or profuse bleeding; Ragged edges do not readily line up. (4 A torn or jagged wound caused by blunt trauma; the process or act of tearing the tissues.  Reference:  Stedman&apos;s Medical Dictionary   </string>
+	<key>Mixed</key>
+	<string>A wound that has a combination of types such as diabetic foot ulcer on an area of pressure</string>
+</dict>
+</plist>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Statuses</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Planned</string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>364535009</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+			<key>activeFlag</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>In Process</string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>364535009</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+			<key>activeFlag</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Completed</string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>364535009</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+			<key>activeFlag</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Cancelled</string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>364535009</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+			<key>activeFlag</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Discontinued</string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>364535009</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+			<key>activeFlag</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Not Adopted</string>
+			<key>sortRank</key>
+			<integer>60</integer>
+			<key>definition</key>
+			<string>some definition</string>
+			<key>SNOMED CT FSN</key>
+			<string>some string (some classification)</string>
+			<key>SNOMED CT CID</key>
+			<integer>364535009</integer>
+			<key>LOINC Code</key>
+			<string>72284-3 (Skin assessment panel)</string>
+			<key>activeFlag</key>
+			<false/>
+		</dict>
+	</array>
+	<key>Joins</key>
+	<array>
+		<dict>
+			<key>Planned</key>
+			<string>In Process,Not Adopted</string>
+		</dict>
+		<dict>
+			<key>In Process</key>
+			<string>Completed,Cancelled,Discontinued</string>
+		</dict>
+		<dict>
+			<key>In Process</key>
+			<string>Completed,Cancelled,Discontinued</string>
+		</dict>
+	</array>
+</dict>
+</plist>

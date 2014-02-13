@@ -28,6 +28,10 @@
      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
           persistentStore:(NSPersistentStore *)store
 {
+    if ([username length] == 0) {
+        return nil;
+    }
+    // else
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     if (nil != store) {
         [request setAffectedStores:[NSArray arrayWithObject:store]];

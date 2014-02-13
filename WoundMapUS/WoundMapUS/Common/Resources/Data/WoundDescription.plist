@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Abrasions</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Burn</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>Burn Degree</key>
+			<array>
+				<dict>
+					<key>title</key>
+					<string>First Degree</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>10</integer>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Second Degree</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>20</integer>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Third Degree</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>30</integer>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Unknown</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>40</integer>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+			</array>
+			<key>Burn Type/Source</key>
+			<array>
+				<dict>
+					<key>title</key>
+					<string>Heat Burn</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>10</integer>
+					<key>inputTypeCode</key>
+					<integer>2</integer>
+					<key>placeHolder</key>
+					<string>specify source of burn</string>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Chemical Burn</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>20</integer>
+					<key>inputTypeCode</key>
+					<integer>2</integer>
+					<key>placeHolder</key>
+					<string>specify source of burn</string>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Electric</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>30</integer>
+					<key>inputTypeCode</key>
+					<integer>2</integer>
+					<key>placeHolder</key>
+					<string>specify source of burn</string>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Radiation</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>40</integer>
+					<key>inputTypeCode</key>
+					<integer>2</integer>
+					<key>placeHolder</key>
+					<string>specify source of burn</string>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Pressure Ulcer</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>children</key>
+			<array>
+				<dict>
+					<key>title</key>
+					<string>Suspected Deep Tissue Injury</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>10</integer>
+					<key>SNOMED CT FSN</key>
+					<string></string>
+					<key>SNOMED CT CID</key>
+					<integer>0</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Stage I</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>20</integer>
+					<key>SNOMED CT FSN</key>
+					<string>pressure ulcer stage 1(disorder)</string>
+					<key>SNOMED CT CID</key>
+					<integer>421076008</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Stage II</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>30</integer>
+					<key>SNOMED CT FSN</key>
+					<string>pressure ulcer stage 2(disorder)</string>
+					<key>SNOMED CT CID</key>
+					<integer>420324007</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Stage III</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>40</integer>
+					<key>SNOMED CT FSN</key>
+					<string>pressure ulcer stage 3(disorder)</string>
+					<key>SNOMED CT CID</key>
+					<integer>421927004</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Stage IV</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>50</integer>
+					<key>SNOMED CT FSN</key>
+					<string>pressure ulcer stage 4(disorder)</string>
+					<key>SNOMED CT CID</key>
+					<integer>420597008</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>Unstageable</string>
+					<key>definition</key>
+					<string></string>
+					<key>sortRank</key>
+					<integer>60</integer>
+					<key>SNOMED CT FSN</key>
+					<string>nonstageable pressure ulcer(disorder)</string>
+					<key>SNOMED CT CID</key>
+					<integer>421594008</integer>
+					<key>LOINC Code</key>
+					<string></string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>General Abrasion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>what object/surface/condition caused the abrasion</string>
+			<key>SNOMED CT FSN</key>
+			<string>abrasion and/or friction burn</string>
+			<key>SNOMED CT CID</key>
+			<integer>400181003</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Incisions</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Surgical</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Non-Surgical</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>what object created the incision</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Lacerations</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Laceration</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>what created the laceration</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Punctures</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>General Puncture Wound</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>what object caused the puncture</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Bite (human)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Bite (animal)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>30</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>what type of animal bit the patient</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Sting</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>40</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>what type of insect stung the patient</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Gun Shot Wound (GSW)</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>50</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>Ballistics</key>
+			<dict>
+				<key>title</key>
+				<string>Ballistic Caliber</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>inputTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>specify ballistic caliber </string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<key>Puncture Type</key>
+			<dict>
+				<key>title</key>
+				<string>Entrance and/or Exit Wound?</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>specify entrance and/or exit wound</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</dict>
+	</array>
+	<key>Avulsions</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Avulsion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+			<key>Incident</key>
+			<dict>
+				<key>title</key>
+				<string>Incident causing the Avulsion</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>inputTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>specify the incident</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<key>Reattachment</key>
+			<dict>
+				<key>title</key>
+				<string>Reattachment</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>2</integer>
+				<key>placeHolder</key>
+				<string>specify reattachment status</string>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</dict>
+	</array>
+	<key>Contusion</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Contusion</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>specify cause of contusion</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Amputation</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Surgical Amputation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>specify amputation site</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>title</key>
+			<string>Trauma Amputation</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>20</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>specify amputation site</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>Other</key>
+	<array>
+		<dict>
+			<key>title</key>
+			<string>Other Wound Type</string>
+			<key>definition</key>
+			<string></string>
+			<key>sortRank</key>
+			<integer>10</integer>
+			<key>inputTypeCode</key>
+			<integer>2</integer>
+			<key>placeHolder</key>
+			<string>describe wound type</string>
+			<key>SNOMED CT FSN</key>
+			<string></string>
+			<key>SNOMED CT CID</key>
+			<integer>0</integer>
+			<key>LOINC Code</key>
+			<string></string>
+		</dict>
+	</array>
+</dict>
+</plist>

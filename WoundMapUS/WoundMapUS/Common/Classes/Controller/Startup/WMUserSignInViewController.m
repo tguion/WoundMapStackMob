@@ -10,6 +10,7 @@
 #import "User.h"
 #import "CoreDataHelper.h"
 #import "WCAppDelegate.h"
+#import "StackMob.h"
 
 @interface WMUserSignInViewController () <UITextFieldDelegate>
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
@@ -30,21 +31,6 @@
 
 @implementation WMUserSignInViewController
 #define debug 1
-
-- (WCAppDelegate *)appDelegate
-{
-    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-- (CoreDataHelper *)coreDataHelper
-{
-    return self.appDelegate.coreDataHelper;
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    return [self.coreDataHelper.stackMobStore contextForCurrentThread];
-}
 
 #pragma mark - ACCOUNT
 

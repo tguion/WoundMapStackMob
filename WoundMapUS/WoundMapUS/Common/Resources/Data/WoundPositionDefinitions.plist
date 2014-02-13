@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Anterior</key>
+	<string>Situated toward the front of the body</string>
+	<key>Posterior</key>
+	<string>Situated at or toward the hind part of the body</string>
+	<key>Distal</key>
+	<string>Situated away from the point of attachment, origin or a central point</string>
+	<key>Proximal</key>
+	<string>Situated next to or neat the point of attachment or origin</string>
+	<key>Medial</key>
+	<string>In the middle or extending toward the median axis of the body</string>
+	<key>Lateral</key>
+	<string>Relating to the side</string>
+	<key>Superior</key>
+	<string>Situated toward the head and further away from the feet</string>
+	<key>Inferior</key>
+	<string>Situated below and closer to the feet than any other part</string>
+	<key>New item</key>
+	<string></string>
+</dict>
+</plist>

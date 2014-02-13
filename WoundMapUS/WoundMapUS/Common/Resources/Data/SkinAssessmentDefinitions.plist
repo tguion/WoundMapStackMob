@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Skin Color</key>
+	<string>A holistic evaluation of the color of the patient&apos;s skin adjusted for ethnicity, used as an indicator of systemic problems.</string>
+	<key>Normal for Ethnic Group</key>
+	<string>Normal for baseline; variation in ethnic groups; pigmentation (color and pigmentation = appropriate for race)</string>
+	<key>Cyanotic</key>
+	<string>Cyanosis is a dusky blue appearance of the fingers, lips or mucous membranes, and is abnormal in both light-and dark-skinned individuals.  Cyanosis occurs when there is greater than 5 g/dL of deoxygentated hemoglobin in the blood.  The earlobes, lower eyelids, lips, oral mucosa, nailbeds, and palmar and plantar surfaces may be especially cyanotic.  Dark-skinned individuals have an ashen-gray to pale tint, and the lips and tongue are good indicators of cyanosis. </string>
+	<key>Flushed</key>
+	<string>Sustained bright red or pink coloration in light-skinned individuals is abnormal.  Dark-skinned individuals may have no underlying change in coloration.  This may occur because of dilated superficial blood vessels, increased blood flow, febrile states, local inflammatory conditions, or excessive alcohol intake.</string>
+	<key>Jaundiced</key>
+	<string>Jaundice is a yellow-green to orange cast or coloration of the skin, sclera, mucous membranes, fingernails, and palmar or plantar surfaces in the light-skinned and may appear as yellow staining in the sclera, hard palate, and palmar or plantar surfaces in dark-skinned individuals. Jaundice is caused by an increased serum bilirubin level of greater than 2 mg/dL associated with liver disease or hemolytic disease.   This is an abnormal finding.</string>
+	<key>Mottled</key>
+	<string>Patchy areas of white and darker pigmentation on the skin is abnormal.  </string>
+	<key>Pale</key>
+	<string>A pale cast to the skin that may be most evident in the face, mucous membranes, lips and nailbeds is abnormal in light-skinned individuals.  A yellowish-brown to ashen-gray cast to the skin along with pale or gray lips, mucous membranes, and nailbeds is abnormal in dark-skinned individuals.  Pallor is due to decreased visibility of the normal oxyhemoglobin.  This can occur when the patient has decreased blood flow in the supervicial vessels, as in shock or syncope, or when there is a decreased amount of serum oxyhemoglobin, as in anemia.</string>
+	<key>Ruddy item</key>
+	<string>A bright red to ruddy, sustained appearance that is evident on the integument, mucous membranes, and palmar or plantar surfaces is abnormal in both light- and dark-skinned individuals.  Polycythemia is an elevation in red blood cells and results in this ruddy appearance.   &quot;Black olive&quot; cast; florid.</string>
+	<key>Dusky</key>
+	<string>Gray pallor that is different (worse) than cyanosis </string>
+	<key>Skin Turgor</key>
+	<string>The skin&apos;s ability to change shape and return to normal (elasticity).  (Source: Medline Plus)</string>
+	<key>Turgor-Normal/Good</key>
+	<string>Normal skin turgor is present when the skin returns to its original contour rapidly after being pinched. (Ref: Zator Estes)</string>
+	<key>Turgor-Decreased/Poor</key>
+	<string>Decreased skin turgor is present when the skin is released and it remains pinched, and slowly returns to its oniginal contour.  This is an abnormal finding and is mainly caused by dehydration.  (Ref: Zator Estes)</string>
+	<key>Tenting</key>
+	<string>Tenting is evidenced by a slow return of the skin to its normal position after being pinched, a sign of either dehydration or aging, or both.  (Ref: Zator Estes)</string>
+	<key>Skin Temperature</key>
+	<string>A holistic evaluation of the surface temperature of the patient&apos;s skin.</string>
+	<key>Cool</key>
+	<string>Skin that is cool to the touch is abnorml and may be generalized or localized.  It can be indicative of an early sign of shock or some other circulatory dysfunction.  Localized hypothermia is indicative of arterial insufficiency in the affected area.  (Ref: Zator Estes)</string>
+	<key>Warm (Normal)</key>
+	<string>It is a normal finding for skin surfaces to be warm and equal bilaterally.  Hands and feet may be slightly cooler than the rest of the body.  (Ref: Zator Estes)</string>
+	<key>Cold</key>
+	<string>Hypothermia, or cold skin, is indicative of shock or some other circulatory dysfunction.  (Ref: Zator Estes)</string>
+	<key>Hot</key>
+	<string>Hyperthermia, or hot skin, is the excessive warming of the skin and may be generalized or localized.  If generalized, it may be indicative of a febrile state, hyperthyroidism, or increased metabolic state.  Localized hyperthermia may be caused by infection, trauma, sunburn or windburn.  (Ref: Zator Estes)</string>
+	<key>Skin Moistness</key>
+	<string>A holistic evaluation of the moisture level of the patient&apos;s skin, used as an indicator of systemic problems.</string>
+	<key>Normal Moistness</key>
+	<string>Normally the skin is dry with a minimum of perspiration.  Normal perspiration is most likely to occur on the hands, axilla, face, and in between the skin folds.  (Ref: Zator Estes)</string>
+	<key>Moist</key>
+	<string>Presence of water in trace amounts.  (Ref: Zator Estes)</string>
+	<key>Diaphoretic</key>
+	<string>Diaphoresis is the profuse production of perspiration.  This is an abnormal finding.  Causes may include hyperthyroidism, increased metabolic rate, spesis, anxiety or pain.  (Ref: Zator Estes)</string>
+	<key>Clammy</key>
+	<string>Clammy is defined as moist, cool and pale skin.  This is an abnormal finding.  Causes may include shock, stress, anxiety, sepsis, hypoglycemia and heat exhaustion, amont others.  &quot;moist, cool, an sticky to the touch&quot;.  (Ref: Zator Estes)</string>
+</dict>
+</plist>

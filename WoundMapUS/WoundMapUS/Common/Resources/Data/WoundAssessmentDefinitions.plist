@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Dimensions</key>
+	<string>The length, width and depth of a wound. (5)</string>
+	<key>Length</key>
+	<string>Measurement of longest length from head to toe(12-6). (2)</string>
+	<key>Width</key>
+	<string>Measure widest width of the pressure ulcer side to side perpendicular (90° angle) to length. (2)</string>
+	<key>Depth</key>
+	<string>Measurement of the deepest aspect of the wound to the skin level. (2)</string>
+	<key>Tissue present in wound</key>
+	<string>Tissue types persent in wound bed. (5)</string>
+	<key>Epithelial</key>
+	<string>New skin that is light pink and shiny (even in persons with darkly pigmented skin). In Stage 2 pressure ulcers, epithelial tissue is seen in the center and edges of the ulcer. In full thickness Stage 3 and 4 pressure ulcers, epithelial tissue advances from the edges of the wound. (2)</string>
+	<key>Granulation (red)</key>
+	<string>Red tissue with “cobblestone” or bumpy appearance, bleeds easily when injured. (2)</string>
+	<key>Slough (yellow)</key>
+	<string>Non-viable yellow, tan, gray, green or brown tissue; usually moist, can be soft, stringy and mucinous in texture. Slough may be adherent to the base of the wound or present in clumps throughout the wound bed. (2)</string>
+	<key>Fibrinous (white)</key>
+	<string>May appear prior to wound opening; skin surface is white or gray</string>
+	<key>Eschar (black)</key>
+	<string>Dead or devitalized tissue that is hard or soft in texture; usually black, brown, or tan in color, and may appear scab like. Necrotic tissue and eschar are usually firmly adherent to the base of the wound and often the sides/ edges of the wound. (2)</string>
+	<key>Bone</key>
+	<string>Shiny, smooth, milky white appearance when healthy. (4)</string>
+	<key>Muscle</key>
+	<string>Pink to dark red, firm, highly vascular, striated. (4)</string>
+	<key>Tendon</key>
+	<string>Gleaming yellow or white, shiny when healthy, strong fibrous tissue, attaches muscle to bone. (4)</string>
+	<key>Exudate</key>
+	<string>Accumulated fluid in a wound (5)</string>
+	<key>Serous</key>
+	<string>Clear or pale yellow fluid that is thin/ watery. (4)</string>
+	<key>Sero/Sangunous</key>
+	<string>Serous and blood tinged may be thin, watery and pale pink to pale red. (4)</string>
+	<key>Purulent</key>
+	<string>Pus made up of inflammatory cell and tissue debris often is green/brown or yellow and is not normal in a wound. (4)</string>
+	<key>Bloody</key>
+	<string>Sanguineous (fresh bleeding). (4)</string>
+	<key>Wound odor</key>
+	<string>Strong, foul, pungent, fecal, musty, sweet smell,  noticeable AFTER wound has been cleaned. (5)</string>
+	<key>Scant</key>
+	<string>Tiny amount noted when dressing is removed. (5)</string>
+	<key>Minimal</key>
+	<string>Small amount detectable when dressing removed  less than 33% of the dressing surface. (5)</string>
+	<key>Moderate</key>
+	<string>Exudate is covering less than 67% of the dressing surface  May soak through secondary dressing. (5)</string>
+	<key>Large</key>
+	<string>Exudate is covering more than 67% of the dressing surface.  Dressing is often saturated and may be soaked through secondary dressing. (5)</string>
+	<key>Margins/edges</key>
+	<string>Skin surrounding the wound. (5)</string>
+	<key>Regular</key>
+	<string>Well defined attached tissue. (5)</string>
+	<key>Irregular</key>
+	<string>Undefined, macerated or varying in consistency. (5)</string>
+	<key>Not attached</key>
+	<string>Sides or walls are present; floor or base of wound is deeper than edge. (5)</string>
+	<key>Rolled under</key>
+	<string>(Epibole) Epithelial tissue migrates down sides of the wound instead of across. Edges that roll over will ultimately cease in migration secondary to contact inhibition once epithelial cells of the leading edge come in contact with other epithelial cells. (4)</string>
+	<key>Callous</key>
+	<string>(Hyperkeratosis) callous-like tissue formation around wound and at edges. (4)</string>
+	<key>Undermining</key>
+	<string>The destruction of tissue or ulceration extending under the skin edges (margins) so that the pressure ulcer is larger at its base than at the skin surface. (2)</string>
+	<key>Tunneling</key>
+	<string>A passage way of tissue destruction under the skin surface that has an opening at the skin level from the edge of the wound. (2)</string>
+</dict>
+</plist>

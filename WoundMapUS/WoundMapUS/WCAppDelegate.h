@@ -8,12 +8,12 @@
 
 #import "CoreDataHelper.h"
 
-@class User;
+@class WMParticipant, User;
 
 @interface WCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong, readonly) CoreDataHelper *coreDataHelper;
-@property (nonatomic, strong) User *user;    // user logged into StackMob
+@property (nonatomic, strong) User *user;    // logged team in StackMob
 
 @end

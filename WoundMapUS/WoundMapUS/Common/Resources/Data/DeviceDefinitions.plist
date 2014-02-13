@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Posey</key>
+	<string>*This is a brand of prodcuts</string>
+	<key>Nasal Cannula</key>
+	<string>Tube used to flow oxygen into the nose</string>
+	<key>Endotracheal Tube</key>
+	<string>Tube inserted through the nose or mouth into the trachea to maintain an unobstructed passageway</string>
+	<key>BIPAP</key>
+	<string>Positive pressure airway device-blowing air at 2 different pressures</string>
+	<key>CPAP</key>
+	<string>Positive pressure airway device</string>
+	<key>Trach Plate</key>
+	<string></string>
+	<key>Respirator</key>
+	<string></string>
+	<key>Brace</key>
+	<string></string>
+	<key>Cast</key>
+	<string></string>
+	<key>Splint</key>
+	<string></string>
+	<key>Arm Board</key>
+	<string></string>
+	<key>Cervical Collar</key>
+	<string></string>
+	<key>External Fix</key>
+	<string></string>
+	<key>Halo</key>
+	<string></string>
+	<key>Traction</key>
+	<string></string>
+	<key>Pulse Ox</key>
+	<string></string>
+	<key>BP Cuff</key>
+	<string></string>
+	<key>Electrode</key>
+	<string></string>
+	<key>G-Tube</key>
+	<string>Gastrostomy tube inserted through the abdomen directly into the stomach for feeding</string>
+	<key>J-Tube</key>
+	<string>Jejunostomy tibe inserted throug the abdomen directly into the small intestine for feeding</string>
+	<key>NG</key>
+	<string>Feeding tube that is threaded through a nostril down and into the stomach</string>
+	<key>Ostomy</key>
+	<string>Operation to create an artificial passage for bodily elimination, such as a colostomy, ileostomy or urostomy</string>
+	<key>Fecal Tube/Pouch</key>
+	<string></string>
+	<key>PEG Tube</key>
+	<string>Same as G-Tube</string>
+	<key>Catheter</key>
+	<string>Tube inserted into the bladder to drain urine</string>
+</dict>
+</plist>

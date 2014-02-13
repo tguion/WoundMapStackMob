@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>None</string>
+		<key>sortRank</key>
+		<integer>5</integer>
+		<key>SNOMED CT FSN</key>
+		<string>none(qualifier value)</string>
+		<key>SNOMED CT CID</key>
+		<integer>260413007</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Scant</string>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string>scanty(qualifier value)</string>
+		<key>SNOMED CT CID</key>
+		<integer>263865001</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Small</string>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>SNOMED CT FSN</key>
+		<string>small(qualifier value)</string>
+		<key>SNOMED CT CID</key>
+		<integer>255507004</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Moderate</string>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>SNOMED CT FSN</key>
+		<string>moderate(qualifier value)</string>
+		<key>SNOMED CT CID</key>
+		<integer>6736007</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Large</string>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>SNOMED CT FSN</key>
+		<string>large(qualifier value)</string>
+		<key>SNOMED CT CID</key>
+		<integer>255509001</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+</array>
+</plist>

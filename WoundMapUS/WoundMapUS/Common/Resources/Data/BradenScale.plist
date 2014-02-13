@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Sensory Perception</string>
+		<key>desc</key>
+		<string>Ability to respond meaningfully to pressure related discomfort</string>
+		<key>sortRank</key>
+		<integer>0</integer>
+		<key>cells</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>No Impariment</string>
+				<key>primaryDescription</key>
+				<string>Responds to verbal commands. Has no sensory deficit which would limit ability to feel or voice pain or discomfort.</string>
+				<key>value</key>
+				<integer>4</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Slightly Limited</string>
+				<key>primaryDescription</key>
+				<string>Responds to verbal commands but cannot always communicate discomfort or need to be turned.</string>
+				<key>secondaryDescription</key>
+				<string>Has some sensory impairment which liits ability to feel pain or discomfort in 1 or 2 extremities.</string>
+				<key>value</key>
+				<integer>3</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Completely Limited</string>
+				<key>primaryDescription</key>
+				<string>Unresponsive (does not moan, flinch, or grasp) to painful stimuli, due to diminished level of consciousness or sedation.</string>
+				<key>secondaryDescription</key>
+				<string>Limited ability to feel pain over most of body surface.</string>
+				<key>value</key>
+				<integer>1</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Very Limited</string>
+				<key>primaryDescription</key>
+				<string>Responds only to painful stimuli. Cannot communicate discomfort Except for moaning or restlessness.</string>
+				<key>secondaryDescription</key>
+				<string>Has a sensory impairment, which limits the ability to feel pain or discomfort over 1/2 of body.</string>
+				<key>value</key>
+				<integer>2</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Moisture</string>
+		<key>desc</key>
+		<string>Degree to which skin is exposed to moisture</string>
+		<key>sortRank</key>
+		<integer>1</integer>
+		<key>cells</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Rarely Moist</string>
+				<key>primaryDescription</key>
+				<string>Skin is usually dry. Linen only requires changing at routine interventions.</string>
+				<key>value</key>
+				<integer>4</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Occasionally Moist</string>
+				<key>primaryDescription</key>
+				<string>Skin is occasionally moist, requiring an extra linen change approximately once a day.</string>
+				<key>value</key>
+				<integer>3</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Very Moist</string>
+				<key>primaryDescription</key>
+				<string>Skin is often, but not always, moist. Linen must be changed at least once a shift.</string>
+				<key>value</key>
+				<integer>2</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Constantly Moist</string>
+				<key>primaryDescription</key>
+				<string>Skin is kept moist almost constantly by perspiration, urine, etc. Dampness is detected every time patient is moved or turned.</string>
+				<key>value</key>
+				<integer>1</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Activity</string>
+		<key>desc</key>
+		<string>Degree of physical activity</string>
+		<key>sortRank</key>
+		<integer>2</integer>
+		<key>cells</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Walks Frequently</string>
+				<key>primaryDescription</key>
+				<string>Walks outside the room at least twice a day and inside room at least once every 2 hours during waking hours.</string>
+				<key>value</key>
+				<integer>4</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Walks Occasionally</string>
+				<key>primaryDescription</key>
+				<string>Walks occasionally during day but for very short distances, with or without assistance. Spends majority of each shift in bed or chair.</string>
+				<key>value</key>
+				<integer>3</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Chair Fast</string>
+				<key>primaryDescription</key>
+				<string>Abiltiy to walk severly limited or non-exeistent. Cannot bear own weight and/or must be assisted into chair or wheelchair.</string>
+				<key>value</key>
+				<integer>2</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Bedfast</string>
+				<key>primaryDescription</key>
+				<string>Confined to bed.</string>
+				<key>value</key>
+				<integer>1</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Mobility</string>
+		<key>desc</key>
+		<string>Ability to change and control body position</string>
+		<key>sortRank</key>
+		<integer>3</integer>
+		<key>cells</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>No Limitations</string>
+				<key>primaryDescription</key>
+				<string>Makes major and frequent changes in position without assistance.</string>
+				<key>value</key>
+				<integer>4</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Slightly Limited</string>
+				<key>primaryDescription</key>
+				<string>Makes frequent thought slight changes in body or extremity position independently.</string>
+				<key>value</key>
+				<integer>3</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Very Limited</string>
+				<key>primaryDescription</key>
+				<string>Makes occasional slight changes in body or extremity position but unable to make frequent or significant changes independently.</string>
+				<key>value</key>
+				<integer>2</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Completely Immobile</string>
+				<key>primaryDescription</key>
+				<string>Does not make even slight changes in body or extremity position without assistance.</string>
+				<key>value</key>
+				<integer>1</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Nutrition</string>
+		<key>desc</key>
+		<string>Usual food intake pattern</string>
+		<key>sortRank</key>
+		<integer>4</integer>
+		<key>cells</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Excellent</string>
+				<key>primaryDescription</key>
+				<string>Consistently eats most of every meal. Never refuses a meal and even eating between meals at times. Great fluid intake.</string>
+				<key>value</key>
+				<integer>4</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Adequate</string>
+				<key>primaryDescription</key>
+				<string>Consistently eats 75% or less of meals. Accepting nutritional interventions like snacks or supplements if being offered. Occasionally refusing a meal or snack but not often.</string>
+				<key>secondaryDescription</key>
+				<string>Patient is on a tubefeeding or TPN regiment that is meeting their nutritioinal needs. Good fluid intake.</string>
+				<key>value</key>
+				<integer>3</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Probably Inadequate</string>
+				<key>primaryDescription</key>
+				<string>Consistently eats only 50% or less of meals. Occasionally drinks supplements or snacks.</string>
+				<key>secondaryDescription</key>
+				<string>Patient is on a low rate of tubefeeding or TPN that is not meeting their nutritional needs. Low fluid intake.</string>
+				<key>value</key>
+				<integer>2</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Very Poor</string>
+				<key>primaryDescription</key>
+				<string>Consistently eats 25% or less of meals. Declines supplements. Poor fluid intake. NPO or is on clear liquids longer than 3 days.</string>
+				<key>value</key>
+				<integer>1</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Friction &amp; Shear</string>
+		<key>sortRank</key>
+		<integer>5</integer>
+		<key>cells</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>No Apparent Problem</string>
+				<key>primaryDescription</key>
+				<string>Moves in bed and in chair independently and has sufficient muscle strength to lift up completely during move. Maintains good position in bed or chair at all times.</string>
+				<key>value</key>
+				<integer>3</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Potential Problem</string>
+				<key>primaryDescription</key>
+				<string>Moves feebly or requires minimum assistance. During a move, skin probably slides to some extent against sheets, chair restraints or other devices. Maintains relatively good position in chair or bed most of the time, but occasionally slide down.</string>
+				<key>value</key>
+				<integer>2</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Problem</string>
+				<key>primaryDescription</key>
+				<string>Requires moderate to maximum asistance in moving. Complete lifting without sliding against sheets is impossible. Frequently slides down in bed or chair, requiring frequent repositioning with maximum assistance. Spasticity, contractures or agitation lead to almost constant friction.</string>
+				<key>value</key>
+				<integer>1</integer>
+			</dict>
+		</array>
+	</dict>
+</array>
+</plist>

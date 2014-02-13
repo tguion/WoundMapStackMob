@@ -7,8 +7,7 @@
 //
 
 #import "WCAppDelegate.h"
-
-#import "WCMasterViewController.h"
+#import "WMWelcomeToWoundMapViewController.h"
 
 @implementation WCAppDelegate {
     CoreDataHelper *cdh;
@@ -38,18 +37,22 @@
     }
 }
 
+- (id)valueForUndefinedKey:(NSString *)key
+{
+    NSLog(@"here");
+    return nil;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     [self cdh];
-    // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate = (id)navigationController.topViewController;
-    }
+    // initialize UI
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = [[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 							
