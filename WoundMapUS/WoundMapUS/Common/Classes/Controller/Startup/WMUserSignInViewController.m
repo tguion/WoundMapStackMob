@@ -32,6 +32,23 @@
 @implementation WMUserSignInViewController
 #define debug 1
 
+#pragma mark - Accessors
+
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (CoreDataHelper *)coreDataHelper
+{
+    return self.appDelegate.coreDataHelper;
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    return [self.appDelegate.coreDataHelper.stackMobStore contextForCurrentThread];
+}
+
 #pragma mark - ACCOUNT
 
 - (IBAction)cancelAction:(id)sender

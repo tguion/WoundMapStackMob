@@ -16,8 +16,11 @@
 @interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate>
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
+@property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSPersistentStore *store;
+@property (nonatomic) SMFetchPolicy fetchPolicy;
+@property (nonatomic) SMSavePolicy savePolicy;
 
 @property (weak, nonatomic) IBOutlet UIView *teamContainerView;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
@@ -50,7 +53,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _teamContainerView.hidden = (nil == self.appDelegate.participant);
+//    _teamContainerView.hidden = (nil == self.appDelegate.participant);
+    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
+    self.savePolicy = SMSavePolicyNetworkThenCache;
+    if (nil != self.appDelegate.user) {
+        [self.coreDataHelper.stackMobStore syncWithServer];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -66,6 +74,11 @@
     return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+- (CoreDataHelper *)coreDataHelper
+{
+    return self.appDelegate.coreDataHelper;
+}
+
 - (NSManagedObjectContext *)managedObjectContext
 {
     return [self.appDelegate.coreDataHelper.stackMobStore contextForCurrentThread];
@@ -77,6 +90,26 @@
     NSPersistentStore *store = [persistentStores firstObject];
     NSAssert1([store isKindOfClass:[SMIncrementalStore class]], @"Unexpected class, expected SMIncrementalStore, found %@", store);
     return store;
+}
+
+- (void)setFetchPolicy:(SMFetchPolicy)fetchPolicy
+{
+    if (_fetchPolicy == fetchPolicy) {
+        return;
+    }
+    // else
+    _fetchPolicy = fetchPolicy;
+    self.coreDataHelper.stackMobStore.fetchPolicy = fetchPolicy;
+}
+
+- (void)setSavePolicy:(SMSavePolicy)savePolicy
+{
+    if (_savePolicy == savePolicy) {
+        return;
+    }
+    // else
+    _savePolicy = savePolicy;
+    self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
 }
 
 - (WMSignInViewController *)signInViewController
@@ -112,7 +145,12 @@
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:self.managedObjectContext persistentStore:self.store];
     userSignInViewController.selectedUser = user;
-    [self.navigationController pushViewController:userSignInViewController animated:YES];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:userSignInViewController];
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
 }
 
 - (IBAction)createTeamAction:(id)sender

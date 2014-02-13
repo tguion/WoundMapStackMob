@@ -5,7 +5,7 @@
 
 
 extern const struct WMParticipantTypeAttributes {
-	__unsafe_unretained NSString *createdate;
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *definition;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *lastmoddate;
@@ -14,7 +14,7 @@ extern const struct WMParticipantTypeAttributes {
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmparticipantType_id;
+	__unsafe_unretained NSString *wmparticipanttype_id;
 } WMParticipantTypeAttributes;
 
 extern const struct WMParticipantTypeRelationships {
@@ -50,11 +50,11 @@ extern const struct WMParticipantTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createdate;
+@property (nonatomic, strong) NSDate* createddate;
 
 
 
-//- (BOOL)validateCreatedate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -152,11 +152,11 @@ extern const struct WMParticipantTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmparticipantType_id;
+@property (nonatomic, strong) NSString* wmparticipanttype_id;
 
 
 
-//- (BOOL)validateWmparticipantType_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateWmparticipanttype_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -184,8 +184,8 @@ extern const struct WMParticipantTypeFetchedProperties {
 @interface _WMParticipantType (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreatedate;
-- (void)setPrimitiveCreatedate:(NSDate*)value;
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
 
 
 
@@ -247,8 +247,8 @@ extern const struct WMParticipantTypeFetchedProperties {
 
 
 
-- (NSString*)primitiveWmparticipantType_id;
-- (void)setPrimitiveWmparticipantType_id:(NSString*)value;
+- (NSString*)primitiveWmparticipanttype_id;
+- (void)setPrimitiveWmparticipanttype_id:(NSString*)value;
 
 
 

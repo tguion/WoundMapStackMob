@@ -7,7 +7,7 @@
 extern const struct WMAddressAttributes {
 	__unsafe_unretained NSString *city;
 	__unsafe_unretained NSString *country;
-	__unsafe_unretained NSString *createdate;
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *postalCode;
 	__unsafe_unretained NSString *state;
@@ -70,11 +70,11 @@ extern const struct WMAddressFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createdate;
+@property (nonatomic, strong) NSDate* createddate;
 
 
 
-//- (BOOL)validateCreatedate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,8 +176,8 @@ extern const struct WMAddressFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreatedate;
-- (void)setPrimitiveCreatedate:(NSDate*)value;
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
 
 
 

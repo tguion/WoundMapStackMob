@@ -131,8 +131,9 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     // APIVersion 0 = Dev, 1 = Prod
     _stackMobClient  = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"69230b76-7939-4342-8d8f-4fb739e2aef4"];
     _stackMobStore = [_stackMobClient coreDataStoreWithManagedObjectModel:_model];
-    // fetch cloud then cache - each view controller should update the policy as needed
-    _stackMobStore.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
+    // fetch from cache until user logged in - each view controller should update the policy as needed
+    _stackMobStore.fetchPolicy = SMFetchPolicyCacheOnly;
+    _stackMobStore.savePolicy = SMSavePolicyCacheOnly;
     
     __weak SMCoreDataStore *cds = _stackMobStore;
     __weak __typeof(self) weakSelf = self;

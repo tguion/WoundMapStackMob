@@ -187,6 +187,8 @@ typedef enum {
     }
     [self.navigationItem setHidesBackButton:YES];
     [self.delegate signInViewControllerWillAppear:self];
+    self.fetchPolicy = SMFetchPolicyCacheOnly;
+    self.savePolicy = SMSavePolicyCacheOnly;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -233,7 +235,7 @@ typedef enum {
         _participant = [WMParticipant participantForName:self.nameInput
                                                   create:NO
                                     managedObjectContext:self.managedObjectContext
-                                         persistentStore:self.store];
+                                         persistentStore:nil];
     }
     return  _participant;
 }
@@ -367,7 +369,7 @@ typedef enum {
                 self.participant = [WMParticipant participantForName:self.nameInput
                                                               create:YES
                                                 managedObjectContext:self.managedObjectContext
-                                                     persistentStore:self.store];
+                                                     persistentStore:nil];
                 self.participant.email = self.emailTextField.text;
                 self.participant.participantType = _selectedParticipantType;
                 [self.delegate signInViewController:self didSignInParticipant:self.participant];
@@ -413,7 +415,7 @@ typedef enum {
         _selectedParticipantType = [WMParticipantType participantTypeForTitle:title
                                                                        create:NO
                                                          managedObjectContext:self.managedObjectContext
-                                                              persistentStore:self.store];
+                                                              persistentStore:nil];
     }
     self.state = SignInViewControllerCreateAccount;
     [self.navigationController popViewControllerAnimated:YES];
@@ -479,15 +481,8 @@ typedef enum {
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 2) {
-        // update local only
-        SMFetchPolicy fetchPolicy = self.fetchPolicy;
-        SMSavePolicy savePolicy = self.savePolicy;
-        self.coreDataHelper.stackMobStore.fetchPolicy = SMFetchPolicyCacheOnly;
-        self.coreDataHelper.stackMobStore.savePolicy = SMFetchPolicyCacheOnly;
-        [WMParticipantType seedDatabase:self.managedObjectContext persistentStore:self.store];
+        [WMParticipantType seedDatabase:self.managedObjectContext persistentStore:nil];
         [self.coreDataHelper backgroundSaveContext];
-        self.coreDataHelper.stackMobStore.fetchPolicy = fetchPolicy;
-        self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
         if (nil != self.appDelegate.user) {
             [self.coreDataHelper.stackMobStore syncWithServer];
         }

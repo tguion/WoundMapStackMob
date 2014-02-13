@@ -4,7 +4,7 @@
 #import "_WMParticipantType.h"
 
 const struct WMParticipantTypeAttributes WMParticipantTypeAttributes = {
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.definition = @"definition",
 	.flags = @"flags",
 	.lastmoddate = @"lastmoddate",
@@ -13,7 +13,7 @@ const struct WMParticipantTypeAttributes WMParticipantTypeAttributes = {
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmparticipantType_id = @"wmparticipantType_id",
+	.wmparticipanttype_id = @"wmparticipanttype_id",
 };
 
 const struct WMParticipantTypeRelationships WMParticipantTypeRelationships = {
@@ -71,7 +71,7 @@ const struct WMParticipantTypeFetchedProperties WMParticipantTypeFetchedProperti
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 
@@ -191,7 +191,7 @@ const struct WMParticipantTypeFetchedProperties WMParticipantTypeFetchedProperti
 
 
 
-@dynamic wmparticipantType_id;
+@dynamic wmparticipanttype_id;
 
 
 

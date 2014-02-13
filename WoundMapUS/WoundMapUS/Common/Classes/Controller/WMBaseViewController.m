@@ -46,6 +46,28 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Fetch/Save Policy
+
+- (void)setFetchPolicy:(SMFetchPolicy)fetchPolicy
+{
+    if (_fetchPolicy == fetchPolicy) {
+        return;
+    }
+    // else
+    _fetchPolicy = fetchPolicy;
+    self.coreDataHelper.stackMobStore.fetchPolicy = fetchPolicy;
+}
+
+- (void)setSavePolicy:(SMSavePolicy)savePolicy
+{
+    if (_savePolicy == savePolicy) {
+        return;
+    }
+    // else
+    _savePolicy = savePolicy;
+    self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
+}
+
 #pragma mark - Core
 
 - (BOOL)isIPadIdiom
@@ -95,10 +117,11 @@
 
 - (NSPersistentStore *)store
 {
-    NSArray *persistentStores = [self.appDelegate.coreDataHelper.stackMobStore.persistentStoreCoordinator persistentStores];
-    NSPersistentStore *store = [persistentStores firstObject];
-    NSAssert1([store isKindOfClass:[SMIncrementalStore class]], @"Unexpected class, expected SMIncrementalStore, found %@", store);
-    return store;
+//    NSArray *persistentStores = [self.appDelegate.coreDataHelper.stackMobStore.persistentStoreCoordinator persistentStores];
+//    NSPersistentStore *store = [persistentStores firstObject];
+//    NSAssert1([store isKindOfClass:[SMIncrementalStore class]], @"Unexpected class, expected SMIncrementalStore, found %@", store);
+//    return store;
+    return nil;
 }
 
 - (NSMutableArray *)opaqueNotificationObservers

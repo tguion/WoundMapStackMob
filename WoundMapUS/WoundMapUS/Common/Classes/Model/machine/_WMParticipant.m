@@ -4,7 +4,7 @@
 #import "_WMParticipant.h"
 
 const struct WMParticipantAttributes WMParticipantAttributes = {
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.dateCreated = @"dateCreated",
 	.dateLastSignin = @"dateLastSignin",
 	.email = @"email",
@@ -65,7 +65,7 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

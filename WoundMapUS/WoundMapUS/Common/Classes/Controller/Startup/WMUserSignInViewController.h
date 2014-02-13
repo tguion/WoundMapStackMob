@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class User;
 @class WMUserSignInViewController;
 
@@ -18,7 +16,7 @@
 
 @end
 
-@interface WMUserSignInViewController : WMBaseViewController
+@interface WMUserSignInViewController : UIViewController
 
 @property (nonatomic, weak) id<UserSignInDelegate> delegate;
 

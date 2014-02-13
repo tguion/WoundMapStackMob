@@ -5,7 +5,7 @@
 
 
 extern const struct WMTelecomTypeAttributes {
-	__unsafe_unretained NSString *createdate;
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *icon;
 	__unsafe_unretained NSString *lastmoddate;
@@ -44,11 +44,11 @@ extern const struct WMTelecomTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createdate;
+@property (nonatomic, strong) NSDate* createddate;
 
 
 
-//- (BOOL)validateCreatedate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -144,8 +144,8 @@ extern const struct WMTelecomTypeFetchedProperties {
 @interface _WMTelecomType (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreatedate;
-- (void)setPrimitiveCreatedate:(NSDate*)value;
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
 
 
 

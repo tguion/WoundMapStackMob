@@ -4,7 +4,7 @@
 #import "_WMTelecom.h"
 
 const struct WMTelecomAttributes WMTelecomAttributes = {
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.flags = @"flags",
 	.lastmoddate = @"lastmoddate",
 	.use = @"use",
@@ -58,7 +58,7 @@ const struct WMTelecomFetchedProperties WMTelecomFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

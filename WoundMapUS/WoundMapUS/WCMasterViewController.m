@@ -81,8 +81,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    // execute fetch on cloud
-    self.appDelegate.coreDataHelper.stackMobStore.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     [self refreshTable];
 }
 
@@ -98,14 +96,6 @@
                              // nothing
                          }];
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    // change back to default fetch policy
-    // execute fetch on cloud
-    self.appDelegate.coreDataHelper.stackMobStore.fetchPolicy = SMFetchPolicyCacheOnly;
 }
 
 - (void)didReceiveMemoryWarning
@@ -140,7 +130,7 @@
 {
     NSManagedObjectContext *stackMobContext = self.managedObjectContext;
     WMPatient *patient = [WMPatient instanceWithManagedObjectContext:stackMobContext persistentStore:self.store];
-    patient.person.nameFamily = [NSString stringWithFormat:@"Patient%d", [self.fetchedResultsController.fetchedObjects count]];
+    patient.person.nameFamily = [NSString stringWithFormat:@"Patient%lu", (unsigned long)[self.fetchedResultsController.fetchedObjects count]];
     // Save the context
     NSLog(@"Saving patient");
     [stackMobContext saveOnSuccess:^{

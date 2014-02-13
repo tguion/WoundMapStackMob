@@ -4,7 +4,7 @@
 #import "_WMPerson.h"
 
 const struct WMPersonAttributes WMPersonAttributes = {
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.lastmoddate = @"lastmoddate",
 	.nameFamily = @"nameFamily",
 	.nameGiven = @"nameGiven",
@@ -55,7 +55,7 @@ const struct WMPersonFetchedProperties WMPersonFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

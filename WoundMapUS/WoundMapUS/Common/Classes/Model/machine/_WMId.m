@@ -4,7 +4,7 @@
 #import "_WMId.h"
 
 const struct WMIdAttributes WMIdAttributes = {
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.extension = @"extension",
 	.flags = @"flags",
 	.lastmoddate = @"lastmoddate",
@@ -58,7 +58,7 @@ const struct WMIdFetchedProperties WMIdFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

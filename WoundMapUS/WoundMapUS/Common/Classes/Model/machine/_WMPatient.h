@@ -6,7 +6,7 @@
 
 extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *archivedFlag;
-	__unsafe_unretained NSString *createdate;
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *dateOfBirth;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *gender;
@@ -64,11 +64,11 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createdate;
+@property (nonatomic, strong) NSDate* createddate;
 
 
 
-//- (BOOL)validateCreatedate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -186,8 +186,8 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreatedate;
-- (void)setPrimitiveCreatedate:(NSDate*)value;
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
 
 
 

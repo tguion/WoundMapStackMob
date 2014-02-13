@@ -6,7 +6,7 @@
 const struct WMAddressAttributes WMAddressAttributes = {
 	.city = @"city",
 	.country = @"country",
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.lastmoddate = @"lastmoddate",
 	.postalCode = @"postalCode",
 	.state = @"state",
@@ -70,7 +70,7 @@ const struct WMAddressFetchedProperties WMAddressFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

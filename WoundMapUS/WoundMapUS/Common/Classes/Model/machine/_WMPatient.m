@@ -5,7 +5,7 @@
 
 const struct WMPatientAttributes WMPatientAttributes = {
 	.archivedFlag = @"archivedFlag",
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.dateOfBirth = @"dateOfBirth",
 	.flags = @"flags",
 	.gender = @"gender",
@@ -92,7 +92,7 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

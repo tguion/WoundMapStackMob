@@ -4,7 +4,7 @@
 #import "_WMOrganization.h"
 
 const struct WMOrganizationAttributes WMOrganizationAttributes = {
-	.createdate = @"createdate",
+	.createddate = @"createddate",
 	.lastmoddate = @"lastmoddate",
 	.name = @"name",
 	.wmorganization_id = @"wmorganization_id",
@@ -51,7 +51,7 @@ const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
 
 
 
-@dynamic createdate;
+@dynamic createddate;
 
 
 

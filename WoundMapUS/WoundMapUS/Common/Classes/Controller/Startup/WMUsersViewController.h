@@ -6,7 +6,10 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
+#import "WMBaseViewController.h"
 #import "WMUserSignInViewController.h"
+
+// TODO use WMBaseViewController
 
 @interface WMUsersViewController : UITableViewController
 

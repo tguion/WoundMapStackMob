@@ -5,7 +5,7 @@
 
 
 extern const struct WMPersonAttributes {
-	__unsafe_unretained NSString *createdate;
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *nameFamily;
 	__unsafe_unretained NSString *nameGiven;
@@ -48,11 +48,11 @@ extern const struct WMPersonFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createdate;
+@property (nonatomic, strong) NSDate* createddate;
 
 
 
-//- (BOOL)validateCreatedate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -159,8 +159,8 @@ extern const struct WMPersonFetchedProperties {
 @interface _WMPerson (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreatedate;
-- (void)setPrimitiveCreatedate:(NSDate*)value;
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
 
 
 
