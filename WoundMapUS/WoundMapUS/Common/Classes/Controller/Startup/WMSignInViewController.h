@@ -22,7 +22,7 @@
 
 @interface WMSignInViewController : WMBaseViewController <SimpleTableViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
-@property (weak, nonatomic) IBOutlet id<SignInViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<SignInViewControllerDelegate> delegate;
 
 - (void)reset;
 

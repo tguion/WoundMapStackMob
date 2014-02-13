@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong, readonly) CoreDataHelper *coreDataHelper;
-@property (nonatomic, strong) User *user;    // logged team in StackMob
+@property (nonatomic, strong) WMParticipant *participant;   // clinician using the app
+@property (nonatomic, strong) User *user;                   // logged team in StackMob
 
 @end

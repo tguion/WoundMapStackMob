@@ -7,18 +7,20 @@
 //
 
 #import "WMWelcomeToWoundMapViewController.h"
+#import "WMSignInViewController.h"
 #import "WMUserSignInViewController.h"
 #import "User.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 
-@interface WMWelcomeToWoundMapViewController () <UserSignInDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate>
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSPersistentStore *store;
 
 @property (weak, nonatomic) IBOutlet UIView *teamContainerView;
+@property (readonly, nonatomic) WMSignInViewController *signInViewController;
 @property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
 
 - (IBAction)signInAction:(id)sender;
@@ -43,6 +45,12 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    _teamContainerView.hidden = (nil == self.appDelegate.participant);
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,6 +79,13 @@
     return store;
 }
 
+- (WMSignInViewController *)signInViewController
+{
+    WMSignInViewController *signInViewController = [[WMSignInViewController alloc] initWithNibName:@"WMSignInViewController" bundle:nil];
+    signInViewController.delegate = self;
+    return signInViewController;
+}
+
 - (WMUserSignInViewController *)userSignInViewController
 {
     WMUserSignInViewController *userSignInViewController = [[WMUserSignInViewController alloc] initWithNibName:@"WMUserSignInViewController" bundle:nil];
@@ -82,7 +97,12 @@
 
 - (IBAction)signInAction:(id)sender
 {
-    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.signInViewController];
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
 }
 
 - (IBAction)joinTeamAction:(id)sender
@@ -103,6 +123,33 @@
 - (IBAction)consultantAction:(id)sender
 {
     
+}
+
+#pragma mark - SignInViewControllerDelegate
+
+- (void)signInViewControllerWillAppear:(WMSignInViewController *)viewController
+{
+    
+}
+
+- (void)signInViewControllerWillDisappear:(WMSignInViewController *)viewController
+{
+    
+}
+
+- (void)signInViewController:(WMSignInViewController *)viewController didSignInParticipant:(WMParticipant *)participant
+{
+    self.appDelegate.participant = participant;
+    [viewController clearAllReferences];
+    BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    if (isIPadIdiom) {
+
+    } else {
+        __weak __typeof(self) weakSelf = self;
+        [self dismissViewControllerAnimated:YES completion:^{
+            NSLog(@"TODO: fixme %@", weakSelf);
+        }];
+    }
 }
 
 #pragma mark - UserSignInDelegate

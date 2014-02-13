@@ -9,13 +9,20 @@
 #import "CoreDataHelper.h"
 #import "CoreDataImporter.h"
 #import "Faulter.h"
+#import "WCAppDelegate.h"
 
 @interface CoreDataHelper ()
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status;
 @end
 
 @implementation CoreDataHelper
 #define debug 1
+
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
 
 #pragma mark - FILES
 
@@ -26,6 +33,10 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
 
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status
 {
+    if (nil == self.appDelegate.user) {
+        return;
+    }
+    // else
     NSString *title = @"Network reachability changed";
     NSString *message = nil;
     switch (status) {

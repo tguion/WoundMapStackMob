@@ -37,12 +37,6 @@
     }
 }
 
-- (id)valueForUndefinedKey:(NSString *)key
-{
-    NSLog(@"here");
-    return nil;
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     if (debug==1) {
