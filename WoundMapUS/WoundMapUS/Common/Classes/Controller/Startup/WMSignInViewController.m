@@ -11,6 +11,7 @@
 #import "WMParticipantType.h"
 #import "WMPatient.h"
 #import "UIView+Custom.h"
+#import "CoreDataHelper.h"
 #import "WMUtilities.h"
 
 typedef enum {
@@ -45,8 +46,8 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UIView *tableFooterView;
-@property (weak, nonatomic) IBOutlet UIButton *signInButton;
-@property (weak, nonatomic) IBOutlet UIButton *createAccountButton;
+@property (strong, nonatomic) IBOutlet UIButton *signInButton;
+@property (strong, nonatomic) IBOutlet UIButton *createAccountButton;
 @property (nonatomic) CGFloat tableFooterViewHeight;
 
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
@@ -478,6 +479,8 @@ typedef enum {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 2) {
         [WMParticipantType seedDatabase:self.managedObjectContext persistentStore:self.store];
+        // synchronize with StackMob
+        [self.coreDataHelper backgroundSaveContext];
         WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
         [self.navigationController pushViewController:simpleTableViewController animated:YES];
         simpleTableViewController.title = @"Select Role";

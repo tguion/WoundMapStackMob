@@ -14,7 +14,7 @@
                 <outlet property="nameCell" destination="14" id="lCS-gh-eFG"/>
                 <outlet property="nameTextField" destination="16" id="XAD-mi-6Bi"/>
                 <outlet property="signInButton" destination="13" id="UH5-uu-7lk"/>
-                <outlet property="tableFooterView" destination="14" id="wfN-go-ig2"/>
+                <outlet property="tableFooterView" destination="12" id="HRp-Xj-2Eg"/>
                 <outlet property="view" destination="4" id="Fc6-qM-HyP"/>
             </connections>
         </placeholder>
