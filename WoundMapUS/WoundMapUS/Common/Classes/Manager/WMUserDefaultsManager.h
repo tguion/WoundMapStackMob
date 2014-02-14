@@ -15,6 +15,7 @@
 + (WMUserDefaultsManager *)sharedInstance;
 
 @property (nonatomic) NSString *lastTeamName;
+@property (nonatomic) NSString *lastPatientId;
 @property (nonatomic) NSDate *lastDateOfBirth;
 @property (nonatomic) NSString *defaultNavigationTrackTitle;
 

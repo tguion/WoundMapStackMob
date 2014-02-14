@@ -11,6 +11,8 @@
 #import "Faulter.h"
 #import "WCAppDelegate.h"
 
+NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSynchFinishedNotification";
+
 @interface CoreDataHelper ()
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status;
@@ -149,6 +151,14 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         }
         // else
         return SMFetchPolicyCacheOnly;
+    }];
+    
+    __weak __typeof(_stackMobStore) weakStackMobStore = _stackMobStore;
+    [_stackMobStore setSyncCompletionCallback:^(NSArray *objects){
+        // Our syncing is complete, so change the policy to fetch from the network
+        [weakStackMobStore setFetchPolicy:SMFetchPolicyTryNetworkElseCache];
+        // Notify other views that they should reload their data from the network
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kStackMobNetworkSynchFinishedNotification" object:nil];
     }];
     
     _context = [_stackMobStore contextForCurrentThread];

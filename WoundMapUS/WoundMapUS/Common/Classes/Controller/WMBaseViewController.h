@@ -40,9 +40,9 @@
 @property (readonly, nonatomic) NSArray *fetchedResultsControllerSortDescriptors;
 @property (readonly, nonatomic) NSString *fetchedResultsControllerSectionNameKeyPath;
 @property (readonly, nonatomic) NSString *fetchedResultsControllerCacheName;
-- (void)updateFetchRequest:(NSFetchRequest *)request;   // update specific properties of fetch request
-- (void)fetchedResultsControllerDidFetch;               // called when frc finishes fetching Core Data
-- (void)nilFetchedResultsController;                    // nil the reference _fetchedResultsController
+- (void)updateFetchRequest:(NSFetchRequest *)request;                       // update specific properties of fetch request
+- (void)fetchedResultsControllerDidFetch;                                   // called when frc finishes fetching Core Data
+- (void)nilFetchedResultsController;                                        // nil the reference _fetchedResultsController
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource
 - (NSIndexPath *)indexPathTableToFetchedResultsController:(NSIndexPath *)indexPath;
@@ -53,5 +53,7 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 - (UITableViewCell *)cellForView:(UIView *)aView;
+
+- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification NS_REQUIRES_SUPER;
 
 @end

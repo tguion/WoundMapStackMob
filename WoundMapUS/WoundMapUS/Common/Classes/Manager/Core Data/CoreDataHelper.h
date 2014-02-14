@@ -11,6 +11,8 @@
 #import "MigrationVC.h"
 #import "StackMob.h"
 
+extern NSString *const kStackMobNetworkSynchFinishedNotification;
+
 @interface CoreDataHelper : NSObject <UIAlertViewDelegate,NSXMLParserDelegate>
 
 @property (nonatomic, readonly) NSManagedObjectContext *parentContext;

@@ -1,6 +1,7 @@
 #import "WMPatient.h"
 #import "WMPerson.h"
 #import "WMId.h"
+#import "WMUtilities.h"
 #import "StackMob.h"
 
 @interface WMPatient ()
@@ -23,6 +24,51 @@
     patient.person = [WMPerson instanceWithManagedObjectContext:managedObjectContext
                                                 persistentStore:store];
 	return patient;
+}
+
++ (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
+    return [managedObjectContext countForFetchRequest:request error:NULL];
+}
+
++ (WMPatient *)patientForPatientId:(NSString *)patientId managedObjectContext:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    if (nil != store) {
+        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    }
+    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"wmpatient_id == %@", patientId]];
+    NSError *error = nil;
+    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+        abort();
+    }
+    // else
+    return [array lastObject];
+}
+
++ (WMPatient *)lastModifiedActivePatient:(NSManagedObjectContext *)managedObjectContext
+                         persistentStore:(NSPersistentStore *)store
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    if (nil != store) {
+        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    }
+    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"archivedFlag == NO"]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
+    NSError *error = nil;
+    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+        abort();
+    }
+    // else
+    return [array lastObject];
 }
 
 - (NSString *)lastNameFirstName

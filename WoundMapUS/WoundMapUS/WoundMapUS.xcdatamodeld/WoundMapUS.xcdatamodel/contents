@@ -4,6 +4,8 @@
         <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="stackMobUser" inverseEntity="WMConsultingGroup" syncable="YES"/>
+        <relationship name="consultingPatients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="consultants" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMAddress" representedClassName="WMAddress" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
@@ -21,6 +23,11 @@
             </userInfo>
         </relationship>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="addresses" inverseEntity="WMPerson" syncable="YES"/>
+    </entity>
+    <entity name="WMConsultingGroup" representedClassName="WMConsultingGroup" syncable="YES">
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="stackMobUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="consultingGroup" inverseEntity="User" syncable="YES"/>
     </entity>
     <entity name="WMId" representedClassName="WMId" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -160,6 +167,7 @@
             <userInfo/>
         </attribute>
         <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="consultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="User" inverseName="consultingPatients" inverseEntity="User" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
@@ -256,5 +264,6 @@
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMConsultingGroup" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

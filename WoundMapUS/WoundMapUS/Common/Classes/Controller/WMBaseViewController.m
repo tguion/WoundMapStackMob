@@ -113,6 +113,40 @@
 	return nil;
 }
 
+#pragma mark - Notifications
+
+- (void)registerForNotifications
+{
+    __weak __typeof(self) weakSelf = self;
+    // user changed iCloud account
+    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kStackMobNetworkSynchFinishedNotification
+                                                                    object:nil
+                                                                     queue:[NSOperationQueue mainQueue]
+                                                                usingBlock:^(NSNotification *notification) {
+                                                                    [weakSelf handleStackMobNetworkSynchFinished:notification];
+                                                                }];
+    [self.persistantObservers addObject:observer];
+
+    
+}
+
+- (void)unregisterForNotifications
+{
+    // stop listening
+    for (id observer in self.opaqueNotificationObservers) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+    }
+    [self.opaqueNotificationObservers removeAllObjects];
+}
+
+#pragma mark - Notification handlers
+
+// network synch with server has finished - subclasses may need to override 
+- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+{
+    [self.tableView reloadData];
+}
+
 #pragma mark - Accessors
 
 - (WCAppDelegate *)appDelegate

@@ -49,6 +49,18 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSString *)lastPatientId
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.lastPatientId"];
+}
+
+- (void)setLastPatientId:(NSString *)lastPatientId
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastPatientId forKey:@"com.mobilehealthware.woundmap.lastPatientId"];
+    [userDefaults synchronize];
+}
+
 - (NSDate *)lastDateOfBirth
 {
     NSString *dateString = [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.lastDateOfBirth"];

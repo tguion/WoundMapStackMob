@@ -6,101 +6,17 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMWelcomeToWoundMapViewController">
             <connections>
-                <outlet property="teamContainerView" destination="uQr-gH-XKs" id="VvB-I6-qPi"/>
-                <outlet property="view" destination="1" id="3"/>
+                <outlet property="view" destination="Ldb-a6-ATs" id="tcw-yP-xxh"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="1">
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Ldb-a6-ATs">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to WoundMap" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OjP-L9-0gQ">
-                    <rect key="frame" x="20" y="96" width="280" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LdL-6x-GRO">
-                    <rect key="frame" x="20" y="146" width="280" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Create Account/Sign In">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="signInAction:" destination="-1" eventType="touchUpInside" id="BTw-qi-l2o"/>
-                    </connections>
-                </button>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VLm-hv-m2d">
-                    <rect key="frame" x="85" y="273" width="216" height="34"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uQr-gH-XKs">
-                    <rect key="frame" x="20" y="184" width="280" height="146"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thW-cH-R9p">
-                            <rect key="frame" x="0.0" y="20" width="280" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Join Existing Team">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="joinTeamAction:" destination="-1" eventType="touchUpInside" id="hWf-gl-vf7"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nPr-n6-UaY">
-                            <rect key="frame" x="0.0" y="58" width="280" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Create a New Team">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="createTeamAction:" destination="-1" eventType="touchUpInside" id="f1z-V7-hGk"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mfZ-oT-FF0">
-                            <rect key="frame" x="0.0" y="96" width="280" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Sign In as Consultant">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="consultantAction:" destination="-1" eventType="touchUpInside" id="nTU-h8-uZv"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstItem="nPr-n6-UaY" firstAttribute="top" secondItem="thW-cH-R9p" secondAttribute="bottom" constant="8" symbolic="YES" id="HVP-R2-h3u"/>
-                        <constraint firstItem="mfZ-oT-FF0" firstAttribute="leading" secondItem="uQr-gH-XKs" secondAttribute="leading" id="MRy-yQ-ko1"/>
-                        <constraint firstAttribute="height" constant="146" id="U56-j2-Day"/>
-                        <constraint firstItem="thW-cH-R9p" firstAttribute="top" secondItem="uQr-gH-XKs" secondAttribute="top" constant="20" symbolic="YES" id="ZsL-RH-Lic"/>
-                        <constraint firstAttribute="trailing" secondItem="mfZ-oT-FF0" secondAttribute="trailing" id="bOQ-4G-53C"/>
-                        <constraint firstItem="mfZ-oT-FF0" firstAttribute="top" secondItem="nPr-n6-UaY" secondAttribute="bottom" constant="8" symbolic="YES" id="g0G-Wp-js8"/>
-                        <constraint firstAttribute="trailing" secondItem="nPr-n6-UaY" secondAttribute="trailing" id="otR-eV-9p0"/>
-                        <constraint firstItem="nPr-n6-UaY" firstAttribute="leading" secondItem="uQr-gH-XKs" secondAttribute="leading" id="pSb-SC-snd"/>
-                        <constraint firstItem="thW-cH-R9p" firstAttribute="leading" secondItem="uQr-gH-XKs" secondAttribute="leading" id="sKh-xG-xhx"/>
-                        <constraint firstAttribute="trailing" secondItem="thW-cH-R9p" secondAttribute="trailing" id="wBt-Ji-bJF"/>
-                    </constraints>
-                </view>
-            </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-            <constraints>
-                <constraint firstItem="OjP-L9-0gQ" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="6Uc-bK-hrc"/>
-                <constraint firstItem="LdL-6x-GRO" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="C1i-BX-z5k"/>
-                <constraint firstItem="uQr-gH-XKs" firstAttribute="top" secondItem="LdL-6x-GRO" secondAttribute="bottom" constant="8" symbolic="YES" id="Ipd-qp-Lwa"/>
-                <constraint firstItem="OjP-L9-0gQ" firstAttribute="top" secondItem="1" secondAttribute="top" constant="96" id="Jbf-vl-93g"/>
-                <constraint firstItem="LdL-6x-GRO" firstAttribute="top" secondItem="OjP-L9-0gQ" secondAttribute="bottom" constant="24" id="OlQ-iU-DL9"/>
-                <constraint firstAttribute="trailing" secondItem="uQr-gH-XKs" secondAttribute="trailing" constant="20" symbolic="YES" id="RXd-2l-ELf"/>
-                <constraint firstItem="uQr-gH-XKs" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="ZXl-Tv-beQ"/>
-                <constraint firstAttribute="trailing" secondItem="LdL-6x-GRO" secondAttribute="trailing" constant="20" symbolic="YES" id="h6t-px-Dha"/>
-                <constraint firstAttribute="trailing" secondItem="OjP-L9-0gQ" secondAttribute="trailing" constant="20" symbolic="YES" id="zfs-wW-xDC"/>
-            </constraints>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-        </view>
+        </tableView>
     </objects>
 </document>
