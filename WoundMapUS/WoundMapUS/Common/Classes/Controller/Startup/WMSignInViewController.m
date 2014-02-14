@@ -81,7 +81,7 @@ typedef enum {
         [actionSheet showInView:self.view];
     }
     if (self.hasNameInput) {
-        NSLog(@"Searching for name matching %@ in %d participants", self.nameInput, [WMParticipant participantCount:self.managedObjectContext persistentStore:nil]);
+        NSLog(@"Searching for name matching %@ in %ld participants", self.nameInput, (long)[WMParticipant participantCount:self.managedObjectContext persistentStore:nil]);
         self.possibleParticipant = [WMParticipant bestMatchingParticipantForUserName:self.nameInput managedObjectContext:self.managedObjectContext];
     } else {
         self.possibleParticipant = nil;

@@ -16,13 +16,6 @@
 
 @interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate>
 
-@property (readonly, nonatomic) WCAppDelegate *appDelegate;
-@property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
-@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, nonatomic) NSPersistentStore *store;
-@property (nonatomic) SMFetchPolicy fetchPolicy;
-@property (nonatomic) SMSavePolicy savePolicy;
-
 @property (weak, nonatomic) IBOutlet UIView *teamContainerView;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
 @property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
@@ -69,46 +62,6 @@
 }
 
 #pragma mark - Core
-
-- (WCAppDelegate *)appDelegate
-{
-    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-- (CoreDataHelper *)coreDataHelper
-{
-    return self.appDelegate.coreDataHelper;
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    return [self.appDelegate.coreDataHelper.stackMobStore contextForCurrentThread];
-}
-
-- (NSPersistentStore *)store
-{
-    return nil;
-}
-
-- (void)setFetchPolicy:(SMFetchPolicy)fetchPolicy
-{
-    if (_fetchPolicy == fetchPolicy) {
-        return;
-    }
-    // else
-    _fetchPolicy = fetchPolicy;
-    self.coreDataHelper.stackMobStore.fetchPolicy = fetchPolicy;
-}
-
-- (void)setSavePolicy:(SMSavePolicy)savePolicy
-{
-    if (_savePolicy == savePolicy) {
-        return;
-    }
-    // else
-    _savePolicy = savePolicy;
-    self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
-}
 
 - (WMSignInViewController *)signInViewController
 {

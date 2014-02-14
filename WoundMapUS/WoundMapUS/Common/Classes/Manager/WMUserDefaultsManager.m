@@ -7,6 +7,7 @@
 //
 
 #import "WMUserDefaultsManager.h"
+#import "WMNavigationTrack.h"
 
 NSDateFormatter * DOB_Formatter;
 
@@ -34,6 +35,7 @@ NSDateFormatter * DOB_Formatter;
 {
 }
 
+#pragma mark - Patient
 
 - (NSString *)lastTeamName
 {
@@ -64,6 +66,33 @@ NSDateFormatter * DOB_Formatter;
     }
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setValue:[DOB_Formatter stringFromDate:lastDateOfBirth] forKey:@"com.mobilehealthware.woundmap.lastDateOfBirth"];
+    [userDefaults synchronize];
+}
+
+#pragma mark - Clinical Care Setting/Stage of Care
+
+- (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
+{
+    NSString *title = self.defaultNavigationTrackTitle;
+    WMNavigationTrack *navigationTrack = nil;
+    if (title) {
+        navigationTrack = [WMNavigationTrack trackForTitle:title
+                                                    create:NO
+                                      managedObjectContext:managedObjectContext
+                                           persistentStore:store];
+    }
+    return navigationTrack;
+}
+
+- (NSString *)defaultNavigationTrackTitle
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.navigationTrackTitle"];
+}
+
+- (void)setDefaultNavigationTrackTitle:(NSString *)defaultNavigationTrackTitle
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:defaultNavigationTrackTitle forKey:@"com.mobilehealthware.woundmap.navigationTrackTitle"];
     [userDefaults synchronize];
 }
 

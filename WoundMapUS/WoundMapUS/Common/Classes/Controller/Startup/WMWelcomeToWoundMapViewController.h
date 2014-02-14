@@ -8,6 +8,6 @@
 
 #import "WMBaseViewController.h"
 
-@interface WMWelcomeToWoundMapViewController : UIViewController
+@interface WMWelcomeToWoundMapViewController : WMBaseViewController
 
 @end

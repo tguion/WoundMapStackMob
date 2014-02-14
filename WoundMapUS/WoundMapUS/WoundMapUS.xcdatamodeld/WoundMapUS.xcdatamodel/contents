@@ -224,10 +224,30 @@
         <attribute name="wmtelecomtype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMTelecom" inverseName="telecomType" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
+    <entity name="WMWoundType" representedClassName="WMWoundType" syncable="YES">
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="options" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="woundTypeCode" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundType" inverseName="parent" inverseEntity="WMWoundType" syncable="YES"/>
+        <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="children" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
     <elements>
         <element name="User" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMAddress" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMNavigationTrack" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="0" height="0"/>
@@ -235,8 +255,6 @@
         <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMNavigationTrack" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

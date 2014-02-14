@@ -8,11 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class WMNavigationTrack;
+
 @interface WMUserDefaultsManager : NSObject
 
 + (WMUserDefaultsManager *)sharedInstance;
 
 @property (nonatomic) NSString *lastTeamName;
 @property (nonatomic) NSDate *lastDateOfBirth;
+@property (nonatomic) NSString *defaultNavigationTrackTitle;
+
+- (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 
 @end
