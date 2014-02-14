@@ -47,4 +47,24 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSDate *)lastDateOfBirth
+{
+    NSString *dateString = [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.lastDateOfBirth"];
+    if (nil != dateString) {
+        return [DOB_Formatter dateFromString:dateString];
+    }
+    // else
+    return [NSDate dateWithTimeIntervalSinceNow:-60*60*24*365*50];
+}
+
+- (void)setLastDateOfBirth:(NSDate *)lastDateOfBirth
+{
+    if (nil == lastDateOfBirth) {
+        lastDateOfBirth = [NSDate date];
+    }
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:[DOB_Formatter stringFromDate:lastDateOfBirth] forKey:@"com.mobilehealthware.woundmap.lastDateOfBirth"];
+    [userDefaults synchronize];
+}
+
 @end

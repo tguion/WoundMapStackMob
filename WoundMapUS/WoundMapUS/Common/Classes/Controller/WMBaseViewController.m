@@ -8,6 +8,7 @@
 
 #import "WMBaseViewController.h"
 #import "StackMob.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
@@ -98,6 +99,20 @@
     _persistantObservers = nil;
 }
 
+- (UITableViewCell *)cellForView:(UIView *)aView
+{
+	UIView *bView = aView.superview;
+	while (nil != bView) {
+		if ([bView isKindOfClass:[UITableViewCell class]]) {
+			return (UITableViewCell *)bView;
+		}
+		// else
+		bView = bView.superview;
+	}
+	// else
+	return nil;
+}
+
 #pragma mark - Accessors
 
 - (WCAppDelegate *)appDelegate
@@ -124,6 +139,11 @@
     return nil;
 }
 
+- (WMUserDefaultsManager *)userDefaultsManager
+{
+    return [WMUserDefaultsManager sharedInstance];
+}
+
 - (NSMutableArray *)opaqueNotificationObservers
 {
     if (nil == _opaqueNotificationObservers) {
@@ -138,6 +158,13 @@
         _persistantObservers = [[NSMutableArray alloc] initWithCapacity:4];
     }
     return _persistantObservers;
+}
+
+#pragma mark - Active data
+
+- (WMPatient *)patient
+{
+    return self.appDelegate.patient;
 }
 
 #pragma mark - Table view data source

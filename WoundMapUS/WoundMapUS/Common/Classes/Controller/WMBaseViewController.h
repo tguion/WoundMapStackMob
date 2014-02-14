@@ -8,7 +8,8 @@
 
 #import "StackMob.h"
 
-@class WCAppDelegate, CoreDataHelper;
+@class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager;
+@class WMPatient;
 
 @interface WMBaseViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
@@ -18,6 +19,8 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 
+@property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
+
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSPersistentStore *store;
@@ -25,8 +28,10 @@
 @property (strong, nonatomic) NSMutableArray *opaqueNotificationObservers;  // observers that do away when the view dissappears
 @property (strong, nonatomic) NSMutableArray *persistantObservers;          // observers that do no go away when the view controller disappears
 
-- (void)clearDataCache;                                                         // clear all cached data for new or nil document
-- (void)clearAllReferences;                                                     // clear all references and all observers
+@property (readonly, nonatomic) WMPatient *patient;                         // active patient
+
+- (void)clearDataCache;                                                     // clear all cached data for new or nil document
+- (void)clearAllReferences;                                                 // clear all references and all observers
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (readonly, nonatomic) NSString *fetchedResultsControllerEntityName;
@@ -46,5 +51,7 @@
 - (NSUInteger)sectionIndexTableToFetchedResultsController:(NSUInteger)sectionIndex;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+
+- (UITableViewCell *)cellForView:(UIView *)aView;
 
 @end

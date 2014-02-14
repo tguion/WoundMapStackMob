@@ -19,6 +19,7 @@ extern const struct WMPatientAttributes {
 extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *ids;
 	__unsafe_unretained NSString *person;
+	__unsafe_unretained NSString *stage;
 } WMPatientRelationships;
 
 extern const struct WMPatientFetchedProperties {
@@ -26,6 +27,7 @@ extern const struct WMPatientFetchedProperties {
 
 @class WMId;
 @class WMPerson;
+@class WMNavigationStage;
 
 
 
@@ -162,6 +164,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMNavigationStage *stage;
+
+//- (BOOL)validateStage:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -245,6 +254,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (WMPerson*)primitivePerson;
 - (void)setPrimitivePerson:(WMPerson*)value;
+
+
+
+- (WMNavigationStage*)primitiveStage;
+- (void)setPrimitiveStage:(WMNavigationStage*)value;
 
 
 @end

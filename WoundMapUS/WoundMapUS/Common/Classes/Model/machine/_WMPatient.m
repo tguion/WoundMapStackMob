@@ -18,6 +18,7 @@ const struct WMPatientAttributes WMPatientAttributes = {
 const struct WMPatientRelationships WMPatientRelationships = {
 	.ids = @"ids",
 	.person = @"person",
+	.stage = @"stage",
 };
 
 const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
@@ -181,6 +182,10 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 	
 
 @dynamic person;
+
+	
+
+@dynamic stage;
 
 	
 

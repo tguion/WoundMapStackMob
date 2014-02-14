@@ -54,6 +54,14 @@
 		5F67D21718AC4ACF00460C37 /* WMSimpleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D21518AC4ACF00460C37 /* WMSimpleTableViewController.m */; };
 		5F67D21818AC4ACF00460C37 /* WMSimpleTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F67D21618AC4ACF00460C37 /* WMSimpleTableViewController.xib */; };
 		5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D21B18AC4DF400460C37 /* UIView+Custom.m */; };
+		5F67D22318AD8DE200460C37 /* _WMNavigationNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D21E18AD8DE200460C37 /* _WMNavigationNode.m */; };
+		5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D22018AD8DE200460C37 /* _WMNavigationStage.m */; };
+		5F67D22518AD8DE200460C37 /* _WMNavigationTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D22218AD8DE200460C37 /* _WMNavigationTrack.m */; };
+		5F67D22C18AD8DF000460C37 /* WMNavigationNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D22718AD8DF000460C37 /* WMNavigationNode.m */; };
+		5F67D22D18AD8DF000460C37 /* WMNavigationStage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D22918AD8DF000460C37 /* WMNavigationStage.m */; };
+		5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D22B18AD8DF000460C37 /* WMNavigationTrack.m */; };
+		5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F67D23018AD901600460C37 /* WMPatientDetailViewController.m */; };
+		5F67D23318AD901600460C37 /* WMPatientDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F67D23118AD901600460C37 /* WMPatientDetailViewController.xib */; };
 		7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060818A7D3400004DC32 /* Foundation.framework */; };
 		7DB2060B18A7D3400004DC32 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */; };
 		7DB2060D18A7D3400004DC32 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060C18A7D3400004DC32 /* UIKit.framework */; };
@@ -178,6 +186,21 @@
 		5F67D21618AC4ACF00460C37 /* WMSimpleTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMSimpleTableViewController.xib; sourceTree = "<group>"; };
 		5F67D21A18AC4DF400460C37 /* UIView+Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Custom.h"; sourceTree = "<group>"; };
 		5F67D21B18AC4DF400460C37 /* UIView+Custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Custom.m"; sourceTree = "<group>"; };
+		5F67D21D18AD8DE200460C37 /* _WMNavigationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMNavigationNode.h; sourceTree = "<group>"; };
+		5F67D21E18AD8DE200460C37 /* _WMNavigationNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMNavigationNode.m; sourceTree = "<group>"; };
+		5F67D21F18AD8DE200460C37 /* _WMNavigationStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMNavigationStage.h; sourceTree = "<group>"; };
+		5F67D22018AD8DE200460C37 /* _WMNavigationStage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMNavigationStage.m; sourceTree = "<group>"; };
+		5F67D22118AD8DE200460C37 /* _WMNavigationTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMNavigationTrack.h; sourceTree = "<group>"; };
+		5F67D22218AD8DE200460C37 /* _WMNavigationTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMNavigationTrack.m; sourceTree = "<group>"; };
+		5F67D22618AD8DF000460C37 /* WMNavigationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationNode.h; sourceTree = "<group>"; };
+		5F67D22718AD8DF000460C37 /* WMNavigationNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationNode.m; sourceTree = "<group>"; };
+		5F67D22818AD8DF000460C37 /* WMNavigationStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStage.h; sourceTree = "<group>"; };
+		5F67D22918AD8DF000460C37 /* WMNavigationStage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationStage.m; sourceTree = "<group>"; };
+		5F67D22A18AD8DF000460C37 /* WMNavigationTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationTrack.h; sourceTree = "<group>"; };
+		5F67D22B18AD8DF000460C37 /* WMNavigationTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationTrack.m; sourceTree = "<group>"; };
+		5F67D22F18AD901600460C37 /* WMPatientDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientDetailViewController.h; sourceTree = "<group>"; };
+		5F67D23018AD901600460C37 /* WMPatientDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientDetailViewController.m; sourceTree = "<group>"; };
+		5F67D23118AD901600460C37 /* WMPatientDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPatientDetailViewController.xib; sourceTree = "<group>"; };
 		7DB2060518A7D3400004DC32 /* WoundMapUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoundMapUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DB2060818A7D3400004DC32 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -606,6 +629,9 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				5F67D22F18AD901600460C37 /* WMPatientDetailViewController.h */,
+				5F67D23018AD901600460C37 /* WMPatientDetailViewController.m */,
+				5F67D23118AD901600460C37 /* WMPatientDetailViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
 				7DB2074B18ABC0850004DC32 /* WMBaseViewController.h */,
@@ -656,6 +682,12 @@
 				7DB206C418A839180004DC32 /* WMAddress.m */,
 				7DB206C518A839180004DC32 /* WMId.h */,
 				7DB206C618A839180004DC32 /* WMId.m */,
+				5F67D22618AD8DF000460C37 /* WMNavigationNode.h */,
+				5F67D22718AD8DF000460C37 /* WMNavigationNode.m */,
+				5F67D22818AD8DF000460C37 /* WMNavigationStage.h */,
+				5F67D22918AD8DF000460C37 /* WMNavigationStage.m */,
+				5F67D22A18AD8DF000460C37 /* WMNavigationTrack.h */,
+				5F67D22B18AD8DF000460C37 /* WMNavigationTrack.m */,
 				7DB206C718A839180004DC32 /* WMOrganization.h */,
 				7DB206C818A839180004DC32 /* WMOrganization.m */,
 				5F67D1BF18AC39B800460C37 /* WMParticipant.h */,
@@ -806,6 +838,12 @@
 				7DB206DC18A839240004DC32 /* _WMAddress.m */,
 				7DB206DD18A839240004DC32 /* _WMId.h */,
 				7DB206DE18A839240004DC32 /* _WMId.m */,
+				5F67D21D18AD8DE200460C37 /* _WMNavigationNode.h */,
+				5F67D21E18AD8DE200460C37 /* _WMNavigationNode.m */,
+				5F67D21F18AD8DE200460C37 /* _WMNavigationStage.h */,
+				5F67D22018AD8DE200460C37 /* _WMNavigationStage.m */,
+				5F67D22118AD8DE200460C37 /* _WMNavigationTrack.h */,
+				5F67D22218AD8DE200460C37 /* _WMNavigationTrack.m */,
 				7DB206DF18A839240004DC32 /* _WMOrganization.h */,
 				7DB206E018A839240004DC32 /* _WMOrganization.m */,
 				5F67D1C518AC39C600460C37 /* _WMParticipant.h */,
@@ -927,6 +965,7 @@
 				5F67D1BC18AC319000460C37 /* WMUserSignInViewController.xib in Resources */,
 				5F67D20318AC3BE000460C37 /* WoundMeasurement.plist in Resources */,
 				5F67D1FA18AC3BE000460C37 /* PsychoSocial.plist in Resources */,
+				5F67D23318AD901600460C37 /* WMPatientDetailViewController.xib in Resources */,
 				5F67D1B418AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib in Resources */,
 				5F67D21818AC4ACF00460C37 /* WMSimpleTableViewController.xib in Resources */,
 				5F67D1EF18AC3BE000460C37 /* AnatomicLocation.plist in Resources */,
@@ -979,15 +1018,18 @@
 				5F67D1CE18AC3B5B00460C37 /* WMUtilities.m in Sources */,
 				5F67D1BD18AC319000460C37 /* WMUsersViewController.m in Sources */,
 				7DB206B118A7D6950004DC32 /* Thumbnailer.m in Sources */,
+				5F67D22D18AD8DF000460C37 /* WMNavigationStage.m in Sources */,
 				5F67D1C318AC39B800460C37 /* WMParticipant.m in Sources */,
 				7DB206AF18A7D6950004DC32 /* CoreDataTVC.m in Sources */,
 				7DB206B518A7D8590004DC32 /* MigrationVC.m in Sources */,
 				7DB206AC18A7D6950004DC32 /* CoreDataHelper.m in Sources */,
+				5F67D22C18AD8DF000460C37 /* WMNavigationNode.m in Sources */,
 				7DB206D718A839180004DC32 /* WMTelecom.m in Sources */,
 				7DB206D118A839180004DC32 /* User.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7DB2062718A7D3400004DC32 /* WCMasterViewController.m in Sources */,
 				7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */,
+				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
@@ -996,6 +1038,7 @@
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DB206E918A839240004DC32 /* _User.m in Sources */,
 				7DB206ED18A839240004DC32 /* _WMPatient.m in Sources */,
+				5F67D22318AD8DE200460C37 /* _WMNavigationNode.m in Sources */,
 				7DB206AD18A7D6950004DC32 /* CoreDataImporter.m in Sources */,
 				7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */,
 				7DB206EB18A839240004DC32 /* _WMId.m in Sources */,
@@ -1011,9 +1054,12 @@
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
+				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
 				7DB206B018A7D6950004DC32 /* Faulter.m in Sources */,
 				7DB206D818A839180004DC32 /* WMTelecomType.m in Sources */,
+				5F67D22518AD8DE200460C37 /* _WMNavigationTrack.m in Sources */,
 				7DB206F018A839240004DC32 /* _WMTelecomType.m in Sources */,
+				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				7DB206D418A839180004DC32 /* WMOrganization.m in Sources */,
 				7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */,
 			);

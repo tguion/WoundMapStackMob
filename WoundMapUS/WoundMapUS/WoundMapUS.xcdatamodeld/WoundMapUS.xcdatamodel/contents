@@ -44,6 +44,64 @@
         <relationship name="organization" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMOrganization" inverseName="ids" inverseEntity="WMOrganization" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="ids" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
+    <entity name="WMNavigationNode" representedClassName="WMNavigationNode" syncable="YES">
+        <attribute name="activeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="closeUnit" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
+        <attribute name="closeValue" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="disabledFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="displayTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="frequencyUnit" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
+        <attribute name="frequencyValue" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
+        <attribute name="iapIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="patientFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="requiresPatientFlag" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="requiresWoundFlag" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="requiresWoundPhotoFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="taskIdentifier" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userSortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="wmnavigation_node_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="woundFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="woundTypeCodes" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parentNode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationNode" inverseName="subnodes" inverseEntity="WMNavigationNode" syncable="YES"/>
+        <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="nodes" inverseEntity="WMNavigationStage" syncable="YES"/>
+        <relationship name="subnodes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationNode" inverseName="parentNode" inverseEntity="WMNavigationNode" syncable="YES"/>
+    </entity>
+    <entity name="WMNavigationStage" representedClassName="WMNavigationStage" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="disabledFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="displayTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmnavigation_stage_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="nodes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationNode" inverseName="stage" inverseEntity="WMNavigationNode" syncable="YES"/>
+        <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="stage" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationTrack" inverseName="stages" inverseEntity="WMNavigationTrack" syncable="YES"/>
+    </entity>
+    <entity name="WMNavigationTrack" representedClassName="WMNavigationTrack" syncable="YES">
+        <attribute name="activeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="disabledFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="displayTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmnavigation_track_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="stages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationStage" inverseName="track" inverseEntity="WMNavigationStage" syncable="YES"/>
+    </entity>
     <entity name="WMOrganization" representedClassName="WMOrganization" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -104,6 +162,7 @@
         <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
+        <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
     </entity>
     <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -176,5 +235,8 @@
         <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMNavigationTrack" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>
