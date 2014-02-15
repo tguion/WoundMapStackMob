@@ -395,6 +395,7 @@
     [[self.view findFirstResponder] resignFirstResponder];
 }
 
+// TODO: handle nil undoManager
 - (IBAction)cancelAction:(id)sender
 {
     _willCancelFlag = YES;
@@ -403,6 +404,10 @@
         if (self.managedObjectContext.undoManager.canUndo) {
             // this should undo the insert of new patient
             [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    } else {
+        if (_newPatientFlag) {
+            [self.managedObjectContext deleteObject:self.patient];
         }
     }
     [self.delegate patientDetailViewControllerDidCancelUpdate:self];
