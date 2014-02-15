@@ -70,8 +70,7 @@
 - (WMNavigationTrack *)navigationTrack
 {
     if (nil == _navigationTrack) {
-        WMPatientManager *patientManager = [WMPatientManager sharedInstance];
-        _navigationTrack = [patientManager navigationTrackForCurrentPatient:self.managedObjectContext persistentStore:self.store];
+        _navigationTrack = [self.patientManager navigationTrackForCurrentPatient:self.managedObjectContext persistentStore:self.store];
     }
     return _navigationTrack;
 }
@@ -138,7 +137,7 @@
     WMNavigationTrackTableViewCell *myCell = (WMNavigationTrackTableViewCell *)cell;
     WMNavigationTrack *navigationTrack = [self.fetchedResultsController objectAtIndexPath:indexPath];
     myCell.navigationTrack = navigationTrack;
-    myCell.imageView.image = (navigationTrack == _navigationTrack ? [UIImage imageNamed:@"ui_circle"]:[UIImage imageNamed:@"ui_checkmark"]);
+    myCell.imageView.image = (navigationTrack == _navigationTrack ? [UIImage imageNamed:@"ui_checkmark"]:[UIImage imageNamed:@"ui_circle"]);
     myCell.accessoryType = UITableViewCellAccessoryNone;
 }
 
@@ -152,11 +151,6 @@
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
     return nil;
-}
-
-- (NSArray *)fetchedResultsControllerAffectedStores
-{
-    return [NSArray arrayWithObject:self.store];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

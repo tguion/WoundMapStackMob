@@ -14,7 +14,7 @@ const struct WMNavigationTrackAttributes WMNavigationTrackAttributes = {
 	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmnavigation_track_id = @"wmnavigation_track_id",
+	.wmnavigationtrack_id = @"wmnavigationtrack_id",
 };
 
 const struct WMNavigationTrackRelationships WMNavigationTrackRelationships = {
@@ -223,7 +223,7 @@ const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperti
 
 
 
-@dynamic wmnavigation_track_id;
+@dynamic wmnavigationtrack_id;
 
 
 

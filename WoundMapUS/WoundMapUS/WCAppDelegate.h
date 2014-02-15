@@ -10,7 +10,7 @@
 
 @class WMParticipant, User, WMPatient;
 
-@interface WCAppDelegate : UIResponder <UIApplicationDelegate>
+@interface WCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong, readonly) CoreDataHelper *coreDataHelper;

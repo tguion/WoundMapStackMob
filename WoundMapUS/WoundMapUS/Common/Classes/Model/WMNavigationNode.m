@@ -233,6 +233,10 @@ typedef enum {
         }
         navigationNode.woundTypeCodes = woundTypes;
     }
+    // save node before attempting to form relationship with subnode
+    NSError *error = nil;
+    [managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
     id subnodes = [dictionary objectForKey:@"subnodes"];
     if ([subnodes isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in subnodes) {

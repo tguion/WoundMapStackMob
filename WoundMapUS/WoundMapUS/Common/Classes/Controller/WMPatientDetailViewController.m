@@ -9,6 +9,8 @@
 #import "WMPatientDetailViewController.h"
 #import "WMPatient.h"
 #import "WMPerson.h"
+#import "WMNavigationTrack.h"
+#import "WMNavigationStage.h"
 //#import "WCWound+Custom.h"
 //#import "WCWoundType+Custom.h"
 //#import "WCWoundPhoto+Custom.h"
@@ -25,10 +27,16 @@
 #import "WMUserDefaultsManager.h"
 //#import "NavigationCoordinator.h"
 #import "UIView+Custom.h"
+#import "WCAppDelegate.h"
 
 @interface WMPatientDetailViewController ()
 
-@property (nonatomic) BOOL willCancelFlag;
+// data
+@property (strong, nonatomic) WMPatient *patient;
+@property (strong, nonatomic) NSArray *sortedWounds;
+// state
+@property (nonatomic) BOOL willCancelFlag;                                          // cancel action started
+// UI
 @property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryToolbar;
 @property (strong, nonatomic) IBOutlet UITableViewCell *firstNameCell;
 @property (weak, nonatomic) IBOutlet UITextField *firstNameField;
@@ -41,7 +49,6 @@
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePickerView;
 @property (strong, nonatomic) IBOutlet UITableViewCell *identifierCell;
 @property (weak, nonatomic) IBOutlet UITextField *identifierField;
-@property (strong, nonatomic) NSArray *sortedWounds;
 @property (strong, nonatomic) NSDateFormatter *dateOfBirthDateFormatter;
 
 //@property (readonly, nonatomic) WoundDetailViewController *woundDetailViewController;
@@ -79,20 +86,23 @@
 - (void)updateTitle
 {
     NSString *title = nil;
-    if (nil == self.patient) {
+    WMPatient *patient = self.patient;
+    if (nil == patient) {
         title = @"Anonymous";
     } else {
-        title = self.patient.lastNameFirstName;
+        title = patient.lastNameFirstName;
     }
     self.title = title;
 }
 
 - (void)updateModelFromView
 {
-    self.patient.person.nameGiven = self.firstNameField.text;
-    self.patient.person.nameFamily = self.lastNameField.text;
-    self.patient.dateOfBirth = self.datePickerView.date;
-    self.dobTextField.text = [self.dateOfBirthDateFormatter stringFromDate:self.patient.dateOfBirth];
+    WMPatient *patient = self.patient;
+    patient.person.nameGiven = self.firstNameField.text;
+    patient.person.nameFamily = self.lastNameField.text;
+    patient.dateOfBirth = self.datePickerView.date;
+//    self.dobTextField.text = [self.dateOfBirthDateFormatter stringFromDate:self.patient.dateOfBirth];
+    // TODO figure out how to allow more than one patient id
 //    self.patient.identifierEMR = self.identifierField.text;
     // save dob for next patient
     self.userDefaultsManager.lastDateOfBirth = self.patient.dateOfBirth;
@@ -102,8 +112,9 @@
 - (void)updateUIFromPatient
 {
     [self updateTitle];
-    if (nil != self.patient.dateOfBirth) {
-        self.datePickerView.date = self.patient.dateOfBirth;
+    WMPatient *patient = self.patient;
+    if (nil != patient.dateOfBirth) {
+        self.datePickerView.date = patient.dateOfBirth;
     }
     [self.tableView reloadData];
 }
@@ -203,6 +214,8 @@
 
 @implementation WMPatientDetailViewController
 
+@synthesize patient=_patient;
+
 - (void)setNewPatientFlag:(BOOL)newPatientFlag
 {
     if (_newPatientFlag == newPatientFlag) {
@@ -246,21 +259,10 @@
     _dateOfBirthDateFormatter = nil;
 }
 
-// clear any strong references to views
-//- (void)clearViewReferences
-//{
-//    [super clearViewReferences];
-//    _inputAccessoryToolbar = nil;
-//    _firstNameCell = nil; _firstNameField = nil;
-//    _lastNameCell = nil; _lastNameField = nil;
-//    _dobCell = nil; _dobTextField = nil;
-//    _identifierCell = nil; _identifierField = nil;
-//    _datePickerView = nil;
-//}
-
 - (void)clearDataCache
 {
     [super clearDataCache];
+    _patient = nil;
     _sortedWounds = nil;
 }
 
@@ -294,6 +296,8 @@
     _datePickerView.maximumDate = [NSDate date];
     _datePickerView.date = self.userDefaultsManager.lastDateOfBirth;
     [self.managedObjectContext.undoManager beginUndoGrouping];
+    // confirm that we have a clean moc
+    NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -306,14 +310,30 @@
     self.willCancelFlag = NO;
 }
 
-- (BOOL)isModalInPopover
-{
-    return YES;
-}
-
 #pragma mark - Core
 
 #pragma mark - BaseViewController
+
+- (WMPatient *)patient
+{
+    if (nil == _patient) {
+        if (_newPatientFlag) {
+            _patient = [WMPatient instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+            // set stage to initial for default clinical setting
+            WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext persistentStore:self.store];
+            WMNavigationStage *navigationStage = navigationTrack.initialStage;
+            _patient.stage = navigationStage;
+        } else {
+            _patient = super.patient;
+        }
+    }
+    return _patient;
+}
+
+- (void)setPatient:(WMPatient *)patient
+{
+    self.appDelegate.patient = patient;
+}
 
 #pragma mark - Actions
 
@@ -359,25 +379,27 @@
 
 - (IBAction)cancelAction:(id)sender
 {
-    self.willCancelFlag = YES;
+    _willCancelFlag = YES;
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
-        if (_willCancelFlag && self.managedObjectContext.undoManager.canUndo) {
+        if (self.managedObjectContext.undoManager.canUndo) {
+            // this should undo the insert of new patient
             [self.managedObjectContext.undoManager undoNestedGroup];
         }
     }
     [self.delegate patientDetailViewControllerDidCancelUpdate:self];
 }
 
+// NOTE: delegate would typically set self.patient to appDelegate.patient and save
 - (IBAction)saveAction:(id)sender
 {
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
     [[self.view findFirstResponder] resignFirstResponder];
-    [self updateModelFromView];
     // do not allow any further input
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateModelFromView) object:nil];
+    [self updateModelFromView];
     [self.delegate patientDetailViewControllerDidUpdatePatient:self];
 }
 
@@ -525,7 +547,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return (self.hideAddWoundFlag ? 2:3);
 }
 
 // fixed font style. use custom view (UILabel) if you want something different
@@ -627,26 +649,6 @@
                     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
                     cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 }
-            }
-            break;
-        }
-        case 3: {
-            // Actions
-            cellIdentifier = @"TreatmentCell";
-            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            }
-            break;
-        }
-        case 4: {
-            // Export
-            cellIdentifier = @"ExportCell";
-            cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
             break;
         }

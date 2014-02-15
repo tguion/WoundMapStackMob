@@ -11,12 +11,15 @@
 #import "WMUserSignInViewController.h"
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
+#import "WMValue1TableViewCell.h"
 #import "User.h"
 #import "WMParticipant.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
+#import "WMSeedDatabaseManager.h"
+#import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
@@ -31,6 +34,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
 @property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
+
+@property (strong, nonatomic) IBOutlet UIView *footerView;
+@property (weak, nonatomic) IBOutlet UIButton *enterWoundMapButton;
+
+- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
 
 - (IBAction)signInAction:(id)sender;
 - (IBAction)joinTeamAction:(id)sender;
@@ -54,7 +62,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.title = @"Welcome to WoundMap";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -62,9 +72,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [super viewWillAppear:animated];
     self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     self.savePolicy = SMSavePolicyNetworkThenCache;
-    if (nil != self.appDelegate.stackMobUsername) {
-        [self.coreDataHelper.stackMobStore syncWithServer];
-    }
+    self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,6 +82,66 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 }
 
 #pragma mark - Core
+
+- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
+{
+    NSString *cellReuseIdentifier = @"Cell";
+    switch (indexPath.section) {
+        case 0: {
+            switch (indexPath.row) {
+                case 0: {
+                    cellReuseIdentifier = @"Cell";
+                    break;
+                }
+                case 1: {
+                    if (_welcomeState == WMWelcomeStateInitial) {
+                        cellReuseIdentifier = @"Cell";
+                    } else {
+                        cellReuseIdentifier = @"ValueCell";
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        case 1: {
+            switch (indexPath.row) {
+                case 0: {
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+                }
+                case 1: {
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+                }
+                case 2: {
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return cellReuseIdentifier;
+}
+
+- (BOOL)setupConfigurationComplete
+{
+    if (nil == self.appDelegate.participant) {
+        return NO;
+    }
+    // else
+    if (nil == self.userDefaultsManager.defaultNavigationTrackTitle) {
+        return NO;
+    }
+    // else
+    NSInteger patientCount = self.patientManager.patientCount;
+    if (0 == patientCount) {
+        return NO;
+    }
+    // else
+    return (nil != self.appDelegate.patient);
+}
 
 - (WMSignInViewController *)signInViewController
 {
@@ -98,15 +166,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentChooseNavigationTrack
 {
-    if (self.isIPadIdiom) {
-        [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
-    } else {
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.chooseTrackViewController];
-        navigationController.delegate = self.appDelegate;
-        [self presentViewController:navigationController animated:YES completion:^{
-            // nothing
-        }];
-    }
+    [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
 }
 
 - (WMPatientDetailViewController *)patientDetailViewController
@@ -173,7 +233,33 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     UISwitch *deferTeamSwitch = (UISwitch *)sender;
     self.welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateInitial);
+    if (deferTeamSwitch.isOn) {
+        self.tableView.tableFooterView = _footerView;
+    } else {
+        self.tableView.tableFooterView = nil;
+    }
     [self.tableView reloadData];
+}
+
+#pragma mark - Notification handlers
+
+// network synch with server has finished - subclasses may need to override
+- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+{
+    // install footer to allow access to WoundMap
+    self.tableView.tableFooterView = _footerView;
+    [super handleStackMobNetworkSynchFinished:notification];
+    // seed StackMob
+    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+    __weak __typeof(self) weakSelf = self;
+    [seedDatabaseManager seedTeamDatabaseWithCompletionHandler:^(NSError *error) {
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf hideProgressView];
+        });
+    }];
 }
 
 #pragma mark - UITableViewDelegate
@@ -196,12 +282,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
                     User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:self.managedObjectContext persistentStore:self.store];
                     userSignInViewController.selectedUser = user;
-                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:userSignInViewController];
-                    [self presentViewController:navigationController
-                                       animated:YES
-                                     completion:^{
-                                         // nothing
-                                     }];
+                    [self.navigationController pushViewController:userSignInViewController animated:YES];
                     break;
                 }
                 case 1: {
@@ -215,12 +296,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             switch (indexPath.row) {
                 case 0: {
                     // create account/sign in
-                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.signInViewController];
-                    [self presentViewController:navigationController
-                                       animated:YES
-                                     completion:^{
-                                         // nothing
-                                     }];
+                    [self.navigationController pushViewController:self.signInViewController animated:YES];
                     break;
                 }
                 case 1: {
@@ -230,8 +306,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 }
                 case 2: {
                     // add/change patient
-                    WMPatientManager *patientManager = [WMPatientManager sharedInstance];
-                    NSInteger patientCount = patientManager.patientCount;
+                    NSInteger patientCount = self.patientManager.patientCount;
                     if (0 == patientCount) {
                         [self presentAddPatientViewController];
                     }
@@ -247,7 +322,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return (_welcomeState > WMWelcomeStateDeferTeam ? 2:1);
+    return (_welcomeState >= WMWelcomeStateTeamSelected ? 2:1);
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -290,7 +365,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    NSString *cellReuseIdentifier = [self cellReuseIdentifier:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
@@ -312,12 +388,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 }
                 case 1: {
                     if (_welcomeState == WMWelcomeStateInitial) {
-                        title = @"Defer Join Team";
+                        title = @"Defer Joining Team";
                         UISwitch *deferTeamSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
                         [deferTeamSwitch addTarget:self action:@selector(deferTeamAction:) forControlEvents:UIControlEventValueChanged];
                         accessoryView = deferTeamSwitch;
                     } else {
-                        title = @"Team";
+                        title = @"Connected to Team:";
+                        image = [UIImage imageNamed:@"ui_checkmark"];
                         value = self.appDelegate.stackMobUsername;
                     }
                     break;
@@ -328,7 +405,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case 1: {
             switch (indexPath.row) {
                 case 0: {
-                    title = (nil == self.appDelegate.participant ? @"Create Account/Sign In":@"Change Account");
                     if (nil == self.appDelegate.participant) {
                         title = @"Create Account/Sign In";
                         image = [UIImage imageNamed:@"ui_circle"];
@@ -360,7 +436,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         [activityIndicatorView startAnimating];
                         cell.accessoryView = activityIndicatorView;
                     } else {
-                        WMPatientManager *patientManager = [WMPatientManager sharedInstance];
+                        WMPatientManager *patientManager = self.patientManager;
                         NSInteger patientCount = patientManager.patientCount;
                         if (0 == patientCount) {
                             title = @"Add Patient";
@@ -408,17 +484,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
-    [self.coreDataHelper backgroundSaveContext];
+    [self showProgressViewWithMessage:@"Updating Participant account"];
+    __weak __typeof(self) weakSelf = self;
+    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf hideProgressView];
+            [weakSelf.tableView reloadData];
+        });
+    }];
     [viewController clearAllReferences];
-    BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
-    if (isIPadIdiom) {
-
-    } else {
-        __weak __typeof(self) weakSelf = self;
-        [self dismissViewControllerAnimated:YES completion:^{
-            NSLog(@"TODO: fixme %@", weakSelf);
-        }];
-    }
+    [self.navigationController popViewControllerAnimated:YES];
     self.welcomeState = WMWelcomeStateParticipantSelected;
 }
 
@@ -426,20 +504,25 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUsername:(NSString *)username
 {
-    self.appDelegate.stackMobUsername = username;
-    [self dismissViewControllerAnimated:YES completion:^{
-        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-        userDefaultsManager.lastTeamName = username;
+    [self showProgressViewWithMessage:@"Updating Team Account"];
+    __weak __typeof(self) weakSelf = self;
+    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.appDelegate.stackMobUsername = username;
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+            weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+            // now that we have a team, synch with server and wait for call back
+            [weakSelf.coreDataHelper.stackMobStore syncWithServer];
+        });
     }];
-    self.welcomeState = WMWelcomeStateTeamSelected;
-    [self.tableView reloadData];
 }
 
 - (void)userSignInViewControllerDidCancel:(WMUserSignInViewController *)viewController
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        // nothing
-    }];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - ChooseTrackDelegate
@@ -448,37 +531,23 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     WMUserDefaultsManager *userDefaultsManger = self.userDefaultsManager;
     userDefaultsManger.defaultNavigationTrackTitle = navigationTrack.title;
-    if (self.isIPadIdiom) {
-        [self.navigationController popViewControllerAnimated:YES];
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-            // nothing
-        }];
-    }
+    [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    [self.tableView reloadData];
 }
 
 - (void)chooseTrackViewControllerDidCancel:(WMChooseTrackViewController *)viewController
 {
-    if (self.isIPadIdiom) {
-        [self.navigationController popViewControllerAnimated:YES];
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-            // nothing
-        }];
-    }
+    [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
 }
 
 #pragma mark - PatientDetailViewControllerDelegate
 
-- (void)patientDetailViewControllerDidUpdatePatient:(PatientDetailViewController *)viewController
+- (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
-    self.waitingForSaveToFinish = YES;
-    // if this is a new patient, update stage to initial workup
-    if (viewController.isNewPatient) {
-        self.navigationCoordinator.navigationStage = self.navigationCoordinator.navigationTrack.initialStage;
-    }
+    // update our reference to current patient
+    self.appDelegate.patient = viewController.patient;
     if (self.isIPadIdiom) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -488,16 +557,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }
     // clear memory
     [viewController clearAllReferences];
-    // synchronize the index store
-    [self.patientManager updateIndexPatientFromDocumentPatient:self.patient];
+    // save
+    [self.coreDataHelper backgroundSaveContext];
 }
 
-- (void)patientDetailViewControllerDidCancelUpdate:(PatientDetailViewController *)viewController
+- (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController
 {
-    if (viewController.isNewPatient) {
-        [self showProgressView];
-        [self.documentManager deleteDocument:viewController.patient.documentName];
-    }
     if (self.isIPadIdiom) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -507,6 +572,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }
     // clear memory
     [viewController clearAllReferences];
+    // confirm that we have a clean moc
+    NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
 }
 
 @end

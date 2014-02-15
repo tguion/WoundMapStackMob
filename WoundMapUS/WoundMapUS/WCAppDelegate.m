@@ -8,6 +8,7 @@
 
 #import "WCAppDelegate.h"
 #import "WMWelcomeToWoundMapViewController.h"
+#import "WMUserDefaultsManager.h"
 
 @implementation WCAppDelegate {
     CoreDataHelper *cdh;
@@ -45,7 +46,9 @@
     [self cdh];
     // initialize UI
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]];
+    navigationController.delegate = self;
+    self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -93,6 +96,31 @@
     }
     // Saves changes in the application's managed object context before the application terminates.
     [[self cdh] saveContext];
+}
+
+#pragma mark - Global Data
+
+- (void)setStackMobUsername:(NSString *)stackMobUsername
+{
+    if (_stackMobUsername == stackMobUsername) {
+        return;
+    }
+    // else
+    _stackMobUsername = stackMobUsername;
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    userDefaultsManager.lastTeamName = stackMobUsername;
+}
+
+#pragma mark - UINavigationControllerDelegate
+
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController *)navigationController
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController *)navigationController
+{
+    return UIInterfaceOrientationPortrait;
 }
 
 @end

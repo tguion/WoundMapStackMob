@@ -11,11 +11,15 @@ extern const struct UserAttributes {
 } UserAttributes;
 
 extern const struct UserRelationships {
+	__unsafe_unretained NSString *consultingGroup;
+	__unsafe_unretained NSString *consultingPatients;
 } UserRelationships;
 
 extern const struct UserFetchedProperties {
 } UserFetchedProperties;
 
+@class WMConsultingGroup;
+@class WMPatient;
 
 
 
@@ -64,10 +68,29 @@ extern const struct UserFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMConsultingGroup *consultingGroup;
+
+//- (BOOL)validateConsultingGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) NSSet *consultingPatients;
+
+- (NSMutableSet*)consultingPatientsSet;
+
+
+
+
 
 @end
 
 @interface _User (CoreDataGeneratedAccessors)
+
+- (void)addConsultingPatients:(NSSet*)value_;
+- (void)removeConsultingPatients:(NSSet*)value_;
+- (void)addConsultingPatientsObject:(WMPatient*)value_;
+- (void)removeConsultingPatientsObject:(WMPatient*)value_;
 
 @end
 
@@ -90,6 +113,16 @@ extern const struct UserFetchedProperties {
 - (void)setPrimitiveUsername:(NSString*)value;
 
 
+
+
+
+- (WMConsultingGroup*)primitiveConsultingGroup;
+- (void)setPrimitiveConsultingGroup:(WMConsultingGroup*)value;
+
+
+
+- (NSMutableSet*)primitiveConsultingPatients;
+- (void)setPrimitiveConsultingPatients:(NSMutableSet*)value;
 
 
 @end

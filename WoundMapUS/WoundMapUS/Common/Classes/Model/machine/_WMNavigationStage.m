@@ -13,7 +13,7 @@ const struct WMNavigationStageAttributes WMNavigationStageAttributes = {
 	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmnavigation_stage_id = @"wmnavigation_stage_id",
+	.wmnavigationstage_id = @"wmnavigationstage_id",
 };
 
 const struct WMNavigationStageRelationships WMNavigationStageRelationships = {
@@ -193,7 +193,7 @@ const struct WMNavigationStageFetchedProperties WMNavigationStageFetchedProperti
 
 
 
-@dynamic wmnavigation_stage_id;
+@dynamic wmnavigationstage_id;
 
 
 

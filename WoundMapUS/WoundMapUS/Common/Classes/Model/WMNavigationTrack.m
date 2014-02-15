@@ -207,6 +207,10 @@ typedef enum {
     navigationTrack.limitToSinglePatientFlag = [[dictionary objectForKey:@"limitToSinglePatientFlag"] boolValue];
     navigationTrack.skipCarePlanFlag = [[dictionary objectForKey:@"skipCarePlanFlag"] boolValue];
     navigationTrack.skipPolicyEditor = [[dictionary objectForKey:@"skipPolicyEditor"] boolValue];
+    // save track before attempting to form relationship with stage
+    NSError *error = nil;
+    [managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
     id stages = [dictionary objectForKey:@"stages"];
     if ([stages isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in stages) {

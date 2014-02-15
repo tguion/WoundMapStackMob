@@ -43,5 +43,6 @@ extern NSString *const kStackMobNetworkSynchFinishedNotification;
 - (void)setupCoreData;
 - (void)saveContext;
 - (void)backgroundSaveContext;
+- (void)saveContextWithCompletionHandler:(void (^)(NSError *))handler;
 
 @end

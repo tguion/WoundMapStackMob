@@ -134,14 +134,18 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     _stackMobClient  = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"69230b76-7939-4342-8d8f-4fb739e2aef4"];
     _stackMobStore = [_stackMobClient coreDataStoreWithManagedObjectModel:_model];
     // fetch from cache until user logged in - each view controller should update the policy as needed
-    _stackMobStore.fetchPolicy = SMFetchPolicyCacheOnly;
-    _stackMobStore.savePolicy = SMSavePolicyCacheOnly;
+    _stackMobStore.fetchPolicy = SMFetchPolicyTryCacheElseNetwork;
+    _stackMobStore.savePolicy = SMSavePolicyNetworkThenCache;
     
     __weak SMCoreDataStore *cds = _stackMobStore;
     __weak __typeof(self) weakSelf = self;
     [_stackMobClient.session.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^SMFetchPolicy(SMNetworkStatus status) {
         [weakSelf alertUserNetworkReachabilityChanged:status];
         if (status == SMNetworkStatusReachable) {
+            if (nil == weakSelf.appDelegate.stackMobUsername) {
+                return cds.fetchPolicy;
+            }
+            // else
             if (weakSelf.synchWithStackMobOnNetworkAvailable) {
                 [cds syncWithServer];
                 return SMFetchPolicyTryNetworkElseCache;
@@ -158,7 +162,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         // Our syncing is complete, so change the policy to fetch from the network
         [weakStackMobStore setFetchPolicy:SMFetchPolicyTryNetworkElseCache];
         // Notify other views that they should reload their data from the network
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kStackMobNetworkSynchFinishedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kStackMobNetworkSynchFinishedNotification object:nil];
     }];
     
     _context = [_stackMobStore contextForCurrentThread];
@@ -287,6 +291,17 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         NSLog(@"SAVED changes to StackMob store (in the background)");
     } onFailure:^(NSError *error) {
         NSLog(@"FAILED to save changes to StackMob store (in the background): %@", error);
+    }];
+}
+
+- (void)saveContextWithCompletionHandler:(void (^)(NSError *))handler
+{
+    NSParameterAssert(handler != nil);
+    NSManagedObjectContext *stackMobContext = [_stackMobStore contextForCurrentThread];
+    [stackMobContext saveOnSuccess:^{
+        handler(nil);
+    } onFailure:^(NSError *error) {
+        handler(error);
     }];
 }
 

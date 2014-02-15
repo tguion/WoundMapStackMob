@@ -15,7 +15,7 @@ extern const struct WMNavigationTrackAttributes {
 	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmnavigation_track_id;
+	__unsafe_unretained NSString *wmnavigationtrack_id;
 } WMNavigationTrackAttributes;
 
 extern const struct WMNavigationTrackRelationships {
@@ -168,11 +168,11 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmnavigation_track_id;
+@property (nonatomic, strong) NSString* wmnavigationtrack_id;
 
 
 
-//- (BOOL)validateWmnavigation_track_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateWmnavigationtrack_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -272,8 +272,8 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
-- (NSString*)primitiveWmnavigation_track_id;
-- (void)setPrimitiveWmnavigation_track_id:(NSString*)value;
+- (NSString*)primitiveWmnavigationtrack_id;
+- (void)setPrimitiveWmnavigationtrack_id:(NSString*)value;
 
 
 

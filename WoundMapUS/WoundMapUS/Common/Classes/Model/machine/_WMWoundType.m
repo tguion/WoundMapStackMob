@@ -4,9 +4,11 @@
 #import "_WMWoundType.h"
 
 const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
+	.createddate = @"createddate",
 	.definition = @"definition",
 	.flags = @"flags",
 	.label = @"label",
+	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.options = @"options",
 	.placeHolder = @"placeHolder",
@@ -16,6 +18,7 @@ const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
 	.sortRank = @"sortRank",
 	.title = @"title",
 	.valueTypeCode = @"valueTypeCode",
+	.wmwoundtype_id = @"wmwoundtype_id",
 	.woundTypeCode = @"woundTypeCode",
 };
 
@@ -85,6 +88,13 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 
+@dynamic createddate;
+
+
+
+
+
+
 @dynamic definition;
 
 
@@ -119,6 +129,13 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 @dynamic label;
+
+
+
+
+
+
+@dynamic lastmoddate;
 
 
 
@@ -240,6 +257,13 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
+
+
+
+
+
+@dynamic wmwoundtype_id;
+
 
 
 

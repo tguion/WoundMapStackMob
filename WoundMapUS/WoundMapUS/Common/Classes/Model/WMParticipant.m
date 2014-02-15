@@ -32,17 +32,29 @@
 
 + (WMParticipant *)bestMatchingParticipantForUserName:(NSString *)name managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
+    NSFetchRequest *request = [self bestMatchingParticipantFetchRequestForUserName:name
+                                                              managedObjectContext:managedObjectContext];
+    __block WMParticipant *participant = nil;
+    [managedObjectContext performBlockAndWait:^{
+        NSError *error = nil;
+        NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+            abort();
+        }
+        // else
+        participant = [array lastObject];
+    }];
+    return participant;
+}
+
++ (NSFetchRequest *)bestMatchingParticipantFetchRequestForUserName:(NSString *)name
+                                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH[cd] %@", name]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-        abort();
-    }
-    // else
-    return [array lastObject];
+    return request;
 }
 
 + (WMParticipant *)participantForName:(NSString *)name

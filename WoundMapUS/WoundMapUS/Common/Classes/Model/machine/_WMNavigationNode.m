@@ -25,7 +25,7 @@ const struct WMNavigationNodeAttributes WMNavigationNodeAttributes = {
 	.taskIdentifier = @"taskIdentifier",
 	.title = @"title",
 	.userSortRank = @"userSortRank",
-	.wmnavigation_node_id = @"wmnavigation_node_id",
+	.wmnavigationnode_id = @"wmnavigationnode_id",
 	.woundFlag = @"woundFlag",
 	.woundTypeCodes = @"woundTypeCodes",
 };
@@ -560,7 +560,7 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 
 
 
-@dynamic wmnavigation_node_id;
+@dynamic wmnavigationnode_id;
 
 
 

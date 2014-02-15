@@ -73,7 +73,7 @@
         <attribute name="taskIdentifier" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userSortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="wmnavigation_node_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="wmnavigationnode_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="woundFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="woundTypeCodes" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="parentNode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationNode" inverseName="subnodes" inverseEntity="WMNavigationNode" syncable="YES"/>
@@ -90,7 +90,7 @@
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="wmnavigation_stage_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="wmnavigationstage_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="nodes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationNode" inverseName="stage" inverseEntity="WMNavigationNode" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="stage" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="track" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationTrack" inverseName="stages" inverseEntity="WMNavigationTrack" syncable="YES"/>
@@ -106,7 +106,7 @@
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="wmnavigation_track_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="wmnavigationtrack_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="stages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationStage" inverseName="track" inverseEntity="WMNavigationStage" syncable="YES"/>
     </entity>
     <entity name="WMOrganization" representedClassName="WMOrganization" syncable="YES">
@@ -233,9 +233,11 @@
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMTelecom" inverseName="telecomType" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
     <entity name="WMWoundType" representedClassName="WMWoundType" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="options" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
@@ -245,6 +247,7 @@
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="wmwoundtype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="woundTypeCode" optional="YES" attributeType="Integer 16" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundType" inverseName="parent" inverseEntity="WMWoundType" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="children" inverseEntity="WMWoundType" syncable="YES"/>

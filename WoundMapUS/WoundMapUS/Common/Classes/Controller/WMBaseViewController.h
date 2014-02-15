@@ -8,7 +8,7 @@
 
 #import "StackMob.h"
 
-@class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager;
+@class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager, WMPatientManager;
 @class WMPatient;
 @class WMProgressViewHUD;
 
@@ -21,6 +21,7 @@
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 
 @property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
+@property (readonly, nonatomic) WMPatientManager *patientManager;
 
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;

@@ -26,7 +26,7 @@ extern const struct WMNavigationNodeAttributes {
 	__unsafe_unretained NSString *taskIdentifier;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *userSortRank;
-	__unsafe_unretained NSString *wmnavigation_node_id;
+	__unsafe_unretained NSString *wmnavigationnode_id;
 	__unsafe_unretained NSString *woundFlag;
 	__unsafe_unretained NSString *woundTypeCodes;
 } WMNavigationNodeAttributes;
@@ -348,11 +348,11 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmnavigation_node_id;
+@property (nonatomic, strong) NSString* wmnavigationnode_id;
 
 
 
-//- (BOOL)validateWmnavigation_node_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateWmnavigationnode_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -586,8 +586,8 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
-- (NSString*)primitiveWmnavigation_node_id;
-- (void)setPrimitiveWmnavigation_node_id:(NSString*)value;
+- (NSString*)primitiveWmnavigationnode_id;
+- (void)setPrimitiveWmnavigationnode_id:(NSString*)value;
 
 
 

@@ -17,6 +17,7 @@ extern const struct WMPatientAttributes {
 } WMPatientAttributes;
 
 extern const struct WMPatientRelationships {
+	__unsafe_unretained NSString *consultants;
 	__unsafe_unretained NSString *ids;
 	__unsafe_unretained NSString *person;
 	__unsafe_unretained NSString *stage;
@@ -25,6 +26,7 @@ extern const struct WMPatientRelationships {
 extern const struct WMPatientFetchedProperties {
 } WMPatientFetchedProperties;
 
+@class User;
 @class WMId;
 @class WMPerson;
 @class WMNavigationStage;
@@ -150,6 +152,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *consultants;
+
+- (NSMutableSet*)consultantsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *ids;
 
 - (NSMutableSet*)idsSet;
@@ -175,6 +184,11 @@ extern const struct WMPatientFetchedProperties {
 @end
 
 @interface _WMPatient (CoreDataGeneratedAccessors)
+
+- (void)addConsultants:(NSSet*)value_;
+- (void)removeConsultants:(NSSet*)value_;
+- (void)addConsultantsObject:(User*)value_;
+- (void)removeConsultantsObject:(User*)value_;
 
 - (void)addIds:(NSSet*)value_;
 - (void)removeIds:(NSSet*)value_;
@@ -244,6 +258,11 @@ extern const struct WMPatientFetchedProperties {
 - (void)setPrimitiveWmpatient_id:(NSString*)value;
 
 
+
+
+
+- (NSMutableSet*)primitiveConsultants;
+- (void)setPrimitiveConsultants:(NSMutableSet*)value;
 
 
 

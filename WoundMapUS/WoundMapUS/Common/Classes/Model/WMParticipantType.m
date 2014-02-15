@@ -24,9 +24,13 @@
 
 + (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    __block NSInteger count = 0;
+    [managedObjectContext performBlockAndWait:^{
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
+        count = [managedObjectContext countForFetchRequest:request error:NULL];
+    }];
+    return count;
 }
 
 + (WMParticipantType *)participantTypeForTitle:(NSString *)title

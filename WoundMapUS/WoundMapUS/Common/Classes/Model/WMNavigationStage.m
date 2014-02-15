@@ -101,6 +101,10 @@ NSString *const kDischargeStageTitle = @"Discharge";
     navigationStage.icon = [dictionary objectForKey:@"icon"];
     navigationStage.sortRank = [dictionary objectForKey:@"sortRank"];
     navigationStage.desc = [dictionary objectForKey:@"desc"];
+    // save stage before attempting to form relationship with node
+    NSError *error = nil;
+    [managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
     id nodes = [dictionary objectForKey:@"nodes"];
     if ([nodes isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in nodes) {

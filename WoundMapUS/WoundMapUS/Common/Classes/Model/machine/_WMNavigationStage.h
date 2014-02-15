@@ -14,7 +14,7 @@ extern const struct WMNavigationStageAttributes {
 	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmnavigation_stage_id;
+	__unsafe_unretained NSString *wmnavigationstage_id;
 } WMNavigationStageAttributes;
 
 extern const struct WMNavigationStageRelationships {
@@ -156,11 +156,11 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmnavigation_stage_id;
+@property (nonatomic, strong) NSString* wmnavigationstage_id;
 
 
 
-//- (BOOL)validateWmnavigation_stage_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateWmnavigationstage_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -270,8 +270,8 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
-- (NSString*)primitiveWmnavigation_stage_id;
-- (void)setPrimitiveWmnavigation_stage_id:(NSString*)value;
+- (NSString*)primitiveWmnavigationstage_id;
+- (void)setPrimitiveWmnavigationstage_id:(NSString*)value;
 
 
 

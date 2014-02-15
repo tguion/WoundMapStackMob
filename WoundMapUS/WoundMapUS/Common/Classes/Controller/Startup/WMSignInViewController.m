@@ -81,8 +81,20 @@ typedef enum {
         [actionSheet showInView:self.view];
     }
     if (self.hasNameInput) {
-        NSLog(@"Searching for name matching %@ in %ld participants", self.nameInput, (long)[WMParticipant participantCount:self.managedObjectContext persistentStore:nil]);
-        self.possibleParticipant = [WMParticipant bestMatchingParticipantForUserName:self.nameInput managedObjectContext:self.managedObjectContext];
+        id firstResponder = [self.view findFirstResponder];
+        if ([firstResponder isEqual:self.nameTextField]) {
+            NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+            NSLog(@"Searching for name matching %@ in %ld participants", self.nameInput, (long)[WMParticipant participantCount:managedObjectContext persistentStore:self.store]);
+            NSFetchRequest *request = [WMParticipant bestMatchingParticipantFetchRequestForUserName:self.nameInput managedObjectContext:managedObjectContext];
+            SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
+            NSError *error = nil;
+            NSArray *participants = [managedObjectContext executeFetchRequestAndWait:request
+                                                              returnManagedObjectIDs:NO
+                                                                             options:options
+                                                                               error:&error];
+            [WMUtilities logError:error];
+            self.possibleParticipant = [participants firstObject];
+        }
     } else {
         self.possibleParticipant = nil;
     }
@@ -188,8 +200,8 @@ typedef enum {
     }
     [self.navigationItem setHidesBackButton:YES];
     [self.delegate signInViewControllerWillAppear:self];
-    self.fetchPolicy = SMFetchPolicyCacheOnly;
-    self.savePolicy = SMSavePolicyCacheOnly;
+    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
+    self.savePolicy = SMSavePolicyNetworkThenCache;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -372,6 +384,11 @@ typedef enum {
                                                 managedObjectContext:self.managedObjectContext
                                                      persistentStore:nil];
                 self.participant.email = self.emailTextField.text;
+                // save participant before creating relationship
+                // save track before attempting to form relationship with stage
+                NSError *error = nil;
+                [self.managedObjectContext saveAndWait:&error];
+                [WMUtilities logError:error];
                 self.participant.participantType = _selectedParticipantType;
                 [self.delegate signInViewController:self didSignInParticipant:self.participant];
                 [self performSelector:@selector(reset) withObject:nil afterDelay:0.0];
@@ -485,11 +502,6 @@ typedef enum {
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 2) {
-        [WMParticipantType seedDatabase:self.managedObjectContext persistentStore:nil];
-        [self.coreDataHelper backgroundSaveContext];
-        if (nil != self.appDelegate.stackMobUsername) {
-            [self.coreDataHelper.stackMobStore syncWithServer];
-        }
         WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
         [self.navigationController pushViewController:simpleTableViewController animated:YES];
         simpleTableViewController.title = @"Select Role";

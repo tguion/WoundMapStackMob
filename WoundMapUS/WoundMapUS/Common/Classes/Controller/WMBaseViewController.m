@@ -10,6 +10,7 @@
 #import "WMProgressViewHUD.h"
 #import "StackMob.h"
 #import "WMUserDefaultsManager.h"
+#import "WMPatientManager.h"
 #import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
@@ -40,6 +41,13 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    // listen for stuff
+    [self registerForNotifications];
 }
 
 - (void)didReceiveMemoryWarning
@@ -163,16 +171,19 @@
 - (void)registerForNotifications
 {
     __weak __typeof(self) weakSelf = self;
-    // user changed iCloud account
-    id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kStackMobNetworkSynchFinishedNotification
-                                                                    object:nil
-                                                                     queue:[NSOperationQueue mainQueue]
-                                                                usingBlock:^(NSNotification *notification) {
-                                                                    [weakSelf handleStackMobNetworkSynchFinished:notification];
-                                                                }];
-    [self.persistantObservers addObject:observer];
-
-    
+    // check if we are already registered
+    if (0 == [self.opaqueNotificationObservers count]) {
+        // add observers
+    }
+    if (0 == [self.persistantObservers count]) {
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kStackMobNetworkSynchFinishedNotification
+                                                                        object:nil
+                                                                         queue:[NSOperationQueue mainQueue]
+                                                                    usingBlock:^(NSNotification *notification) {
+                                                                        [weakSelf handleStackMobNetworkSynchFinished:notification];
+                                                                    }];
+        [self.persistantObservers addObject:observer];
+    }
 }
 
 - (void)unregisterForNotifications
@@ -221,6 +232,11 @@
 - (WMUserDefaultsManager *)userDefaultsManager
 {
     return [WMUserDefaultsManager sharedInstance];
+}
+
+- (WMPatientManager *)patientManager
+{
+    return [WMPatientManager sharedInstance];
 }
 
 - (NSMutableArray *)opaqueNotificationObservers

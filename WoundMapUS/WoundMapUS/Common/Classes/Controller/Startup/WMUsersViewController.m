@@ -50,8 +50,6 @@
 
 - (void)viewDidLoad
 {
-    // execute fetch on cloud
-//    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     // always super
     [super viewDidLoad];
     // register cell

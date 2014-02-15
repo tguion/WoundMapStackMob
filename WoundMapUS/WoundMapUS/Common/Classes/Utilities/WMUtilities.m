@@ -18,6 +18,10 @@ NSTimeInterval kOneDayTimeInterval = 60.0 * 60 * 24.0;
 
 + (void)logError:(NSError *)error
 {
+    if (nil == error) {
+        return;
+    }
+    // else
     DLog(@"*** ERROR ***: %@", [error localizedDescription]);
 	NSArray *detailedErrors = [[error userInfo] objectForKey:NSDetailedErrorsKey];
 	if ([detailedErrors count]) {
