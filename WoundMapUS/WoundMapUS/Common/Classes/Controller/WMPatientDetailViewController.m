@@ -18,7 +18,7 @@
 //#import "WCDeviceGroup+Custom.h"
 //#import "WCSkinAssessmentGroup+Custom.h"
 //#import "WCCarePlanGroup+Custom.h"
-//#import "ProgressViewHUD.h"
+//#import "WMProgressViewHUD.h"
 //#import "PrintConfiguration.h"
 #import "WMUtilities.h"
 //#import "PatientManager.h"

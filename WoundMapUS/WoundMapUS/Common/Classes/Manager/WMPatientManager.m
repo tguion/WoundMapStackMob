@@ -8,6 +8,7 @@
 
 #import "WMPatientManager.h"
 #import "WMPatient.h"
+#import "WMNavigationStage.h"
 #import "CoreDataHelper.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
@@ -90,6 +91,23 @@
         patient = [WMPatient lastModifiedActivePatient:context persistentStore:store];
     }
     return patient;
+}
+
+- (WMNavigationTrack *)navigationTrackForCurrentPatient:(NSManagedObjectContext *)managedObjectContext
+                                        persistentStore:(NSPersistentStore *)store
+{
+    WMNavigationTrack *navigationTrack = nil;
+    WMPatient *patient = self.appDelegate.patient;
+    WMUserDefaultsManager *userDefaultsManager = self.userDefaultsManager;
+    if (nil == patient) {
+        navigationTrack = [userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
+    } else {
+        navigationTrack = patient.stage.track;
+        if (nil == navigationTrack) {
+            navigationTrack = [userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
+        }
+    }
+    return navigationTrack;
 }
 
 @end

@@ -9,6 +9,8 @@
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMSignInViewController.h"
 #import "WMUserSignInViewController.h"
+#import "WMChooseTrackViewController.h"
+#import "WMPatientDetailViewController.h"
 #import "User.h"
 #import "WMParticipant.h"
 #import "WMNavigationTrack.h"
@@ -24,7 +26,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateParticipantSelected
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
@@ -85,6 +87,49 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMUserSignInViewController *userSignInViewController = [[WMUserSignInViewController alloc] initWithNibName:@"WMUserSignInViewController" bundle:nil];
     userSignInViewController.delegate = self;
     return userSignInViewController;
+}
+
+- (WMChooseTrackViewController *)chooseTrackViewController
+{
+    WMChooseTrackViewController *chooseTrackViewController = [[WMChooseTrackViewController alloc] initWithNibName:@"WMChooseTrackViewController" bundle:nil];
+    chooseTrackViewController.delegate = self;
+    return chooseTrackViewController;
+}
+
+- (void)presentChooseNavigationTrack
+{
+    if (self.isIPadIdiom) {
+        [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
+    } else {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.chooseTrackViewController];
+        navigationController.delegate = self.appDelegate;
+        [self presentViewController:navigationController animated:YES completion:^{
+            // nothing
+        }];
+    }
+}
+
+- (WMPatientDetailViewController *)patientDetailViewController
+{
+    WMPatientDetailViewController *patientDetailViewController = [[WMPatientDetailViewController alloc] initWithNibName:@"WMPatientDetailViewController" bundle:nil];
+    patientDetailViewController.delegate = self;
+    return patientDetailViewController;
+}
+
+- (void)presentAddPatientViewController
+{
+    // create new patient and document and wait for document open callback
+    [self showProgressViewWithMessage:@"Opening Patient Record"];
+    WMPatientDetailViewController *patientDetailViewController = self.patientDetailViewController;
+    patientDetailViewController.newPatientFlag = YES;
+    patientDetailViewController.hideAddWoundFlag = YES;
+    if (self.isIPadIdiom) {
+        [self.navigationController pushViewController:patientDetailViewController animated:YES];
+    } else {
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:patientDetailViewController] animated:YES completion:^{
+            // nothing
+        }];
+    }
 }
 
 #pragma mark - Actions
@@ -185,15 +230,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 }
                 case 2: {
                     // add/change patient
-                    NSInteger patientCount = self.patientManager.patientCount;
+                    WMPatientManager *patientManager = [WMPatientManager sharedInstance];
+                    NSInteger patientCount = patientManager.patientCount;
                     if (0 == patientCount) {
-                        // check iCloud
-                        if (self.appDelegate.userSelectedToUseICloud && !self.appDelegate.iCloudInitializationDidFinish) {
-                            // show progress view and wait for notification
-                            [self showProgressViewWithMessage:@"Waiting for iCloud"];
-                        } else {
-                            [self presentAddPatientViewController];
-                        }
+                        [self presentAddPatientViewController];
                     }
                     break;
                 }
@@ -402,6 +442,71 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }];
 }
 
+#pragma mark - ChooseTrackDelegate
 
+- (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
+{
+    WMUserDefaultsManager *userDefaultsManger = self.userDefaultsManager;
+    userDefaultsManger.defaultNavigationTrackTitle = navigationTrack.title;
+    if (self.isIPadIdiom) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // nothing
+        }];
+    }
+    [viewController clearAllReferences];
+}
+
+- (void)chooseTrackViewControllerDidCancel:(WMChooseTrackViewController *)viewController
+{
+    if (self.isIPadIdiom) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // nothing
+        }];
+    }
+    [viewController clearAllReferences];
+}
+
+#pragma mark - PatientDetailViewControllerDelegate
+
+- (void)patientDetailViewControllerDidUpdatePatient:(PatientDetailViewController *)viewController
+{
+    self.waitingForSaveToFinish = YES;
+    // if this is a new patient, update stage to initial workup
+    if (viewController.isNewPatient) {
+        self.navigationCoordinator.navigationStage = self.navigationCoordinator.navigationTrack.initialStage;
+    }
+    if (self.isIPadIdiom) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // nothing
+        }];
+    }
+    // clear memory
+    [viewController clearAllReferences];
+    // synchronize the index store
+    [self.patientManager updateIndexPatientFromDocumentPatient:self.patient];
+}
+
+- (void)patientDetailViewControllerDidCancelUpdate:(PatientDetailViewController *)viewController
+{
+    if (viewController.isNewPatient) {
+        [self showProgressView];
+        [self.documentManager deleteDocument:viewController.patient.documentName];
+    }
+    if (self.isIPadIdiom) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // nothing
+        }];
+    }
+    // clear memory
+    [viewController clearAllReferences];
+}
 
 @end

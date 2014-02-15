@@ -7,6 +7,7 @@
 //
 
 #import "WMBaseViewController.h"
+#import "WMProgressViewHUD.h"
 #import "StackMob.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
@@ -111,6 +112,50 @@
 	}
 	// else
 	return nil;
+}
+
+#pragma mark - Progress view
+
+- (WMProgressViewHUD *)progressView
+{
+    if (nil == _progressView) {
+        _progressView = [[WMProgressViewHUD alloc] initWithFrame:CGRectZero];
+    }
+    return _progressView;
+}
+
+- (void)showProgressView
+{
+    if (nil != _progressView.superview) {
+        return;
+    }
+    // else
+    [self.view addSubview:self.progressView];
+}
+
+- (void)showProgressViewWithMessage:(NSString *)message
+{
+    if (nil == _progressView.superview) {
+        [self.view addSubview:self.progressView];
+    }
+    _progressView.messageLabel.text = message;
+}
+
+- (void)hideProgressView
+{
+    if (nil == _progressView.superview) {
+        // check for missed views
+        for (UIView *view in self.view.subviews) {
+            if ([view isKindOfClass:[WMProgressViewHUD class]]) {
+                [view removeFromSuperview];
+            }
+        }
+        _progressView = nil;
+        return;
+    }
+    // else
+    [_progressView removeFromSuperview];
+    _progressView = nil;
 }
 
 #pragma mark - Notifications

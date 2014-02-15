@@ -10,6 +10,7 @@
 
 @class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager;
 @class WMPatient;
+@class WMProgressViewHUD;
 
 @interface WMBaseViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
@@ -53,6 +54,11 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 - (UITableViewCell *)cellForView:(UIView *)aView;
+
+@property (strong, nonatomic) WMProgressViewHUD *progressView;
+- (void)showProgressView;
+- (void)showProgressViewWithMessage:(NSString *)message;
+- (void)hideProgressView;
 
 - (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification NS_REQUIRES_SUPER;
 

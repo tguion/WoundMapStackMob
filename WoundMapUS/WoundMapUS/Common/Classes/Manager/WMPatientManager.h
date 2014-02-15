@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class WMPatient;
+@class WMPatient, WMNavigationTrack;
 
 @interface WMPatientManager : NSObject
 
@@ -16,5 +16,8 @@
 @property (readonly, nonatomic) WMPatient *lastModifiedActivePatient;
 
 + (WMPatientManager *)sharedInstance;
+
+- (WMNavigationTrack *)navigationTrackForCurrentPatient:(NSManagedObjectContext *)managedObjectContext
+                                        persistentStore:(NSPersistentStore *)store;
 
 @end
