@@ -28,11 +28,13 @@
 //#import "NavigationCoordinator.h"
 #import "UIView+Custom.h"
 #import "WCAppDelegate.h"
+#import "StackMob.h"
 
 @interface WMPatientDetailViewController ()
 
 // data
 @property (strong, nonatomic) WMPatient *patient;
+@property (strong, nonatomic) WMPerson *person;
 @property (strong, nonatomic) NSArray *sortedWounds;
 // state
 @property (nonatomic) BOOL willCancelFlag;                                          // cancel action started
@@ -98,8 +100,9 @@
 - (void)updateModelFromView
 {
     WMPatient *patient = self.patient;
-    patient.person.nameGiven = self.firstNameField.text;
-    patient.person.nameFamily = self.lastNameField.text;
+    WMPerson *person = self.person;
+    person.nameGiven = self.firstNameField.text;
+    person.nameFamily = self.lastNameField.text;
     patient.dateOfBirth = self.datePickerView.date;
 //    self.dobTextField.text = [self.dateOfBirthDateFormatter stringFromDate:self.patient.dateOfBirth];
     // TODO figure out how to allow more than one patient id
@@ -262,6 +265,7 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
+    _newPatientFlag = NO;
     _patient = nil;
     _sortedWounds = nil;
 }
@@ -319,10 +323,6 @@
     if (nil == _patient) {
         if (_newPatientFlag) {
             _patient = [WMPatient instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
-            // set stage to initial for default clinical setting
-            WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext persistentStore:self.store];
-            WMNavigationStage *navigationStage = navigationTrack.initialStage;
-            _patient.stage = navigationStage;
         } else {
             _patient = super.patient;
         }
@@ -333,6 +333,24 @@
 - (void)setPatient:(WMPatient *)patient
 {
     self.appDelegate.patient = patient;
+}
+
+- (WMPerson *)person
+{
+    if (nil == _person) {
+        WMPatient *patient = self.patient;
+        _person = patient.person;
+        if (nil == _person) {
+            // must save patient
+            NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+            NSError *error = nil;
+            [managedObjectContext saveAndWait:&error];
+            [WMUtilities logError:error];
+            _person = [WMPerson instanceWithManagedObjectContext:managedObjectContext persistentStore:self.store];
+            patient.person = _person;
+        }
+    }
+    return _person;
 }
 
 #pragma mark - Actions
@@ -659,28 +677,30 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
+    WMPatient *patient = self.patient;
+    WMPerson *person = self.person;
     switch (indexPath.section) {
         case 0: {
             switch (indexPath.row) {
                 case 0: {
                     // first name
-                    self.firstNameField.text = self.patient.person.nameGiven;
+                    self.firstNameField.text = person.nameGiven;
                     break;
                 }
                 case 1: {
                     // last name
-                    self.lastNameField.text = self.patient.person.nameFamily;
+                    self.lastNameField.text = person.nameFamily;
                     break;
                 }
                 case 3: {
                     // gender
-                    self.genderSegmentedControl.selectedSegmentIndex = self.patient.genderIndex;
+                    self.genderSegmentedControl.selectedSegmentIndex = patient.genderIndex;
                     break;
                 }
                 case 2: {
                     // dob
-                    if (nil != self.patient.dateOfBirth) {
-                        self.dobTextField.text = [NSDateFormatter localizedStringFromDate:self.patient.dateOfBirth dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
+                    if (nil != patient.dateOfBirth) {
+                        self.dobTextField.text = [NSDateFormatter localizedStringFromDate:patient.dateOfBirth dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
                     };
                     break;
                 }

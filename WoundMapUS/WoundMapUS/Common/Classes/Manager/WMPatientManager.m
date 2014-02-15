@@ -51,7 +51,7 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.coreDataHelper.stackMobStore.contextForCurrentThread;
+    return [self.coreDataHelper.stackMobStore contextForCurrentThread];
 }
 
 - (NSPersistentStore *)store
@@ -66,13 +66,9 @@
 
 - (NSInteger)patientCount
 {
-    __block NSInteger count = 0;
     NSManagedObjectContext *context = self.managedObjectContext;
     NSPersistentStore *store = self.store;
-    [context performBlockAndWait:^{
-        count = [WMPatient patientCount:context persistentStore:store];
-    }];
-    return count;
+    return [WMPatient patientCount:context persistentStore:store];
 }
 
 - (WMPatient *)lastModifiedActivePatient

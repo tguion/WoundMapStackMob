@@ -21,16 +21,21 @@
 		[managedObjectContext assignObject:patient toPersistentStore:store];
 	}
     [patient setValue:[patient assignObjectId] forKey:[patient primaryKeyField]];
-    patient.person = [WMPerson instanceWithManagedObjectContext:managedObjectContext
-                                                persistentStore:store];
 	return patient;
 }
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    if (nil != store) {
+        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    }
     [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    NSError *error = nil;
+    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyTryCacheElseNetwork];
+    NSInteger count = [managedObjectContext countForFetchRequestAndWait:request options:options error:&error];
+    [WMUtilities logError:error];
+    return count;
 }
 
 + (WMPatient *)patientForPatientId:(NSString *)patientId managedObjectContext:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store

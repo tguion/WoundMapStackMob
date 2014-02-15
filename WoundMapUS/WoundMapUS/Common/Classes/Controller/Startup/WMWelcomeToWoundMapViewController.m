@@ -45,6 +45,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (IBAction)createTeamAction:(id)sender;
 - (IBAction)consultantAction:(id)sender;
 
+- (IBAction)enterWoundMapAction:(id)sender;
+
 @end
 
 @implementation WMWelcomeToWoundMapViewController
@@ -132,11 +134,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }
     // else
     if (nil == self.userDefaultsManager.defaultNavigationTrackTitle) {
-        return NO;
-    }
-    // else
-    NSInteger patientCount = self.patientManager.patientCount;
-    if (0 == patientCount) {
         return NO;
     }
     // else
@@ -239,6 +236,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         self.tableView.tableFooterView = nil;
     }
     [self.tableView reloadData];
+}
+- (IBAction)enterWoundMapAction:(id)sender
+{
+    NSLog(@"Hurray");
 }
 
 #pragma mark - Notification handlers
@@ -436,21 +437,28 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         [activityIndicatorView startAnimating];
                         cell.accessoryView = activityIndicatorView;
                     } else {
-                        WMPatientManager *patientManager = self.patientManager;
-                        NSInteger patientCount = patientManager.patientCount;
-                        if (0 == patientCount) {
-                            title = @"Add Patient";
-                            image = [UIImage imageNamed:@"ui_circle"];
-                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                        } else {
-                            if (patientCount == 1) {
-                                title = @"Patient Added";
-                                accessoryType = UITableViewCellAccessoryNone;
+                        WMPatient *patient = self.appDelegate.patient;
+                        if (nil == patient) {
+                            WMPatientManager *patientManager = self.patientManager;
+                            NSInteger patientCount = patientManager.patientCount;
+                            if (0 == patientCount) {
+                                title = @"Add Patient";
+                                image = [UIImage imageNamed:@"ui_circle"];
+                                accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             } else {
-                                title = @"Current Patient";
-                                accessoryType = UITableViewCellAccessoryNone;
+                                if (patientCount == 1) {
+                                    title = @"Patient Added";
+                                    accessoryType = UITableViewCellAccessoryNone;
+                                } else {
+                                    title = @"Current Patient";
+                                    accessoryType = UITableViewCellAccessoryNone;
+                                }
+                                patient = patientManager.lastModifiedActivePatient;
+                                value = patient.lastNameFirstName;
+                                image = [UIImage imageNamed:@"ui_checkmark"];
                             }
-                            WMPatient *patient = patientManager.lastModifiedActivePatient;
+                        } else {
+                            title = @"Patient";
                             value = patient.lastNameFirstName;
                             image = [UIImage imageNamed:@"ui_checkmark"];
                         }
@@ -546,8 +554,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
+    __block WMPatient *patient = viewController.patient;
+    // clear memory
+    [viewController clearAllReferences];
     // update our reference to current patient
-    self.appDelegate.patient = viewController.patient;
+    self.appDelegate.patient = patient;
     if (self.isIPadIdiom) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -555,10 +566,27 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // nothing
         }];
     }
-    // clear memory
-    [viewController clearAllReferences];
-    // save
-    [self.coreDataHelper backgroundSaveContext];
+    // save patient first, then associated stage
+    [self showProgressViewWithMessage:@"Saving patient record"];
+    __weak __typeof(self) weakSelf = self;
+    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+        [WMUtilities logError:error];
+        if (nil == patient.stage) {
+            // set stage to initial for default clinical setting
+            WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:weakSelf.managedObjectContext persistentStore:weakSelf.store];
+            WMNavigationStage *navigationStage = navigationTrack.initialStage;
+            patient.stage = navigationStage;
+            // save again
+            [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+                [WMUtilities logError:error];
+            }];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf hideProgressView];
+            [weakSelf.tableView reloadData];
+            weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
+        });
+    }];
 }
 
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController
