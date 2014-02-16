@@ -395,7 +395,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         [deferTeamSwitch addTarget:self action:@selector(deferTeamAction:) forControlEvents:UIControlEventValueChanged];
                         accessoryView = deferTeamSwitch;
                     } else {
-                        title = @"Connected to Team:";
+                        title = @"Connected:";
                         image = [UIImage imageNamed:@"ui_checkmark"];
                         value = self.appDelegate.stackMobUsername;
                     }
