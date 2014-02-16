@@ -76,6 +76,13 @@
     return [array lastObject];
 }
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.dateCreated = [NSDate date];
+    self.dateModified = [NSDate date];
+}
+
 - (NSString *)lastNameFirstName
 {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];

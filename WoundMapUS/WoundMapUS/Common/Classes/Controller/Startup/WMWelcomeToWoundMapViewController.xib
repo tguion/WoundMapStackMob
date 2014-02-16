@@ -30,6 +30,9 @@
                     <state key="normal" title="Enter WoundMAP">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="enterWoundMapAction:" destination="-1" eventType="touchUpInside" id="YmA-rQ-8tx"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzm-VL-tWV" customClass="BoxedButton">
                     <rect key="frame" x="0.0" y="44" width="320" height="44"/>

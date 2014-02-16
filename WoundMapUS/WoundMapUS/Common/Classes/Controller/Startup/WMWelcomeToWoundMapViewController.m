@@ -250,6 +250,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     // install footer to allow access to WoundMap
     self.tableView.tableFooterView = _footerView;
     [super handleStackMobNetworkSynchFinished:notification];
+    self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
     // seed StackMob
     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
     __weak __typeof(self) weakSelf = self;
@@ -456,6 +457,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                 patient = patientManager.lastModifiedActivePatient;
                                 value = patient.lastNameFirstName;
                                 image = [UIImage imageNamed:@"ui_checkmark"];
+                                self.appDelegate.patient = patient;
+                                self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
                             }
                         } else {
                             title = @"Patient";
@@ -501,6 +504,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideProgressView];
             [weakSelf.tableView reloadData];
+            self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
         });
     }];
     [viewController clearAllReferences];
@@ -571,16 +575,22 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     __weak __typeof(self) weakSelf = self;
     [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
         [WMUtilities logError:error];
+        NSManagedObjectContext *managedObjectContext = weakSelf.managedObjectContext;
+        NSPersistentStore *store = weakSelf.store;
+        // make sure the user (sm_owner) has access via the consultants relationship
+        User *user = [User userForUsername:self.appDelegate.stackMobUsername
+                      managedObjectContext:managedObjectContext persistentStore:store];
+        [patient addConsultantsObject:user];
         if (nil == patient.stage) {
             // set stage to initial for default clinical setting
-            WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:weakSelf.managedObjectContext persistentStore:weakSelf.store];
+            WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
             WMNavigationStage *navigationStage = navigationTrack.initialStage;
             patient.stage = navigationStage;
-            // save again
-            [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-                [WMUtilities logError:error];
-            }];
         }
+        // save again
+        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+            [WMUtilities logError:error];
+        }];
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideProgressView];
             [weakSelf.tableView reloadData];

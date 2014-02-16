@@ -156,6 +156,10 @@
             <userInfo/>
         </attribute>
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date">
+            <userInfo/>
+        </attribute>
+        <attribute name="dateModified" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateOfBirth" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
             <userInfo/>
@@ -255,6 +259,7 @@
     <elements>
         <element name="User" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMAddress" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMConsultingGroup" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
@@ -267,6 +272,5 @@
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMConsultingGroup" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

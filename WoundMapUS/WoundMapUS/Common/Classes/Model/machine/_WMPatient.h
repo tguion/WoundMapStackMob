@@ -7,6 +7,8 @@
 extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *archivedFlag;
 	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *dateCreated;
+	__unsafe_unretained NSString *dateModified;
 	__unsafe_unretained NSString *dateOfBirth;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *gender;
@@ -30,6 +32,8 @@ extern const struct WMPatientFetchedProperties {
 @class WMId;
 @class WMPerson;
 @class WMNavigationStage;
+
+
 
 
 
@@ -73,6 +77,26 @@ extern const struct WMPatientFetchedProperties {
 
 
 //- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* dateCreated;
+
+
+
+//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* dateModified;
+
+
+
+//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -211,6 +235,18 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSDate*)primitiveCreateddate;
 - (void)setPrimitiveCreateddate:(NSDate*)value;
+
+
+
+
+- (NSDate*)primitiveDateCreated;
+- (void)setPrimitiveDateCreated:(NSDate*)value;
+
+
+
+
+- (NSDate*)primitiveDateModified;
+- (void)setPrimitiveDateModified:(NSDate*)value;
 
 
 
