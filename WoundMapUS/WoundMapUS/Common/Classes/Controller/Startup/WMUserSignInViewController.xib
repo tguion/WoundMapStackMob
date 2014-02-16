@@ -37,9 +37,6 @@
                     <state key="normal" title="Join Team">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
-                    <connections>
-                        <action selector="authenticate:" destination="-1" eventType="touchUpInside" id="M4l-44-DEY"/>
-                    </connections>
                 </button>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter Clinical Team Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yih-1A-PjO">
                     <rect key="frame" x="20" y="242" width="280" height="21"/>

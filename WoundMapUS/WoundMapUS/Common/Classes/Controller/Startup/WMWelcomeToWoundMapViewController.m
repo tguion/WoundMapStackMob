@@ -8,6 +8,7 @@
 
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMSignInViewController.h"
+#import "WMIAPCreateTeamViewController.h"
 #import "WMUserSignInViewController.h"
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
@@ -16,6 +17,7 @@
 #import "WMParticipant.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
+#import "WMPatientConsultant.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
 #import "WMSeedDatabaseManager.h"
@@ -29,11 +31,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateParticipantSelected
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, IAPCreateTeamViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
 @property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
+@property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 
 @property (strong, nonatomic) IBOutlet UIView *footerView;
 @property (weak, nonatomic) IBOutlet UIButton *enterWoundMapButton;
@@ -96,6 +99,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
+                    cellReuseIdentifier = @"Cell";
+                    break;
+                }
+                case 2: {
                     if (_welcomeState == WMWelcomeStateInitial) {
                         cellReuseIdentifier = @"Cell";
                     } else {
@@ -152,6 +159,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMUserSignInViewController *userSignInViewController = [[WMUserSignInViewController alloc] initWithNibName:@"WMUserSignInViewController" bundle:nil];
     userSignInViewController.delegate = self;
     return userSignInViewController;
+}
+
+- (WMIAPCreateTeamViewController *)iapCreateTeamViewController
+{
+    WMIAPCreateTeamViewController *iapCreateTeamViewController = [[WMIAPCreateTeamViewController alloc] initWithNibName:@"WMIAPCreateTeamViewController" bundle:nil];
+    iapCreateTeamViewController.delegate = self;
+    return iapCreateTeamViewController;
 }
 
 - (WMChooseTrackViewController *)chooseTrackViewController
@@ -288,6 +302,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
+                    // create team
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateTeamViewController];
+                    [self presentViewController:navigationController
+                                       animated:YES
+                                     completion:^{
+                                         // nothing
+                                     }];
+                    break;
+                }
+                case 2: {
                     // defer or team joined
                     break;
                 }
@@ -348,7 +372,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     NSInteger count = 0;
     switch (section) {
         case 0: {
-            count = 2;
+            count = 3;
             break;
         }
         case 1: {
@@ -384,11 +408,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    title = @"Join or Create Team";
+                    title = @"Join a Team";
                     accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
                 case 1: {
+                    title = @"Create a Team";
+                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                }
+                case 2: {
                     if (_welcomeState == WMWelcomeStateInitial) {
                         title = @"Defer Joining Team";
                         UISwitch *deferTeamSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -537,6 +566,24 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark - IAPCreateTeamViewControllerDelegate
+
+- (void)iapCreateTeamViewControllerDidPurchase:(WMIAPCreateTeamViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        WMUserSignInViewController *userSignInViewController = self.userSignInViewController;
+        userSignInViewController.createNewUserFlag = YES;
+        [self.navigationController pushViewController:userSignInViewController animated:YES];
+    }];
+}
+
+- (void)iapCreateTeamViewControllerDidDecline:(WMIAPCreateTeamViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
 #pragma mark - ChooseTrackDelegate
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
@@ -577,10 +624,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [WMUtilities logError:error];
         NSManagedObjectContext *managedObjectContext = weakSelf.managedObjectContext;
         NSPersistentStore *store = weakSelf.store;
-        // make sure the user (sm_owner) has access via the consultants relationship
-        User *user = [User userForUsername:self.appDelegate.stackMobUsername
-                      managedObjectContext:managedObjectContext persistentStore:store];
-        [patient addConsultantsObject:user];
+        // make sure the track/stage is set
         if (nil == patient.stage) {
             // set stage to initial for default clinical setting
             WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
@@ -590,12 +634,25 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         // save again
         [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
             [WMUtilities logError:error];
+            // make sure the user (sm_owner) has access via the consultants relationship
+            User *user = [User userForUsername:self.appDelegate.stackMobUsername
+                          managedObjectContext:managedObjectContext persistentStore:store];
+            WMParticipant *participant = self.appDelegate.participant;
+            WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
+                                                                                           consultant:user
+                                                                                          participant:participant
+                                                                                               create:YES
+                                                                                 managedObjectContext:managedObjectContext
+                                                                                      persistentStore:store];
+            patientConsultant.acquiredFlagValue = NO;
+            // save again
+            [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+                [WMUtilities logError:error];
+                [weakSelf hideProgressView];
+                [weakSelf.tableView reloadData];
+                weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
+            }];
         }];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf hideProgressView];
-            [weakSelf.tableView reloadData];
-            weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-        });
     }];
 }
 

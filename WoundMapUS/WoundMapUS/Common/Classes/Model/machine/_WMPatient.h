@@ -5,6 +5,7 @@
 
 
 extern const struct WMPatientAttributes {
+	__unsafe_unretained NSString *acquiredByConsultant;
 	__unsafe_unretained NSString *archivedFlag;
 	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *dateCreated;
@@ -19,8 +20,8 @@ extern const struct WMPatientAttributes {
 } WMPatientAttributes;
 
 extern const struct WMPatientRelationships {
-	__unsafe_unretained NSString *consultants;
 	__unsafe_unretained NSString *ids;
+	__unsafe_unretained NSString *patientConsultants;
 	__unsafe_unretained NSString *person;
 	__unsafe_unretained NSString *stage;
 } WMPatientRelationships;
@@ -28,10 +29,11 @@ extern const struct WMPatientRelationships {
 extern const struct WMPatientFetchedProperties {
 } WMPatientFetchedProperties;
 
-@class User;
 @class WMId;
+@class WMPatientConsultant;
 @class WMPerson;
 @class WMNavigationStage;
+
 
 
 
@@ -53,6 +55,20 @@ extern const struct WMPatientFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (WMPatientID*)objectID;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* acquiredByConsultant;
+
+
+
+@property BOOL acquiredByConsultantValue;
+- (BOOL)acquiredByConsultantValue;
+- (void)setAcquiredByConsultantValue:(BOOL)value_;
+
+//- (BOOL)validateAcquiredByConsultant:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,16 +192,16 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *consultants;
-
-- (NSMutableSet*)consultantsSet;
-
-
-
-
 @property (nonatomic, strong) NSSet *ids;
 
 - (NSMutableSet*)idsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *patientConsultants;
+
+- (NSMutableSet*)patientConsultantsSet;
 
 
 
@@ -209,19 +225,28 @@ extern const struct WMPatientFetchedProperties {
 
 @interface _WMPatient (CoreDataGeneratedAccessors)
 
-- (void)addConsultants:(NSSet*)value_;
-- (void)removeConsultants:(NSSet*)value_;
-- (void)addConsultantsObject:(User*)value_;
-- (void)removeConsultantsObject:(User*)value_;
-
 - (void)addIds:(NSSet*)value_;
 - (void)removeIds:(NSSet*)value_;
 - (void)addIdsObject:(WMId*)value_;
 - (void)removeIdsObject:(WMId*)value_;
 
+- (void)addPatientConsultants:(NSSet*)value_;
+- (void)removePatientConsultants:(NSSet*)value_;
+- (void)addPatientConsultantsObject:(WMPatientConsultant*)value_;
+- (void)removePatientConsultantsObject:(WMPatientConsultant*)value_;
+
 @end
 
 @interface _WMPatient (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveAcquiredByConsultant;
+- (void)setPrimitiveAcquiredByConsultant:(NSNumber*)value;
+
+- (BOOL)primitiveAcquiredByConsultantValue;
+- (void)setPrimitiveAcquiredByConsultantValue:(BOOL)value_;
+
+
 
 
 - (NSNumber*)primitiveArchivedFlag;
@@ -297,13 +322,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveConsultants;
-- (void)setPrimitiveConsultants:(NSMutableSet*)value;
-
-
-
 - (NSMutableSet*)primitiveIds;
 - (void)setPrimitiveIds:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitivePatientConsultants;
+- (void)setPrimitivePatientConsultants:(NSMutableSet*)value;
 
 
 

@@ -5,8 +5,11 @@
 
 
 extern const struct WMConsultingGroupAttributes {
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *wmconsultinggroup_id;
 } WMConsultingGroupAttributes;
 
 extern const struct WMConsultingGroupRelationships {
@@ -21,6 +24,9 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
+
+
+
 @interface WMConsultingGroupID : NSManagedObjectID {}
 @end
 
@@ -29,6 +35,16 @@ extern const struct WMConsultingGroupFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (WMConsultingGroupID*)objectID;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* createddate;
+
+
+
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -48,11 +64,31 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* lastmoddate;
+
+
+
+//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* name;
 
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* wmconsultinggroup_id;
+
+
+
+//- (BOOL)validateWmconsultinggroup_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -75,6 +111,12 @@ extern const struct WMConsultingGroupFetchedProperties {
 @interface _WMConsultingGroup (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
@@ -84,8 +126,20 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
+- (NSDate*)primitiveLastmoddate;
+- (void)setPrimitiveLastmoddate:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveWmconsultinggroup_id;
+- (void)setPrimitiveWmconsultinggroup_id:(NSString*)value;
 
 
 

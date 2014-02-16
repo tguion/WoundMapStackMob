@@ -4,8 +4,11 @@
 #import "_WMConsultingGroup.h"
 
 const struct WMConsultingGroupAttributes WMConsultingGroupAttributes = {
+	.createddate = @"createddate",
 	.flags = @"flags",
+	.lastmoddate = @"lastmoddate",
 	.name = @"name",
+	.wmconsultinggroup_id = @"wmconsultinggroup_id",
 };
 
 const struct WMConsultingGroupRelationships WMConsultingGroupRelationships = {
@@ -53,6 +56,13 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 
+@dynamic createddate;
+
+
+
+
+
+
 @dynamic flags;
 
 
@@ -79,7 +89,21 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 
+@dynamic lastmoddate;
+
+
+
+
+
+
 @dynamic name;
+
+
+
+
+
+
+@dynamic wmconsultinggroup_id;
 
 
 

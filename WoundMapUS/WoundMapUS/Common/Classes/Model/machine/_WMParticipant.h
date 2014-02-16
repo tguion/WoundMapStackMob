@@ -17,12 +17,14 @@ extern const struct WMParticipantAttributes {
 } WMParticipantAttributes;
 
 extern const struct WMParticipantRelationships {
+	__unsafe_unretained NSString *acquiredConsults;
 	__unsafe_unretained NSString *participantType;
 } WMParticipantRelationships;
 
 extern const struct WMParticipantFetchedProperties {
 } WMParticipantFetchedProperties;
 
+@class WMPatientConsultant;
 @class WMParticipantType;
 
 
@@ -146,6 +148,13 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *acquiredConsults;
+
+- (NSMutableSet*)acquiredConsultsSet;
+
+
+
+
 @property (nonatomic, strong) WMParticipantType *participantType;
 
 //- (BOOL)validateParticipantType:(id*)value_ error:(NSError**)error_;
@@ -157,6 +166,11 @@ extern const struct WMParticipantFetchedProperties {
 @end
 
 @interface _WMParticipant (CoreDataGeneratedAccessors)
+
+- (void)addAcquiredConsults:(NSSet*)value_;
+- (void)removeAcquiredConsults:(NSSet*)value_;
+- (void)addAcquiredConsultsObject:(WMPatientConsultant*)value_;
+- (void)removeAcquiredConsultsObject:(WMPatientConsultant*)value_;
 
 @end
 
@@ -221,6 +235,11 @@ extern const struct WMParticipantFetchedProperties {
 - (void)setPrimitiveWmparticipant_id:(NSString*)value;
 
 
+
+
+
+- (NSMutableSet*)primitiveAcquiredConsults;
+- (void)setPrimitiveAcquiredConsults:(NSMutableSet*)value;
 
 
 

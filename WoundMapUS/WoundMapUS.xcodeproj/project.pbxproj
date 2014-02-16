@@ -77,6 +77,10 @@
 		7D9AA27118AFF73E00C1B698 /* _WMConsultingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27018AFF73E00C1B698 /* _WMConsultingGroup.m */; };
 		7D9AA27418AFF74C00C1B698 /* WMConsultingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27318AFF74C00C1B698 /* WMConsultingGroup.m */; };
 		7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA27618B003D600C1B698 /* NavigationTracks.plist */; };
+		7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */; };
+		7D9AA27C18B1038400C1B698 /* WMIAPCreateTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */; };
+		7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */; };
+		7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */; };
 		7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060818A7D3400004DC32 /* Foundation.framework */; };
 		7DB2060B18A7D3400004DC32 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */; };
 		7DB2060D18A7D3400004DC32 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060C18A7D3400004DC32 /* UIKit.framework */; };
@@ -245,6 +249,13 @@
 		7D9AA27218AFF74C00C1B698 /* WMConsultingGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMConsultingGroup.h; sourceTree = "<group>"; };
 		7D9AA27318AFF74C00C1B698 /* WMConsultingGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMConsultingGroup.m; sourceTree = "<group>"; };
 		7D9AA27618B003D600C1B698 /* NavigationTracks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NavigationTracks.plist; sourceTree = "<group>"; };
+		7D9AA27818B1038400C1B698 /* WMIAPCreateTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateTeamViewController.h; sourceTree = "<group>"; };
+		7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateTeamViewController.m; sourceTree = "<group>"; };
+		7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPCreateTeamViewController.xib; sourceTree = "<group>"; };
+		7D9AA27D18B1106500C1B698 /* _WMPatientConsultant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMPatientConsultant.h; sourceTree = "<group>"; };
+		7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPatientConsultant.m; sourceTree = "<group>"; };
+		7D9AA28018B1107200C1B698 /* WMPatientConsultant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientConsultant.h; sourceTree = "<group>"; };
+		7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientConsultant.m; sourceTree = "<group>"; };
 		7DB2060518A7D3400004DC32 /* WoundMapUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoundMapUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DB2060818A7D3400004DC32 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -428,6 +439,9 @@
 				5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */,
 				5F67D1B118AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m */,
 				5F67D1B218AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib */,
+				7D9AA27818B1038400C1B698 /* WMIAPCreateTeamViewController.h */,
+				7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */,
+				7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -768,6 +782,8 @@
 				5F67D1C218AC39B800460C37 /* WMParticipantType.m */,
 				7DB206C918A839180004DC32 /* WMPatient.h */,
 				7DB206CA18A839180004DC32 /* WMPatient.m */,
+				7D9AA28018B1107200C1B698 /* WMPatientConsultant.h */,
+				7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */,
 				7DB206CB18A839180004DC32 /* WMPerson.h */,
 				7DB206CC18A839180004DC32 /* WMPerson.m */,
 				7DB206CD18A839180004DC32 /* WMTelecom.h */,
@@ -939,6 +955,8 @@
 				5F67D1C818AC39C600460C37 /* _WMParticipantType.m */,
 				7DB206E118A839240004DC32 /* _WMPatient.h */,
 				7DB206E218A839240004DC32 /* _WMPatient.m */,
+				7D9AA27D18B1106500C1B698 /* _WMPatientConsultant.h */,
+				7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */,
 				7DB206E318A839240004DC32 /* _WMPerson.h */,
 				7DB206E418A839240004DC32 /* _WMPerson.m */,
 				7DB206E518A839240004DC32 /* _WMTelecom.h */,
@@ -1084,6 +1102,7 @@
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
 				5F67D1FB18AC3BE000460C37 /* PsychoSocialDefinitions.plist in Resources */,
 				7DB2061518A7D3400004DC32 /* InfoPlist.strings in Resources */,
+				7D9AA27C18B1038400C1B698 /* WMIAPCreateTeamViewController.xib in Resources */,
 				5F67D20B18AC3BE000460C37 /* WoundTypeDefinitions.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1111,6 +1130,7 @@
 				5F67D1CE18AC3B5B00460C37 /* WMUtilities.m in Sources */,
 				5F67D1BD18AC319000460C37 /* WMUsersViewController.m in Sources */,
 				7D9AA26B18AFBF3E00C1B698 /* BoxedButton.m in Sources */,
+				7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */,
 				7DB206B118A7D6950004DC32 /* Thumbnailer.m in Sources */,
 				5F67D22D18AD8DF000460C37 /* WMNavigationStage.m in Sources */,
 				5F6DE4F018AEDF2400E87F7E /* WMChooseTrackViewController.m in Sources */,
@@ -1121,6 +1141,7 @@
 				5F67D22C18AD8DF000460C37 /* WMNavigationNode.m in Sources */,
 				7DB206D718A839180004DC32 /* WMTelecom.m in Sources */,
 				7DB206D118A839180004DC32 /* User.m in Sources */,
+				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7DB2062718A7D3400004DC32 /* WCMasterViewController.m in Sources */,
 				7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */,
@@ -1134,6 +1155,7 @@
 				5F6DE4F718AEE08D00E87F7E /* APTableViewCell.m in Sources */,
 				7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */,
 				7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */,
+				7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */,
 				5F67D1BB18AC319000460C37 /* WMUserSignInViewController.m in Sources */,
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DB206E918A839240004DC32 /* _User.m in Sources */,

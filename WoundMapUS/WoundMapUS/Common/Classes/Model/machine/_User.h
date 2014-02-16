@@ -12,14 +12,14 @@ extern const struct UserAttributes {
 
 extern const struct UserRelationships {
 	__unsafe_unretained NSString *consultingGroup;
-	__unsafe_unretained NSString *consultingPatients;
+	__unsafe_unretained NSString *patientConsultants;
 } UserRelationships;
 
 extern const struct UserFetchedProperties {
 } UserFetchedProperties;
 
 @class WMConsultingGroup;
-@class WMPatient;
+@class WMPatientConsultant;
 
 
 
@@ -75,9 +75,9 @@ extern const struct UserFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *consultingPatients;
+@property (nonatomic, strong) NSSet *patientConsultants;
 
-- (NSMutableSet*)consultingPatientsSet;
+- (NSMutableSet*)patientConsultantsSet;
 
 
 
@@ -87,10 +87,10 @@ extern const struct UserFetchedProperties {
 
 @interface _User (CoreDataGeneratedAccessors)
 
-- (void)addConsultingPatients:(NSSet*)value_;
-- (void)removeConsultingPatients:(NSSet*)value_;
-- (void)addConsultingPatientsObject:(WMPatient*)value_;
-- (void)removeConsultingPatientsObject:(WMPatient*)value_;
+- (void)addPatientConsultants:(NSSet*)value_;
+- (void)removePatientConsultants:(NSSet*)value_;
+- (void)addPatientConsultantsObject:(WMPatientConsultant*)value_;
+- (void)removePatientConsultantsObject:(WMPatientConsultant*)value_;
 
 @end
 
@@ -121,8 +121,8 @@ extern const struct UserFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveConsultingPatients;
-- (void)setPrimitiveConsultingPatients:(NSMutableSet*)value;
+- (NSMutableSet*)primitivePatientConsultants;
+- (void)setPrimitivePatientConsultants:(NSMutableSet*)value;
 
 
 @end

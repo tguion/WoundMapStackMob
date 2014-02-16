@@ -11,7 +11,7 @@ const struct UserAttributes UserAttributes = {
 
 const struct UserRelationships UserRelationships = {
 	.consultingGroup = @"consultingGroup",
-	.consultingPatients = @"consultingPatients",
+	.patientConsultants = @"patientConsultants",
 };
 
 const struct UserFetchedProperties UserFetchedProperties = {
@@ -75,15 +75,15 @@ const struct UserFetchedProperties UserFetchedProperties = {
 
 	
 
-@dynamic consultingPatients;
+@dynamic patientConsultants;
 
 	
-- (NSMutableSet*)consultingPatientsSet {
-	[self willAccessValueForKey:@"consultingPatients"];
+- (NSMutableSet*)patientConsultantsSet {
+	[self willAccessValueForKey:@"patientConsultants"];
   
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"consultingPatients"];
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"patientConsultants"];
   
-	[self didAccessValueForKey:@"consultingPatients"];
+	[self didAccessValueForKey:@"patientConsultants"];
 	return result;
 }
 	

@@ -16,6 +16,7 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 };
 
 const struct WMParticipantRelationships WMParticipantRelationships = {
+	.acquiredConsults = @"acquiredConsults",
 	.participantType = @"participantType",
 };
 
@@ -165,6 +166,19 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
+
+@dynamic acquiredConsults;
+
+	
+- (NSMutableSet*)acquiredConsultsSet {
+	[self willAccessValueForKey:@"acquiredConsults"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"acquiredConsults"];
+  
+	[self didAccessValueForKey:@"acquiredConsults"];
+	return result;
+}
+	
 
 @dynamic participantType;
 

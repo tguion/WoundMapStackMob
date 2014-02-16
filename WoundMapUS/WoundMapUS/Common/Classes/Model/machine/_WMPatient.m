@@ -4,6 +4,7 @@
 #import "_WMPatient.h"
 
 const struct WMPatientAttributes WMPatientAttributes = {
+	.acquiredByConsultant = @"acquiredByConsultant",
 	.archivedFlag = @"archivedFlag",
 	.createddate = @"createddate",
 	.dateCreated = @"dateCreated",
@@ -18,8 +19,8 @@ const struct WMPatientAttributes WMPatientAttributes = {
 };
 
 const struct WMPatientRelationships WMPatientRelationships = {
-	.consultants = @"consultants",
 	.ids = @"ids",
+	.patientConsultants = @"patientConsultants",
 	.person = @"person",
 	.stage = @"stage",
 };
@@ -53,6 +54,11 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"acquiredByConsultantValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"acquiredByConsultant"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"archivedFlagValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"archivedFlag"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -66,6 +72,32 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic acquiredByConsultant;
+
+
+
+- (BOOL)acquiredByConsultantValue {
+	NSNumber *result = [self acquiredByConsultant];
+	return [result boolValue];
+}
+
+- (void)setAcquiredByConsultantValue:(BOOL)value_ {
+	[self setAcquiredByConsultant:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveAcquiredByConsultantValue {
+	NSNumber *result = [self primitiveAcquiredByConsultant];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveAcquiredByConsultantValue:(BOOL)value_ {
+	[self setPrimitiveAcquiredByConsultant:[NSNumber numberWithBool:value_]];
+}
+
 
 
 
@@ -185,19 +217,6 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
-@dynamic consultants;
-
-	
-- (NSMutableSet*)consultantsSet {
-	[self willAccessValueForKey:@"consultants"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"consultants"];
-  
-	[self didAccessValueForKey:@"consultants"];
-	return result;
-}
-	
-
 @dynamic ids;
 
 	
@@ -207,6 +226,19 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"ids"];
   
 	[self didAccessValueForKey:@"ids"];
+	return result;
+}
+	
+
+@dynamic patientConsultants;
+
+	
+- (NSMutableSet*)patientConsultantsSet {
+	[self willAccessValueForKey:@"patientConsultants"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"patientConsultants"];
+  
+	[self didAccessValueForKey:@"patientConsultants"];
 	return result;
 }
 	

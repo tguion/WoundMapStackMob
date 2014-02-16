@@ -385,7 +385,6 @@ typedef enum {
                                                      persistentStore:nil];
                 self.participant.email = self.emailTextField.text;
                 // save participant before creating relationship
-                // save track before attempting to form relationship with stage
                 NSError *error = nil;
                 [self.managedObjectContext saveAndWait:&error];
                 [WMUtilities logError:error];
@@ -438,9 +437,7 @@ typedef enum {
     self.state = SignInViewControllerCreateAccount;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView endUpdates];
+    [self.tableView reloadData];
 }
 
 - (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController

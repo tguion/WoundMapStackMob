@@ -11,6 +11,7 @@
 #import "StackMob.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
+#import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
@@ -22,6 +23,13 @@
 @end
 
 @implementation WMBaseViewController
+
+#pragma mark - View
+
+- (void)dealloc
+{
+    DLog(@"%@.dealloc", self);
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
