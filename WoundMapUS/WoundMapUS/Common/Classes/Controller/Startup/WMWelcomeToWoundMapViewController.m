@@ -637,9 +637,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient
 {
     // update our reference to current patient
-    self.appDelegate.patient = patient;
+    if (nil != patient) {
+        self.appDelegate.patient = patient;
+    }
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
+//    [viewController clearAllReferences];
     [self.tableView reloadData];
 }
 

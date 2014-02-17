@@ -93,6 +93,15 @@ typedef enum {
                                                                              options:options
                                                                                error:&error];
             [WMUtilities logError:error];
+            // if not found, go to network to find
+            if (0 == [participants count]) {
+                request = [WMParticipant matchingParticipantFetchRequestForUserName:self.nameInput managedObjectContext:managedObjectContext];
+                options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyNetworkOnly];
+                participants = [managedObjectContext executeFetchRequestAndWait:request
+                                                         returnManagedObjectIDs:NO
+                                                                        options:options
+                                                                          error:&error];
+            }
             self.possibleParticipant = [participants firstObject];
         }
     } else {

@@ -90,6 +90,7 @@
 {
     [super viewWillAppear:animated];
     self.fetchPolicy = SMFetchPolicyCacheOnly;
+    _patientToOpen = self.patient;
 }
 
 - (void)didReceiveMemoryWarning
@@ -109,8 +110,6 @@
 
 - (IBAction)doneAction:(id)sender
 {
-    // unhook
-    [self clearViewReferences];
     // mark that we are waiting for synch to complete
     _waitingForSynchWithServer = YES;
     // reconnect to network
@@ -336,12 +335,19 @@
     NSPredicate *predicate = nil;
     if (self.isSearchActive) {
         NSString *searchText = self.searchDisplayController.searchBar.text;
-        predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:
-                                                                       [NSPredicate predicateWithFormat:@"person.nameFamily CONTAINS[cd] %@", searchText],
-                                                                       [NSPredicate predicateWithFormat:@"person.nameGiven CONTAINS[cd] %@", searchText],
-                                                                       [NSPredicate predicateWithFormat:@"ids.extension CONTAINS[cd] %@", searchText],
-                                                                       nil]];
-        
+        if (self.isShowingTeamPatients) {
+            predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:
+                                                                           [NSPredicate predicateWithFormat:@"person.nameFamily CONTAINS[cd] %@", searchText],
+                                                                           [NSPredicate predicateWithFormat:@"person.nameGiven CONTAINS[cd] %@", searchText],
+                                                                           [NSPredicate predicateWithFormat:@"ids.extension CONTAINS[cd] %@", searchText],
+                                                                           nil]];
+        } else {
+            predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:
+                                                                           [NSPredicate predicateWithFormat:@"patient.person.nameFamily CONTAINS[cd] %@", searchText],
+                                                                           [NSPredicate predicateWithFormat:@"patient.person.nameGiven CONTAINS[cd] %@", searchText],
+                                                                           [NSPredicate predicateWithFormat:@"patient.ids.extension CONTAINS[cd] %@", searchText],
+                                                                           nil]];
+        }
     }
     return predicate;
 }

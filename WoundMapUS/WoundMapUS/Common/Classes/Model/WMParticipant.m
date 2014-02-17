@@ -57,6 +57,15 @@
     return request;
 }
 
++ (NSFetchRequest *)matchingParticipantFetchRequestForUserName:(NSString *)name
+                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"name == %@", name]];
+    return request;
+}
+
 + (WMParticipant *)participantForName:(NSString *)name
                                create:(BOOL)create
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext

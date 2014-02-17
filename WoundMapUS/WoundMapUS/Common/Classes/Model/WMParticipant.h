@@ -7,6 +7,8 @@
 + (WMParticipant *)bestMatchingParticipantForUserName:(NSString *)name managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 + (NSFetchRequest *)bestMatchingParticipantFetchRequestForUserName:(NSString *)name
                                               managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (NSFetchRequest *)matchingParticipantFetchRequestForUserName:(NSString *)name
+                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMParticipant *)participantForName:(NSString *)name
                                create:(BOOL)create
