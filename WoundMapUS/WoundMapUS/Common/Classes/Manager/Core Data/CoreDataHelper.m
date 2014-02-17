@@ -9,6 +9,7 @@
 #import "CoreDataHelper.h"
 #import "CoreDataImporter.h"
 #import "Faulter.h"
+#import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSynchFinishedNotification";
@@ -163,6 +164,18 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         [weakStackMobStore setFetchPolicy:SMFetchPolicyTryNetworkElseCache];
         // Notify other views that they should reload their data from the network
         [[NSNotificationCenter defaultCenter] postNotificationName:kStackMobNetworkSynchFinishedNotification object:nil];
+    }];
+    [_stackMobStore setSyncCallbackForFailedUpdates:^(NSArray *objects){
+        // Use to set a callback executed when updates on the server fail during a sync.
+        DLog(@"*** WARNING *** failed server updates: %@", objects);
+    }];
+    [_stackMobStore setSyncCallbackForFailedInserts:^(NSArray *objects){
+        // Use to set a callback executed when updates on the server fail during a sync.
+        DLog(@"*** WARNING *** failed server inserts: %@", objects);
+    }];
+    [_stackMobStore setSyncCallbackForFailedDeletes:^(NSArray *objects){
+        // Use to set a callback executed when updates on the server fail during a sync.
+        DLog(@"*** WARNING *** failed server deletes: %@", objects);
     }];
     
     _context = [_stackMobStore contextForCurrentThread];

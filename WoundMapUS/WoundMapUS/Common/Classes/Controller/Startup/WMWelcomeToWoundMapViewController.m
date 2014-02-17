@@ -567,8 +567,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
     __block WMPatient *patient = viewController.patient;
-    // clear memory
-    [viewController clearAllReferences];
     // update our reference to current patient
     self.appDelegate.patient = patient;
     if (self.isIPadIdiom) {
@@ -641,7 +639,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         self.appDelegate.patient = patient;
     }
     [self.navigationController popViewControllerAnimated:YES];
-//    [viewController clearAllReferences];
     [self.tableView reloadData];
 }
 

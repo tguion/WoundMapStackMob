@@ -122,6 +122,11 @@
 
 - (IBAction)patientTypeValueChangedAction:(id)sender
 {
+    if (self.isShowingTeamPatients) {
+        self.fetchPolicy = SMFetchPolicyCacheOnly;
+    } else {
+        self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
+    }
     [self refetchDataForTableView];
 }
 
@@ -184,6 +189,7 @@
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [self deletePatient:_patientToDelete];
             _patientToDelete = nil;
+            [self.tableView reloadData];
         }
     }
 }
@@ -314,7 +320,7 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     WMPatient *patient = [self patientAtIndexPath:indexPath];
-    cell.accessoryType = ([patient isEqual:self.patient] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
+    cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
     WMPatientTableViewCell *myCell = (WMPatientTableViewCell *)cell;
     myCell.patient = patient;
 }
