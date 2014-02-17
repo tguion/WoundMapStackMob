@@ -13,6 +13,7 @@
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
 #import "CoreDataHelper.h"
+#import "WMPatientManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 #import "StackMob.h"
@@ -95,14 +96,32 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.fetchPolicy = SMFetchPolicyCacheOnly;
-    _patientToOpen = self.patient;
+    // get all patient and patientConsultant data from server before we display data
+    _waitingForSynchWithServer = YES;
+    // show progress
+    [self showProgressViewWithMessage:@"Acquiring Patient Records"];
+    [self performSelector:@selector(delayedAcquirePatientRecordsFromNetwork) withObject:nil afterDelay:0.0];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)delayedAcquirePatientRecordsFromNetwork
+{
+    __weak __typeof(self) weakSelf = self;
+    [self.patientManager acquirePatientRecordsWithCompletionHandler:^(NSError *error) {
+        [WMUtilities logError:error];
+        weakSelf.waitingForSynchWithServer = NO;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf hideProgressView];
+            weakSelf.fetchPolicy = SMFetchPolicyCacheOnly;
+            weakSelf.patientToOpen = weakSelf.patient;
+            [weakSelf.tableView reloadData];
+        });
+    }];
 }
 
 #pragma mark - Core
@@ -129,11 +148,6 @@
 // WMPatientConsultant is fetched from server, but properties are not populated
 - (IBAction)patientTypeValueChangedAction:(id)sender
 {
-    if (self.isShowingTeamPatients) {
-        self.fetchPolicy = SMFetchPolicyCacheOnly;
-    } else {
-        self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    }
     [self refetchDataForTableView];
 }
 
@@ -224,17 +238,6 @@
 
 #pragma mark - UISearchDisplayDelegate
 
-//- (void)searchDisplayController:(UISearchDisplayController *)viewController willShowSearchResultsTableView:(UITableView *)tableView
-//{
-//    [tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
-//    self.tableView.hidden = YES;
-//}
-
-//- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
-//{
-//    self.tableView.hidden = NO;
-//}
-
 - (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView
 {
     [self refetchDataForTableView];
@@ -303,6 +306,15 @@
 
 #pragma mark - UITableViewDataSource
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if (_waitingForSynchWithServer) {
+        return 0;
+    }
+    // else
+    return [[self.fetchedResultsController sections] count];
+}
+
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -360,7 +372,7 @@
                                                                            nil]];
         }
     } else {
-        predicate = nil;// [NSPredicate predicateWithFormat:@"participant != %@", self.appDelegate.participant];
+        predicate = [NSPredicate predicateWithFormat:@"participant != %@", self.appDelegate.participant];
     }
     return predicate;
 }

@@ -20,4 +20,6 @@
 - (WMNavigationTrack *)navigationTrackForCurrentPatient:(NSManagedObjectContext *)managedObjectContext
                                         persistentStore:(NSPersistentStore *)store;
 
+- (void)acquirePatientRecordsWithCompletionHandler:(void (^)(NSError *))handler;
+
 @end
