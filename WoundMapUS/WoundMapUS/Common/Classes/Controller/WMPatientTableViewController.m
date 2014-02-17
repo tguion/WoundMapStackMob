@@ -286,7 +286,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     // let done/cancel action do the work
-    _patientToOpen = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if (self.isShowingTeamPatients) {
+        _patientToOpen = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    } else {
+        _patientToOpen = [[self.fetchedResultsController objectAtIndexPath:indexPath] valueForKey:WMPatientConsultantRelationships.patient];
+    }
     [tableView reloadData];
 }
 
