@@ -5,6 +5,8 @@
 //  Created by Todd Guion on 2/16/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
+//  ISSUE: advanced predicates are not supported on StackMob server at this time.
+//  So we switch to cache only fetch. However, the properties of WMPatient and WMPatientConsult are not being synched on local cache.
 
 #import "WMPatientTableViewController.h"
 #import "WMPatientTableViewCell.h"
@@ -28,6 +30,7 @@
 @property (nonatomic) BOOL waitingForSynchWithServer;
 
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) UIView *searchBarTextField;
 
 - (IBAction)patientTypeValueChangedAction:(id)sender;
 
@@ -123,7 +126,7 @@
     [self.coreDataHelper.stackMobStore syncWithServer];
 }
 
-// WMPatientConsultant is not local ???
+// WMPatientConsultant is fetched from server, but properties are not populated
 - (IBAction)patientTypeValueChangedAction:(id)sender
 {
     if (self.isShowingTeamPatients) {
@@ -202,12 +205,6 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
-//    if (nil == self.searchDisplayController) {
-//        _searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
-//        _searchDisplayController.delegate = self;
-//        _searchDisplayController.searchResultsDataSource = self;
-//        _searchDisplayController.searchResultsDelegate = self;
-//    }
     self.navigationItem.leftBarButtonItem = nil;
     if (self.navigationItem.rightBarButtonItem.target == self) {
         self.navigationItem.rightBarButtonItem = nil;
