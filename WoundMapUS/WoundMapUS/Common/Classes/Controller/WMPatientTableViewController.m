@@ -12,6 +12,7 @@
 #import "WMPatientConsultant.h"
 #import "CoreDataHelper.h"
 #import "WMUtilities.h"
+#import "WCAppDelegate.h"
 #import "StackMob.h"
 
 #define kPatientTableViewCellHeight 76.0
@@ -343,21 +344,17 @@
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
     NSPredicate *predicate = nil;
-    if (self.isSearchActive) {
-        NSString *searchText = self.searchDisplayController.searchBar.text;
-        if (self.isShowingTeamPatients) {
+    if (self.isShowingTeamPatients) {
+        if (self.isSearchActive) {
+            NSString *searchText = self.searchDisplayController.searchBar.text;
             predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:
                                                                            [NSPredicate predicateWithFormat:@"person.nameFamily CONTAINS[cd] %@", searchText],
                                                                            [NSPredicate predicateWithFormat:@"person.nameGiven CONTAINS[cd] %@", searchText],
                                                                            [NSPredicate predicateWithFormat:@"ids.extension CONTAINS[cd] %@", searchText],
                                                                            nil]];
-        } else {
-            predicate = [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:
-                                                                           [NSPredicate predicateWithFormat:@"patient.person.nameFamily CONTAINS[cd] %@", searchText],
-                                                                           [NSPredicate predicateWithFormat:@"patient.person.nameGiven CONTAINS[cd] %@", searchText],
-                                                                           [NSPredicate predicateWithFormat:@"patient.ids.extension CONTAINS[cd] %@", searchText],
-                                                                           nil]];
         }
+    } else {
+        predicate = [NSPredicate predicateWithFormat:@"participant != %@", self.appDelegate.participant];
     }
     return predicate;
 }
