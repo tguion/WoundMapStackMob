@@ -27,6 +27,8 @@
 @property (strong, nonatomic) WMPatient *patientToOpen;
 @property (nonatomic) BOOL waitingForSynchWithServer;
 
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+
 - (IBAction)patientTypeValueChangedAction:(id)sender;
 
 @end
@@ -121,6 +123,7 @@
     [self.coreDataHelper.stackMobStore syncWithServer];
 }
 
+// WMPatientConsultant is not local ???
 - (IBAction)patientTypeValueChangedAction:(id)sender
 {
     if (self.isShowingTeamPatients) {
@@ -199,6 +202,12 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
+//    if (nil == self.searchDisplayController) {
+//        _searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
+//        _searchDisplayController.delegate = self;
+//        _searchDisplayController.searchResultsDataSource = self;
+//        _searchDisplayController.searchResultsDelegate = self;
+//    }
     self.navigationItem.leftBarButtonItem = nil;
     if (self.navigationItem.rightBarButtonItem.target == self) {
         self.navigationItem.rightBarButtonItem = nil;
@@ -354,7 +363,7 @@
                                                                            nil]];
         }
     } else {
-        predicate = [NSPredicate predicateWithFormat:@"participant != %@", self.appDelegate.participant];
+        predicate = nil;// [NSPredicate predicateWithFormat:@"participant != %@", self.appDelegate.participant];
     }
     return predicate;
 }

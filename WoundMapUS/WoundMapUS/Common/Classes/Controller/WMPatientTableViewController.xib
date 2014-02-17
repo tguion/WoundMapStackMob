@@ -8,6 +8,7 @@
             <connections>
                 <outlet property="patientTypeContainerView" destination="Tnr-xS-8DP" id="SGf-q5-YQw"/>
                 <outlet property="patientTypeSegmentedControl" destination="5GR-AB-dNM" id="7vY-Cu-P9I"/>
+                <outlet property="searchBar" destination="RPa-Xx-i8f" id="Ss7-cE-kYm"/>
                 <outlet property="searchDisplayController" destination="S9y-K2-61W" id="nvL-iF-qOA"/>
                 <outlet property="view" destination="pNL-ca-Rwe" id="OQ3-7b-fkc"/>
             </connections>
