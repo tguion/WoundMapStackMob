@@ -67,6 +67,8 @@
 		5F6DE4F418AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE4F318AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m */; };
 		5F6DE4F718AEE08D00E87F7E /* APTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */; };
 		5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE4F918AEE58900E87F7E /* WMProgressViewHUD.m */; };
+		5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */; };
+		5F6DE4FF18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -232,6 +234,9 @@
 		5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APTableViewCell.m; sourceTree = "<group>"; };
 		5F6DE4F818AEE58900E87F7E /* WMProgressViewHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMProgressViewHUD.h; sourceTree = "<group>"; };
 		5F6DE4F918AEE58900E87F7E /* WMProgressViewHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMProgressViewHUD.m; sourceTree = "<group>"; };
+		5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPJoinTeamViewController.h; sourceTree = "<group>"; };
+		5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPJoinTeamViewController.m; sourceTree = "<group>"; };
+		5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPJoinTeamViewController.xib; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -450,6 +455,9 @@
 				7D9AA27818B1038400C1B698 /* WMIAPCreateTeamViewController.h */,
 				7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */,
 				7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */,
+				5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */,
+				5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */,
+				5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -1097,6 +1105,7 @@
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
 				5F67D1BE18AC319000460C37 /* WMUsersViewController.xib in Resources */,
 				5F67D1FD18AC3BE000460C37 /* SkinAssessment.plist in Resources */,
+				5F6DE4FF18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib in Resources */,
 				5F67D1FE18AC3BE000460C37 /* SkinAssessmentDefinitions.plist in Resources */,
 				5F67D1F518AC3BE000460C37 /* IAPProducts.plist in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
@@ -1202,6 +1211,7 @@
 				7DB206F018A839240004DC32 /* _WMTelecomType.m in Sources */,
 				7D9AA26E18AFD35F00C1B698 /* WMSeedDatabaseManager.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
+				5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */,
 				7DB206D418A839180004DC32 /* WMOrganization.m in Sources */,
 				7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */,
 			);

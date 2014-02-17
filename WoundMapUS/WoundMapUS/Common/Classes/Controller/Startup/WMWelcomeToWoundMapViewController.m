@@ -8,6 +8,7 @@
 
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMSignInViewController.h"
+#import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
 #import "WMUserSignInViewController.h"
 #import "WMChooseTrackViewController.h"
@@ -32,11 +33,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateParticipantSelected
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, IAPCreateTeamViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
 @property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
+@property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 
 @property (strong, nonatomic) IBOutlet UIView *footerView;
@@ -157,6 +159,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return userSignInViewController;
 }
 
+- (WMIAPJoinTeamViewController *)iapJoinTeamViewController
+{
+    WMIAPJoinTeamViewController *iapJoinTeamViewController = [[WMIAPJoinTeamViewController alloc] initWithNibName:@"WMIAPJoinTeamViewController" bundle:nil];
+    iapJoinTeamViewController.delegate = self;
+    return iapJoinTeamViewController;
+}
+
 - (WMIAPCreateTeamViewController *)iapCreateTeamViewController
 {
     WMIAPCreateTeamViewController *iapCreateTeamViewController = [[WMIAPCreateTeamViewController alloc] initWithNibName:@"WMIAPCreateTeamViewController" bundle:nil];
@@ -259,12 +268,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             switch (indexPath.row) {
                 case 0: {
                     // join team
-                    WMUserSignInViewController *userSignInViewController = self.userSignInViewController;
-                    userSignInViewController.createNewUserFlag = NO;
-                    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-                    User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:self.managedObjectContext persistentStore:self.store];
-                    userSignInViewController.selectedUser = user;
-                    [self.navigationController pushViewController:userSignInViewController animated:YES];
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
+                    [self presentViewController:navigationController
+                                       animated:YES
+                                     completion:^{
+                                         // nothing
+                                     }];
+
                     break;
                 }
                 case 1: {
@@ -525,6 +535,27 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)userSignInViewControllerDidCancel:(WMUserSignInViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - WMIAPJoinTeamViewControllerDelegate
+
+- (void)iapJoinTeamViewControllerDidPurchase:(WMIAPJoinTeamViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        WMUserSignInViewController *userSignInViewController = self.userSignInViewController;
+        userSignInViewController.createNewUserFlag = NO;
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:self.managedObjectContext persistentStore:self.store];
+        userSignInViewController.selectedUser = user;
+        [self.navigationController pushViewController:userSignInViewController animated:YES];
+    }];
+}
+
+- (void)iapJoinTeamViewControllerDidDecline:(WMIAPJoinTeamViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
 }
 
 #pragma mark - IAPCreateTeamViewControllerDelegate
