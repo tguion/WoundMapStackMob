@@ -9,7 +9,7 @@
 #import "WMBaseViewController.h"
 //#import "WoundDetailViewController.h"
 
-@class WCPatient;
+@class WMPatient;
 @class WMPatientDetailViewController;
 
 @protocol PatientDetailViewControllerDelegate <NSObject>

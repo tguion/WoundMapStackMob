@@ -18,7 +18,12 @@
     if ([SMBinaryDataConversion stringContainsURL:picString]) {
         self.imageURL = [NSURL URLWithString:picString relativeToURL:nil];
     } else {
-        UIImage *image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
+        UIImage *image = nil;
+        if (nil == picString) {
+            image = patient.missingThumbnailImage;
+        } else {
+            image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
+        }
         self.image = image;
     }
 }

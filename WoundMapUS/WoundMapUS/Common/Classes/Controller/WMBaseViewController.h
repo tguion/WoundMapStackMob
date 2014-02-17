@@ -20,6 +20,9 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 
+@property (readonly, nonatomic) UITableView *activeTableView;
+@property (readonly, nonatomic) BOOL isSearchActive;
+
 @property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
 @property (readonly, nonatomic) WMPatientManager *patientManager;
 
@@ -32,8 +35,9 @@
 
 @property (readonly, nonatomic) WMPatient *patient;                         // active patient
 
-- (void)clearDataCache;                                                     // clear all cached data for new or nil document
-- (void)clearAllReferences;                                                 // clear all references and all observers
+- (void)clearViewReferences NS_REQUIRES_SUPER;                              // clear all references to views
+- (void)clearDataCache NS_REQUIRES_SUPER;                                   // clear all cached data for new or nil document
+- (void)clearAllReferences NS_REQUIRES_SUPER;                               // clear all references and all observers
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (readonly, nonatomic) NSString *fetchedResultsControllerEntityName;
@@ -45,6 +49,7 @@
 - (void)updateFetchRequest:(NSFetchRequest *)request;                       // update specific properties of fetch request
 - (void)fetchedResultsControllerDidFetch;                                   // called when frc finishes fetching Core Data
 - (void)nilFetchedResultsController;                                        // nil the reference _fetchedResultsController
+- (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource
 - (NSIndexPath *)indexPathTableToFetchedResultsController:(NSIndexPath *)indexPath;

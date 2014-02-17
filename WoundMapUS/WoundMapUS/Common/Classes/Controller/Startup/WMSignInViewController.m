@@ -357,7 +357,6 @@ typedef enum {
                 [actionSheet showInView:self.view];
             } else {
                 [self.delegate signInViewController:self didSignInParticipant:self.possibleParticipant];
-                [self performSelector:@selector(reset) withObject:nil afterDelay:0.0];
             }
             break;
         }

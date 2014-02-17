@@ -114,4 +114,15 @@
     return genderIndex;
 }
 
+- (UIImage *)missingThumbnailImage
+{
+    NSString *avitarFileName = @"user_";
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        avitarFileName = [avitarFileName stringByAppendingString:@"iPad"];
+    } else {
+        avitarFileName = [avitarFileName stringByAppendingString:@"iPhone"];
+    }
+    return [UIImage imageNamed:avitarFileName];
+}
+
 @end

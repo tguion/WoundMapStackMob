@@ -93,6 +93,15 @@
     return [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
 }
 
+// clear any strong references to views
+- (void)clearViewReferences
+{
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
+    self.tableView = nil;
+    [self hideProgressView];
+}
+
 - (void)clearDataCache
 {
     _patientObjectID = nil;
@@ -104,6 +113,7 @@
 
 - (void)clearAllReferences
 {
+    [self clearViewReferences];
     [self clearDataCache];
     [self removeAllObservers];
 }
@@ -128,6 +138,20 @@
 	}
 	// else
 	return nil;
+}
+
+- (BOOL)isSearchActive
+{
+    return self.searchDisplayController.isActive;
+}
+
+- (UITableView *)activeTableView
+{
+    if (self.isSearchActive) {
+        return self.searchDisplayController.searchResultsTableView;
+    }
+    // else
+    return self.tableView;
 }
 
 #pragma mark - Progress view
@@ -375,6 +399,12 @@
 - (void)nilFetchedResultsController
 {
     _fetchedResultsController = nil;
+}
+
+- (void)refetchDataForTableView
+{
+    _fetchedResultsController = nil;
+    [self.activeTableView reloadData];
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate

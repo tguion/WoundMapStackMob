@@ -9,6 +9,7 @@
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (readonly, nonatomic) NSInteger genderIndex;
+@property (readonly, nonatomic) UIImage *missingThumbnailImage;
 
 + (WMPatient *)patientForPatientId:(NSString *)patientId
               managedObjectContext:(NSManagedObjectContext *)managedObjectContext

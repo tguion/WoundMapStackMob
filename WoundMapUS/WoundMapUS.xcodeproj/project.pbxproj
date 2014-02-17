@@ -81,6 +81,9 @@
 		7D9AA27C18B1038400C1B698 /* WMIAPCreateTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */; };
 		7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */; };
 		7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */; };
+		7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */; };
+		7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */; };
+		7D9AA28A18B13F5900C1B698 /* WMPatientTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */; };
 		7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060818A7D3400004DC32 /* Foundation.framework */; };
 		7DB2060B18A7D3400004DC32 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */; };
 		7DB2060D18A7D3400004DC32 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060C18A7D3400004DC32 /* UIKit.framework */; };
@@ -256,6 +259,11 @@
 		7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPatientConsultant.m; sourceTree = "<group>"; };
 		7D9AA28018B1107200C1B698 /* WMPatientConsultant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientConsultant.h; sourceTree = "<group>"; };
 		7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientConsultant.m; sourceTree = "<group>"; };
+		7D9AA28318B13B2D00C1B698 /* WMPatientTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientTableViewController.h; sourceTree = "<group>"; };
+		7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientTableViewController.m; sourceTree = "<group>"; };
+		7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPatientTableViewController.xib; sourceTree = "<group>"; };
+		7D9AA28818B13F5900C1B698 /* WMPatientTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientTableViewCell.h; sourceTree = "<group>"; };
+		7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientTableViewCell.m; sourceTree = "<group>"; };
 		7DB2060518A7D3400004DC32 /* WoundMapUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoundMapUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DB2060818A7D3400004DC32 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -717,6 +725,9 @@
 				5F67D21418AC4ACF00460C37 /* WMSimpleTableViewController.h */,
 				5F67D21518AC4ACF00460C37 /* WMSimpleTableViewController.m */,
 				5F67D21618AC4ACF00460C37 /* WMSimpleTableViewController.xib */,
+				7D9AA28318B13B2D00C1B698 /* WMPatientTableViewController.h */,
+				7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */,
+				7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -799,6 +810,8 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D9AA28818B13F5900C1B698 /* WMPatientTableViewCell.h */,
+				7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */,
 				7D9AA26918AFBF3E00C1B698 /* BoxedButton.h */,
 				7D9AA26A18AFBF3E00C1B698 /* BoxedButton.m */,
 				5F6DE4F818AEE58900E87F7E /* WMProgressViewHUD.h */,
@@ -1093,6 +1106,7 @@
 				5F67D1F718AC3BE000460C37 /* Medications.plist in Resources */,
 				5F67D1F618AC3BE000460C37 /* InterventionStatus.plist in Resources */,
 				5F67D20A18AC3BE000460C37 /* WoundType.plist in Resources */,
+				7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */,
 				5F67D20418AC3BE000460C37 /* WoundMeasurementDefinitions.plist in Resources */,
 				5F67D20618AC3BE000460C37 /* WoundOdor.plist in Resources */,
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
@@ -1157,6 +1171,7 @@
 				7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */,
 				7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */,
 				5F67D1BB18AC319000460C37 /* WMUserSignInViewController.m in Sources */,
+				7D9AA28A18B13F5900C1B698 /* WMPatientTableViewCell.m in Sources */,
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DB206E918A839240004DC32 /* _User.m in Sources */,
 				5F6DE4F418AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m in Sources */,
@@ -1177,6 +1192,7 @@
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
+				7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */,
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
 				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
 				7DB206B018A7D6950004DC32 /* Faulter.m in Sources */,

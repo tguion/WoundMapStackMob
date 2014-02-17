@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMPatientTableViewController">
+            <connections>
+                <outlet property="patientTypeContainerView" destination="Tnr-xS-8DP" id="SGf-q5-YQw"/>
+                <outlet property="patientTypeSegmentedControl" destination="5GR-AB-dNM" id="7vY-Cu-P9I"/>
+                <outlet property="searchDisplayController" destination="S9y-K2-61W" id="nvL-iF-qOA"/>
+                <outlet property="view" destination="pNL-ca-Rwe" id="OQ3-7b-fkc"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="pNL-ca-Rwe">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <view key="tableHeaderView" contentMode="scaleToFill" id="Tnr-xS-8DP">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="5GR-AB-dNM">
+                        <rect key="frame" x="20" y="8" width="280" height="29"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <segments>
+                            <segment title="Team Patients"/>
+                            <segment title="Consult Patients"/>
+                        </segments>
+                        <connections>
+                            <action selector="patientTypeValueChangedAction:" destination="-1" eventType="valueChanged" id="Tr3-eX-Hwf"/>
+                        </connections>
+                    </segmentedControl>
+                </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            </view>
+            <connections>
+                <outlet property="dataSource" destination="-1" id="Ztp-a5-LG8"/>
+                <outlet property="delegate" destination="-1" id="6YJ-U1-ebX"/>
+            </connections>
+        </tableView>
+        <searchDisplayController id="S9y-K2-61W">
+            <connections>
+                <outlet property="delegate" destination="-1" id="fHz-F9-xGx"/>
+                <outlet property="searchBar" destination="RPa-Xx-i8f" id="dQz-di-tyj"/>
+                <outlet property="searchContentsController" destination="-1" id="n25-jk-Jbx"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="QUo-ba-bUm"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="dKB-S0-JfI"/>
+            </connections>
+        </searchDisplayController>
+        <searchBar contentMode="redraw" placeholder="Search Patients" id="RPa-Xx-i8f">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <textInputTraits key="textInputTraits"/>
+            <scopeButtonTitles>
+                <string>All Patients</string>
+                <string>Consult Requests</string>
+            </scopeButtonTitles>
+            <connections>
+                <outlet property="delegate" destination="-1" id="8NW-as-Hjy"/>
+            </connections>
+        </searchBar>
+    </objects>
+</document>
