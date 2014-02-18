@@ -7,9 +7,12 @@
 //
 
 #import "WMSignInViewController.h"
+#import "WMSimpleTableViewController.h"
+#import "WMPersonEditorViewController.h"
 #import "WMParticipant.h"
 #import "WMParticipantType.h"
 #import "WMPatient.h"
+#import "WMPerson.h"
 #import "UIView+Custom.h"
 #import "CoreDataHelper.h"
 #import "WCAppDelegate.h"
@@ -28,12 +31,13 @@ typedef enum {
     SignInViewControllerActionResetCreateAccount    = 1001,
 } SignInViewControllerActionTag;
 
-@interface WMSignInViewController ()
+@interface WMSignInViewController () <SimpleTableViewControllerDelegate, PersonEditorViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) SignInViewControllerState state;
 @property (strong, nonatomic) WMParticipant *participant;
 @property (strong, nonatomic) WMParticipant *possibleParticipant;
 @property (strong, nonatomic) WMParticipantType *selectedParticipantType;
+@property (strong, nonatomic) WMPerson *person;
 @property (strong, nonatomic) NSString *userNameForNewAccout;
 
 @property (readonly, nonatomic) BOOL userNameMatchesUser;
@@ -44,6 +48,7 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UITableViewCell *nameCell;
 @property (strong, nonatomic) IBOutlet UITableViewCell *emailCell;
 @property (strong, nonatomic) IBOutlet UITableViewCell *assigneeTypeCell;
+@property (strong, nonatomic) IBOutlet UITableViewCell *contactCell;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet UIView *tableFooterView;
@@ -52,6 +57,7 @@ typedef enum {
 @property (nonatomic) CGFloat tableFooterViewHeight;
 
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
+@property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 
 - (IBAction)signInAction:(id)sender;
 - (IBAction)createAccountAction:(id)sender;
@@ -154,7 +160,7 @@ typedef enum {
                 self.state = SignInViewControllerEnterRole;
                 self.title = @"Select Role";
                 [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0], [NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self.tableView endUpdates];
             } else {
                 [self.emailTextField becomeFirstResponder];
@@ -249,6 +255,13 @@ typedef enum {
     simpleTableViewController.delegate = self;
     simpleTableViewController.allowMultipleSelection = NO;
     return simpleTableViewController;
+}
+
+- (WMPersonEditorViewController *)personEditorViewController
+{
+    WMPersonEditorViewController *personEditorViewController = [[WMPersonEditorViewController alloc] initWithNibName:@"WMPersonEditorViewController" bundle:nil];
+    personEditorViewController.delegate = self;
+    return personEditorViewController;
 }
 
 - (WMParticipant *)participant
@@ -386,17 +399,40 @@ typedef enum {
                                                           cancelButtonTitle:@"Dismiss"
                                                           otherButtonTitles:nil];
                 [alertView show];
+            } else if (nil == _selectedParticipantType) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Role"
+                                                                    message:@"Please select a role"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Dismiss"
+                                                          otherButtonTitles:nil];
+                [alertView show];
             } else {
                 self.participant = [WMParticipant participantForName:self.nameInput
                                                               create:YES
                                                 managedObjectContext:self.managedObjectContext
                                                      persistentStore:nil];
                 self.participant.email = self.emailTextField.text;
-                // save participant before creating relationship
+                // save participant before creating relationships
                 NSError *error = nil;
                 [self.managedObjectContext saveAndWait:&error];
                 [WMUtilities logError:error];
                 self.participant.participantType = _selectedParticipantType;
+                [self.managedObjectContext saveAndWait:&error];
+                [WMUtilities logError:error];
+                // check for contact details
+                if (nil == _person) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Contact Details"
+                                                                        message:@"Please tap Contact Details"
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"Dismiss"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                    return;
+                }
+                // else
+                self.participant.person = _person;
+                [self.managedObjectContext saveAndWait:&error];
+                [WMUtilities logError:error];
                 [self.delegate signInViewController:self didSignInParticipant:self.participant];
                 [self performSelector:@selector(reset) withObject:nil afterDelay:0.0];
             }
@@ -452,6 +488,18 @@ typedef enum {
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+}
+
+#pragma mark - PersonEditorViewControllerDelegate
+
+- (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -510,6 +558,14 @@ typedef enum {
         WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
         [self.navigationController pushViewController:simpleTableViewController animated:YES];
         simpleTableViewController.title = @"Select Role";
+    } else if (indexPath.row == 3) {
+        WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
+        _person = self.participant.person;
+        if (nil == _person) {
+            _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+        }
+        personEditorViewController.person = _person;
+        [self.navigationController pushViewController:personEditorViewController animated:YES];
     }
 }
 
@@ -539,7 +595,7 @@ typedef enum {
         }
         case SignInViewControllerCreateAccount:
         case SignInViewControllerEnterRole: {
-            count = 3;
+            count = 4;
             break;
         }
     }
@@ -565,6 +621,10 @@ typedef enum {
                 cell = self.assigneeTypeCell;
                 break;
             }
+            case 3: {
+                cell = self.contactCell;
+                break;
+            }
         }
     }
     [self configureCell:cell atIndexPath:indexPath];
@@ -584,6 +644,10 @@ typedef enum {
         }
         case 2: {
             cell.detailTextLabel.text = self.selectedParticipantType.title;
+            break;
+        }
+        case 3: {
+            cell.detailTextLabel.text = self.participant.lastNameFirstName;
             break;
         }
     }

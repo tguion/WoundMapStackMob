@@ -69,6 +69,9 @@
 		5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE4F918AEE58900E87F7E /* WMProgressViewHUD.m */; };
 		5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */; };
 		5F6DE4FF18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */; };
+		5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE50118B2CC2200E87F7E /* WMPersonEditorViewController.m */; };
+		5F6DE50418B2CC2200E87F7E /* WMPersonEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE50218B2CC2200E87F7E /* WMPersonEditorViewController.xib */; };
+		5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE50618B2D37000E87F7E /* WMTextFieldTableViewCell.m */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -237,6 +240,11 @@
 		5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPJoinTeamViewController.h; sourceTree = "<group>"; };
 		5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPJoinTeamViewController.m; sourceTree = "<group>"; };
 		5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPJoinTeamViewController.xib; sourceTree = "<group>"; };
+		5F6DE50018B2CC2200E87F7E /* WMPersonEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPersonEditorViewController.h; sourceTree = "<group>"; };
+		5F6DE50118B2CC2200E87F7E /* WMPersonEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPersonEditorViewController.m; sourceTree = "<group>"; };
+		5F6DE50218B2CC2200E87F7E /* WMPersonEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPersonEditorViewController.xib; sourceTree = "<group>"; };
+		5F6DE50518B2D37000E87F7E /* WMTextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTextFieldTableViewCell.h; sourceTree = "<group>"; };
+		5F6DE50618B2D37000E87F7E /* WMTextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTextFieldTableViewCell.m; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -736,6 +744,9 @@
 				7D9AA28318B13B2D00C1B698 /* WMPatientTableViewController.h */,
 				7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */,
 				7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */,
+				5F6DE50018B2CC2200E87F7E /* WMPersonEditorViewController.h */,
+				5F6DE50118B2CC2200E87F7E /* WMPersonEditorViewController.m */,
+				5F6DE50218B2CC2200E87F7E /* WMPersonEditorViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -834,6 +845,8 @@
 				7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */,
 				7D9AA26618AFBE6300C1B698 /* WMValue1TableViewCell.h */,
 				7D9AA26718AFBE6300C1B698 /* WMValue1TableViewCell.m */,
+				5F6DE50518B2D37000E87F7E /* WMTextFieldTableViewCell.h */,
+				5F6DE50618B2D37000E87F7E /* WMTextFieldTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1100,6 +1113,7 @@
 				5F67D20118AC3BE000460C37 /* WoundAssessmentDefinitions.plist in Resources */,
 				5F67D1F318AC3BE000460C37 /* DeviceDefinitions.plist in Resources */,
 				7DB2068218A7D4000004DC32 /* CHANGELOG.md in Resources */,
+				5F6DE50418B2CC2200E87F7E /* WMPersonEditorViewController.xib in Resources */,
 				5F67D20918AC3BE000460C37 /* WoundTreatmentDefinitions.plist in Resources */,
 				7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
@@ -1165,6 +1179,7 @@
 				7DB206D718A839180004DC32 /* WMTelecom.m in Sources */,
 				7DB206D118A839180004DC32 /* User.m in Sources */,
 				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
+				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7DB2062718A7D3400004DC32 /* WCMasterViewController.m in Sources */,
 				7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */,
@@ -1172,6 +1187,7 @@
 				7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
+				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
 				7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */,
 				7DB2062418A7D3400004DC32 /* WoundMapUS.xcdatamodeld in Sources */,

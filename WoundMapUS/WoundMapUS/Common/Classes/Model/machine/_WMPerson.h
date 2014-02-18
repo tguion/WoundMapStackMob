@@ -16,6 +16,7 @@ extern const struct WMPersonAttributes {
 
 extern const struct WMPersonRelationships {
 	__unsafe_unretained NSString *addresses;
+	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *telecoms;
 } WMPersonRelationships;
@@ -24,6 +25,7 @@ extern const struct WMPersonFetchedProperties {
 } WMPersonFetchedProperties;
 
 @class WMAddress;
+@class WMParticipant;
 @class WMPatient;
 @class WMTelecom;
 
@@ -125,6 +127,13 @@ extern const struct WMPersonFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMParticipant *participant;
+
+//- (BOOL)validateParticipant:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) WMPatient *patient;
 
 //- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
@@ -204,6 +213,11 @@ extern const struct WMPersonFetchedProperties {
 
 - (NSMutableSet*)primitiveAddresses;
 - (void)setPrimitiveAddresses:(NSMutableSet*)value;
+
+
+
+- (WMParticipant*)primitiveParticipant;
+- (void)setPrimitiveParticipant:(WMParticipant*)value;
 
 
 

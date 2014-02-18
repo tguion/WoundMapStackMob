@@ -141,6 +141,7 @@
         <attribute name="wmparticipant_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="participant" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="participant" inverseEntity="WMPerson" syncable="YES"/>
     </entity>
     <entity name="WMParticipantType" representedClassName="WMParticipantType" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -221,6 +222,7 @@
                 <entry key="attributeName" value="addr"/>
             </userInfo>
         </relationship>
+        <relationship name="participant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="person" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="person" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTelecom" inverseName="person" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
@@ -284,10 +286,10 @@
         <element name="WMParticipant" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPatient" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPatientConsultant" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMPatientConsultant" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

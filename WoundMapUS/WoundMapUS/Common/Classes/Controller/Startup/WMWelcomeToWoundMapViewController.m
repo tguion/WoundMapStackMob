@@ -67,6 +67,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     // Do any additional setup after loading the view from its nib.
     self.title = @"Welcome to WoundMap";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"DeferCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
 }
 
@@ -93,16 +94,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case 0: {
             switch (indexPath.row) {
                 case 0: {
+                    // Join Team
                     cellReuseIdentifier = @"Cell";
                     break;
                 }
                 case 1: {
+                    // Create Team
                     cellReuseIdentifier = @"Cell";
                     break;
                 }
                 case 2: {
-                    if (_welcomeState == WMWelcomeStateInitial) {
-                        cellReuseIdentifier = @"Cell";
+                    // Defer or Connected
+                    if (_welcomeState == WMWelcomeStateInitial || _welcomeState == WMWelcomeStateDeferTeam) {
+                        cellReuseIdentifier = @"DeferCell";
                     } else {
                         cellReuseIdentifier = @"ValueCell";
                     }
@@ -228,6 +232,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }
     [self.tableView reloadData];
 }
+
 - (IBAction)enterWoundMapAction:(id)sender
 {
     NSLog(@"Hurray");
@@ -398,9 +403,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 case 2: {
                     if (_welcomeState == WMWelcomeStateInitial) {
                         title = @"Defer Joining Team";
-                        UISwitch *deferTeamSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
-                        [deferTeamSwitch addTarget:self action:@selector(deferTeamAction:) forControlEvents:UIControlEventValueChanged];
-                        accessoryView = deferTeamSwitch;
+                        if (nil == cell.accessoryView && ![cell.accessoryView isKindOfClass:[UISwitch class]]) {
+                            UISwitch *deferTeamSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+                            [deferTeamSwitch addTarget:self action:@selector(deferTeamAction:) forControlEvents:UIControlEventValueChanged];
+                            accessoryView = deferTeamSwitch;
+                        } else {
+                            accessoryView = cell.accessoryView;
+                        }
+                    } else if (_welcomeState == WMWelcomeStateDeferTeam) {
+                        title = @"Deferring Joining Team";
+                        accessoryView = cell.accessoryView;
                     } else {
                         title = @"Connected:";
                         image = [UIImage imageNamed:@"ui_checkmark"];

@@ -18,6 +18,7 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 const struct WMParticipantRelationships WMParticipantRelationships = {
 	.acquiredConsults = @"acquiredConsults",
 	.participantType = @"participantType",
+	.person = @"person",
 };
 
 const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
@@ -181,6 +182,10 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 	
 
 @dynamic participantType;
+
+	
+
+@dynamic person;
 
 	
 

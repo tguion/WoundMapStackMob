@@ -7,7 +7,6 @@
 //
 
 #import "WMBaseViewController.h"
-#import "WMSimpleTableViewController.h"
 
 @class WMSignInViewController;
 @class WMParticipant;
@@ -20,7 +19,7 @@
 
 @end
 
-@interface WMSignInViewController : WMBaseViewController <SimpleTableViewControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
+@interface WMSignInViewController : WMBaseViewController
 
 @property (weak, nonatomic) id<SignInViewControllerDelegate> delegate;
 

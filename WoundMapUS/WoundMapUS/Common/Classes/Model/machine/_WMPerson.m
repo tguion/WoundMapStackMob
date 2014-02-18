@@ -15,6 +15,7 @@ const struct WMPersonAttributes WMPersonAttributes = {
 
 const struct WMPersonRelationships WMPersonRelationships = {
 	.addresses = @"addresses",
+	.participant = @"participant",
 	.patient = @"patient",
 	.telecoms = @"telecoms",
 };
@@ -115,6 +116,10 @@ const struct WMPersonFetchedProperties WMPersonFetchedProperties = {
 	[self didAccessValueForKey:@"addresses"];
 	return result;
 }
+	
+
+@dynamic participant;
+
 	
 
 @dynamic patient;

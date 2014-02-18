@@ -1,5 +1,6 @@
 #import "WMParticipant.h"
 #import "WMParticipantType.h"
+#import "WMPerson.h"
 #import "WMUtilities.h"
 #import "StackMob.h"
 
@@ -120,6 +121,21 @@
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
+}
+
+- (NSString *)lastNameFirstName
+{
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
+    if ([self.person.nameFamily length] > 0) {
+        [array addObject:self.person.nameFamily];
+    }
+    if ([self.person.nameGiven length] > 0) {
+        [array addObject:self.person.nameGiven];
+    }
+    if ([array count] == 0) {
+        [array addObject:@"New Person"];
+    }
+    return [array componentsJoinedByString:@", "];
 }
 
 @end
