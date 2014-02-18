@@ -32,6 +32,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.title = @"Contact Details";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                           target:self
+                                                                                           action:@selector(doneAction:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                           target:self
+                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
 }
@@ -82,7 +89,25 @@
     return cellReuseIdentifier;
 }
 
-#pragma mark - @protocol UITextFieldDelegate
+- (void)updateModelFromUI
+{
+    // TODO
+}
+
+#pragma mark - Actions
+
+- (IBAction)doneAction:(id)sender
+{
+    [self updateModelFromUI];
+    [self.delegate personEditorViewController:self didEditPerson:_person];
+}
+
+- (IBAction)cancelAction:(id)sender
+{
+    [self.delegate personEditorViewControllerDidCancel:self];
+}
+
+#pragma mark - UITextFieldDelegate
 
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -162,25 +187,25 @@
         case 0: {
             // prefix
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix valuePrompt:@"Optional"];
+            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix valuePrompt:@"Dr, Mr, Ms, etc"];
             break;
         }
         case 1: {
             // given name
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Given Name" valueText:self.person.nameGiven valuePrompt:@"Enter Given or First Name"];
+            [myCell updateWithLabelText:@"Given Name" valueText:self.person.nameGiven valuePrompt:@"Given or First Name"];
             break;
         }
         case 2: {
             // family name
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Family Name" valueText:self.person.nameFamily valuePrompt:@"Enter Family or Last Name"];
+            [myCell updateWithLabelText:@"Family Name" valueText:self.person.nameFamily valuePrompt:@"Family or Last Name"];
             break;
         }
         case 3: {
             // suffix
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Suffix" valueText:self.person.nameSuffix valuePrompt:@"Optional"];
+            [myCell updateWithLabelText:@"Suffix" valueText:self.person.nameSuffix valuePrompt:@"III, Esquire, etc"];
             break;
         }
         case 4: {

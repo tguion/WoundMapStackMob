@@ -10,8 +10,6 @@
 
 @interface WMTextFieldTableViewCell ()
 @property (readwrite, nonatomic) UITextField *textField;
-@property (nonatomic, strong) UIView *topSpacerView;
-@property (nonatomic, strong) UIView *bottomSpacerView;
 @end
 
 @implementation WMTextFieldTableViewCell
@@ -22,44 +20,22 @@
     if (self) {
         // Initialization code
         UIView *contentView = self.contentView;
-//        contentView.translatesAutoresizingMaskIntoConstraints = NO;
-        contentView.backgroundColor = [UIColor redColor];
-//        NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(contentView);
-//        NSMutableArray *constraints = [NSMutableArray array];
-//        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView]|"
-//                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
-//                                                                                 metrics:nil
-//                                                                                   views:viewsDictionary]];
-//        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView]|"
-//                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
-//                                                                                 metrics:nil
-//                                                                                   views:viewsDictionary]];
-//        [self addConstraints:constraints];
         
         UITextField *textField = [[UITextField alloc] initWithFrame:CGRectZero];
         [self.contentView addSubview:textField];
         _textField = textField;
         textField.translatesAutoresizingMaskIntoConstraints = NO;
-//        [textField setContentHuggingPriority:1 forAxis:UILayoutConstraintAxisHorizontal];
-        
-        _topSpacerView = [[UIView alloc] initWithFrame:CGRectZero];
-        _topSpacerView.translatesAutoresizingMaskIntoConstraints = NO;
-        _topSpacerView.backgroundColor = [UIColor yellowColor];
-        [contentView addSubview:_topSpacerView];
-        
-        _bottomSpacerView = [[UIView alloc] initWithFrame:CGRectZero];
-        _bottomSpacerView.translatesAutoresizingMaskIntoConstraints = NO;
-        _bottomSpacerView.backgroundColor = [UIColor yellowColor];
-        [contentView addSubview:_bottomSpacerView];
+        textField.textAlignment = NSTextAlignmentRight;
         
         UILabel *textLabel = self.textLabel;
         textLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        NSDictionary *views = NSDictionaryOfVariableBindings(_topSpacerView, textLabel, textField, _bottomSpacerView);
+        [textLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+
+        NSDictionary *views = NSDictionaryOfVariableBindings(textLabel, textField);
 
         NSMutableArray *constraints = [NSMutableArray array];
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topSpacerView][textLabel][_bottomSpacerView(==_topSpacerView)]|" options:NSLayoutFormatAlignAllLeading metrics:nil views:views]];
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[textLabel]-[textField]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[textLabel]|" options:NSLayoutFormatAlignAllLeading metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[textLabel]-[textField]-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
         [constraints addObject:[NSLayoutConstraint constraintWithItem:textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
         [self.contentView addConstraints:constraints];
     }
