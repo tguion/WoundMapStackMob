@@ -553,13 +553,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)iapJoinTeamViewControllerDidPurchase:(WMIAPJoinTeamViewController *)viewController
 {
+    __weak __typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        WMUserSignInViewController *userSignInViewController = self.userSignInViewController;
+        WMUserSignInViewController *userSignInViewController = weakSelf.userSignInViewController;
         userSignInViewController.createNewUserFlag = NO;
         WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-        User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:self.managedObjectContext persistentStore:self.store];
+        User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:weakSelf.managedObjectContext persistentStore:weakSelf.store];
         userSignInViewController.selectedUser = user;
-        [self.navigationController pushViewController:userSignInViewController animated:YES];
+        [weakSelf.navigationController pushViewController:userSignInViewController animated:YES];
     }];
 }
 
@@ -574,10 +575,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)iapCreateTeamViewControllerDidPurchase:(WMIAPCreateTeamViewController *)viewController
 {
+    __weak __typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        WMUserSignInViewController *userSignInViewController = self.userSignInViewController;
+        WMUserSignInViewController *userSignInViewController = weakSelf.userSignInViewController;
         userSignInViewController.createNewUserFlag = YES;
-        [self.navigationController pushViewController:userSignInViewController animated:YES];
+        [weakSelf.navigationController pushViewController:userSignInViewController animated:YES];
     }];
 }
 

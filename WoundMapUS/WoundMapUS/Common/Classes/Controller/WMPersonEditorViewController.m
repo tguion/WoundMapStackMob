@@ -162,25 +162,25 @@
         case 0: {
             // prefix
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix];
+            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix valuePrompt:@"Optional"];
             break;
         }
         case 1: {
             // given name
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Given Name" valueText:self.person.namePrefix];
+            [myCell updateWithLabelText:@"Given Name" valueText:self.person.nameGiven valuePrompt:@"Enter Given or First Name"];
             break;
         }
         case 2: {
             // family name
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Family Name" valueText:self.person.namePrefix];
+            [myCell updateWithLabelText:@"Family Name" valueText:self.person.nameFamily valuePrompt:@"Enter Family or Last Name"];
             break;
         }
         case 3: {
             // suffix
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Suffix" valueText:self.person.namePrefix];
+            [myCell updateWithLabelText:@"Suffix" valueText:self.person.nameSuffix valuePrompt:@"Optional"];
             break;
         }
         case 4: {

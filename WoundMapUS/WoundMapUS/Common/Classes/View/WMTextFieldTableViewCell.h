@@ -12,6 +12,6 @@
 
 @property (readonly, nonatomic) UITextField *textField;
 
-- (void)updateWithLabelText:(NSString *)labelText valueText:(NSString *)valueText;
+- (void)updateWithLabelText:(NSString *)labelText valueText:(NSString *)valueText valuePrompt:(NSString *)promptText;
 
 @end
