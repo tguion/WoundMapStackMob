@@ -5,4 +5,6 @@
 + (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                  persistentStore:(NSPersistentStore *)store;
 
+@property (readonly, nonatomic) NSString *lastNameFirstName;
+
 @end

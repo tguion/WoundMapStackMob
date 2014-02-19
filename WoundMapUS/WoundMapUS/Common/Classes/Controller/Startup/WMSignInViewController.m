@@ -497,6 +497,7 @@ typedef enum {
     self.person = person;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    [self.tableView reloadData];
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
@@ -651,7 +652,7 @@ typedef enum {
             break;
         }
         case 3: {
-            cell.detailTextLabel.text = self.participant.lastNameFirstName;
+            cell.detailTextLabel.text = self.person.lastNameFirstName;
             break;
         }
     }

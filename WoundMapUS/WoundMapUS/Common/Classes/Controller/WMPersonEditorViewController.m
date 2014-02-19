@@ -15,6 +15,8 @@
 
 @interface WMPersonEditorViewController () <UITextFieldDelegate>
 
+@property (strong, nonatomic, readwrite) NSManagedObjectContext *childManagedObjectContext;
+
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
 
 @end
@@ -55,12 +57,29 @@
 
 #pragma mark - Core
 
+- (NSManagedObjectContext *)childManagedObjectContext
+{
+    if (nil == _childManagedObjectContext) {
+        _childManagedObjectContext = self.coreDataHelper.context;
+    }
+    return _childManagedObjectContext;
+}
+
 - (WMPerson *)person
 {
     if (nil == _person) {
-        _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+        _person = [WMPerson instanceWithManagedObjectContext:self.childManagedObjectContext persistentStore:self.store];
     }
     return _person;
+}
+
+- (void)setPerson:(WMPerson *)person
+{
+    if (nil == person) {
+        _person = nil;
+    } else {
+        _person = (WMPerson *)[self.childManagedObjectContext objectWithID:[person objectID]];
+    }
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
@@ -106,7 +125,13 @@
 - (IBAction)doneAction:(id)sender
 {
     [self.view endEditing:YES];
-    [self.delegate personEditorViewController:self didEditPerson:_person];
+    NSError *error = nil;
+    BOOL success = [self.childManagedObjectContext save:&error];
+    if (!success) {
+        [WMUtilities logError:error];
+    }
+    WMPerson *person = (WMPerson *)[self.managedObjectContext objectWithID:[_person objectID]];
+    [self.delegate personEditorViewController:self didEditPerson:person];
 }
 
 - (IBAction)cancelAction:(id)sender
