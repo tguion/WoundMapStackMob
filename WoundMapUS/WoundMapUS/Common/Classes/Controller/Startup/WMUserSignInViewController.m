@@ -163,9 +163,7 @@
     CoreDataHelper *coreDataHelper = self.coreDataHelper;
     if([coreDataHelper.stackMobClient isLoggedIn]) {
         [coreDataHelper.stackMobClient getLoggedInUserOnSuccess:^(NSDictionary *result) {
-            self.statusLabel.text =
-            [NSString stringWithFormat:@"You're using '%@'",
-             [result objectForKey:@"username"]];
+            self.statusLabel.text = [NSString stringWithFormat:@"You're using '%@'", [result objectForKey:@"username"]];
         } onFailure:^(NSError *error) {
             self.statusLabel.text = @"Create or Enter a Clinical Team";
         }];

@@ -80,6 +80,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     self.savePolicy = SMSavePolicyNetworkThenCache;
     self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
+    if([self.coreDataHelper.stackMobClient isLoggedIn]) {
+        __weak __typeof(self) weakSelf = self;
+        [self.coreDataHelper.stackMobClient getLoggedInUserOnSuccess:^(NSDictionary *result) {
+            weakSelf.appDelegate.stackMobUsername = [result objectForKey:@"username"];
+            _welcomeState = WMWelcomeStateTeamSelected;
+            [weakSelf.tableView reloadData];
+        } onFailure:^(NSError *error) {
+            self.appDelegate.stackMobUsername = nil;
+            [weakSelf.tableView reloadData];
+        }];
+    } else {
+        self.appDelegate.stackMobUsername = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -255,10 +268,17 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (IBAction)disconnectFromTeamAction:(id)sender
 {
-    // TODO: stack mob log out action ???
-    _welcomeState = WMWelcomeStateInitial;
-    self.appDelegate.stackMobUsername = nil;
-    [self.tableView reloadData];
+    [self showProgressViewWithMessage:@"Disconnecting from Team"];
+    __weak __typeof(self) weakSelf = self;
+    [self.coreDataHelper.stackMobClient logoutOnSuccess:^(NSDictionary *result) {
+        DLog(@"result: %@", result);
+        _welcomeState = WMWelcomeStateInitial;
+        weakSelf.appDelegate.stackMobUsername = nil;
+        [weakSelf.tableView reloadData];
+        [weakSelf hideProgressView];
+    } onFailure:^(NSError *error) {
+        [weakSelf hideProgressView];
+    }];
 }
 
 - (IBAction)enterWoundMapAction:(id)sender
