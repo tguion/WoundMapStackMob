@@ -132,7 +132,7 @@
                                                onSuccess:^(NSDictionary *results) {
                                                    NSString *username = [results valueForKey:@"username"];
                                                    [self showAlertWithTitle:@"Success!"
-                                                                    message:[NSString stringWithFormat:@"You're now using Clinical Team '%@'", username]];
+                                                                    message:[NSString stringWithFormat:@"You're now connected to Clinical Team '%@'", username]];
                                                    [self updateStatus];
                                                    [self showWait:NO];
                                                    [self.delegate userSignInViewController:self didSignInUsername:username];

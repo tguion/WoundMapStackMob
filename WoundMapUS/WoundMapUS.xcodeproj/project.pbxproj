@@ -140,6 +140,10 @@
 		7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074618ABAB8E0004DC32 /* AsyncImageView.m */; };
 		7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */; };
 		7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */; };
+		7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */; };
+		7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */; };
+		7DDAFAEF18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */; };
+		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
 		7DDCDD4518AC28C9001D3BA9 /* libstackmob-v2.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068118A7D4000004DC32 /* libstackmob-v2.2.0.a */; };
 /* End PBXBuildFile section */
 
@@ -412,6 +416,12 @@
 		7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCPatientPhotoImageView.m; sourceTree = "<group>"; };
 		7DB2074B18ABC0850004DC32 /* WMBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMBaseViewController.h; sourceTree = "<group>"; };
 		7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMBaseViewController.m; sourceTree = "<group>"; };
+		7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateConsultantViewController.h; sourceTree = "<group>"; };
+		7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateConsultantViewController.m; sourceTree = "<group>"; };
+		7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPCreateConsultantViewController.xib; sourceTree = "<group>"; };
+		7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateConsultantValueProposition.txt; sourceTree = "<group>"; };
+		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
+		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,6 +476,9 @@
 				5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */,
 				5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */,
 				5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */,
+				7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */,
+				7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */,
+				7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -847,6 +860,8 @@
 				7D9AA26718AFBE6300C1B698 /* WMValue1TableViewCell.m */,
 				5F6DE50518B2D37000E87F7E /* WMTextFieldTableViewCell.h */,
 				5F6DE50618B2D37000E87F7E /* WMTextFieldTableViewCell.m */,
+				7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */,
+				7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -854,6 +869,7 @@
 		7DB2069F18A7D6950004DC32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7DDAFAED18B4E9F700A05F5D /* IAP */,
 				7D9AA27518B003D600C1B698 /* Policy */,
 				5F67D1CF18AC3BE000460C37 /* Data */,
 				7DB206F118AAC2730004DC32 /* Test Images */,
@@ -1013,6 +1029,14 @@
 			path = "Test Images";
 			sourceTree = "<group>";
 		};
+		7DDAFAED18B4E9F700A05F5D /* IAP */ = {
+			isa = PBXGroup;
+			children = (
+				7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */,
+			);
+			path = IAP;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1095,6 +1119,7 @@
 			files = (
 				5F67D1F818AC3BE000460C37 /* MedicationsDefinitions.plist in Resources */,
 				5F67D20218AC3BE000460C37 /* WoundDescription.plist in Resources */,
+				7DDAFAEF18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt in Resources */,
 				7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */,
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
 				5F67D1FF18AC3BE000460C37 /* SkinIntervention.plist in Resources */,
@@ -1135,6 +1160,7 @@
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
 				5F67D1F418AC3BE000460C37 /* Devices.plist in Resources */,
 				7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */,
+				7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */,
 				5F67D1F218AC3BE000460C37 /* CarePlan.plist in Resources */,
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
 				5F67D1FB18AC3BE000460C37 /* PsychoSocialDefinitions.plist in Resources */,
@@ -1186,6 +1212,7 @@
 				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
 				7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
+				7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
 				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
@@ -1219,6 +1246,7 @@
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
 				7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */,
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
+				7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */,
 				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
 				7DB206B018A7D6950004DC32 /* Faulter.m in Sources */,
 				5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */,

@@ -37,7 +37,7 @@
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[textLabel]|" options:NSLayoutFormatAlignAllLeading metrics:nil views:views]];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[textLabel]-[textField]-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
         [constraints addObject:[NSLayoutConstraint constraintWithItem:textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-        [self.contentView addConstraints:constraints];
+        [contentView addConstraints:constraints];
     }
     return self;
 }
