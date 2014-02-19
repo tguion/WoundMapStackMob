@@ -372,7 +372,7 @@
                                                                            nil]];
         }
     } else {
-        predicate = [NSPredicate predicateWithFormat:@"participant != %@", self.appDelegate.participant];
+        predicate = [NSPredicate predicateWithFormat:@"consultant.username != %@", self.appDelegate.stackMobUsername];
     }
     return predicate;
 }

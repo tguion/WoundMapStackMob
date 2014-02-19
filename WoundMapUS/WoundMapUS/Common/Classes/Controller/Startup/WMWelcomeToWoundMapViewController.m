@@ -613,14 +613,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
     [self showProgressViewWithMessage:@"Updating Participant account"];
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
     __weak __typeof(self) weakSelf = self;
-    __weak __typeof(viewController) weakViewController = viewController;
     [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
         [WMUtilities logError:error];
         [weakSelf hideProgressView];
         weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-        [weakSelf.navigationController popViewControllerAnimated:YES];
-        [weakViewController clearAllReferences];
         [weakSelf.tableView reloadData];
     }];
 }

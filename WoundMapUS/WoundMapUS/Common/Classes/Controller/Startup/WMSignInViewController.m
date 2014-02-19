@@ -23,7 +23,8 @@ typedef enum {
     SignInViewControllerCreateNewAccount    = 1,
     SignInViewControllerEnterEmail          = 2,
     SignInViewControllerEnterRole           = 3,
-    SignInViewControllerCreateAccount       = 4,
+    SignInViewControllerEnterContactDetail  = 4,
+    SignInViewControllerCreateAccount       = 5,
 } SignInViewControllerState;
 
 typedef enum {
@@ -160,7 +161,7 @@ typedef enum {
                 self.state = SignInViewControllerEnterRole;
                 self.title = @"Select Role";
                 [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0], [NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
                 [self.tableView endUpdates];
             } else {
                 [self.emailTextField becomeFirstResponder];
@@ -169,7 +170,10 @@ typedef enum {
         }
         case SignInViewControllerEnterRole: {
             self.title = @"Select Role";
-            self.signInButton.enabled = YES;
+            break;
+        }
+        case SignInViewControllerEnterContactDetail: {
+            self.title = @"Contact Details";
             break;
         }
         case SignInViewControllerCreateAccount: {
@@ -383,7 +387,6 @@ typedef enum {
             break;
         }
         case SignInViewControllerEnterEmail:
-        case SignInViewControllerCreateAccount:
         case SignInViewControllerEnterRole: {
             if (!self.hasNameInput) {
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Participant Name"
@@ -407,18 +410,6 @@ typedef enum {
                                                           otherButtonTitles:nil];
                 [alertView show];
             } else {
-                self.participant = [WMParticipant participantForName:self.nameInput
-                                                              create:YES
-                                                managedObjectContext:self.managedObjectContext
-                                                     persistentStore:nil];
-                self.participant.email = self.emailTextField.text;
-                // save participant before creating relationships
-                NSError *error = nil;
-                [self.managedObjectContext saveAndWait:&error];
-                [WMUtilities logError:error];
-                self.participant.participantType = _selectedParticipantType;
-                [self.managedObjectContext saveAndWait:&error];
-                [WMUtilities logError:error];
                 // check for contact details
                 if (nil == _person) {
                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Contact Details"
@@ -430,12 +421,29 @@ typedef enum {
                     return;
                 }
                 // else
-                self.participant.person = _person;
-                [self.managedObjectContext saveAndWait:&error];
-                [WMUtilities logError:error];
-                [self.delegate signInViewController:self didSignInParticipant:self.participant];
-                [self performSelector:@selector(reset) withObject:nil afterDelay:0.0];
             }
+            break;
+        }
+        case SignInViewControllerCreateAccount:
+        case SignInViewControllerEnterContactDetail: {
+            NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+            WMParticipant *participant = [WMParticipant participantForName:self.nameInput
+                                                                    create:YES
+                                                      managedObjectContext:managedObjectContext
+                                                           persistentStore:nil];
+            self.participant = participant;
+            participant.email = self.emailTextField.text;
+            // save participant before creating relationships
+            NSError *error = nil;
+            [managedObjectContext saveAndWait:&error];
+            [WMUtilities logError:error];
+            participant.participantType = _selectedParticipantType;
+            [managedObjectContext saveAndWait:&error];
+            [WMUtilities logError:error];
+            participant.person = _person;
+            [managedObjectContext saveAndWait:&error];
+            [WMUtilities logError:error];
+            [self.delegate signInViewController:self didSignInParticipant:participant];
             break;
         }
     }
@@ -478,10 +486,13 @@ typedef enum {
                                                          managedObjectContext:self.managedObjectContext
                                                               persistentStore:nil];
     }
-    self.state = SignInViewControllerCreateAccount;
+    self.state = SignInViewControllerEnterContactDetail;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    [self.tableView reloadData];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationTop];
+    [self.tableView endUpdates];
 }
 
 - (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController
@@ -497,6 +508,7 @@ typedef enum {
     self.person = person;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    self.state = SignInViewControllerCreateAccount;
     [self.tableView reloadData];
 }
 
@@ -598,8 +610,12 @@ typedef enum {
             count = 2;
             break;
         }
-        case SignInViewControllerCreateAccount:
         case SignInViewControllerEnterRole: {
+            count = 3;
+            break;
+        }
+        case SignInViewControllerCreateAccount:
+        case SignInViewControllerEnterContactDetail: {
             count = 4;
             break;
         }
