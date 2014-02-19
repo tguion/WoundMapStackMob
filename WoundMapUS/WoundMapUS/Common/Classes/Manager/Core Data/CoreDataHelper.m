@@ -178,25 +178,42 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         DLog(@"*** WARNING *** failed server deletes: %@", objects);
     }];
     
-    _context = [_stackMobStore contextForCurrentThread];
-    
-    _importContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [_importContext performBlockAndWait:^{
-        [_importContext setParentContext:_context];
-        [_importContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-        [_importContext setContextShouldObtainPermanentIDsBeforeSaving:YES];
-        [_importContext setUndoManager:nil]; // the default on iOS
-    }];
-    
-    _sourceContext =
-    [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [_sourceContext performBlockAndWait:^{
-        [_sourceContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-        [_sourceContext setParentContext:_context];
-        [_sourceContext setContextShouldObtainPermanentIDsBeforeSaving:YES];
-        [_sourceContext setUndoManager:nil]; // the default on iOS
-    }];
     return self;
+}
+
+- (NSManagedObjectContext *)context
+{
+    WM_ASSERT_MAIN_THREAD;
+    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    [context setParentContext:[_stackMobStore mainThreadContext]];
+    [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+    [context setContextShouldObtainPermanentIDsBeforeSaving:YES];
+    [context setUndoManager:nil]; // the default on iOS
+    return context;
+}
+
+- (NSManagedObjectContext *)importContext
+{
+    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [importContext performBlockAndWait:^{
+        [importContext setParentContext:[_stackMobStore contextForCurrentThread]];
+        [importContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+        [importContext setContextShouldObtainPermanentIDsBeforeSaving:YES];
+        [importContext setUndoManager:nil]; // the default on iOS
+    }];
+    return importContext;
+}
+
+- (NSManagedObjectContext *)sourceContext
+{
+    NSManagedObjectContext *sourceContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [sourceContext performBlockAndWait:^{
+        [sourceContext setParentContext:[_stackMobStore contextForCurrentThread]];
+        [sourceContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+        [sourceContext setContextShouldObtainPermanentIDsBeforeSaving:YES];
+        [sourceContext setUndoManager:nil]; // the default on iOS
+    }];
+    return sourceContext;
 }
 
 - (void)loadStore
@@ -703,28 +720,28 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
               NSStringFromSelector(_cmd),url.path);
     }
     // Periodically refresh the interface during the import
-    _importTimer =
-    [NSTimer scheduledTimerWithTimeInterval:2.0
-                                     target:self
-                                   selector:@selector(somethingChanged)
-                                   userInfo:nil
-                                    repeats:YES];
+    _importTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+                                                    target:self
+                                                  selector:@selector(somethingChanged)
+                                                  userInfo:nil
+                                                   repeats:YES];
     
-    [_sourceContext performBlock:^{
+    NSManagedObjectContext *sourceContext = self.sourceContext;
+    NSManagedObjectContext *importContext = self.importContext;
+    NSManagedObjectContext *context = self.context;
+    [sourceContext performBlock:^{
         
         NSLog(@"*** STARTED DEEP COPY FROM DEFAULT DATA PERSISTENT STORE ***");
         
-        NSArray *entitiesToCopy = [NSArray arrayWithObjects:
-                                   @"LocationAtHome",@"LocationAtShop",@"Unit",@"Item", nil];
+        NSArray *entitiesToCopy = [NSArray arrayWithObjects:@"LocationAtHome",@"LocationAtShop",@"Unit",@"Item", nil];
         
-        CoreDataImporter *importer = [[CoreDataImporter alloc]
-                                      initWithUniqueAttributes:[self selectedUniqueAttributes]];
+        CoreDataImporter *importer = [[CoreDataImporter alloc] initWithUniqueAttributes:[self selectedUniqueAttributes]];
         
         [importer deepCopyEntities:entitiesToCopy
-                       fromContext:_sourceContext
-                         toContext:_importContext];
+                       fromContext:sourceContext
+                         toContext:importContext];
         
-        [_context performBlock:^{
+        [context performBlock:^{
             // Stop periodically refreshing the interface
             [_importTimer invalidate];
             
@@ -748,14 +765,15 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     
     if (!imported.boolValue) {
         NSLog(@"Importing test data...");
-        [_importContext performBlock:^{
+        NSManagedObjectContext *importContext = self.importContext;
+        [importContext performBlock:^{
             
             NSManagedObject *locationAtHome =
             [NSEntityDescription insertNewObjectForEntityForName:@"LocationAtHome"
-                                          inManagedObjectContext:_importContext];
+                                          inManagedObjectContext:importContext];
             NSManagedObject *locationAtShop =
             [NSEntityDescription insertNewObjectForEntityForName:@"LocationAtShop"
-                                          inManagedObjectContext:_importContext];
+                                          inManagedObjectContext:importContext];
             [locationAtHome setValue:@"Test Home Location" forKey:@"storedIn"];
             [locationAtShop setValue:@"Test Shop Location" forKey:@"aisle"];
             
@@ -766,7 +784,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
                     // Insert Item
                     NSManagedObject *item =
                     [NSEntityDescription insertNewObjectForEntityForName:@"Item"
-                                                  inManagedObjectContext:_importContext];
+                                                  inManagedObjectContext:importContext];
                     [item setValue:[NSString stringWithFormat:@"Test Item %i",a]
                             forKey:@"name"];
                     [item setValue:locationAtHome
@@ -777,7 +795,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
                     // Insert Photo
                     NSManagedObject *photo =
                     [NSEntityDescription insertNewObjectForEntityForName:@"Item_Photo"
-                                                  inManagedObjectContext:_importContext];
+                                                  inManagedObjectContext:importContext];
                     [photo setValue:UIImagePNGRepresentation(
                                                              [UIImage imageNamed:@"GroceryHead.png"])
                              forKey:@"data"];
@@ -787,12 +805,12 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
                     
                     NSLog(@"Inserting %@", [item valueForKey:@"name"]);
                     [Faulter faultObjectWithID:photo.objectID
-                                     inContext:_importContext];
+                                     inContext:importContext];
                     [Faulter faultObjectWithID:item.objectID
-                                     inContext:_importContext];
+                                     inContext:importContext];
                 }
             }
-            [_importContext reset];
+            [importContext reset];
             
             // ensure import was a one off
             [[NSUserDefaults standardUserDefaults]
@@ -818,7 +836,8 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
             
             NSLog(@"Default Data Import Approved by User");
             // XML Import
-            [_importContext performBlock:^{
+            NSManagedObjectContext *importContext = self.importContext;
+            [importContext performBlock:^{
                 [self importFromXML:[[NSBundle mainBundle]
                                      URLForResource:@"DefaultData"
                                      withExtension:@"xml"]];
@@ -873,8 +892,8 @@ didStartElement:(NSString *)elementName
  qualifiedName:(NSString *)qName
     attributes:(NSDictionary *)attributeDict
 {
-    
-    [self.importContext performBlockAndWait:^{
+    NSManagedObjectContext *importContext = self.importContext;
+    [importContext performBlockAndWait:^{
         
         // STEP 1: Process only the 'item' element in the XML file
         if ([elementName isEqualToString:@"item"]) {
@@ -890,7 +909,7 @@ didStartElement:(NSString *)elementName
                                 targetEntityAttribute:@"name"
                                    sourceXMLAttribute:@"name"
                                         attributeDict:attributeDict
-                                              context:_importContext];
+                                              context:importContext];
             
             // STEP 3b: Insert a unique 'Unit' object
             NSManagedObject *unit =
@@ -898,7 +917,7 @@ didStartElement:(NSString *)elementName
                                 targetEntityAttribute:@"name"
                                    sourceXMLAttribute:@"unit"
                                         attributeDict:attributeDict
-                                              context:_importContext];
+                                              context:importContext];
             
             // STEP 3c: Insert a unique 'LocationAtHome' object
             NSManagedObject *locationAtHome =
@@ -906,7 +925,7 @@ didStartElement:(NSString *)elementName
                                 targetEntityAttribute:@"storedIn"
                                    sourceXMLAttribute:@"locationathome"
                                         attributeDict:attributeDict
-                                              context:_importContext];
+                                              context:importContext];
             
             // STEP 3d: Insert a unique 'LocationAtShop' object
             NSManagedObject *locationAtShop =
@@ -914,7 +933,7 @@ didStartElement:(NSString *)elementName
                                 targetEntityAttribute:@"aisle"
                                    sourceXMLAttribute:@"locationatshop"
                                         attributeDict:attributeDict
-                                              context:_importContext];
+                                              context:importContext];
             
             // STEP 4: Manually add extra attribute values.
             [item setValue:@NO forKey:@"listed"];
@@ -925,13 +944,13 @@ didStartElement:(NSString *)elementName
             [item setValue:locationAtShop forKey:@"locationAtShop"];
             
             // STEP 6: Save new objects to the persistent store.
-            [CoreDataImporter saveContext:_importContext];
+            [CoreDataImporter saveContext:importContext];
             
             // STEP 7: Turn objects into faults to save memory
-            [Faulter faultObjectWithID:item.objectID inContext:_importContext];
-            [Faulter faultObjectWithID:unit.objectID inContext:_importContext];
-            [Faulter faultObjectWithID:locationAtHome.objectID inContext:_importContext];
-            [Faulter faultObjectWithID:locationAtShop.objectID inContext:_importContext];
+            [Faulter faultObjectWithID:item.objectID inContext:importContext];
+            [Faulter faultObjectWithID:unit.objectID inContext:importContext];
+            [Faulter faultObjectWithID:locationAtHome.objectID inContext:importContext];
+            [Faulter faultObjectWithID:locationAtShop.objectID inContext:importContext];
         }
     }];
 }

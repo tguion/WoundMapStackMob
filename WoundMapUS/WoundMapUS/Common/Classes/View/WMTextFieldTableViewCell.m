@@ -58,16 +58,4 @@
     [self updateConstraintsIfNeeded];
 }
 
-- (void)updateConstraints
-{
-    [super updateConstraints];
-    [self performSelector:@selector(delayedLog) withObject:nil afterDelay:1.0];
-}
-
-- (void)delayedLog
-{
-    NSLog(@"contentView %@", self.contentView);
-    NSLog(@"contentView.subviews %@", self.contentView.subviews);
-}
-
 @end

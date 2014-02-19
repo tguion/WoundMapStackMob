@@ -494,12 +494,15 @@ typedef enum {
 
 - (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
 {
+    self.person = person;
     [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -554,17 +557,18 @@ typedef enum {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.view endEditing:YES];
     if (indexPath.row == 2) {
         WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
         [self.navigationController pushViewController:simpleTableViewController animated:YES];
         simpleTableViewController.title = @"Select Role";
     } else if (indexPath.row == 3) {
         WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
-        _person = self.participant.person;
-        if (nil == _person) {
-            _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+        WMPerson *person = self.participant.person;
+        if (nil == person) {
+            person = _person;
         }
-        personEditorViewController.person = _person;
+        personEditorViewController.person = person;
         [self.navigationController pushViewController:personEditorViewController animated:YES];
     }
 }

@@ -10,6 +10,8 @@
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMPerson.h"
+#import "CoreDataHelper.h"
+#import "WMUtilities.h"
 
 @interface WMPersonEditorViewController () <UITextFieldDelegate>
 
@@ -18,6 +20,8 @@
 @end
 
 @implementation WMPersonEditorViewController
+
+@synthesize person=_person;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +54,14 @@
 }
 
 #pragma mark - Core
+
+- (WMPerson *)person
+{
+    if (nil == _person) {
+        _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+    }
+    return _person;
+}
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
 {
@@ -89,22 +101,25 @@
     return cellReuseIdentifier;
 }
 
-- (void)updateModelFromUI
-{
-    // TODO
-}
-
 #pragma mark - Actions
 
 - (IBAction)doneAction:(id)sender
 {
-    [self updateModelFromUI];
+    [self.view endEditing:YES];
     [self.delegate personEditorViewController:self didEditPerson:_person];
 }
 
 - (IBAction)cancelAction:(id)sender
 {
     [self.delegate personEditorViewControllerDidCancel:self];
+}
+
+#pragma mark - WMBaseViewController
+
+- (void)clearDataCache
+{
+    [super clearDataCache];
+    _person = nil;
 }
 
 #pragma mark - UITextFieldDelegate

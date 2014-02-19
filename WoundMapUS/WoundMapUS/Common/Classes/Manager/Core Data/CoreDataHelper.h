@@ -15,9 +15,9 @@ extern NSString *const kStackMobNetworkSynchFinishedNotification;
 
 @interface CoreDataHelper : NSObject <UIAlertViewDelegate,NSXMLParserDelegate>
 
-@property (nonatomic, readonly) NSManagedObjectContext *parentContext;
-@property (nonatomic, readonly) NSManagedObjectContext *context;
-@property (nonatomic, readonly) NSManagedObjectContext *importContext;
+@property (nonatomic, readonly) NSManagedObjectContext *parentContext;      // StackMob context for current thread
+@property (nonatomic, readonly) NSManagedObjectContext *context;            // child context of StackMob managedObjectContext
+@property (nonatomic, readonly) NSManagedObjectContext *importContext;      // child context of context
 
 @property (nonatomic, readonly) NSManagedObjectModel *model;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;

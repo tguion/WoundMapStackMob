@@ -14,6 +14,8 @@
 #define DLog(...)
 #endif
 
+#define WM_ASSERT_MAIN_THREAD NSAssert([NSThread isMainThread], @"This method must be called on the main thread")
+
 extern NSTimeInterval kOneDayTimeInterval;
 
 @interface WMUtilities : NSObject
