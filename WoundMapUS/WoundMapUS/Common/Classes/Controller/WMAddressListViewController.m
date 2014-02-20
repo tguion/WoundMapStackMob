@@ -17,6 +17,7 @@
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressEditorViewController *addressEditorViewController;
+@property (strong, nonatomic) NSArray *addresses;
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath;
 
@@ -40,17 +41,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Addresses";
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                              target:self
-                                                                                              action:@selector(doneAction:)],
-                                                [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                                              target:self
-                                                                                              action:@selector(addAction:)]];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                           target:self
+                                                                                           action:@selector(doneAction:)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"AddCell"];
+    // allow editing
+    [self.tableView setEditing:YES animated:NO];
     // we want to support cancel, so make sure we have an undoManager
     if (nil == self.managedObjectContext.undoManager) {
         self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
@@ -102,8 +102,18 @@
 
 - (WMAddress *)addressForIndex:(NSInteger)index
 {
-    NSArray *addresses = [[self.delegate.source.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastmoddate" ascending:YES]]];
-    return addresses[index];
+    if (nil == _addresses) {
+        _addresses = [[self.delegate.source.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastmoddate" ascending:YES]]];
+    }
+    return _addresses[index];
+}
+
+#pragma mark - WMBaseViewController
+
+- (void)clearDataCache
+{
+    [super clearDataCache];
+    _addresses = nil;
 }
 
 #pragma mark - Actions
@@ -127,7 +137,16 @@
 
 - (IBAction)cancelAction:(id)sender
 {
-    [self clearAllReferences];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+        if (self.managedObjectContext.undoManager.canUndo) {
+            // this should undo the insert of new person
+            [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate addressListViewControllerDidCancel:self];
 }
 
@@ -139,15 +158,44 @@
 {
     [self.delegate.source addAddressesObject:address];
     [self.navigationController popViewControllerAnimated:YES];
+    _addresses = nil;
     [self.tableView reloadData];
+    [viewController clearAllReferences];
 }
 
 - (void)addressEditorViewControllerDidCancel:(WMAddressEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 44.0;
+    if (![self isAddIndexPath:indexPath]) {
+        WMAddress *address = [self addressForIndex:indexPath.row];
+        NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
+        CGSize aSize = CGSizeMake(CGRectGetWidth(self.tableView.bounds) - self.tableView.separatorInset.left - self.tableView.separatorInset.right, CGFLOAT_MAX);
+        height = ceilf([attributedString boundingRectWithSize:aSize
+                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                context:nil].size.height) + 32.0;
+    }
+    return height;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return ([self isAddIndexPath:indexPath] ? UITableViewCellEditingStyleInsert:UITableViewCellEditingStyleDelete);
+}
+
+// Controls whether the background is indented while editing.  If not implemented, the default is YES.
+// This is unrelated to the indentation level below.  This method only applies to grouped style table views.
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
 
 // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -191,27 +239,28 @@
     } else {
         WMAddress *address = [self addressForIndex:indexPath.row];
         NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
+        cell.textLabel.numberOfLines = 0;
         cell.textLabel.attributedText = attributedString;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 }
 
+// After a row has the minus or plus button invoked (based on the UITableViewCellEditingStyle for the cell), the dataSource must commit the change
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        WMAddress *address = [self addressForIndex:indexPath.row];
+        [self.delegate.source removeAddressesObject:address];
+        _addresses = nil;
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView endUpdates];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        [self addAction:nil];
+    }
+}
+
+// FRC did not work
 // 2014-02-20 14:04:49.272 WoundMapUS[2323:70b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Cannot retrieve referenceObject from an objectID that was not created by this store'
-
-#pragma mark - NSFetchedResultsController
-
-- (NSString *)fetchedResultsControllerEntityName
-{
-    return [WMAddress entityName];
-}
-
-- (NSPredicate *)fetchedResultsControllerPredicate
-{
-    return [NSPredicate predicateWithFormat:@"%K == %@", self.delegate.relationshipKey, self.delegate.source];
-}
-
-- (NSArray *)fetchedResultsControllerSortDescriptors
-{
-    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"lastmoddate" ascending:NO]];
-}
 
 @end

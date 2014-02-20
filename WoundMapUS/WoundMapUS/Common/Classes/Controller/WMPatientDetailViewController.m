@@ -38,6 +38,8 @@
 @property (strong, nonatomic) NSArray *sortedWounds;
 // state
 @property (nonatomic) BOOL willCancelFlag;                                          // cancel action started
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
 // UI
 @property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryToolbar;
 @property (strong, nonatomic) IBOutlet UITableViewCell *firstNameCell;
@@ -116,9 +118,12 @@
 {
     [self updateTitle];
     WMPatient *patient = self.patient;
-    if (nil != patient.dateOfBirth) {
-        self.datePickerView.date = patient.dateOfBirth;
+    NSDate *date = patient.dateOfBirth;
+    if (nil == date) {
+        date = self.userDefaultsManager.lastDateOfBirth;
+        patient.dateOfBirth = date;
     }
+    self.datePickerView.date = date;
     [self.tableView reloadData];
 }
 
@@ -302,6 +307,12 @@
     [self.managedObjectContext.undoManager beginUndoGrouping];
     // confirm that we have a clean moc
     NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
+    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -398,6 +409,7 @@
 // TODO: handle nil undoManager
 - (IBAction)cancelAction:(id)sender
 {
+    [self.view endEditing:YES];
     _willCancelFlag = YES;
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
@@ -416,6 +428,7 @@
 // NOTE: delegate would typically set self.patient to appDelegate.patient and save
 - (IBAction)saveAction:(id)sender
 {
+    [self.view endEditing:YES];
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }

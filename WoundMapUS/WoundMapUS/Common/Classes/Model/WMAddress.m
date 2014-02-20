@@ -47,7 +47,7 @@
     if ([array0 count] == 0) {
         [array0 addObject:@"New Address"];
     }
-    return [array0 componentsJoinedByString:@"\n"];
+    return [array0 componentsJoinedByString:@"\r"];
 }
 
 @end

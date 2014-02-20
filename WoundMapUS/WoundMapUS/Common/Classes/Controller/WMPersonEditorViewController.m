@@ -137,6 +137,7 @@
 
 - (IBAction)cancelAction:(id)sender
 {
+    [self.view endEditing:YES];
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
         if (self.managedObjectContext.undoManager.canUndo) {
@@ -173,6 +174,9 @@
 - (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 - (void)addressListViewControllerDidCancel:(WMAddressListViewController *)viewController
@@ -280,12 +284,15 @@
         case 4: {
             // addresses
             cell.textLabel.text = @"Addresses";
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d addresses", [self.person.addresses count]];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }
         case 5: {
             // telecoms
             cell.textLabel.text = @"Telecoms";
+            NSString *addressString = ([self.person.telecoms count] == 1 ? @"address":@"addresses");
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [self.person.telecoms count], addressString];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }

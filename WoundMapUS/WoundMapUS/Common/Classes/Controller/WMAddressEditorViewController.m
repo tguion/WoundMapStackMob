@@ -118,6 +118,7 @@
 
 - (IBAction)cancelAction:(id)sender
 {
+    [self.view endEditing:YES];
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
         if (self.managedObjectContext.undoManager.canUndo) {
