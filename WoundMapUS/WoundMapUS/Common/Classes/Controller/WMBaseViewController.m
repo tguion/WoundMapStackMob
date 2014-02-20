@@ -386,7 +386,7 @@
     }
 	NSError *error = nil;
     if (![_fetchedResultsController performFetch:&error]) {
-        abort();
+        [WMUtilities logError:error];
     }
 	[self performSelector:@selector(fetchedResultsControllerDidFetch) withObject:nil afterDelay:0.0];
 	return _fetchedResultsController;

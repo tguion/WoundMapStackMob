@@ -92,3 +92,33 @@ typedef enum {
 - (NSMutableAttributedString *)descriptionAsMutableAttributedStringWithBaseFontSize:(CGFloat)fontSize;
 
 @end
+
+@class WMAddress;
+
+@protocol AddressSource <NSObject>
+
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSManagedObjectID *objectID;
+@property (readonly, nonatomic) NSSet *addresses;
+
+- (void)addAddresses:(NSSet*)value_;
+- (void)removeAddresses:(NSSet*)value_;
+- (void)addAddressesObject:(WMAddress*)value_;
+- (void)removeAddressesObject:(WMAddress*)value_;
+
+@end
+
+@class WMTelecom;
+
+@protocol TelecomSource <NSObject>
+
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSManagedObjectID *objectID;
+@property (readonly, nonatomic) NSSet *telecoms;
+
+- (void)addTelecoms:(NSSet*)value_;
+- (void)removeTelecoms:(NSSet*)value_;
+- (void)addTelecomsObject:(WMTelecom*)value_;
+- (void)removeTelecomsObject:(WMTelecom*)value_;
+
+@end

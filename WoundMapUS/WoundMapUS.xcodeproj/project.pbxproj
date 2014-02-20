@@ -162,6 +162,12 @@
 		7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */; };
 		7DDAFAEF18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
+		7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */; };
+		7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */; };
+		7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF918B61A4F00A05F5D /* WMAddressListViewController.m */; };
+		7DDAFAFC18B61A4F00A05F5D /* WMAddressListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAFA18B61A4F00A05F5D /* WMAddressListViewController.xib */; };
+		7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */; };
+		7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */; };
 		7DDCDD4518AC28C9001D3BA9 /* libstackmob-v2.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068118A7D4000004DC32 /* libstackmob-v2.2.0.a */; };
 /* End PBXBuildFile section */
 
@@ -463,6 +469,16 @@
 		7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateConsultantValueProposition.txt; sourceTree = "<group>"; };
 		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
 		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
+		7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressEditorViewController.h; sourceTree = "<group>"; };
+		7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMAddressEditorViewController.m; sourceTree = "<group>"; };
+		7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMAddressEditorViewController.xib; sourceTree = "<group>"; };
+		7DDAFAF818B61A4F00A05F5D /* WMAddressListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressListViewController.h; sourceTree = "<group>"; };
+		7DDAFAF918B61A4F00A05F5D /* WMAddressListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMAddressListViewController.m; sourceTree = "<group>"; };
+		7DDAFAFA18B61A4F00A05F5D /* WMAddressListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMAddressListViewController.xib; sourceTree = "<group>"; };
+		7DDAFAFE18B62C9C00A05F5D /* WCModelTextKitAtrributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCModelTextKitAtrributes.h; sourceTree = "<group>"; };
+		7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCModelTextKitAtrributes.m; sourceTree = "<group>"; };
+		7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMAddress+CoreText.h"; sourceTree = "<group>"; };
+		7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMAddress+CoreText.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -825,6 +841,12 @@
 				5F67D21418AC4ACF00460C37 /* WMSimpleTableViewController.h */,
 				5F67D21518AC4ACF00460C37 /* WMSimpleTableViewController.m */,
 				5F67D21618AC4ACF00460C37 /* WMSimpleTableViewController.xib */,
+				7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */,
+				7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */,
+				7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */,
+				7DDAFAF818B61A4F00A05F5D /* WMAddressListViewController.h */,
+				7DDAFAF918B61A4F00A05F5D /* WMAddressListViewController.m */,
+				7DDAFAFA18B61A4F00A05F5D /* WMAddressListViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -867,6 +889,7 @@
 		7DB2069D18A7D6950004DC32 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7DDAFAFD18B62C9C00A05F5D /* CoreText */,
 				7DB206C018A838800004DC32 /* machine */,
 				7DB206C118A839180004DC32 /* User.h */,
 				7DB206C218A839180004DC32 /* User.m */,
@@ -1109,6 +1132,17 @@
 			path = IAP;
 			sourceTree = "<group>";
 		};
+		7DDAFAFD18B62C9C00A05F5D /* CoreText */ = {
+			isa = PBXGroup;
+			children = (
+				7DDAFAFE18B62C9C00A05F5D /* WCModelTextKitAtrributes.h */,
+				7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */,
+				7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */,
+				7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */,
+			);
+			path = CoreText;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1217,6 +1251,7 @@
 				5F6DE53918B58BB000E87F7E /* InstructionsIntroduction.html in Resources */,
 				5F6DE50418B2CC2200E87F7E /* WMPersonEditorViewController.xib in Resources */,
 				5F67D20918AC3BE000460C37 /* WoundTreatmentDefinitions.plist in Resources */,
+				7DDAFAFC18B61A4F00A05F5D /* WMAddressListViewController.xib in Resources */,
 				5F6DE53D18B58BB000E87F7E /* InstructionsPolicyCompassNavigation.html in Resources */,
 				7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
@@ -1227,6 +1262,7 @@
 				5F67D1FE18AC3BE000460C37 /* SkinAssessmentDefinitions.plist in Resources */,
 				5F67D1F518AC3BE000460C37 /* IAPProducts.plist in Resources */,
 				5F6DE54118B58BB000E87F7E /* InstructionsWoundTreatment.html in Resources */,
+				7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */,
 				5F6DE53818B58BB000E87F7E /* InstructionsAuditTrail.html in Resources */,
 				5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
@@ -1299,12 +1335,14 @@
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
 				7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
+				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
 				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
 				7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */,
 				7DB2062418A7D3400004DC32 /* WoundMapUS.xcdatamodeld in Sources */,
 				5F6DE4F718AEE08D00E87F7E /* APTableViewCell.m in Sources */,
+				7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */,
 				7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */,
 				7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */,
 				7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */,
@@ -1331,12 +1369,14 @@
 				5F67D1C918AC39C600460C37 /* _WMParticipant.m in Sources */,
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
+				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
 				7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */,
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
 				5F6DE51018B586F600E87F7E /* WMInstructionsViewController.m in Sources */,
 				7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */,
 				5F6DE51A18B5885E00E87F7E /* WMInstructionContentViewController.m in Sources */,
+				7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */,
 				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
 				7DB206B018A7D6950004DC32 /* Faulter.m in Sources */,
 				5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */,

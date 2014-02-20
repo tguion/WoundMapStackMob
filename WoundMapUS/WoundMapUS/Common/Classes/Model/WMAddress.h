@@ -1,5 +1,10 @@
 #import "_WMAddress.h"
 
 @interface WMAddress : _WMAddress {}
-// Custom logic goes here.
+
++ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                 persistentStore:(NSPersistentStore *)store;
+
+@property (readonly, nonatomic) NSString *stringValue;
+
 @end

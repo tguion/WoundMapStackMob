@@ -1,31 +1,27 @@
 //
-//  WMPersonEditorViewController.m
+//  WMAddressEditorViewController.m
 //  WoundMapUS
 //
-//  Created by etreasure consulting LLC on 2/17/14.
+//  Created by Todd Guion on 2/20/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMPersonEditorViewController.h"
-#import "WMAddressListViewController.h"
-#import "WMValue1TableViewCell.h"
+#import "WMAddressEditorViewController.h"
 #import "WMTextFieldTableViewCell.h"
-#import "WMPerson.h"
+#import "WMValue1TableViewCell.h"
+#import "WMAddress.h"
 #import "CoreDataHelper.h"
 #import "WMUtilities.h"
 
-@interface WMPersonEditorViewController () <UITextFieldDelegate, AddressListViewControllerDelegate>
+@interface WMAddressEditorViewController () <UITextFieldDelegate>
 
-@property (strong, nonatomic, readwrite) NSManagedObjectContext *childManagedObjectContext;
-@property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
-
-- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
+@property (strong, nonatomic) NSManagedObjectContext *childManagedObjectContext;
 
 @end
 
-@implementation WMPersonEditorViewController
+@implementation WMAddressEditorViewController
 
-@synthesize person=_person;
+@synthesize address=_address;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,15 +36,17 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Contact Details";
+    self.title = @"Address Details";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelAction:)];
+                                                                                          target:self
+                                                                                          action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    self.fetchPolicy = SMFetchPolicyCacheOnly;
+    self.savePolicy = SMSavePolicyCacheOnly;
 }
 
 - (void)didReceiveMemoryWarning
@@ -62,33 +60,27 @@
 - (NSManagedObjectContext *)childManagedObjectContext
 {
     if (nil == _childManagedObjectContext) {
-        _childManagedObjectContext = self.coreDataHelper.context;
+        _childManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        _childManagedObjectContext.parentContext = self.delegate.managedObjectContext;
     }
     return _childManagedObjectContext;
 }
 
-- (WMPerson *)person
+- (WMAddress *)address
 {
-    if (nil == _person) {
-        _person = [WMPerson instanceWithManagedObjectContext:self.childManagedObjectContext persistentStore:self.store];
+    if (nil == _address) {
+        _address = [WMAddress instanceWithManagedObjectContext:self.childManagedObjectContext persistentStore:self.store];
     }
-    return _person;
+    return _address;
 }
 
-- (void)setPerson:(WMPerson *)person
+- (void)setAddress:(WMAddress *)address
 {
-    if (nil == person) {
-        _person = nil;
+    if (nil == address) {
+        _address = nil;
     } else {
-        _person = (WMPerson *)[self.childManagedObjectContext objectWithID:[person objectID]];
+        _address = (WMAddress *)[self.childManagedObjectContext objectWithID:[address objectID]];
     }
-}
-
-- (WMAddressListViewController *)addressListViewController
-{
-    WMAddressListViewController *addressListViewController = [[WMAddressListViewController alloc] initWithNibName:@"WMAddressListViewController" bundle:nil];
-    addressListViewController.delegate = self;
-    return addressListViewController;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
@@ -96,33 +88,33 @@
     NSString *cellReuseIdentifier = nil;
     switch (indexPath.row) {
         case 0: {
-            // prefix
+            // street
             cellReuseIdentifier = @"TextCell";
             break;
         }
         case 1: {
-            // given name
+            // street 1
             cellReuseIdentifier = @"TextCell";
             break;
         }
         case 2: {
-            // family name
+            // city
             cellReuseIdentifier = @"TextCell";
             break;
         }
         case 3: {
-            // suffix
+            // state
             cellReuseIdentifier = @"TextCell";
             break;
         }
         case 4: {
-            // addresses
-            cellReuseIdentifier = @"ValueCell";
+            // postalCode
+            cellReuseIdentifier = @"TextCell";
             break;
         }
         case 5: {
-            // telecoms
-            cellReuseIdentifier = @"ValueCell";
+            // country
+            cellReuseIdentifier = @"TextCell";
             break;
         }
     }
@@ -139,13 +131,13 @@
     if (!success) {
         [WMUtilities logError:error];
     }
-    WMPerson *person = (WMPerson *)[self.managedObjectContext objectWithID:[_person objectID]];
-    [self.delegate personEditorViewController:self didEditPerson:person];
+    WMAddress *address = (WMAddress *)[self.delegate.managedObjectContext objectWithID:[_address objectID]];
+    [self.delegate addressEditorViewController:self didEditAddress:address];
 }
 
 - (IBAction)cancelAction:(id)sender
 {
-    [self.delegate personEditorViewControllerDidCancel:self];
+    [self.delegate addressEditorViewControllerDidCancel:self];
 }
 
 #pragma mark - WMBaseViewController
@@ -153,27 +145,7 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _childManagedObjectContext = nil;
-    _person = nil;
-}
-
-#pragma mark - AddressListViewControllerDelegate
-
-- (id<AddressSource>)source
-{
-    return _person;
-}
-
-- (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
-}
-
-- (void)addressListViewControllerDidCancel:(WMAddressListViewController *)viewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
+    _address = nil;
 }
 
 #pragma mark - UITextFieldDelegate
@@ -185,23 +157,33 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     switch (indexPath.row) {
         case 0: {
-            // prefix
-            self.person.namePrefix = textField.text;
+            // street
+            self.address.streetAddressLine = textField.text;
             break;
         }
         case 1: {
-            // given name
-            self.person.nameGiven = textField.text;
+            // street 1
+            self.address.streetAddressLine1 = textField.text;
             break;
         }
         case 2: {
-            // family name
-            self.person.nameFamily = textField.text;
+            // city
+            self.address.city = textField.text;
             break;
         }
         case 3: {
-            // suffix
-            self.person.nameSuffix = textField.text;
+            // state
+            self.address.state = textField.text;
+            break;
+        }
+        case 4: {
+            // postalCode
+            self.address.postalCode = textField.text;
+            break;
+        }
+        case 5: {
+            // country
+            self.address.country = textField.text;
             break;
         }
     }
@@ -213,12 +195,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 4) {
-        // address
-        [self.navigationController pushViewController:self.addressListViewController animated:YES];
-    } else if (indexPath.row == 5) {
-        // telecom
-    }
+    // navigate to address
+    // navigate to telecoms
 }
 
 #pragma mark - UITableViewDataSource
@@ -250,39 +228,39 @@
 {
     switch (indexPath.row) {
         case 0: {
-            // prefix
+            // street
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix valuePrompt:@"Dr, Mr, Ms, etc"];
+            [myCell updateWithLabelText:@"Street" valueText:self.address.streetAddressLine valuePrompt:@"1 Somestreet"];
             break;
         }
         case 1: {
-            // given name
+            // street
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Given Name" valueText:self.person.nameGiven valuePrompt:@"Given or First Name"];
+            [myCell updateWithLabelText:@"Street" valueText:self.address.streetAddressLine1 valuePrompt:@"Suite 100"];
             break;
         }
         case 2: {
-            // family name
+            // city
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Family Name" valueText:self.person.nameFamily valuePrompt:@"Family or Last Name"];
+            [myCell updateWithLabelText:@"City" valueText:self.address.city valuePrompt:@"Some City"];
             break;
         }
         case 3: {
-            // suffix
+            // state
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Suffix" valueText:self.person.nameSuffix valuePrompt:@"III, Esquire, etc"];
+            [myCell updateWithLabelText:@"State" valueText:self.address.state valuePrompt:@"WY"];
             break;
         }
         case 4: {
-            // addresses
-            cell.textLabel.text = @"Addresses";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            // postalCode
+            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            [myCell updateWithLabelText:@"Postal Code" valueText:self.address.postalCode valuePrompt:@"82801"];
             break;
         }
         case 5: {
-            // telecoms
-            cell.textLabel.text = @"Telecoms";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            // country
+            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            [myCell updateWithLabelText:@"Country" valueText:self.address.country valuePrompt:@"US"];
             break;
         }
     }
