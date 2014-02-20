@@ -15,6 +15,7 @@
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
 #import "WMPatientTableViewController.h"
+#import "WMInstructionsViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMButtonCell.h"
 #import "User.h"
@@ -217,6 +218,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return chooseTrackViewController;
 }
 
+- (WMInstructionsViewController *)instructionsViewController
+{
+    return [[WMInstructionsViewController alloc] initWithNibName:@"WMInstructionsViewController" bundle:nil];
+}
+
 - (void)presentChooseNavigationTrack
 {
     [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
@@ -284,6 +290,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (IBAction)enterWoundMapAction:(id)sender
 {
     NSLog(@"Hurray");
+}
+
+- (IBAction)viewInstructionsAction:(id)sender
+{
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.instructionsViewController];
+    [self presentViewController:navigationController animated:YES completion:^{
+        // nothing
+    }];
 }
 
 #pragma mark - Notification handlers

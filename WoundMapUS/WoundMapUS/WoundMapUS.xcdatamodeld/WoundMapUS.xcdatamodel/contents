@@ -54,6 +54,18 @@
         <relationship name="organization" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMOrganization" inverseName="ids" inverseEntity="WMOrganization" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="ids" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
+    <entity name="WMInstruction" representedClassName="WMInstruction" syncable="YES">
+        <attribute name="contentFileExtension" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contentFileName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="iconFileName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wminstruction_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
     <entity name="WMNavigationNode" representedClassName="WMNavigationNode" syncable="YES">
         <attribute name="activeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="closeUnit" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
@@ -293,5 +305,6 @@
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMInstruction" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

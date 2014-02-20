@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsIntroduction</string>
+		<key>desc</key>
+		<string>What kind of data does WoundMap collect? How does WoundMap help improve consistency and quality of wound care?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>0</integer>
+		<key>title</key>
+		<string>Patients, Wound, Photos, and Policy</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsPolicy</string>
+		<key>desc</key>
+		<string>What are Policies and how do I edit them?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>1</integer>
+		<key>title</key>
+		<string>Policy</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsPolicyCompassNavigation</string>
+		<key>desc</key>
+		<string>How does the Compass interface reflect the wound care policies? How do I navigate from one task to the next? What do the status indicators mean?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>Policy &amp; the Compass interface</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsSecurity</string>
+		<key>desc</key>
+		<string>How does WoundMap help keep patient data secure? How can iOS security features help?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>Security</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsPatientPhoto</string>
+		<key>desc</key>
+		<string>How does WoundMap help ensure you are entering data for the correct patient?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>4</integer>
+		<key>title</key>
+		<string>Patient Photo</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsPhotoAndMeasurement</string>
+		<key>desc</key>
+		<string>Wound photos taken over time can be very helpful in evaluating the progress of healing. There are a number of things to do to optimize the value of wound photos.</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>5</integer>
+		<key>title</key>
+		<string>Photos and Measurements</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsAuditTrail</string>
+		<key>desc</key>
+		<string>How does WoundMap help track who and when patient and wound information has been entered, edited, and deleted?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>6</integer>
+		<key>title</key>
+		<string>Data Audit Trail</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsSkinAssessment</string>
+		<key>desc</key>
+		<string>The Skin Assessment section allows the user to select frequency , responsible care provider, and current  clinical findings.</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>7</integer>
+		<key>title</key>
+		<string>Skin Assessment</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsWoundAssessment</string>
+		<key>desc</key>
+		<string>Wound assessment provides the user  with a  complete objective wound  assessment, covering all aspects of the wound. </string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>8</integer>
+		<key>title</key>
+		<string>Wound Assessment</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionsWoundTreatment</string>
+		<key>desc</key>
+		<string>The Wound Treatment section allows the user to enter a complete wound treatment plan.</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>9</integer>
+		<key>title</key>
+		<string>Wound Treatment</string>
+	</dict>
+</array>
+</plist>

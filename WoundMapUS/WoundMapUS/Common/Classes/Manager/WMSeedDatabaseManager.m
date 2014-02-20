@@ -7,6 +7,7 @@
 //
 
 #import "WMSeedDatabaseManager.h"
+#import "WMInstruction.h"
 #import "WMParticipantType.h"
 #import "WMParticipantType.h"
 #import "WMWoundType.h"
@@ -47,6 +48,7 @@
         CoreDataHelper *coreDataHelper = self.appDelegate.coreDataHelper;
         NSManagedObjectContext *stackMobContext = [coreDataHelper.stackMobStore contextForCurrentThread];
         DLog(@"reading plists and seeding database start");
+        [WMInstruction seedDatabase:stackMobContext persistentStore:nil];
         [WMWoundType seedDatabase:stackMobContext persistentStore:nil];
         [WMParticipantType seedDatabase:stackMobContext persistentStore:nil];
 //        [WCAmountQualifier seedDatabase:managedObjectContext persistentStore:nil];
