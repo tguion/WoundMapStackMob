@@ -509,7 +509,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         if (self.connectedTeamIsConsultingGroup) {
                             title = @"Team is Register Consultant";
                         } else {
-                            title = @"Become a Consultant";
+                            title = @"Register as a Consultant";
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                         }
                     } else {

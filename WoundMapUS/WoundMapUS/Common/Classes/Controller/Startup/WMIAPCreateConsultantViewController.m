@@ -33,7 +33,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Become a Consultant";
+    self.title = @"Register as a Consultant";
     NSURL *valuePropositionURL = [[NSBundle mainBundle] URLForResource:@"CreateConsultantValueProposition" withExtension:@"txt"];
     NSError *error = nil;
     NSAttributedString *string = [[NSAttributedString alloc] initWithFileURL:valuePropositionURL options:nil documentAttributes:NULL error:&error];
