@@ -381,7 +381,7 @@
 																	 managedObjectContext:self.managedObjectContext
 																	   sectionNameKeyPath:self.fetchedResultsControllerSectionNameKeyPath
 																				cacheName:self.fetchedResultsControllerCacheName];
-    if (fetchRequest.requestType == NSManagedObjectResultType) {
+    if (fetchRequest.resultType == NSManagedObjectResultType) {
         _fetchedResultsController.delegate = self;
     }
 	NSError *error = nil;

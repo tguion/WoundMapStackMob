@@ -16,7 +16,7 @@
 
 @interface WMPersonEditorViewController () <UITextFieldDelegate, AddressListViewControllerDelegate>
 
-@property (strong, nonatomic, readwrite) NSManagedObjectContext *childManagedObjectContext;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
@@ -24,8 +24,6 @@
 @end
 
 @implementation WMPersonEditorViewController
-
-@synthesize person=_person;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,6 +47,12 @@
                                                                                            action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
+    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,29 +63,17 @@
 
 #pragma mark - Core
 
-- (NSManagedObjectContext *)childManagedObjectContext
+- (NSManagedObjectContext *)managedObjectContext
 {
-    if (nil == _childManagedObjectContext) {
-        _childManagedObjectContext = self.coreDataHelper.context;
-    }
-    return _childManagedObjectContext;
+    return self.delegate.managedObjectContext;
 }
 
 - (WMPerson *)person
 {
     if (nil == _person) {
-        _person = [WMPerson instanceWithManagedObjectContext:self.childManagedObjectContext persistentStore:self.store];
+        _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
     }
     return _person;
-}
-
-- (void)setPerson:(WMPerson *)person
-{
-    if (nil == person) {
-        _person = nil;
-    } else {
-        _person = (WMPerson *)[self.childManagedObjectContext objectWithID:[person objectID]];
-    }
 }
 
 - (WMAddressListViewController *)addressListViewController
@@ -134,17 +126,27 @@
 - (IBAction)doneAction:(id)sender
 {
     [self.view endEditing:YES];
-    NSError *error = nil;
-    BOOL success = [self.childManagedObjectContext save:&error];
-    if (!success) {
-        [WMUtilities logError:error];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
     }
-    WMPerson *person = (WMPerson *)[self.managedObjectContext objectWithID:[_person objectID]];
-    [self.delegate personEditorViewController:self didEditPerson:person];
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
+    [self.delegate personEditorViewController:self didEditPerson:_person];
 }
 
 - (IBAction)cancelAction:(id)sender
 {
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+        if (self.managedObjectContext.undoManager.canUndo) {
+            // this should undo the insert of new person
+            [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate personEditorViewControllerDidCancel:self];
 }
 
@@ -153,7 +155,6 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _childManagedObjectContext = nil;
     _person = nil;
 }
 
@@ -164,16 +165,19 @@
     return _person;
 }
 
+- (NSString *)relationshipKey
+{
+    return @"person";
+}
+
 - (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 - (void)addressListViewControllerDidCancel:(WMAddressListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITextFieldDelegate

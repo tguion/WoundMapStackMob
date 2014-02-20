@@ -14,6 +14,9 @@
 @protocol AddressListViewControllerDelegate <NSObject>
 
 @property (readonly, nonatomic) id<AddressSource> source;
+@property (readonly, nonatomic) NSString *relationshipKey;                      // person, organization, ..
+
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController;
 - (void)addressListViewControllerDidCancel:(WMAddressListViewController *)viewController;

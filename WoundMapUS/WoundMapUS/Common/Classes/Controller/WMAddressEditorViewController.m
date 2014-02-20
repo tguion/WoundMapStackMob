@@ -15,13 +15,11 @@
 
 @interface WMAddressEditorViewController () <UITextFieldDelegate>
 
-@property (strong, nonatomic) NSManagedObjectContext *childManagedObjectContext;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @end
 
 @implementation WMAddressEditorViewController
-
-@synthesize address=_address;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,8 +43,12 @@
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    self.fetchPolicy = SMFetchPolicyCacheOnly;
-    self.savePolicy = SMSavePolicyCacheOnly;
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
+    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,30 +59,9 @@
 
 #pragma mark - Core
 
-- (NSManagedObjectContext *)childManagedObjectContext
+- (NSManagedObjectContext *)managedObjectContext
 {
-    if (nil == _childManagedObjectContext) {
-        _childManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        _childManagedObjectContext.parentContext = self.delegate.managedObjectContext;
-    }
-    return _childManagedObjectContext;
-}
-
-- (WMAddress *)address
-{
-    if (nil == _address) {
-        _address = [WMAddress instanceWithManagedObjectContext:self.childManagedObjectContext persistentStore:self.store];
-    }
-    return _address;
-}
-
-- (void)setAddress:(WMAddress *)address
-{
-    if (nil == address) {
-        _address = nil;
-    } else {
-        _address = (WMAddress *)[self.childManagedObjectContext objectWithID:[address objectID]];
-    }
+    return self.delegate.managedObjectContext;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
@@ -126,17 +107,27 @@
 - (IBAction)doneAction:(id)sender
 {
     [self.view endEditing:YES];
-    NSError *error = nil;
-    BOOL success = [self.childManagedObjectContext save:&error];
-    if (!success) {
-        [WMUtilities logError:error];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
     }
-    WMAddress *address = (WMAddress *)[self.delegate.managedObjectContext objectWithID:[_address objectID]];
-    [self.delegate addressEditorViewController:self didEditAddress:address];
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
+    [self.delegate addressEditorViewController:self didEditAddress:_address];
 }
 
 - (IBAction)cancelAction:(id)sender
 {
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+        if (self.managedObjectContext.undoManager.canUndo) {
+            // this should undo the insert of new person
+            [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate addressEditorViewControllerDidCancel:self];
 }
 
@@ -195,8 +186,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    // navigate to address
-    // navigate to telecoms
 }
 
 #pragma mark - UITableViewDataSource

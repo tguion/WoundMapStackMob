@@ -12,6 +12,8 @@
 
 @protocol PersonEditorViewControllerDelegate <NSObject>
 
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+
 - (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person;
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController;
 

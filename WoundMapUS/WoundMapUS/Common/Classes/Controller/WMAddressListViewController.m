@@ -5,6 +5,7 @@
 //  Created by Todd Guion on 2/20/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
+//  TODO: + sign on add address, height for cell attributedString
 
 #import "WMAddressListViewController.h"
 #import "WMAddressEditorViewController.h"
@@ -14,8 +15,7 @@
 
 @interface WMAddressListViewController () <AddressEditorViewControllerDelegate>
 
-@property (strong, nonatomic, readwrite) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) id<AddressSource> childAddressSource;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressEditorViewController *addressEditorViewController;
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath;
@@ -51,8 +51,12 @@
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"AddCell"];
-    self.fetchPolicy = SMFetchPolicyCacheOnly;
-    self.savePolicy = SMSavePolicyCacheOnly;
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
+    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)didReceiveMemoryWarning
@@ -65,19 +69,7 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    if (nil == _managedObjectContext) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        _managedObjectContext.parentContext = self.delegate.source.managedObjectContext;
-    }
-    return _managedObjectContext;
-}
-
-- (id<AddressSource>)childAddressSource
-{
-    if (nil == _childAddressSource) {
-        _childAddressSource = (id<AddressSource>)[self.managedObjectContext objectWithID:self.delegate.source.objectID];
-    }
-    return _childAddressSource;
+    return self.delegate.managedObjectContext;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
@@ -91,7 +83,7 @@
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row == [self.childAddressSource.addresses count];
+    return indexPath.row == [self.delegate.source.addresses count];
 }
 
 - (WMAddressEditorViewController *)addressEditorViewController
@@ -108,6 +100,12 @@
     [self.navigationController pushViewController:addressEditorViewController animated:YES];
 }
 
+- (WMAddress *)addressForIndex:(NSInteger)index
+{
+    NSArray *addresses = [[self.delegate.source.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastmoddate" ascending:YES]]];
+    return addresses[index];
+}
+
 #pragma mark - Actions
 
 - (IBAction)addAction:(id)sender
@@ -118,42 +116,35 @@
 
 - (IBAction)doneAction:(id)sender
 {
-    NSError *error = nil;
-    BOOL success = [self.managedObjectContext save:&error];
-    if (!success) {
-        [WMUtilities logError:error];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
     }
     [self.delegate addressListViewControllerDidFinish:self];
 }
 
 - (IBAction)cancelAction:(id)sender
 {
+    [self clearAllReferences];
     [self.delegate addressListViewControllerDidCancel:self];
 }
 
 #pragma mark - WMBaseViewController
 
-- (void)clearDataCache
-{
-    [super clearDataCache];
-    _managedObjectContext = nil;
-    _childAddressSource = nil;
-}
-
 #pragma mark - AddressEditorViewControllerDelegate
 
 - (void)addressEditorViewController:(WMAddressEditorViewController *)viewController didEditAddress:(WMAddress *)address
 {
-    [self.childAddressSource addAddressesObject:address];
+    [self.delegate.source addAddressesObject:address];
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     [self.tableView reloadData];
 }
 
 - (void)addressEditorViewControllerDidCancel:(WMAddressEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate
@@ -167,7 +158,7 @@
         [self addAction:nil];
     } else {
         // edit address
-        [self navigateToAddressEditorForAddress:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+        [self navigateToAddressEditorForAddress:[self addressForIndex:indexPath.row]];
     }
 }
 
@@ -175,16 +166,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (nil == _childAddressSource) {
-        return 0;
-    }
-    // else
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.childAddressSource.addresses count] + 1;
+    return [self.delegate.source.addresses count] + 1;
 }
 
 // Customize the appearance of table view cells.
@@ -202,11 +189,13 @@
         cell.textLabel.font = [UIFont systemFontOfSize:15.0];
         cell.textLabel.text = @"Add Address";
     } else {
-        WMAddress *address = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        WMAddress *address = [self addressForIndex:indexPath.row];
         NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
         cell.textLabel.attributedText = attributedString;
     }
 }
+
+// 2014-02-20 14:04:49.272 WoundMapUS[2323:70b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Cannot retrieve referenceObject from an objectID that was not created by this store'
 
 #pragma mark - NSFetchedResultsController
 
@@ -217,7 +206,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"SELF IN (%@)", self.childAddressSource.addresses];
+    return [NSPredicate predicateWithFormat:@"%K == %@", self.delegate.relationshipKey, self.delegate.source];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

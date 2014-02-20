@@ -507,7 +507,6 @@ typedef enum {
 {
     self.person = person;
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     self.state = SignInViewControllerCreateAccount;
     [self.tableView reloadData];
 }

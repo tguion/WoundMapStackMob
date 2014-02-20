@@ -36,7 +36,7 @@
     if (nil != store) {
         [request setAffectedStores:[NSArray arrayWithObject:store]];
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
+    [request setEntity:[NSEntityDescription entityForName:@"WMPatientConsultant" inManagedObjectContext:managedObjectContext]];
     NSMutableArray *predicates = [NSMutableArray array];
     if (nil != patient) {
         [predicates addObject:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
