@@ -9,4 +9,6 @@
                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                      persistentStore:(NSPersistentStore *)store;
 
+@property (readonly, nonatomic) NSString *consultingDescription;
+
 @end

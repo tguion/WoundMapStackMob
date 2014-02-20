@@ -8,10 +8,11 @@
 
 #import "APTableViewCell.h"
 
-@class WMPatient;
+@class WMPatient, WMPatientConsultant;
 
 @interface WMPatientTableViewCell : APTableViewCell
 
 @property (strong, nonatomic) WMPatient *patient;
+@property (strong, nonatomic) WMPatientConsultant *patientConsultant;
 
 @end

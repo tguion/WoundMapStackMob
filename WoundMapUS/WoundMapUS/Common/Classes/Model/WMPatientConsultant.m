@@ -1,4 +1,7 @@
 #import "WMPatientConsultant.h"
+#import "WMPatient.h"
+#import "WMParticipant.h"
+#import "User.h"
 #import "WMUtilities.h"
 #import "StackMob.h"
 
@@ -61,6 +64,17 @@
         patientConsultant.patient = patient;
     }
     return patientConsultant;
+}
+
+- (NSString *)consultingDescription
+{
+    NSString *string = nil;
+    if (self.acquiredFlagValue) {
+        string = [NSString stringWithFormat:@"Referred by %@ acquired by %@", self.patient.sm_owner, self.participant.lastNameFirstName];
+    } else {
+        string = [NSString stringWithFormat:@"Referred by %@", self.patient.sm_owner];
+    }
+    return string;
 }
 
 @end

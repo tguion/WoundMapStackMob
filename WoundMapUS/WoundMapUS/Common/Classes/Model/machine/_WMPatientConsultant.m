@@ -9,6 +9,7 @@ const struct WMPatientConsultantAttributes WMPatientConsultantAttributes = {
 	.dateAquired = @"dateAquired",
 	.flags = @"flags",
 	.lastmoddate = @"lastmoddate",
+	.sm_owner = @"sm_owner",
 	.wmpatientconsultant_id = @"wmpatientconsultant_id",
 };
 
@@ -131,6 +132,13 @@ const struct WMPatientConsultantFetchedProperties WMPatientConsultantFetchedProp
 
 
 @dynamic lastmoddate;
+
+
+
+
+
+
+@dynamic sm_owner;
 
 
 

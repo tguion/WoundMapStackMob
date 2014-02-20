@@ -345,7 +345,12 @@
     WMPatient *patient = [self patientAtIndexPath:indexPath];
     cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
     WMPatientTableViewCell *myCell = (WMPatientTableViewCell *)cell;
-    myCell.patient = patient;
+    id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if (self.isShowingTeamPatients) {
+        myCell.patient = object;
+    } else {
+        myCell.patientConsultant = object;
+    }
 }
 
 #pragma mark - NSFetchedResultsController

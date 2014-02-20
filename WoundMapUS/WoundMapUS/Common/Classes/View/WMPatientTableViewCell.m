@@ -13,6 +13,7 @@
 #import "WCPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMPerson.h"
+#import "WMPatientConsultant.h"
 #import "WMUtilities.h"
 
 @interface WMPatientTableViewCell()
@@ -38,6 +39,15 @@
         self.backgroundColor = [UIColor whiteColor];
     }
     return self;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    _patient = nil;
+    _patientConsultant = nil;
+    [_activityView stopAnimating];
+    _thumbnailImageView.image = nil;
 }
 
 #pragma mark - Text Attributes
@@ -160,9 +170,25 @@
     [self setNeedsDisplay];
 }
 
+- (void)setPatientConsultant:(WMPatientConsultant *)patientConsultant
+{
+    if (_patientConsultant == patientConsultant) {
+        return;
+    }
+    // set new value
+    [self willChangeValueForKey:@"patientConsultant"];
+    _patientConsultant = patientConsultant;
+    [self didChangeValueForKey:@"patientConsultant"];
+    self.patient = patientConsultant.patient;
+}
+
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.patient.managedObjectContext;
+    if (_patient) {
+        return [_patient managedObjectContext];
+    }
+    // else
+    return [_patientConsultant managedObjectContext];
 }
 
 - (UIActivityIndicatorView *)activityView
@@ -229,7 +255,10 @@
     rect = UIEdgeInsetsInsetRect(rect, self.separatorInset);
     NSDictionary *textAttributes = nil;
     CGFloat width = CGRectGetWidth(rect);
-    // set our reference to document
+    WMPatient *patient = _patient;
+    if (nil == patient) {
+        patient = _patientConsultant.patient;
+    }
     NSString *string = _patient.lastNameFirstName;
     if (self.isHighlightedOrSelected) {
         textAttributes = self.titleSelectedAttributes;
@@ -263,6 +292,15 @@
         textAttributes = self.statusAttributes;
     }
     string = _patient.patientStatusMessages;
+    if (_patientConsultant) {
+        string = _patientConsultant.consultingDescription;
+    } else {
+        // check if submitted for consult
+        WMPatientConsultant *targetConsultant = _patient.patientConsultantSubmittedTarget;
+        if (targetConsultant) {
+            string = [NSString stringWithFormat:@"Submitted for consult to %@", targetConsultant.sm_owner];
+        }
+    }
     if ([string length] > 0) {
         [string drawInRect:textRect withAttributes:textAttributes];
     }
