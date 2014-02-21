@@ -8,6 +8,7 @@
 
 #import "WMPatientDetailViewController.h"
 #import "WMPersonEditorViewController.h"
+#import "WMIdListViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMSegmentControlTableViewCell.h"
@@ -21,7 +22,7 @@
 #import "WCAppDelegate.h"
 #import "StackMob.h"
 
-@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate>
+@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate>
 
 // data
 @property (strong, nonatomic) WMPatient *patient;
@@ -35,6 +36,7 @@
 @property (strong, nonatomic) NSDateFormatter *dateOfBirthDateFormatter;
 
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
+@property (readonly, nonatomic) WMIdListViewController *idListViewController;
 
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)saveAction:(id)sender;
@@ -309,6 +311,13 @@
     return personEditorViewController;
 }
 
+- (WMIdListViewController *)idListViewController
+{
+    WMIdListViewController *idListViewController = [[WMIdListViewController alloc] initWithNibName:@"WMIdListViewController" bundle:nil];
+    idListViewController.delegate = self;
+    return idListViewController;
+}
+
 #pragma mark - BaseViewController
 
 - (WMPatient *)patient
@@ -457,6 +466,28 @@
     [viewController clearAllReferences];
 }
 
+#pragma mark - IdListViewControllerDelegate
+
+- (id<idSource>) source
+{
+    return self.patient;
+}
+
+- (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+    [viewController clearAllReferences];
+}
+
+- (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -472,7 +503,8 @@
         }
         case 1: {
             // EMR/Insurance Identification
-            
+            WMIdListViewController *idListViewController = self.idListViewController;
+            [self.navigationController pushViewController:idListViewController animated:YES];
             break;
         }
     }
@@ -529,7 +561,7 @@
         myCell.textField.inputAccessoryView = self.inputAccessoryToolbar;
     } else if ([cell isKindOfClass:[WMSegmentControlTableViewCell class]]) {
         WMSegmentControlTableViewCell *myCell = (WMSegmentControlTableViewCell *)cell;
-        [myCell configureWithItems:@[@"Male", @"Female"] target:self action:@selector(dateOfBirthChangedValueAction:)];
+        [myCell configureWithItems:@[@"Male", @"Female"] target:self action:@selector(genderChangedAction:)];
     }
     [self configureCell:cell atIndexPath:indexPath];
     return cell;

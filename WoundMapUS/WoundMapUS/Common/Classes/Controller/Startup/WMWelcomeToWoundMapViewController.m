@@ -399,7 +399,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 case 2: {
                     // add/change patient
                     NSInteger patientCount = self.patientManager.patientCount;
-                    if (0 == patientCount) {
+                    if (4 == patientCount) {
                         [self presentAddPatientViewController];
                     } else {
                         [self presentChoosePatientViewController];
@@ -776,9 +776,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                                                                       persistentStore:store];
             patientConsultant.acquiredFlagValue = NO;
         }
-        [weakSelf hideProgressView];
         [weakSelf.tableView reloadData];
         weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
+        // save again
+        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+            [WMUtilities logError:error];
+            [weakSelf hideProgressView];
+        }];
     }];
 }
 

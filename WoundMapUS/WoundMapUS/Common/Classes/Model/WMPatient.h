@@ -1,6 +1,7 @@
 #import "_WMPatient.h"
+#import "WoundCareProtocols.h"
 
-@interface WMPatient : _WMPatient {}
+@interface WMPatient : _WMPatient <idSource> {}
 
 + (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                  persistentStore:(NSPersistentStore *)store;

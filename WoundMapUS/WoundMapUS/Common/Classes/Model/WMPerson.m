@@ -10,6 +10,8 @@
 
 @implementation WMPerson
 
+@dynamic managedObjectContext, objectID;
+
 + (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                  persistentStore:(NSPersistentStore *)store
 {

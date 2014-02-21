@@ -13,6 +13,8 @@
 
 @implementation WMPatient
 
+@dynamic managedObjectContext, objectID;
+
 + (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                  persistentStore:(NSPersistentStore *)store
 {
@@ -93,7 +95,7 @@
         [array addObject:self.person.nameGiven];
     }
     if ([array count] == 0 && [self.ids count] > 0) {
-        [array addObject:[self.ids valueForKeyPath:@"extension"]];
+        [array addObject:[[self.ids valueForKeyPath:@"extension"] componentsJoinedByString:@","]];
     }
     if ([array count] == 0) {
         [array addObject:@"New Patient"];
