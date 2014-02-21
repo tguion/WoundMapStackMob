@@ -4,7 +4,7 @@
 //
 //  Created by Todd Guion on 2/12/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
-//
+//  NS_DESIGNATED_INITIALIZER
 
 #import "StackMob.h"
 

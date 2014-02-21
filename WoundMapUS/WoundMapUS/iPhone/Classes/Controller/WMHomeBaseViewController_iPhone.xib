@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMHomeBaseViewController_iPhone">
+            <connections>
+                <outlet property="navigationPatientWoundContainerView" destination="okY-uD-XHX" id="Ebr-8h-WYY"/>
+                <outlet property="shareButton" destination="awU-yo-b2d" id="ZmK-QL-gzi"/>
+                <outlet property="view" destination="PyS-WP-Oyd" id="cIP-Sb-l7A"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="PyS-WP-Oyd">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </tableView>
+        <view contentMode="redraw" id="okY-uD-XHX" customClass="WMNavigationPatientWoundContainerView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="128"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Na7-Po-y19">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="128"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iUd-7z-elZ" customClass="WMNavigationNodeButton">
+                            <rect key="frame" x="20" y="2" width="63" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="26" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="20" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Add" image="patient_add_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qck-vm-1fe" customClass="WMNavigationNodeButton">
+                            <rect key="frame" x="101" y="2" width="63" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="26" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="20" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Select" image="patient_select_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GCj-Mc-YHh" customClass="WMNavigationNodeButton">
+                            <rect key="frame" x="181" y="2" width="63" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="26" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="20" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Edit" image="patient_edit_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKz-1U-yjX" customClass="WMNavigationNodeButton">
+                            <rect key="frame" x="20" y="62" width="63" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="26" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="20" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Add" image="wound_add_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BO0-oQ-u4C" customClass="WMNavigationNodeButton">
+                            <rect key="frame" x="101" y="62" width="63" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="26" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="16" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Select" image="wound_select_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Kh-lG-TdH" customClass="NavigationNodeButton">
+                            <rect key="frame" x="181" y="62" width="63" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="titleEdgeInsets" minX="-26" minY="26" maxX="0.0" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="20" minY="-24" maxX="0.0" maxY="0.0"/>
+                            <state key="normal" title="Edit" image="wound_edit_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.24313725489999999" green="0.27058823529999998" blue="0.29803921570000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <gestureRecognizers/>
+                </view>
+                <view contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6sv-dl-FSd" customClass="WMNavigationPatientWoundView">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="128"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="WoundMAP Home" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uI4-zi-fPP">
+                            <rect key="frame" x="20" y="0.0" width="280" height="21"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2CP-ss-Tnr">
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="128"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" image="ridges_light_default.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="patientAction:" destination="okY-uD-XHX" eventType="touchUpInside" id="5rN-ID-dQK"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="awU-yo-b2d">
+                            <rect key="frame" x="276" y="0.0" width="44" height="128"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" image="share_iPhone.png">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="breadcrumbLabel" destination="uI4-zi-fPP" id="6bg-em-HZG"/>
+                        <outlet property="shareButton" destination="awU-yo-b2d" id="iOL-ou-SiV"/>
+                        <outlet property="showPatientButton" destination="2CP-ss-Tnr" id="4Ts-LX-h2t"/>
+                    </connections>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="delegate" destination="-1" id="rtv-n9-nMX"/>
+                <outlet property="nameContainerView" destination="6sv-dl-FSd" id="Hs6-vM-qzY"/>
+                <outlet property="patientAddNavigationNodeButton" destination="iUd-7z-elZ" id="plh-kW-ZHA"/>
+                <outlet property="patientContainerView" destination="Na7-Po-y19" id="mb0-W9-A29"/>
+                <outlet property="patientEditNavigationNodeButton" destination="GCj-Mc-YHh" id="4bl-ta-vpk"/>
+                <outlet property="patientSelectNavigationNodeButton" destination="qck-vm-1fe" id="BNP-ly-oKv"/>
+                <outlet property="showPatientButton" destination="2CP-ss-Tnr" id="b9D-nH-unA"/>
+                <outlet property="woundAddNavigationNodeButton" destination="QKz-1U-yjX" id="xXf-np-sx5"/>
+                <outlet property="woundEditNavigationNodeButton" destination="4Kh-lG-TdH" id="o7P-VS-HYi"/>
+                <outlet property="woundSelectNavigationNodeButton" destination="BO0-oQ-u4C" id="Meh-1Q-9cC"/>
+                <outletCollection property="gestureRecognizers" destination="xoe-mv-JkT" appends="YES" id="Lvq-qL-N2A"/>
+                <outletCollection property="gestureRecognizers" destination="L6m-TP-WOi" appends="YES" id="o0r-Pw-VpX"/>
+            </connections>
+        </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="xoe-mv-JkT"/>
+        <swipeGestureRecognizer direction="right" id="L6m-TP-WOi"/>
+    </objects>
+    <resources>
+        <image name="patient_add_iPhone.png" width="30" height="30"/>
+        <image name="patient_edit_iPhone.png" width="30" height="30"/>
+        <image name="patient_select_iPhone.png" width="30" height="30"/>
+        <image name="ridges_light_default.png" width="30" height="30"/>
+        <image name="share_iPhone.png" width="30" height="30"/>
+        <image name="wound_add_iPhone.png" width="30" height="30"/>
+        <image name="wound_edit_iPhone.png" width="30" height="30"/>
+        <image name="wound_select_iPhone.png" width="30" height="30"/>
+    </resources>
+</document>

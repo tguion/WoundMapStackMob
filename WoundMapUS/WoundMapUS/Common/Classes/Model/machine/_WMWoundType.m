@@ -25,6 +25,7 @@ const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
 const struct WMWoundTypeRelationships WMWoundTypeRelationships = {
 	.children = @"children",
 	.parent = @"parent",
+	.wounds = @"wounds",
 };
 
 const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
@@ -310,6 +311,19 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 @dynamic parent;
 
+	
+
+@dynamic wounds;
+
+	
+- (NSMutableSet*)woundsSet {
+	[self willAccessValueForKey:@"wounds"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"wounds"];
+  
+	[self didAccessValueForKey:@"wounds"];
+	return result;
+}
 	
 
 

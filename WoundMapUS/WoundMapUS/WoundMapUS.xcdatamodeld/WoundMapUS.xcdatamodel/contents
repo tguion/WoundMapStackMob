@@ -195,6 +195,7 @@
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="patient" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
+        <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWound" inverseName="patient" inverseEntity="WMWound" syncable="YES"/>
     </entity>
     <entity name="WMPatientConsultant" representedClassName="WMPatientConsultant" syncable="YES">
         <attribute name="acquiredFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -269,6 +270,28 @@
         <attribute name="wmtelecomtype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMTelecom" inverseName="telecomType" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
+    <entity name="WMWound" representedClassName="WMWound" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date">
+            <userInfo/>
+        </attribute>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String">
+            <userInfo/>
+        </attribute>
+        <attribute name="sortRank" attributeType="Integer 16" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="wmwound_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="woundLocationValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="woundTypeValue" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="patient" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="wounds" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="woundType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="wounds" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
     <entity name="WMWoundType" representedClassName="WMWoundType" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
@@ -288,12 +311,14 @@
         <attribute name="woundTypeCode" optional="YES" attributeType="Integer 16" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundType" inverseName="parent" inverseEntity="WMWoundType" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="children" inverseEntity="WMWoundType" syncable="YES"/>
+        <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWound" inverseName="woundType" inverseEntity="WMWound" syncable="YES"/>
     </entity>
     <elements>
         <element name="User" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMAddress" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMConsultingGroup" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMInstruction" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="0" height="0"/>
@@ -306,6 +331,6 @@
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMInstruction" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWound" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

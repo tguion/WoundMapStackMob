@@ -26,6 +26,7 @@ extern const struct WMWoundTypeAttributes {
 extern const struct WMWoundTypeRelationships {
 	__unsafe_unretained NSString *children;
 	__unsafe_unretained NSString *parent;
+	__unsafe_unretained NSString *wounds;
 } WMWoundTypeRelationships;
 
 extern const struct WMWoundTypeFetchedProperties {
@@ -33,6 +34,7 @@ extern const struct WMWoundTypeFetchedProperties {
 
 @class WMWoundType;
 @class WMWoundType;
+@class WMWound;
 
 
 
@@ -258,6 +260,13 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *wounds;
+
+- (NSMutableSet*)woundsSet;
+
+
+
+
 
 @end
 
@@ -267,6 +276,11 @@ extern const struct WMWoundTypeFetchedProperties {
 - (void)removeChildren:(NSSet*)value_;
 - (void)addChildrenObject:(WMWoundType*)value_;
 - (void)removeChildrenObject:(WMWoundType*)value_;
+
+- (void)addWounds:(NSSet*)value_;
+- (void)removeWounds:(NSSet*)value_;
+- (void)addWoundsObject:(WMWound*)value_;
+- (void)removeWoundsObject:(WMWound*)value_;
 
 @end
 
@@ -392,6 +406,11 @@ extern const struct WMWoundTypeFetchedProperties {
 
 - (WMWoundType*)primitiveParent;
 - (void)setPrimitiveParent:(WMWoundType*)value;
+
+
+
+- (NSMutableSet*)primitiveWounds;
+- (void)setPrimitiveWounds:(NSMutableSet*)value;
 
 
 @end

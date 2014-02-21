@@ -8,7 +8,7 @@
 
 #import "CoreDataHelper.h"
 
-@class WMParticipant, User, WMPatient;
+@class WMParticipant, User, WMPatient, WMWound;
 
 @interface WCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 
@@ -18,5 +18,6 @@
 @property (nonatomic, strong) NSString *stackMobUsername;   // logged team in StackMob
 
 @property (strong, nonatomic) WMPatient *patient;           // active patient
+@property (strong, nonatomic) WMWound *wound;               // active wound
 
 @end

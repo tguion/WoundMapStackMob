@@ -25,6 +25,7 @@ const struct WMPatientRelationships WMPatientRelationships = {
 	.patientConsultants = @"patientConsultants",
 	.person = @"person",
 	.stage = @"stage",
+	.wounds = @"wounds",
 };
 
 const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
@@ -265,6 +266,19 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 @dynamic stage;
 
+	
+
+@dynamic wounds;
+
+	
+- (NSMutableSet*)woundsSet {
+	[self willAccessValueForKey:@"wounds"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"wounds"];
+  
+	[self didAccessValueForKey:@"wounds"];
+	return result;
+}
 	
 
 

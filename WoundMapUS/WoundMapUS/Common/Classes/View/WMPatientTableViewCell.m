@@ -216,7 +216,6 @@
             [anImageView updateForPatient:_patient];
         }
         anImageView.contentMode = UIViewContentModeScaleAspectFill;
-        anImageView.layer.cornerRadius = 28.0;
         [self.customContentView addSubview:anImageView];
         _thumbnailImageView = anImageView;
     }
