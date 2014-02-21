@@ -397,9 +397,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 2: {
-                    // add/change patient DEBUG
+                    // add/change patient
                     NSInteger patientCount = self.patientManager.patientCount;
-                    if (1 == patientCount) {
+                    if (0 == patientCount) {
                         [self presentAddPatientViewController];
                     } else {
                         [self presentChoosePatientViewController];
