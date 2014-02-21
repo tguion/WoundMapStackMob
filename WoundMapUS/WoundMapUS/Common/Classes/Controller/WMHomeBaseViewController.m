@@ -54,7 +54,7 @@
 
 - (void)delayedScrollTrackAndScopeOffTop
 {
-    NSInteger row = 3;
+    NSInteger row = 2;
     if (!self.shouldShowSelectTrackTableViewCell) {
         --row;
     }
@@ -79,71 +79,74 @@
 
 - (IBAction)selectInitialStageAction:(id)sender
 {
-    self.navigationCoordinator.navigationStage = [WCNavigationStage initialStageForTrack:self.navigationCoordinator.navigationTrack
-                                                                    managedObjectContext:self.managedObjectContext
-                                                                         persistentStore:nil];
+    self.patient.stage = [WCNavigationStage initialStageForTrack:self.patient.stage.track
+                                            managedObjectContext:self.managedObjectContext
+                                                 persistentStore:nil];
 }
 
 - (IBAction)selectFollowupStageAction:(id)sender
 {
-    self.navigationCoordinator.navigationStage = [WCNavigationStage followupStageForTrack:self.navigationCoordinator.navigationTrack
-                                                                     managedObjectContext:self.managedObjectContext
-                                                                          persistentStore:nil];
+    self.patient.stage = [WCNavigationStage followupStageForTrack:self.patient.stage.track
+                                             managedObjectContext:self.managedObjectContext
+                                                  persistentStore:nil];
 }
 
 - (IBAction)selectDischargeStageAction:(id)sender
 {
-    self.navigationCoordinator.navigationStage = [WCNavigationStage dischargeStageForTrack:self.navigationCoordinator.navigationTrack
-                                                                      managedObjectContext:self.managedObjectContext
-                                                                           persistentStore:nil];
+    self.patient.stage = [WCNavigationStage dischargeStageForTrack:self.patient.stage.track
+                                              managedObjectContext:self.managedObjectContext
+                                                   persistentStore:nil];
 }
 
 - (IBAction)selectPatientAction:(id)sender
 {
-    [self navigateToSelectPatient];
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    [self navigateToSelectPatient:navigationNodeButton];
 }
 
 - (IBAction)editPatientAction:(id)sender
 {
-    // set state
-    self.state = PatientSelectedStateShowContactInfo;
-    [self navigateToPatientDetail];
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    [self navigateToPatientDetail:navigationNodeButton];
 }
 
 - (IBAction)addPatientAction:(id)sender
 {
-    // create new patient and document and wait for document open callback
-    [self showProgressViewWithMessage:@"Creating Patient Record"];
-    // set state
-    self.state = PatientSelectedStateAddNewPatient;
-    // create document for iCloud - notification will arrive when document is ready
-    self.documentNameWaitingForOpen = [self.documentManager addDocumentForNewPatient];
-    // self.document may be nil if waiting for currently open document to close
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    // create patient
+    [self navigateToPatientDetailViewControllerForNewPatient:navigationNodeButton];
 }
 
 - (IBAction)selectWoundAction:(id)sender
 {
-    [self navigateToSelectWound];
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    [self navigateToSelectWound:navigationNodeButton];
 }
 
 - (IBAction)editWoundAction:(id)sender
 {
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     [self navigateToWoundDetailForWound:self.wound newWoundFlag:NO button:navigationNodeButton];
 }
 
 - (IBAction)addWoundAction:(id)sender
 {
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
-    self.wound = [WCWound createWoundForPatient:self.patient];
-    [self navigateToWoundDetailForWound:self.documentManager.wound newWoundFlag:YES button:navigationNodeButton];
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    self.appDelegate.wound = [WCWound createWoundForPatient:self.patient];
+    [self navigateToWoundDetailForWound:self.wound newWoundFlag:YES button:navigationNodeButton];
 }
 
 - (IBAction)woundsAction:(id)sender
 {
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
-    WCNavigationNode *navigationNode = navigationNodeButton.navigationNode;
-    [self navigateToWounds:navigationNode];
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    [self navigateToWounds:navigationNodeButton];
 }
 
 - (IBAction)chooseTrackAction:(id)sender
@@ -181,7 +184,8 @@
 
 - (IBAction)riskAssessmentAction:(id)sender
 {
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     WCNavigationNode *navigationNode = navigationNodeButton.navigationNode;
     if ([navigationNode.subnodes count] > 0) {
         // this should have subnodes, just being anal
@@ -196,8 +200,8 @@
 
 - (IBAction)bradenScaleAction:(id)sender
 {
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     if ([navigationNodeButton.navigationNode requiresIAPForWoundType:self.wound.woundType]) {
         // show IAP purchase view controller with self as delegate
@@ -211,8 +215,8 @@
 // IAP: mock up for medication node having an IAP
 - (IBAction)medicationAssessmentAction:(id)sender
 {
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"sender:%@ must be NavigationNodeButton", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"sender:%@ must be NavigationNodeButton", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     if (nil != navigationNodeButton.navigationNode.iapIdentifier) {
         BOOL proceed = [self presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier successSelector:@selector(navigateToMedicationAssessment:) withObject:navigationNodeButton];
@@ -226,31 +230,32 @@
 
 - (IBAction)deviceAssessmentAction:(id)sender
 {
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToDeviceAssessment:navigationNodeButton];
 }
 
 - (IBAction)psycoSocialAssessmentAction:(id)sender
 {
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToPsychoSocialAssessment:navigationNodeButton];
 }
 
 - (IBAction)skinAssessmentAction:(id)sender
 {
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
 }
 
 - (IBAction)photoAction:(id)sender
 {
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
     WCNavigationNode *navigationNode = navigationNodeButton.navigationNode;
     [self navigateToPhoto:navigationNode];
 }
