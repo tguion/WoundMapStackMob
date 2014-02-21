@@ -90,6 +90,7 @@
 		5F6DE53F18B58BB000E87F7E /* InstructionsSkinAssessment.html in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE53418B58BB000E87F7E /* InstructionsSkinAssessment.html */; };
 		5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE53518B58BB000E87F7E /* InstructionsWoundAssessment.html */; };
 		5F6DE54118B58BB000E87F7E /* InstructionsWoundTreatment.html in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE53618B58BB000E87F7E /* InstructionsWoundTreatment.html */; };
+		5F6DE54418B6D44400E87F7E /* WMSegmentControlTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE54318B6D44400E87F7E /* WMSegmentControlTableViewCell.m */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -296,6 +297,8 @@
 		5F6DE53418B58BB000E87F7E /* InstructionsSkinAssessment.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = InstructionsSkinAssessment.html; sourceTree = "<group>"; };
 		5F6DE53518B58BB000E87F7E /* InstructionsWoundAssessment.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = InstructionsWoundAssessment.html; sourceTree = "<group>"; };
 		5F6DE53618B58BB000E87F7E /* InstructionsWoundTreatment.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = InstructionsWoundTreatment.html; sourceTree = "<group>"; };
+		5F6DE54218B6D44400E87F7E /* WMSegmentControlTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSegmentControlTableViewCell.h; sourceTree = "<group>"; };
+		5F6DE54318B6D44400E87F7E /* WMSegmentControlTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSegmentControlTableViewCell.m; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -954,6 +957,8 @@
 				5F6DE50618B2D37000E87F7E /* WMTextFieldTableViewCell.m */,
 				7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */,
 				7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */,
+				5F6DE54218B6D44400E87F7E /* WMSegmentControlTableViewCell.h */,
+				5F6DE54318B6D44400E87F7E /* WMSegmentControlTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1365,6 +1370,7 @@
 				5F67D21718AC4ACF00460C37 /* WMSimpleTableViewController.m in Sources */,
 				7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */,
 				5F67D1B318AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m in Sources */,
+				5F6DE54418B6D44400E87F7E /* WMSegmentControlTableViewCell.m in Sources */,
 				5F6DE52718B58A8300E87F7E /* _WMInstruction.m in Sources */,
 				5F67D1C918AC39C600460C37 /* _WMParticipant.m in Sources */,
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,

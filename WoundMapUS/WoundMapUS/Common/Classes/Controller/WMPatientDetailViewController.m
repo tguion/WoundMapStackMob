@@ -7,55 +7,34 @@
 //
 
 #import "WMPatientDetailViewController.h"
+#import "WMPersonEditorViewController.h"
+#import "WMValue1TableViewCell.h"
+#import "WMTextFieldTableViewCell.h"
+#import "WMSegmentControlTableViewCell.h"
+#import "UIView+Custom.h"
 #import "WMPatient.h"
 #import "WMPerson.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
-//#import "WCWound+Custom.h"
-//#import "WCWoundType+Custom.h"
-//#import "WCWoundPhoto+Custom.h"
-//#import "WCBradenScale+Custom.h"
-//#import "WCWoundTreatmentGroup+Custom.h"
-//#import "WCMedicationGroup+Custom.h"
-//#import "WCDeviceGroup+Custom.h"
-//#import "WCSkinAssessmentGroup+Custom.h"
-//#import "WCCarePlanGroup+Custom.h"
-//#import "WMProgressViewHUD.h"
-//#import "PrintConfiguration.h"
 #import "WMUtilities.h"
-//#import "PatientManager.h"
 #import "WMUserDefaultsManager.h"
-//#import "NavigationCoordinator.h"
-#import "UIView+Custom.h"
 #import "WCAppDelegate.h"
 #import "StackMob.h"
 
-@interface WMPatientDetailViewController ()
+@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate>
 
 // data
 @property (strong, nonatomic) WMPatient *patient;
-@property (strong, nonatomic) WMPerson *person;
-@property (strong, nonatomic) NSArray *sortedWounds;
 // state
-@property (nonatomic) BOOL willCancelFlag;                                          // cancel action started
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
-
 // UI
 @property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryToolbar;
-@property (strong, nonatomic) IBOutlet UITableViewCell *firstNameCell;
-@property (weak, nonatomic) IBOutlet UITextField *firstNameField;
-@property (strong, nonatomic) IBOutlet UITableViewCell *lastNameCell;
-@property (weak, nonatomic) IBOutlet UITextField *lastNameField;
-@property (strong, nonatomic) IBOutlet UITableViewCell *genderCell;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *genderSegmentedControl;
-@property (strong, nonatomic) IBOutlet UITableViewCell *dobCell;
-@property (weak, nonatomic) IBOutlet UITextField *dobTextField;
+@property (readonly, nonatomic) UITextField *dobTextField;
+@property (readonly, nonatomic) UITextField *ssnTextField;
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePickerView;
-@property (strong, nonatomic) IBOutlet UITableViewCell *identifierCell;
-@property (weak, nonatomic) IBOutlet UITextField *identifierField;
 @property (strong, nonatomic) NSDateFormatter *dateOfBirthDateFormatter;
 
-//@property (readonly, nonatomic) WoundDetailViewController *woundDetailViewController;
+@property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)saveAction:(id)sender;
@@ -67,9 +46,7 @@
 
 @interface WMPatientDetailViewController (PrivateMethods)
 
-//- (void)navigateToWoundDetailWithNewWoundFlag:(BOOL)newWoundFlag;
-- (void)updateTitle;
-- (void)updateModelFromView;
+- (void)updateDOBModelFromView;
 - (void)updateUIFromPatient;
 - (void)updateUIForDataChange;
 - (UIResponder *)nextTextFieldResponder;
@@ -79,13 +56,6 @@
 @end
 
 @implementation WMPatientDetailViewController (PrivateMethods)
-
-//- (void)navigateToWoundDetailWithNewWoundFlag:(BOOL)newWoundFlag
-//{
-//    WoundDetailViewController *woundDetailViewController = self.woundDetailViewController;
-//    woundDetailViewController.newWoundFlag = newWoundFlag;
-//    [self.navigationController pushViewController:woundDetailViewController animated:YES];
-//}
 
 - (void)updateTitle
 {
@@ -99,16 +69,10 @@
     self.title = title;
 }
 
-- (void)updateModelFromView
+- (void)updateDOBModelFromView
 {
     WMPatient *patient = self.patient;
-    WMPerson *person = self.person;
-    person.nameGiven = self.firstNameField.text;
-    person.nameFamily = self.lastNameField.text;
     patient.dateOfBirth = self.datePickerView.date;
-//    self.dobTextField.text = [self.dateOfBirthDateFormatter stringFromDate:self.patient.dateOfBirth];
-    // TODO figure out how to allow more than one patient id
-//    self.patient.identifierEMR = self.identifierField.text;
     // save dob for next patient
     self.userDefaultsManager.lastDateOfBirth = self.patient.dateOfBirth;
 }
@@ -155,10 +119,10 @@
         cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
         responder = [self responderInCell:cell];
         if (nil != responder) {
-            // move to next cell
+            // found it
             break;
         }
-        // else
+        // else move to next cell
         ++row;
     }
     if (nil == responder) {
@@ -171,9 +135,6 @@
                 if (nil != responder) {
                     break;
                 }
-            }
-            if (nil != responder) {
-                break;
             }
             ++section;
         }
@@ -200,10 +161,6 @@
                 break;
             }
         }
-        if (nil != responder) {
-            break;
-        }
-        // else
         --section;
         row = ([self tableView:self.tableView numberOfRowsInSection:section] - 1);
     }
@@ -215,7 +172,18 @@
 
 - (UIResponder *)responderInCell:(UITableViewCell *)cell
 {
-    return (UIResponder *)[[cell.contentView.subviews filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"tag == 1000"]] lastObject];
+    if (nil == cell) {
+        return nil;
+    }
+    // else
+    UIResponder *responder = nil;
+    for (UIView *aView in cell.contentView.subviews) {
+        if ([aView isKindOfClass:[UIResponder class]]) {
+            responder = aView;
+            break;
+        }
+    }
+    return responder;
 }
 
 @end
@@ -223,29 +191,6 @@
 @implementation WMPatientDetailViewController
 
 @synthesize patient=_patient;
-
-- (void)setNewPatientFlag:(BOOL)newPatientFlag
-{
-    if (_newPatientFlag == newPatientFlag) {
-        return;
-    }
-    // else
-    [self willChangeValueForKey:@"newPatientFlag"];
-    _newPatientFlag = newPatientFlag;
-    [self didChangeValueForKey:@"newPatientFlag"];
-    if (newPatientFlag) {
-        // dump any cache
-        _sortedWounds = nil;
-    }
-}
-
-//- (NSArray *)sortedWounds
-//{
-//    if (nil == _sortedWounds) {
-//        _sortedWounds = [WCWound sortedWounds:self.managedObjectContext];
-//    }
-//    return _sortedWounds;
-//}
 
 - (NSDateFormatter *)dateOfBirthDateFormatter
 {
@@ -259,20 +204,10 @@
 
 #pragma mark - Memory
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Add code to clean up any of your own resources that are no longer necessary.
-    _sortedWounds = nil;
-    _dateOfBirthDateFormatter = nil;
-}
-
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _newPatientFlag = NO;
     _patient = nil;
-    _sortedWounds = nil;
 }
 
 #pragma mark - Views
@@ -283,7 +218,7 @@
     if (self) {
         // set state
         self.modalInPopover = YES;
-//        self.preferredContentSize = CGSizeMake(320.0, 460.0 + [self.patient.wounds count] * 44.0);
+        self.preferredContentSize = CGSizeMake(320.0, 460.0);
     }
     return self;
 }
@@ -291,22 +226,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // configure input
-    self.firstNameField.inputAccessoryView = self.inputAccessoryToolbar;
-    self.lastNameField.inputAccessoryView = self.inputAccessoryToolbar;
-    self.identifierField.inputAccessoryView = self.inputAccessoryToolbar;
-    self.dobTextField.inputAccessoryView = self.inputAccessoryToolbar;
-    self.dobTextField.inputView = self.datePickerView;
-    self.firstNameField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-    self.lastNameField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-    // allow editing
-    [self.tableView setEditing:YES animated:NO];
+    // configure tableView
+    [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    [self.tableView registerClass:[WMSegmentControlTableViewCell class] forCellReuseIdentifier:@"SwitchCell"];
     // configure date picker
     _datePickerView.maximumDate = [NSDate date];
     _datePickerView.date = self.userDefaultsManager.lastDateOfBirth;
-    [self.managedObjectContext.undoManager beginUndoGrouping];
-    // confirm that we have a clean moc
-    NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
     // we want to support cancel, so make sure we have an undoManager
     if (nil == self.managedObjectContext.undoManager) {
         self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
@@ -320,12 +246,68 @@
     [super viewWillAppear:animated];
     [self updateUIFromPatient];
     [self updateUIForDataChange];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self.navigationController setToolbarHidden:YES animated:YES];
-    self.willCancelFlag = NO;
 }
 
 #pragma mark - Core
+
+- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
+{
+    NSString *cellReuseIdentifier = nil;
+    switch (indexPath.section) {
+        case 0: {
+            // patient data
+            switch (indexPath.row) {
+                case 0: {
+                    // contact detail
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+                }
+                case 1: {
+                    // gender
+                    cellReuseIdentifier = @"SwitchCell";
+                    break;
+                }
+                case 2: {
+                    // DOB
+                    cellReuseIdentifier = @"TextCell";
+                    break;
+                }
+                case 3: {
+                    // SSN
+                    cellReuseIdentifier = @"TextCell";
+                    break;
+                }
+            }
+            break;
+        }
+        case 1: {
+            // ids
+            cellReuseIdentifier = @"ValueCell";
+            break;
+        }
+    }
+    return cellReuseIdentifier;
+}
+
+- (UITextField *)dobTextField
+{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+    return (UITextField *)[self responderInCell:cell];
+}
+
+- (UITextField *)ssnTextField
+{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
+    return (UITextField *)[self responderInCell:cell];
+}
+
+- (WMPersonEditorViewController *)personEditorViewController
+{
+    WMPersonEditorViewController *personEditorViewController = [[WMPersonEditorViewController alloc] initWithNibName:@"WMPersonEditorViewController" bundle:nil];
+    personEditorViewController.delegate = self;
+    return personEditorViewController;
+}
 
 #pragma mark - BaseViewController
 
@@ -348,20 +330,13 @@
 
 - (WMPerson *)person
 {
-    if (nil == _person) {
-        WMPatient *patient = self.patient;
-        _person = patient.person;
-        if (nil == _person) {
-            // must save patient
-            NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-            NSError *error = nil;
-            [managedObjectContext saveAndWait:&error];
-            [WMUtilities logError:error];
-            _person = [WMPerson instanceWithManagedObjectContext:managedObjectContext persistentStore:self.store];
-            patient.person = _person;
-        }
+    WMPatient *patient = self.patient;
+    WMPerson *person = patient.person;
+    if (nil == person) {
+        person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+        patient.person = person;
     }
-    return _person;
+    return person;
 }
 
 #pragma mark - Actions
@@ -406,21 +381,18 @@
     [[self.view findFirstResponder] resignFirstResponder];
 }
 
-// TODO: handle nil undoManager
 - (IBAction)cancelAction:(id)sender
 {
     [self.view endEditing:YES];
-    _willCancelFlag = YES;
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
         if (self.managedObjectContext.undoManager.canUndo) {
-            // this should undo the insert of new patient
+            // this should undo the insert of new person
             [self.managedObjectContext.undoManager undoNestedGroup];
         }
-    } else {
-        if (_newPatientFlag) {
-            [self.managedObjectContext deleteObject:self.patient];
-        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
     }
     [self.delegate patientDetailViewControllerDidCancelUpdate:self];
 }
@@ -432,59 +404,11 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
-    [[self.view findFirstResponder] resignFirstResponder];
-    // do not allow any further input
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateModelFromView) object:nil];
-    [self updateModelFromView];
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate patientDetailViewControllerDidUpdatePatient:self];
 }
-
-#pragma mark - WoundDetailViewControllerDelegate
-
-//- (void)woundDetailViewControllerDidUpdateWound:(WoundDetailViewController *)viewController
-//{
-//    [self.navigationController popViewControllerAnimated:YES];
-//    [self.documentManager saveDocument:self.document];
-//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.sortedWounds indexOfObject:viewController.wound] inSection:2];
-//    // dump our cache
-//    _sortedWounds = nil;
-//    // reload table cell
-//    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//    // update title
-//    [self updateTitle];
-//    // clear
-//    [viewController clearAllReferences];
-//}
-//
-//- (void)woundDetailViewControllerDidCancelUpdate:(WoundDetailViewController *)viewController
-//{
-//    if (viewController.isNewWound) {
-//        [self.navigationCoordinator deleteWound:viewController.wound];
-//        self.wound = [self.navigationCoordinator selectLastWound];
-//    }
-//    [self.documentManager saveDocument:viewController.document];
-//    [self.navigationController popViewControllerAnimated:YES];
-//    // dump our cache
-//    _sortedWounds = nil;
-//    // reload table
-//    [self.tableView reloadData];
-//    // clear
-//    [viewController clearAllReferences];
-//}
-//
-//- (void)woundDetailViewController:(WoundDetailViewController *)viewController didDeleteWound:(WCWound *)wound
-//{
-//    [self.navigationCoordinator deleteWound:wound];
-//    self.wound = [self.navigationCoordinator selectLastWound];
-//    [self.documentManager saveDocument:viewController.document];
-//    [self.navigationController popViewControllerAnimated:YES];
-//    // dump our cache
-//    _sortedWounds = nil;
-//    // reload table
-//    [self.tableView reloadData];
-//    // clear
-//    [viewController clearAllReferences];
-//}
 
 #pragma mark - UITextFieldDelegate
 
@@ -496,19 +420,15 @@
             self.datePickerView.date = self.patient.dateOfBirth;
         }
     }
-//    UITableViewCell *cell = [self cellForView:textField];
-//    self.indexPathToScrollIntoView = [self.tableView indexPathForCell:cell];
-//    [self.tableView scrollToRowAtIndexPath:self.indexPathToScrollIntoView atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 }
 
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    if (_willCancelFlag) {
-        return;
+    // update model from text
+    if (textField == self.ssnTextField) {
+        self.patient.ssn = textField.text;
     }
-    // else
-    [self performSelector:@selector(updateModelFromView) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateTitle) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateUIForDataChange) withObject:nil afterDelay:0.0];
 }
@@ -520,16 +440,24 @@
     return YES;
 }
 
-#pragma mark - UITableViewDelegate
+#pragma mark - PersonEditorViewControllerDelegate
 
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
 {
-    if (indexPath.section == 2 || indexPath.section == 3 || indexPath.section == 4) {
-        return YES;
-    }
-    // else
-    return NO;
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+    [viewController clearAllReferences];
 }
+
+- (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
+#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -537,53 +465,24 @@
     switch (indexPath.section) {
         case 0: {
             // Patient Information - no selection
+            WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
+            personEditorViewController.person = self.person;
+            [self.navigationController pushViewController:personEditorViewController animated:YES];
             break;
         }
         case 1: {
-            // EMR/Insurance Identification - no selection
+            // EMR/Insurance Identification
+            
             break;
         }
-//        case 2: {
-//            // Wounds
-//            BOOL newWoundFlag = NO;
-//            if (indexPath.row == [self.sortedWounds count]) {
-//                // add wound
-//                self.wound = [WCWound createWoundForPatient:self.patient];
-//                newWoundFlag = YES;
-//            } else {
-//                // existing wound
-//                self.wound = [self.sortedWounds objectAtIndex:indexPath.row];
-//            }
-//            [self navigateToWoundDetailWithNewWoundFlag:newWoundFlag];
-//            break;
-//        }
     }
-}
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 2) {
-        // wounds
-        return (indexPath.row == [self.sortedWounds count] ? UITableViewCellEditingStyleInsert:UITableViewCellEditingStyleNone);
-    }
-    // else
-    return UITableViewCellEditingStyleNone;
-}
-
-// Controls whether the background is indented while editing.  If not implemented, the default is YES.
-// This is unrelated to the indentation level below.  This method only applies to grouped style table views.
-- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return NO;
 }
 
 #pragma mark - UITableViewDataSource
 
-// NOTE: 2013.07.03 limiting to only 3 sections - assessments and sharing sections moved to primary UI
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return (self.hideAddWoundFlag ? 2:3);
+    return 2;
 }
 
 // fixed font style. use custom view (UILabel) if you want something different
@@ -596,11 +495,7 @@
             break;
         }
         case 1: {
-            title = @"EMR/Record Identifier";
-            break;
-        }
-        case 2: {
-            title = @"Wounds";
+            title = @"EMR/Record Identifiers";
             break;
         }
     }
@@ -619,10 +514,6 @@
             count = 1;
             break;
         }
-        case 2: {
-            count = ([self.sortedWounds count] + 1);
-            break;
-        }
     }
     return count;
 }
@@ -630,29 +521,58 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = nil;
-    UITableViewCell *cell = nil;
+    NSString *cellIdentifier = [self cellReuseIdentifier:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if ([cell isKindOfClass:[WMTextFieldTableViewCell class]]) {
+        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+        myCell.textField.delegate = self;
+        myCell.textField.inputAccessoryView = self.inputAccessoryToolbar;
+    } else if ([cell isKindOfClass:[WMSegmentControlTableViewCell class]]) {
+        WMSegmentControlTableViewCell *myCell = (WMSegmentControlTableViewCell *)cell;
+        [myCell configureWithItems:@[@"Male", @"Female"] target:self action:@selector(dateOfBirthChangedValueAction:)];
+    }
+    [self configureCell:cell atIndexPath:indexPath];
+    return cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    WMPatient *patient = self.patient;
     switch (indexPath.section) {
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    // contact information cell
-                    cell = self.firstNameCell;
+                    // contact detail
+                    cell.textLabel.text = @"Contact Details";
+                    cell.detailTextLabel.text = self.person.lastNameFirstName;
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
                 case 1: {
-                    // contact information cell
-                    cell = self.lastNameCell;
-                    break;
-                }
-                case 3: {
-                    // gender cell
-                    cell = self.genderCell;
+                    // gender
+                    WMSegmentControlTableViewCell *myCell = (WMSegmentControlTableViewCell *)cell;
+                    myCell.segmentedControl.selectedSegmentIndex = patient.genderIndex;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
                     break;
                 }
                 case 2: {
-                    // contact information cell
-                    cell = self.dobCell;
+                    // dob
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    [myCell updateWithLabelText:@"DOB"
+                                      valueText:[NSDateFormatter localizedStringFromDate:patient.dateOfBirth dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle]
+                                    valuePrompt:@"Date of Birth"];
+                    myCell.textField.inputView = self.datePickerView;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                case 3: {
+                    // ssn
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    [myCell updateWithLabelText:@"SSN"
+                                      valueText:patient.ssn
+                                    valuePrompt:@"SSN (optional)"];
+                    myCell.textField.inputView = nil;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
                     break;
                 }
             }
@@ -662,108 +582,16 @@
             switch (indexPath.row) {
                 case 0: {
                     // identifier
-                    cell = self.identifierCell;
+                    cell.textLabel.text = @"Idenfiers";
+                    NSString *string = ([patient.ids count] == 1 ? @"Identifier":@"Idenfiers");
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [patient.ids count], string];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
-                }
-            }
-            break;
-        }
-        case 2: {
-            if (indexPath.row == [self.sortedWounds count]) {
-                // cell to add wound
-                cellIdentifier = @"AddWoundCell";
-                cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                if (cell == nil) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
-                }
-            } else {
-                // existing wound
-                cellIdentifier = @"WoundCell";
-                cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-                if (cell == nil) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-                    cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 }
             }
             break;
         }
     }
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
 }
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    WMPatient *patient = self.patient;
-    WMPerson *person = self.person;
-    switch (indexPath.section) {
-        case 0: {
-            switch (indexPath.row) {
-                case 0: {
-                    // first name
-                    self.firstNameField.text = person.nameGiven;
-                    break;
-                }
-                case 1: {
-                    // last name
-                    self.lastNameField.text = person.nameFamily;
-                    break;
-                }
-                case 3: {
-                    // gender
-                    self.genderSegmentedControl.selectedSegmentIndex = patient.genderIndex;
-                    break;
-                }
-                case 2: {
-                    // dob
-                    if (nil != patient.dateOfBirth) {
-                        self.dobTextField.text = [NSDateFormatter localizedStringFromDate:patient.dateOfBirth dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
-                    };
-                    break;
-                }
-            }
-            break;
-        }
-//        case 1: {
-//            switch (indexPath.row) {
-//                case 0: {
-//                    // identifier
-//                    self.identifierField.text = self.patient.identifierEMR;
-//                    break;
-//                }
-//            }
-//            break;
-//        }
-//        case 2: {
-//            // Wounds section
-//            if (indexPath.row == [self.sortedWounds count]) {
-//                // cell to add wound
-//                cell.textLabel.text = @"Add Wound";
-//            } else {
-//                // existing wound
-//                WCWound *wound = [self.sortedWounds objectAtIndex:indexPath.row];
-//                cell.textLabel.text = wound.name;
-//                cell.detailTextLabel.text = wound.woundType.titleForDisplay;
-//            }
-//            break;
-//        }
-    }
-}
-
-//// Allows the reorder accessory view to optionally be shown for a particular row.
-//// By default, the reorder control will be shown only if the datasource implements -tableView:moveRowAtIndexPath:toIndexPath:
-//- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return NO;
-//}
-//
-//// After a row has the minus or plus button invoked (based on the UITableViewCellEditingStyle for the cell), the dataSource must commit the change
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    self.wound = [WCWound createWoundForPatient:self.patient];
-//    [self navigateToWoundDetailWithNewWoundFlag:YES];
-//}
-
 
 @end

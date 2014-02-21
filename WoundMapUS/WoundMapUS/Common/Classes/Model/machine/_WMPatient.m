@@ -15,6 +15,7 @@ const struct WMPatientAttributes WMPatientAttributes = {
 	.lastmoddate = @"lastmoddate",
 	.patientStatusMessages = @"patientStatusMessages",
 	.sm_owner = @"sm_owner",
+	.ssn = @"ssn",
 	.thumbnail = @"thumbnail",
 	.wmpatient_id = @"wmpatient_id",
 };
@@ -205,6 +206,13 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 @dynamic sm_owner;
+
+
+
+
+
+
+@dynamic ssn;
 
 
 

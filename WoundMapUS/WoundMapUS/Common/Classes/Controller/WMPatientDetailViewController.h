@@ -7,7 +7,6 @@
 //
 
 #import "WMBaseViewController.h"
-//#import "WoundDetailViewController.h"
 
 @class WMPatient;
 @class WMPatientDetailViewController;
@@ -21,9 +20,8 @@
 
 @interface WMPatientDetailViewController : WMBaseViewController <UITextFieldDelegate, UIAlertViewDelegate/*, WoundDetailViewControllerDelegate*/>
 
-@property (weak, nonatomic) id<PatientDetailViewControllerDelegate>delegate;
+@property (weak, nonatomic) id<PatientDetailViewControllerDelegate> delegate;
 
 @property (nonatomic, getter = isNewPatient) BOOL newPatientFlag;
-@property (nonatomic) BOOL hideAddWoundFlag;
 
 @end

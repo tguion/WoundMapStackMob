@@ -241,7 +241,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self showProgressViewWithMessage:@"Opening Patient Record"];
     WMPatientDetailViewController *patientDetailViewController = self.patientDetailViewController;
     patientDetailViewController.newPatientFlag = YES;
-    patientDetailViewController.hideAddWoundFlag = YES;
     if (self.isIPadIdiom) {
         [self.navigationController pushViewController:patientDetailViewController animated:YES];
     } else {
@@ -398,9 +397,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 2: {
-                    // add/change patient
+                    // add/change patient DEBUG
                     NSInteger patientCount = self.patientManager.patientCount;
-                    if (0 == patientCount) {
+                    if (1 == patientCount) {
                         [self presentAddPatientViewController];
                     } else {
                         [self presentChoosePatientViewController];
@@ -738,6 +737,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
     __block WMPatient *patient = viewController.patient;
+    // clear memory
+    [viewController clearAllReferences];
     // update our reference to current patient
     self.appDelegate.patient = patient;
     if (self.isIPadIdiom) {
@@ -747,27 +748,26 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // nothing
         }];
     }
-    // save patient first, then associated stage
+    CoreDataHelper *coreDataHelper = self.coreDataHelper;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSPersistentStore *store = self.store;
+    // make sure the track/stage is set
+    if (nil == patient.stage) {
+        // set stage to initial for default clinical setting
+        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
+        WMNavigationStage *navigationStage = navigationTrack.initialStage;
+        patient.stage = navigationStage;
+    }
     [self showProgressViewWithMessage:@"Saving patient record"];
     __weak __typeof(self) weakSelf = self;
     [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
         [WMUtilities logError:error];
-        NSManagedObjectContext *managedObjectContext = weakSelf.managedObjectContext;
-        NSPersistentStore *store = weakSelf.store;
-        // make sure the track/stage is set
-        if (nil == patient.stage) {
-            // set stage to initial for default clinical setting
-            WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
-            WMNavigationStage *navigationStage = navigationTrack.initialStage;
-            patient.stage = navigationStage;
-        }
-        // save again
-        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-            [WMUtilities logError:error];
-            // make sure the user (sm_owner) has access via the consultants relationship
-            User *user = [User userForUsername:self.appDelegate.stackMobUsername
-                          managedObjectContext:managedObjectContext persistentStore:store];
-            WMParticipant *participant = self.appDelegate.participant;
+        // make sure the user (sm_owner) has access via the consultants relationship
+        User *user = nil;
+        if([coreDataHelper.stackMobClient isLoggedIn]) {
+            user = [User userForUsername:weakSelf.appDelegate.stackMobUsername
+                    managedObjectContext:managedObjectContext persistentStore:store];
+            WMParticipant *participant = weakSelf.appDelegate.participant;
             WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
                                                                                            consultant:user
                                                                                           participant:participant
@@ -775,14 +775,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                                                                  managedObjectContext:managedObjectContext
                                                                                       persistentStore:store];
             patientConsultant.acquiredFlagValue = NO;
-            // save again
-            [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-                [WMUtilities logError:error];
-                [weakSelf hideProgressView];
-                [weakSelf.tableView reloadData];
-                weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-            }];
-        }];
+        }
+        [weakSelf hideProgressView];
+        [weakSelf.tableView reloadData];
+        weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
     }];
 }
 

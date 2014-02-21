@@ -16,6 +16,7 @@ extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *patientStatusMessages;
 	__unsafe_unretained NSString *sm_owner;
+	__unsafe_unretained NSString *ssn;
 	__unsafe_unretained NSString *thumbnail;
 	__unsafe_unretained NSString *wmpatient_id;
 } WMPatientAttributes;
@@ -34,6 +35,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMPatientConsultant;
 @class WMPerson;
 @class WMNavigationStage;
+
 
 
 
@@ -184,6 +186,16 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ssn;
+
+
+
+//- (BOOL)validateSsn:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* thumbnail;
 
 
@@ -323,6 +335,12 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSString*)primitiveSm_owner;
 - (void)setPrimitiveSm_owner:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveSsn;
+- (void)setPrimitiveSsn:(NSString*)value;
 
 
 
