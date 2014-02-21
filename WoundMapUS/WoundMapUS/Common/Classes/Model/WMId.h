@@ -1,5 +1,8 @@
 #import "_WMId.h"
 
 @interface WMId : _WMId {}
-// Custom logic goes here.
+
++ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                 persistentStore:(NSPersistentStore *)store;
+
 @end

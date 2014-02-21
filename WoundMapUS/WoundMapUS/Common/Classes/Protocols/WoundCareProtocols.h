@@ -122,3 +122,19 @@ typedef enum {
 - (void)removeTelecomsObject:(WMTelecom*)value_;
 
 @end
+
+@class WMId;
+
+@protocol idSource <NSObject>
+
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSManagedObjectID *objectID;
+@property (readonly, nonatomic) NSSet *ids;
+
+- (void)addIds:(NSSet*)value_;
+- (void)removeIds:(NSSet*)value_;
+- (void)addIdsObject:(WMId*)value_;
+- (void)removeIdsObject:(WMId*)value_;
+
+@end
+
