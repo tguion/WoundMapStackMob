@@ -50,6 +50,7 @@
 - (void)fetchedResultsControllerDidFetch;                                   // called when frc finishes fetching Core Data
 - (void)nilFetchedResultsController;                                        // nil the reference _fetchedResultsController
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
+- (void)refreshTable;                                                       // refetch using StackMob
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource
 - (NSIndexPath *)indexPathTableToFetchedResultsController:(NSIndexPath *)indexPath;

@@ -91,6 +91,10 @@
                                                                                            action:@selector(doneAction:)];
     [self.tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
+    // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated. Then we initiate the refresh process.
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
 }
 
 - (void)viewWillAppear:(BOOL)animated

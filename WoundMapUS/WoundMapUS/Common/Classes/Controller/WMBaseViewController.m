@@ -154,6 +154,22 @@
     return self.tableView;
 }
 
+#pragma mark - Actions
+
+- (void)refreshTable
+{
+    NSManagedObjectContext *context = self.managedObjectContext;
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:self.fetchedResultsControllerEntityName];
+    [fetchRequest setSortDescriptors:self.fetchedResultsControllerSortDescriptors];
+    [context executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
+        [self.refreshControl endRefreshing];
+    } onFailure:^(NSError *error) {
+        [self.refreshControl endRefreshing];
+        NSLog(@"An error %@, %@", error, [error userInfo]);
+    }];
+}
+
+
 #pragma mark - Progress view
 
 - (WMProgressViewHUD *)progressView
