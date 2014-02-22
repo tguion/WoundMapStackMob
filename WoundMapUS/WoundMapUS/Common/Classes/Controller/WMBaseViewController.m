@@ -12,6 +12,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
 #import "WMUtilities.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
@@ -43,12 +44,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    _fetchPolicy = SMFetchPolicyTryNetworkElseCache;
+    _savePolicy = SMSavePolicyNetworkThenCache;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -73,7 +70,6 @@
     }
     // else
     _fetchPolicy = fetchPolicy;
-    self.coreDataHelper.stackMobStore.fetchPolicy = fetchPolicy;
 }
 
 - (void)setSavePolicy:(SMSavePolicy)savePolicy
@@ -84,6 +80,16 @@
     // else
     _savePolicy = savePolicy;
     self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
+}
+
+- (void)updateStackMobToFetchPolicy
+{
+    self.coreDataHelper.stackMobStore.fetchPolicy = _fetchPolicy;
+}
+
+- (void)updateStackMobToSavePolicy
+{
+    self.coreDataHelper.stackMobStore.fetchPolicy = _savePolicy;
 }
 
 #pragma mark - Core
@@ -224,6 +230,7 @@
         // add observers
     }
     if (0 == [self.persistantObservers count]) {
+        // StackMob network synch finished
         id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kStackMobNetworkSynchFinishedNotification
                                                                         object:nil
                                                                          queue:[NSOperationQueue mainQueue]
@@ -231,6 +238,52 @@
                                                                         [weakSelf handleStackMobNetworkSynchFinished:notification];
                                                                     }];
         [self.persistantObservers addObject:observer];
+        // update for change in patient
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kPatientChangedNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     WMPatient *patient = (WMPatient *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     [weakSelf handlePatientChanged:patient];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
+        // update for change in wound
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kWoundChangedNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     WMWound *wound = (WMWound *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     [weakSelf handleWoundChanged:wound];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
+        // update for change in woundPhoto
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kWoundPhotoChangedNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     [weakSelf handleWoundPhotoChanged:woundPhoto];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
+        // update for change in track
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kNavigationTrackChangedNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     WMNavigationTrack *navigationTrack = (WMNavigationTrack *)[weakSelf.managedObjectContext objectWithID:[notification object]];
+                                                                     [weakSelf handleNavigationTrackChanged:navigationTrack];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
+        // update for change in stage
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kNavigationStageChangedNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     WMNavigationStage *navigationStage = (WMNavigationStage *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     [weakSelf handleNavigationStageChanged:navigationStage];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
+
     }
 }
 
@@ -249,6 +302,30 @@
 - (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
 {
     [self.tableView reloadData];
+}
+
+- (void)handlePatientChanged:(WMPatient *)patient
+{
+    
+}
+
+- (void)handleWoundChanged:(WMWound *)wound
+{
+    
+}
+
+- (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto
+{
+    
+}
+
+// patient navigationTrack changed
+- (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack
+{
+}
+
+- (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage
+{
 }
 
 #pragma mark - Accessors
@@ -307,7 +384,17 @@
 
 - (WMPatient *)patient
 {
-    return self.appDelegate.patient;
+    return self.appDelegate.navigationCoordinator.patient;
+}
+
+- (WMWound *)wound
+{
+    return self.appDelegate.navigationCoordinator.wound;
+}
+
+- (WMWoundPhoto *)woundPhoto
+{
+    return self.appDelegate.navigationCoordinator.woundPhoto;
 }
 
 #pragma mark - UITableViewDataSource
@@ -392,6 +479,8 @@
     [fetchRequest setSortDescriptors:self.fetchedResultsControllerSortDescriptors];
     // update for possible NSDictionaryResultType
     [self updateFetchRequest:fetchRequest];
+    // enforce the fetch policy set by view controller
+    [self updateStackMobToFetchPolicy];
     // Edit the section name key path and cache name if appropriate - nil for section name key path means "no sections".
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 																	 managedObjectContext:self.managedObjectContext

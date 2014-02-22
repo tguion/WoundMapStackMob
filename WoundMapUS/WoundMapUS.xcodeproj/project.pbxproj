@@ -149,6 +149,11 @@
 		7D39DB5518B828000054DDC3 /* WMPatientSummaryContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB5318B828000054DDC3 /* WMPatientSummaryContainerViewController.xib */; };
 		7D39DB5918B828630054DDC3 /* WMPsychoSocialGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB5718B828630054DDC3 /* WMPsychoSocialGroupViewController.m */; };
 		7D39DB5A18B828630054DDC3 /* WMPsychoSocialGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB5818B828630054DDC3 /* WMPsychoSocialGroupViewController.xib */; };
+		7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB5D18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m */; };
+		7D39DB6218B921EE0054DDC3 /* WMPhotosContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */; };
+		7D39DB6318B921EE0054DDC3 /* WMPhotosContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */; };
+		7D39DB6718B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB6518B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m */; };
+		7D39DB6818B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB6618B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -459,6 +464,14 @@
 		7D39DB5618B828630054DDC3 /* WMPsychoSocialGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPsychoSocialGroupViewController.h; sourceTree = "<group>"; };
 		7D39DB5718B828630054DDC3 /* WMPsychoSocialGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPsychoSocialGroupViewController.m; sourceTree = "<group>"; };
 		7D39DB5818B828630054DDC3 /* WMPsychoSocialGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPsychoSocialGroupViewController.xib; sourceTree = "<group>"; };
+		7D39DB5C18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationCoordinator_iPad.h; sourceTree = "<group>"; };
+		7D39DB5D18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationCoordinator_iPad.m; sourceTree = "<group>"; };
+		7D39DB5F18B921EE0054DDC3 /* WMPhotosContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPhotosContainerViewController.h; sourceTree = "<group>"; };
+		7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPhotosContainerViewController.m; sourceTree = "<group>"; };
+		7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPhotosContainerViewController.xib; sourceTree = "<group>"; };
+		7D39DB6418B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPhotosContainerViewController_iPad.h; sourceTree = "<group>"; };
+		7D39DB6518B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPhotosContainerViewController_iPad.m; sourceTree = "<group>"; };
+		7D39DB6618B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPhotosContainerViewController_iPad.xib; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -790,6 +803,15 @@
 			path = Instructions;
 			sourceTree = "<group>";
 		};
+		7D39DB5B18B90DBC0054DDC3 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				7D39DB5C18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.h */,
+				7D39DB5D18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 		7D9AA25818AE549300C1B698 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -1009,6 +1031,9 @@
 				7D39DB2C18B8230F0054DDC3 /* WMBradenScaleViewController.xib */,
 				7D39DB3918B824510054DDC3 /* WMBuildGroupViewController.h */,
 				7D39DB3A18B824510054DDC3 /* WMBuildGroupViewController.m */,
+				7D39DB4118B826620054DDC3 /* WMCarePlanGroupViewController.h */,
+				7D39DB4218B826620054DDC3 /* WMCarePlanGroupViewController.m */,
+				7D39DB4318B826620054DDC3 /* WMCarePlanGroupViewController.xib */,
 				7D39DAEE18B7E6130054DDC3 /* WMChooseStageViewController.h */,
 				7D39DAEF18B7E6130054DDC3 /* WMChooseStageViewController.m */,
 				7D39DAF018B7E6130054DDC3 /* WMChooseStageViewController.xib */,
@@ -1038,6 +1063,9 @@
 				5F67D22F18AD901600460C37 /* WMPatientDetailViewController.h */,
 				5F67D23018AD901600460C37 /* WMPatientDetailViewController.m */,
 				5F67D23118AD901600460C37 /* WMPatientDetailViewController.xib */,
+				7D39DB5118B828000054DDC3 /* WMPatientSummaryContainerViewController.h */,
+				7D39DB5218B828000054DDC3 /* WMPatientSummaryContainerViewController.m */,
+				7D39DB5318B828000054DDC3 /* WMPatientSummaryContainerViewController.xib */,
 				7D9AA28318B13B2D00C1B698 /* WMPatientTableViewController.h */,
 				7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */,
 				7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */,
@@ -1053,6 +1081,9 @@
 				7D39DB0218B7E8BE0054DDC3 /* WMPolicyEditorViewController.h */,
 				7D39DB0318B7E8BE0054DDC3 /* WMPolicyEditorViewController.m */,
 				7D39DB0418B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib */,
+				7D39DB5618B828630054DDC3 /* WMPsychoSocialGroupViewController.h */,
+				7D39DB5718B828630054DDC3 /* WMPsychoSocialGroupViewController.m */,
+				7D39DB5818B828630054DDC3 /* WMPsychoSocialGroupViewController.xib */,
 				7D39DB0F18B7FA750054DDC3 /* WMSelectWoundLocationViewController.h */,
 				7D39DB1018B7FA750054DDC3 /* WMSelectWoundLocationViewController.m */,
 				7D39DB1118B7FA750054DDC3 /* WMSelectWoundLocationViewController.xib */,
@@ -1071,30 +1102,24 @@
 				7D39DB3C18B825750054DDC3 /* WMSkinAssessmentGroupViewController.h */,
 				7D39DB3D18B825750054DDC3 /* WMSkinAssessmentGroupViewController.m */,
 				7D39DB3E18B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib */,
+				7D39DB4C18B827AB0054DDC3 /* WMTakePatientPhotoViewController.h */,
+				7D39DB4D18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m */,
+				7D39DB4E18B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib */,
 				7D39DAE918B7E5F80054DDC3 /* WMWoundDetailViewController.h */,
 				7D39DAEA18B7E5F80054DDC3 /* WMWoundDetailViewController.m */,
 				7D39DAEB18B7E5F80054DDC3 /* WMWoundDetailViewController.xib */,
+				7D39DB4718B827180054DDC3 /* WMWoundMeasurementGroupViewController.h */,
+				7D39DB4818B827180054DDC3 /* WMWoundMeasurementGroupViewController.m */,
+				7D39DB4918B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib */,
 				7D39DAF318B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.h */,
 				7D39DAF418B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m */,
 				7D39DAF518B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib */,
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
-				7D39DB4118B826620054DDC3 /* WMCarePlanGroupViewController.h */,
-				7D39DB4218B826620054DDC3 /* WMCarePlanGroupViewController.m */,
-				7D39DB4318B826620054DDC3 /* WMCarePlanGroupViewController.xib */,
-				7D39DB4718B827180054DDC3 /* WMWoundMeasurementGroupViewController.h */,
-				7D39DB4818B827180054DDC3 /* WMWoundMeasurementGroupViewController.m */,
-				7D39DB4918B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib */,
-				7D39DB4C18B827AB0054DDC3 /* WMTakePatientPhotoViewController.h */,
-				7D39DB4D18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m */,
-				7D39DB4E18B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib */,
-				7D39DB5118B828000054DDC3 /* WMPatientSummaryContainerViewController.h */,
-				7D39DB5218B828000054DDC3 /* WMPatientSummaryContainerViewController.m */,
-				7D39DB5318B828000054DDC3 /* WMPatientSummaryContainerViewController.xib */,
-				7D39DB5618B828630054DDC3 /* WMPsychoSocialGroupViewController.h */,
-				7D39DB5718B828630054DDC3 /* WMPsychoSocialGroupViewController.m */,
-				7D39DB5818B828630054DDC3 /* WMPsychoSocialGroupViewController.xib */,
+				7D39DB5F18B921EE0054DDC3 /* WMPhotosContainerViewController.h */,
+				7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */,
+				7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1243,6 +1268,7 @@
 		7DB206A118A7D6950004DC32 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7D39DB5B18B90DBC0054DDC3 /* Manager */,
 				7DB206A218A7D6950004DC32 /* Controller */,
 				7DB206A318A7D6950004DC32 /* Model */,
 				7DB206A418A7D6950004DC32 /* View */,
@@ -1256,6 +1282,9 @@
 				7DDFD68718B7C0B900041927 /* WMHomeBaseViewController_iPad.h */,
 				7DDFD68818B7C0B900041927 /* WMHomeBaseViewController_iPad.m */,
 				7DDFD68918B7C0B900041927 /* WMHomeBaseViewController_iPad.xib */,
+				7D39DB6418B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.h */,
+				7D39DB6518B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m */,
+				7D39DB6618B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1518,6 +1547,7 @@
 				5F67D1F818AC3BE000460C37 /* MedicationsDefinitions.plist in Resources */,
 				7D39DB1818B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib in Resources */,
 				5F67D20218AC3BE000460C37 /* WoundDescription.plist in Resources */,
+				7D39DB6818B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib in Resources */,
 				7DDAFAEF18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt in Resources */,
 				5F6DE54918B6FA4E00E87F7E /* WMIdListViewController.xib in Resources */,
 				7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */,
@@ -1534,6 +1564,7 @@
 				5F67D20318AC3BE000460C37 /* WoundMeasurement.plist in Resources */,
 				5F67D1FA18AC3BE000460C37 /* PsychoSocial.plist in Resources */,
 				5F67D23318AD901600460C37 /* WMPatientDetailViewController.xib in Resources */,
+				7D39DB6318B921EE0054DDC3 /* WMPhotosContainerViewController.xib in Resources */,
 				5F67D1B418AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib in Resources */,
 				5F67D21818AC4ACF00460C37 /* WMSimpleTableViewController.xib in Resources */,
 				7D39DB5518B828000054DDC3 /* WMPatientSummaryContainerViewController.xib in Resources */,
@@ -1652,6 +1683,7 @@
 				7D39DB0018B7E6560054DDC3 /* WMShareViewController.m in Sources */,
 				7D39DB5418B828000054DDC3 /* WMPatientSummaryContainerViewController.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
+				7D39DB6718B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m in Sources */,
 				7DB2062718A7D3400004DC32 /* WCMasterViewController.m in Sources */,
 				7D39DAD718B7CE6E0054DDC3 /* WMCompassView.m in Sources */,
 				7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */,
@@ -1665,6 +1697,7 @@
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
 				7D39DAE318B7DC120054DDC3 /* WMPolicyManager.m in Sources */,
 				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
+				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				7D39DB0918B7EFE30054DDC3 /* WMCarePlanTableViewCell.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
@@ -1740,6 +1773,7 @@
 				7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */,
 				7D9AA26E18AFD35F00C1B698 /* WMSeedDatabaseManager.m in Sources */,
 				7D39DB1C18B7FC350054DDC3 /* WMPlotConfigureGraphViewController.m in Sources */,
+				7D39DB6218B921EE0054DDC3 /* WMPhotosContainerViewController.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */,
 				7D39DAF118B7E6130054DDC3 /* WMChooseStageViewController.m in Sources */,

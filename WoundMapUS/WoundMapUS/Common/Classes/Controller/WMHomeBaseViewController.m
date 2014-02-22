@@ -21,9 +21,14 @@
 #import "WMPsychoSocialGroupViewController.h"
 #import "WMTakePatientPhotoViewController.h"
 #import "WMWoundMeasurementGroupViewController.h"
-#import "WMCarePlanTableViewCell.h"
+#import "WMWoundTreatmentGroupsViewController.h"
+#import "WMPhotosContainerViewController.h"
 #import "WMCarePlanGroupViewController.h"
 #import "WMPatientSummaryContainerViewController.h"
+#import "WMInstructionsViewController.h"
+#import "WMPlotSelectDatasetViewController.h"
+#import "WMShareViewController.h"
+#import "WMCarePlanTableViewCell.h"
 #import "WMPatient.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
@@ -31,11 +36,17 @@
 
 @interface WMHomeBaseViewController () <PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate, OverlayViewControllerDelegate, WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate>
 
-
+@property (readonly, nonatomic) WMChooseTrackViewController *chooseTrackViewController;
+@property (readonly, nonatomic) WMChooseStageViewController *chooseStageViewController;
 @property (readonly, nonatomic) WMPolicyEditorViewController *policyEditorViewController;
-@property (nonatomic) BOOL removingTrackAndOrStageCells;
 
-- (IBAction)editPoliciesAction:(id)sender;
+@property (nonatomic) BOOL removingTrackAndOrStageCells;
+@property (nonatomic) BOOL updatePatientWoundComponentsInProgress;
+@property (nonatomic) BOOL updateNavigationComponentsInProgress;
+
+- (void)updatePatientWoundComponents;
+- (void)updateWoundPhotoComponents;
+- (void)updateNavigationComponents;
 
 @end
 
@@ -54,10 +65,29 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
     self.title = @"Home";
+    // instructions button
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeInfoDark];
+    button.showsTouchWhenHighlighted = YES;
+    [button addTarget:self action:@selector(viewInstructionsAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.navigationItem.rightBarButtonItem = barButtonItem;
     // show table view separators all the way across
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // update UI
+    if (nil != self.patient && _navigationUIRequiresUpdate) {
+        _navigationUIRequiresUpdate = NO;
+        [self updateNavigationComponents];
+    }
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setToolbarHidden:NO animated:YES];
+    [self performSelector:delayedScrollTrackAndScopeOffTop withObject:nil afterDelay:1.0];
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,14 +105,11 @@
 
 - (void)delayedScrollTrackAndScopeOffTop
 {
-    NSInteger row = 2;
-    if (!self.shouldShowSelectTrackTableViewCell) {
-        --row;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(delayedScrollTrackAndScopeOffTop) object:nil];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:self.compassCell];
+    if (nil != indexPath) {
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
-    if (!self.shouldShowSelectStageTableViewCell) {
-        --row;
-    }
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 - (UITableViewCell *)carePlanCell
@@ -94,6 +121,355 @@
         _carePlanCell.imageView.image = [UIImage imageNamed:@"careplan_iPhone"];
     }
     return _carePlanCell;
+}
+
+- (void)setParentNavigationNode:(WMNavigationNode *)parentNavigationNode
+{
+    if (_parentNavigationNode == parentNavigationNode) {
+        return;
+    }
+    // else
+    _parentNavigationNode = parentNavigationNode;
+    // clear our cache
+    _navigationNodes = nil;
+    _navigationNodeControls = nil;
+    // update UI
+    if (nil == self.view.window) {
+        self.navigationUIRequiresUpdate = YES;
+    } else {
+        [self updateNavigationComponents];
+    }
+}
+
+- (NSString *)breadcrumbString
+{
+    if (nil == _parentNavigationNode) {
+        return @"WoundMap Home";
+    }
+    // else
+    NSMutableArray *nodeTitles = [[NSMutableArray alloc] initWithObjects:@"Home", nil];
+    WCNavigationNode *navigationNode = self.parentNavigationNode;
+    while (nil != navigationNode) {
+        [nodeTitles insertObject:navigationNode.displayTitle atIndex:1];
+        navigationNode = navigationNode.parentNode;
+    }
+    return [nodeTitles componentsJoinedByString:@" > "];
+}
+
+#pragma mark - Accessors
+
+- (WMNavigationNodeButton *)selectPatientButton
+{
+    return self.navigationPatientWoundContainerView.patientSelectNavigationNodeButton;
+}
+
+- (WMNavigationNodeButton *)editPatientButton
+{
+    return self.navigationPatientWoundContainerView.patientEditNavigationNodeButton;
+}
+
+- (WMNavigationNodeButton *)addPatientButton
+{
+    return self.navigationPatientWoundContainerView.patientAddNavigationNodeButton;
+}
+
+- (WMNavigationNodeButton *)selectWoundButton
+{
+    return self.navigationPatientWoundContainerView.woundSelectNavigationNodeButton;
+}
+
+- (WMNavigationNodeButton *)editWoundButton
+{
+    return self.navigationPatientWoundContainerView.woundEditNavigationNodeButton;
+}
+
+- (WMNavigationNodeButton *)addWoundButton
+{
+    return self.navigationPatientWoundContainerView.woundAddNavigationNodeButton;
+}
+
+#pragma mark - Toolbar
+
+- (void)updateToolbar
+{
+    [self setToolbarItems:self.toolbarItems];
+    self.reviewPhotosBarButtonItem.enabled = (self.wound.woundPhotosCount > 0 ? YES:NO);
+}
+
+- (NSArray *)toolbarItems
+{
+    if (nil == self.patient) {
+        return [NSArray array];
+    }
+    // else
+    NSMutableArray *toolbarItems = [NSMutableArray array];
+    UIBarButtonItem *barButtonItem = nil;
+    if (nil != self.wound) {
+        // spacer
+        [toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+        // browse photos
+        barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"photos"]
+                                                         style:UIBarButtonItemStylePlain
+                                                        target:self
+                                                        action:@selector(browsePhotosAction:)];
+        [toolbarItems addObject:barButtonItem];
+        self.reviewPhotosBarButtonItem = barButtonItem;
+        // spacer
+        [toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+        // view graphs
+        barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"graph"]
+                                                         style:UIBarButtonItemStylePlain
+                                                        target:self
+                                                        action:@selector(viewGraphsAction:)];
+        [toolbarItems addObject:barButtonItem];
+        self.reviewGraphsBarButtonItem = barButtonItem;
+    }
+    // spacer
+    [toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    // patient summary
+    barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"chart"]
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(viewPatientSummaryAction:)];
+    [toolbarItems addObject:barButtonItem];
+    self.patientSummaryBarButtonItem = barButtonItem;
+    // spacer
+    [toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
+    return toolbarItems;
+}
+
+#pragma mark - Model/View synchronization
+
+- (void)updateNavigationBar
+{
+    // nothing
+}
+
+- (void)updatePatientWoundComponents
+{
+    if (nil == self.view.window) {
+        _patientWoundUIRequiresUpdate = YES;
+        return;
+    }
+    // else
+    if (_updatePatientWoundComponentsInProgress) {
+        return;
+    }
+    _updatePatientWoundComponentsInProgress = YES;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updatePatientWoundComponents) object:nil];
+    [self.navigationPatientWoundContainerView updateContentForPatient];
+    
+    toolbar;
+    
+    [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
+    _updatePatientWoundComponentsInProgress = NO;
+}
+
+- (void)updateWoundPhotoComponents
+{
+    xxx;
+}
+
+- (void)updateNavigationComponents
+{
+    if (nil == self.view.window) {
+        _navigationUIRequiresUpdate = YES;
+        return;
+    }
+    // else
+    if (_updateNavigationComponentsInProgress) {
+        return;
+    }
+    _updateNavigationComponentsInProgress = YES;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateNavigationComponents) object:nil];
+    // else update table cells
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:self.trackTableViewCell];
+    if (nil != indexPath) {
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    }
+    indexPath = [self.tableView indexPathForCell:self.stageTableViewCell];
+    if (nil != indexPath) {
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    }
+    // update other UI
+    self.parentNavigationNode = nil;
+    self.breadcrumbLabel.text = self.breadcrumbString;
+    self.compassView.navigationNodeControls = self.navigationNodeControls;
+    [self.compassView animateNodesIntoActivePosition];
+    [self rotateCompassToRecommendedTask];
+    [self enableOrDisableNavigationNodes];
+    // update center of compass view
+    self.compassView.patientPhotoView.navigationNodeTitle = self.parentNavigationNode.displayTitle;
+    NSString *iconSuffix = (self.isIPadIdiom ? @"_iPad":@"_iPhone");
+    self.compassView.patientPhotoView.navigationNodeIconName = [self.parentNavigationNode.icon stringByAppendingString:iconSuffix];
+    self.compassView.actionState = (nil == self.parentNavigationNode ? CompassViewActionStateHome:CompassViewActionStateNone);
+    WMNavigationStage *navigationStage = self.navigationCoordinator.navigationStage;
+    NSInteger index = [[WMNavigationStage sortedStagesForTrack:self.navigationCoordinator.navigationTrack] indexOfObject:navigationStage];
+    self.stageSegmentedControl.selectedSegmentIndex = index;
+    _updateNavigationComponentsInProgress = NO;
+}
+
+- (void)rotateCompassToRecommendedTask
+{
+    if ([self.navigationNodes count] == 0) {
+        // nothing to rotate to
+        return;
+    }
+    // else
+    WMNavigationNode *navigationNode = [self.policyManager recommendedNavigationNodeForNavigationNodes:self.navigationNodes];
+    NSInteger index = [self.navigationNodes indexOfObject:navigationNode];
+    switch (index) {
+        case MapBaseRotationDirection_West:
+            [self.compassView rotateToWestAction:nil];
+            break;
+        case MapBaseRotationDirection_North:
+            [self.compassView rotateToNorthAction:nil];
+            break;
+        case MapBaseRotationDirection_East:
+            [self.compassView rotateToEastAction:nil];
+            break;
+        case MapBaseRotationDirection_South:
+            [self.compassView rotateToSouthAction:nil];
+            break;
+    }
+}
+
+- (void)enableOrDisableNavigationNodes
+{
+    // patient - patientNavigationNodes:select, edit, add
+    [self updatePatientNodeControls];
+    // wound - woundNavigationNodeControls:select, edit, add
+    [self updateWoundNodeControls];
+    // task nodes
+    [self updateTaskNodeControls];
+}
+
+// we need to adjust for
+//  1. No patients (no documents)
+//  2. Patients, but document not selected
+//  3. Patient selected, but only one patient
+//  4. Patient selected, 2 or more patients
+- (void)updatePatientNodeControls
+{
+    NSInteger patientCount = self.patientManager.patientCount;
+    // select
+    if (0 == patientCount) {
+        // no patients (documents)
+        self.selectPatientButton.enabled = NO;
+    } else if (nil == self.document) {
+        // at least one patient, but none selected
+        self.selectPatientButton.enabled = YES;
+    } else {
+        // document not nil, so patient is selected - at least one patient exists
+        self.selectPatientButton.enabled = (patientCount > 1 ? YES:NO);
+    }
+    // edit
+    self.editPatientButton.enabled = self.isDocumentOpen;
+}
+
+- (void)updateWoundNodeControls
+{
+    NSInteger woundCount = 0.0;
+    if (self.isDocumentOpen) {
+        woundCount = [WCWound woundCount:self.managedObjectContext persistentStore:nil];
+    }
+    // select
+    if (nil == self.wound) {
+        // we have wounds, but none selected
+        self.selectWoundButton.enabled = woundCount > 0;
+    } else if (woundCount < 2) {
+        // wound is selected and only 1
+        self.selectWoundButton.enabled = NO;
+    } else {
+        // wound selected and more than one
+        self.selectWoundButton.enabled = YES;
+    }
+    // edit
+    self.editWoundButton.enabled = (nil != self.wound);
+}
+
+- (WMNavigationNode *)addPatientNavigationNode
+{
+    return [WMNavigationNode addPatientNavigationNode:self.managedObjectContext
+                                      persistentStore:nil];
+}
+
+- (WMNavigationNode *)selectPatientNavigationNode
+{
+    return [WMNavigationNode selectPatientNavigationNode:self.managedObjectContext
+                                         persistentStore:nil];
+}
+
+- (WMNavigationNode *)editPatientNavigationNode
+{
+    return [WMNavigationNode editPatientNavigationNode:self.managedObjectContext
+                                       persistentStore:nil];
+}
+
+- (WMNavigationNode *)addWoundNavigationNode
+{
+    return [WMNavigationNode addWoundNavigationNode:self.managedObjectContext
+                                    persistentStore:nil];
+}
+
+- (WMNavigationNode *)selectWoundNavigationNode
+{
+    return [WMNavigationNode selectWoundNavigationNode:self.managedObjectContext
+                                       persistentStore:nil];
+}
+
+- (WMNavigationNode *)editWoundNavigationNode
+{
+    return [WCNavigationNode editWoundNavigationNode:self.managedObjectContext
+                                     persistentStore:nil];
+}
+
+#pragma mark - Notification handlers
+
+// network synch with server has finished - subclasses may need to override
+- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+{
+    [super handleStackMobNetworkSynchFinished:notification];
+    // update UI components
+    [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
+    [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
+}
+
+- (void)handlePatientChanged:(WMPatient *)patient
+{
+    [super handlePatientChanged:patient];
+    [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
+}
+
+- (void)handleWoundChanged:(WMWound *)wound
+{
+    [super handleWoundChanged:wound];
+    [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
+}
+
+- (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto
+{
+    [super handleWoundPhotoChanged:woundPhoto];
+    [self performSelector:@selector(updateWoundPhotoComponents) withObject:nil afterDelay:0.0];
+}
+
+// patient navigationTrack changed
+- (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack
+{
+    [super handleNavigationTrackChanged:navigationTrack];
+    [self performSelector:@selector(updateToolbar) withObject:nil afterDelay:0.0];
+    [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
+}
+
+// patient navigationStage changed
+- (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage
+{
+    [super handleNavigationStageChanged:navigationStage];
+    [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }
 
 #pragma mark - Actions
@@ -178,25 +554,27 @@
 - (IBAction)selectStageAction:(id)sender
 {
     UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
+    WMNavigationTrack *navigationTrack = self.navigationCoordinator.navigationTrack;
+    NSManagedObjectContext *managedobjectContext = [navigationTrack managedObjectContext];
     switch (segmentedControl.selectedSegmentIndex) {
         case 0: {
             // initial (admit)
-            self.navigationCoordinator.navigationStage = [WCNavigationStage initialStageForTrack:self.navigationCoordinator.navigationTrack
-                                                                            managedObjectContext:self.document.managedObjectContext
+            self.navigationCoordinator.navigationStage = [WMNavigationStage initialStageForTrack:navigationTrack
+                                                                            managedObjectContext:managedObjectContext
                                                                                  persistentStore:nil];
             break;
         }
         case 1: {
             // follow-up
-            self.navigationCoordinator.navigationStage = [WCNavigationStage followupStageForTrack:self.navigationCoordinator.navigationTrack
-                                                                             managedObjectContext:self.document.managedObjectContext
+            self.navigationCoordinator.navigationStage = [WCNavigationStage followupStageForTrack:navigationTrack
+                                                                             managedObjectContext:managedObjectContext
                                                                                   persistentStore:nil];
             break;
         }
         case 2: {
             // discharge
-            self.navigationCoordinator.navigationStage = [WCNavigationStage dischargeStageForTrack:self.navigationCoordinator.navigationTrack
-                                                                              managedObjectContext:self.document.managedObjectContext
+            self.navigationCoordinator.navigationStage = [WCNavigationStage dischargeStageForTrack:navigationTrack
+                                                                              managedObjectContext:managedObjectContext
                                                                                    persistentStore:nil];
             break;
         }
@@ -418,6 +796,150 @@
     }];
 }
 
+#pragma mark - Navigation
+
+- (void)navigateToNavigationTracks
+{
+    [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
+}
+
+#pragma mark - View Controllers
+
+- (WMChooseTrackViewController *)chooseTrackViewController
+{
+    WMChooseTrackViewController *chooseTrackViewController = [[WMChooseTrackViewController alloc] initWithNibName:@"WMChooseTrackViewController" bundle:nil];
+    chooseTrackViewController.delegate = self;
+    return chooseTrackViewController;
+}
+
+- (WMChooseStageViewController *)chooseStageViewController
+{
+    WMChooseStageViewController *chooseStageViewController = [[WMChooseStageViewController alloc] initWithNibName:@"WMChooseStageViewController" bundle:nil];
+    chooseStageViewController.delegate = self;
+    return chooseStageViewController;
+}
+
+- (WMPatientTableViewController *)patientTableViewController
+{
+    WMPatientTableViewController *patientTableViewController = [[WMPatientTableViewController alloc] initWithNibName:@"WMPatientTableViewController" bundle:nil];
+    patientTableViewController.delegate = self;
+    return patientTableViewController;
+}
+
+- (WMPatientDetailViewController *)patientDetailViewController
+{
+    WMPatientDetailViewController *patientDetailViewController = [[WMPatientDetailViewController alloc] initWithNibName:@"WMPatientDetailViewController" bundle:nil];
+    patientDetailViewController.delegate = self;
+    return patientDetailViewController;
+}
+
+- (WMSelectWoundViewController *)selectWoundViewController
+{
+    WMSelectWoundViewController *selectWoundViewController = [[WMSelectWoundViewController alloc] initWithNibName:@"WMSelectWoundViewController" bundle:nil];
+    selectWoundViewController.delegate = self;
+    return selectWoundViewController;
+}
+
+- (WMWoundDetailViewController *)woundDetailViewController
+{
+    WMWoundDetailViewController *woundDetailViewController = [[WMWoundDetailViewController alloc] initWithNibName:@"WMWoundDetailViewController" bundle:nil];
+    woundDetailViewController.delegate = self;
+    return woundDetailViewController;
+}
+
+- (WMBradenScaleViewController *)bradenScaleViewController
+{
+    WMBradenScaleViewController *bradenScaleViewController = [[WMBradenScaleViewController alloc] initWithNibName:@"WMBradenScaleViewController" bundle:nil];
+    bradenScaleViewController.delegate = self;
+    return bradenScaleViewController;
+}
+
+- (WMMedicationGroupViewController *)medicationsViewController
+{
+    WMMedicationGroupViewController *medicationsViewController = [[WMMedicationGroupViewController alloc] initWithNibName:@"WMMedicationGroupViewController" bundle:nil];
+    medicationsViewController.delegate = self;
+    return medicationsViewController;
+}
+
+- (WMDevicesViewController *)devicesViewController
+{
+    WMDevicesViewController *devicesViewController = [[WMDevicesViewController alloc] initWithNibName:@"WMDevicesViewController" bundle:nil];
+    devicesViewController.delegate = self;
+    return devicesViewController;
+}
+
+- (WMPsychoSocialGroupViewController *)psychoSocialGroupViewController
+{
+    WMPsychoSocialGroupViewController *psychoSocialGroupViewController = [[WMPsychoSocialGroupViewController alloc] initWithNibName:@"WMPsychoSocialGroupViewController" bundle:nil];
+    psychoSocialGroupViewController.delegate = self;
+    return psychoSocialGroupViewController;
+}
+
+- (WMSkinAssessmentGroupViewController *)skinAssessmentGroupViewController
+{
+    WMSkinAssessmentGroupViewController *skinAssessmentGroupViewController = [[WMSkinAssessmentGroupViewController alloc] initWithNibName:@"WMSkinAssessmentGroupViewController" bundle:nil];
+    skinAssessmentGroupViewController.delegate = self;
+    return skinAssessmentGroupViewController;
+}
+
+- (WMCarePlanGroupViewController *)carePlanGroupViewController
+{
+    WMCarePlanGroupViewController *carePlanGroupViewController = [[WMCarePlanGroupViewController alloc] initWithNibName:@"WMCarePlanGroupViewController" bundle:nil];
+    carePlanGroupViewController.delegate = self;
+    return carePlanGroupViewController;
+}
+
+- (WMInstructionsViewController *)instructionsViewController
+{
+    return [[WMInstructionsViewController alloc] initWithNibName:@"WMInstructionsViewController" bundle:nil];
+}
+
+- (WMPhotosContainerViewController *)photosContainerViewController
+{
+}
+
+- (WMPlotSelectDatasetViewController *)plotSelectDatasetViewController
+{
+    WMPlotSelectDatasetViewController *plotSelectDatasetViewController = [[WMPlotSelectDatasetViewController alloc] initWithNibName:@"WMPlotSelectDatasetViewController" bundle:nil];
+    plotSelectDatasetViewController.delegate = self;
+    return plotSelectDatasetViewController;
+}
+
+- (WMPatientSummaryContainerViewController *)patientSummaryContainerViewController
+{
+    WMPatientSummaryContainerViewController *patientSummaryContainerViewController = [[WMPatientSummaryContainerViewController alloc] initWithNibName:@"WMPatientSummaryContainerViewController" bundle:nil];
+    patientSummaryContainerViewController.delegate = self;
+    return patientSummaryContainerViewController;
+}
+
+- (WMShareViewController *)shareViewController
+{
+    WMShareViewController *shareViewController = [[WMShareViewController alloc] initWithNibName:@"WMShareViewController" bundle:nil];
+    shareViewController.delegate = self;
+    return shareViewController;
+}
+
+- (WMWoundTreatmentGroupsViewController *)woundTreatmentGroupsViewController
+{
+    WMWoundTreatmentGroupsViewController *woundTreatmentGroupsViewController = [[WMWoundTreatmentGroupsViewController alloc] initWithNibName:@"WMWoundTreatmentGroupsViewController" bundle:nil];
+    woundTreatmentGroupsViewController.delegate = self;
+    return woundTreatmentGroupsViewController;
+}
+
+- (WMWoundMeasurementGroupViewController *)woundMeasurementGroupViewController
+{
+    WMWoundMeasurementGroupViewController *woundMeasurementGroupViewController = [[WMWoundMeasurementGroupViewController alloc] initWithNibName:@"WMWoundMeasurementGroupViewController" bundle:nil];
+    woundMeasurementGroupViewController.delegate = self;
+    return woundMeasurementGroupViewController;
+}
+
+- (WMTakePatientPhotoViewController *)takePatientPhotoViewController
+{
+    WMTakePatientPhotoViewController *takePatientPhotoViewController = [[WMTakePatientPhotoViewController alloc] initWithNibName:@"WMTakePatientPhotoViewController" bundle:nil];
+    takePatientPhotoViewController.delegate = self;
+    return takePatientPhotoViewController;
+}
+
 #pragma mark - BaseViewController
 
 - (void)registerForNotifications
@@ -493,14 +1015,15 @@
 
 #pragma mark - ChooseTrackDelegate
 
-- (void)chooseTrackViewController:(ChooseTrackViewController *)viewController didChooseNavigationTrack:(WCNavigationTrack *)navigationTrack
+- (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {
-    self.navigationCoordinator.navigationTrack = navigationTrack;
+    self.patient.track = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    
 }
 
-- (void)chooseTrackViewControllerDidCancel:(ChooseTrackViewController *)viewController
+- (void)chooseTrackViewControllerDidCancel:(WMChooseTrackViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
@@ -1258,7 +1781,7 @@
     if (_removingTrackAndOrStageCells) {
         _removingTrackAndOrStageCells = NO;
         // we removed Track/Stage
-        [self delayedScrollTrackAndScopeOffTop];
+        [self performSelector:delayedScrollTrackAndScopeOffTop withObject:nil afterDelay:0.0];
     }
 }
 

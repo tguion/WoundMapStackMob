@@ -9,7 +9,7 @@
 #import "StackMob.h"
 
 @class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager, WMPatientManager;
-@class WMPatient;
+@class WMPatient, WMWound, WMWoundPhoto, WMNavigationTrack, WMNavigationStage;
 @class WMProgressViewHUD;
 
 @interface WMBaseViewController : UITableViewController <NSFetchedResultsControllerDelegate>
@@ -34,6 +34,8 @@
 @property (strong, nonatomic) NSMutableArray *persistantObservers;          // observers that do no go away when the view controller disappears
 
 @property (readonly, nonatomic) WMPatient *patient;                         // active patient
+@property (readonly, nonatomic) WMWound *wound;                             // active wound
+@property (readonly, nonatomic) WMWoundPhoto *woundPhoto;                   // active woundPhoto
 
 - (void)clearViewReferences NS_REQUIRES_SUPER;                              // clear all references to views
 - (void)clearDataCache NS_REQUIRES_SUPER;                                   // clear all cached data for new or nil document
@@ -67,6 +69,11 @@
 - (void)showProgressViewWithMessage:(NSString *)message;
 - (void)hideProgressView;
 
+- (void)handlePatientChanged:(WMPatient *)patient NS_REQUIRES_SUPER;
+- (void)handleWoundChanged:(WMWound *)wound NS_REQUIRES_SUPER;
+- (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto NS_REQUIRES_SUPER;
 - (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification NS_REQUIRES_SUPER;
+- (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack NS_REQUIRES_SUPER;
+- (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 
 @end

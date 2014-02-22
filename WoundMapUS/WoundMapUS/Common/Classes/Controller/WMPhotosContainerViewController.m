@@ -1,19 +1,18 @@
 //
-//  WMHomeBaseViewController_iPad.m
+//  WMPhotosContainerViewController.m
 //  WoundMapUS
 //
-//  Created by Todd Guion on 2/21/14.
+//  Created by Todd Guion on 2/22/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMHomeBaseViewController_iPad.h"
-#import "WMPhotosContainerViewController_iPad.h"
+#import "WMPhotosContainerViewController.h"
 
-@interface WMHomeBaseViewController_iPad ()
+@interface WMPhotosContainerViewController ()
 
 @end
 
-@implementation WMHomeBaseViewController_iPad
+@implementation WMPhotosContainerViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,13 +33,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - View Controllers
-
-- (WMPhotosContainerViewController *)photosContainerViewController
-{
-    return [[WMPhotosContainerViewController_iPad alloc] initWithNibName:@"WMPhotosContainerViewController_iPad" bundle:nil];
 }
 
 @end

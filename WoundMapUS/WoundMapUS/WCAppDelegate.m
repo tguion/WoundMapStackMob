@@ -9,6 +9,13 @@
 #import "WCAppDelegate.h"
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMUserDefaultsManager.h"
+#import "WMNavigationCoordinator.h"
+
+@interface WCAppDelegate ()
+
+@property (nonatomic, strong, readwrite) WMNavigationCoordinator *navigationCoordinator;
+
+@end
 
 @implementation WCAppDelegate {
     CoreDataHelper *cdh;
@@ -109,6 +116,21 @@
     _stackMobUsername = stackMobUsername;
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     userDefaultsManager.lastTeamName = stackMobUsername;
+}
+
+#pragma mark - Managers
+
+- (WMNavigationCoordinator *)navigationCoordinator
+{
+    if (nil == _navigationCoordinator) {
+        BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom];
+        if (isIPadIdiom) {
+            _navigationCoordinator = [WMNavigationCoordinator_iPad sharedInstance];
+        } else {
+            _navigationCoordinator = [WMNavigationCoordinator sharedInstance];
+        }
+    }
+    return  _navigationCoordinator;
 }
 
 #pragma mark - UINavigationControllerDelegate
