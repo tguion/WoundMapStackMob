@@ -12,6 +12,7 @@
 #import "WMPlotSelectDatasetViewController.h"
 #import "WMShareViewController.h"
 #import "WMCompassView.h"
+#import "TakePhotoProtocols.h"
 
 @class WMNavigationNode;
 @class WMPatientTableViewController, WMPatientDetailViewController, WMSelectWoundViewController, WMWoundDetailViewController;
@@ -19,7 +20,7 @@
 @class WMCarePlanGroupViewController, WMWoundTreatmentGroupsViewController, WMWoundMeasurementGroupViewController, WMTakePatientPhotoViewController;
 @class WMPhotosContainerViewController, WMPlotSelectDatasetViewController, WMPatientSummaryContainerViewController, WMShareViewController;
 
-@interface WMHomeBaseViewController : WMBaseViewController
+@interface WMHomeBaseViewController : WMBaseViewController <OverlayViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet WMNavigationPatientWoundContainerView *navigationPatientWoundContainerView;
 @property (strong, nonatomic) IBOutlet UITableViewCell *trackTableViewCell;
@@ -91,5 +92,44 @@
 
 - (IBAction)homeAction:(id)sender;
 - (IBAction)editPoliciesAction:(id)sender;
+- (IBAction)viewInstructionsAction:(id)sender;
+
+- (IBAction)selectPatientAction:(id)sender;
+- (IBAction)editPatientAction:(id)sender;
+- (IBAction)addPatientAction:(id)sender;
+
+- (IBAction)selectWoundAction:(id)sender;
+- (IBAction)editWoundAction:(id)sender;
+- (IBAction)addWoundAction:(id)sender;
+
+- (IBAction)takePatientPhotoAction:(id)sender;
+
+- (IBAction)riskAssessmentAction:(id)sender;
+
+- (void)navigateToNavigationTracks;
+
+- (void)navigateToPatientDetail:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToPatientDetailViewControllerForNewPatient:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToSelectPatient:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToWoundDetail:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToWoundDetailViewControllerForNewWound:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToSelectWound:(WMNavigationNodeButton *)navigationNodeButton;
+
+- (void)navigateToBradenScaleAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToSkinAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToPhoto:(WMNavigationNodeButton *)navigationNode;
+- (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToWoundAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToWoundTreatment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToCarePlan;
+- (void)navigateToBrowsePhotos:(id)sender;
+- (void)navigateToViewGraphs:(id)sender;
+- (void)navigateToPatientSummary:(id)sender;
+- (void)navigateToShare:(id)sender;
+
 
 @end

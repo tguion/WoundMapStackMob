@@ -14,6 +14,7 @@
 #import "WMNavigationStage.h"
 #import "CoreDataHelper.h"
 #import "WMPatientManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -87,12 +88,12 @@ typedef enum {
 
 - (WMPatient *)patient
 {
-    return self.appDelegate.patient;
+    return self.appDelegate.navigationCoordinator.patient;
 }
 
 - (WMWound *)wound
 {
-    return self.appDelegate.wound;
+    return self.appDelegate.navigationCoordinator.wound;
 }
 
 - (CGFloat)patientWoundContainerViewWidth

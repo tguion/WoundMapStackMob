@@ -69,6 +69,7 @@
 - (void)showProgressViewWithMessage:(NSString *)message;
 - (void)hideProgressView;
 
+- (void)handleApplicationWillResignActiveNotification NS_REQUIRES_SUPER;
 - (void)handlePatientChanged:(WMPatient *)patient NS_REQUIRES_SUPER;
 - (void)handleWoundChanged:(WMWound *)wound NS_REQUIRES_SUPER;
 - (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto NS_REQUIRES_SUPER;

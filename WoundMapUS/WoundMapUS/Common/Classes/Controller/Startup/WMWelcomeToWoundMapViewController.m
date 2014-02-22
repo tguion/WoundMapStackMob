@@ -26,6 +26,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
 #import "WMSeedDatabaseManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -173,7 +174,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         return NO;
     }
     // else
-    return (nil != self.appDelegate.patient);
+    return (nil != self.appDelegate.navigationCoordinator.patient);
 }
 
 - (WMSignInViewController *)signInViewController
@@ -566,7 +567,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         [activityIndicatorView startAnimating];
                         cell.accessoryView = activityIndicatorView;
                     } else {
-                        WMPatient *patient = self.appDelegate.patient;
+                        WMPatient *patient = self.appDelegate.navigationCoordinator.patient;
                         WMPatientManager *patientManager = self.patientManager;
                         NSInteger patientCount = patientManager.patientCount;
                         if (nil == patient) {
@@ -585,7 +586,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                 patient = patientManager.lastModifiedActivePatient;
                                 value = patient.lastNameFirstName;
                                 image = [UIImage imageNamed:@"ui_checkmark"];
-                                self.appDelegate.patient = patient;
+                                self.appDelegate.navigationCoordinator.patient = patient;
                                 self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
                             }
                         } else {
@@ -740,7 +741,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     // clear memory
     [viewController clearAllReferences];
     // update our reference to current patient
-    self.appDelegate.patient = patient;
+    self.appDelegate.navigationCoordinator.patient = patient;
     if (self.isIPadIdiom) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -807,7 +808,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     // update our reference to current patient
     if (nil != patient) {
-        self.appDelegate.patient = patient;
+        self.appDelegate.navigationCoordinator.patient = patient;
     }
     [self.navigationController popViewControllerAnimated:YES];
     [self.tableView reloadData];

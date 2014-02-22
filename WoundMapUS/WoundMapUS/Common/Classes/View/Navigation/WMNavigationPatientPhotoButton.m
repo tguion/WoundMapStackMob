@@ -10,6 +10,7 @@
 #import "WCPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMPhotoManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 
 #define kNavigationImageInset 16.0
@@ -45,7 +46,7 @@
 
 - (WMPatient *)patient
 {
-    return self.appDelegate.patient;
+    return self.appDelegate.navigationCoordinator.patient;
 }
 
 - (NSDictionary *)navigationNodeTitleAttributes

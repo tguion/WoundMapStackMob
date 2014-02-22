@@ -11,6 +11,7 @@
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMNavigationPatientPhotoButton.h"
+#import "WMNavigationCoordinator.h"
 #import "WMPolicyManager.h"
 #import "WMDesignUtilities.h"
 #import "WCAppDelegate.h"
@@ -97,12 +98,12 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 - (WMPatient *)patient
 {
-    return self.appDelegate.patient;
+    return self.appDelegate.navigationCoordinator.patient;
 }
 
 - (WMWound *)wound
 {
-    return self.appDelegate.wound;
+    return self.appDelegate.navigationCoordinator.wound;
 }
 
 - (BOOL)hasNavigationNodeControls

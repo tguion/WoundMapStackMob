@@ -19,6 +19,7 @@
 #import "WMNavigationStage.h"
 #import "WMUtilities.h"
 #import "WMUserDefaultsManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 #import "StackMob.h"
 
@@ -334,7 +335,7 @@
 
 - (void)setPatient:(WMPatient *)patient
 {
-    self.appDelegate.patient = patient;
+    self.appDelegate.navigationCoordinator.patient = patient;
 }
 
 - (WMPerson *)person

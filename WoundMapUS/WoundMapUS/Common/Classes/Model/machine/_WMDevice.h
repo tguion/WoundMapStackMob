@@ -1,10 +1,10 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMWoundType.h instead.
+// Make changes to WMDevice.h instead.
 
 #import <CoreData/CoreData.h>
 
 
-extern const struct WMWoundTypeAttributes {
+extern const struct WMDeviceAttributes {
 	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *definition;
 	__unsafe_unretained NSString *flags;
@@ -13,32 +13,24 @@ extern const struct WMWoundTypeAttributes {
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *options;
 	__unsafe_unretained NSString *placeHolder;
-	__unsafe_unretained NSString *sectionTitle;
 	__unsafe_unretained NSString *snomedCID;
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *valueTypeCode;
-	__unsafe_unretained NSString *wmwoundtype_id;
-	__unsafe_unretained NSString *woundTypeCode;
-} WMWoundTypeAttributes;
+	__unsafe_unretained NSString *wmdevice_id;
+} WMDeviceAttributes;
 
-extern const struct WMWoundTypeRelationships {
-	__unsafe_unretained NSString *children;
-	__unsafe_unretained NSString *deviceCategories;
-	__unsafe_unretained NSString *medicationCategories;
-	__unsafe_unretained NSString *parent;
-	__unsafe_unretained NSString *wounds;
-} WMWoundTypeRelationships;
+extern const struct WMDeviceRelationships {
+	__unsafe_unretained NSString *category;
+	__unsafe_unretained NSString *values;
+} WMDeviceRelationships;
 
-extern const struct WMWoundTypeFetchedProperties {
-} WMWoundTypeFetchedProperties;
+extern const struct WMDeviceFetchedProperties {
+} WMDeviceFetchedProperties;
 
-@class WMWoundType;
 @class WMDeviceCategory;
-@class WMMedicationCategory;
-@class WMWoundType;
-@class WMWound;
+@class WMDeviceValue;
 
 
 
@@ -55,16 +47,14 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
-
-
-@interface WMWoundTypeID : NSManagedObjectID {}
+@interface WMDeviceID : NSManagedObjectID {}
 @end
 
-@interface _WMWoundType : NSManagedObject {}
+@interface _WMDevice : NSManagedObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (WMWoundTypeID*)objectID;
+- (WMDeviceID*)objectID;
 
 
 
@@ -154,16 +144,6 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* sectionTitle;
-
-
-
-//- (BOOL)validateSectionTitle:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSNumber* snomedCID;
 
 
@@ -226,61 +206,26 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmwoundtype_id;
+@property (nonatomic, strong) NSString* wmdevice_id;
 
 
 
-//- (BOOL)validateWmwoundtype_id:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* woundTypeCode;
-
-
-
-@property int16_t woundTypeCodeValue;
-- (int16_t)woundTypeCodeValue;
-- (void)setWoundTypeCodeValue:(int16_t)value_;
-
-//- (BOOL)validateWoundTypeCode:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateWmdevice_id:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSSet *children;
+@property (nonatomic, strong) WMDeviceCategory *category;
 
-- (NSMutableSet*)childrenSet;
-
-
-
-
-@property (nonatomic, strong) NSSet *deviceCategories;
-
-- (NSMutableSet*)deviceCategoriesSet;
+//- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, strong) NSSet *medicationCategories;
+@property (nonatomic, strong) NSSet *values;
 
-- (NSMutableSet*)medicationCategoriesSet;
-
-
-
-
-@property (nonatomic, strong) WMWoundType *parent;
-
-//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
-
-
-
-
-@property (nonatomic, strong) NSSet *wounds;
-
-- (NSMutableSet*)woundsSet;
+- (NSMutableSet*)valuesSet;
 
 
 
@@ -288,31 +233,16 @@ extern const struct WMWoundTypeFetchedProperties {
 
 @end
 
-@interface _WMWoundType (CoreDataGeneratedAccessors)
+@interface _WMDevice (CoreDataGeneratedAccessors)
 
-- (void)addChildren:(NSSet*)value_;
-- (void)removeChildren:(NSSet*)value_;
-- (void)addChildrenObject:(WMWoundType*)value_;
-- (void)removeChildrenObject:(WMWoundType*)value_;
-
-- (void)addDeviceCategories:(NSSet*)value_;
-- (void)removeDeviceCategories:(NSSet*)value_;
-- (void)addDeviceCategoriesObject:(WMDeviceCategory*)value_;
-- (void)removeDeviceCategoriesObject:(WMDeviceCategory*)value_;
-
-- (void)addMedicationCategories:(NSSet*)value_;
-- (void)removeMedicationCategories:(NSSet*)value_;
-- (void)addMedicationCategoriesObject:(WMMedicationCategory*)value_;
-- (void)removeMedicationCategoriesObject:(WMMedicationCategory*)value_;
-
-- (void)addWounds:(NSSet*)value_;
-- (void)removeWounds:(NSSet*)value_;
-- (void)addWoundsObject:(WMWound*)value_;
-- (void)removeWoundsObject:(WMWound*)value_;
+- (void)addValues:(NSSet*)value_;
+- (void)removeValues:(NSSet*)value_;
+- (void)addValuesObject:(WMDeviceValue*)value_;
+- (void)removeValuesObject:(WMDeviceValue*)value_;
 
 @end
 
-@interface _WMWoundType (CoreDataGeneratedPrimitiveAccessors)
+@interface _WMDevice (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSDate*)primitiveCreateddate;
@@ -366,12 +296,6 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
-- (NSString*)primitiveSectionTitle;
-- (void)setPrimitiveSectionTitle:(NSString*)value;
-
-
-
-
 - (NSNumber*)primitiveSnomedCID;
 - (void)setPrimitiveSnomedCID:(NSNumber*)value;
 
@@ -411,44 +335,20 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
-- (NSString*)primitiveWmwoundtype_id;
-- (void)setPrimitiveWmwoundtype_id:(NSString*)value;
-
-
-
-
-- (NSNumber*)primitiveWoundTypeCode;
-- (void)setPrimitiveWoundTypeCode:(NSNumber*)value;
-
-- (int16_t)primitiveWoundTypeCodeValue;
-- (void)setPrimitiveWoundTypeCodeValue:(int16_t)value_;
+- (NSString*)primitiveWmdevice_id;
+- (void)setPrimitiveWmdevice_id:(NSString*)value;
 
 
 
 
 
-- (NSMutableSet*)primitiveChildren;
-- (void)setPrimitiveChildren:(NSMutableSet*)value;
+- (WMDeviceCategory*)primitiveCategory;
+- (void)setPrimitiveCategory:(WMDeviceCategory*)value;
 
 
 
-- (NSMutableSet*)primitiveDeviceCategories;
-- (void)setPrimitiveDeviceCategories:(NSMutableSet*)value;
-
-
-
-- (NSMutableSet*)primitiveMedicationCategories;
-- (void)setPrimitiveMedicationCategories:(NSMutableSet*)value;
-
-
-
-- (WMWoundType*)primitiveParent;
-- (void)setPrimitiveParent:(WMWoundType*)value;
-
-
-
-- (NSMutableSet*)primitiveWounds;
-- (void)setPrimitiveWounds:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveValues;
+- (void)setPrimitiveValues:(NSMutableSet*)value;
 
 
 @end

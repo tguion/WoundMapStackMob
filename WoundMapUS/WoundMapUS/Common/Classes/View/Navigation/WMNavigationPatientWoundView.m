@@ -12,7 +12,7 @@
 #import "WMWound.h"
 //#import "WMWoundLocation.h"
 #import "WMNavigationStage.h"
-//#import "NavigationCoordinator.h"
+#import "WMNavigationCoordinator.h"
 #import "CoreDataHelper.h"
 #import "WMDesignUtilities.h"
 #import "WCAppDelegate.h"
@@ -49,12 +49,12 @@
 
 - (WMPatient *)patient
 {
-    return self.appDelegate.patient;
+    return self.appDelegate.navigationCoordinator.patient;
 }
 
 - (WMWound *)wound
 {
-    return self.appDelegate.wound;
+    return self.appDelegate.navigationCoordinator.wound;
 }
 
 - (NSDictionary *)patientTextAttributes

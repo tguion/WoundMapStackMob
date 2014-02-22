@@ -32,9 +32,9 @@
 #import "WMPatient.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
-#import "TakePhotoProtocols.h"
+#import "WCAppDelegate.h"
 
-@interface WMHomeBaseViewController () <PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate, OverlayViewControllerDelegate, WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate>
+@interface WMHomeBaseViewController () <PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate,WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate>
 
 @property (readonly, nonatomic) WMChooseTrackViewController *chooseTrackViewController;
 @property (readonly, nonatomic) WMChooseStageViewController *chooseStageViewController;
@@ -474,25 +474,17 @@
 
 #pragma mark - Actions
 
-- (IBAction)selectInitialStageAction:(id)sender
+- (IBAction)homeAction:(id)sender
 {
-    self.patient.stage = [WCNavigationStage initialStageForTrack:self.patient.stage.track
-                                            managedObjectContext:self.managedObjectContext
-                                                 persistentStore:nil];
+    self.parentNavigationNode = self.parentNavigationNode.parentNode;
 }
 
-- (IBAction)selectFollowupStageAction:(id)sender
+- (IBAction)editPoliciesAction:(id)sender
 {
-    self.patient.stage = [WCNavigationStage followupStageForTrack:self.patient.stage.track
-                                             managedObjectContext:self.managedObjectContext
-                                                  persistentStore:nil];
-}
-
-- (IBAction)selectDischargeStageAction:(id)sender
-{
-    self.patient.stage = [WCNavigationStage dischargeStageForTrack:self.patient.stage.track
-                                              managedObjectContext:self.managedObjectContext
-                                                   persistentStore:nil];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.policyEditorViewController];
+    [self presentViewController:navigationController animated:YES completion:^{
+        // nothing
+    }];
 }
 
 - (IBAction)selectPatientAction:(id)sender
@@ -521,7 +513,7 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
-    [self navigateToSelectWound:navigationNodeButton];
+    [self navigateToWoundDetail:navigationNodeButton];
 }
 
 - (IBAction)editWoundAction:(id)sender
@@ -584,7 +576,7 @@
 - (IBAction)riskAssessmentAction:(id)sender
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WCNavigationNode *navigationNode = navigationNodeButton.navigationNode;
     if ([navigationNode.subnodes count] > 0) {
         // this should have subnodes, just being anal
@@ -592,15 +584,10 @@
     }
 }
 
-- (IBAction)homeAction:(id)sender
-{
-    self.parentNavigationNode = self.parentNavigationNode.parentNode;
-}
-
 - (IBAction)bradenScaleAction:(id)sender
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     if ([navigationNodeButton.navigationNode requiresIAPForWoundType:self.wound.woundType]) {
         // show IAP purchase view controller with self as delegate
@@ -615,7 +602,7 @@
 - (IBAction)medicationAssessmentAction:(id)sender
 {
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"sender:%@ must be NavigationNodeButton", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     if (nil != navigationNodeButton.navigationNode.iapIdentifier) {
         BOOL proceed = [self presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier successSelector:@selector(navigateToMedicationAssessment:) withObject:navigationNodeButton];
@@ -630,7 +617,7 @@
 - (IBAction)deviceAssessmentAction:(id)sender
 {
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToDeviceAssessment:navigationNodeButton];
 }
@@ -638,7 +625,7 @@
 - (IBAction)psycoSocialAssessmentAction:(id)sender
 {
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToPsychoSocialAssessment:navigationNodeButton];
 }
@@ -646,7 +633,7 @@
 - (IBAction)skinAssessmentAction:(id)sender
 {
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [self.policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
 }
@@ -654,7 +641,7 @@
 - (IBAction)photoAction:(id)sender
 {
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    WMNavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WCNavigationNode *navigationNode = navigationNodeButton.navigationNode;
     [self navigateToPhoto:navigationNode];
 }
@@ -662,7 +649,7 @@
 - (IBAction)handleSwipeNavigationNodeControl:(UISwipeGestureRecognizer *)gestureRecognizer
 {
     NavigationNodeButton *button = (NavigationNodeButton *)gestureRecognizer.view;
-    WCNavigationNode *navigationNode = button.navigationNode;
+    WMNavigationNode *navigationNode = button.navigationNode;
     NavigationNodeIdentifier navigationNodeIdentifier = navigationNode.navigationNodeIdentifier;
     switch (navigationNodeIdentifier) {
         case kTakePhotoNode: {
@@ -801,6 +788,31 @@
 - (void)navigateToNavigationTracks
 {
     [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
+}
+
+- (void)navigateToPhoto:(WMNavigationNode *)navigationNode
+{
+    self.parentNavigationNode = navigationNode;
+}
+
+- (void)navigateToMeasurePhoto
+{
+    [self.navigationCoordinator viewController:self beginMeasurementsForWoundPhoto:self.woundPhoto addingPhoto:NO];
+}
+
+- (void)navigateToCarePlan
+{
+    WMNavigationNode *navigationNode = [WMNavigationNode carePlanNavigationNode:self.managedObjectContext persistentStore:nil];
+    NSInteger count = [self.policyManager closeExpiredRecords:navigationNode];
+    WMCarePlanGroupViewController *carePlanGroupViewController = self.carePlanGroupViewController;
+    carePlanGroupViewController.recentlyClosedCount = count;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:carePlanGroupViewController];
+    navigationController.delegate = self.appDelegate;
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
 }
 
 #pragma mark - View Controllers
@@ -946,11 +958,12 @@
 {
     [super registerForNotifications];
     // adjust when task completes
+    __weak __typeof(self) weakSelf = self;
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kTaskDidCompleteNotification
                                                                     object:nil
                                                                      queue:[NSOperationQueue mainQueue]
                                                                 usingBlock:^(NSNotification *notification) {
-                                                                    [weakSelf performSelector:@selector(reloadNavigationUI) withObject:nil afterDelay:0.0];
+                                                                    [weakSelf performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
                                                                 }];
     [self.persistantObservers addObject:observer];
     // pull down our popover
@@ -958,6 +971,7 @@
                                                                  object:nil
                                                                   queue:[NSOperationQueue mainQueue]
                                                              usingBlock:^(NSNotification *notification) {
+                                                                 [weakSelf handleApplicationWillResignActiveNotification];
                                                                  if (weakSelf.isIPadIdiom) {
                                                                      UIViewController *viewController = [weakSelf.navigationNodePopoverController contentViewController];
                                                                      if (nil != viewController) {
@@ -1031,116 +1045,27 @@
 
 #pragma mark - ChooseStageDelegate
 
-- (WCNavigationTrack *)navigationTrack
+- (WMNavigationTrack *)navigationTrack
 {
     return self.navigationCoordinator.navigationTrack;
 }
 
-- (WCNavigationStage *)navigationStage
+- (WMNavigationStage *)navigationStage
 {
     return self.navigationCoordinator.navigationStage;
 }
 
-- (void)chooseStageViewController:(ChooseStageViewController *)chooseStageViewController didSelectNavigationStage:(WCNavigationStage *)navigationStage
+- (void)chooseStageViewController:(WMChooseStageViewController *)chooseStageViewController didSelectNavigationStage:(WMNavigationStage *)navigationStage
 {
     self.navigationCoordinator.navigationStage = navigationStage;
     [self.navigationController popViewControllerAnimated:YES];
     [chooseStageViewController clearAllReferences];
 }
 
-- (void)chooseStageViewControllerDidCancel:(ChooseStageViewController *)chooseStageViewController
+- (void)chooseStageViewControllerDidCancel:(WMChooseStageViewController *)chooseStageViewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [chooseStageViewController clearAllReferences];
-}
-
-#pragma mark - PatientTableViewControllerDelegate
-
-- (void)patientTableViewController:(PatientTableViewController *)viewController didSelectDocument:(NSString *)documentName
-{
-    // navigation coordinator will automatically set its document property from viewController
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        [viewController clearAllReferences];
-        _navigationNodePopoverController = nil;
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            // new document will update the UI from registerForNotifications
-            [weakViewController clearAllReferences];
-        }];
-    }
-}
-
-- (void)patientTableViewControllerDidCancel:(PatientTableViewController *)viewController
-{
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        [viewController clearAllReferences];
-        _navigationNodePopoverController = nil;
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            // new document will update the UI from registerForNotifications
-            [weakViewController clearAllReferences];
-        }];
-    }
-}
-
-#pragma mark - PatientDetailViewControllerDelegate
-
-- (void)patientDetailViewControllerDidUpdatePatient:(PatientDetailViewController *)viewController
-{
-    // clear memory
-    [viewController clearAllReferences];
-    // PatientDetailViewController has updated the patient in the document - move data to index store
-    [self.documentManager saveDocument:self.document];
-    // if this is a new patient, update stage to initial workup
-    if (viewController.isNewPatient) {
-        self.navigationCoordinator.navigationStage = self.navigationCoordinator.navigationTrack.initialStage;
-    }
-    __weak __typeof(viewController) weakViewController = viewController;
-    __weak __typeof(self) weakSelf = self;
-    if (self.isIPadIdiom) {
-        if (weakViewController.isNewPatient) {
-            [weakSelf updateUIForDocumentWoundStageChanged];
-        } else {
-            [weakSelf.navigationPatientWoundContainerView updateContentForDocument];
-        }
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-            if (weakViewController.isNewPatient) {
-                [weakSelf updateUIForDocumentWoundStageChanged];
-            } else {
-                [weakSelf.navigationPatientWoundContainerView updateContentForDocument];
-            }
-        }];
-    }
-    self.state = PatientSelectedStateNone;
-    // synchronize the index store
-    [self.patientManager updateIndexPatientFromDocumentPatient:self.patient];
-}
-
-- (void)patientDetailViewControllerDidCancelUpdate:(PatientDetailViewController *)viewController
-{
-    if (viewController.isNewPatient) {
-        [self showProgressViewWithMessage:@"Creating Patient Record"];
-        [self.documentManager deleteDocument:viewController.patient.documentName];
-    }
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        // clear memory
-        [viewController clearAllReferences];
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakViewController clearAllReferences];
-        }];
-    }
-    self.state = PatientSelectedStateNone;
 }
 
 #pragma mark - SelectWoundViewControllerDelegate

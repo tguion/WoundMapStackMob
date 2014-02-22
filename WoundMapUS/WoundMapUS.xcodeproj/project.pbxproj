@@ -154,6 +154,22 @@
 		7D39DB6318B921EE0054DDC3 /* WMPhotosContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */; };
 		7D39DB6718B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB6518B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m */; };
 		7D39DB6818B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB6618B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib */; };
+		7D39DB6B18B924740054DDC3 /* UnderlayNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB6A18B924740054DDC3 /* UnderlayNavigationBar.m */; };
+		7D39DB6E18B924D30054DDC3 /* UnderlayToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB6D18B924D30054DDC3 /* UnderlayToolbar.m */; };
+		7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB7018B947250054DDC3 /* _WMMedication.m */; };
+		7D39DB7618B947250054DDC3 /* _WMMedicationCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB7218B947250054DDC3 /* _WMMedicationCategory.m */; };
+		7D39DB7718B947250054DDC3 /* _WMMedicationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB7418B947250054DDC3 /* _WMMedicationGroup.m */; };
+		7D39DB7E18B947330054DDC3 /* WMMedication.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB7918B947330054DDC3 /* WMMedication.m */; };
+		7D39DB7F18B947330054DDC3 /* WMMedicationCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB7B18B947330054DDC3 /* WMMedicationCategory.m */; };
+		7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB7D18B947330054DDC3 /* WMMedicationGroup.m */; };
+		7D39DB8918B94FEB0054DDC3 /* _WMDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB8218B94FEB0054DDC3 /* _WMDevice.m */; };
+		7D39DB8A18B94FEB0054DDC3 /* _WMDeviceCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB8418B94FEB0054DDC3 /* _WMDeviceCategory.m */; };
+		7D39DB8B18B94FEB0054DDC3 /* _WMDeviceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB8618B94FEB0054DDC3 /* _WMDeviceGroup.m */; };
+		7D39DB8C18B94FEB0054DDC3 /* _WMDeviceValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB8818B94FEB0054DDC3 /* _WMDeviceValue.m */; };
+		7D39DB9518B94FFD0054DDC3 /* WMDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB8E18B94FFD0054DDC3 /* WMDevice.m */; };
+		7D39DB9618B94FFD0054DDC3 /* WMDeviceCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9018B94FFD0054DDC3 /* WMDeviceCategory.m */; };
+		7D39DB9718B94FFD0054DDC3 /* WMDeviceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9218B94FFD0054DDC3 /* WMDeviceGroup.m */; };
+		7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -472,6 +488,38 @@
 		7D39DB6418B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPhotosContainerViewController_iPad.h; sourceTree = "<group>"; };
 		7D39DB6518B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPhotosContainerViewController_iPad.m; sourceTree = "<group>"; };
 		7D39DB6618B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPhotosContainerViewController_iPad.xib; sourceTree = "<group>"; };
+		7D39DB6918B924740054DDC3 /* UnderlayNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnderlayNavigationBar.h; sourceTree = "<group>"; };
+		7D39DB6A18B924740054DDC3 /* UnderlayNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnderlayNavigationBar.m; sourceTree = "<group>"; };
+		7D39DB6C18B924D30054DDC3 /* UnderlayToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnderlayToolbar.h; sourceTree = "<group>"; };
+		7D39DB6D18B924D30054DDC3 /* UnderlayToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnderlayToolbar.m; sourceTree = "<group>"; };
+		7D39DB6F18B947250054DDC3 /* _WMMedication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMMedication.h; sourceTree = "<group>"; };
+		7D39DB7018B947250054DDC3 /* _WMMedication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMMedication.m; sourceTree = "<group>"; };
+		7D39DB7118B947250054DDC3 /* _WMMedicationCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMMedicationCategory.h; sourceTree = "<group>"; };
+		7D39DB7218B947250054DDC3 /* _WMMedicationCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMMedicationCategory.m; sourceTree = "<group>"; };
+		7D39DB7318B947250054DDC3 /* _WMMedicationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMMedicationGroup.h; sourceTree = "<group>"; };
+		7D39DB7418B947250054DDC3 /* _WMMedicationGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMMedicationGroup.m; sourceTree = "<group>"; };
+		7D39DB7818B947330054DDC3 /* WMMedication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedication.h; sourceTree = "<group>"; };
+		7D39DB7918B947330054DDC3 /* WMMedication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedication.m; sourceTree = "<group>"; };
+		7D39DB7A18B947330054DDC3 /* WMMedicationCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedicationCategory.h; sourceTree = "<group>"; };
+		7D39DB7B18B947330054DDC3 /* WMMedicationCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedicationCategory.m; sourceTree = "<group>"; };
+		7D39DB7C18B947330054DDC3 /* WMMedicationGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedicationGroup.h; sourceTree = "<group>"; };
+		7D39DB7D18B947330054DDC3 /* WMMedicationGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedicationGroup.m; sourceTree = "<group>"; };
+		7D39DB8118B94FEB0054DDC3 /* _WMDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMDevice.h; sourceTree = "<group>"; };
+		7D39DB8218B94FEB0054DDC3 /* _WMDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMDevice.m; sourceTree = "<group>"; };
+		7D39DB8318B94FEB0054DDC3 /* _WMDeviceCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMDeviceCategory.h; sourceTree = "<group>"; };
+		7D39DB8418B94FEB0054DDC3 /* _WMDeviceCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMDeviceCategory.m; sourceTree = "<group>"; };
+		7D39DB8518B94FEB0054DDC3 /* _WMDeviceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMDeviceGroup.h; sourceTree = "<group>"; };
+		7D39DB8618B94FEB0054DDC3 /* _WMDeviceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMDeviceGroup.m; sourceTree = "<group>"; };
+		7D39DB8718B94FEB0054DDC3 /* _WMDeviceValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMDeviceValue.h; sourceTree = "<group>"; };
+		7D39DB8818B94FEB0054DDC3 /* _WMDeviceValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMDeviceValue.m; sourceTree = "<group>"; };
+		7D39DB8D18B94FFD0054DDC3 /* WMDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDevice.h; sourceTree = "<group>"; };
+		7D39DB8E18B94FFD0054DDC3 /* WMDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDevice.m; sourceTree = "<group>"; };
+		7D39DB8F18B94FFD0054DDC3 /* WMDeviceCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDeviceCategory.h; sourceTree = "<group>"; };
+		7D39DB9018B94FFD0054DDC3 /* WMDeviceCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDeviceCategory.m; sourceTree = "<group>"; };
+		7D39DB9118B94FFD0054DDC3 /* WMDeviceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDeviceGroup.h; sourceTree = "<group>"; };
+		7D39DB9218B94FFD0054DDC3 /* WMDeviceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDeviceGroup.m; sourceTree = "<group>"; };
+		7D39DB9318B94FFD0054DDC3 /* WMDeviceValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDeviceValue.h; sourceTree = "<group>"; };
+		7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDeviceValue.m; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -1174,10 +1222,24 @@
 				7DB206C418A839180004DC32 /* WMAddress.m */,
 				7D9AA27218AFF74C00C1B698 /* WMConsultingGroup.h */,
 				7D9AA27318AFF74C00C1B698 /* WMConsultingGroup.m */,
+				7D39DB8D18B94FFD0054DDC3 /* WMDevice.h */,
+				7D39DB8E18B94FFD0054DDC3 /* WMDevice.m */,
+				7D39DB8F18B94FFD0054DDC3 /* WMDeviceCategory.h */,
+				7D39DB9018B94FFD0054DDC3 /* WMDeviceCategory.m */,
+				7D39DB9118B94FFD0054DDC3 /* WMDeviceGroup.h */,
+				7D39DB9218B94FFD0054DDC3 /* WMDeviceGroup.m */,
+				7D39DB9318B94FFD0054DDC3 /* WMDeviceValue.h */,
+				7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */,
 				7DB206C518A839180004DC32 /* WMId.h */,
 				7DB206C618A839180004DC32 /* WMId.m */,
 				5F6DE52818B58A8D00E87F7E /* WMInstruction.h */,
 				5F6DE52918B58A8D00E87F7E /* WMInstruction.m */,
+				7D39DB7818B947330054DDC3 /* WMMedication.h */,
+				7D39DB7918B947330054DDC3 /* WMMedication.m */,
+				7D39DB7A18B947330054DDC3 /* WMMedicationCategory.h */,
+				7D39DB7B18B947330054DDC3 /* WMMedicationCategory.m */,
+				7D39DB7C18B947330054DDC3 /* WMMedicationGroup.h */,
+				7D39DB7D18B947330054DDC3 /* WMMedicationGroup.m */,
 				5F67D22618AD8DF000460C37 /* WMNavigationNode.h */,
 				5F67D22718AD8DF000460C37 /* WMNavigationNode.m */,
 				5F67D22818AD8DF000460C37 /* WMNavigationStage.h */,
@@ -1299,6 +1361,10 @@
 		7DB206A418A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D39DB6C18B924D30054DDC3 /* UnderlayToolbar.h */,
+				7D39DB6D18B924D30054DDC3 /* UnderlayToolbar.m */,
+				7D39DB6918B924740054DDC3 /* UnderlayNavigationBar.h */,
+				7D39DB6A18B924740054DDC3 /* UnderlayNavigationBar.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1378,10 +1444,24 @@
 				7DB206DC18A839240004DC32 /* _WMAddress.m */,
 				7D9AA26F18AFF73E00C1B698 /* _WMConsultingGroup.h */,
 				7D9AA27018AFF73E00C1B698 /* _WMConsultingGroup.m */,
+				7D39DB8118B94FEB0054DDC3 /* _WMDevice.h */,
+				7D39DB8218B94FEB0054DDC3 /* _WMDevice.m */,
+				7D39DB8318B94FEB0054DDC3 /* _WMDeviceCategory.h */,
+				7D39DB8418B94FEB0054DDC3 /* _WMDeviceCategory.m */,
+				7D39DB8518B94FEB0054DDC3 /* _WMDeviceGroup.h */,
+				7D39DB8618B94FEB0054DDC3 /* _WMDeviceGroup.m */,
+				7D39DB8718B94FEB0054DDC3 /* _WMDeviceValue.h */,
+				7D39DB8818B94FEB0054DDC3 /* _WMDeviceValue.m */,
 				7DB206DD18A839240004DC32 /* _WMId.h */,
 				7DB206DE18A839240004DC32 /* _WMId.m */,
 				5F6DE52518B58A8300E87F7E /* _WMInstruction.h */,
 				5F6DE52618B58A8300E87F7E /* _WMInstruction.m */,
+				7D39DB6F18B947250054DDC3 /* _WMMedication.h */,
+				7D39DB7018B947250054DDC3 /* _WMMedication.m */,
+				7D39DB7118B947250054DDC3 /* _WMMedicationCategory.h */,
+				7D39DB7218B947250054DDC3 /* _WMMedicationCategory.m */,
+				7D39DB7318B947250054DDC3 /* _WMMedicationGroup.h */,
+				7D39DB7418B947250054DDC3 /* _WMMedicationGroup.m */,
 				5F67D21D18AD8DE200460C37 /* _WMNavigationNode.h */,
 				5F67D21E18AD8DE200460C37 /* _WMNavigationNode.m */,
 				5F67D21F18AD8DE200460C37 /* _WMNavigationStage.h */,
@@ -1677,26 +1757,37 @@
 				7DB206AC18A7D6950004DC32 /* CoreDataHelper.m in Sources */,
 				5F67D22C18AD8DF000460C37 /* WMNavigationNode.m in Sources */,
 				7DB206D718A839180004DC32 /* WMTelecom.m in Sources */,
+				7D39DB8C18B94FEB0054DDC3 /* _WMDeviceValue.m in Sources */,
 				7DB206D118A839180004DC32 /* User.m in Sources */,
 				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
 				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
+				7D39DB6B18B924740054DDC3 /* UnderlayNavigationBar.m in Sources */,
 				7D39DB0018B7E6560054DDC3 /* WMShareViewController.m in Sources */,
 				7D39DB5418B828000054DDC3 /* WMPatientSummaryContainerViewController.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
+				7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */,
+				7D39DB9718B94FFD0054DDC3 /* WMDeviceGroup.m in Sources */,
 				7D39DB6718B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m in Sources */,
+				7D39DB7F18B947330054DDC3 /* WMMedicationCategory.m in Sources */,
 				7DB2062718A7D3400004DC32 /* WCMasterViewController.m in Sources */,
 				7D39DAD718B7CE6E0054DDC3 /* WMCompassView.m in Sources */,
+				7D39DB9518B94FFD0054DDC3 /* WMDevice.m in Sources */,
 				7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */,
 				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
+				7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */,
 				7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
+				7D39DB7E18B947330054DDC3 /* WMMedication.m in Sources */,
 				5F6DE54818B6FA4E00E87F7E /* WMIdListViewController.m in Sources */,
 				7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
 				7D39DB5918B828630054DDC3 /* WMPsychoSocialGroupViewController.m in Sources */,
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
+				7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */,
+				7D39DB7618B947250054DDC3 /* _WMMedicationCategory.m in Sources */,
 				7D39DAE318B7DC120054DDC3 /* WMPolicyManager.m in Sources */,
 				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
+				7D39DB9618B94FFD0054DDC3 /* WMDeviceCategory.m in Sources */,
 				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				7D39DB0918B7EFE30054DDC3 /* WMCarePlanTableViewCell.m in Sources */,
@@ -1704,7 +1795,9 @@
 				7D39DB3B18B824510054DDC3 /* WMBuildGroupViewController.m in Sources */,
 				7D39DB2818B821920054DDC3 /* WMPhoto.m in Sources */,
 				7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */,
+				7D39DB8918B94FEB0054DDC3 /* _WMDevice.m in Sources */,
 				7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */,
+				7D39DB8A18B94FEB0054DDC3 /* _WMDeviceCategory.m in Sources */,
 				7DB2062418A7D3400004DC32 /* WoundMapUS.xcdatamodeld in Sources */,
 				5F6DE4F718AEE08D00E87F7E /* APTableViewCell.m in Sources */,
 				7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */,
@@ -1758,6 +1851,7 @@
 				7D39DB4418B826620054DDC3 /* WMCarePlanGroupViewController.m in Sources */,
 				7D39DB2218B8217A0054DDC3 /* _WMPhoto.m in Sources */,
 				5F6DE51A18B5885E00E87F7E /* WMInstructionContentViewController.m in Sources */,
+				7D39DB6E18B924D30054DDC3 /* UnderlayToolbar.m in Sources */,
 				7D39DB0D18B7FA080054DDC3 /* WMSelectWoundTypeViewController.m in Sources */,
 				7D39DB0518B7E8BE0054DDC3 /* WMPolicyEditorViewController.m in Sources */,
 				7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */,
@@ -1769,6 +1863,7 @@
 				7D39DB3718B824060054DDC3 /* WMDevicesViewController.m in Sources */,
 				7DB206D818A839180004DC32 /* WMTelecomType.m in Sources */,
 				5F67D22518AD8DE200460C37 /* _WMNavigationTrack.m in Sources */,
+				7D39DB8B18B94FEB0054DDC3 /* _WMDeviceGroup.m in Sources */,
 				7DB206F018A839240004DC32 /* _WMTelecomType.m in Sources */,
 				7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */,
 				7D9AA26E18AFD35F00C1B698 /* WMSeedDatabaseManager.m in Sources */,
@@ -1777,6 +1872,7 @@
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */,
 				7D39DAF118B7E6130054DDC3 /* WMChooseStageViewController.m in Sources */,
+				7D39DB7718B947250054DDC3 /* _WMMedicationGroup.m in Sources */,
 				7DB206D418A839180004DC32 /* WMOrganization.m in Sources */,
 				7DDFD68A18B7C0B900041927 /* WMHomeBaseViewController_iPad.m in Sources */,
 				7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */,

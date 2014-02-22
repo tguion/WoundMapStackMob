@@ -21,7 +21,9 @@ const struct WMPatientAttributes WMPatientAttributes = {
 };
 
 const struct WMPatientRelationships WMPatientRelationships = {
+	.deviceGroups = @"deviceGroups",
 	.ids = @"ids",
+	.medicationGroups = @"medicationGroups",
 	.patientConsultants = @"patientConsultants",
 	.person = @"person",
 	.stage = @"stage",
@@ -234,6 +236,19 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
+@dynamic deviceGroups;
+
+	
+- (NSMutableSet*)deviceGroupsSet {
+	[self willAccessValueForKey:@"deviceGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"deviceGroups"];
+  
+	[self didAccessValueForKey:@"deviceGroups"];
+	return result;
+}
+	
+
 @dynamic ids;
 
 	
@@ -243,6 +258,19 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"ids"];
   
 	[self didAccessValueForKey:@"ids"];
+	return result;
+}
+	
+
+@dynamic medicationGroups;
+
+	
+- (NSMutableSet*)medicationGroupsSet {
+	[self willAccessValueForKey:@"medicationGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medicationGroups"];
+  
+	[self didAccessValueForKey:@"medicationGroups"];
 	return result;
 }
 	

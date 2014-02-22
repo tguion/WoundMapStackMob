@@ -10,6 +10,7 @@
 #import "WMPatient.h"
 //#import "WMCarePlanGroup.h"
 //#import "WMInterventionStatus.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 
 @interface WMCarePlanTableViewCell ()
@@ -86,7 +87,7 @@
 
 - (void)drawContentView:(CGRect)rect
 {
-    WMPatient *patient = self.appDelegate.patient;
+    WMPatient *patient = self.appDelegate.navigationCoordinator.patient;
     if (nil == patient) {
         return;
     }

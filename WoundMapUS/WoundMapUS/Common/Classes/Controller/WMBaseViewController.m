@@ -304,6 +304,27 @@
     [self.tableView reloadData];
 }
 
+- (void)handleApplicationWillResignActiveNotification
+{
+    __block UIViewController *viewController = self.appDelegate.window.rootViewController.presentedViewController;
+    if (nil != viewController) {
+        NSMutableArray *viewControllers = [NSMutableArray array];
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *navigationController = (UINavigationController *)viewController;
+            [viewControllers addObjectsFromArray:navigationController.viewControllers];
+        } else {
+            [viewControllers addObject:viewController];
+        }
+        [viewController dismissViewControllerAnimated:NO completion:^{
+            for (WMBaseViewController *viewController in viewControllers) {
+                if ([viewController isKindOfClass:[WMBaseViewController class]]) {
+                    [viewController clearAllReferences];
+                }
+            }
+        }];
+    }
+}
+
 - (void)handlePatientChanged:(WMPatient *)patient
 {
     

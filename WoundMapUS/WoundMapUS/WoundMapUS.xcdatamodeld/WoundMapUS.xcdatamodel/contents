@@ -32,6 +32,67 @@
         <attribute name="wmconsultinggroup_id" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="stackMobUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="consultingGroup" inverseEntity="User" syncable="YES"/>
     </entity>
+    <entity name="WMDevice" representedClassName="WMDevice" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="options" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="wmdevice_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMDeviceCategory" inverseName="devices" inverseEntity="WMDeviceCategory" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceValue" inverseName="device" inverseEntity="WMDeviceValue" syncable="YES"/>
+    </entity>
+    <entity name="WMDeviceCategory" representedClassName="WMDeviceCategory" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="iapIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmdevicecategory_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="devices" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDevice" inverseName="category" inverseEntity="WMDevice" syncable="YES"/>
+        <relationship name="woundTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="deviceCategories" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
+    <entity name="WMDeviceGroup" representedClassName="WMDeviceGroup" syncable="YES">
+        <attribute name="closedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="continueCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="datePushed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="wmdevicegroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="deviceGroups" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceValue" inverseName="group" inverseEntity="WMDeviceValue" syncable="YES"/>
+    </entity>
+    <entity name="WMDeviceValue" representedClassName="WMDeviceValue" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateAttach" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateRemove" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="revisedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmdevicevalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="device" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMDevice" inverseName="values" inverseEntity="WMDevice" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMDeviceGroup" inverseName="values" inverseEntity="WMDeviceGroup" syncable="YES"/>
+    </entity>
     <entity name="WMId" representedClassName="WMId" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="extension" optional="YES" attributeType="String" syncable="YES">
@@ -65,6 +126,52 @@
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wminstruction_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="WMMedication" representedClassName="WMMedication" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmmedication_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMMedicationCategory" inverseName="medications" inverseEntity="WMMedicationCategory" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="medications" inverseEntity="WMMedicationGroup" syncable="YES"/>
+    </entity>
+    <entity name="WMMedicationCategory" representedClassName="WMMedicationCategory" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="iapIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmmedicationcategory_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="medications" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedication" inverseName="category" inverseEntity="WMMedication" syncable="YES"/>
+        <relationship name="woundTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="medicationCategories" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
+    <entity name="WMMedicationGroup" representedClassName="WMMedicationGroup" syncable="YES">
+        <attribute name="closedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="continueCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="datePushed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmmedicationgroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="medications" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMMedication" inverseName="groups" inverseEntity="WMMedication" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="medicationGroups" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMNavigationNode" representedClassName="WMNavigationNode" syncable="YES">
         <attribute name="activeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -191,7 +298,9 @@
             <userInfo/>
         </attribute>
         <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="deviceGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceGroup" inverseName="patient" inverseEntity="WMDeviceGroup" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
+        <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="patient" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
@@ -355,6 +464,8 @@
         <attribute name="wmwoundtype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="woundTypeCode" optional="YES" attributeType="Integer 16" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundType" inverseName="parent" inverseEntity="WMWoundType" syncable="YES"/>
+        <relationship name="deviceCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMDeviceCategory" inverseName="woundTypes" inverseEntity="WMDeviceCategory" syncable="YES"/>
+        <relationship name="medicationCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMMedicationCategory" inverseName="woundTypes" inverseEntity="WMMedicationCategory" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="children" inverseEntity="WMWoundType" syncable="YES"/>
         <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWound" inverseName="woundType" inverseEntity="WMWound" syncable="YES"/>
     </entity>
@@ -379,5 +490,12 @@
         <element name="WMWound" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundPhoto" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedication" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedicationCategory" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedicationGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDevice" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceCategory" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceValue" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

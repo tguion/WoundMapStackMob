@@ -81,7 +81,6 @@ typedef enum {
 @property (strong, nonatomic) NSString *unit;
 @property (readonly, nonatomic) NSArray *optionsArray;
 @property (readonly, nonatomic) NSArray *secondaryOptionsArray;
-@property (strong, nonatomic) NSSet *interventionEvents;
 
 @end
 

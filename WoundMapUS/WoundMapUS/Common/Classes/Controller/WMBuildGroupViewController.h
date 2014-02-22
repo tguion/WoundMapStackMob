@@ -10,4 +10,6 @@
 
 @interface WMBuildGroupViewController : WMBaseViewController
 
+@property (nonatomic) NSInteger recentlyClosedCount;
+
 @end

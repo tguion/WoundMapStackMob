@@ -22,7 +22,9 @@ extern const struct WMPatientAttributes {
 } WMPatientAttributes;
 
 extern const struct WMPatientRelationships {
+	__unsafe_unretained NSString *deviceGroups;
 	__unsafe_unretained NSString *ids;
+	__unsafe_unretained NSString *medicationGroups;
 	__unsafe_unretained NSString *patientConsultants;
 	__unsafe_unretained NSString *person;
 	__unsafe_unretained NSString *stage;
@@ -32,7 +34,9 @@ extern const struct WMPatientRelationships {
 extern const struct WMPatientFetchedProperties {
 } WMPatientFetchedProperties;
 
+@class WMDeviceGroup;
 @class WMId;
+@class WMMedicationGroup;
 @class WMPatientConsultant;
 @class WMPerson;
 @class WMNavigationStage;
@@ -218,9 +222,23 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *deviceGroups;
+
+- (NSMutableSet*)deviceGroupsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *ids;
 
 - (NSMutableSet*)idsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *medicationGroups;
+
+- (NSMutableSet*)medicationGroupsSet;
 
 
 
@@ -258,10 +276,20 @@ extern const struct WMPatientFetchedProperties {
 
 @interface _WMPatient (CoreDataGeneratedAccessors)
 
+- (void)addDeviceGroups:(NSSet*)value_;
+- (void)removeDeviceGroups:(NSSet*)value_;
+- (void)addDeviceGroupsObject:(WMDeviceGroup*)value_;
+- (void)removeDeviceGroupsObject:(WMDeviceGroup*)value_;
+
 - (void)addIds:(NSSet*)value_;
 - (void)removeIds:(NSSet*)value_;
 - (void)addIdsObject:(WMId*)value_;
 - (void)removeIdsObject:(WMId*)value_;
+
+- (void)addMedicationGroups:(NSSet*)value_;
+- (void)removeMedicationGroups:(NSSet*)value_;
+- (void)addMedicationGroupsObject:(WMMedicationGroup*)value_;
+- (void)removeMedicationGroupsObject:(WMMedicationGroup*)value_;
 
 - (void)addPatientConsultants:(NSSet*)value_;
 - (void)removePatientConsultants:(NSSet*)value_;
@@ -372,8 +400,18 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveDeviceGroups;
+- (void)setPrimitiveDeviceGroups:(NSMutableSet*)value;
+
+
+
 - (NSMutableSet*)primitiveIds;
 - (void)setPrimitiveIds:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveMedicationGroups;
+- (void)setPrimitiveMedicationGroups:(NSMutableSet*)value;
 
 
 

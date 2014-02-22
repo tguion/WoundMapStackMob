@@ -15,6 +15,7 @@
 #import "WMNavigationStage.h"
 #import "CoreDataHelper.h"
 #import "WMUserDefaultsManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -98,7 +99,7 @@
                                         persistentStore:(NSPersistentStore *)store
 {
     WMNavigationTrack *navigationTrack = nil;
-    WMPatient *patient = self.appDelegate.patient;
+    WMPatient *patient = self.appDelegate.navigationCoordinator.patient;
     WMUserDefaultsManager *userDefaultsManager = self.userDefaultsManager;
     if (nil == patient) {
         navigationTrack = [userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];

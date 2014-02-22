@@ -10,6 +10,7 @@
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
+#import "WMNavigationCoordinator_iPad.h"
 
 @interface WCAppDelegate ()
 

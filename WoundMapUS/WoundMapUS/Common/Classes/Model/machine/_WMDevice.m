@@ -1,9 +1,9 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMWoundType.m instead.
+// Make changes to WMDevice.m instead.
 
-#import "_WMWoundType.h"
+#import "_WMDevice.h"
 
-const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
+const struct WMDeviceAttributes WMDeviceAttributes = {
 	.createddate = @"createddate",
 	.definition = @"definition",
 	.flags = @"flags",
@@ -12,48 +12,43 @@ const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
 	.loincCode = @"loincCode",
 	.options = @"options",
 	.placeHolder = @"placeHolder",
-	.sectionTitle = @"sectionTitle",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
 	.valueTypeCode = @"valueTypeCode",
-	.wmwoundtype_id = @"wmwoundtype_id",
-	.woundTypeCode = @"woundTypeCode",
+	.wmdevice_id = @"wmdevice_id",
 };
 
-const struct WMWoundTypeRelationships WMWoundTypeRelationships = {
-	.children = @"children",
-	.deviceCategories = @"deviceCategories",
-	.medicationCategories = @"medicationCategories",
-	.parent = @"parent",
-	.wounds = @"wounds",
+const struct WMDeviceRelationships WMDeviceRelationships = {
+	.category = @"category",
+	.values = @"values",
 };
 
-const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
+const struct WMDeviceFetchedProperties WMDeviceFetchedProperties = {
 };
 
-@implementation WMWoundTypeID
+@implementation WMDeviceID
 @end
 
-@implementation _WMWoundType
+@implementation _WMDevice
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"WMWoundType" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"WMDevice" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"WMWoundType";
+	return @"WMDevice";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"WMDevice" inManagedObjectContext:moc_];
 }
 
-- (WMWoundTypeID*)objectID {
-	return (WMWoundTypeID*)[super objectID];
+- (WMDeviceID*)objectID {
+	return (WMDeviceID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
@@ -76,11 +71,6 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 	}
 	if ([key isEqualToString:@"valueTypeCodeValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"valueTypeCode"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"woundTypeCodeValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"woundTypeCode"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -160,13 +150,6 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 @dynamic placeHolder;
-
-
-
-
-
-
-@dynamic sectionTitle;
 
 
 
@@ -265,91 +248,26 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 
-@dynamic wmwoundtype_id;
+@dynamic wmdevice_id;
 
 
 
 
 
 
-@dynamic woundTypeCode;
-
-
-
-- (int16_t)woundTypeCodeValue {
-	NSNumber *result = [self woundTypeCode];
-	return [result shortValue];
-}
-
-- (void)setWoundTypeCodeValue:(int16_t)value_ {
-	[self setWoundTypeCode:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveWoundTypeCodeValue {
-	NSNumber *result = [self primitiveWoundTypeCode];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveWoundTypeCodeValue:(int16_t)value_ {
-	[self setPrimitiveWoundTypeCode:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-@dynamic children;
-
-	
-- (NSMutableSet*)childrenSet {
-	[self willAccessValueForKey:@"children"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"children"];
-  
-	[self didAccessValueForKey:@"children"];
-	return result;
-}
-	
-
-@dynamic deviceCategories;
-
-	
-- (NSMutableSet*)deviceCategoriesSet {
-	[self willAccessValueForKey:@"deviceCategories"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"deviceCategories"];
-  
-	[self didAccessValueForKey:@"deviceCategories"];
-	return result;
-}
-	
-
-@dynamic medicationCategories;
-
-	
-- (NSMutableSet*)medicationCategoriesSet {
-	[self willAccessValueForKey:@"medicationCategories"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medicationCategories"];
-  
-	[self didAccessValueForKey:@"medicationCategories"];
-	return result;
-}
-	
-
-@dynamic parent;
+@dynamic category;
 
 	
 
-@dynamic wounds;
+@dynamic values;
 
 	
-- (NSMutableSet*)woundsSet {
-	[self willAccessValueForKey:@"wounds"];
+- (NSMutableSet*)valuesSet {
+	[self willAccessValueForKey:@"values"];
   
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"wounds"];
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"values"];
   
-	[self didAccessValueForKey:@"wounds"];
+	[self didAccessValueForKey:@"values"];
 	return result;
 }
 	
