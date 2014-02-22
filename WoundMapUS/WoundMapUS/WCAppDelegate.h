@@ -19,5 +19,6 @@
 
 @property (strong, nonatomic) WMPatient *patient;           // active patient
 @property (strong, nonatomic) WMWound *wound;               // active wound
+@property (strong, nonatomic) WMWoundPhoto *woundPhoto;     // active woundPhoto
 
 @end

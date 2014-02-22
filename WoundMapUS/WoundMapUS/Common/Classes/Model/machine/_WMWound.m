@@ -18,6 +18,7 @@ const struct WMWoundAttributes WMWoundAttributes = {
 
 const struct WMWoundRelationships WMWoundRelationships = {
 	.patient = @"patient",
+	.photos = @"photos",
 	.woundType = @"woundType",
 };
 
@@ -177,6 +178,19 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 
 @dynamic patient;
 
+	
+
+@dynamic photos;
+
+	
+- (NSMutableSet*)photosSet {
+	[self willAccessValueForKey:@"photos"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"photos"];
+  
+	[self didAccessValueForKey:@"photos"];
+	return result;
+}
 	
 
 @dynamic woundType;

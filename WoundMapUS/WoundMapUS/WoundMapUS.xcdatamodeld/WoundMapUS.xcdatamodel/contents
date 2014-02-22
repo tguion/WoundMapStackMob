@@ -242,6 +242,19 @@
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="person" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTelecom" inverseName="person" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
+    <entity name="WMPhoto" representedClassName="WMPhoto" syncable="YES">
+        <attribute name="column" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="originalFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="photo" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer" storedInTruthFile="YES">
+            <userInfo/>
+        </attribute>
+        <attribute name="row" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="scale" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="tileFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="woundPhoto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundPhoto" inverseName="photos" inverseEntity="WMWoundPhoto" syncable="YES"/>
+    </entity>
     <entity name="WMTelecom" representedClassName="WMTelecom" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
@@ -290,7 +303,39 @@
         <attribute name="woundLocationValue" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="woundTypeValue" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="patient" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="wounds" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundPhoto" inverseName="wound" inverseEntity="WMWoundPhoto" syncable="YES"/>
         <relationship name="woundType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="wounds" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundPhoto" representedClassName="WMWoundPhoto" syncable="YES">
+        <attribute name="comments" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date">
+            <userInfo/>
+        </attribute>
+        <attribute name="dateModified" optional="YES" attributeType="Date">
+            <userInfo/>
+        </attribute>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="imageHeight" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="imageOrientation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="imageWidth" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="metadata" optional="YES" attributeType="String" valueTransformerName="DictionaryToDataTransformer" syncable="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
+            <userInfo/>
+        </attribute>
+        <attribute name="thumbnailLarge" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="thumbnailMini" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
+            <userInfo/>
+        </attribute>
+        <attribute name="transformAsString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transformRotation" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="transformScale" optional="YES" attributeType="Float" defaultValueString="1" syncable="YES"/>
+        <attribute name="transformSizeAsString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transformTranslationX" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="transformTranslationY" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPhoto" inverseName="woundPhoto" inverseEntity="WMPhoto" syncable="YES"/>
+        <relationship name="wound" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="photos" inverseEntity="WMWound" syncable="YES"/>
     </entity>
     <entity name="WMWoundType" representedClassName="WMWoundType" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -332,5 +377,7 @@
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWound" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundPhoto" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPhoto" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

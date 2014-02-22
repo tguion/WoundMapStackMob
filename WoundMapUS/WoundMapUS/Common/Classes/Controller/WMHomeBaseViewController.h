@@ -7,11 +7,6 @@
 //
 
 #import "WMBaseViewController.h"
-#import "WMPatientTableViewController.h"
-#import "WMSelectWoundViewController.h"
-#import "WMWoundDetailViewController.h"
-#import "WMChooseTrackViewController.h"
-#import "WMChooseStageViewController.h"
 #import "WMNavigationPatientWoundContainerView.h"
 #import "WMWoundTreatmentGroupsViewController.h"
 #import "WMPlotSelectDatasetViewController.h"
@@ -21,7 +16,6 @@
 @class WMNavigationNode;
 
 @interface WMHomeBaseViewController : WMBaseViewController
-<PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet WMNavigationPatientWoundContainerView *navigationPatientWoundContainerView;
 @property (strong, nonatomic) IBOutlet UITableViewCell *trackTableViewCell;

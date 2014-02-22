@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
+#import "WMBuildGroupViewController.h"
 
 @class WMWoundTreatmentViewController;
 @class WMWoundTreatmentGroup, WMWoundTreatment;
@@ -19,7 +19,7 @@
 
 @end
 
-@interface WMWoundTreatmentViewController : WMBaseViewController
+@interface WMWoundTreatmentViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<WoundTreatmentViewControllerDelegate> delegate;
 @property (strong, nonatomic) WMWoundTreatmentGroup *woundTreatmentGroup;

@@ -8,12 +8,29 @@
 
 #import "WMHomeBaseViewController.h"
 #import "WMPolicyEditorViewController.h"
+#import "WMPatientTableViewController.h"
+#import "WMSelectWoundViewController.h"
+#import "WMWoundDetailViewController.h"
+#import "WMChooseTrackViewController.h"
+#import "WMChooseStageViewController.h"
+#import "WMPatientDetailViewController.h"
+#import "WMSkinAssessmentGroupViewController.h"
+#import "WMBradenScaleViewController.h"
+#import "WMMedicationGroupViewController.h"
+#import "WMDevicesViewController.h"
+#import "WMPsychoSocialGroupViewController.h"
+#import "WMTakePatientPhotoViewController.h"
+#import "WMWoundMeasurementGroupViewController.h"
 #import "WMCarePlanTableViewCell.h"
+#import "WMCarePlanGroupViewController.h"
+#import "WMPatientSummaryContainerViewController.h"
 #import "WMPatient.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
+#import "TakePhotoProtocols.h"
 
-@interface WMHomeBaseViewController () <PolicyEditorDelegate>
+@interface WMHomeBaseViewController () <PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate, OverlayViewControllerDelegate, WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate>
+
 
 @property (readonly, nonatomic) WMPolicyEditorViewController *policyEditorViewController;
 @property (nonatomic) BOOL removingTrackAndOrStageCells;
@@ -37,6 +54,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    self.title = @"Home";
+    // show table view separators all the way across
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (void)didReceiveMemoryWarning

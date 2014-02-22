@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
+#import "WMBuildGroupViewController.h"
 
 @class WMSelectWoundLocationViewController;
 @class WMWoundLocation;
@@ -18,7 +18,7 @@
 
 @end
 
-@interface WMSelectWoundLocationViewController : WMBaseViewController
+@interface WMSelectWoundLocationViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<SelectWoundLocationViewControllerDelegate> delegate;
 @property (strong, nonatomic) WMWoundLocation *selectedWoundLocation;
