@@ -68,6 +68,9 @@
     self.navigationItem.rightBarButtonItem = barButtonItem;
     // show table view separators all the way across
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    // do all work locally
+    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
+    self.savePolicy = SMSavePolicyNetworkThenCache;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -784,12 +787,13 @@
 
 - (IBAction)handleSwipeNavigationNodeControl:(UISwipeGestureRecognizer *)gestureRecognizer
 {
-    NavigationNodeButton *button = (NavigationNodeButton *)gestureRecognizer.view;
+    WMNavigationNodeButton *button = (WMNavigationNodeButton *)gestureRecognizer.view;
     WMNavigationNode *navigationNode = button.navigationNode;
     NavigationNodeIdentifier navigationNodeIdentifier = navigationNode.navigationNodeIdentifier;
+    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
     switch (navigationNodeIdentifier) {
         case kTakePhotoNode: {
-            self.photoManager.usePhotoLibraryForNextPhoto = YES;
+            photoManager.usePhotoLibraryForNextPhoto = YES;
             [self takePhotoAction:button];
             break;
         }
@@ -801,7 +805,7 @@
 - (IBAction)takePhotoAction:(id)sender
 {
     self.photoAcquisitionState = PhotoAcquisitionStateAcquireWoundPhoto;
-    [self navigateToTakePhoto:(NavigationNodeButton *)sender];
+    [self navigateToTakePhoto:(WMNavigationNodeButton *)sender];
 }
 
 // the action depends on parentNavigationNode
@@ -824,8 +828,8 @@
 - (IBAction)woundAssessmentAction:(id)sender
 {
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToWoundAssessment:navigationNodeButton];
 }
@@ -833,8 +837,8 @@
 - (IBAction)woundTreatmentAction:(id)sender
 {
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
-    NSAssert1([sender isKindOfClass:[NavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
-    NavigationNodeButton *navigationNodeButton = (NavigationNodeButton *)sender;
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
     [self navigateToWoundTreatment:navigationNodeButton];
 }
@@ -866,7 +870,7 @@
         return;
     }
     // else
-    [self navigateToBrowsePhotos];
+    [self navigateToBrowsePhotos:sender];
 }
 
 - (IBAction)viewGraphsAction:(id)sender
@@ -876,12 +880,12 @@
 
 - (IBAction)viewPatientSummaryAction:(id)sender
 {
-    [self navigateToPatientSummary];
+    [self navigateToPatientSummary:sender];
 }
 
 - (IBAction)shareAction:(id)sender
 {
-    [self navigateToShare];
+    [self navigateToShare:sender];
 }
 
 - (IBAction)emailCADAction:(id)sender

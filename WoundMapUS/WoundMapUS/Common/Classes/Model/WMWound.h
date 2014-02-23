@@ -9,6 +9,7 @@
 + (WMWound *)woundForPatient:(WMPatient *)patient woundId:(NSString *)woundId;
 
 @property (readonly, nonatomic) NSInteger woundPhotosCount;
+@property (readonly, nonatomic) NSString *shortName;
 @property (readonly, nonatomic) NSArray *woundTypeForDisplay;
 
 @end

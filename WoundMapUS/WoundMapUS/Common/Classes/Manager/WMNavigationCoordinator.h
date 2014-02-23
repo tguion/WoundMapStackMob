@@ -6,7 +6,11 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "WMTransformPhotoViewController.h"
+#import "WMPhotoScaleViewController.h"
+#import "WMPhotoMeasureViewController.h"
+#import "WMPhotoDepthViewController.h"
+#import "WMUndermineTunnelViewController.h"
 
 extern NSString *const kPatientChangedNotification;
 extern NSString *const kWoundChangedNotification;
@@ -17,10 +21,19 @@ extern NSString *const kWoundPhotoWillDeleteNotification;
 extern NSString *const kNavigationTrackChangedNotification;
 extern NSString *const kNavigationStageChangedNotification;
 
+@class WMBaseViewController;
 @class WMPatient, WMWound, WMWoundPhoto;
 @class WMNavigationTrack, WMNavigationStage;
 
-@interface WMNavigationCoordinator : NSObject
+typedef enum {
+    NavigationCoordinatorStateInitialized = 0,
+    NavigationCoordinatorStateAuthenticating = 1,
+    NavigationCoordinatorStatePasscode = 2,
+    NavigationCoordinatorStateMeasureNewPhoto = 3,
+    NavigationCoordinatorStateMeasureExistingPhoto = 4,
+} NavigationCoordinatorState;
+
+@interface WMNavigationCoordinator : NSObject <TransformPhotoViewControllerDelegate, PhotoScaleViewControllerDelegate, PhotoMeasureViewControllerDelegate, PhotoDepthViewControllerDelegate, UndermineTunnelViewControllerDelegate>
 
 + (WMNavigationCoordinator *)sharedInstance;
 
@@ -31,10 +44,15 @@ extern NSString *const kNavigationStageChangedNotification;
 @property (nonatomic) WMNavigationTrack *navigationTrack;   // active track
 @property (nonatomic) WMNavigationStage *navigationStage;   // active stage
 
+@property (nonatomic) NavigationCoordinatorState state;
+@property (strong, nonatomic) WMBaseViewController *initialMeasurePhotoViewController;
+
 @property (readonly, nonatomic) WMWound *lastWoundForPatient;
 - (WMWound *)selectLastWoundForPatient;
 - (void)deleteWound:(WMWound *)wound;
 
+- (void)viewController:(WMBaseViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto;
+- (void)cancelWoundMeasurementNavigation:(UIViewController *)viewController;
 - (void)deleteWoundPhoto:(WMWoundPhoto *)woundPhoto;
 
 @end

@@ -46,6 +46,10 @@
     [super viewDidLoad];
     _fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     _savePolicy = SMSavePolicyNetworkThenCache;
+    // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated.
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -164,15 +168,14 @@
 
 - (void)refreshTable
 {
-    NSManagedObjectContext *context = self.managedObjectContext;
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:self.fetchedResultsControllerEntityName];
-    [fetchRequest setSortDescriptors:self.fetchedResultsControllerSortDescriptors];
-    [context executeFetchRequest:fetchRequest onSuccess:^(NSArray *results) {
-        [self.refreshControl endRefreshing];
-    } onFailure:^(NSError *error) {
-        [self.refreshControl endRefreshing];
-        NSLog(@"An error %@, %@", error, [error userInfo]);
-    }];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSFetchRequest *fetchRequest = self.fetchRequestForFetchedResultsController;
+    NSError *error = nil;
+    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyNetworkOnly];
+    // results should autopopulate the table view view the fetchedResultsController delegate methods
+    [managedObjectContext executeFetchRequestAndWait:fetchRequest returnManagedObjectIDs:NO options:options error:&error];
+    [WMUtilities logError:error];
+    [self.refreshControl endRefreshing];
 }
 
 
@@ -598,16 +601,8 @@
     
 }
 
-- (NSFetchedResultsController *)fetchedResultsController
+- (NSFetchRequest *)fetchRequestForFetchedResultsController
 {
-	if (nil != _fetchedResultsController) {
-		return _fetchedResultsController;
-	}
-	// else
-	if (0 == [self.fetchedResultsControllerEntityName length]) {
-		return nil;
-	}
-	// else
 	NSEntityDescription *entityDescription = [NSEntityDescription entityForName:self.fetchedResultsControllerEntityName inManagedObjectContext:self.managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	[fetchRequest setEntity:entityDescription];
@@ -621,6 +616,20 @@
     [fetchRequest setSortDescriptors:self.fetchedResultsControllerSortDescriptors];
     // update for possible NSDictionaryResultType
     [self updateFetchRequest:fetchRequest];
+    return fetchRequest;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+	if (nil != _fetchedResultsController) {
+		return _fetchedResultsController;
+	}
+	// else
+	if (0 == [self.fetchedResultsControllerEntityName length]) {
+		return nil;
+	}
+	// else
+    NSFetchRequest *fetchRequest = [self fetchRequestForFetchedResultsController];
     // enforce the fetch policy set by view controller
     [self updateStackMobToFetchPolicy];
     // Edit the section name key path and cache name if appropriate - nil for section name key path means "no sections".

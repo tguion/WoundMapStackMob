@@ -54,18 +54,7 @@
     [super viewDidLoad];
     // register cell
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated. Then we initiate the refresh process.
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl  = refreshControl;
-    [refreshControl beginRefreshing];
-    [self refreshTable];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.title = @"Clinical Groups";
+    self.title = @"Clinical Teams";
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addUserAction:)];
     self.navigationItem.rightBarButtonItem = addButton;
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editAction:)];

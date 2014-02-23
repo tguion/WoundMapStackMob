@@ -65,7 +65,11 @@
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    __block NSInteger count = 0;
+    [managedObjectContext performBlockAndWait:^{
+        count = [managedObjectContext countForFetchRequest:request error:NULL];
+    }];
+    return count;
 }
 
 + (WMDeviceGroup *)deviceGroupByRevising:(WMDeviceGroup *)deviceGroup
@@ -143,8 +147,12 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMDeviceGroup"];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
+    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
     NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
+                                                 returnManagedObjectIDs:NO
+                                                                options:options
+                                                                  error:&error];
     if ([results count] == 0)
         return nil;
     // else

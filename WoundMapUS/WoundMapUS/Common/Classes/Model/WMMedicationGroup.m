@@ -77,8 +77,12 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMMedicationGroup"];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
+    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
     NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
+                                                 returnManagedObjectIDs:NO
+                                                                options:options
+                                                                  error:&error];
     if ([results count] == 0)
         return nil;
     // else

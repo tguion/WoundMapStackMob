@@ -7,6 +7,7 @@
 //
 
 #import "WMNavigationCoordinator.h"
+#import "WMBaseViewController.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatient.h"
 #import "WMWound.h"
@@ -32,6 +33,8 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+@property (nonatomic) BOOL exitingWoundMeasurement;                                         // exiting measurement
 
 @end
 
@@ -180,6 +183,161 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
 }
 
+#pragma mark - View Controllers
+
+- (WMTransformPhotoViewController *)transformPhotoViewController
+{
+    WMTransformPhotoViewController *transformPhotoViewController = [[WMTransformPhotoViewController alloc] initWithNibName:@"WMTransformPhotoViewController" bundle:nil];
+    transformPhotoViewController.delegate = self;
+    return transformPhotoViewController;
+}
+
+#pragma mark - Wound Measurements
+
+- (void)viewController:(WMBaseViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto
+{
+    // make sure the navigation bar is showing
+    [viewController.navigationController setNavigationBarHidden:NO];
+    self.state = addingPhoto ? NavigationCoordinatorStateMeasureNewPhoto:NavigationCoordinatorStateMeasureExistingPhoto;
+    self.exitingWoundMeasurement = NO;
+    self.woundPhoto = woundPhoto;
+    BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    if (isIPadIdiom) {
+        // subclass will finish
+        return;
+    }
+    // else
+    self.initialMeasurePhotoViewController = viewController;
+    // adjust image or scale
+    [viewController hideProgressView];
+    if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto]) {
+        // adjust image
+        WMTransformPhotoViewController *transformPhotoViewController = self.transformPhotoViewController;
+        switch (self.state) {
+            case NavigationCoordinatorStateAuthenticating:
+            case NavigationCoordinatorStatePasscode:
+            case NavigationCoordinatorStateInitialized: {
+                // nothing
+                break;
+            }
+            case NavigationCoordinatorStateMeasureNewPhoto: {
+                [viewController.navigationController pushViewController:transformPhotoViewController animated:YES];
+                break;
+            }
+            case NavigationCoordinatorStateMeasureExistingPhoto: {
+                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:transformPhotoViewController];
+                [viewController presentViewController:navigationController animated:YES completion:^{
+                    // nothing
+                }];
+                break;
+            }
+        }
+    } else {
+        // set photo scale
+        WMPhotoScaleViewController *photoScaleViewController = self.photoScaleViewController;
+        switch (self.state) {
+            case NavigationCoordinatorStateAuthenticating:
+            case NavigationCoordinatorStatePasscode:
+            case NavigationCoordinatorStateInitialized: {
+                // nothing
+                break;
+            }
+            case NavigationCoordinatorStateMeasureNewPhoto: {
+                [viewController.navigationController pushViewController:photoScaleViewController animated:YES];
+                break;
+            }
+            case NavigationCoordinatorStateMeasureExistingPhoto: {
+                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:photoScaleViewController];
+                [viewController presentViewController:navigationController animated:YES completion:^{
+                    // nothing
+                }];
+                break;
+            }
+        }
+    }
+}
+
+- (void)cancelWoundMeasurementNavigation:(UIViewController *)viewController
+{
+    if (nil == _initialMeasurePhotoViewController) {
+        // already cancelled
+        return;
+    }
+    // else
+    if (self.appDelegate.photoManager.deferTilesProcessAfterMeasurement && !self.woundPhoto.tilingHasStarted) {
+        self.woundPhoto.tilingHasStarted = YES;
+        // save changes now
+        [self.documentManager saveDocument:self.document];
+        WCPhoto *originalPhoto = [self.woundPhoto fetchOrCreatePhotoForType:PhotoTypeOriginal];
+        [self.appDelegate.photoManager createTiledImagesForWoundPhoto:self.woundPhoto photo:originalPhoto photoType:PhotoTypeTile];
+    }
+    // clear caches for all view controllers
+    NSEnumerator *enumerator = [viewController.navigationController.viewControllers reverseObjectEnumerator];
+    BaseViewController *baseViewController = (BaseViewController *)[enumerator nextObject];
+    while (nil != baseViewController) {
+        if (baseViewController == self.initialMeasurePhotoViewController) {
+            if (!self.isIPadIdiom) {
+                [baseViewController clearAllReferences];
+            }
+            break;
+        }
+        // else
+        [baseViewController clearAllReferences];
+        baseViewController = (BaseViewController *)[enumerator nextObject];
+    }
+    switch (self.state) {
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            // nothing
+            break;
+        }
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            // post notification that a task has finished
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMeasurePhotoNode]];
+            [viewController.navigationController popToViewController:self.initialMeasurePhotoViewController animated:NO];
+            break;
+        }
+        case NavigationCoordinatorStateMeasureExistingPhoto: {
+            // post notification that a task has finished
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMeasurePhotoNode]];
+            if (self.isIPadIdiom) {
+                [viewController.navigationController popToViewController:self.initialMeasurePhotoViewController animated:NO];
+            } else {
+                [self.initialMeasurePhotoViewController dismissViewControllerAnimated:NO completion:^{
+                    // nothing
+                }];
+            }
+            break;
+        }
+    }
+    [self purgeMemoryAfterMeasurement];
+}
+
+- (void)purgeMemoryAfterMeasurement
+{
+    // check for empty dimensions
+    if (nil != _woundMeasurementValueWidth && [_woundMeasurementValueWidth.value length] == 0) {
+        _woundMeasurementValueWidth.group = nil;
+        _woundMeasurementValueWidth.woundMeasurement = nil;
+        [self.document.managedObjectContext deleteObject:_woundMeasurementValueWidth];
+    }
+    if (nil != _woundMeasurementValueLength && [_woundMeasurementValueLength.value length] == 0) {
+        _woundMeasurementValueLength.group = nil;
+        _woundMeasurementValueLength.woundMeasurement = nil;
+        [self.document.managedObjectContext deleteObject:_woundMeasurementValueLength];
+    }
+    if (nil != _woundMeasurementValueDepth && [_woundMeasurementValueDepth.value length] == 0) {
+        _woundMeasurementValueDepth.group = nil;
+        _woundMeasurementValueDepth.woundMeasurement = nil;
+        [self.document.managedObjectContext deleteObject:_woundMeasurementValueDepth];
+    }
+    [self.initialMeasurePhotoViewController showProgressViewWithMessage:@"Cleaning up"];
+    // wait for notification that document has saved
+    self.exitingWoundMeasurement = YES;
+    [self.documentManager saveDocument:self.document];
+}
+
 #pragma mark - Delete
 
 - (void)deleteWound:(WMWound *)wound
@@ -200,6 +358,144 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     [woundPhoto.wound removePhotosObject:woundPhoto];
     [managedObjectContext deleteObject:woundPhoto];
     [[NSNotificationCenter defaultCenter] postNotificationName:kWoundPhotoWillDeleteNotification object:woundPhoto];
+}
+
+#pragma mark - TransformPhotoViewControllerDelegate
+
+- (void)tranformPhotoViewController:(WMTransformPhotoViewController *)viewController didTransformPhoto:(WMWoundPhoto *)woundPhoto
+{
+    switch (self.state) {
+        case NavigationCoordinatorStateMeasureExistingPhoto:
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            // set photo scale
+            PhotoScaleViewController *photoScaleViewController = self.photoScaleViewController;
+            [viewController.navigationController pushViewController:photoScaleViewController animated:YES];
+            break;
+        }
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            [viewController clearAllReferences];
+            break;
+        }
+    }
+}
+
+- (void)tranformPhotoViewControllerDidCancel:(WMTransformPhotoViewController *)viewController
+{
+    switch (self.state) {
+        case NavigationCoordinatorStateMeasureExistingPhoto:
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            [self cancelWoundMeasurementNavigation:viewController];
+            break;
+        }
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            [viewController clearAllReferences];
+            break;
+        }
+    }
+}
+
+#pragma mark - PhotoScaleViewControllerDelegate
+
+- (void)photoScaleViewController:(WMPhotoScaleViewController *)viewController didSetPointsPerCentimeter:(CGFloat)pointsPerCentimeter
+{
+    switch (self.state) {
+        case NavigationCoordinatorStateMeasureExistingPhoto:
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            // now measure
+            WMPhotoMeasureViewController *photoMeasureViewController = self.photoMeasureViewController;
+            photoMeasureViewController.pointsPerCentimeter = pointsPerCentimeter;
+            [viewController.navigationController pushViewController:photoMeasureViewController animated:YES];
+            break;
+        }
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            [viewController clearAllReferences];
+            break;
+        }
+    }
+}
+
+- (void)photoScaleViewControllerDidCancel:(WMPhotoScaleViewController *)viewController
+{
+    switch (self.state) {
+        case NavigationCoordinatorStateMeasureExistingPhoto:
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            [self cancelWoundMeasurementNavigation:viewController];
+            break;
+        }
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            [viewController clearAllReferences];
+            break;
+        }
+    }
+}
+
+#pragma mark - PhotoMeasureViewControllerDelegate
+
+- (void)photoMeasureViewControllerDelegate:(WMPhotoMeasureViewController *)viewController length:(NSDecimalNumber *)length width:(NSDecimalNumber *)width
+{
+    switch (self.state) {
+        case NavigationCoordinatorStateMeasureExistingPhoto:
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            // update measurement
+            self.woundMeasurementValueWidth.value = [width stringValue];
+            self.woundMeasurementValueLength.value = [length stringValue];
+            // now measure
+            [viewController.navigationController pushViewController:self.photoDepthViewController animated:YES];
+            break;
+        }
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            [viewController clearAllReferences];
+            break;
+        }
+    }
+}
+
+#pragma mark - PhotoDepthViewControllerDelegate
+
+- (void)photoDepthViewControllerDelegate:(WMPhotoDepthViewController *)viewController depth:(NSDecimalNumber *)depth
+{
+    switch (self.state) {
+        case NavigationCoordinatorStateMeasureExistingPhoto:
+        case NavigationCoordinatorStateMeasureNewPhoto: {
+            // update measurement
+            self.woundMeasurementValueDepth.value = [depth stringValue];
+            // now enter undermining & tunneling
+            UndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
+            undermineTunnelViewController.woundMeasurementGroup = [WCWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            undermineTunnelViewController.showCancelButton = NO;
+            [viewController.navigationController pushViewController:undermineTunnelViewController animated:YES];
+            break;
+        }
+        case NavigationCoordinatorStateAuthenticating:
+        case NavigationCoordinatorStatePasscode:
+        case NavigationCoordinatorStateInitialized: {
+            [viewController clearAllReferences];
+            break;
+        }
+    }
+}
+
+#pragma mark - UndermineTunnelViewControllerDelegate
+
+// TODO - move to area view controller
+- (void)undermineTunnelViewControllerDidDone:(WMUndermineTunnelViewController *)viewController
+{
+    [self cancelWoundMeasurementNavigation:viewController];
+}
+
+- (void)undermineTunnelViewControllerDidCancel:(WMUndermineTunnelViewController *)viewController
+{
+    [self cancelWoundMeasurementNavigation:viewController];
 }
 
 @end

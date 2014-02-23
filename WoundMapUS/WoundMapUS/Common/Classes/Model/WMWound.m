@@ -89,4 +89,16 @@
     return woundTypes;
 }
 
+- (NSString *)shortName
+{
+    NSString *string = self.name;
+    if ([string length] == 0) {
+        string = [self.woundTypeForDisplay componentsJoinedByString:@", "];
+        if (0 == [string length]) {
+            string = @"Unspecified Wound";
+        }
+    }
+    return string;
+}
+
 @end
