@@ -20,4 +20,6 @@
 
 @interface WMSkinAssessmentGroupViewController : WMBuildGroupViewController
 
+@property (weak, nonatomic) id<SkinAssessmentGroupViewControllerDelegate> delegate;
+
 @end

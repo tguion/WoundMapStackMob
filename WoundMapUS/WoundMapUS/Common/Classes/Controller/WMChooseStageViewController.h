@@ -23,4 +23,6 @@
 
 @interface WMChooseStageViewController : WMBaseViewController
 
+@property (weak, nonatomic) id<ChooseStageDelegate> delegate;
+
 @end

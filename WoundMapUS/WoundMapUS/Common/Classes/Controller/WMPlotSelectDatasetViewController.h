@@ -18,4 +18,6 @@
 
 @interface WMPlotSelectDatasetViewController : WMBaseViewController
 
+@property (weak, nonatomic) id<PlotViewControllerDelegate> delegate;
+
 @end

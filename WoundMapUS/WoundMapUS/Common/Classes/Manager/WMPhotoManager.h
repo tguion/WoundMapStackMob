@@ -8,6 +8,8 @@
 
 #import "TakePhotoProtocols.h"
 
+NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
+
 @class WMWound, WMWoundPhoto, WMPhoto;
 
 @interface WMPhotoManager : NSObject
