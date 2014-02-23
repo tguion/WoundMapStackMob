@@ -25,6 +25,7 @@ const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
 const struct WMWoundTypeRelationships WMWoundTypeRelationships = {
 	.children = @"children",
 	.deviceCategories = @"deviceCategories",
+	.iapProducts = @"iapProducts",
 	.medicationCategories = @"medicationCategories",
 	.parent = @"parent",
 	.wounds = @"wounds",
@@ -320,6 +321,19 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"deviceCategories"];
   
 	[self didAccessValueForKey:@"deviceCategories"];
+	return result;
+}
+	
+
+@dynamic iapProducts;
+
+	
+- (NSMutableSet*)iapProductsSet {
+	[self willAccessValueForKey:@"iapProducts"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"iapProducts"];
+  
+	[self didAccessValueForKey:@"iapProducts"];
 	return result;
 }
 	

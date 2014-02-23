@@ -12,7 +12,7 @@
 
 @protocol PatientSummaryContainerDelegate <NSObject>
 
-- (void)PatientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController;
+- (void)patientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController;
 
 @end
 

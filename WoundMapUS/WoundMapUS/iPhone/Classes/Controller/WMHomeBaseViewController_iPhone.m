@@ -32,7 +32,6 @@
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
-#import <objc/runtime.h>
 
 @interface WMHomeBaseViewController_iPhone ()
 
@@ -72,37 +71,23 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Model/View synchronization
+#pragma mark - Actions
 
-- (void)updateNavigationBar
+// the action depends on parentNavigationNode
+- (IBAction)takePatientPhotoAction:(id)sender
 {
-    [super updateNavigationBar];
-    // show policy editor if home
+    [super takePatientPhotoAction:sender];
     if (nil == self.parentNavigationNode) {
-        WMNavigationTrack *navigationTrack = self.appDelegate.navigationCoordinator.navigationTrack;
-        if (!sel_isEqual(self.navigationItem.leftBarButtonItem.action, @selector(editPoliciesAction:)) && !navigationTrack.skipPolicyEditor) {
-            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings"]
-                                                                                     style:UIBarButtonItemStylePlain
-                                                                                    target:self
-                                                                                    action:@selector(editPoliciesAction:)];
-        } else if (navigationTrack.skipPolicyEditor) {
-            self.navigationItem.leftBarButtonItem = nil;
-        }
-    } else {
-        NSString *imageName = nil;
-        if (nil == self.parentNavigationNode.parentNode) {
-            // one step from home
-            imageName = @"home";
-        } else {
-            // more than one step from home
-            imageName = @"homeback";
-        }
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName]
-                                                                                 style:UIBarButtonItemStylePlain
-                                                                                target:self
-                                                                                action:@selector(homeAction:)];
+        // we are home, so take photo
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.takePatientPhotoViewController];
+        navigationController.delegate = self.appDelegate;
+        [self presentViewController:navigationController animated:YES completion:^{
+            // nothing
+        }];
     }
 }
+
+#pragma mark - Model/View synchronization
 
 #pragma mark - View Controllers
 
@@ -177,6 +162,20 @@
     }];
 }
 
+- (void)navigateToSkinAssessmentForNavigationNode:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMSkinAssessmentGroupViewController *skinAssessmentGroupViewController = self.skinAssessmentGroupViewController;
+    skinAssessmentGroupViewController.navigationNode = navigationNodeButton.navigationNode;
+    skinAssessmentGroupViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:skinAssessmentGroupViewController];
+    navigationController.delegate = self.appDelegate;
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
+}
+
 - (void)navigateToBradenScaleAssessment:(WMNavigationNodeButton *)navigationNodeButton
 {
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.bradenScaleViewController];
@@ -243,7 +242,7 @@
 {
     WMPhotoManager * photoManager = [WMPhotoManager sharedInstance];
     photoManager.delegate = self;
-    [self presentViewController:self.photoManager.imagePickerController animated:YES completion:^{
+    [self presentViewController:photoManager.imagePickerController animated:YES completion:^{
         if (photoManager.shouldUseCameraForNextPhoto) {
             [photoManager setupImagePicker];
         }
@@ -480,6 +479,158 @@
 - (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
 {
     [super devicesViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - PsychoSocialGroupViewControllerDelegate
+
+- (void)psychoSocialGroupViewControllerDidFinish:(WMPsychoSocialGroupViewController *)viewController
+{
+    [super psychoSocialGroupViewControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)psychoSocialGroupViewControllerDidCancel:(WMPsychoSocialGroupViewController *)viewController
+{
+    [super psychoSocialGroupViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - SkinAssessmentGroupViewControllerDelegate
+
+- (void)skinAssessmentGroupViewControllerDidSave:(WMSkinAssessmentGroupViewController *)viewController
+{
+    [super skinAssessmentGroupViewControllerDidSave:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
+{
+    [super skinAssessmentGroupViewControllerDidCancel:viewController];
+}
+
+#pragma mark - TakePatientPhotoDelegate
+
+- (void)takePatientPhotoViewControllerDidFinish:(WMTakePatientPhotoViewController *)viewController
+{
+    [super takePatientPhotoViewControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - OverlayViewControllerDelegate
+
+- (void)photoManager:(WMPhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata
+{
+    [super photoManager:photoManager didCaptureImage:image metadata:metadata];
+    switch (self.photoAcquisitionState) {
+        case PhotoAcquisitionStateNone: {
+            break;
+        }
+        case PhotoAcquisitionStateAcquireWoundPhoto: {
+            // tear down interface
+            [self dismissViewControllerAnimated:YES completion:^{
+                // nothing more
+            }];
+            break;
+        }
+        case PhotoAcquisitionStateAcquirePatientPhoto: {
+            // process image in background using self.photoManager scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect
+            // tear down interface
+            [self dismissViewControllerAnimated:YES completion:^{
+                // nothing more
+            }];
+            break;
+        }
+    }
+}
+
+- (void)photoManagerDidCancelCaptureImage:(WMPhotoManager *)photoManager
+{
+    // tear down interface
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing more
+    }];
+}
+
+#pragma mark - WoundTreatmentGroupsDelegate
+
+- (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
+{
+    [super woundTreatmentGroupsViewControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)woundTreatmentGroupsViewControllerDidCancel:(WMWoundTreatmentGroupsViewController *)viewController
+{
+    [super woundTreatmentGroupsViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - WoundMeasurementGroupViewControllerDelegate
+
+- (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
+{
+    [super woundMeasurementGroupViewControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController
+{
+    [super woundMeasurementGroupViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - PlotViewControllerDelegate
+
+- (void)plotViewControllerDidCancel:(WMBaseViewController *)viewController
+{
+    [super plotViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)plotViewControllerDidFinish:(WMBaseViewController *)viewController
+{
+    [super plotViewControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - PatientSummaryContainerDelegate
+
+- (void)patientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController
+{
+    [super patientSummaryContainerViewControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - ShareViewControllerDelegate
+
+- (void)shareViewControllerDidFinish:(WMShareViewController *)viewController
+{
+    [super shareViewControllerDidFinish:viewController];
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];

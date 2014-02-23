@@ -9,16 +9,16 @@
 #ifndef WoundCarePhoto_TakePhotoProtocols_h
 #define WoundCarePhoto_TakePhotoProtocols_h
 
-@class WCWoundPhoto;
-@class WoundPhotoViewController, PhotoManager;
+@class WMWoundPhoto;
+@class WMWoundPhotoViewController, WMPhotoManager;
 
 @protocol WoundPhotoViewControllerDelegate <NSObject>
-- (void)controller:(WoundPhotoViewController *)viewController didSelectWoundPhoto:(WCWoundPhoto *)woundPhoto;
+- (void)controller:(WMWoundPhotoViewController *)viewController didSelectWoundPhoto:(WMWoundPhoto *)woundPhoto;
 @end
 
 @protocol OverlayViewControllerDelegate <NSObject>
-- (void)photoManager:(PhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata;
-- (void)photoManagerDidCancelCaptureImage:(PhotoManager *)photoManager;
+- (void)photoManager:(WMPhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata;
+- (void)photoManagerDidCancelCaptureImage:(WMPhotoManager *)photoManager;
 @end
 
 

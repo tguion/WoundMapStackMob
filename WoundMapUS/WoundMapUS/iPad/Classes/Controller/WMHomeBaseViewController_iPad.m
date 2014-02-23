@@ -12,6 +12,10 @@
 #import "WMPhotosContainerViewController_iPad.h"
 #import "WMWoundDetailViewController.h"
 #import "WMSelectWoundViewController.h"
+#import "WMPlotSelectDatasetViewController.h"
+#import "WMPlotConfigureGraphViewController.h"
+#import "WMPlotGraphViewController.h"
+#import "WMNavigationPatientPhotoButton.h"
 #import "WMNavigationNodeButton.h"
 #import "UnderlayNavigationBar.h"
 #import "UnderlayToolbar.h"
@@ -87,7 +91,39 @@
     return _navigationNodePopoverController;
 }
 
+#pragma mark - Actions
+
+// the action depends on parentNavigationNode
+- (IBAction)takePatientPhotoAction:(id)sender
+{
+    [super takePatientPhotoAction:sender];
+    if (nil == self.parentNavigationNode) {
+        // we are home, so take photo
+        self.photoAcquisitionState = PhotoAcquisitionStateAcquirePatientPhoto;
+        UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.takePatientPhotoViewController];
+        UIButton *button = self.compassView.patientPhotoView;
+        CGRect rect = [self.view convertRect:button.frame fromView:button.superview];
+        [popoverController presentPopoverFromRect:rect
+                                           inView:self.view
+                         permittedArrowDirections:UIPopoverArrowDirectionAny
+                                         animated:YES];
+    }
+}
+
 #pragma mark - Navigation
+
+- (void)navigateToSkinAssessmentForNavigationNode:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMSkinAssessmentGroupViewController *skinAssessmentGroupViewController = self.skinAssessmentGroupViewController;
+    skinAssessmentGroupViewController.navigationNode = navigationNodeButton.navigationNode;
+    skinAssessmentGroupViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:skinAssessmentGroupViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
 
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton
 {
@@ -100,9 +136,6 @@
                                            inView:self.view
                          permittedArrowDirections:UIPopoverArrowDirectionAny
                                          animated:YES];
-        if (photoManager.shouldUseCameraForNextPhoto) {
-            [photoManager performSelector:@selector(setupImagePicker) withObject:nil afterDelay:0.0];
-        }
     } else {
         [self presentViewController:photoManager.imagePickerController animated:YES completion:^{
             if (photoManager.shouldUseCameraForNextPhoto) {
@@ -332,6 +365,163 @@
 - (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
 {
     [super devicesViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - PsychoSocialGroupViewControllerDelegate
+
+- (void)psychoSocialGroupViewControllerDidFinish:(WMPsychoSocialGroupViewController *)viewController
+{
+    [super psychoSocialGroupViewControllerDidFinish:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)psychoSocialGroupViewControllerDidCancel:(WMPsychoSocialGroupViewController *)viewController
+{
+    [super psychoSocialGroupViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - SkinAssessmentGroupViewControllerDelegate
+
+- (void)skinAssessmentGroupViewControllerDidSave:(WMSkinAssessmentGroupViewController *)viewController
+{
+    [super skinAssessmentGroupViewControllerDidSave:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
+{
+    [super skinAssessmentGroupViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - TakePatientPhotoDelegate
+
+- (void)takePatientPhotoViewControllerDidFinish:(WMTakePatientPhotoViewController *)viewController
+{
+    [super takePatientPhotoViewControllerDidFinish:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - OverlayViewControllerDelegate
+
+- (void)photoManager:(WMPhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata
+{
+    [super photoManager:photoManager didCaptureImage:image metadata:metadata];
+    switch (self.photoAcquisitionState) {
+        case PhotoAcquisitionStateNone: {
+            break;
+        }
+        case PhotoAcquisitionStateAcquireWoundPhoto: {
+            // tear down interface
+            if (photoManager.shouldUseCameraForNextPhoto) {
+                [_navigationNodePopoverController dismissPopoverAnimated:YES];
+                _navigationNodePopoverController = nil;
+            } else {
+                [self dismissViewControllerAnimated:YES completion:^{
+                    // nothing more
+                }];
+            }
+            break;
+        }
+        case PhotoAcquisitionStateAcquirePatientPhoto: {
+            // process image in background using self.photoManager scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect
+            [self dismissViewControllerAnimated:YES completion:^{
+                // nothing more
+            }];
+            break;
+        }
+    }
+}
+
+- (void)photoManagerDidCancelCaptureImage:(WMPhotoManager *)photoManager
+{
+    if (!photoManager.shouldUseCameraForNextPhoto) {
+        [_navigationNodePopoverController dismissPopoverAnimated:YES];
+        _navigationNodePopoverController = nil;
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // nothing
+        }];
+    }
+}
+
+#pragma mark - WoundTreatmentGroupsDelegate
+
+- (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
+{
+    [super woundTreatmentGroupsViewControllerDidFinish:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)woundTreatmentGroupsViewControllerDidCancel:(WMWoundTreatmentGroupsViewController *)viewController
+{
+    [super woundTreatmentGroupsViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - WoundMeasurementGroupViewControllerDelegate
+
+- (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
+{
+    [super woundMeasurementGroupViewControllerDidFinish:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController
+{
+    [super woundMeasurementGroupViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - PlotViewControllerDelegate
+
+- (void)plotViewControllerDidCancel:(WMBaseViewController *)viewController
+{
+    [super plotViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)plotViewControllerDidFinish:(WMBaseViewController *)viewController
+{
+    [super plotViewControllerDidFinish:viewController];
+    // could be PlotSelectDatasetViewController, PlotConfigureGraphViewController, or PlotGraphViewController
+    if ([viewController isKindOfClass:[WMPlotSelectDatasetViewController class]] || [viewController isKindOfClass:[WMPlotConfigureGraphViewController class]]) {
+        [_navigationNodePopoverController dismissPopoverAnimated:YES];
+        _navigationNodePopoverController = nil;
+    } else if ([viewController isKindOfClass:[WMPlotGraphViewController class]]) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // nothing
+        }];
+    }
+}
+
+#pragma mark - PatientSummaryContainerDelegate
+
+- (void)patientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController
+{
+    [super patientSummaryContainerViewControllerDidFinish:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - ShareViewControllerDelegate
+
+- (void)shareViewControllerDidFinish:(WMShareViewController *)viewController
+{
+    [super shareViewControllerDidFinish:viewController];
     [_navigationNodePopoverController dismissPopoverAnimated:YES];
     _navigationNodePopoverController = nil;
 }

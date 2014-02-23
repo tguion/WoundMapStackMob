@@ -74,7 +74,11 @@
 {
     NSManagedObjectContext *context = self.managedObjectContext;
     NSPersistentStore *store = self.store;
-    return [WMPatient patientCount:context persistentStore:store];
+    __block NSInteger count = 0;
+    [context performBlockAndWait:^{
+        count = [WMPatient patientCount:context persistentStore:store];
+    }];
+    return count;
 }
 
 - (WMPatient *)lastModifiedActivePatient

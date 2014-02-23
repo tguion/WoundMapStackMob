@@ -418,6 +418,127 @@
     return self.appDelegate.navigationCoordinator.woundPhoto;
 }
 
+#pragma mark - IAP proceedAlways
+
+- (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
+                                     successSelector:(SEL)selector
+                                          withObject:(id)object
+{
+    return [self presentIAPViewControllerForProductIdentifier:productIdentifier
+                                              successSelector:selector
+                                                   withObject:object
+                                                proceedAlways:NO];
+}
+
+- (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
+                                     successSelector:(SEL)selector
+                                          withObject:(id)object
+                                       proceedAlways:(BOOL)proceedAlways
+{
+    // check if this is constrained to wound type
+    IAPProduct *iapProduct = [self.localStoreManager iapProductForIdentifier:productIdentifier];
+    // CAUTION: we should have an IAP for productIdentifier
+    if (nil == iapProduct) {
+        DLog(@"Missing productIdentifier:%@ - please update our IAP products in the IAPProducts.plist and in iTunes connect", productIdentifier);
+        return YES;
+    }
+    // has user purchased the product ?
+    if (proceedAlways || ![self.iapManager isProductPurchased:iapProduct]) {
+        BOOL shouldPresentPurchaseIAPViewController = NO;
+        if (proceedAlways) {
+            shouldPresentPurchaseIAPViewController = YES;
+        } else if (nil != iapProduct.woundType) {
+            // does this node has content for the current woundType ?
+            if ([iapProduct.woundType.woundTypeCode isEqual:self.wound.woundType.woundTypeCode]) {
+                // show IAP view controller with self as delegate - use blocks to execute for success or failure of IAP
+                shouldPresentPurchaseIAPViewController = YES;
+            } // else assume there is content for this node, but IAP will enhance the content, so we will still navigate to destination
+        } else {
+            // IAP product not restricted to wound type - must show IAP view controller
+            shouldPresentPurchaseIAPViewController = YES;
+        }
+        if (shouldPresentPurchaseIAPViewController) {
+            // present IAP view controller (don't push but present), using purchase/cancel blocks to execute when IAP purchase view controller completes
+            IAPBaseViewController *viewController = nil;
+            if (iapProduct.aggregatorFlag) {
+                viewController = [[IAPAggregatorViewController alloc] initWithNibName:@"IAPAggregatorViewController" bundle:nil];
+            } else {
+                // non-aggregator view controller
+                viewController = [[IAPNonConsumableViewController alloc] initWithNibName:@"IAPNonConsumableViewController" bundle:nil];
+            }
+            viewController.iapProduct = iapProduct;
+            
+            __weak __typeof(self) weakSelf = self;
+            __weak __typeof(viewController) weakViewController = viewController;
+            viewController.acceptHandler = ^{
+                // make sure this is called on the main thread
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (nil != _iapPopoverController) {
+                        [_iapPopoverController dismissPopoverAnimated:YES];
+                        _iapPopoverController = nil;
+                        // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
+                        [weakSelf performSelector:selector withObject:object];
+                        [weakViewController clearAllReferences];
+                    } else {
+                        [weakSelf dismissViewControllerAnimated:YES completion:^{
+                            // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
+                            [weakSelf performSelector:selector withObject:object];
+                            [weakViewController clearAllReferences];
+                        }];
+                    }
+                });
+            };
+            viewController.declineHandler = ^{
+                // make sure this is called on the main thread
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (weakSelf.isIPadIdiom && nil != _iapPopoverController) {
+                        [_iapPopoverController dismissPopoverAnimated:YES];
+                        _iapPopoverController = nil;
+                        [weakViewController clearAllReferences];
+                    } else {
+                        [weakSelf dismissViewControllerAnimated:YES completion:^{
+                            [weakViewController clearAllReferences];
+                        }];
+                    }
+                });
+            };
+            
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
+            if ([object isKindOfClass:[NavigationNodeButton class]] && self.isIPadIdiom) {
+                UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+                UIButton *button = (UIButton *)object;
+                CGRect rect = [self.view convertRect:button.frame fromView:button.superview];
+                [popoverController presentPopoverFromRect:rect
+                                                   inView:self.view
+                                 permittedArrowDirections:UIPopoverArrowDirectionAny
+                                                 animated:YES];
+                _iapPopoverController = popoverController;
+            } else if ([object isKindOfClass:[UIView class]] && self.isIPadIdiom) {
+                UINavigationController *navigationController =
+                [[UINavigationController alloc] initWithNavigationBarClass:[UnderlayNavigationBar class] toolbarClass:[UnderlayToolbar class]];
+                [navigationController setViewControllers:@[viewController]];
+                
+                UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+                UIView *uiView = (UIView *)object;
+                CGRect rect = [self.view convertRect:uiView.frame fromView:uiView.superview];
+                [popoverController presentPopoverFromRect:rect
+                                                   inView:self.view
+                                 permittedArrowDirections:UIPopoverArrowDirectionUp
+                                                 animated:YES];
+                _iapPopoverController = popoverController;
+            } else {
+                [self presentViewController:navigationController animated:YES completion:^{
+                    // nothing
+                }];
+            }
+            return NO;
+        }
+    }
+    // return YES to indicate that user should proceed to destination
+    return YES;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

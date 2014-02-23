@@ -12,6 +12,7 @@ extern const struct UserAttributes {
 
 extern const struct UserRelationships {
 	__unsafe_unretained NSString *consultingGroup;
+	__unsafe_unretained NSString *iapProducts;
 	__unsafe_unretained NSString *patientConsultants;
 } UserRelationships;
 
@@ -19,6 +20,7 @@ extern const struct UserFetchedProperties {
 } UserFetchedProperties;
 
 @class WMConsultingGroup;
+@class IAPProduct;
 @class WMPatientConsultant;
 
 
@@ -75,6 +77,13 @@ extern const struct UserFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *iapProducts;
+
+- (NSMutableSet*)iapProductsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *patientConsultants;
 
 - (NSMutableSet*)patientConsultantsSet;
@@ -86,6 +95,11 @@ extern const struct UserFetchedProperties {
 @end
 
 @interface _User (CoreDataGeneratedAccessors)
+
+- (void)addIapProducts:(NSSet*)value_;
+- (void)removeIapProducts:(NSSet*)value_;
+- (void)addIapProductsObject:(IAPProduct*)value_;
+- (void)removeIapProductsObject:(IAPProduct*)value_;
 
 - (void)addPatientConsultants:(NSSet*)value_;
 - (void)removePatientConsultants:(NSSet*)value_;
@@ -118,6 +132,11 @@ extern const struct UserFetchedProperties {
 
 - (WMConsultingGroup*)primitiveConsultingGroup;
 - (void)setPrimitiveConsultingGroup:(WMConsultingGroup*)value;
+
+
+
+- (NSMutableSet*)primitiveIapProducts;
+- (void)setPrimitiveIapProducts:(NSMutableSet*)value;
 
 
 

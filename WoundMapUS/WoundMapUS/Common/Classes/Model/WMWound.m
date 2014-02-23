@@ -59,6 +59,21 @@
     return [array lastObject];
 }
 
+- (NSInteger)woundPhotosCount
+{
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WCWoundPhoto" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
+    NSError *error = nil;
+    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
+    // else
+    return count;
+}
+
 - (NSArray *)woundTypeForDisplay
 {
     if (nil == self.woundType) {

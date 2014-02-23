@@ -172,6 +172,13 @@
 		7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */; };
 		7D39DB9C18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */; };
 		7D39DB9D18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */; };
+		7D39DBA118BA8AB20054DDC3 /* WMPlotGraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9F18BA8AB20054DDC3 /* WMPlotGraphViewController.m */; };
+		7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DBA018BA8AB20054DDC3 /* WMPlotGraphViewController.xib */; };
+		7D39DBAC18BA97A70054DDC3 /* IAPAggregatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBA518BA97A70054DDC3 /* IAPAggregatorViewController.m */; };
+		7D39DBAD18BA97A70054DDC3 /* IAPAggregatorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DBA618BA97A70054DDC3 /* IAPAggregatorViewController.xib */; };
+		7D39DBAE18BA97A70054DDC3 /* IAPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBA818BA97A70054DDC3 /* IAPBaseViewController.m */; };
+		7D39DBAF18BA97A70054DDC3 /* IAPNonConsumableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBAA18BA97A70054DDC3 /* IAPNonConsumableViewController.m */; };
+		7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DBAB18BA97A70054DDC3 /* IAPNonConsumableViewController.xib */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -525,6 +532,17 @@
 		7D39DB9918BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentSummaryViewController.h; sourceTree = "<group>"; };
 		7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentSummaryViewController.m; sourceTree = "<group>"; };
 		7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundTreatmentSummaryViewController.xib; sourceTree = "<group>"; };
+		7D39DB9E18BA8AB20054DDC3 /* WMPlotGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPlotGraphViewController.h; sourceTree = "<group>"; };
+		7D39DB9F18BA8AB20054DDC3 /* WMPlotGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPlotGraphViewController.m; sourceTree = "<group>"; };
+		7D39DBA018BA8AB20054DDC3 /* WMPlotGraphViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPlotGraphViewController.xib; sourceTree = "<group>"; };
+		7D39DBA418BA97A70054DDC3 /* IAPAggregatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPAggregatorViewController.h; sourceTree = "<group>"; };
+		7D39DBA518BA97A70054DDC3 /* IAPAggregatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPAggregatorViewController.m; sourceTree = "<group>"; };
+		7D39DBA618BA97A70054DDC3 /* IAPAggregatorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IAPAggregatorViewController.xib; sourceTree = "<group>"; };
+		7D39DBA718BA97A70054DDC3 /* IAPBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPBaseViewController.h; sourceTree = "<group>"; };
+		7D39DBA818BA97A70054DDC3 /* IAPBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPBaseViewController.m; sourceTree = "<group>"; };
+		7D39DBA918BA97A70054DDC3 /* IAPNonConsumableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPNonConsumableViewController.h; sourceTree = "<group>"; };
+		7D39DBAA18BA97A70054DDC3 /* IAPNonConsumableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPNonConsumableViewController.m; sourceTree = "<group>"; };
+		7D39DBAB18BA97A70054DDC3 /* IAPNonConsumableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IAPNonConsumableViewController.xib; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -865,6 +883,21 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		7D39DBA318BA97A70054DDC3 /* IAP */ = {
+			isa = PBXGroup;
+			children = (
+				7D39DBA418BA97A70054DDC3 /* IAPAggregatorViewController.h */,
+				7D39DBA518BA97A70054DDC3 /* IAPAggregatorViewController.m */,
+				7D39DBA618BA97A70054DDC3 /* IAPAggregatorViewController.xib */,
+				7D39DBA718BA97A70054DDC3 /* IAPBaseViewController.h */,
+				7D39DBA818BA97A70054DDC3 /* IAPBaseViewController.m */,
+				7D39DBA918BA97A70054DDC3 /* IAPNonConsumableViewController.h */,
+				7D39DBAA18BA97A70054DDC3 /* IAPNonConsumableViewController.m */,
+				7D39DBAB18BA97A70054DDC3 /* IAPNonConsumableViewController.xib */,
+			);
+			path = IAP;
+			sourceTree = "<group>";
+		};
 		7D9AA25818AE549300C1B698 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -1069,6 +1102,7 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7D39DBA318BA97A70054DDC3 /* IAP */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
 				7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */,
@@ -1176,6 +1210,9 @@
 				7D39DB9918BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.h */,
 				7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */,
 				7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */,
+				7D39DB9E18BA8AB20054DDC3 /* WMPlotGraphViewController.h */,
+				7D39DB9F18BA8AB20054DDC3 /* WMPlotGraphViewController.m */,
+				7D39DBA018BA8AB20054DDC3 /* WMPlotGraphViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1642,6 +1679,8 @@
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
 				5F67D1FF18AC3BE000460C37 /* SkinIntervention.plist in Resources */,
 				5F67D20718AC3BE000460C37 /* WoundPositionDefinitions.plist in Resources */,
+				7D39DBAD18BA97A70054DDC3 /* IAPAggregatorViewController.xib in Resources */,
+				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
 				5F67D20518AC3BE000460C37 /* WoundMeasurementTemplate.plist in Resources */,
 				5F67D1F918AC3BE000460C37 /* ProfessionalTitle.plist in Resources */,
@@ -1673,6 +1712,7 @@
 				7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
 				7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */,
+				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
 				5F67D1BE18AC319000460C37 /* WMUsersViewController.xib in Resources */,
 				5F67D1FD18AC3BE000460C37 /* SkinAssessment.plist in Resources */,
 				5F6DE51B18B5885E00E87F7E /* WMInstructionContentViewController.xib in Resources */,
@@ -1802,6 +1842,7 @@
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				7D39DB0918B7EFE30054DDC3 /* WMCarePlanTableViewCell.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
+				7D39DBAE18BA97A70054DDC3 /* IAPBaseViewController.m in Sources */,
 				7D39DB3B18B824510054DDC3 /* WMBuildGroupViewController.m in Sources */,
 				7D39DB2818B821920054DDC3 /* WMPhoto.m in Sources */,
 				7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */,
@@ -1813,9 +1854,11 @@
 				7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */,
 				5F6DE54D18B6FBF400E87F7E /* WMIdEditorViewController.m in Sources */,
 				7D39DB4F18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m in Sources */,
+				7D39DBAF18BA97A70054DDC3 /* IAPNonConsumableViewController.m in Sources */,
 				7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */,
 				7D39DB2918B821920054DDC3 /* WMWoundPhoto.m in Sources */,
 				7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */,
+				7D39DBA118BA8AB20054DDC3 /* WMPlotGraphViewController.m in Sources */,
 				7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */,
 				7DDFD69118B7C2C000041927 /* WMNavigationPatientWoundContainerView.m in Sources */,
 				5F67D1BB18AC319000460C37 /* WMUserSignInViewController.m in Sources */,
@@ -1851,6 +1894,7 @@
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
+				7D39DBAC18BA97A70054DDC3 /* IAPAggregatorViewController.m in Sources */,
 				7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */,
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
 				5F6DE51018B586F600E87F7E /* WMInstructionsViewController.m in Sources */,

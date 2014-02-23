@@ -77,4 +77,12 @@
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack NS_REQUIRES_SUPER;
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 
+- (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
+                                     successSelector:(SEL)selector
+                                          withObject:(id)object
+                                       proceedAlways:(BOOL)proceedAlways;
+- (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
+                                     successSelector:(SEL)selector
+                                          withObject:(id)object;
+
 @end

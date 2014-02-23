@@ -7,6 +7,23 @@
 //
 
 #import "WMPolicyManager.h"
+#import "WMPatient.h"
+#import "WMWound.h"
+#import "WMWoundPhoto.h"
+//#import "WMWoundMeasurementGroup.h"
+//#import "WMWoundTreatmentGroup.h"
+//#import "WMCarePlanGroup.h"
+#import "WMNavigationTrack.h"
+#import "WMNavigationStage.h"
+//#import "WMBradenScale.h"
+#import "WMMedicationGroup.h"
+#import "WMDeviceGroup.h"
+//#import "WMPsychoSocialGroup.h"
+//#import "WMSkinAssessmentGroup.h"
+#import "WMNavigationNodeButton.h"
+#import "WMNavigationCoordinator.h"
+#import "CoreDataHelper.h"
+#import "WMUtilities.h"
 
 @implementation WMPolicyManager
 

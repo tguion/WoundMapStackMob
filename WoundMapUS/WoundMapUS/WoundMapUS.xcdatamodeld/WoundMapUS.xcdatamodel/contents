@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="iapproduct_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Decimal" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="proposition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="purchasedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tokenCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="viewTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="options" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="IAPProduct" inverseName="parent" inverseEntity="IAPProduct" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IAPProduct" inverseName="options" inverseEntity="IAPProduct" syncable="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="iapProducts" inverseEntity="User" syncable="YES"/>
+        <relationship name="woundType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="iapProducts" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
     <entity name="User" representedClassName="User" syncable="YES">
         <attribute name="createdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="stackMobUser" inverseEntity="WMConsultingGroup" syncable="YES"/>
+        <relationship name="iapProducts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="IAPProduct" inverseName="user" inverseEntity="IAPProduct" syncable="YES"/>
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="consultant" inverseEntity="WMPatientConsultant" syncable="YES"/>
     </entity>
     <entity name="WMAddress" representedClassName="WMAddress" syncable="YES">
@@ -465,6 +486,7 @@
         <attribute name="woundTypeCode" optional="YES" attributeType="Integer 16" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundType" inverseName="parent" inverseEntity="WMWoundType" syncable="YES"/>
         <relationship name="deviceCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMDeviceCategory" inverseName="woundTypes" inverseEntity="WMDeviceCategory" syncable="YES"/>
+        <relationship name="iapProducts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="IAPProduct" inverseName="woundType" inverseEntity="IAPProduct" syncable="YES"/>
         <relationship name="medicationCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMMedicationCategory" inverseName="woundTypes" inverseEntity="WMMedicationCategory" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="children" inverseEntity="WMWoundType" syncable="YES"/>
         <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWound" inverseName="woundType" inverseEntity="WMWound" syncable="YES"/>
@@ -497,5 +519,6 @@
         <element name="WMDeviceCategory" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDeviceGroup" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDeviceValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="IAPProduct" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

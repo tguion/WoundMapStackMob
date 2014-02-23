@@ -26,6 +26,7 @@ extern const struct WMWoundTypeAttributes {
 extern const struct WMWoundTypeRelationships {
 	__unsafe_unretained NSString *children;
 	__unsafe_unretained NSString *deviceCategories;
+	__unsafe_unretained NSString *iapProducts;
 	__unsafe_unretained NSString *medicationCategories;
 	__unsafe_unretained NSString *parent;
 	__unsafe_unretained NSString *wounds;
@@ -36,6 +37,7 @@ extern const struct WMWoundTypeFetchedProperties {
 
 @class WMWoundType;
 @class WMDeviceCategory;
+@class IAPProduct;
 @class WMMedicationCategory;
 @class WMWoundType;
 @class WMWound;
@@ -264,6 +266,13 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *iapProducts;
+
+- (NSMutableSet*)iapProductsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *medicationCategories;
 
 - (NSMutableSet*)medicationCategoriesSet;
@@ -299,6 +308,11 @@ extern const struct WMWoundTypeFetchedProperties {
 - (void)removeDeviceCategories:(NSSet*)value_;
 - (void)addDeviceCategoriesObject:(WMDeviceCategory*)value_;
 - (void)removeDeviceCategoriesObject:(WMDeviceCategory*)value_;
+
+- (void)addIapProducts:(NSSet*)value_;
+- (void)removeIapProducts:(NSSet*)value_;
+- (void)addIapProductsObject:(IAPProduct*)value_;
+- (void)removeIapProductsObject:(IAPProduct*)value_;
 
 - (void)addMedicationCategories:(NSSet*)value_;
 - (void)removeMedicationCategories:(NSSet*)value_;
@@ -434,6 +448,11 @@ extern const struct WMWoundTypeFetchedProperties {
 
 - (NSMutableSet*)primitiveDeviceCategories;
 - (void)setPrimitiveDeviceCategories:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveIapProducts;
+- (void)setPrimitiveIapProducts:(NSMutableSet*)value;
 
 
 

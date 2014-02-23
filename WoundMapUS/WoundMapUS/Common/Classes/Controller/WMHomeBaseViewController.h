@@ -32,6 +32,13 @@
 #import "WMCompassView.h"
 #import "TakePhotoProtocols.h"
 
+// maitain state for type of photo taken
+typedef enum {
+    PhotoAcquisitionStateNone,
+    PhotoAcquisitionStateAcquirePatientPhoto,
+    PhotoAcquisitionStateAcquireWoundPhoto,
+} PhotoAcquisitionState;
+
 @class WMNavigationNode;
 @class WMPatientTableViewController, WMPatientDetailViewController, WMSelectWoundViewController, WMWoundDetailViewController;
 @class WMSkinAssessmentGroupViewController, WMBradenScaleViewController, WMMedicationGroupViewController, WMDevicesViewController, WMPsychoSocialGroupViewController;
@@ -39,7 +46,9 @@
 @class WMPhotosContainerViewController, WMPlotSelectDatasetViewController, WMPatientSummaryContainerViewController, WMShareViewController;
 
 @interface WMHomeBaseViewController : WMBaseViewController
-<PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate,WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate, OverlayViewControllerDelegate>
+<PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate,WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate, OverlayViewControllerDelegate>
+
+@property (nonatomic) PhotoAcquisitionState photoAcquisitionState;
 
 @property (strong, nonatomic) IBOutlet WMNavigationPatientWoundContainerView *navigationPatientWoundContainerView;
 @property (strong, nonatomic) IBOutlet UITableViewCell *trackTableViewCell;
@@ -134,12 +143,13 @@
 - (void)navigateToWoundDetailViewControllerForNewWound:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToSelectWound:(WMNavigationNodeButton *)navigationNodeButton;
 
+- (void)navigateToSkinAssessmentForNavigationNode:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToBradenScaleAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToSkinAssessment:(WMNavigationNodeButton *)navigationNodeButton;
-- (void)navigateToPhoto:(WMNavigationNodeButton *)navigationNode;
+- (void)navigateToPhoto:(WMNavigationNode *)navigationNode;
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToWoundAssessment:(WMNavigationNodeButton *)navigationNodeButton;

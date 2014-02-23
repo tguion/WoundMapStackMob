@@ -11,6 +11,7 @@ const struct UserAttributes UserAttributes = {
 
 const struct UserRelationships UserRelationships = {
 	.consultingGroup = @"consultingGroup",
+	.iapProducts = @"iapProducts",
 	.patientConsultants = @"patientConsultants",
 };
 
@@ -73,6 +74,19 @@ const struct UserFetchedProperties UserFetchedProperties = {
 
 @dynamic consultingGroup;
 
+	
+
+@dynamic iapProducts;
+
+	
+- (NSMutableSet*)iapProductsSet {
+	[self willAccessValueForKey:@"iapProducts"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"iapProducts"];
+  
+	[self didAccessValueForKey:@"iapProducts"];
+	return result;
+}
 	
 
 @dynamic patientConsultants;
