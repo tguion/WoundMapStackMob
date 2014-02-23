@@ -395,4 +395,94 @@
     NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
 }
 
+#pragma mark - SelectWoundViewControllerDelegate
+
+- (void)selectWoundController:(WMSelectWoundViewController *)viewController didSelectWound:(WMWound *)wound
+{
+    [super selectWoundController:viewController didSelectWound:wound];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)selectWoundControllerDidCancel:(WMSelectWoundViewController *)viewController
+{
+    [super selectWoundControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - WoundDetailViewControllerDelegate
+
+- (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController
+{
+    [super woundDetailViewControllerDidUpdateWound:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController
+{
+    [super woundDetailViewControllerDidCancelUpdate:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
+{
+    [super woundDetailViewController:viewController didDeleteWound:wound];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - BradenScaleDelegate
+
+- (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController
+{
+    [super bradenScaleControllerDidFinish:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - MedicationGroupViewControllerDelegate
+
+- (void)medicationGroupViewControllerDidSave:(WMMedicationGroupViewController *)viewController
+{
+    [super medicationGroupViewControllerDidSave:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)medicationGroupViewControllerDidCancel:(WMMedicationGroupViewController *)viewController
+{
+    [super medicationGroupViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - DevicesViewControllerDelegate
+
+- (void)devicesViewControllerDidSave:(WMDevicesViewController *)viewController
+{
+    [super devicesViewControllerDidSave:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
+{
+    [super devicesViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
 @end

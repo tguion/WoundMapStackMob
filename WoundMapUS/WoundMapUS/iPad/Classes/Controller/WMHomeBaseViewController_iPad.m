@@ -11,6 +11,7 @@
 #import "WMPatientDetailViewController.h"
 #import "WMPhotosContainerViewController_iPad.h"
 #import "WMWoundDetailViewController.h"
+#import "WMSelectWoundViewController.h"
 #import "WMNavigationNodeButton.h"
 #import "UnderlayNavigationBar.h"
 #import "UnderlayToolbar.h"
@@ -253,6 +254,86 @@
     _navigationNodePopoverController = nil;
     // confirm that we have a clean moc
     NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
+}
+
+#pragma mark - SelectWoundViewControllerDelegate
+
+- (void)selectWoundController:(WMSelectWoundViewController *)viewController didSelectWound:(WMWound *)wound
+{
+    [super selectWoundController:viewController didSelectWound:wound];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)selectWoundControllerDidCancel:(WMSelectWoundViewController *)viewController
+{
+    [super selectWoundControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - WoundDetailViewControllerDelegate
+
+- (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController
+{
+    [super woundDetailViewControllerDidUpdateWound:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController
+{
+    [super woundDetailViewControllerDidCancelUpdate:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
+{
+    [super woundDetailViewController:viewController didDeleteWound:wound];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - BradenScaleDelegate
+
+- (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController
+{
+    [super bradenScaleControllerDidFinish:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - MedicationGroupViewControllerDelegate
+
+- (void)medicationGroupViewControllerDidSave:(WMMedicationGroupViewController *)viewController
+{
+    [super medicationGroupViewControllerDidSave:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)medicationGroupViewControllerDidCancel:(WMMedicationGroupViewController *)viewController
+{
+    [super medicationGroupViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - DevicesViewControllerDelegate
+
+- (void)devicesViewControllerDidSave:(WMDevicesViewController *)viewController
+{
+    [super devicesViewControllerDidSave:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
+{
+    [super devicesViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
 }
 
 @end

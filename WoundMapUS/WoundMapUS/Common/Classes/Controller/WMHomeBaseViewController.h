@@ -9,6 +9,24 @@
 #import "WMBaseViewController.h"
 #import "WMNavigationPatientWoundContainerView.h"
 #import "WMWoundTreatmentGroupsViewController.h"
+#import "WMPolicyEditorViewController.h"
+#import "WMPatientTableViewController.h"
+#import "WMSelectWoundViewController.h"
+#import "WMWoundDetailViewController.h"
+#import "WMChooseTrackViewController.h"
+#import "WMChooseStageViewController.h"
+#import "WMPatientDetailViewController.h"
+#import "WMSkinAssessmentGroupViewController.h"
+#import "WMBradenScaleViewController.h"
+#import "WMMedicationGroupViewController.h"
+#import "WMDevicesViewController.h"
+#import "WMPsychoSocialGroupViewController.h"
+#import "WMTakePatientPhotoViewController.h"
+#import "WMWoundMeasurementGroupViewController.h"
+#import "WMPhotosContainerViewController.h"
+#import "WMCarePlanGroupViewController.h"
+#import "WMPatientSummaryContainerViewController.h"
+#import "WMInstructionsViewController.h"
 #import "WMPlotSelectDatasetViewController.h"
 #import "WMShareViewController.h"
 #import "WMCompassView.h"
@@ -20,7 +38,8 @@
 @class WMCarePlanGroupViewController, WMWoundTreatmentGroupsViewController, WMWoundMeasurementGroupViewController, WMTakePatientPhotoViewController;
 @class WMPhotosContainerViewController, WMPlotSelectDatasetViewController, WMPatientSummaryContainerViewController, WMShareViewController;
 
-@interface WMHomeBaseViewController : WMBaseViewController <OverlayViewControllerDelegate>
+@interface WMHomeBaseViewController : WMBaseViewController
+<PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate,WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate, OverlayViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet WMNavigationPatientWoundContainerView *navigationPatientWoundContainerView;
 @property (strong, nonatomic) IBOutlet UITableViewCell *trackTableViewCell;

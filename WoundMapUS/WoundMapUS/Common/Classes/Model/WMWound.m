@@ -44,6 +44,21 @@
     return count;
 }
 
++ (WMWound *)woundForPatient:(WMPatient *)patient woundId:(NSString *)woundId
+{
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WCWound" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND wmwound_id == %@", patient, woundId]];
+    NSError *error = nil;
+    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
+    // else
+    return [array lastObject];
+}
+
 - (NSArray *)woundTypeForDisplay
 {
     if (nil == self.woundType) {

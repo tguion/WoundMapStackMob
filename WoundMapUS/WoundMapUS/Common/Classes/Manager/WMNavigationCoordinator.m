@@ -21,6 +21,9 @@
 NSString *const kPatientChangedNotification = @"PatientChangedNotification";
 NSString *const kWoundChangedNotification = @"WoundChangedNotification";
 NSString *const kWoundPhotoChangedNotification = @"WoundPhotoChangedNotification";
+NSString *const kWoundWillDeleteNotification = @"WoundWillDeleteNotification";
+NSString *const kWoundPhotoAddedNotification = @"WoundPhotoAddedNotification";
+NSString *const kWoundPhotoWillDeleteNotification = @"WoundPhotoWillDeleteNotification";
 NSString *const kNavigationStageChangedNotification = @"NavigationStageChangedNotification";
 NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNotification";
 
@@ -86,6 +89,35 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
 }
 
+- (WMWound *)lastWoundForPatient
+{
+    if (nil == _patient) {
+        return nil;
+    }
+    // else
+    WMWound *wound = nil;
+    NSString *patientId = _patient.wmpatient_id;
+    NSString *woundId = [[WMUserDefaultsManager sharedInstance] lastWoundIdOnDeviceForPatietId:patientId];
+    if ([woundId length] > 0) {
+        wound = [WMWound woundForPatient:_patient woundId:woundId];
+    }
+    if (nil == wound) {
+        wound = _patient.lastActiveWound;
+    }
+    return wound;
+}
+
+- (WMWound *)selectLastWoundForPatient
+{
+    WMWound *wound = self.lastWoundForPatient;
+    if (nil == wound) {
+        return nil;
+    }
+    // else
+    self.wound = wound;
+    return wound;
+}
+
 - (void)setWoundPhoto:(WMWoundPhoto *)woundPhoto
 {
     WM_ASSERT_MAIN_THREAD;
@@ -146,6 +178,28 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
             [[NSNotificationCenter defaultCenter] postNotificationName:kNavigationStageChangedNotification object:[navigationStage objectID]];
         }
     }
+}
+
+#pragma mark - Delete
+
+- (void)deleteWound:(WMWound *)wound
+{
+    BOOL deletingCurrentWound = (_wound == wound);
+    NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWoundWillDeleteNotification object:wound];
+    [wound.patient removeWoundsObject:wound];
+    [managedObjectContext deleteObject:wound];
+    if (deletingCurrentWound) {
+        [self selectLastWoundForPatient];
+    }
+}
+
+- (void)deleteWoundPhoto:(WMWoundPhoto *)woundPhoto
+{
+    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+    [woundPhoto.wound removePhotosObject:woundPhoto];
+    [managedObjectContext deleteObject:woundPhoto];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWoundPhotoWillDeleteNotification object:woundPhoto];
 }
 
 @end

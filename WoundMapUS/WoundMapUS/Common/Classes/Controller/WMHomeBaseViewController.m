@@ -7,34 +7,14 @@
 //
 
 #import "WMHomeBaseViewController.h"
-#import "WMPolicyEditorViewController.h"
-#import "WMPatientTableViewController.h"
-#import "WMSelectWoundViewController.h"
-#import "WMWoundDetailViewController.h"
-#import "WMChooseTrackViewController.h"
-#import "WMChooseStageViewController.h"
-#import "WMPatientDetailViewController.h"
-#import "WMSkinAssessmentGroupViewController.h"
-#import "WMBradenScaleViewController.h"
-#import "WMMedicationGroupViewController.h"
-#import "WMDevicesViewController.h"
-#import "WMPsychoSocialGroupViewController.h"
-#import "WMTakePatientPhotoViewController.h"
-#import "WMWoundMeasurementGroupViewController.h"
-#import "WMWoundTreatmentGroupsViewController.h"
-#import "WMPhotosContainerViewController.h"
-#import "WMCarePlanGroupViewController.h"
-#import "WMPatientSummaryContainerViewController.h"
-#import "WMInstructionsViewController.h"
-#import "WMPlotSelectDatasetViewController.h"
-#import "WMShareViewController.h"
 #import "WMCarePlanTableViewCell.h"
 #import "WMPatient.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 
-@interface WMHomeBaseViewController () <PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, SimpleTableViewControllerDelegate,WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate>
+@interface WMHomeBaseViewController ()
 
 @property (readonly, nonatomic) WMChooseTrackViewController *chooseTrackViewController;
 @property (readonly, nonatomic) WMChooseStageViewController *chooseStageViewController;
@@ -1070,126 +1050,67 @@
 
 #pragma mark - SelectWoundViewControllerDelegate
 
-- (void)selectWoundController:(SelectWoundViewController *)viewController didSelectWound:(WCWound *)wound
+- (void)selectWoundController:(WMSelectWoundViewController *)viewController didSelectWound:(WMWound *)wound
 {
-    [self.documentManager saveDocument:viewController.document];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        // clear memory
-        [viewController clearAllReferences];
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakViewController clearAllReferences];
-        }];
-    }
-    self.wound = wound;
+    [viewController clearAllReferences];
+    self.appDelegate.navigationCoordinator.wound = wound;
 }
 
-- (void)selectWoundControllerDidCancel:(SelectWoundViewController *)viewController
+- (void)selectWoundControllerDidCancel:(WMSelectWoundViewController *)viewController
 {
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        // clear memory
-        [viewController clearAllReferences];
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakViewController clearAllReferences];
-        }];
-    }
+    [viewController clearAllReferences];
 }
 
 #pragma mark - WoundDetailViewControllerDelegate
 
-- (void)woundDetailViewControllerDidUpdateWound:(WoundDetailViewController *)viewController
+- (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController
 {
     // save
-    [self.documentManager saveDocument:viewController.document];
+    NSError *error = nil;
+    [self.managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
     // clear memory
     [viewController clearAllReferences];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-            // nothing
-        }];
-    }
     // update UI
-    [self.navigationPatientWoundContainerView updateContentForDocument];
-    [self.tableView reloadData];
+    [self.navigationPatientWoundContainerView updateContentForPatient];
 }
 
-- (void)woundDetailViewControllerDidCancelUpdate:(WoundDetailViewController *)viewController
+- (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController
 {
     if (viewController.isNewWound) {
-        [self.navigationCoordinator deleteWound:viewController.wound];
-        self.wound = [self.navigationCoordinator selectLastWound];
+        [self.appDelegate.navigationCoordinator deleteWound:viewController.wound];
     }
-    [self.documentManager saveDocument:viewController.document];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        // clear memory
-        [viewController clearAllReferences];
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakViewController clearAllReferences];
-        }];
-    }
-    // reload table
-    [self.tableView reloadData];
+    // clear memory
+    [viewController clearAllReferences];
 }
 
-- (void)woundDetailViewController:(WoundDetailViewController *)viewController didDeleteWound:(WCWound *)wound
+- (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
 {
-    [self.navigationCoordinator deleteWound:wound];
-    self.wound = [self.navigationCoordinator selectLastWound];
-    [self.documentManager saveDocument:viewController.document];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        // clear memory
-        [viewController clearAllReferences];
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakViewController clearAllReferences];
-        }];
-    }
-    // reload table
-    [self.tableView reloadData];
+    [self.appDelegate.navigationCoordinator deleteWound:wound];
+    // save
+    NSError *error = nil;
+    [self.managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
+    // clear memory
+    [viewController clearAllReferences];
 }
 
 #pragma mark - BradenScaleDelegate
 
-- (void)bradenScaleControllerDidFinish:(BradenScaleViewController *)viewController
+- (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController
 {
     [viewController clearAllReferences];
     // save in order to update dateModified
-    [self.documentManager saveDocument:self.document];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        // Braden gets saved before here, so just assume changes have been made
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-            // Braden gets saved before here, so just assume changes have been made
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-        }];
-    }
+    NSError *error = nil;
+    [self.managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
 
 #pragma mark - MedicationGroupViewControllerDelegate
 
-- (void)medicationGroupViewControllerDidSave:(MedicationGroupViewController *)viewController
+- (void)medicationGroupViewControllerDidSave:(WMMedicationGroupViewController *)viewController
 {
     BOOL hasChanges = self.managedObjectContext.hasChanges;
     BOOL hasValues = [[viewController.medicationGroup medications] count] > 0;
@@ -1199,41 +1120,21 @@
     }
     [viewController clearAllReferences];
     // save in order to update dateModified
-    [self.documentManager saveDocument:self.document];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        if (hasChanges) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-        }
-    } else {
-        [self dismissViewControllerAnimated:YES completion:^{
-            if (hasChanges) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
-                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-            }
-        }];
-    }
+    NSError *error = nil;
+    [self.managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
 
-- (void)medicationGroupViewControllerDidCancel:(MedicationGroupViewController *)viewController
+- (void)medicationGroupViewControllerDidCancel:(WMMedicationGroupViewController *)viewController
 {
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        [viewController clearAllReferences];
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakViewController clearAllReferences];
-        }];
-    }
+    [viewController clearAllReferences];
 }
 
 #pragma mark - DevicesViewControllerDelegate
 
-- (void)devicesViewControllerDidSave:(DevicesViewController *)viewController
+- (void)devicesViewControllerDidSave:(WMDevicesViewController *)viewController
 {
     BOOL hasChanges = self.managedObjectContext.hasChanges;
     BOOL hasValues = [viewController.deviceGroup.values count] > 0;
@@ -1243,35 +1144,18 @@
     }
     [viewController clearAllReferences];
     // save in order to update dateModified
-    [self.documentManager saveDocument:self.document];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-        if (hasChanges) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-        }
+    NSError *error = nil;
+    [self.managedObjectContext saveAndWait:&error];
+    [WMUtilities logError:error];
+    if (hasChanges) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
     }
-    [self dismissViewControllerAnimated:YES completion:^{
-        if (hasChanges) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-        }
-    }];
 }
 
-- (void)devicesViewControllerDidCancel:(DevicesViewController *)viewController
+- (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
 {
     [viewController clearAllReferences];
-    if (self.isIPadIdiom) {
-        [_navigationNodePopoverController dismissPopoverAnimated:YES];
-        _navigationNodePopoverController = nil;
-    } else {
-        __weak __typeof(viewController) weakViewController = viewController;
-        [self dismissViewControllerAnimated:YES completion:^{
-            weakViewController.delegate = nil;
-        }];
-    }
 }
 
 #pragma mark - PsychoSocialGroupViewControllerDelegate

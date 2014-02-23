@@ -1,5 +1,8 @@
 #import "_WMDeviceValue.h"
 
 @interface WMDeviceValue : _WMDeviceValue {}
-// Custom logic goes here.
+
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store;
+
 @end

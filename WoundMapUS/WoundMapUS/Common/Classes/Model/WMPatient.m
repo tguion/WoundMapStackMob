@@ -127,6 +127,16 @@
     return [UIImage imageNamed:avitarFileName];
 }
 
+- (WMWound *)lastActiveWound
+{
+    return [self.sortedWounds firstObject];
+}
+
+- (NSArray *)sortedWounds
+{
+    return [[self.wounds allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
+}
+
 - (WMPatientConsultant *)patientConsultantSubmittedSource
 {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sm_owner == %@", self.sm_owner];

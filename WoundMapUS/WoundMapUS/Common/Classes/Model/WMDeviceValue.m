@@ -1,5 +1,5 @@
 #import "WMDeviceValue.h"
-
+#import "StackMob.h"
 
 @interface WMDeviceValue ()
 
@@ -10,6 +10,15 @@
 
 @implementation WMDeviceValue
 
-// Custom logic goes here.
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store
+{
+    WMDeviceValue *deviceValue = [[WMDeviceValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMDeviceValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+	if (store) {
+		[managedObjectContext assignObject:deviceValue toPersistentStore:store];
+	}
+    [deviceValue setValue:[deviceValue assignObjectId] forKey:[deviceValue primaryKeyField]];
+	return deviceValue;
+}
 
 @end

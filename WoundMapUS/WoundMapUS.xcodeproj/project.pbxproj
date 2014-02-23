@@ -170,6 +170,8 @@
 		7D39DB9618B94FFD0054DDC3 /* WMDeviceCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9018B94FFD0054DDC3 /* WMDeviceCategory.m */; };
 		7D39DB9718B94FFD0054DDC3 /* WMDeviceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9218B94FFD0054DDC3 /* WMDeviceGroup.m */; };
 		7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */; };
+		7D39DB9C18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */; };
+		7D39DB9D18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -520,6 +522,9 @@
 		7D39DB9218B94FFD0054DDC3 /* WMDeviceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDeviceGroup.m; sourceTree = "<group>"; };
 		7D39DB9318B94FFD0054DDC3 /* WMDeviceValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDeviceValue.h; sourceTree = "<group>"; };
 		7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDeviceValue.m; sourceTree = "<group>"; };
+		7D39DB9918BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentSummaryViewController.h; sourceTree = "<group>"; };
+		7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentSummaryViewController.m; sourceTree = "<group>"; };
+		7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundTreatmentSummaryViewController.xib; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -1168,6 +1173,9 @@
 				7D39DB5F18B921EE0054DDC3 /* WMPhotosContainerViewController.h */,
 				7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */,
 				7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */,
+				7D39DB9918BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.h */,
+				7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */,
+				7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1688,6 +1696,7 @@
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
 				7D39DAED18B7E5F80054DDC3 /* WMWoundDetailViewController.xib in Resources */,
 				5F67D1F618AC3BE000460C37 /* InterventionStatus.plist in Resources */,
+				7D39DB9D18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib in Resources */,
 				5F67D20A18AC3BE000460C37 /* WoundType.plist in Resources */,
 				7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
@@ -1753,6 +1762,7 @@
 				7DB206AF18A7D6950004DC32 /* CoreDataTVC.m in Sources */,
 				7D39DB4A18B827180054DDC3 /* WMWoundMeasurementGroupViewController.m in Sources */,
 				7DDFD69218B7C2C000041927 /* WMNavigationPatientWoundView.m in Sources */,
+				7D39DB9C18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m in Sources */,
 				7DB206B518A7D8590004DC32 /* MigrationVC.m in Sources */,
 				7DB206AC18A7D6950004DC32 /* CoreDataHelper.m in Sources */,
 				5F67D22C18AD8DF000460C37 /* WMNavigationNode.m in Sources */,

@@ -38,7 +38,7 @@
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"status.activeFlag == YES AND closedFlag == NO"]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO"]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];

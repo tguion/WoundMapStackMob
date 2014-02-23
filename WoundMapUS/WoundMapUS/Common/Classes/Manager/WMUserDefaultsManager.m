@@ -8,6 +8,7 @@
 
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationTrack.h"
+#import "WMUtilities.h"
 
 NSDateFormatter * DOB_Formatter;
 
@@ -58,6 +59,33 @@ NSDateFormatter * DOB_Formatter;
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setValue:lastPatientId forKey:@"com.mobilehealthware.woundmap.lastPatientId"];
+    [userDefaults synchronize];
+}
+
+- (NSString *)lastWoundIdOnDeviceForPatietId:(NSString *)patientId
+{
+    NSDictionary *dictionary = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"com.mobilehealthware.woundmap.lastWoundIdOnDevice"];
+    return [dictionary objectForKey:patientId];
+}
+
+- (void)setLastWoundIdOnDevice:(NSString *)lastWoundIdOnDevice forPatientId:(NSString *)patientId
+{
+    if ([patientId length] == 0) {
+        DLog(@"%@ setLastWoundIdOnDevice:forPatientId - patientId is nil !!!", NSStringFromClass([self class]));
+        return;
+    }
+    // else
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *dictionary = [[userDefaults dictionaryForKey:@"com.mobilehealthware.woundmap.lastWoundIdOnDevice"] mutableCopy];
+    if (nil == dictionary) {
+        dictionary = [[NSMutableDictionary alloc] initWithCapacity:2];
+    }
+    if (nil == lastWoundIdOnDevice) {
+        [dictionary removeObjectForKey:lastWoundIdOnDevice];
+    } else {
+        [dictionary setValue:lastWoundIdOnDevice forKey:patientId];
+    }
+    [userDefaults setObject:dictionary forKey:@"com.mobilehealthware.woundmap.lastWoundIdOnDevice"];
     [userDefaults synchronize];
 }
 

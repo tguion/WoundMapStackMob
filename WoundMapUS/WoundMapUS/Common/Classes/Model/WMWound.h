@@ -6,6 +6,8 @@
 
 + (NSInteger)woundCountForPatient:(WMPatient *)patient;
 
++ (WMWound *)woundForPatient:(WMPatient *)patient woundId:(NSString *)woundId;
+
 @property (readonly, nonatomic) NSArray *woundTypeForDisplay;
 
 @end
