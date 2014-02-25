@@ -45,10 +45,9 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMParticipantType *participantType = [array lastObject];
@@ -65,10 +64,9 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return array;

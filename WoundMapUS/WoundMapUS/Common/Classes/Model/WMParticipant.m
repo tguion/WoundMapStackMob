@@ -38,10 +38,9 @@
     __block WMParticipant *participant = nil;
     [managedObjectContext performBlockAndWait:^{
         NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
         if (nil != error) {
             [WMUtilities logError:error];
-            abort();
         }
         // else
         participant = [array lastObject];
@@ -79,10 +78,9 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"name == %@", name]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMParticipant *participant = [array lastObject];

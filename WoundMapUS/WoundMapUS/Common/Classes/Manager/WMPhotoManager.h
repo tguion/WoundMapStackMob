@@ -14,7 +14,7 @@
 
 + (WMPhotoManager *)sharedInstance;
 
-+ (void)applyTransform:(UIView *)aView forWoundPhoto:(WCWoundPhoto *)woundPhoto;
++ (void)applyTransform:(UIView *)aView forWoundPhoto:(WMWoundPhoto *)woundPhoto;
 
 @property (weak, nonatomic) id<OverlayViewControllerDelegate> delegate;             // delegate to handle taking photo process
 
@@ -25,6 +25,7 @@
 - (void)setupImagePicker;
 
 - (void)loadImageFromAssetURL:(NSURL *)assetURL into:(UIImage **)image;
+
 - (WMWoundPhoto *)processNewImage:(UIImage *)image
                          metadata:(NSDictionary *)metadata
                             wound:(WMWound *)wound

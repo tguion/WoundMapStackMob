@@ -261,10 +261,9 @@ typedef enum {
     [request setPredicate:[NSPredicate predicateWithFormat:@"patientFlag == YES"]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return array;
@@ -323,10 +322,9 @@ typedef enum {
     [request setPredicate:[NSPredicate predicateWithFormat:@"woundFlag == YES"]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return array;
@@ -394,10 +392,9 @@ typedef enum {
     }
     [request setPredicate:predicate];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return [array lastObject];
@@ -465,10 +462,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kBrowsePhotosNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -498,10 +494,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kViewGraphsNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -531,10 +526,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kShareNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -566,10 +560,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kInitialStageNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -599,10 +592,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kFollowupStageNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -632,10 +624,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kDischargeStageNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -665,10 +656,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kCarePlanNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -700,10 +690,9 @@ typedef enum {
     [request setPredicate:[NSPredicate predicateWithFormat:@"stage == %@ AND parentNode == nil", navigationStage]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return array;
@@ -727,10 +716,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND stage == %@ AND parentNode == %@", title, stage, parentNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];
@@ -761,10 +749,9 @@ typedef enum {
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d AND stage == %@ AND parentNode == %@", taskIdentifier, stage, parentNode]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationNode *navigationNode = [array lastObject];

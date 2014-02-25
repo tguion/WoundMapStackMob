@@ -50,10 +50,9 @@
     NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
     [request setPredicate:predicate];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMPatientConsultant *patientConsultant = [array lastObject];

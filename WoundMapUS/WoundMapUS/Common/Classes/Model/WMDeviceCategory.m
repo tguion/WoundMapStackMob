@@ -36,7 +36,7 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMDeviceCategory" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }
@@ -60,7 +60,7 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMDeviceCategory" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"sortRank == %@", sortRank]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }

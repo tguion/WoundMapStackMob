@@ -41,7 +41,7 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO"]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }
@@ -57,7 +57,7 @@
         [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
         [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
         NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
         if (nil != error) {
             [WMUtilities logError:error];
         }
@@ -101,7 +101,7 @@
 	[request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO AND dateCreated < %@", date]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (error) {
         [WMUtilities logError:error];
         return 0;
@@ -132,7 +132,7 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }
@@ -179,7 +179,7 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMMedication" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"groups CONTAINS (%@)", self]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }

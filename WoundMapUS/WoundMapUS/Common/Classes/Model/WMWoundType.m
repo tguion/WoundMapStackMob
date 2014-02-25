@@ -139,10 +139,9 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMWoundType *woundType = [array lastObject];
@@ -164,10 +163,9 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"woundTypeCode == %d", woundTypeCodeValue]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return array;
@@ -183,10 +181,9 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundTypeTitle]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return [array lastObject];
