@@ -45,6 +45,30 @@
         </relationship>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="addresses" inverseEntity="WMPerson" syncable="YES"/>
     </entity>
+    <entity name="WMAmountQualifier" representedClassName="WMAmountQualifier" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" maxValueString="16">
+            <userInfo/>
+        </attribute>
+        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="wmamountqualifier_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="measurementValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundMeasurementValue" inverseName="amountQualifier" inverseEntity="WMWoundMeasurementValue" syncable="YES"/>
+    </entity>
     <entity name="WMConsultingGroup" representedClassName="WMConsultingGroup" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -373,16 +397,13 @@
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTelecom" inverseName="person" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
     <entity name="WMPhoto" representedClassName="WMPhoto" syncable="YES">
-        <attribute name="column" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="originalFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="photo" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer" storedInTruthFile="YES">
             <userInfo/>
         </attribute>
-        <attribute name="row" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="scale" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="tileFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="woundPhoto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundPhoto" inverseName="photos" inverseEntity="WMWoundPhoto" syncable="YES"/>
     </entity>
     <entity name="WMTelecom" representedClassName="WMTelecom" syncable="YES">
@@ -432,9 +453,103 @@
         <attribute name="wmwound_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="woundLocationValue" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="woundTypeValue" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="measurementGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurementGroup" inverseName="wound" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
         <relationship name="patient" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="wounds" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundPhoto" inverseName="wound" inverseEntity="WMWoundPhoto" syncable="YES"/>
         <relationship name="woundType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="wounds" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundMeasurement" representedClassName="WMWoundMeasurement" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="graphableFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="iapIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="keyboardType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" maxValueString="16">
+            <userInfo/>
+        </attribute>
+        <attribute name="valueMaximum" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="valueMinimum" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="wmwoundmeasurement_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="childrenMeasurements" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurement" inverseName="parentMeasurement" inverseEntity="WMWoundMeasurement" syncable="YES"/>
+        <relationship name="parentMeasurement" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundMeasurement" inverseName="childrenMeasurements" inverseEntity="WMWoundMeasurement" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurementValue" inverseName="woundMeasurement" inverseEntity="WMWoundMeasurementValue" syncable="YES"/>
+        <relationship name="woundTypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="woundMeasurements" inverseEntity="WMWoundType" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundMeasurementGroup" representedClassName="WMWoundMeasurementGroup" syncable="YES">
+        <attribute name="closedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="continueCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" attributeType="Date" syncable="YES"/>
+        <attribute name="datePushed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="wmwoundmeasurementgroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurementValue" inverseName="group" inverseEntity="WMWoundMeasurementValue" syncable="YES"/>
+        <relationship name="wound" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="measurementGroups" inverseEntity="WMWound" syncable="YES"/>
+        <relationship name="woundPhoto" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundPhoto" inverseName="measurementGroups" inverseEntity="WMWoundPhoto" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundMeasurementTunnelValue" representedClassName="WMWoundMeasurementTunnelValue" parentEntity="WMWoundMeasurementValue" syncable="YES">
+        <attribute name="fromOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="3" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="wmwoundmeasurementtunnelvalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundMeasurementUndermineValue" representedClassName="WMWoundMeasurementUndermineValue" parentEntity="WMWoundMeasurementTunnelValue" syncable="YES">
+        <attribute name="toOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="5" syncable="YES"/>
+        <attribute name="wmwoundmeasurementunderminevalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundMeasurementValue" representedClassName="WMWoundMeasurementValue" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" attributeType="Date" syncable="YES"/>
+        <attribute name="datePushed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="revisedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmwoundmeasurementvalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="amountQualifier" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMAmountQualifier" inverseName="measurementValues" inverseEntity="WMAmountQualifier" syncable="YES"/>
+        <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundMeasurementGroup" inverseName="values" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
+        <relationship name="odor" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundOdor" inverseName="measurementValues" inverseEntity="WMWoundOdor" syncable="YES"/>
+        <relationship name="woundMeasurement" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundMeasurement" inverseName="values" inverseEntity="WMWoundMeasurement" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundOdor" representedClassName="WMWoundOdor" syncable="YES">
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" maxValueString="16">
+            <userInfo/>
+        </attribute>
+        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <relationship name="measurementValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundMeasurementValue" inverseName="odor" inverseEntity="WMWoundMeasurementValue" syncable="YES"/>
     </entity>
     <entity name="WMWoundPhoto" representedClassName="WMWoundPhoto" syncable="YES">
         <attribute name="comments" optional="YES" attributeType="String" syncable="YES"/>
@@ -464,6 +579,7 @@
         <attribute name="transformSizeAsString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="transformTranslationX" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="transformTranslationY" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="measurementGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundMeasurementGroup" inverseName="woundPhoto" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPhoto" inverseName="woundPhoto" inverseEntity="WMPhoto" syncable="YES"/>
         <relationship name="wound" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="photos" inverseEntity="WMWound" syncable="YES"/>
     </entity>
@@ -489,14 +605,23 @@
         <relationship name="iapProducts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="IAPProduct" inverseName="woundType" inverseEntity="IAPProduct" syncable="YES"/>
         <relationship name="medicationCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMMedicationCategory" inverseName="woundTypes" inverseEntity="WMMedicationCategory" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundType" inverseName="children" inverseEntity="WMWoundType" syncable="YES"/>
+        <relationship name="woundMeasurements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundMeasurement" inverseName="woundTypes" inverseEntity="WMWoundMeasurement" syncable="YES"/>
         <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWound" inverseName="woundType" inverseEntity="WMWound" syncable="YES"/>
     </entity>
     <elements>
+        <element name="IAPProduct" positionX="0" positionY="0" width="0" height="0"/>
         <element name="User" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMAddress" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMConsultingGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDevice" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceCategory" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMInstruction" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedication" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedicationCategory" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedicationGroup" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="0" height="0"/>
@@ -506,19 +631,18 @@
         <element name="WMPatient" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPhoto" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWound" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurement" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundPhoto" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMPhoto" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMMedication" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMMedicationCategory" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMMedicationGroup" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDevice" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDeviceCategory" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDeviceGroup" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDeviceValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="IAPProduct" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementTunnelValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementUndermineValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMAmountQualifier" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundOdor" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

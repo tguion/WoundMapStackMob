@@ -29,6 +29,7 @@ extern const struct WMWoundTypeRelationships {
 	__unsafe_unretained NSString *iapProducts;
 	__unsafe_unretained NSString *medicationCategories;
 	__unsafe_unretained NSString *parent;
+	__unsafe_unretained NSString *woundMeasurements;
 	__unsafe_unretained NSString *wounds;
 } WMWoundTypeRelationships;
 
@@ -40,6 +41,7 @@ extern const struct WMWoundTypeFetchedProperties {
 @class IAPProduct;
 @class WMMedicationCategory;
 @class WMWoundType;
+@class WMWoundMeasurement;
 @class WMWound;
 
 
@@ -287,6 +289,13 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *woundMeasurements;
+
+- (NSMutableSet*)woundMeasurementsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *wounds;
 
 - (NSMutableSet*)woundsSet;
@@ -318,6 +327,11 @@ extern const struct WMWoundTypeFetchedProperties {
 - (void)removeMedicationCategories:(NSSet*)value_;
 - (void)addMedicationCategoriesObject:(WMMedicationCategory*)value_;
 - (void)removeMedicationCategoriesObject:(WMMedicationCategory*)value_;
+
+- (void)addWoundMeasurements:(NSSet*)value_;
+- (void)removeWoundMeasurements:(NSSet*)value_;
+- (void)addWoundMeasurementsObject:(WMWoundMeasurement*)value_;
+- (void)removeWoundMeasurementsObject:(WMWoundMeasurement*)value_;
 
 - (void)addWounds:(NSSet*)value_;
 - (void)removeWounds:(NSSet*)value_;
@@ -463,6 +477,11 @@ extern const struct WMWoundTypeFetchedProperties {
 
 - (WMWoundType*)primitiveParent;
 - (void)setPrimitiveParent:(WMWoundType*)value;
+
+
+
+- (NSMutableSet*)primitiveWoundMeasurements;
+- (void)setPrimitiveWoundMeasurements:(NSMutableSet*)value;
 
 
 

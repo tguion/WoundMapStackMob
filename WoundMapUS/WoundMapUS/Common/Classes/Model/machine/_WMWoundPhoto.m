@@ -24,6 +24,7 @@ const struct WMWoundPhotoAttributes WMWoundPhotoAttributes = {
 };
 
 const struct WMWoundPhotoRelationships WMWoundPhotoRelationships = {
+	.measurementGroups = @"measurementGroups",
 	.photos = @"photos",
 	.wound = @"wound",
 };
@@ -374,6 +375,19 @@ const struct WMWoundPhotoFetchedProperties WMWoundPhotoFetchedProperties = {
 
 
 
+
+@dynamic measurementGroups;
+
+	
+- (NSMutableSet*)measurementGroupsSet {
+	[self willAccessValueForKey:@"measurementGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"measurementGroups"];
+  
+	[self didAccessValueForKey:@"measurementGroups"];
+	return result;
+}
+	
 
 @dynamic photos;
 

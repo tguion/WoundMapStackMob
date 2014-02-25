@@ -8,6 +8,8 @@
 
 #import "WMNavigationNode.h"
 
+extern NSString *const kTaskDidCompleteNotification;
+
 @class WMNavigationNode, WMNavigationNodeButton;
 
 @interface WMPolicyManager : NSObject

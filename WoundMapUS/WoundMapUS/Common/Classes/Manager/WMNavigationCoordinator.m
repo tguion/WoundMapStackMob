@@ -14,8 +14,12 @@
 #import "WMWoundPhoto.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
+#import "WMWoundMeasurementGroup.h"
+#import "WMWoundMeasurementValue.h"
+#import "WMWoundMeasurement.h"
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
+#import "WMPolicyManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -33,6 +37,17 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+@property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueWidth;
+@property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueLength;
+@property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueDepth;
+@property (readonly, nonatomic) WMWoundMeasurement *underminingTunnelingWoundMeasurement;
+
+@property (readonly, nonatomic) WMTransformPhotoViewController *transformPhotoViewController;
+@property (readonly, nonatomic) WMPhotoScaleViewController *photoScaleViewController;
+@property (readonly, nonatomic) WMPhotoMeasureViewController *photoMeasureViewController;
+@property (readonly, nonatomic) WMPhotoDepthViewController *photoDepthViewController;
+@property (readonly, nonatomic) WMUndermineTunnelViewController *undermineTunnelViewController;
 
 @property (nonatomic) BOOL exitingWoundMeasurement;                                         // exiting measurement
 
@@ -66,6 +81,17 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 #pragma mark - Core
 
+- (void)clearPatientCache
+{
+    _patient = nil;
+    _wound = nil;
+    _woundPhoto = nil;
+    _woundMeasurementValueWidth = nil;
+    _woundMeasurementValueLength = nil;
+    _woundMeasurementValueDepth  = nil;
+    _underminingTunnelingWoundMeasurement = nil;
+}
+
 - (void)setPatient:(WMPatient *)patient
 {
     WM_ASSERT_MAIN_THREAD;
@@ -73,6 +99,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         return;
     }
     // else
+    [self clearPatientCache];
     _patient = patient;
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
@@ -183,6 +210,44 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
 }
 
+- (WMWoundMeasurementValue *)woundMeasurementValueWidth
+{
+    if (nil == _woundMeasurementValueWidth) {
+        if (nil != self.woundPhoto) {
+            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            _woundMeasurementValueWidth = group.measurementValueWidth;
+        }
+    }
+    return _woundMeasurementValueWidth;
+}
+
+- (WMWoundMeasurementValue *)woundMeasurementValueLength
+{
+    if (nil == _woundMeasurementValueLength) {
+        if (nil != self.woundPhoto) {
+            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            _woundMeasurementValueLength = group.measurementValueLength;
+        }
+    }
+    return _woundMeasurementValueLength;
+}
+
+- (WMWoundMeasurementValue *)woundMeasurementValueDepth
+{
+    if (nil == _woundMeasurementValueDepth) {
+        if (nil != self.woundPhoto) {
+            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            _woundMeasurementValueDepth = group.measurementValueDepth;
+        }
+    }
+    return _woundMeasurementValueDepth;
+}
+
+- (WMWoundMeasurement *)underminingTunnelingWoundMeasurement
+{
+    return [WMWoundMeasurement underminingTunnelingWoundMeasurement:[self.woundPhoto managedObjectContext] persistentStore:nil];
+}
+
 #pragma mark - View Controllers
 
 - (WMTransformPhotoViewController *)transformPhotoViewController
@@ -190,6 +255,34 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     WMTransformPhotoViewController *transformPhotoViewController = [[WMTransformPhotoViewController alloc] initWithNibName:@"WMTransformPhotoViewController" bundle:nil];
     transformPhotoViewController.delegate = self;
     return transformPhotoViewController;
+}
+
+- (WMPhotoScaleViewController *)photoScaleViewController
+{
+    WMPhotoScaleViewController *photoScaleViewController = [[WMPhotoScaleViewController alloc] initWithNibName:@"WMPhotoScaleViewController" bundle:nil];
+    photoScaleViewController.delegate = self;
+    return photoScaleViewController;
+}
+
+- (WMPhotoMeasureViewController *)photoMeasureViewController
+{
+    WMPhotoMeasureViewController *photoMeasureViewController = [[WMPhotoMeasureViewController alloc] initWithNibName:@"WMPhotoMeasureViewController" bundle:nil];
+    photoMeasureViewController.delegate = self;
+    return photoMeasureViewController;
+}
+
+- (WMPhotoDepthViewController *)photoDepthViewController
+{
+    WMPhotoDepthViewController *photoDepthViewController = [[WMPhotoDepthViewController alloc] initWithNibName:@"WMPhotoDepthViewController" bundle:nil];
+    photoDepthViewController.delegate = self;
+    return photoDepthViewController;
+}
+
+- (WMUndermineTunnelViewController *)undermineTunnelViewController
+{
+    WMUndermineTunnelViewController *undermineTunnelViewController = [[WMUndermineTunnelViewController alloc] initWithNibName:@"WMUndermineTunnelViewController" bundle:nil];
+    undermineTunnelViewController.delegate = self;
+    return undermineTunnelViewController;
 }
 
 #pragma mark - Wound Measurements
@@ -263,28 +356,16 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         // already cancelled
         return;
     }
-    // else
-    if (self.appDelegate.photoManager.deferTilesProcessAfterMeasurement && !self.woundPhoto.tilingHasStarted) {
-        self.woundPhoto.tilingHasStarted = YES;
-        // save changes now
-        [self.documentManager saveDocument:self.document];
-        WCPhoto *originalPhoto = [self.woundPhoto fetchOrCreatePhotoForType:PhotoTypeOriginal];
-        [self.appDelegate.photoManager createTiledImagesForWoundPhoto:self.woundPhoto photo:originalPhoto photoType:PhotoTypeTile];
-    }
     // clear caches for all view controllers
-    NSEnumerator *enumerator = [viewController.navigationController.viewControllers reverseObjectEnumerator];
-    BaseViewController *baseViewController = (BaseViewController *)[enumerator nextObject];
-    while (nil != baseViewController) {
-        if (baseViewController == self.initialMeasurePhotoViewController) {
-            if (!self.isIPadIdiom) {
-                [baseViewController clearAllReferences];
-            }
-            break;
+    BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    NSArray *viewControllers = viewController.navigationController.viewControllers;
+    SEL selector = @selector(clearAllReferences);
+    [viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj respondsToSelector:selector]) {
+            SuppressPerformSelectorLeakWarning([obj performSelector:selector]);
+            *stop = YES;
         }
-        // else
-        [baseViewController clearAllReferences];
-        baseViewController = (BaseViewController *)[enumerator nextObject];
-    }
+    }];
     switch (self.state) {
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
@@ -294,14 +375,14 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         }
         case NavigationCoordinatorStateMeasureNewPhoto: {
             // post notification that a task has finished
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMeasurePhotoNode]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kMeasurePhotoNode)];
             [viewController.navigationController popToViewController:self.initialMeasurePhotoViewController animated:NO];
             break;
         }
         case NavigationCoordinatorStateMeasureExistingPhoto: {
             // post notification that a task has finished
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMeasurePhotoNode]];
-            if (self.isIPadIdiom) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kMeasurePhotoNode)];
+            if (isIPadIdiom) {
                 [viewController.navigationController popToViewController:self.initialMeasurePhotoViewController animated:NO];
             } else {
                 [self.initialMeasurePhotoViewController dismissViewControllerAnimated:NO completion:^{
@@ -320,22 +401,28 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     if (nil != _woundMeasurementValueWidth && [_woundMeasurementValueWidth.value length] == 0) {
         _woundMeasurementValueWidth.group = nil;
         _woundMeasurementValueWidth.woundMeasurement = nil;
-        [self.document.managedObjectContext deleteObject:_woundMeasurementValueWidth];
+        [self.managedObjectContext deleteObject:_woundMeasurementValueWidth];
+        _woundMeasurementValueWidth = nil;
     }
     if (nil != _woundMeasurementValueLength && [_woundMeasurementValueLength.value length] == 0) {
         _woundMeasurementValueLength.group = nil;
         _woundMeasurementValueLength.woundMeasurement = nil;
-        [self.document.managedObjectContext deleteObject:_woundMeasurementValueLength];
+        [self.managedObjectContext deleteObject:_woundMeasurementValueLength];
+        _woundMeasurementValueLength = nil;
     }
     if (nil != _woundMeasurementValueDepth && [_woundMeasurementValueDepth.value length] == 0) {
         _woundMeasurementValueDepth.group = nil;
         _woundMeasurementValueDepth.woundMeasurement = nil;
-        [self.document.managedObjectContext deleteObject:_woundMeasurementValueDepth];
+        [self.managedObjectContext deleteObject:_woundMeasurementValueDepth];
+        _woundMeasurementValueDepth = nil;
     }
-    [self.initialMeasurePhotoViewController showProgressViewWithMessage:@"Cleaning up"];
     // wait for notification that document has saved
     self.exitingWoundMeasurement = YES;
-    [self.documentManager saveDocument:self.document];
+    [self.managedObjectContext saveOnSuccess:^{
+        // nothing more
+    } onFailure:^(NSError *error){
+        [WMUtilities logError:error];
+    }];
 }
 
 #pragma mark - Delete
@@ -368,7 +455,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateMeasureExistingPhoto:
         case NavigationCoordinatorStateMeasureNewPhoto: {
             // set photo scale
-            PhotoScaleViewController *photoScaleViewController = self.photoScaleViewController;
+            WMPhotoScaleViewController *photoScaleViewController = self.photoScaleViewController;
             [viewController.navigationController pushViewController:photoScaleViewController animated:YES];
             break;
         }
@@ -470,7 +557,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
             // update measurement
             self.woundMeasurementValueDepth.value = [depth stringValue];
             // now enter undermining & tunneling
-            UndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
+            WMUndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
             undermineTunnelViewController.woundMeasurementGroup = [WCWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
             undermineTunnelViewController.showCancelButton = NO;
             [viewController.navigationController pushViewController:undermineTunnelViewController animated:YES];

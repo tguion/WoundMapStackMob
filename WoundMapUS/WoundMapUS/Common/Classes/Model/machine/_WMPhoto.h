@@ -5,14 +5,11 @@
 
 
 extern const struct WMPhotoAttributes {
-	__unsafe_unretained NSString *column;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *originalFlag;
 	__unsafe_unretained NSString *photo;
-	__unsafe_unretained NSString *row;
 	__unsafe_unretained NSString *scale;
 	__unsafe_unretained NSString *sortRank;
-	__unsafe_unretained NSString *tileFlag;
 } WMPhotoAttributes;
 
 extern const struct WMPhotoRelationships {
@@ -30,9 +27,6 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-
-
-
 @interface WMPhotoID : NSManagedObjectID {}
 @end
 
@@ -41,20 +35,6 @@ extern const struct WMPhotoFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (WMPhotoID*)objectID;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* column;
-
-
-
-@property int16_t columnValue;
-- (int16_t)columnValue;
-- (void)setColumnValue:(int16_t)value_;
-
-//- (BOOL)validateColumn:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -98,20 +78,6 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* row;
-
-
-
-@property int16_t rowValue;
-- (int16_t)rowValue;
-- (void)setRowValue:(int16_t)value_;
-
-//- (BOOL)validateRow:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSNumber* scale;
 
 
@@ -140,20 +106,6 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* tileFlag;
-
-
-
-@property BOOL tileFlagValue;
-- (BOOL)tileFlagValue;
-- (void)setTileFlagValue:(BOOL)value_;
-
-//- (BOOL)validateTileFlag:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) WMWoundPhoto *woundPhoto;
 
 //- (BOOL)validateWoundPhoto:(id*)value_ error:(NSError**)error_;
@@ -169,15 +121,6 @@ extern const struct WMPhotoFetchedProperties {
 @end
 
 @interface _WMPhoto (CoreDataGeneratedPrimitiveAccessors)
-
-
-- (NSNumber*)primitiveColumn;
-- (void)setPrimitiveColumn:(NSNumber*)value;
-
-- (int16_t)primitiveColumnValue;
-- (void)setPrimitiveColumnValue:(int16_t)value_;
-
-
 
 
 - (NSNumber*)primitiveFlags;
@@ -204,15 +147,6 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-- (NSNumber*)primitiveRow;
-- (void)setPrimitiveRow:(NSNumber*)value;
-
-- (int16_t)primitiveRowValue;
-- (void)setPrimitiveRowValue:(int16_t)value_;
-
-
-
-
 - (NSNumber*)primitiveScale;
 - (void)setPrimitiveScale:(NSNumber*)value;
 
@@ -227,15 +161,6 @@ extern const struct WMPhotoFetchedProperties {
 
 - (int16_t)primitiveSortRankValue;
 - (void)setPrimitiveSortRankValue:(int16_t)value_;
-
-
-
-
-- (NSNumber*)primitiveTileFlag;
-- (void)setPrimitiveTileFlag:(NSNumber*)value;
-
-- (BOOL)primitiveTileFlagValue;
-- (void)setPrimitiveTileFlagValue:(BOOL)value_;
 
 
 

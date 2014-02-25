@@ -1,5 +1,6 @@
 #import "WMWound.h"
 #import "WMWoundType.h"
+#import "WMWoundPhoto.h"
 #import "WMPatient.h"
 #import "WMUtilities.h"
 #import "StackMob.h"
@@ -99,6 +100,56 @@
         }
     }
     return string;
+}
+
+- (WMWoundPhoto *)lastWoundPhoto
+{
+    NSArray *objectIDs = self.sortedWoundPhotoIDs;
+    if (0 == [objectIDs count]) {
+        return nil;
+    }
+    // else
+    return (WMWoundPhoto *)[[self managedObjectContext] objectWithID:[objectIDs lastObject]];
+}
+
+- (WMWoundPhoto *)referenceWoundPhoto:(WMWoundPhoto *)woundPhoto
+{
+    NSManagedObjectID *objectID = [woundPhoto objectID];
+    NSArray *woundPhotoIDs = self.sortedWoundPhotoIDs;
+    NSInteger index = [woundPhotoIDs indexOfObject:objectID];
+    if (index > 0) {
+        return (WMWoundPhoto *)[[self managedObjectContext] objectWithID:[woundPhotoIDs objectAtIndex:(index - 1)]];
+    }
+    // else
+    return (WMWoundPhoto *)[[self managedObjectContext] objectWithID:[woundPhotoIDs lastObject]];
+}
+
+- (BOOL)hasPreviousWoundPhoto:(WMWoundPhoto *)woundPhoto
+{
+    NSManagedObjectID *objectID = [woundPhoto objectID];
+    NSArray *woundPhotoIDs = self.sortedWoundPhotoIDs;
+    NSInteger index = [woundPhotoIDs indexOfObject:objectID];
+    if (index > 0) {
+        return YES;
+    }
+    // else
+    return NO;
+}
+
+- (NSArray *)sortedWoundPhotoIDs
+{
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WCWoundPhoto" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
+    [request setResultType:NSManagedObjectIDResultType];
+    NSError *error = nil;
+    NSArray *objectIDs = [managedObjectContext executeFetchRequestAndWait:request returnManagedObjectIDs:YES error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
+    return objectIDs;
 }
 
 @end
