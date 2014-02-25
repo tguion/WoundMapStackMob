@@ -25,6 +25,7 @@ extern const struct WMWoundPhotoAttributes {
 } WMWoundPhotoAttributes;
 
 extern const struct WMWoundPhotoRelationships {
+	__unsafe_unretained NSString *measurementGroups;
 	__unsafe_unretained NSString *photos;
 	__unsafe_unretained NSString *wound;
 } WMWoundPhotoRelationships;
@@ -32,6 +33,7 @@ extern const struct WMWoundPhotoRelationships {
 extern const struct WMWoundPhotoFetchedProperties {
 } WMWoundPhotoFetchedProperties;
 
+@class WMWoundMeasurementGroup;
 @class WMPhoto;
 @class WMWound;
 
@@ -268,6 +270,13 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *measurementGroups;
+
+- (NSMutableSet*)measurementGroupsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *photos;
 
 - (NSMutableSet*)photosSet;
@@ -286,6 +295,11 @@ extern const struct WMWoundPhotoFetchedProperties {
 @end
 
 @interface _WMWoundPhoto (CoreDataGeneratedAccessors)
+
+- (void)addMeasurementGroups:(NSSet*)value_;
+- (void)removeMeasurementGroups:(NSSet*)value_;
+- (void)addMeasurementGroupsObject:(WMWoundMeasurementGroup*)value_;
+- (void)removeMeasurementGroupsObject:(WMWoundMeasurementGroup*)value_;
 
 - (void)addPhotos:(NSSet*)value_;
 - (void)removePhotos:(NSSet*)value_;
@@ -421,6 +435,11 @@ extern const struct WMWoundPhotoFetchedProperties {
 - (void)setPrimitiveTransformTranslationYValue:(float)value_;
 
 
+
+
+
+- (NSMutableSet*)primitiveMeasurementGroups;
+- (void)setPrimitiveMeasurementGroups:(NSMutableSet*)value;
 
 
 

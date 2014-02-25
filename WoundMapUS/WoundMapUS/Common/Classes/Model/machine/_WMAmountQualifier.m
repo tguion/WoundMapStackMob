@@ -1,61 +1,54 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMWoundType.m instead.
+// Make changes to WMAmountQualifier.m instead.
 
-#import "_WMWoundType.h"
+#import "_WMAmountQualifier.h"
 
-const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
+const struct WMAmountQualifierAttributes WMAmountQualifierAttributes = {
 	.createddate = @"createddate",
 	.definition = @"definition",
 	.flags = @"flags",
 	.label = @"label",
 	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
-	.options = @"options",
 	.placeHolder = @"placeHolder",
 	.sectionTitle = @"sectionTitle",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
+	.unit = @"unit",
 	.valueTypeCode = @"valueTypeCode",
-	.wmwoundtype_id = @"wmwoundtype_id",
-	.woundTypeCode = @"woundTypeCode",
+	.wmamountqualifier_id = @"wmamountqualifier_id",
 };
 
-const struct WMWoundTypeRelationships WMWoundTypeRelationships = {
-	.children = @"children",
-	.deviceCategories = @"deviceCategories",
-	.iapProducts = @"iapProducts",
-	.medicationCategories = @"medicationCategories",
-	.parent = @"parent",
-	.woundMeasurements = @"woundMeasurements",
-	.wounds = @"wounds",
+const struct WMAmountQualifierRelationships WMAmountQualifierRelationships = {
+	.measurementValues = @"measurementValues",
 };
 
-const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
+const struct WMAmountQualifierFetchedProperties WMAmountQualifierFetchedProperties = {
 };
 
-@implementation WMWoundTypeID
+@implementation WMAmountQualifierID
 @end
 
-@implementation _WMWoundType
+@implementation _WMAmountQualifier
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"WMWoundType" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"WMAmountQualifier" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"WMWoundType";
+	return @"WMAmountQualifier";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"WMAmountQualifier" inManagedObjectContext:moc_];
 }
 
-- (WMWoundTypeID*)objectID {
-	return (WMWoundTypeID*)[super objectID];
+- (WMAmountQualifierID*)objectID {
+	return (WMAmountQualifierID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
@@ -78,11 +71,6 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 	}
 	if ([key isEqualToString:@"valueTypeCodeValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"valueTypeCode"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"woundTypeCodeValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"woundTypeCode"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -148,13 +136,6 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 @dynamic loincCode;
-
-
-
-
-
-
-@dynamic options;
 
 
 
@@ -241,6 +222,13 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 
+@dynamic unit;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -267,117 +255,22 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 
-@dynamic wmwoundtype_id;
+@dynamic wmamountqualifier_id;
 
 
 
 
 
 
-@dynamic woundTypeCode;
-
-
-
-- (int16_t)woundTypeCodeValue {
-	NSNumber *result = [self woundTypeCode];
-	return [result shortValue];
-}
-
-- (void)setWoundTypeCodeValue:(int16_t)value_ {
-	[self setWoundTypeCode:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveWoundTypeCodeValue {
-	NSNumber *result = [self primitiveWoundTypeCode];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveWoundTypeCodeValue:(int16_t)value_ {
-	[self setPrimitiveWoundTypeCode:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-@dynamic children;
+@dynamic measurementValues;
 
 	
-- (NSMutableSet*)childrenSet {
-	[self willAccessValueForKey:@"children"];
+- (NSMutableSet*)measurementValuesSet {
+	[self willAccessValueForKey:@"measurementValues"];
   
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"children"];
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"measurementValues"];
   
-	[self didAccessValueForKey:@"children"];
-	return result;
-}
-	
-
-@dynamic deviceCategories;
-
-	
-- (NSMutableSet*)deviceCategoriesSet {
-	[self willAccessValueForKey:@"deviceCategories"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"deviceCategories"];
-  
-	[self didAccessValueForKey:@"deviceCategories"];
-	return result;
-}
-	
-
-@dynamic iapProducts;
-
-	
-- (NSMutableSet*)iapProductsSet {
-	[self willAccessValueForKey:@"iapProducts"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"iapProducts"];
-  
-	[self didAccessValueForKey:@"iapProducts"];
-	return result;
-}
-	
-
-@dynamic medicationCategories;
-
-	
-- (NSMutableSet*)medicationCategoriesSet {
-	[self willAccessValueForKey:@"medicationCategories"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medicationCategories"];
-  
-	[self didAccessValueForKey:@"medicationCategories"];
-	return result;
-}
-	
-
-@dynamic parent;
-
-	
-
-@dynamic woundMeasurements;
-
-	
-- (NSMutableSet*)woundMeasurementsSet {
-	[self willAccessValueForKey:@"woundMeasurements"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"woundMeasurements"];
-  
-	[self didAccessValueForKey:@"woundMeasurements"];
-	return result;
-}
-	
-
-@dynamic wounds;
-
-	
-- (NSMutableSet*)woundsSet {
-	[self willAccessValueForKey:@"wounds"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"wounds"];
-  
-	[self didAccessValueForKey:@"wounds"];
+	[self didAccessValueForKey:@"measurementValues"];
 	return result;
 }
 	

@@ -4,14 +4,11 @@
 #import "_WMPhoto.h"
 
 const struct WMPhotoAttributes WMPhotoAttributes = {
-	.column = @"column",
 	.flags = @"flags",
 	.originalFlag = @"originalFlag",
 	.photo = @"photo",
-	.row = @"row",
 	.scale = @"scale",
 	.sortRank = @"sortRank",
-	.tileFlag = @"tileFlag",
 };
 
 const struct WMPhotoRelationships WMPhotoRelationships = {
@@ -47,11 +44,6 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"columnValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"column"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 	if ([key isEqualToString:@"flagsValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"flags"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -59,11 +51,6 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 	}
 	if ([key isEqualToString:@"originalFlagValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"originalFlag"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"rowValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"row"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -77,40 +64,9 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"tileFlagValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"tileFlag"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic column;
-
-
-
-- (int16_t)columnValue {
-	NSNumber *result = [self column];
-	return [result shortValue];
-}
-
-- (void)setColumnValue:(int16_t)value_ {
-	[self setColumn:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveColumnValue {
-	NSNumber *result = [self primitiveColumn];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveColumnValue:(int16_t)value_ {
-	[self setPrimitiveColumn:[NSNumber numberWithShort:value_]];
-}
-
 
 
 
@@ -174,32 +130,6 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 
 
 
-@dynamic row;
-
-
-
-- (int16_t)rowValue {
-	NSNumber *result = [self row];
-	return [result shortValue];
-}
-
-- (void)setRowValue:(int16_t)value_ {
-	[self setRow:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveRowValue {
-	NSNumber *result = [self primitiveRow];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveRowValue:(int16_t)value_ {
-	[self setPrimitiveRow:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
 @dynamic scale;
 
 
@@ -246,32 +176,6 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 
 - (void)setPrimitiveSortRankValue:(int16_t)value_ {
 	[self setPrimitiveSortRank:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-@dynamic tileFlag;
-
-
-
-- (BOOL)tileFlagValue {
-	NSNumber *result = [self tileFlag];
-	return [result boolValue];
-}
-
-- (void)setTileFlagValue:(BOOL)value_ {
-	[self setTileFlag:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveTileFlagValue {
-	NSNumber *result = [self primitiveTileFlag];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveTileFlagValue:(BOOL)value_ {
-	[self setPrimitiveTileFlag:[NSNumber numberWithBool:value_]];
 }
 
 

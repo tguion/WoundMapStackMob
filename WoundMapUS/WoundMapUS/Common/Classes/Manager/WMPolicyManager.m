@@ -25,6 +25,8 @@
 #import "CoreDataHelper.h"
 #import "WMUtilities.h"
 
+NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
+
 @implementation WMPolicyManager
 
 + (WMPolicyManager *)sharedInstance

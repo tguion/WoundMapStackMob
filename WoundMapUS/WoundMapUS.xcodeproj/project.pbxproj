@@ -268,6 +268,22 @@
 		7DDAFAFC18B61A4F00A05F5D /* WMAddressListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAFA18B61A4F00A05F5D /* WMAddressListViewController.xib */; };
 		7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */; };
 		7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */; };
+		7DDBEDB118BC0DD300FEF3FA /* _IAPProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA218BC0DD300FEF3FA /* _IAPProduct.m */; };
+		7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA418BC0DD300FEF3FA /* _WMAmountQualifier.m */; };
+		7DDBEDB318BC0DD300FEF3FA /* _WMWoundMeasurement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA618BC0DD300FEF3FA /* _WMWoundMeasurement.m */; };
+		7DDBEDB418BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA818BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m */; };
+		7DDBEDB518BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDAA18BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m */; };
+		7DDBEDB618BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDAC18BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.m */; };
+		7DDBEDB718BC0DD300FEF3FA /* _WMWoundMeasurementValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDAE18BC0DD300FEF3FA /* _WMWoundMeasurementValue.m */; };
+		7DDBEDB818BC0DD300FEF3FA /* _WMWoundOdor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDB018BC0DD300FEF3FA /* _WMWoundOdor.m */; };
+		7DDBEDC918BC0DED00FEF3FA /* IAPProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDBA18BC0DED00FEF3FA /* IAPProduct.m */; };
+		7DDBEDCA18BC0DED00FEF3FA /* WMAmountQualifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDBC18BC0DED00FEF3FA /* WMAmountQualifier.m */; };
+		7DDBEDCB18BC0DED00FEF3FA /* WMWoundMeasurement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDBE18BC0DED00FEF3FA /* WMWoundMeasurement.m */; };
+		7DDBEDCC18BC0DED00FEF3FA /* WMWoundMeasurementGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC018BC0DED00FEF3FA /* WMWoundMeasurementGroup.m */; };
+		7DDBEDCD18BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC218BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m */; };
+		7DDBEDCE18BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC418BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.m */; };
+		7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC618BC0DED00FEF3FA /* WMWoundMeasurementValue.m */; };
+		7DDBEDD018BC0DED00FEF3FA /* WMWoundOdor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC818BC0DED00FEF3FA /* WMWoundOdor.m */; };
 		7DDCDD4518AC28C9001D3BA9 /* libstackmob-v2.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2068118A7D4000004DC32 /* libstackmob-v2.2.0.a */; };
 		7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68018B7C06D00041927 /* WMHomeBaseViewController.m */; };
 		7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68318B7C09B00041927 /* WMHomeBaseViewController_iPhone.m */; };
@@ -754,6 +770,38 @@
 		7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCModelTextKitAtrributes.m; sourceTree = "<group>"; };
 		7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMAddress+CoreText.h"; sourceTree = "<group>"; };
 		7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMAddress+CoreText.m"; sourceTree = "<group>"; };
+		7DDBEDA118BC0DD300FEF3FA /* _IAPProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _IAPProduct.h; sourceTree = "<group>"; };
+		7DDBEDA218BC0DD300FEF3FA /* _IAPProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _IAPProduct.m; sourceTree = "<group>"; };
+		7DDBEDA318BC0DD300FEF3FA /* _WMAmountQualifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMAmountQualifier.h; sourceTree = "<group>"; };
+		7DDBEDA418BC0DD300FEF3FA /* _WMAmountQualifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMAmountQualifier.m; sourceTree = "<group>"; };
+		7DDBEDA518BC0DD300FEF3FA /* _WMWoundMeasurement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurement.h; sourceTree = "<group>"; };
+		7DDBEDA618BC0DD300FEF3FA /* _WMWoundMeasurement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurement.m; sourceTree = "<group>"; };
+		7DDBEDA718BC0DD300FEF3FA /* _WMWoundMeasurementGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementGroup.h; sourceTree = "<group>"; };
+		7DDBEDA818BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementGroup.m; sourceTree = "<group>"; };
+		7DDBEDA918BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementTunnelValue.h; sourceTree = "<group>"; };
+		7DDBEDAA18BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementTunnelValue.m; sourceTree = "<group>"; };
+		7DDBEDAB18BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementUndermineValue.h; sourceTree = "<group>"; };
+		7DDBEDAC18BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementUndermineValue.m; sourceTree = "<group>"; };
+		7DDBEDAD18BC0DD300FEF3FA /* _WMWoundMeasurementValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementValue.h; sourceTree = "<group>"; };
+		7DDBEDAE18BC0DD300FEF3FA /* _WMWoundMeasurementValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementValue.m; sourceTree = "<group>"; };
+		7DDBEDAF18BC0DD300FEF3FA /* _WMWoundOdor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundOdor.h; sourceTree = "<group>"; };
+		7DDBEDB018BC0DD300FEF3FA /* _WMWoundOdor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundOdor.m; sourceTree = "<group>"; };
+		7DDBEDB918BC0DED00FEF3FA /* IAPProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPProduct.h; sourceTree = "<group>"; };
+		7DDBEDBA18BC0DED00FEF3FA /* IAPProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPProduct.m; sourceTree = "<group>"; };
+		7DDBEDBB18BC0DED00FEF3FA /* WMAmountQualifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAmountQualifier.h; sourceTree = "<group>"; };
+		7DDBEDBC18BC0DED00FEF3FA /* WMAmountQualifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMAmountQualifier.m; sourceTree = "<group>"; };
+		7DDBEDBD18BC0DED00FEF3FA /* WMWoundMeasurement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurement.h; sourceTree = "<group>"; };
+		7DDBEDBE18BC0DED00FEF3FA /* WMWoundMeasurement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurement.m; sourceTree = "<group>"; };
+		7DDBEDBF18BC0DED00FEF3FA /* WMWoundMeasurementGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementGroup.h; sourceTree = "<group>"; };
+		7DDBEDC018BC0DED00FEF3FA /* WMWoundMeasurementGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementGroup.m; sourceTree = "<group>"; };
+		7DDBEDC118BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementTunnelValue.h; sourceTree = "<group>"; };
+		7DDBEDC218BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementTunnelValue.m; sourceTree = "<group>"; };
+		7DDBEDC318BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementUndermineValue.h; sourceTree = "<group>"; };
+		7DDBEDC418BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementUndermineValue.m; sourceTree = "<group>"; };
+		7DDBEDC518BC0DED00FEF3FA /* WMWoundMeasurementValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementValue.h; sourceTree = "<group>"; };
+		7DDBEDC618BC0DED00FEF3FA /* WMWoundMeasurementValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementValue.m; sourceTree = "<group>"; };
+		7DDBEDC718BC0DED00FEF3FA /* WMWoundOdor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundOdor.h; sourceTree = "<group>"; };
+		7DDBEDC818BC0DED00FEF3FA /* WMWoundOdor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundOdor.m; sourceTree = "<group>"; };
 		7DDFD67F18B7C06D00041927 /* WMHomeBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHomeBaseViewController.h; sourceTree = "<group>"; };
 		7DDFD68018B7C06D00041927 /* WMHomeBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMHomeBaseViewController.m; sourceTree = "<group>"; };
 		7DDFD68218B7C09B00041927 /* WMHomeBaseViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHomeBaseViewController_iPhone.h; sourceTree = "<group>"; };
@@ -1303,11 +1351,15 @@
 			isa = PBXGroup;
 			children = (
 				7DDAFAFD18B62C9C00A05F5D /* CoreText */,
+				7DDBEDB918BC0DED00FEF3FA /* IAPProduct.h */,
+				7DDBEDBA18BC0DED00FEF3FA /* IAPProduct.m */,
 				7DB206C018A838800004DC32 /* machine */,
 				7DB206C118A839180004DC32 /* User.h */,
 				7DB206C218A839180004DC32 /* User.m */,
 				7DB206C318A839180004DC32 /* WMAddress.h */,
 				7DB206C418A839180004DC32 /* WMAddress.m */,
+				7DDBEDBB18BC0DED00FEF3FA /* WMAmountQualifier.h */,
+				7DDBEDBC18BC0DED00FEF3FA /* WMAmountQualifier.m */,
 				7D9AA27218AFF74C00C1B698 /* WMConsultingGroup.h */,
 				7D9AA27318AFF74C00C1B698 /* WMConsultingGroup.m */,
 				7D39DB8D18B94FFD0054DDC3 /* WMDevice.h */,
@@ -1354,6 +1406,18 @@
 				7DB206D018A839180004DC32 /* WMTelecomType.m */,
 				7D39DACC18B7CBA90054DDC3 /* WMWound.h */,
 				7D39DACD18B7CBA90054DDC3 /* WMWound.m */,
+				7DDBEDBD18BC0DED00FEF3FA /* WMWoundMeasurement.h */,
+				7DDBEDBE18BC0DED00FEF3FA /* WMWoundMeasurement.m */,
+				7DDBEDBF18BC0DED00FEF3FA /* WMWoundMeasurementGroup.h */,
+				7DDBEDC018BC0DED00FEF3FA /* WMWoundMeasurementGroup.m */,
+				7DDBEDC118BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.h */,
+				7DDBEDC218BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m */,
+				7DDBEDC318BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.h */,
+				7DDBEDC418BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.m */,
+				7DDBEDC518BC0DED00FEF3FA /* WMWoundMeasurementValue.h */,
+				7DDBEDC618BC0DED00FEF3FA /* WMWoundMeasurementValue.m */,
+				7DDBEDC718BC0DED00FEF3FA /* WMWoundOdor.h */,
+				7DDBEDC818BC0DED00FEF3FA /* WMWoundOdor.m */,
 				7D39DB2618B821920054DDC3 /* WMWoundPhoto.h */,
 				7D39DB2718B821920054DDC3 /* WMWoundPhoto.m */,
 				7D9AA25D18AE67AD00C1B698 /* WMWoundType.h */,
@@ -1528,10 +1592,14 @@
 		7DB206C018A838800004DC32 /* machine */ = {
 			isa = PBXGroup;
 			children = (
+				7DDBEDA118BC0DD300FEF3FA /* _IAPProduct.h */,
+				7DDBEDA218BC0DD300FEF3FA /* _IAPProduct.m */,
 				7DB206D918A839240004DC32 /* _User.h */,
 				7DB206DA18A839240004DC32 /* _User.m */,
 				7DB206DB18A839240004DC32 /* _WMAddress.h */,
 				7DB206DC18A839240004DC32 /* _WMAddress.m */,
+				7DDBEDA318BC0DD300FEF3FA /* _WMAmountQualifier.h */,
+				7DDBEDA418BC0DD300FEF3FA /* _WMAmountQualifier.m */,
 				7D9AA26F18AFF73E00C1B698 /* _WMConsultingGroup.h */,
 				7D9AA27018AFF73E00C1B698 /* _WMConsultingGroup.m */,
 				7D39DB8118B94FEB0054DDC3 /* _WMDevice.h */,
@@ -1578,6 +1646,18 @@
 				7DB206E818A839240004DC32 /* _WMTelecomType.m */,
 				7D39DAC918B7CB9B0054DDC3 /* _WMWound.h */,
 				7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */,
+				7DDBEDA518BC0DD300FEF3FA /* _WMWoundMeasurement.h */,
+				7DDBEDA618BC0DD300FEF3FA /* _WMWoundMeasurement.m */,
+				7DDBEDA718BC0DD300FEF3FA /* _WMWoundMeasurementGroup.h */,
+				7DDBEDA818BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m */,
+				7DDBEDA918BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.h */,
+				7DDBEDAA18BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m */,
+				7DDBEDAB18BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.h */,
+				7DDBEDAC18BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.m */,
+				7DDBEDAD18BC0DD300FEF3FA /* _WMWoundMeasurementValue.h */,
+				7DDBEDAE18BC0DD300FEF3FA /* _WMWoundMeasurementValue.m */,
+				7DDBEDAF18BC0DD300FEF3FA /* _WMWoundOdor.h */,
+				7DDBEDB018BC0DD300FEF3FA /* _WMWoundOdor.m */,
 				7D39DB2018B8217A0054DDC3 /* _WMWoundPhoto.h */,
 				7D39DB2118B8217A0054DDC3 /* _WMWoundPhoto.m */,
 				7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */,
@@ -1836,6 +1916,7 @@
 				7D9AA27118AFF73E00C1B698 /* _WMConsultingGroup.m in Sources */,
 				7D39DADD18B7D0450054DDC3 /* WMPhotoManager.m in Sources */,
 				7D39DAD418B7CDFA0054DDC3 /* WMDesignUtilities.m in Sources */,
+				7DDBEDB418BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m in Sources */,
 				7D39DB2318B8217A0054DDC3 /* _WMWoundPhoto.m in Sources */,
 				7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */,
 				7DB206D218A839180004DC32 /* WMAddress.m in Sources */,
@@ -1862,11 +1943,13 @@
 				7DB206D118A839180004DC32 /* User.m in Sources */,
 				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
 				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
+				7DDBEDCD18BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m in Sources */,
 				7D39DB6B18B924740054DDC3 /* UnderlayNavigationBar.m in Sources */,
 				7D39DB0018B7E6560054DDC3 /* WMShareViewController.m in Sources */,
 				7D39DB5418B828000054DDC3 /* WMPatientSummaryContainerViewController.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */,
+				7DDBEDD018BC0DED00FEF3FA /* WMWoundOdor.m in Sources */,
 				7D39DB9718B94FFD0054DDC3 /* WMDeviceGroup.m in Sources */,
 				7D39DB6718B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m in Sources */,
 				7D39DB7F18B947330054DDC3 /* WMMedicationCategory.m in Sources */,
@@ -1880,11 +1963,13 @@
 				7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */,
 				7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
+				7DDBEDB518BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m in Sources */,
 				7D39DB7E18B947330054DDC3 /* WMMedication.m in Sources */,
 				5F6DE54818B6FA4E00E87F7E /* WMIdListViewController.m in Sources */,
 				7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
 				7D39DB5918B828630054DDC3 /* WMPsychoSocialGroupViewController.m in Sources */,
+				7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */,
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
 				7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */,
 				7D39DB7618B947250054DDC3 /* _WMMedicationCategory.m in Sources */,
@@ -1908,8 +1993,10 @@
 				5F6DE54D18B6FBF400E87F7E /* WMIdEditorViewController.m in Sources */,
 				7D39DBB918BAB3BF0054DDC3 /* WMPhotoScaleViewController.m in Sources */,
 				7D39DB4F18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m in Sources */,
+				7DDBEDB118BC0DD300FEF3FA /* _IAPProduct.m in Sources */,
 				7D39DBAF18BA97A70054DDC3 /* IAPNonConsumableViewController.m in Sources */,
 				7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */,
+				7DDBEDCB18BC0DED00FEF3FA /* WMWoundMeasurement.m in Sources */,
 				7D39DB2918B821920054DDC3 /* WMWoundPhoto.m in Sources */,
 				7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */,
 				7D39DBA118BA8AB20054DDC3 /* WMPlotGraphViewController.m in Sources */,
@@ -1919,6 +2006,7 @@
 				7D9AA28A18B13F5900C1B698 /* WMPatientTableViewCell.m in Sources */,
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DB206E918A839240004DC32 /* _User.m in Sources */,
+				7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */,
 				7D39DAFB18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.m in Sources */,
 				5F6DE4F418AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m in Sources */,
 				7D39DADA18B7CEF50054DDC3 /* WMNavigationPatientPhotoButton.m in Sources */,
@@ -1938,6 +2026,7 @@
 				7D39DB3F18B825750054DDC3 /* WMSkinAssessmentGroupViewController.m in Sources */,
 				5F67D21218AC4A2800460C37 /* WMSignInViewController.m in Sources */,
 				5F67D21718AC4ACF00460C37 /* WMSimpleTableViewController.m in Sources */,
+				7DDBEDB718BC0DD300FEF3FA /* _WMWoundMeasurementValue.m in Sources */,
 				7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */,
 				7D39DB1218B7FA750054DDC3 /* WMSelectWoundLocationViewController.m in Sources */,
 				5F67D1B318AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m in Sources */,
@@ -1955,6 +2044,7 @@
 				5F6DE51018B586F600E87F7E /* WMInstructionsViewController.m in Sources */,
 				7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */,
 				7D39DB2D18B8230F0054DDC3 /* WMBradenScaleViewController.m in Sources */,
+				7DDBEDCA18BC0DED00FEF3FA /* WMAmountQualifier.m in Sources */,
 				7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */,
 				7D39DAEC18B7E5F80054DDC3 /* WMWoundDetailViewController.m in Sources */,
 				7D39DB4418B826620054DDC3 /* WMCarePlanGroupViewController.m in Sources */,
@@ -1968,17 +2058,23 @@
 				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
 				7DB206B018A7D6950004DC32 /* Faulter.m in Sources */,
 				7D39DBBE18BAB4960054DDC3 /* WMPhotoMeasureViewController.m in Sources */,
+				7DDBEDB318BC0DD300FEF3FA /* _WMWoundMeasurement.m in Sources */,
 				7D39DAF618B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m in Sources */,
 				5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */,
 				7D39DB3718B824060054DDC3 /* WMDevicesViewController.m in Sources */,
 				7DB206D818A839180004DC32 /* WMTelecomType.m in Sources */,
+				7DDBEDC918BC0DED00FEF3FA /* IAPProduct.m in Sources */,
 				5F67D22518AD8DE200460C37 /* _WMNavigationTrack.m in Sources */,
 				7D39DB8B18B94FEB0054DDC3 /* _WMDeviceGroup.m in Sources */,
+				7DDBEDCE18BC0DED00FEF3FA /* WMWoundMeasurementUndermineValue.m in Sources */,
 				7DB206F018A839240004DC32 /* _WMTelecomType.m in Sources */,
+				7DDBEDCC18BC0DED00FEF3FA /* WMWoundMeasurementGroup.m in Sources */,
+				7DDBEDB818BC0DD300FEF3FA /* _WMWoundOdor.m in Sources */,
 				7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */,
 				7D9AA26E18AFD35F00C1B698 /* WMSeedDatabaseManager.m in Sources */,
 				7D39DB1C18B7FC350054DDC3 /* WMPlotConfigureGraphViewController.m in Sources */,
 				7D39DB6218B921EE0054DDC3 /* WMPhotosContainerViewController.m in Sources */,
+				7DDBEDB618BC0DD300FEF3FA /* _WMWoundMeasurementUndermineValue.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */,
 				7D39DAF118B7E6130054DDC3 /* WMChooseStageViewController.m in Sources */,

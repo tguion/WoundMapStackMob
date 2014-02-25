@@ -12,4 +12,6 @@
 @property (readonly, nonatomic) NSString *shortName;
 @property (readonly, nonatomic) NSArray *woundTypeForDisplay;
 
+- (BOOL)hasPreviousWoundPhoto:(WMWoundPhoto *)woundPhoto;
+
 @end
