@@ -89,7 +89,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     _woundMeasurementValueWidth = nil;
     _woundMeasurementValueLength = nil;
     _woundMeasurementValueDepth  = nil;
-    _underminingTunnelingWoundMeasurement = nil;
 }
 
 - (void)setPatient:(WMPatient *)patient
