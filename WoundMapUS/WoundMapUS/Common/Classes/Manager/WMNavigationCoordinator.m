@@ -557,7 +557,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
             self.woundMeasurementValueDepth.value = [depth stringValue];
             // now enter undermining & tunneling
             WMUndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
-            undermineTunnelViewController.woundMeasurementGroup = [WCWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            undermineTunnelViewController.woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
             undermineTunnelViewController.showCancelButton = NO;
             [viewController.navigationController pushViewController:undermineTunnelViewController animated:YES];
             break;

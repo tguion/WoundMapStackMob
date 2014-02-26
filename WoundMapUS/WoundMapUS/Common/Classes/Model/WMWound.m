@@ -52,7 +52,7 @@
     [request setEntity:[NSEntityDescription entityForName:@"WCWound" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND wmwound_id == %@", patient, woundId]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }

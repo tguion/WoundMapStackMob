@@ -127,10 +127,9 @@ NSString *const kDischargeStageTitle = @"Discharge";
     [request setPredicate:[NSPredicate predicateWithFormat:@"track == %@", navigationTrack]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return array;
@@ -170,10 +169,9 @@ NSString *const kDischargeStageTitle = @"Discharge";
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationStage" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND track == %@", title, navigationTrack]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMNavigationStage *navigationStage = [array lastObject];

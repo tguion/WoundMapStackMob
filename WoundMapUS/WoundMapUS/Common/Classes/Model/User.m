@@ -1,5 +1,5 @@
 #import "User.h"
-
+#import "WMUtilities.h"
 
 @interface User ()
 
@@ -39,10 +39,9 @@
     [request setEntity:[NSEntityDescription entityForName:@"User" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"username == %@", username]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
-        NSLog(@"TODO: handle error");
-        abort();
+        [WMUtilities logError:error];
     }
     // else
     NSAssert1([array count] < 2, @"More than one User for username %@", username);

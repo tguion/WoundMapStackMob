@@ -65,7 +65,6 @@
     NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     return count;
@@ -101,10 +100,9 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMInstruction" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
-        abort();
     }
     // else
     WMInstruction *instruction = [array lastObject];
