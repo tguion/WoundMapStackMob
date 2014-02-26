@@ -69,6 +69,59 @@
         <attribute name="wmamountqualifier_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="measurementValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundMeasurementValue" inverseName="amountQualifier" inverseEntity="WMWoundMeasurementValue" syncable="YES"/>
     </entity>
+    <entity name="WMBradenCare" representedClassName="WMBradenCare" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="scoreMaximum" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="scoreMinimum" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmbradencare_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="WMBradenCell" representedClassName="WMBradenCell" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="primaryDescription" attributeType="String">
+            <userInfo/>
+        </attribute>
+        <attribute name="secondaryDescription" optional="YES" attributeType="String">
+            <userInfo/>
+        </attribute>
+        <attribute name="selectedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="title" attributeType="String">
+            <userInfo/>
+        </attribute>
+        <attribute name="value" attributeType="Integer 16" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <attribute name="wmbradencell_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="section" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMBradenSection" inverseName="cells" inverseEntity="WMBradenSection" syncable="YES"/>
+    </entity>
+    <entity name="WMBradenScale" representedClassName="WMBradenScale" syncable="YES">
+        <attribute name="closedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="completeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" attributeType="Date" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="score" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="wmbradenscale_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="bradenScales" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="sections" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMBradenSection" inverseName="bradenScale" inverseEntity="WMBradenSection" syncable="YES"/>
+    </entity>
+    <entity name="WMBradenSection" representedClassName="WMBradenSection" syncable="YES">
+        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wmbradensection_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="bradenScale" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMBradenScale" inverseName="sections" inverseEntity="WMBradenScale" syncable="YES"/>
+        <relationship name="cells" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMBradenCell" inverseName="section" inverseEntity="WMBradenCell" syncable="YES"/>
+    </entity>
     <entity name="WMConsultingGroup" representedClassName="WMConsultingGroup" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -343,6 +396,7 @@
             <userInfo/>
         </attribute>
         <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="bradenScales" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMBradenScale" inverseName="patient" inverseEntity="WMBradenScale" syncable="YES"/>
         <relationship name="deviceGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceGroup" inverseName="patient" inverseEntity="WMDeviceGroup" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
@@ -644,5 +698,9 @@
         <element name="WMWoundMeasurementUndermineValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMAmountQualifier" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundOdor" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMBradenCare" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMBradenCell" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMBradenScale" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMBradenSection" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

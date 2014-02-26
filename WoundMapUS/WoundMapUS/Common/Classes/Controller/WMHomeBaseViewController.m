@@ -1209,7 +1209,9 @@
     // save
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     // clear memory
     [viewController clearAllReferences];
     // update UI
@@ -1231,7 +1233,9 @@
     // save
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     // clear memory
     [viewController clearAllReferences];
 }
@@ -1248,7 +1252,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
@@ -1267,7 +1273,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
@@ -1279,7 +1287,9 @@
         [self.managedObjectContext deleteObject:viewController.medicationGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1298,7 +1308,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     if (hasChanges) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
@@ -1312,7 +1324,9 @@
         [self.managedObjectContext deleteObject:viewController.deviceGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1331,7 +1345,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     if (hasChanges) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kPsycoSocialNode]];
     }
@@ -1344,7 +1360,9 @@
         [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1363,7 +1381,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     if (hasChanges) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kSkinAssessmentNode]];
     }
@@ -1376,7 +1396,9 @@
         [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1416,7 +1438,9 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
             } onFailure:^(NSError *error) {
                 [self hideProgressView];
-                [WMUtilities logError:error];
+                if (nil != error) {
+                    [WMUtilities logError:error];
+                }
                 // TODO show alert on fail
             }];
             self.photoAcquisitionState = PhotoAcquisitionStateNone;
@@ -1471,7 +1495,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [viewController clearAllReferences];
     [self dismissViewControllerAnimated:YES completion:^{
         // post notification if some values were added
@@ -1497,7 +1523,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
 }
 
@@ -1514,7 +1542,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     // notify interface of completed task
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundAssessmentNode)];
 }
