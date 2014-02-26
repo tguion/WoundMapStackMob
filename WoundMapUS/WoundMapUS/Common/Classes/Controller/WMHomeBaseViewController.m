@@ -1105,49 +1105,6 @@
                                                                   queue:[NSOperationQueue mainQueue]
                                                              usingBlock:^(NSNotification *notification) {
                                                                  [weakSelf handleApplicationWillResignActiveNotification];
-                                                                 if (weakSelf.isIPadIdiom) {
-                                                                     UIViewController *viewController = [weakSelf.navigationNodePopoverController contentViewController];
-                                                                     if (nil != viewController) {
-                                                                         if ([viewController isKindOfClass:[UINavigationController class]]) {
-                                                                             UINavigationController *navigationController = (UINavigationController *)viewController;
-                                                                             viewController = navigationController.topViewController;
-                                                                         }
-                                                                         if ([viewController isKindOfClass:[BaseViewController class]]) {
-                                                                             BaseViewController *baseViewController = (BaseViewController *)viewController;
-                                                                             [baseViewController clearAllReferences];
-                                                                         }
-                                                                         [weakSelf.navigationNodePopoverController dismissPopoverAnimated:NO];
-                                                                     } else {
-                                                                         // check for presented view controller
-                                                                         __block UIViewController *viewController = weakSelf.appDelegate.window.rootViewController.presentedViewController;
-                                                                         if (nil != viewController) {
-                                                                             [viewController dismissViewControllerAnimated:NO completion:^{
-                                                                                 if ([viewController isKindOfClass:[UINavigationController class]]) {
-                                                                                     UINavigationController *navigationController = (UINavigationController *)viewController;
-                                                                                     viewController = navigationController.topViewController;
-                                                                                 }
-                                                                                 if ([viewController isKindOfClass:[BaseViewController class]]) {
-                                                                                     BaseViewController *baseViewController = (BaseViewController *)viewController;
-                                                                                     [baseViewController clearAllReferences];
-                                                                                 }
-                                                                             }];
-                                                                         }
-                                                                     }
-                                                                 } else {
-                                                                     __block UIViewController *viewController = weakSelf.appDelegate.window.rootViewController.presentedViewController;
-                                                                     if (nil != viewController) {
-                                                                         [viewController dismissViewControllerAnimated:NO completion:^{
-                                                                             if ([viewController isKindOfClass:[UINavigationController class]]) {
-                                                                                 UINavigationController *navigationController = (UINavigationController *)viewController;
-                                                                                 viewController = navigationController.topViewController;
-                                                                             }
-                                                                             if ([viewController isKindOfClass:[BaseViewController class]]) {
-                                                                                 BaseViewController *baseViewController = (BaseViewController *)viewController;
-                                                                                 [baseViewController clearAllReferences];
-                                                                             }
-                                                                         }];
-                                                                     }
-                                                                 }
                                                              }];
     [self.persistantObservers addObject:observer];
 }
