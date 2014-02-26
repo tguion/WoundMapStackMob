@@ -17,7 +17,7 @@
 @property (nonatomic) NSString *lastTeamName;
 @property (nonatomic) NSString *lastPatientId;
 @property (nonatomic) NSDate *lastDateOfBirth;
-@property (nonatomic) NSString *defaultNavigationTrackTitle;
+@property (nonatomic) NSString *defaultNavigationTrackId;
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 

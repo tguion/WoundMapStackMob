@@ -20,4 +20,6 @@
 
 @interface WMDevicesViewController : WMBuildGroupViewController
 
+@property (weak, nonatomic) id<DevicesViewControllerDelegate> delegate;
+
 @end

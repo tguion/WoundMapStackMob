@@ -71,6 +71,10 @@ typedef enum {
 @property (strong, nonatomic) NSArray *navigationNodes;                 // current task set (WCNavigationNode), displayed on compass view
 @property (strong, nonatomic) NSArray *navigationNodeControls;          // controls for navigationNodes
 
+@property (readonly, nonatomic) WMNavigationNode *initialStageNavigationNode;
+@property (readonly, nonatomic) WMNavigationNode *followupStageNavigationNode;
+@property (readonly, nonatomic) WMNavigationNode *dischargeStageNavigationNode;
+
 @property (readonly, nonatomic) WMNavigationNodeButton *selectPatientButton;
 @property (readonly, nonatomic) WMNavigationNodeButton *editPatientButton;
 @property (readonly, nonatomic) WMNavigationNodeButton *addPatientButton;

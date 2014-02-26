@@ -21,6 +21,7 @@
 #import "WMPhotoManager.h"
 #import "WMPolicyManager.h"
 #import "WMNavigationCoordinator.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import <objc/runtime.h>
@@ -189,6 +190,24 @@
 - (WMNavigationNodeButton *)addWoundButton
 {
     return self.navigationPatientWoundContainerView.woundAddNavigationNodeButton;
+}
+
+- (WMNavigationNode *)initialStageNavigationNode
+{
+    return [WMNavigationNode initialStageNavigationNode:self.managedObjectContext
+                                        persistentStore:self.store];
+}
+
+- (WMNavigationNode *)followupStageNavigationNode
+{
+    return [WMNavigationNode followupStageNavigationNode:self.managedObjectContext
+                                         persistentStore:self.store];
+}
+
+- (WMNavigationNode *)dischargeStageNavigationNode
+{
+    return [WMNavigationNode dischargeStageNavigationNode:self.managedObjectContext
+                                          persistentStore:self.store];
 }
 
 #pragma mark - Toolbar
@@ -596,6 +615,7 @@
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack
 {
     [super handleNavigationTrackChanged:navigationTrack];
+    xxx;
     [self performSelector:@selector(updateToolbar) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }
@@ -1041,6 +1061,7 @@
 
 - (WMPhotosContainerViewController *)photosContainerViewController
 {
+    return [[WMPhotosContainerViewController alloc] initWithNibName:@"WMPhotosContainerViewController" bundle:nil];
 }
 
 - (WMPlotSelectDatasetViewController *)plotSelectDatasetViewController
@@ -1112,16 +1133,26 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _parentNavigationNode = nil;
     [self clearNavigationCache];
     [self.compassView updateForPatient:nil];
+}
+
+- (void)clearNavigationCache
+{
+    _parentNavigationNode = nil;
+    _navigationNodes = nil;
+    _navigationNodeControls = nil;
 }
 
 #pragma mark - ChooseTrackDelegate
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {
-    self.patient.track = navigationTrack;
+    if (nil == navigationTrack || [self.patient.stage.track isEqual:navigationTrack]) {
+        return;
+    }
+    // else let navigationCoordinator update patient and defaults
+    self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     

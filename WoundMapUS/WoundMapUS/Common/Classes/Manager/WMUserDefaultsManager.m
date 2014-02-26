@@ -113,26 +113,25 @@ NSDateFormatter * DOB_Formatter;
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
 {
-    NSString *title = self.defaultNavigationTrackTitle;
+    NSString *navigationTrackId = self.defaultNavigationTrackId;
     WMNavigationTrack *navigationTrack = nil;
-    if (title) {
-        navigationTrack = [WMNavigationTrack trackForTitle:title
-                                                    create:NO
-                                      managedObjectContext:managedObjectContext
-                                           persistentStore:store];
+    if (navigationTrackId) {
+        navigationTrack = [WMNavigationTrack trackForId:navigationTrackId
+                                   managedObjectContext:managedObjectContext
+                                        persistentStore:store];
     }
     return navigationTrack;
 }
 
-- (NSString *)defaultNavigationTrackTitle
+- (NSString *)defaultNavigationTrackId
 {
-    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.navigationTrackTitle"];
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.navigationTrackId"];
 }
 
-- (void)setDefaultNavigationTrackTitle:(NSString *)defaultNavigationTrackTitle
+- (void)setDefaultNavigationTrackId:(NSString *)defaultNavigationTrackId
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:defaultNavigationTrackTitle forKey:@"com.mobilehealthware.woundmap.navigationTrackTitle"];
+    [userDefaults setValue:defaultNavigationTrackId forKey:@"com.mobilehealthware.woundmap.navigationTrackId"];
     [userDefaults synchronize];
 }
 

@@ -170,7 +170,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         return NO;
     }
     // else
-    if (nil == self.userDefaultsManager.defaultNavigationTrackTitle) {
+    if (nil == self.userDefaultsManager.defaultNavigationTrackId) {
         return NO;
     }
     // else
@@ -447,7 +447,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case 1: {
             if (nil == self.appDelegate.participant) {
                 count = 1;
-            } else if (nil == self.userDefaultsManager.defaultNavigationTrackTitle) {
+            } else if (nil == self.userDefaultsManager.defaultNavigationTrackId) {
                 count = 2;
             } else {
                 count = 3;
@@ -721,7 +721,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {
     WMUserDefaultsManager *userDefaultsManger = self.userDefaultsManager;
-    userDefaultsManger.defaultNavigationTrackTitle = navigationTrack.title;
+    userDefaultsManger.defaultNavigationTrackId = navigationTrack.wmnavigationtrack_id;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     [self.tableView reloadData];

@@ -25,13 +25,16 @@
 
 - (void)updateForPatient:(WMPatient *)patient
 {
+    if (nil == patient) {
+        self.image = [WMPatient missingThumbnailImage];
+    }
     NSString *picString = patient.thumbnail;
     if ([SMBinaryDataConversion stringContainsURL:picString]) {
         self.imageURL = [NSURL URLWithString:picString relativeToURL:nil];
     } else {
         UIImage *image = nil;
         if (nil == picString) {
-            image = patient.missingThumbnailImage;
+            image = [WMPatient missingThumbnailImage];
         } else {
             image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
         }

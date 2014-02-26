@@ -114,7 +114,7 @@
     return genderIndex;
 }
 
-- (UIImage *)missingThumbnailImage
++ (UIImage *)missingThumbnailImage
 {
     NSString *avitarFileName = @"user_";
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
