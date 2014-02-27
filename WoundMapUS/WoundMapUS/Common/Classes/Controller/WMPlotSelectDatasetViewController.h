@@ -12,8 +12,10 @@
 @class WMPlotSelectDatasetViewController;
 
 @protocol PlotViewControllerDelegate <SimpleTableViewControllerDelegate>
+
 - (void)plotViewControllerDidCancel:(WMBaseViewController *)viewController;
 - (void)plotViewControllerDidFinish:(WMBaseViewController *)viewController;
+
 @end
 
 @interface WMPlotSelectDatasetViewController : WMBaseViewController

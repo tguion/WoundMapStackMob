@@ -8,9 +8,10 @@
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 
++ (UIImage *)missingThumbnailImage;
+
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (readonly, nonatomic) NSInteger genderIndex;
-@property (readonly, nonatomic) UIImage *missingThumbnailImage;
 @property (readonly, nonatomic) WMWound *lastActiveWound;
 @property (readonly, nonatomic) WMPatientConsultant *patientConsultantSubmittedSource;
 @property (readonly, nonatomic) WMPatientConsultant *patientConsultantSubmittedTarget;

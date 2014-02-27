@@ -21,6 +21,7 @@
 #import "WMPhotoManager.h"
 #import "WMPolicyManager.h"
 #import "WMNavigationCoordinator.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import <objc/runtime.h>
@@ -189,6 +190,24 @@
 - (WMNavigationNodeButton *)addWoundButton
 {
     return self.navigationPatientWoundContainerView.woundAddNavigationNodeButton;
+}
+
+- (WMNavigationNode *)initialStageNavigationNode
+{
+    return [WMNavigationNode initialStageNavigationNode:self.managedObjectContext
+                                        persistentStore:self.store];
+}
+
+- (WMNavigationNode *)followupStageNavigationNode
+{
+    return [WMNavigationNode followupStageNavigationNode:self.managedObjectContext
+                                         persistentStore:self.store];
+}
+
+- (WMNavigationNode *)dischargeStageNavigationNode
+{
+    return [WMNavigationNode dischargeStageNavigationNode:self.managedObjectContext
+                                          persistentStore:self.store];
 }
 
 #pragma mark - Toolbar
@@ -596,6 +615,7 @@
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack
 {
     [super handleNavigationTrackChanged:navigationTrack];
+    xxx;
     [self performSelector:@selector(updateToolbar) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }
@@ -1041,6 +1061,7 @@
 
 - (WMPhotosContainerViewController *)photosContainerViewController
 {
+    return [[WMPhotosContainerViewController alloc] initWithNibName:@"WMPhotosContainerViewController" bundle:nil];
 }
 
 - (WMPlotSelectDatasetViewController *)plotSelectDatasetViewController
@@ -1105,49 +1126,6 @@
                                                                   queue:[NSOperationQueue mainQueue]
                                                              usingBlock:^(NSNotification *notification) {
                                                                  [weakSelf handleApplicationWillResignActiveNotification];
-                                                                 if (weakSelf.isIPadIdiom) {
-                                                                     UIViewController *viewController = [weakSelf.navigationNodePopoverController contentViewController];
-                                                                     if (nil != viewController) {
-                                                                         if ([viewController isKindOfClass:[UINavigationController class]]) {
-                                                                             UINavigationController *navigationController = (UINavigationController *)viewController;
-                                                                             viewController = navigationController.topViewController;
-                                                                         }
-                                                                         if ([viewController isKindOfClass:[BaseViewController class]]) {
-                                                                             BaseViewController *baseViewController = (BaseViewController *)viewController;
-                                                                             [baseViewController clearAllReferences];
-                                                                         }
-                                                                         [weakSelf.navigationNodePopoverController dismissPopoverAnimated:NO];
-                                                                     } else {
-                                                                         // check for presented view controller
-                                                                         __block UIViewController *viewController = weakSelf.appDelegate.window.rootViewController.presentedViewController;
-                                                                         if (nil != viewController) {
-                                                                             [viewController dismissViewControllerAnimated:NO completion:^{
-                                                                                 if ([viewController isKindOfClass:[UINavigationController class]]) {
-                                                                                     UINavigationController *navigationController = (UINavigationController *)viewController;
-                                                                                     viewController = navigationController.topViewController;
-                                                                                 }
-                                                                                 if ([viewController isKindOfClass:[BaseViewController class]]) {
-                                                                                     BaseViewController *baseViewController = (BaseViewController *)viewController;
-                                                                                     [baseViewController clearAllReferences];
-                                                                                 }
-                                                                             }];
-                                                                         }
-                                                                     }
-                                                                 } else {
-                                                                     __block UIViewController *viewController = weakSelf.appDelegate.window.rootViewController.presentedViewController;
-                                                                     if (nil != viewController) {
-                                                                         [viewController dismissViewControllerAnimated:NO completion:^{
-                                                                             if ([viewController isKindOfClass:[UINavigationController class]]) {
-                                                                                 UINavigationController *navigationController = (UINavigationController *)viewController;
-                                                                                 viewController = navigationController.topViewController;
-                                                                             }
-                                                                             if ([viewController isKindOfClass:[BaseViewController class]]) {
-                                                                                 BaseViewController *baseViewController = (BaseViewController *)viewController;
-                                                                                 [baseViewController clearAllReferences];
-                                                                             }
-                                                                         }];
-                                                                     }
-                                                                 }
                                                              }];
     [self.persistantObservers addObject:observer];
 }
@@ -1155,16 +1133,26 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _parentNavigationNode = nil;
     [self clearNavigationCache];
     [self.compassView updateForPatient:nil];
+}
+
+- (void)clearNavigationCache
+{
+    _parentNavigationNode = nil;
+    _navigationNodes = nil;
+    _navigationNodeControls = nil;
 }
 
 #pragma mark - ChooseTrackDelegate
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {
-    self.patient.track = navigationTrack;
+    if (nil == navigationTrack || [self.patient.stage.track isEqual:navigationTrack]) {
+        return;
+    }
+    // else let navigationCoordinator update patient and defaults
+    self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     
@@ -1221,7 +1209,9 @@
     // save
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     // clear memory
     [viewController clearAllReferences];
     // update UI
@@ -1243,7 +1233,9 @@
     // save
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     // clear memory
     [viewController clearAllReferences];
 }
@@ -1260,7 +1252,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
@@ -1279,7 +1273,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
@@ -1291,7 +1287,9 @@
         [self.managedObjectContext deleteObject:viewController.medicationGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1310,7 +1308,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     if (hasChanges) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
@@ -1324,7 +1324,9 @@
         [self.managedObjectContext deleteObject:viewController.deviceGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1343,7 +1345,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     if (hasChanges) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kPsycoSocialNode]];
     }
@@ -1356,7 +1360,9 @@
         [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1375,7 +1381,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     if (hasChanges) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kSkinAssessmentNode]];
     }
@@ -1388,7 +1396,9 @@
         [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
         NSError *error = nil;
         [self.managedObjectContext saveAndWait:&error];
-        [WMUtilities logError:error];
+        if (nil != error) {
+            [WMUtilities logError:error];
+        }
     }
     [viewController clearAllReferences];
 }
@@ -1428,7 +1438,9 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
             } onFailure:^(NSError *error) {
                 [self hideProgressView];
-                [WMUtilities logError:error];
+                if (nil != error) {
+                    [WMUtilities logError:error];
+                }
                 // TODO show alert on fail
             }];
             self.photoAcquisitionState = PhotoAcquisitionStateNone;
@@ -1483,7 +1495,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [viewController clearAllReferences];
     [self dismissViewControllerAnimated:YES completion:^{
         // post notification if some values were added
@@ -1509,7 +1523,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
 }
 
@@ -1526,7 +1542,9 @@
     // save in order to update dateModified
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
     // notify interface of completed task
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundAssessmentNode)];
 }

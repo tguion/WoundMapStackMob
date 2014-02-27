@@ -320,8 +320,8 @@
         }
         [viewController dismissViewControllerAnimated:NO completion:^{
             for (WMBaseViewController *viewController in viewControllers) {
-                if ([viewController isKindOfClass:[WMBaseViewController class]]) {
-                    [viewController clearAllReferences];
+                if ([viewController respondsToSelector:@selector(clearAllReferences)]) {
+                    [viewController performSelector:@selector(clearAllReferences)];
                 }
             }
         }];

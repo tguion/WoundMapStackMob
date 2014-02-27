@@ -175,7 +175,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     WM_ASSERT_MAIN_THREAD;
     NSAssert(nil != navigationTrack, @"Do not set navigationTrack to nil");
     BOOL patientNavigationTrackDidChange = NO;
-    [[WMUserDefaultsManager sharedInstance] setDefaultNavigationTrackTitle:navigationTrack.title];
+    [[WMUserDefaultsManager sharedInstance] setDefaultNavigationTrackId:navigationTrack.wmnavigationtrack_id];
     WMPatient *patient = self.patient;
     if (nil != patient) {
         WMNavigationTrack *patientNavigationTrack = patient.stage.track;

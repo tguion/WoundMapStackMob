@@ -32,6 +32,8 @@
 
 @property (strong, nonatomic) NSMutableArray *opaqueNotificationObservers;  // observers that do away when the view dissappears
 @property (strong, nonatomic) NSMutableArray *persistantObservers;          // observers that do no go away when the view controller disappears
+- (void)registerForNotifications;
+- (void)unregisterForNotifications;
 
 @property (readonly, nonatomic) WMPatient *patient;                         // active patient
 @property (readonly, nonatomic) WMWound *wound;                             // active wound

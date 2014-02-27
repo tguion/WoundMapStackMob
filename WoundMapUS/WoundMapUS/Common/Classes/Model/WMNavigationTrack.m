@@ -266,4 +266,23 @@ typedef enum {
     return navigationTrack;
 }
 
++ (WMNavigationTrack *)trackForId:(NSString *)navigationTrackId
+             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                  persistentStore:(NSPersistentStore *)store
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    if (nil != store) {
+        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    }
+    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationTrack" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"wmnavigationtrack_id == %@", navigationTrackId]];
+    NSError *error = nil;
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+    }
+    // else
+    return [array lastObject];
+}
+
 @end

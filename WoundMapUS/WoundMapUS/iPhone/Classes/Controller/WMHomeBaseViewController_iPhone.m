@@ -71,6 +71,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - BaseViewController
+
+- (void)registerForNotifications
+{
+    [super registerForNotifications];
+}
+
 #pragma mark - Actions
 
 // the action depends on parentNavigationNode

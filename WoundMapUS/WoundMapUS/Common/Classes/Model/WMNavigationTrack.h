@@ -27,4 +27,8 @@
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
                      persistentStore:(NSPersistentStore *)store;
 
++ (WMNavigationTrack *)trackForId:(NSString *)navigationTrackId
+             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                  persistentStore:(NSPersistentStore *)store;
+
 @end
