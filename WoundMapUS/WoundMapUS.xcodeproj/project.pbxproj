@@ -258,9 +258,10 @@
 		7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074618ABAB8E0004DC32 /* AsyncImageView.m */; };
 		7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */; };
 		7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */; };
+		7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DD3EA4418C00E120093E370 /* IAPProducts.plist */; };
+		7DD3EA4918C011A70093E370 /* IAPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD3EA4818C011A70093E370 /* IAPManager.m */; };
 		7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */; };
 		7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */; };
-		7DDAFAEF18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
 		7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */; };
 		7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */; };
@@ -764,10 +765,12 @@
 		7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCPatientPhotoImageView.m; sourceTree = "<group>"; };
 		7DB2074B18ABC0850004DC32 /* WMBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMBaseViewController.h; sourceTree = "<group>"; };
 		7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMBaseViewController.m; sourceTree = "<group>"; };
+		7DD3EA4418C00E120093E370 /* IAPProducts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = IAPProducts.plist; sourceTree = "<group>"; };
+		7DD3EA4718C011A70093E370 /* IAPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPManager.h; sourceTree = "<group>"; };
+		7DD3EA4818C011A70093E370 /* IAPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPManager.m; sourceTree = "<group>"; };
 		7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateConsultantViewController.h; sourceTree = "<group>"; };
 		7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateConsultantViewController.m; sourceTree = "<group>"; };
 		7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPCreateConsultantViewController.xib; sourceTree = "<group>"; };
-		7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CreateConsultantValueProposition.txt; sourceTree = "<group>"; };
 		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
 		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
 		7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressEditorViewController.h; sourceTree = "<group>"; };
@@ -1343,6 +1346,8 @@
 		7DB2068F18A7D6950004DC32 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				7DD3EA4718C011A70093E370 /* IAPManager.h */,
+				7DD3EA4818C011A70093E370 /* IAPManager.m */,
 				7DB2069018A7D6950004DC32 /* Core Data */,
 				5F67D20C18AC447400460C37 /* WMUserDefaultsManager.h */,
 				5F67D20D18AC447400460C37 /* WMUserDefaultsManager.m */,
@@ -1727,7 +1732,7 @@
 		7DDAFAED18B4E9F700A05F5D /* IAP */ = {
 			isa = PBXGroup;
 			children = (
-				7DDAFAEE18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt */,
+				7DD3EA4418C00E120093E370 /* IAPProducts.plist */,
 			);
 			path = IAP;
 			sourceTree = "<group>";
@@ -1846,7 +1851,6 @@
 				7D39DB1818B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib in Resources */,
 				5F67D20218AC3BE000460C37 /* WoundDescription.plist in Resources */,
 				7D39DB6818B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib in Resources */,
-				7DDAFAEF18B4EB8D00A05F5D /* CreateConsultantValueProposition.txt in Resources */,
 				5F6DE54918B6FA4E00E87F7E /* WMIdListViewController.xib in Resources */,
 				7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */,
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
@@ -1889,6 +1893,7 @@
 				7DDBEDD818BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib in Resources */,
 				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
 				7D39DBB518BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib in Resources */,
+				7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */,
 				5F67D1BE18AC319000460C37 /* WMUsersViewController.xib in Resources */,
 				5F67D1FD18AC3BE000460C37 /* SkinAssessment.plist in Resources */,
 				5F6DE51B18B5885E00E87F7E /* WMInstructionContentViewController.xib in Resources */,
@@ -1997,6 +2002,7 @@
 				7D39DB6B18B924740054DDC3 /* UnderlayNavigationBar.m in Sources */,
 				7D39DB0018B7E6560054DDC3 /* WMShareViewController.m in Sources */,
 				7D39DB5418B828000054DDC3 /* WMPatientSummaryContainerViewController.m in Sources */,
+				7DD3EA4918C011A70093E370 /* IAPManager.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */,
 				7DDBEDEE18BEA96C00FEF3FA /* WMBradenCell.m in Sources */,
