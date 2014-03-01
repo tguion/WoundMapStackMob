@@ -16,14 +16,18 @@ extern const struct WMPsychoSocialGroupAttributes {
 } WMPsychoSocialGroupAttributes;
 
 extern const struct WMPsychoSocialGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *patient;
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 } WMPsychoSocialGroupRelationships;
 
 extern const struct WMPsychoSocialGroupFetchedProperties {
 } WMPsychoSocialGroupFetchedProperties;
 
+@class WMPsychoSocialInterventionEvent;
 @class WMPatient;
+@class WMInterventionStatus;
 @class WMPsychoSocialValue;
 
 
@@ -136,9 +140,23 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
 @property (nonatomic, strong) WMPatient *patient;
 
 //- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -154,6 +172,11 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 @end
 
 @interface _WMPsychoSocialGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMPsychoSocialInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMPsychoSocialInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
@@ -220,8 +243,18 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
 - (WMPatient*)primitivePatient;
 - (void)setPrimitivePatient:(WMPatient*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 

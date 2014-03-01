@@ -17,6 +17,8 @@ extern const struct WMWoundTreatmentGroupAttributes {
 } WMWoundTreatmentGroupAttributes;
 
 extern const struct WMWoundTreatmentGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 	__unsafe_unretained NSString *wound;
 } WMWoundTreatmentGroupRelationships;
@@ -24,6 +26,8 @@ extern const struct WMWoundTreatmentGroupRelationships {
 extern const struct WMWoundTreatmentGroupFetchedProperties {
 } WMWoundTreatmentGroupFetchedProperties;
 
+@class WMWoundTreatmentInterventionEvent;
+@class WMInterventionStatus;
 @class WMWoundTreatmentValue;
 @class WMWound;
 
@@ -152,6 +156,20 @@ extern const struct WMWoundTreatmentGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *values;
 
 - (NSMutableSet*)valuesSet;
@@ -170,6 +188,11 @@ extern const struct WMWoundTreatmentGroupFetchedProperties {
 @end
 
 @interface _WMWoundTreatmentGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMWoundTreatmentInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMWoundTreatmentInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
@@ -242,6 +265,16 @@ extern const struct WMWoundTreatmentGroupFetchedProperties {
 - (void)setPrimitiveWmwoundtreatmentgroup_id:(NSString*)value;
 
 
+
+
+
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 

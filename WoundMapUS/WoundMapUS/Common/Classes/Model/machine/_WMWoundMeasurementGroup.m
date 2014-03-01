@@ -16,6 +16,7 @@ const struct WMWoundMeasurementGroupAttributes WMWoundMeasurementGroupAttributes
 };
 
 const struct WMWoundMeasurementGroupRelationships WMWoundMeasurementGroupRelationships = {
+	.status = @"status",
 	.values = @"values",
 	.wound = @"wound",
 	.woundPhoto = @"woundPhoto",
@@ -191,6 +192,10 @@ const struct WMWoundMeasurementGroupFetchedProperties WMWoundMeasurementGroupFet
 
 
 
+
+@dynamic status;
+
+	
 
 @dynamic values;
 

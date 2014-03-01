@@ -17,14 +17,18 @@ extern const struct WMCarePlanGroupAttributes {
 } WMCarePlanGroupAttributes;
 
 extern const struct WMCarePlanGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *patient;
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 } WMCarePlanGroupRelationships;
 
 extern const struct WMCarePlanGroupFetchedProperties {
 } WMCarePlanGroupFetchedProperties;
 
+@class WMCarePlanInterventionEvent;
 @class WMPatient;
+@class WMInterventionStatus;
 @class WMCarePlanValue;
 
 
@@ -152,9 +156,23 @@ extern const struct WMCarePlanGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
 @property (nonatomic, strong) WMPatient *patient;
 
 //- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -170,6 +188,11 @@ extern const struct WMCarePlanGroupFetchedProperties {
 @end
 
 @interface _WMCarePlanGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMCarePlanInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMCarePlanInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
@@ -245,8 +268,18 @@ extern const struct WMCarePlanGroupFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
 - (WMPatient*)primitivePatient;
 - (void)setPrimitivePatient:(WMPatient*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 

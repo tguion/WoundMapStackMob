@@ -16,7 +16,9 @@ const struct WMDeviceGroupAttributes WMDeviceGroupAttributes = {
 };
 
 const struct WMDeviceGroupRelationships WMDeviceGroupRelationships = {
+	.interventionEvents = @"interventionEvents",
 	.patient = @"patient",
+	.status = @"status",
 	.values = @"values",
 };
 
@@ -191,7 +193,24 @@ const struct WMDeviceGroupFetchedProperties WMDeviceGroupFetchedProperties = {
 
 
 
+@dynamic interventionEvents;
+
+	
+- (NSMutableSet*)interventionEventsSet {
+	[self willAccessValueForKey:@"interventionEvents"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"interventionEvents"];
+  
+	[self didAccessValueForKey:@"interventionEvents"];
+	return result;
+}
+	
+
 @dynamic patient;
+
+	
+
+@dynamic status;
 
 	
 

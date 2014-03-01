@@ -17,14 +17,18 @@ extern const struct WMSkinAssessmentGroupAttributes {
 } WMSkinAssessmentGroupAttributes;
 
 extern const struct WMSkinAssessmentGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *patient;
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 } WMSkinAssessmentGroupRelationships;
 
 extern const struct WMSkinAssessmentGroupFetchedProperties {
 } WMSkinAssessmentGroupFetchedProperties;
 
+@class WMSkinAssessmentInterventionEvent;
 @class WMPatient;
+@class WMInterventionStatus;
 @class WMSkinAssessmentValue;
 
 
@@ -152,9 +156,23 @@ extern const struct WMSkinAssessmentGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
 @property (nonatomic, strong) WMPatient *patient;
 
 //- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -170,6 +188,11 @@ extern const struct WMSkinAssessmentGroupFetchedProperties {
 @end
 
 @interface _WMSkinAssessmentGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMSkinAssessmentInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMSkinAssessmentInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
@@ -245,8 +268,18 @@ extern const struct WMSkinAssessmentGroupFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
 - (WMPatient*)primitivePatient;
 - (void)setPrimitivePatient:(WMPatient*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 

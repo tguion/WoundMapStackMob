@@ -18,6 +18,7 @@ extern const struct WMParticipantAttributes {
 
 extern const struct WMParticipantRelationships {
 	__unsafe_unretained NSString *acquiredConsults;
+	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *participantType;
 	__unsafe_unretained NSString *person;
 } WMParticipantRelationships;
@@ -26,6 +27,7 @@ extern const struct WMParticipantFetchedProperties {
 } WMParticipantFetchedProperties;
 
 @class WMPatientConsultant;
+@class WMInterventionEvent;
 @class WMParticipantType;
 @class WMPerson;
 
@@ -157,6 +159,13 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
 @property (nonatomic, strong) WMParticipantType *participantType;
 
 //- (BOOL)validateParticipantType:(id*)value_ error:(NSError**)error_;
@@ -180,6 +189,11 @@ extern const struct WMParticipantFetchedProperties {
 - (void)removeAcquiredConsults:(NSSet*)value_;
 - (void)addAcquiredConsultsObject:(WMPatientConsultant*)value_;
 - (void)removeAcquiredConsultsObject:(WMPatientConsultant*)value_;
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 @end
 
@@ -249,6 +263,11 @@ extern const struct WMParticipantFetchedProperties {
 
 - (NSMutableSet*)primitiveAcquiredConsults;
 - (void)setPrimitiveAcquiredConsults:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
 
 
 

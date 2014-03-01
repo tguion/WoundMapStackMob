@@ -21,15 +21,19 @@ extern const struct WMMedicationGroupAttributes {
 } WMMedicationGroupAttributes;
 
 extern const struct WMMedicationGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *medications;
 	__unsafe_unretained NSString *patient;
+	__unsafe_unretained NSString *status;
 } WMMedicationGroupRelationships;
 
 extern const struct WMMedicationGroupFetchedProperties {
 } WMMedicationGroupFetchedProperties;
 
+@class WMMedicationInterventionEvent;
 @class WMMedication;
 @class WMPatient;
+@class WMInterventionStatus;
 
 
 
@@ -204,6 +208,13 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *medications;
 
 - (NSMutableSet*)medicationsSet;
@@ -218,10 +229,22 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
 @interface _WMMedicationGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMMedicationInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMMedicationInterventionEvent*)value_;
 
 - (void)addMedications:(NSSet*)value_;
 - (void)removeMedications:(NSSet*)value_;
@@ -324,6 +347,11 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
 - (NSMutableSet*)primitiveMedications;
 - (void)setPrimitiveMedications:(NSMutableSet*)value;
 
@@ -331,6 +359,11 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 - (WMPatient*)primitivePatient;
 - (void)setPrimitivePatient:(WMPatient*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 @end

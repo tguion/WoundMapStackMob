@@ -15,7 +15,9 @@ const struct WMPsychoSocialGroupAttributes WMPsychoSocialGroupAttributes = {
 };
 
 const struct WMPsychoSocialGroupRelationships WMPsychoSocialGroupRelationships = {
+	.interventionEvents = @"interventionEvents",
 	.patient = @"patient",
+	.status = @"status",
 	.values = @"values",
 };
 
@@ -159,7 +161,24 @@ const struct WMPsychoSocialGroupFetchedProperties WMPsychoSocialGroupFetchedProp
 
 
 
+@dynamic interventionEvents;
+
+	
+- (NSMutableSet*)interventionEventsSet {
+	[self willAccessValueForKey:@"interventionEvents"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"interventionEvents"];
+  
+	[self didAccessValueForKey:@"interventionEvents"];
+	return result;
+}
+	
+
 @dynamic patient;
+
+	
+
+@dynamic status;
 
 	
 

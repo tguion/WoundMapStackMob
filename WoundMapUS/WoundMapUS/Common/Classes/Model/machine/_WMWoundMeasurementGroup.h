@@ -17,6 +17,7 @@ extern const struct WMWoundMeasurementGroupAttributes {
 } WMWoundMeasurementGroupAttributes;
 
 extern const struct WMWoundMeasurementGroupRelationships {
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 	__unsafe_unretained NSString *wound;
 	__unsafe_unretained NSString *woundPhoto;
@@ -25,6 +26,7 @@ extern const struct WMWoundMeasurementGroupRelationships {
 extern const struct WMWoundMeasurementGroupFetchedProperties {
 } WMWoundMeasurementGroupFetchedProperties;
 
+@class WMInterventionStatus;
 @class WMWoundMeasurementValue;
 @class WMWound;
 @class WMWoundPhoto;
@@ -154,6 +156,13 @@ extern const struct WMWoundMeasurementGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *values;
 
 - (NSMutableSet*)valuesSet;
@@ -251,6 +260,11 @@ extern const struct WMWoundMeasurementGroupFetchedProperties {
 - (void)setPrimitiveWmwoundmeasurementgroup_id:(NSString*)value;
 
 
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 

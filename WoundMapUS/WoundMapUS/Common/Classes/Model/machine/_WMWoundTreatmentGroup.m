@@ -16,6 +16,8 @@ const struct WMWoundTreatmentGroupAttributes WMWoundTreatmentGroupAttributes = {
 };
 
 const struct WMWoundTreatmentGroupRelationships WMWoundTreatmentGroupRelationships = {
+	.interventionEvents = @"interventionEvents",
+	.status = @"status",
 	.values = @"values",
 	.wound = @"wound",
 };
@@ -190,6 +192,23 @@ const struct WMWoundTreatmentGroupFetchedProperties WMWoundTreatmentGroupFetched
 
 
 
+
+@dynamic interventionEvents;
+
+	
+- (NSMutableSet*)interventionEventsSet {
+	[self willAccessValueForKey:@"interventionEvents"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"interventionEvents"];
+  
+	[self didAccessValueForKey:@"interventionEvents"];
+	return result;
+}
+	
+
+@dynamic status;
+
+	
 
 @dynamic values;
 
