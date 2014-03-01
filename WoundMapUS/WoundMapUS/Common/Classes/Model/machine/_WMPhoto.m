@@ -4,11 +4,14 @@
 #import "_WMPhoto.h"
 
 const struct WMPhotoAttributes WMPhotoAttributes = {
+	.createddate = @"createddate",
 	.flags = @"flags",
+	.lastmoddate = @"lastmoddate",
 	.originalFlag = @"originalFlag",
 	.photo = @"photo",
 	.scale = @"scale",
 	.sortRank = @"sortRank",
+	.wmphoto_id = @"wmphoto_id",
 };
 
 const struct WMPhotoRelationships WMPhotoRelationships = {
@@ -71,6 +74,13 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 
 
 
+@dynamic createddate;
+
+
+
+
+
+
 @dynamic flags;
 
 
@@ -92,6 +102,13 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
+
+
+
+
+
+@dynamic lastmoddate;
+
 
 
 
@@ -177,6 +194,13 @@ const struct WMPhotoFetchedProperties WMPhotoFetchedProperties = {
 - (void)setPrimitiveSortRankValue:(int16_t)value_ {
 	[self setPrimitiveSortRank:[NSNumber numberWithShort:value_]];
 }
+
+
+
+
+
+@dynamic wmphoto_id;
+
 
 
 

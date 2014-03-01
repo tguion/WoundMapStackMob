@@ -16,6 +16,7 @@ const struct WMBradenScaleAttributes WMBradenScaleAttributes = {
 };
 
 const struct WMBradenScaleRelationships WMBradenScaleRelationships = {
+	.patient = @"patient",
 	.sections = @"sections",
 };
 
@@ -213,6 +214,10 @@ const struct WMBradenScaleFetchedProperties WMBradenScaleFetchedProperties = {
 
 
 
+
+@dynamic patient;
+
+	
 
 @dynamic sections;
 

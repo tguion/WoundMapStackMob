@@ -23,12 +23,16 @@ const struct WMWoundTypeAttributes WMWoundTypeAttributes = {
 };
 
 const struct WMWoundTypeRelationships WMWoundTypeRelationships = {
+	.carePlanCategories = @"carePlanCategories",
 	.children = @"children",
 	.deviceCategories = @"deviceCategories",
 	.iapProducts = @"iapProducts",
 	.medicationCategories = @"medicationCategories",
 	.parent = @"parent",
+	.psychosocialItems = @"psychosocialItems",
+	.skinAssessmentCategories = @"skinAssessmentCategories",
 	.woundMeasurements = @"woundMeasurements",
+	.woundTreatments = @"woundTreatments",
 	.wounds = @"wounds",
 };
 
@@ -300,6 +304,19 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 
 
+@dynamic carePlanCategories;
+
+	
+- (NSMutableSet*)carePlanCategoriesSet {
+	[self willAccessValueForKey:@"carePlanCategories"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"carePlanCategories"];
+  
+	[self didAccessValueForKey:@"carePlanCategories"];
+	return result;
+}
+	
+
 @dynamic children;
 
 	
@@ -356,6 +373,32 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 
 	
 
+@dynamic psychosocialItems;
+
+	
+- (NSMutableSet*)psychosocialItemsSet {
+	[self willAccessValueForKey:@"psychosocialItems"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"psychosocialItems"];
+  
+	[self didAccessValueForKey:@"psychosocialItems"];
+	return result;
+}
+	
+
+@dynamic skinAssessmentCategories;
+
+	
+- (NSMutableSet*)skinAssessmentCategoriesSet {
+	[self willAccessValueForKey:@"skinAssessmentCategories"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"skinAssessmentCategories"];
+  
+	[self didAccessValueForKey:@"skinAssessmentCategories"];
+	return result;
+}
+	
+
 @dynamic woundMeasurements;
 
 	
@@ -365,6 +408,19 @@ const struct WMWoundTypeFetchedProperties WMWoundTypeFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"woundMeasurements"];
   
 	[self didAccessValueForKey:@"woundMeasurements"];
+	return result;
+}
+	
+
+@dynamic woundTreatments;
+
+	
+- (NSMutableSet*)woundTreatmentsSet {
+	[self willAccessValueForKey:@"woundTreatments"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"woundTreatments"];
+  
+	[self didAccessValueForKey:@"woundTreatments"];
 	return result;
 }
 	

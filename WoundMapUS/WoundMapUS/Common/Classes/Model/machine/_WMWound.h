@@ -18,18 +18,24 @@ extern const struct WMWoundAttributes {
 } WMWoundAttributes;
 
 extern const struct WMWoundRelationships {
+	__unsafe_unretained NSString *locationValues;
 	__unsafe_unretained NSString *measurementGroups;
 	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *photos;
+	__unsafe_unretained NSString *positionValues;
+	__unsafe_unretained NSString *treatmentGroups;
 	__unsafe_unretained NSString *woundType;
 } WMWoundRelationships;
 
 extern const struct WMWoundFetchedProperties {
 } WMWoundFetchedProperties;
 
+@class WMWoundLocationValue;
 @class WMWoundMeasurementGroup;
 @class WMPatient;
 @class WMWoundPhoto;
+@class WMWoundPositionValue;
+@class WMWoundTreatmentGroup;
 @class WMWoundType;
 
 
@@ -164,6 +170,13 @@ extern const struct WMWoundFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *locationValues;
+
+- (NSMutableSet*)locationValuesSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *measurementGroups;
 
 - (NSMutableSet*)measurementGroupsSet;
@@ -185,6 +198,20 @@ extern const struct WMWoundFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *positionValues;
+
+- (NSMutableSet*)positionValuesSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *treatmentGroups;
+
+- (NSMutableSet*)treatmentGroupsSet;
+
+
+
+
 @property (nonatomic, strong) WMWoundType *woundType;
 
 //- (BOOL)validateWoundType:(id*)value_ error:(NSError**)error_;
@@ -197,6 +224,11 @@ extern const struct WMWoundFetchedProperties {
 
 @interface _WMWound (CoreDataGeneratedAccessors)
 
+- (void)addLocationValues:(NSSet*)value_;
+- (void)removeLocationValues:(NSSet*)value_;
+- (void)addLocationValuesObject:(WMWoundLocationValue*)value_;
+- (void)removeLocationValuesObject:(WMWoundLocationValue*)value_;
+
 - (void)addMeasurementGroups:(NSSet*)value_;
 - (void)removeMeasurementGroups:(NSSet*)value_;
 - (void)addMeasurementGroupsObject:(WMWoundMeasurementGroup*)value_;
@@ -206,6 +238,16 @@ extern const struct WMWoundFetchedProperties {
 - (void)removePhotos:(NSSet*)value_;
 - (void)addPhotosObject:(WMWoundPhoto*)value_;
 - (void)removePhotosObject:(WMWoundPhoto*)value_;
+
+- (void)addPositionValues:(NSSet*)value_;
+- (void)removePositionValues:(NSSet*)value_;
+- (void)addPositionValuesObject:(WMWoundPositionValue*)value_;
+- (void)removePositionValuesObject:(WMWoundPositionValue*)value_;
+
+- (void)addTreatmentGroups:(NSSet*)value_;
+- (void)removeTreatmentGroups:(NSSet*)value_;
+- (void)addTreatmentGroupsObject:(WMWoundTreatmentGroup*)value_;
+- (void)removeTreatmentGroupsObject:(WMWoundTreatmentGroup*)value_;
 
 @end
 
@@ -279,6 +321,11 @@ extern const struct WMWoundFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveLocationValues;
+- (void)setPrimitiveLocationValues:(NSMutableSet*)value;
+
+
+
 - (NSMutableSet*)primitiveMeasurementGroups;
 - (void)setPrimitiveMeasurementGroups:(NSMutableSet*)value;
 
@@ -291,6 +338,16 @@ extern const struct WMWoundFetchedProperties {
 
 - (NSMutableSet*)primitivePhotos;
 - (void)setPrimitivePhotos:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitivePositionValues;
+- (void)setPrimitivePositionValues:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveTreatmentGroups;
+- (void)setPrimitiveTreatmentGroups:(NSMutableSet*)value;
 
 
 

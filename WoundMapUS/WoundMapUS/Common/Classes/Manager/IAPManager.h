@@ -7,7 +7,7 @@
 //
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
-#import "WCIAPTransaction+Custom.h"
+#import "WMIAPTransaction.h"
 
 @class IAPProduct;
 
@@ -36,7 +36,7 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 
 - (void)sharePdfReportCreditHasBeenUsed;
 
-- (WCIAPTransaction *) addCreditTransaction:(NSNumber *)credits;
+- (WMIAPTransaction *)addCreditTransaction:(NSNumber *)credits;
 
 - (void) resetTokenCount;
 - (void) diagDumpAction;

@@ -24,24 +24,32 @@ extern const struct WMWoundTypeAttributes {
 } WMWoundTypeAttributes;
 
 extern const struct WMWoundTypeRelationships {
+	__unsafe_unretained NSString *carePlanCategories;
 	__unsafe_unretained NSString *children;
 	__unsafe_unretained NSString *deviceCategories;
 	__unsafe_unretained NSString *iapProducts;
 	__unsafe_unretained NSString *medicationCategories;
 	__unsafe_unretained NSString *parent;
+	__unsafe_unretained NSString *psychosocialItems;
+	__unsafe_unretained NSString *skinAssessmentCategories;
 	__unsafe_unretained NSString *woundMeasurements;
+	__unsafe_unretained NSString *woundTreatments;
 	__unsafe_unretained NSString *wounds;
 } WMWoundTypeRelationships;
 
 extern const struct WMWoundTypeFetchedProperties {
 } WMWoundTypeFetchedProperties;
 
+@class WMCarePlanCategory;
 @class WMWoundType;
 @class WMDeviceCategory;
 @class IAPProduct;
 @class WMMedicationCategory;
 @class WMWoundType;
+@class WMPsychoSocialItem;
+@class WMSkinAssessmentCategory;
 @class WMWoundMeasurement;
+@class WMWoundTreatment;
 @class WMWound;
 
 
@@ -254,6 +262,13 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *carePlanCategories;
+
+- (NSMutableSet*)carePlanCategoriesSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *children;
 
 - (NSMutableSet*)childrenSet;
@@ -289,9 +304,30 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *psychosocialItems;
+
+- (NSMutableSet*)psychosocialItemsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *skinAssessmentCategories;
+
+- (NSMutableSet*)skinAssessmentCategoriesSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *woundMeasurements;
 
 - (NSMutableSet*)woundMeasurementsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *woundTreatments;
+
+- (NSMutableSet*)woundTreatmentsSet;
 
 
 
@@ -307,6 +343,11 @@ extern const struct WMWoundTypeFetchedProperties {
 @end
 
 @interface _WMWoundType (CoreDataGeneratedAccessors)
+
+- (void)addCarePlanCategories:(NSSet*)value_;
+- (void)removeCarePlanCategories:(NSSet*)value_;
+- (void)addCarePlanCategoriesObject:(WMCarePlanCategory*)value_;
+- (void)removeCarePlanCategoriesObject:(WMCarePlanCategory*)value_;
 
 - (void)addChildren:(NSSet*)value_;
 - (void)removeChildren:(NSSet*)value_;
@@ -328,10 +369,25 @@ extern const struct WMWoundTypeFetchedProperties {
 - (void)addMedicationCategoriesObject:(WMMedicationCategory*)value_;
 - (void)removeMedicationCategoriesObject:(WMMedicationCategory*)value_;
 
+- (void)addPsychosocialItems:(NSSet*)value_;
+- (void)removePsychosocialItems:(NSSet*)value_;
+- (void)addPsychosocialItemsObject:(WMPsychoSocialItem*)value_;
+- (void)removePsychosocialItemsObject:(WMPsychoSocialItem*)value_;
+
+- (void)addSkinAssessmentCategories:(NSSet*)value_;
+- (void)removeSkinAssessmentCategories:(NSSet*)value_;
+- (void)addSkinAssessmentCategoriesObject:(WMSkinAssessmentCategory*)value_;
+- (void)removeSkinAssessmentCategoriesObject:(WMSkinAssessmentCategory*)value_;
+
 - (void)addWoundMeasurements:(NSSet*)value_;
 - (void)removeWoundMeasurements:(NSSet*)value_;
 - (void)addWoundMeasurementsObject:(WMWoundMeasurement*)value_;
 - (void)removeWoundMeasurementsObject:(WMWoundMeasurement*)value_;
+
+- (void)addWoundTreatments:(NSSet*)value_;
+- (void)removeWoundTreatments:(NSSet*)value_;
+- (void)addWoundTreatmentsObject:(WMWoundTreatment*)value_;
+- (void)removeWoundTreatmentsObject:(WMWoundTreatment*)value_;
 
 - (void)addWounds:(NSSet*)value_;
 - (void)removeWounds:(NSSet*)value_;
@@ -455,6 +511,11 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveCarePlanCategories;
+- (void)setPrimitiveCarePlanCategories:(NSMutableSet*)value;
+
+
+
 - (NSMutableSet*)primitiveChildren;
 - (void)setPrimitiveChildren:(NSMutableSet*)value;
 
@@ -480,8 +541,23 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+- (NSMutableSet*)primitivePsychosocialItems;
+- (void)setPrimitivePsychosocialItems:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveSkinAssessmentCategories;
+- (void)setPrimitiveSkinAssessmentCategories:(NSMutableSet*)value;
+
+
+
 - (NSMutableSet*)primitiveWoundMeasurements;
 - (void)setPrimitiveWoundMeasurements:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveWoundTreatments;
+- (void)setPrimitiveWoundTreatments:(NSMutableSet*)value;
 
 
 

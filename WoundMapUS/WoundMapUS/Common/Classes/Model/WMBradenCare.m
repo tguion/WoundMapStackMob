@@ -46,7 +46,7 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMBradenCare" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"sectionTitle == %@ AND scoreMinimum <= %@ AND scoreMaximum >= %@", sectionTitle, score, score]];
     NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
         [WMUtilities logError:error];
     }

@@ -29,7 +29,7 @@ NSInteger const kBradenSectionCount = 6;
 	return bradenScale;
 }
 
-+ (WMBradenScale *)createNewBradenScale:(WMPatient *)patient
++ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMBradenScale *bradenScale = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
@@ -202,11 +202,12 @@ NSInteger const kBradenSectionCount = 6;
 - (void)updateScoreFromSections
 {
     NSInteger score = 0;
-    for (WMBradenSection *bradenSection in [self.sections allObjects]) {
+    NSSet *sections = self.sections;
+    for (WMBradenSection *bradenSection in sections) {
         score += [bradenSection.selectedCell.value intValue];
     }
-    self.score = [NSNumber numberWithInt:score];
-    self.completeFlag = [NSNumber numberWithBool:self.isScoredCalculated];
+    self.scoreValue = score;
+    self.completeFlag = @(self.isScoredCalculated);
 }
 
 - (NSArray *)sortedSections
@@ -216,7 +217,7 @@ NSInteger const kBradenSectionCount = 6;
 
 - (BOOL)isClosed
 {
-    return [self.closedFlag boolValue];
+    return self.closedFlagValue;
 }
 
 - (void)populateSections
@@ -233,30 +234,32 @@ NSInteger const kBradenSectionCount = 6;
 																 format:NULL
 																  error:&error];
 	NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-	for (NSDictionary *dictionary in propertyList) {
-		WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:self
-															 managedObjectContext:[self managedObjectContext]
-																  persistentStore:nil];
-		bradenSection.sortRank = [dictionary objectForKey:@"sortRank"];
-		bradenSection.bradenScale = self;
-		bradenSection.title = [dictionary objectForKey:@"title"];
-		bradenSection.desc = [dictionary objectForKey:@"desc"];
-		id object = [dictionary objectForKey:@"cells"];
-		if ([object isKindOfClass:[NSArray class]]) {
-			for (NSDictionary *d in object) {
-				WMBradenCell *bradenCell = [WMBradenCell instanceWithBradenSection:bradenSection
-															  managedObjectContext:[self managedObjectContext]
-																   persistentStore:nil];
-				bradenCell.title = [d objectForKey:@"title"];
-				bradenCell.primaryDescription = [d objectForKey:@"primaryDescription"];
-				id obj = [d objectForKey:@"secondaryDescription"];
-				if ([obj isKindOfClass:[NSString class]]) {
-					bradenCell.secondaryDescription = obj;
-				}
-				bradenCell.value = [d objectForKey:@"value"];
-			}
-		}
-	}
+    @autoreleasepool {
+        for (NSDictionary *dictionary in propertyList) {
+            WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:self
+                                                                 managedObjectContext:[self managedObjectContext]
+                                                                      persistentStore:nil];
+            bradenSection.sortRank = [dictionary objectForKey:@"sortRank"];
+            bradenSection.bradenScale = self;
+            bradenSection.title = [dictionary objectForKey:@"title"];
+            bradenSection.desc = [dictionary objectForKey:@"desc"];
+            id object = [dictionary objectForKey:@"cells"];
+            if ([object isKindOfClass:[NSArray class]]) {
+                for (NSDictionary *d in object) {
+                    WMBradenCell *bradenCell = [WMBradenCell instanceWithBradenSection:bradenSection
+                                                                  managedObjectContext:[self managedObjectContext]
+                                                                       persistentStore:nil];
+                    bradenCell.title = [d objectForKey:@"title"];
+                    bradenCell.primaryDescription = [d objectForKey:@"primaryDescription"];
+                    id obj = [d objectForKey:@"secondaryDescription"];
+                    if ([obj isKindOfClass:[NSString class]]) {
+                        bradenCell.secondaryDescription = obj;
+                    }
+                    bradenCell.value = [d objectForKey:@"value"];
+                }
+            }
+        }
+    }
 }
 
 @end

@@ -5,11 +5,14 @@
 
 
 extern const struct WMPhotoAttributes {
+	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *originalFlag;
 	__unsafe_unretained NSString *photo;
 	__unsafe_unretained NSString *scale;
 	__unsafe_unretained NSString *sortRank;
+	__unsafe_unretained NSString *wmphoto_id;
 } WMPhotoAttributes;
 
 extern const struct WMPhotoRelationships {
@@ -20,6 +23,9 @@ extern const struct WMPhotoFetchedProperties {
 } WMPhotoFetchedProperties;
 
 @class WMWoundPhoto;
+
+
+
 
 
 
@@ -40,6 +46,16 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* createddate;
+
+
+
+//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -49,6 +65,16 @@ extern const struct WMPhotoFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* lastmoddate;
+
+
+
+//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -106,6 +132,16 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* wmphoto_id;
+
+
+
+//- (BOOL)validateWmphoto_id:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) WMWoundPhoto *woundPhoto;
 
 //- (BOOL)validateWoundPhoto:(id*)value_ error:(NSError**)error_;
@@ -123,11 +159,23 @@ extern const struct WMPhotoFetchedProperties {
 @interface _WMPhoto (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSDate*)primitiveCreateddate;
+- (void)setPrimitiveCreateddate:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
+
+
+
+
+- (NSDate*)primitiveLastmoddate;
+- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -161,6 +209,12 @@ extern const struct WMPhotoFetchedProperties {
 
 - (int16_t)primitiveSortRankValue;
 - (void)setPrimitiveSortRankValue:(int16_t)value_;
+
+
+
+
+- (NSString*)primitiveWmphoto_id;
+- (void)setPrimitiveWmphoto_id:(NSString*)value;
 
 
 

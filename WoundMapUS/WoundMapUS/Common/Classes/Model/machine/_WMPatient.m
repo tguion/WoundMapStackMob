@@ -21,6 +21,7 @@ const struct WMPatientAttributes WMPatientAttributes = {
 };
 
 const struct WMPatientRelationships WMPatientRelationships = {
+	.bradenScales = @"bradenScales",
 	.deviceGroups = @"deviceGroups",
 	.ids = @"ids",
 	.medicationGroups = @"medicationGroups",
@@ -235,6 +236,19 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
+
+@dynamic bradenScales;
+
+	
+- (NSMutableSet*)bradenScalesSet {
+	[self willAccessValueForKey:@"bradenScales"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"bradenScales"];
+  
+	[self didAccessValueForKey:@"bradenScales"];
+	return result;
+}
+	
 
 @dynamic deviceGroups;
 

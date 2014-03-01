@@ -17,9 +17,12 @@ const struct WMWoundAttributes WMWoundAttributes = {
 };
 
 const struct WMWoundRelationships WMWoundRelationships = {
+	.locationValues = @"locationValues",
 	.measurementGroups = @"measurementGroups",
 	.patient = @"patient",
 	.photos = @"photos",
+	.positionValues = @"positionValues",
+	.treatmentGroups = @"treatmentGroups",
 	.woundType = @"woundType",
 };
 
@@ -177,6 +180,19 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 
 
 
+@dynamic locationValues;
+
+	
+- (NSMutableSet*)locationValuesSet {
+	[self willAccessValueForKey:@"locationValues"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"locationValues"];
+  
+	[self didAccessValueForKey:@"locationValues"];
+	return result;
+}
+	
+
 @dynamic measurementGroups;
 
 	
@@ -203,6 +219,32 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"photos"];
   
 	[self didAccessValueForKey:@"photos"];
+	return result;
+}
+	
+
+@dynamic positionValues;
+
+	
+- (NSMutableSet*)positionValuesSet {
+	[self willAccessValueForKey:@"positionValues"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"positionValues"];
+  
+	[self didAccessValueForKey:@"positionValues"];
+	return result;
+}
+	
+
+@dynamic treatmentGroups;
+
+	
+- (NSMutableSet*)treatmentGroupsSet {
+	[self willAccessValueForKey:@"treatmentGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"treatmentGroups"];
+  
+	[self didAccessValueForKey:@"treatmentGroups"];
 	return result;
 }
 	
