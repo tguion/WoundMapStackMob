@@ -1,5 +1,9 @@
 #import "_WMWoundPositionValue.h"
 
+@class WMWound;
+
 @interface WMWoundPositionValue : _WMWoundPositionValue {}
-// Custom logic goes here.
+
++ (WMWoundPositionValue *)woundPositionValueForWound:(WMWound *)wound;
+
 @end

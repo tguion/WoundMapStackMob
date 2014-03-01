@@ -5,6 +5,8 @@
 
 const struct WMWoundLocationValueAttributes WMWoundLocationValueAttributes = {
 	.createddate = @"createddate",
+	.dateCreated = @"dateCreated",
+	.dateModified = @"dateModified",
 	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.wmwoundlocationvalue_id = @"wmwoundlocationvalue_id",
@@ -57,6 +59,20 @@ const struct WMWoundLocationValueFetchedProperties WMWoundLocationValueFetchedPr
 
 
 @dynamic createddate;
+
+
+
+
+
+
+@dynamic dateCreated;
+
+
+
+
+
+
+@dynamic dateModified;
 
 
 

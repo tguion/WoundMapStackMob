@@ -1,5 +1,8 @@
 #import "_WMWoundTreatmentValue.h"
 
 @interface WMWoundTreatmentValue : _WMWoundTreatmentValue {}
-// Custom logic goes here.
+
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store;
+
 @end

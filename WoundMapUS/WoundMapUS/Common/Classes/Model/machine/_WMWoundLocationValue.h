@@ -6,6 +6,8 @@
 
 extern const struct WMWoundLocationValueAttributes {
 	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *dateCreated;
+	__unsafe_unretained NSString *dateModified;
 	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *wmwoundlocationvalue_id;
@@ -21,6 +23,8 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 @class WMWoundLocation;
 @class WMWound;
+
+
 
 
 
@@ -45,6 +49,26 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 
 //- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* dateCreated;
+
+
+
+//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* dateModified;
+
+
+
+//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -110,6 +134,18 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 - (NSDate*)primitiveCreateddate;
 - (void)setPrimitiveCreateddate:(NSDate*)value;
+
+
+
+
+- (NSDate*)primitiveDateCreated;
+- (void)setPrimitiveDateCreated:(NSDate*)value;
+
+
+
+
+- (NSDate*)primitiveDateModified;
+- (void)setPrimitiveDateModified:(NSDate*)value;
 
 
 

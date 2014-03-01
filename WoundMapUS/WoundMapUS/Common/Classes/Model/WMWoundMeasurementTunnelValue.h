@@ -1,5 +1,8 @@
 #import "_WMWoundMeasurementTunnelValue.h"
 
 @interface WMWoundMeasurementTunnelValue : _WMWoundMeasurementTunnelValue {}
-// Custom logic goes here.
+
+@property (readonly, nonatomic) NSString *labelText;
+@property (readonly, nonatomic) NSString *valueText;
+
 @end

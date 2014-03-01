@@ -733,6 +733,8 @@
     </entity>
     <entity name="WMWoundLocationValue" representedClassName="WMWoundLocationValue" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date" syncable="YES"/>
+        <attribute name="dateModified" attributeType="Date" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="wmwoundlocationvalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
