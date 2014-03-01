@@ -1,5 +1,8 @@
 #import "_WMDefinitionKeyword.h"
 
 @interface WMDefinitionKeyword : _WMDefinitionKeyword {}
-// Custom logic goes here.
+
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store;
+
 @end

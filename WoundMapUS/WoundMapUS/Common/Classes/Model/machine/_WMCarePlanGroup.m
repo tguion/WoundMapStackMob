@@ -16,6 +16,7 @@ const struct WMCarePlanGroupAttributes WMCarePlanGroupAttributes = {
 };
 
 const struct WMCarePlanGroupRelationships WMCarePlanGroupRelationships = {
+	.patient = @"patient",
 	.values = @"values",
 };
 
@@ -189,6 +190,10 @@ const struct WMCarePlanGroupFetchedProperties WMCarePlanGroupFetchedProperties =
 
 
 
+
+@dynamic patient;
+
+	
 
 @dynamic values;
 

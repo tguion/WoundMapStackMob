@@ -1,5 +1,25 @@
 #import "_WMCarePlanCategory.h"
+#import "WoundCareProtocols.h"
 
-@interface WMCarePlanCategory : _WMCarePlanCategory {}
-// Custom logic goes here.
+@class WMWoundType;
+
+@interface WMCarePlanCategory : _WMCarePlanCategory <AssessmentGroup> {}
+
+@property (nonatomic) BOOL combineKeyAndValue;
+@property (nonatomic) BOOL inputValueInline;
+@property (nonatomic) BOOL allowMultipleChildSelection;
+@property (nonatomic) BOOL skipSelectionIcon;
+@property (readonly, nonatomic) BOOL hasSubcategories;
+@property (readonly, nonatomic) NSArray *sortedChildernCarePlanCategories;
+
+- (NSString *)combineKeyAndValue:(NSString *)value;
+- (void)aggregateSubcategories:(NSMutableSet *)set;
+
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
+
++ (NSArray *)sortedRootCarePlanCategories:(NSManagedObjectContext *)managedObjectContext;
++ (NSSet *)carePlanCategories:(NSManagedObjectContext *)managedObjectContext;
+
++ (NSPredicate *)predicateForParent:(WMCarePlanCategory *)parent woundType:(WMWoundType *)woundType;
+
 @end

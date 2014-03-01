@@ -23,6 +23,7 @@ extern const struct WMPatientAttributes {
 
 extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *bradenScales;
+	__unsafe_unretained NSString *carePlanGroups;
 	__unsafe_unretained NSString *deviceGroups;
 	__unsafe_unretained NSString *ids;
 	__unsafe_unretained NSString *medicationGroups;
@@ -36,6 +37,7 @@ extern const struct WMPatientFetchedProperties {
 } WMPatientFetchedProperties;
 
 @class WMBradenScale;
+@class WMCarePlanGroup;
 @class WMDeviceGroup;
 @class WMId;
 @class WMMedicationGroup;
@@ -231,6 +233,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *carePlanGroups;
+
+- (NSMutableSet*)carePlanGroupsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *deviceGroups;
 
 - (NSMutableSet*)deviceGroupsSet;
@@ -289,6 +298,11 @@ extern const struct WMPatientFetchedProperties {
 - (void)removeBradenScales:(NSSet*)value_;
 - (void)addBradenScalesObject:(WMBradenScale*)value_;
 - (void)removeBradenScalesObject:(WMBradenScale*)value_;
+
+- (void)addCarePlanGroups:(NSSet*)value_;
+- (void)removeCarePlanGroups:(NSSet*)value_;
+- (void)addCarePlanGroupsObject:(WMCarePlanGroup*)value_;
+- (void)removeCarePlanGroupsObject:(WMCarePlanGroup*)value_;
 
 - (void)addDeviceGroups:(NSSet*)value_;
 - (void)removeDeviceGroups:(NSSet*)value_;
@@ -416,6 +430,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSMutableSet*)primitiveBradenScales;
 - (void)setPrimitiveBradenScales:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveCarePlanGroups;
+- (void)setPrimitiveCarePlanGroups:(NSMutableSet*)value;
 
 
 

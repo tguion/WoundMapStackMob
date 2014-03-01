@@ -17,12 +17,14 @@ extern const struct WMCarePlanGroupAttributes {
 } WMCarePlanGroupAttributes;
 
 extern const struct WMCarePlanGroupRelationships {
+	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *values;
 } WMCarePlanGroupRelationships;
 
 extern const struct WMCarePlanGroupFetchedProperties {
 } WMCarePlanGroupFetchedProperties;
 
+@class WMPatient;
 @class WMCarePlanValue;
 
 
@@ -150,6 +152,13 @@ extern const struct WMCarePlanGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMPatient *patient;
+
+//- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *values;
 
 - (NSMutableSet*)valuesSet;
@@ -233,6 +242,11 @@ extern const struct WMCarePlanGroupFetchedProperties {
 - (void)setPrimitiveWmcareplangroup_id:(NSString*)value;
 
 
+
+
+
+- (WMPatient*)primitivePatient;
+- (void)setPrimitivePatient:(WMPatient*)value;
 
 
 

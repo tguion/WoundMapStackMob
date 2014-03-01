@@ -19,7 +19,6 @@ extern const struct WMCarePlanValueAttributes {
 extern const struct WMCarePlanValueRelationships {
 	__unsafe_unretained NSString *category;
 	__unsafe_unretained NSString *group;
-	__unsafe_unretained NSString *item;
 } WMCarePlanValueRelationships;
 
 extern const struct WMCarePlanValueFetchedProperties {
@@ -27,7 +26,6 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 @class WMCarePlanCategory;
 @class WMCarePlanGroup;
-@class WMCarePlanItem;
 
 
 
@@ -164,13 +162,6 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) WMCarePlanItem *item;
-
-//- (BOOL)validateItem:(id*)value_ error:(NSError**)error_;
-
-
-
-
 
 @end
 
@@ -249,11 +240,6 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 - (WMCarePlanGroup*)primitiveGroup;
 - (void)setPrimitiveGroup:(WMCarePlanGroup*)value;
-
-
-
-- (WMCarePlanItem*)primitiveItem;
-- (void)setPrimitiveItem:(WMCarePlanItem*)value;
 
 
 @end

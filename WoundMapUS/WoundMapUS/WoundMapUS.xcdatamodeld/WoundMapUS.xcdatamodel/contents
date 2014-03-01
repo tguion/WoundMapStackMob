@@ -139,7 +139,6 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="wmcareplancategory_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanItem" inverseName="category" inverseEntity="WMCarePlanItem" syncable="YES"/>
         <relationship name="parent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanCategory" inverseName="subcategories" inverseEntity="WMCarePlanCategory" syncable="YES"/>
         <relationship name="subcategories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanCategory" inverseName="parent" inverseEntity="WMCarePlanCategory" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanValue" inverseName="category" inverseEntity="WMCarePlanValue" syncable="YES"/>
@@ -155,26 +154,8 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="wmcareplangroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="carePlanGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanValue" inverseName="group" inverseEntity="WMCarePlanValue" syncable="YES"/>
-    </entity>
-    <entity name="WMCarePlanItem" representedClassName="WMCarePlanItem" syncable="YES">
-        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="keyboardType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="options" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="placeHolder" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="wmcareplanitem_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="category" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanCategory" inverseName="items" inverseEntity="WMCarePlanCategory" syncable="YES"/>
-        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanValue" inverseName="item" inverseEntity="WMCarePlanValue" syncable="YES"/>
     </entity>
     <entity name="WMCarePlanValue" representedClassName="WMCarePlanValue" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -188,7 +169,6 @@
         <attribute name="wmcareplanvalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="category" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanCategory" inverseName="values" inverseEntity="WMCarePlanCategory" syncable="YES"/>
         <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanGroup" inverseName="values" inverseEntity="WMCarePlanGroup" syncable="YES"/>
-        <relationship name="item" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanItem" inverseName="values" inverseEntity="WMCarePlanItem" syncable="YES"/>
     </entity>
     <entity name="WMConsultingGroup" representedClassName="WMConsultingGroup" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -493,6 +473,7 @@
         </attribute>
         <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="bradenScales" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMBradenScale" inverseName="patient" inverseEntity="WMBradenScale" syncable="YES"/>
+        <relationship name="carePlanGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanGroup" inverseName="patient" inverseEntity="WMCarePlanGroup" syncable="YES"/>
         <relationship name="deviceGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceGroup" inverseName="patient" inverseEntity="WMDeviceGroup" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
@@ -1032,7 +1013,6 @@
         <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMCarePlanCategory" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMCarePlanGroup" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMCarePlanItem" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMCarePlanValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDefinition" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDefinitionKeyword" positionX="0" positionY="0" width="0" height="0"/>

@@ -23,7 +23,6 @@ const struct WMCarePlanCategoryAttributes WMCarePlanCategoryAttributes = {
 };
 
 const struct WMCarePlanCategoryRelationships WMCarePlanCategoryRelationships = {
-	.items = @"items",
 	.parent = @"parent",
 	.subcategories = @"subcategories",
 	.values = @"values",
@@ -297,19 +296,6 @@ const struct WMCarePlanCategoryFetchedProperties WMCarePlanCategoryFetchedProper
 
 
 
-
-@dynamic items;
-
-	
-- (NSMutableSet*)itemsSet {
-	[self willAccessValueForKey:@"items"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"items"];
-  
-	[self didAccessValueForKey:@"items"];
-	return result;
-}
-	
 
 @dynamic parent;
 

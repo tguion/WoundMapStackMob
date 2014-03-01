@@ -305,7 +305,6 @@
 		7DDFD69218B7C2C000041927 /* WMNavigationPatientWoundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD69018B7C2C000041927 /* WMNavigationPatientWoundView.m */; };
 		7DF4E8E418C22EEC000A3F5B /* _WMCarePlanCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8B918C22EEC000A3F5B /* _WMCarePlanCategory.m */; };
 		7DF4E8E518C22EEC000A3F5B /* _WMCarePlanGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8BB18C22EEC000A3F5B /* _WMCarePlanGroup.m */; };
-		7DF4E8E618C22EEC000A3F5B /* _WMCarePlanItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8BD18C22EEC000A3F5B /* _WMCarePlanItem.m */; };
 		7DF4E8E718C22EEC000A3F5B /* _WMCarePlanValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8BF18C22EEC000A3F5B /* _WMCarePlanValue.m */; };
 		7DF4E8E818C22EEC000A3F5B /* _WMDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8C118C22EEC000A3F5B /* _WMDefinition.m */; };
 		7DF4E8E918C22EEC000A3F5B /* _WMDefinitionKeyword.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8C318C22EEC000A3F5B /* _WMDefinitionKeyword.m */; };
@@ -327,7 +326,6 @@
 		7DF4E8F918C22EEC000A3F5B /* _WMWoundTreatmentValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8E318C22EEC000A3F5B /* _WMWoundTreatmentValue.m */; };
 		7DF4E92618C22F27000A3F5B /* WMCarePlanCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8FB18C22F27000A3F5B /* WMCarePlanCategory.m */; };
 		7DF4E92718C22F27000A3F5B /* WMCarePlanGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8FD18C22F27000A3F5B /* WMCarePlanGroup.m */; };
-		7DF4E92818C22F27000A3F5B /* WMCarePlanItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8FF18C22F27000A3F5B /* WMCarePlanItem.m */; };
 		7DF4E92918C22F27000A3F5B /* WMCarePlanValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E90118C22F27000A3F5B /* WMCarePlanValue.m */; };
 		7DF4E92A18C22F27000A3F5B /* WMDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E90318C22F27000A3F5B /* WMDefinition.m */; };
 		7DF4E92B18C22F27000A3F5B /* WMDefinitionKeyword.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E90518C22F27000A3F5B /* WMDefinitionKeyword.m */; };
@@ -347,6 +345,7 @@
 		7DF4E93918C22F27000A3F5B /* WMWoundTreatment.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E92118C22F27000A3F5B /* WMWoundTreatment.m */; };
 		7DF4E93A18C22F27000A3F5B /* WMWoundTreatmentGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E92318C22F27000A3F5B /* WMWoundTreatmentGroup.m */; };
 		7DF4E93B18C22F27000A3F5B /* WMWoundTreatmentValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E92518C22F27000A3F5B /* WMWoundTreatmentValue.m */; };
+		7DF4E93E18C2550F000A3F5B /* SearchUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E93D18C2550F000A3F5B /* SearchUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -894,8 +893,6 @@
 		7DF4E8B918C22EEC000A3F5B /* _WMCarePlanCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMCarePlanCategory.m; sourceTree = "<group>"; };
 		7DF4E8BA18C22EEC000A3F5B /* _WMCarePlanGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMCarePlanGroup.h; sourceTree = "<group>"; };
 		7DF4E8BB18C22EEC000A3F5B /* _WMCarePlanGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMCarePlanGroup.m; sourceTree = "<group>"; };
-		7DF4E8BC18C22EEC000A3F5B /* _WMCarePlanItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMCarePlanItem.h; sourceTree = "<group>"; };
-		7DF4E8BD18C22EEC000A3F5B /* _WMCarePlanItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMCarePlanItem.m; sourceTree = "<group>"; };
 		7DF4E8BE18C22EEC000A3F5B /* _WMCarePlanValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMCarePlanValue.h; sourceTree = "<group>"; };
 		7DF4E8BF18C22EEC000A3F5B /* _WMCarePlanValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMCarePlanValue.m; sourceTree = "<group>"; };
 		7DF4E8C018C22EEC000A3F5B /* _WMDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMDefinition.h; sourceTree = "<group>"; };
@@ -938,8 +935,6 @@
 		7DF4E8FB18C22F27000A3F5B /* WMCarePlanCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanCategory.m; sourceTree = "<group>"; };
 		7DF4E8FC18C22F27000A3F5B /* WMCarePlanGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanGroup.h; sourceTree = "<group>"; };
 		7DF4E8FD18C22F27000A3F5B /* WMCarePlanGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanGroup.m; sourceTree = "<group>"; };
-		7DF4E8FE18C22F27000A3F5B /* WMCarePlanItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanItem.h; sourceTree = "<group>"; };
-		7DF4E8FF18C22F27000A3F5B /* WMCarePlanItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanItem.m; sourceTree = "<group>"; };
 		7DF4E90018C22F27000A3F5B /* WMCarePlanValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanValue.h; sourceTree = "<group>"; };
 		7DF4E90118C22F27000A3F5B /* WMCarePlanValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanValue.m; sourceTree = "<group>"; };
 		7DF4E90218C22F27000A3F5B /* WMDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDefinition.h; sourceTree = "<group>"; };
@@ -978,6 +973,8 @@
 		7DF4E92318C22F27000A3F5B /* WMWoundTreatmentGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentGroup.m; sourceTree = "<group>"; };
 		7DF4E92418C22F27000A3F5B /* WMWoundTreatmentValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentValue.h; sourceTree = "<group>"; };
 		7DF4E92518C22F27000A3F5B /* WMWoundTreatmentValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentValue.m; sourceTree = "<group>"; };
+		7DF4E93C18C2550F000A3F5B /* SearchUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchUtilities.h; sourceTree = "<group>"; };
+		7DF4E93D18C2550F000A3F5B /* SearchUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchUtilities.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1042,6 +1039,8 @@
 		5F67D1CB18AC3B1A00460C37 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				7DF4E93C18C2550F000A3F5B /* SearchUtilities.h */,
+				7DF4E93D18C2550F000A3F5B /* SearchUtilities.m */,
 				7D39DAD218B7CDFA0054DDC3 /* WMDesignUtilities.h */,
 				7D39DAD318B7CDFA0054DDC3 /* WMDesignUtilities.m */,
 				5F67D1CC18AC3B5B00460C37 /* WMUtilities.h */,
@@ -1541,8 +1540,6 @@
 				7DF4E8FB18C22F27000A3F5B /* WMCarePlanCategory.m */,
 				7DF4E8FC18C22F27000A3F5B /* WMCarePlanGroup.h */,
 				7DF4E8FD18C22F27000A3F5B /* WMCarePlanGroup.m */,
-				7DF4E8FE18C22F27000A3F5B /* WMCarePlanItem.h */,
-				7DF4E8FF18C22F27000A3F5B /* WMCarePlanItem.m */,
 				7DF4E90018C22F27000A3F5B /* WMCarePlanValue.h */,
 				7DF4E90118C22F27000A3F5B /* WMCarePlanValue.m */,
 				7D9AA27218AFF74C00C1B698 /* WMConsultingGroup.h */,
@@ -1833,8 +1830,6 @@
 				7DF4E8B918C22EEC000A3F5B /* _WMCarePlanCategory.m */,
 				7DF4E8BA18C22EEC000A3F5B /* _WMCarePlanGroup.h */,
 				7DF4E8BB18C22EEC000A3F5B /* _WMCarePlanGroup.m */,
-				7DF4E8BC18C22EEC000A3F5B /* _WMCarePlanItem.h */,
-				7DF4E8BD18C22EEC000A3F5B /* _WMCarePlanItem.m */,
 				7DF4E8BE18C22EEC000A3F5B /* _WMCarePlanValue.h */,
 				7DF4E8BF18C22EEC000A3F5B /* _WMCarePlanValue.m */,
 				7D9AA26F18AFF73E00C1B698 /* _WMConsultingGroup.h */,
@@ -2264,6 +2259,7 @@
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
 				7D39DB5918B828630054DDC3 /* WMPsychoSocialGroupViewController.m in Sources */,
 				7DF4E8E918C22EEC000A3F5B /* _WMDefinitionKeyword.m in Sources */,
+				7DF4E93E18C2550F000A3F5B /* SearchUtilities.m in Sources */,
 				7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */,
 				7DF4E93718C22F27000A3F5B /* WMWoundPosition.m in Sources */,
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
@@ -2349,7 +2345,6 @@
 				5F67D1C918AC39C600460C37 /* _WMParticipant.m in Sources */,
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
-				7DF4E92818C22F27000A3F5B /* WMCarePlanItem.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7D39DBC318BAB4FB0054DDC3 /* WMPhotoDepthViewController.m in Sources */,
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
@@ -2370,7 +2365,6 @@
 				7DF4E92F18C22F27000A3F5B /* WMPsychoSocialValue.m in Sources */,
 				7D39DB6E18B924D30054DDC3 /* UnderlayToolbar.m in Sources */,
 				7D39DB0D18B7FA080054DDC3 /* WMSelectWoundTypeViewController.m in Sources */,
-				7DF4E8E618C22EEC000A3F5B /* _WMCarePlanItem.m in Sources */,
 				7D39DB0518B7E8BE0054DDC3 /* WMPolicyEditorViewController.m in Sources */,
 				7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */,
 				7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */,

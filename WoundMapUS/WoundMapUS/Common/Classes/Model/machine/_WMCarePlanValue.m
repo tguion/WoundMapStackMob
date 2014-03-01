@@ -18,7 +18,6 @@ const struct WMCarePlanValueAttributes WMCarePlanValueAttributes = {
 const struct WMCarePlanValueRelationships WMCarePlanValueRelationships = {
 	.category = @"category",
 	.group = @"group",
-	.item = @"item",
 };
 
 const struct WMCarePlanValueFetchedProperties WMCarePlanValueFetchedProperties = {
@@ -173,10 +172,6 @@ const struct WMCarePlanValueFetchedProperties WMCarePlanValueFetchedProperties =
 	
 
 @dynamic group;
-
-	
-
-@dynamic item;
 
 	
 

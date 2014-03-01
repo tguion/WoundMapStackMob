@@ -24,7 +24,6 @@ extern const struct WMCarePlanCategoryAttributes {
 } WMCarePlanCategoryAttributes;
 
 extern const struct WMCarePlanCategoryRelationships {
-	__unsafe_unretained NSString *items;
 	__unsafe_unretained NSString *parent;
 	__unsafe_unretained NSString *subcategories;
 	__unsafe_unretained NSString *values;
@@ -34,7 +33,6 @@ extern const struct WMCarePlanCategoryRelationships {
 extern const struct WMCarePlanCategoryFetchedProperties {
 } WMCarePlanCategoryFetchedProperties;
 
-@class WMCarePlanItem;
 @class WMCarePlanCategory;
 @class WMCarePlanCategory;
 @class WMCarePlanValue;
@@ -250,13 +248,6 @@ extern const struct WMCarePlanCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *items;
-
-- (NSMutableSet*)itemsSet;
-
-
-
-
 @property (nonatomic, strong) WMCarePlanCategory *parent;
 
 //- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
@@ -289,11 +280,6 @@ extern const struct WMCarePlanCategoryFetchedProperties {
 @end
 
 @interface _WMCarePlanCategory (CoreDataGeneratedAccessors)
-
-- (void)addItems:(NSSet*)value_;
-- (void)removeItems:(NSSet*)value_;
-- (void)addItemsObject:(WMCarePlanItem*)value_;
-- (void)removeItemsObject:(WMCarePlanItem*)value_;
 
 - (void)addSubcategories:(NSSet*)value_;
 - (void)removeSubcategories:(NSSet*)value_;
@@ -424,11 +410,6 @@ extern const struct WMCarePlanCategoryFetchedProperties {
 - (void)setPrimitiveWmcareplancategory_id:(NSString*)value;
 
 
-
-
-
-- (NSMutableSet*)primitiveItems;
-- (void)setPrimitiveItems:(NSMutableSet*)value;
 
 
 
