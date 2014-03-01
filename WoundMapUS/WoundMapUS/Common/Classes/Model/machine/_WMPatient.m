@@ -28,6 +28,8 @@ const struct WMPatientRelationships WMPatientRelationships = {
 	.medicationGroups = @"medicationGroups",
 	.patientConsultants = @"patientConsultants",
 	.person = @"person",
+	.psychosocialGroups = @"psychosocialGroups",
+	.skinAssessmentGroups = @"skinAssessmentGroups",
 	.stage = @"stage",
 	.wounds = @"wounds",
 };
@@ -318,6 +320,32 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 @dynamic person;
 
+	
+
+@dynamic psychosocialGroups;
+
+	
+- (NSMutableSet*)psychosocialGroupsSet {
+	[self willAccessValueForKey:@"psychosocialGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"psychosocialGroups"];
+  
+	[self didAccessValueForKey:@"psychosocialGroups"];
+	return result;
+}
+	
+
+@dynamic skinAssessmentGroups;
+
+	
+- (NSMutableSet*)skinAssessmentGroupsSet {
+	[self willAccessValueForKey:@"skinAssessmentGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"skinAssessmentGroups"];
+  
+	[self didAccessValueForKey:@"skinAssessmentGroups"];
+	return result;
+}
 	
 
 @dynamic stage;

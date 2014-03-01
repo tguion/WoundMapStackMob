@@ -479,6 +479,8 @@
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="patient" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
+        <relationship name="psychosocialGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPsychoSocialGroup" inverseName="patient" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
+        <relationship name="skinAssessmentGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMSkinAssessmentGroup" inverseName="patient" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
         <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWound" inverseName="patient" inverseEntity="WMWound" syncable="YES"/>
     </entity>
@@ -549,6 +551,7 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="wmpsychosocialgroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="psychosocialGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPsychoSocialValue" inverseName="group" inverseEntity="WMPsychoSocialValue" syncable="YES"/>
     </entity>
     <entity name="WMPsychoSocialItem" representedClassName="WMPsychoSocialItem" syncable="YES">
@@ -633,6 +636,7 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="wmskinassessmentgroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="skinAssessmentGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMSkinAssessmentValue" inverseName="group" inverseEntity="WMSkinAssessmentValue" syncable="YES"/>
     </entity>
     <entity name="WMSkinAssessmentValue" representedClassName="WMSkinAssessmentValue" syncable="YES">
@@ -694,7 +698,7 @@
         <attribute name="wmwound_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="woundLocationValue" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="woundTypeValue" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="locationValues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundLocationValue" inverseName="wound" inverseEntity="WMWoundLocationValue" syncable="YES"/>
+        <relationship name="locationValue" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMWoundLocationValue" inverseName="wound" inverseEntity="WMWoundLocationValue" syncable="YES"/>
         <relationship name="measurementGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurementGroup" inverseName="wound" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
         <relationship name="patient" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="wounds" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundPhoto" inverseName="wound" inverseEntity="WMWoundPhoto" syncable="YES"/>
@@ -733,7 +737,7 @@
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="wmwoundlocationvalue_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundLocation" inverseName="values" inverseEntity="WMWoundLocation" syncable="YES"/>
-        <relationship name="wound" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="locationValues" inverseEntity="WMWound" syncable="YES"/>
+        <relationship name="wound" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="locationValue" inverseEntity="WMWound" syncable="YES"/>
     </entity>
     <entity name="WMWoundMeasurement" representedClassName="WMWoundMeasurement" syncable="YES">
         <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>

@@ -1,5 +1,8 @@
 #import "_WMSkinAssessmentValue.h"
 
 @interface WMSkinAssessmentValue : _WMSkinAssessmentValue {}
-// Custom logic goes here.
+
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store;
+
 @end

@@ -17,7 +17,7 @@ const struct WMWoundAttributes WMWoundAttributes = {
 };
 
 const struct WMWoundRelationships WMWoundRelationships = {
-	.locationValues = @"locationValues",
+	.locationValue = @"locationValue",
 	.measurementGroups = @"measurementGroups",
 	.patient = @"patient",
 	.photos = @"photos",
@@ -180,17 +180,8 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 
 
 
-@dynamic locationValues;
+@dynamic locationValue;
 
-	
-- (NSMutableSet*)locationValuesSet {
-	[self willAccessValueForKey:@"locationValues"];
-  
-	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"locationValues"];
-  
-	[self didAccessValueForKey:@"locationValues"];
-	return result;
-}
 	
 
 @dynamic measurementGroups;

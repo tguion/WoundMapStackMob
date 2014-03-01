@@ -16,6 +16,7 @@ const struct WMSkinAssessmentGroupAttributes WMSkinAssessmentGroupAttributes = {
 };
 
 const struct WMSkinAssessmentGroupRelationships WMSkinAssessmentGroupRelationships = {
+	.patient = @"patient",
 	.values = @"values",
 };
 
@@ -189,6 +190,10 @@ const struct WMSkinAssessmentGroupFetchedProperties WMSkinAssessmentGroupFetched
 
 
 
+
+@dynamic patient;
+
+	
 
 @dynamic values;
 

@@ -18,7 +18,7 @@ extern const struct WMWoundAttributes {
 } WMWoundAttributes;
 
 extern const struct WMWoundRelationships {
-	__unsafe_unretained NSString *locationValues;
+	__unsafe_unretained NSString *locationValue;
 	__unsafe_unretained NSString *measurementGroups;
 	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *photos;
@@ -170,9 +170,9 @@ extern const struct WMWoundFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *locationValues;
+@property (nonatomic, strong) WMWoundLocationValue *locationValue;
 
-- (NSMutableSet*)locationValuesSet;
+//- (BOOL)validateLocationValue:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -223,11 +223,6 @@ extern const struct WMWoundFetchedProperties {
 @end
 
 @interface _WMWound (CoreDataGeneratedAccessors)
-
-- (void)addLocationValues:(NSSet*)value_;
-- (void)removeLocationValues:(NSSet*)value_;
-- (void)addLocationValuesObject:(WMWoundLocationValue*)value_;
-- (void)removeLocationValuesObject:(WMWoundLocationValue*)value_;
 
 - (void)addMeasurementGroups:(NSSet*)value_;
 - (void)removeMeasurementGroups:(NSSet*)value_;
@@ -321,8 +316,8 @@ extern const struct WMWoundFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveLocationValues;
-- (void)setPrimitiveLocationValues:(NSMutableSet*)value;
+- (WMWoundLocationValue*)primitiveLocationValue;
+- (void)setPrimitiveLocationValue:(WMWoundLocationValue*)value;
 
 
 

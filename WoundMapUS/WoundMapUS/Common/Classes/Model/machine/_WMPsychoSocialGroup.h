@@ -16,12 +16,14 @@ extern const struct WMPsychoSocialGroupAttributes {
 } WMPsychoSocialGroupAttributes;
 
 extern const struct WMPsychoSocialGroupRelationships {
+	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *values;
 } WMPsychoSocialGroupRelationships;
 
 extern const struct WMPsychoSocialGroupFetchedProperties {
 } WMPsychoSocialGroupFetchedProperties;
 
+@class WMPatient;
 @class WMPsychoSocialValue;
 
 
@@ -134,6 +136,13 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMPatient *patient;
+
+//- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *values;
 
 - (NSMutableSet*)valuesSet;
@@ -208,6 +217,11 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 - (void)setPrimitiveWmpsychosocialgroup_id:(NSString*)value;
 
 
+
+
+
+- (WMPatient*)primitivePatient;
+- (void)setPrimitivePatient:(WMPatient*)value;
 
 
 

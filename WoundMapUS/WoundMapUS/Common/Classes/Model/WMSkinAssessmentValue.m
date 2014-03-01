@@ -1,5 +1,5 @@
 #import "WMSkinAssessmentValue.h"
-
+#import "StackMob.h"
 
 @interface WMSkinAssessmentValue ()
 
@@ -10,6 +10,15 @@
 
 @implementation WMSkinAssessmentValue
 
-// Custom logic goes here.
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store
+{
+    WMSkinAssessmentValue *skinAssessmentValue = [[WMSkinAssessmentValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+	if (store) {
+		[managedObjectContext assignObject:skinAssessmentValue toPersistentStore:store];
+	}
+    [skinAssessmentValue setValue:[skinAssessmentValue assignObjectId] forKey:[skinAssessmentValue primaryKeyField]];
+	return skinAssessmentValue;
+}
 
 @end

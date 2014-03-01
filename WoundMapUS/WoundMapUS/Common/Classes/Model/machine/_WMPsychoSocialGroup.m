@@ -15,6 +15,7 @@ const struct WMPsychoSocialGroupAttributes WMPsychoSocialGroupAttributes = {
 };
 
 const struct WMPsychoSocialGroupRelationships WMPsychoSocialGroupRelationships = {
+	.patient = @"patient",
 	.values = @"values",
 };
 
@@ -157,6 +158,10 @@ const struct WMPsychoSocialGroupFetchedProperties WMPsychoSocialGroupFetchedProp
 
 
 
+
+@dynamic patient;
+
+	
 
 @dynamic values;
 

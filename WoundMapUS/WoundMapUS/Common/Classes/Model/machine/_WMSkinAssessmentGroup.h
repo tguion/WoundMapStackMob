@@ -17,12 +17,14 @@ extern const struct WMSkinAssessmentGroupAttributes {
 } WMSkinAssessmentGroupAttributes;
 
 extern const struct WMSkinAssessmentGroupRelationships {
+	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *values;
 } WMSkinAssessmentGroupRelationships;
 
 extern const struct WMSkinAssessmentGroupFetchedProperties {
 } WMSkinAssessmentGroupFetchedProperties;
 
+@class WMPatient;
 @class WMSkinAssessmentValue;
 
 
@@ -150,6 +152,13 @@ extern const struct WMSkinAssessmentGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMPatient *patient;
+
+//- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *values;
 
 - (NSMutableSet*)valuesSet;
@@ -233,6 +242,11 @@ extern const struct WMSkinAssessmentGroupFetchedProperties {
 - (void)setPrimitiveWmskinassessmentgroup_id:(NSString*)value;
 
 
+
+
+
+- (WMPatient*)primitivePatient;
+- (void)setPrimitivePatient:(WMPatient*)value;
 
 
 

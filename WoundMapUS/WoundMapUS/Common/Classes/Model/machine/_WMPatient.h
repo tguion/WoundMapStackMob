@@ -29,6 +29,8 @@ extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *medicationGroups;
 	__unsafe_unretained NSString *patientConsultants;
 	__unsafe_unretained NSString *person;
+	__unsafe_unretained NSString *psychosocialGroups;
+	__unsafe_unretained NSString *skinAssessmentGroups;
 	__unsafe_unretained NSString *stage;
 	__unsafe_unretained NSString *wounds;
 } WMPatientRelationships;
@@ -43,6 +45,8 @@ extern const struct WMPatientFetchedProperties {
 @class WMMedicationGroup;
 @class WMPatientConsultant;
 @class WMPerson;
+@class WMPsychoSocialGroup;
+@class WMSkinAssessmentGroup;
 @class WMNavigationStage;
 @class WMWound;
 
@@ -275,6 +279,20 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *psychosocialGroups;
+
+- (NSMutableSet*)psychosocialGroupsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *skinAssessmentGroups;
+
+- (NSMutableSet*)skinAssessmentGroupsSet;
+
+
+
+
 @property (nonatomic, strong) WMNavigationStage *stage;
 
 //- (BOOL)validateStage:(id*)value_ error:(NSError**)error_;
@@ -323,6 +341,16 @@ extern const struct WMPatientFetchedProperties {
 - (void)removePatientConsultants:(NSSet*)value_;
 - (void)addPatientConsultantsObject:(WMPatientConsultant*)value_;
 - (void)removePatientConsultantsObject:(WMPatientConsultant*)value_;
+
+- (void)addPsychosocialGroups:(NSSet*)value_;
+- (void)removePsychosocialGroups:(NSSet*)value_;
+- (void)addPsychosocialGroupsObject:(WMPsychoSocialGroup*)value_;
+- (void)removePsychosocialGroupsObject:(WMPsychoSocialGroup*)value_;
+
+- (void)addSkinAssessmentGroups:(NSSet*)value_;
+- (void)removeSkinAssessmentGroups:(NSSet*)value_;
+- (void)addSkinAssessmentGroupsObject:(WMSkinAssessmentGroup*)value_;
+- (void)removeSkinAssessmentGroupsObject:(WMSkinAssessmentGroup*)value_;
 
 - (void)addWounds:(NSSet*)value_;
 - (void)removeWounds:(NSSet*)value_;
@@ -460,6 +488,16 @@ extern const struct WMPatientFetchedProperties {
 
 - (WMPerson*)primitivePerson;
 - (void)setPrimitivePerson:(WMPerson*)value;
+
+
+
+- (NSMutableSet*)primitivePsychosocialGroups;
+- (void)setPrimitivePsychosocialGroups:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveSkinAssessmentGroups;
+- (void)setPrimitiveSkinAssessmentGroups:(NSMutableSet*)value;
 
 
 
