@@ -1075,6 +1075,81 @@
         <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWound" inverseName="woundType" inverseEntity="WMWound" syncable="YES"/>
         <relationship name="woundTreatments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundTreatment" inverseName="woundTypes" inverseEntity="WMWoundTreatment" syncable="YES"/>
     </entity>
+    <configuration name="Local">
+        <memberEntity name="WMDefinition"/>
+        <memberEntity name="WMDefinitionKeyword"/>
+        <memberEntity name="WMInstruction"/>
+    </configuration>
+    <configuration name="Team">
+        <memberEntity name="IAPProduct"/>
+        <memberEntity name="User"/>
+        <memberEntity name="WMAddress"/>
+        <memberEntity name="WMAmountQualifier"/>
+        <memberEntity name="WMBradenCare"/>
+        <memberEntity name="WMBradenCell"/>
+        <memberEntity name="WMBradenScale"/>
+        <memberEntity name="WMBradenSection"/>
+        <memberEntity name="WMCarePlanCategory"/>
+        <memberEntity name="WMCarePlanGroup"/>
+        <memberEntity name="WMCarePlanInterventionEvent"/>
+        <memberEntity name="WMCarePlanValue"/>
+        <memberEntity name="WMConsultingGroup"/>
+        <memberEntity name="WMDevice"/>
+        <memberEntity name="WMDeviceCategory"/>
+        <memberEntity name="WMDeviceGroup"/>
+        <memberEntity name="WMDeviceInterventionEvent"/>
+        <memberEntity name="WMDeviceValue"/>
+        <memberEntity name="WMIAPTransaction"/>
+        <memberEntity name="WMId"/>
+        <memberEntity name="WMInterventionEvent"/>
+        <memberEntity name="WMInterventionEventType"/>
+        <memberEntity name="WMInterventionStatus"/>
+        <memberEntity name="WMInterventionStatusJoin"/>
+        <memberEntity name="WMMedication"/>
+        <memberEntity name="WMMedicationCategory"/>
+        <memberEntity name="WMMedicationGroup"/>
+        <memberEntity name="WMMedicationInterventionEvent"/>
+        <memberEntity name="WMNavigationNode"/>
+        <memberEntity name="WMNavigationStage"/>
+        <memberEntity name="WMNavigationTrack"/>
+        <memberEntity name="WMOrganization"/>
+        <memberEntity name="WMParticipant"/>
+        <memberEntity name="WMParticipantType"/>
+        <memberEntity name="WMPatient"/>
+        <memberEntity name="WMPatientConsultant"/>
+        <memberEntity name="WMPerson"/>
+        <memberEntity name="WMPhoto"/>
+        <memberEntity name="WMPsychoSocialGroup"/>
+        <memberEntity name="WMPsychoSocialIntEvent"/>
+        <memberEntity name="WMPsychoSocialItem"/>
+        <memberEntity name="WMPsychoSocialValue"/>
+        <memberEntity name="WMSkinAssessment"/>
+        <memberEntity name="WMSkinAssessmentCategory"/>
+        <memberEntity name="WMSkinAssessmentGroup"/>
+        <memberEntity name="WMSkinAssessmentIntEvent"/>
+        <memberEntity name="WMSkinAssessmentValue"/>
+        <memberEntity name="WMTelecom"/>
+        <memberEntity name="WMTelecomType"/>
+        <memberEntity name="WMWound"/>
+        <memberEntity name="WMWoundLocation"/>
+        <memberEntity name="WMWoundLocationPositionJoin"/>
+        <memberEntity name="WMWoundLocationValue"/>
+        <memberEntity name="WMWoundMeasurement"/>
+        <memberEntity name="WMWoundMeasurementGroup"/>
+        <memberEntity name="WMWoundMeasurementIntEvent"/>
+        <memberEntity name="WMWoundMeasurementTunnelValue"/>
+        <memberEntity name="WMWoundMeasurementUnderValue"/>
+        <memberEntity name="WMWoundMeasurementValue"/>
+        <memberEntity name="WMWoundOdor"/>
+        <memberEntity name="WMWoundPhoto"/>
+        <memberEntity name="WMWoundPosition"/>
+        <memberEntity name="WMWoundPositionValue"/>
+        <memberEntity name="WMWoundTreatment"/>
+        <memberEntity name="WMWoundTreatmentGroup"/>
+        <memberEntity name="WMWoundTreatmentIntEvent"/>
+        <memberEntity name="WMWoundTreatmentValue"/>
+        <memberEntity name="WMWoundType"/>
+    </configuration>
     <elements>
         <element name="IAPProduct" positionX="0" positionY="0" width="0" height="0"/>
         <element name="User" positionX="0" positionY="0" width="0" height="0"/>
