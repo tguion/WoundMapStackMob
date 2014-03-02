@@ -20,8 +20,10 @@ const struct WMMedicationGroupAttributes WMMedicationGroupAttributes = {
 };
 
 const struct WMMedicationGroupRelationships WMMedicationGroupRelationships = {
+	.interventionEvents = @"interventionEvents",
 	.medications = @"medications",
 	.patient = @"patient",
+	.status = @"status",
 };
 
 const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperties = {
@@ -247,6 +249,19 @@ const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperti
 
 
 
+@dynamic interventionEvents;
+
+	
+- (NSMutableSet*)interventionEventsSet {
+	[self willAccessValueForKey:@"interventionEvents"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"interventionEvents"];
+  
+	[self didAccessValueForKey:@"interventionEvents"];
+	return result;
+}
+	
+
 @dynamic medications;
 
 	
@@ -261,6 +276,10 @@ const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperti
 	
 
 @dynamic patient;
+
+	
+
+@dynamic status;
 
 	
 

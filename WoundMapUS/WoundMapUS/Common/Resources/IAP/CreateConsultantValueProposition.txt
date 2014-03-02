@@ -1,9 +1,0 @@
-Introduction to CDA Technical Artifacts
-A complete understanding of CDA requires an understanding of the normative artifacts used to define the specification. The CDA Hierarchical Description is the definitive source for CDA conformance rules, and serves as the source from which the CDA Schema is derived. While a CDA instance must validate against the CDA Schema, it must also adhere to the conformance rules stated in the CDA Hierarchical Description. The CDA Hierarchical Description is derived from the CDA R-MIM, which in turn is derived from the HL7 Reference Information Model (RIM). The HL7 RIM is the definitive source for class and attribute definitions.
-The following sections summarize the artifacts used by CDA, and how they can be used by those seeking to implement or understand the CDA specification.
-2.1 HL7 Reference Information Model
-
-The HL7 RIM is the definitive reference source for class and attribute definitions. The CDA specification does not exhaustively replicate RIM definitions, but instead refers the reader to the RIM for complete definitions. While CDA may further constrain RIM definitions, at no time will CDA definitions conflict with those in the RIM.
-
-CDA Release 3 is derived from the HL7 RIM Version 4.
-Where a reader needs to see the complete definition of a RIM attribute or class, they should refer to the HL7 RIM.

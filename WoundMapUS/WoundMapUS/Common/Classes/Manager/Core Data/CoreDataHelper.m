@@ -14,8 +14,9 @@
 
 NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSynchFinishedNotification";
 
-@interface CoreDataHelper ()
+@interface CoreDataHelper () <UIAlertViewDelegate>
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
+@property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status;
 @end
 
@@ -29,14 +30,21 @@ NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSyn
 
 #pragma mark - FILES
 
+NSString *teamModelFilename = @"WoundMapUS";
+
 NSString *storeFilename = @"WoundMap.sqlite";
 NSString *sourceStoreFilename = @"DefaultData.sqlite";
+NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 #pragma mark - Alerts
 
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status
 {
     if (nil == self.appDelegate.stackMobUsername) {
+        return;
+    }
+    // else
+    if (nil != _networkReachabilityAlertView) {
         return;
     }
     // else
@@ -60,10 +68,11 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     }
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
                                                         message:message
-                                                       delegate:nil
+                                                       delegate:self
                                               cancelButtonTitle:@"Dismiss"
                                               otherButtonTitles:nil];
     [alertView show];
+    _networkReachabilityAlertView = alertView;
 }
 
 #pragma mark - PATHS
@@ -112,6 +121,16 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
                                    ofType:[sourceStoreFilename pathExtension]]];
 }
 
+- (NSURL *)localStoreURL {
+    if (debug==1) {
+        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+    }
+    
+    return [NSURL fileURLWithPath:[[NSBundle mainBundle]
+                                   pathForResource:[localStoreFilename stringByDeletingPathExtension]
+                                   ofType:[localStoreFilename pathExtension]]];
+}
+
 #pragma mark - SETUP
 
 - (id)init
@@ -120,7 +139,9 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     self = [super init];
-    if (!self) {return nil;}
+    if (!self) {
+        return nil;
+    }
     
     _model = [NSManagedObjectModel mergedModelFromBundles:nil];
     
@@ -135,7 +156,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     _stackMobClient  = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"69230b76-7939-4342-8d8f-4fb739e2aef4"];
     _stackMobStore = [_stackMobClient coreDataStoreWithManagedObjectModel:_model];
     // fetch from cache until user logged in - each view controller should update the policy as needed
-    _stackMobStore.fetchPolicy = SMFetchPolicyTryCacheElseNetwork;
+    _stackMobStore.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
     _stackMobStore.savePolicy = SMSavePolicyNetworkThenCache;
     
     __weak SMCoreDataStore *cds = _stackMobStore;
@@ -144,7 +165,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         [weakSelf alertUserNetworkReachabilityChanged:status];
         if (status == SMNetworkStatusReachable) {
             if (nil == weakSelf.appDelegate.stackMobUsername) {
-                return cds.fetchPolicy;
+                return SMFetchPolicyCacheOnly;
             }
             // else
             if (weakSelf.synchWithStackMobOnNetworkAvailable) {
@@ -290,8 +311,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
-    NSManagedObjectContext *stackMobContext =
-    [_stackMobStore contextForCurrentThread];
+    NSManagedObjectContext *stackMobContext = [_stackMobStore contextForCurrentThread];
     if (!stackMobContext) {
         NSLog(@"StackMob context is nil, so FAILED to save");
         return;
@@ -410,9 +430,7 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
                                     URL:sourceStore
                                     error:&error];
     
-    NSManagedObjectModel *sourceModel =
-    [NSManagedObjectModel mergedModelFromBundles:nil
-                                forStoreMetadata:sourceMetadata];
+    NSManagedObjectModel *sourceModel = [NSManagedObjectModel mergedModelFromBundles:nil forStoreMetadata:sourceMetadata];
     
     NSManagedObjectModel *destinModel = _model;
     
@@ -831,6 +849,11 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
+    if (alertView == _networkReachabilityAlertView) {
+        _networkReachabilityAlertView = nil;
+        return;
+    }
+    // else
     if (alertView == self.importAlertView) {
         if (buttonIndex == 1) { // The ‘Import’ button on the importAlertView
             
@@ -851,6 +874,15 @@ NSString *sourceStoreFilename = @"DefaultData.sqlite";
         }
         // Set the data as imported regardless of the user's decision
         [self setDefaultDataAsImportedForStore:_store];
+    }
+}
+
+// Called when we cancel a view (eg. the user clicks the Home button). This is not called when the user clicks the cancel button.
+// If not defined in the delegate, we simulate a click in the cancel button
+- (void)alertViewCancel:(UIAlertView *)alertView
+{
+    if (alertView == _networkReachabilityAlertView) {
+        _networkReachabilityAlertView = nil;
     }
 }
 
@@ -966,5 +998,6 @@ didStartElement:(NSString *)elementName
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"SomethingChanged" object:nil];
 }
+
 
 @end

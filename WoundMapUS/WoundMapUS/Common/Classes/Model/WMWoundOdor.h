@@ -1,5 +1,12 @@
 #import "_WMWoundOdor.h"
 
 @interface WMWoundOdor : _WMWoundOdor {}
-// Custom logic goes here.
+
++ (WMWoundOdor *)woundOdorForTitle:(NSString *)title
+                            create:(BOOL)create
+              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                   persistentStore:(NSPersistentStore *)store;
+
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
+
 @end

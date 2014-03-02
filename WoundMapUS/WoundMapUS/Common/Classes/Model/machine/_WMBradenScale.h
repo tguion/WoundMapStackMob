@@ -17,12 +17,14 @@ extern const struct WMBradenScaleAttributes {
 } WMBradenScaleAttributes;
 
 extern const struct WMBradenScaleRelationships {
+	__unsafe_unretained NSString *patient;
 	__unsafe_unretained NSString *sections;
 } WMBradenScaleRelationships;
 
 extern const struct WMBradenScaleFetchedProperties {
 } WMBradenScaleFetchedProperties;
 
+@class WMPatient;
 @class WMBradenSection;
 
 
@@ -154,6 +156,13 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMPatient *patient;
+
+//- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *sections;
 
 - (NSMutableSet*)sectionsSet;
@@ -240,6 +249,11 @@ extern const struct WMBradenScaleFetchedProperties {
 - (void)setPrimitiveWmbradenscale_id:(NSString*)value;
 
 
+
+
+
+- (WMPatient*)primitivePatient;
+- (void)setPrimitivePatient:(WMPatient*)value;
 
 
 

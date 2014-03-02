@@ -1,0 +1,33 @@
+#import "_WMWoundTreatmentGroup.h"
+#import "WoundCareProtocols.h"
+
+@class WMPatient, WMWound, WMWoundTreatment, WMWoundTreatmentValue;
+
+@interface WMWoundTreatmentGroup : _WMWoundTreatmentGroup <AssessmentGroup> {}
+
++ (WMWoundTreatmentGroup *)woundTreatmentGroupForWound:(WMWound *)wound;
+
++ (BOOL)woundTreatmentGroupsHaveHistory:(WMPatient *)patient;
++ (NSInteger)woundTreatmentGroupsCount:(WMPatient *)patient;
++ (NSInteger)woundTreatmentGroupsInactiveOrClosedCount:(WMPatient *)patient;
+
+- (BOOL)hasWoundTreatmentValuesForWoundTreatmentAndChildren:(WMWoundTreatment *)woundTreatment;
+
+@property (readonly, nonatomic) BOOL isClosed;
+
+- (WMWoundTreatmentValue *)woundTreatmentValueForWoundTreatment:(WMWoundTreatment *)woundTreatment
+                                                         create:(BOOL)create
+                                                          value:(id)value;
+
+- (void)removeWoundTreatmentValuesForParentWoundTreatment:(WMWoundTreatment *)woundTreatment;
+- (WMWoundTreatment *)woundTreatmentForParentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment sectionTitle:(NSString *)sectionTitle;
++ (NSInteger)closeWoundTreatmentGroupsCreatedBefore:(NSDate *)date
+                                            patient:(WMPatient *)patient;
+
++ (NSDate *)mostRecentDateModified:(WMWound *)wound;
++ (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound;
+
+
+- (NSInteger)valuesCountForWoundTreatment:(WMWoundTreatment *)woundTreatment;
+
+@end

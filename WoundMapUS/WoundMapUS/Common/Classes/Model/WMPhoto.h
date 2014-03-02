@@ -1,5 +1,8 @@
 #import "_WMPhoto.h"
 
 @interface WMPhoto : _WMPhoto {}
-// Custom logic goes here.
+
++ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                       persistentStore:(NSPersistentStore *)store;
+
 @end

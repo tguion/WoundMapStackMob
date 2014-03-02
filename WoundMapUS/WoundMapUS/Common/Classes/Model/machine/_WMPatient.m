@@ -21,11 +21,15 @@ const struct WMPatientAttributes WMPatientAttributes = {
 };
 
 const struct WMPatientRelationships WMPatientRelationships = {
+	.bradenScales = @"bradenScales",
+	.carePlanGroups = @"carePlanGroups",
 	.deviceGroups = @"deviceGroups",
 	.ids = @"ids",
 	.medicationGroups = @"medicationGroups",
 	.patientConsultants = @"patientConsultants",
 	.person = @"person",
+	.psychosocialGroups = @"psychosocialGroups",
+	.skinAssessmentGroups = @"skinAssessmentGroups",
 	.stage = @"stage",
 	.wounds = @"wounds",
 };
@@ -236,6 +240,32 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
+@dynamic bradenScales;
+
+	
+- (NSMutableSet*)bradenScalesSet {
+	[self willAccessValueForKey:@"bradenScales"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"bradenScales"];
+  
+	[self didAccessValueForKey:@"bradenScales"];
+	return result;
+}
+	
+
+@dynamic carePlanGroups;
+
+	
+- (NSMutableSet*)carePlanGroupsSet {
+	[self willAccessValueForKey:@"carePlanGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"carePlanGroups"];
+  
+	[self didAccessValueForKey:@"carePlanGroups"];
+	return result;
+}
+	
+
 @dynamic deviceGroups;
 
 	
@@ -290,6 +320,32 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 @dynamic person;
 
+	
+
+@dynamic psychosocialGroups;
+
+	
+- (NSMutableSet*)psychosocialGroupsSet {
+	[self willAccessValueForKey:@"psychosocialGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"psychosocialGroups"];
+  
+	[self didAccessValueForKey:@"psychosocialGroups"];
+	return result;
+}
+	
+
+@dynamic skinAssessmentGroups;
+
+	
+- (NSMutableSet*)skinAssessmentGroupsSet {
+	[self willAccessValueForKey:@"skinAssessmentGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"skinAssessmentGroups"];
+  
+	[self didAccessValueForKey:@"skinAssessmentGroups"];
+	return result;
+}
 	
 
 @dynamic stage;

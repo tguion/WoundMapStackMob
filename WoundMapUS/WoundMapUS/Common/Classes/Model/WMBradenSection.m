@@ -66,7 +66,7 @@
 
 - (NSInteger)score
 {
-    return [self.selectedCell.value intValue];
+    return self.selectedCell.valueValue;
 }
 
 - (NSArray *)sortedCells

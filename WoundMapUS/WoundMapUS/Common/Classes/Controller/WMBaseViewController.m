@@ -8,6 +8,7 @@
 
 #import "WMBaseViewController.h"
 #import "WMProgressViewHUD.h"
+#import "IAPProduct.h"
 #import "StackMob.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
@@ -439,7 +440,10 @@
                                        proceedAlways:(BOOL)proceedAlways
 {
     // check if this is constrained to wound type
-    IAPProduct *iapProduct = [self.localStoreManager iapProductForIdentifier:productIdentifier];
+    IAPProduct *iapProduct = [IAPProduct productForIdentifier:productIdentifier
+                                                       create:NO
+                                         managedObjectContext:self.managedObjectContext
+                                              persistentStore:self.store];
     // CAUTION: we should have an IAP for productIdentifier
     if (nil == iapProduct) {
         DLog(@"Missing productIdentifier:%@ - please update our IAP products in the IAPProducts.plist and in iTunes connect", productIdentifier);

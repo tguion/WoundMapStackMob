@@ -17,14 +17,18 @@ extern const struct WMDeviceGroupAttributes {
 } WMDeviceGroupAttributes;
 
 extern const struct WMDeviceGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *patient;
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 } WMDeviceGroupRelationships;
 
 extern const struct WMDeviceGroupFetchedProperties {
 } WMDeviceGroupFetchedProperties;
 
+@class WMDeviceInterventionEvent;
 @class WMPatient;
+@class WMInterventionStatus;
 @class WMDeviceValue;
 
 
@@ -152,9 +156,23 @@ extern const struct WMDeviceGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
 @property (nonatomic, strong) WMPatient *patient;
 
 //- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -170,6 +188,11 @@ extern const struct WMDeviceGroupFetchedProperties {
 @end
 
 @interface _WMDeviceGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMDeviceInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMDeviceInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
@@ -245,8 +268,18 @@ extern const struct WMDeviceGroupFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
 - (WMPatient*)primitivePatient;
 - (void)setPrimitivePatient:(WMPatient*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 
