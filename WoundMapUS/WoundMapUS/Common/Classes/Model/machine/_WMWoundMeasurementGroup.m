@@ -16,6 +16,7 @@ const struct WMWoundMeasurementGroupAttributes WMWoundMeasurementGroupAttributes
 };
 
 const struct WMWoundMeasurementGroupRelationships WMWoundMeasurementGroupRelationships = {
+	.interventionEvents = @"interventionEvents",
 	.status = @"status",
 	.values = @"values",
 	.wound = @"wound",
@@ -192,6 +193,19 @@ const struct WMWoundMeasurementGroupFetchedProperties WMWoundMeasurementGroupFet
 
 
 
+
+@dynamic interventionEvents;
+
+	
+- (NSMutableSet*)interventionEventsSet {
+	[self willAccessValueForKey:@"interventionEvents"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"interventionEvents"];
+  
+	[self didAccessValueForKey:@"interventionEvents"];
+	return result;
+}
+	
 
 @dynamic status;
 

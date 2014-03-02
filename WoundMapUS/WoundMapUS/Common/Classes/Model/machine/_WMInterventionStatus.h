@@ -35,12 +35,12 @@ extern const struct WMInterventionStatusFetchedProperties {
 
 @class WMCarePlanGroup;
 @class WMDeviceGroup;
-@class WMInterventionStatusJoins;
+@class WMInterventionStatusJoin;
 @class WMWoundMeasurementGroup;
 @class WMMedicationGroup;
 @class WMPsychoSocialGroup;
 @class WMSkinAssessmentGroup;
-@class WMInterventionStatusJoins;
+@class WMInterventionStatusJoin;
 @class WMWoundTreatmentGroup;
 
 
@@ -274,8 +274,8 @@ extern const struct WMInterventionStatusFetchedProperties {
 
 - (void)addFromStatusJoins:(NSSet*)value_;
 - (void)removeFromStatusJoins:(NSSet*)value_;
-- (void)addFromStatusJoinsObject:(WMInterventionStatusJoins*)value_;
-- (void)removeFromStatusJoinsObject:(WMInterventionStatusJoins*)value_;
+- (void)addFromStatusJoinsObject:(WMInterventionStatusJoin*)value_;
+- (void)removeFromStatusJoinsObject:(WMInterventionStatusJoin*)value_;
 
 - (void)addMeasurementGroups:(NSSet*)value_;
 - (void)removeMeasurementGroups:(NSSet*)value_;
@@ -299,8 +299,8 @@ extern const struct WMInterventionStatusFetchedProperties {
 
 - (void)addToStatusJoins:(NSSet*)value_;
 - (void)removeToStatusJoins:(NSSet*)value_;
-- (void)addToStatusJoinsObject:(WMInterventionStatusJoins*)value_;
-- (void)removeToStatusJoinsObject:(WMInterventionStatusJoins*)value_;
+- (void)addToStatusJoinsObject:(WMInterventionStatusJoin*)value_;
+- (void)removeToStatusJoinsObject:(WMInterventionStatusJoin*)value_;
 
 - (void)addTreatmentGroups:(NSSet*)value_;
 - (void)removeTreatmentGroups:(NSSet*)value_;

@@ -1,32 +1,32 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMInterventionStatusJoins.h instead.
+// Make changes to WMInterventionStatusJoin.h instead.
 
 #import <CoreData/CoreData.h>
 
 
-extern const struct WMInterventionStatusJoinsAttributes {
-} WMInterventionStatusJoinsAttributes;
+extern const struct WMInterventionStatusJoinAttributes {
+} WMInterventionStatusJoinAttributes;
 
-extern const struct WMInterventionStatusJoinsRelationships {
+extern const struct WMInterventionStatusJoinRelationships {
 	__unsafe_unretained NSString *fromStatus;
 	__unsafe_unretained NSString *toStatus;
-} WMInterventionStatusJoinsRelationships;
+} WMInterventionStatusJoinRelationships;
 
-extern const struct WMInterventionStatusJoinsFetchedProperties {
-} WMInterventionStatusJoinsFetchedProperties;
+extern const struct WMInterventionStatusJoinFetchedProperties {
+} WMInterventionStatusJoinFetchedProperties;
 
 @class WMInterventionStatus;
 @class WMInterventionStatus;
 
 
-@interface WMInterventionStatusJoinsID : NSManagedObjectID {}
+@interface WMInterventionStatusJoinID : NSManagedObjectID {}
 @end
 
-@interface _WMInterventionStatusJoins : NSManagedObject {}
+@interface _WMInterventionStatusJoin : NSManagedObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (WMInterventionStatusJoinsID*)objectID;
+- (WMInterventionStatusJoinID*)objectID;
 
 
 
@@ -49,11 +49,11 @@ extern const struct WMInterventionStatusJoinsFetchedProperties {
 
 @end
 
-@interface _WMInterventionStatusJoins (CoreDataGeneratedAccessors)
+@interface _WMInterventionStatusJoin (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _WMInterventionStatusJoins (CoreDataGeneratedPrimitiveAccessors)
+@interface _WMInterventionStatusJoin (CoreDataGeneratedPrimitiveAccessors)
 
 
 

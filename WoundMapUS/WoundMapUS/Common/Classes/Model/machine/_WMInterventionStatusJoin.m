@@ -1,23 +1,23 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMInterventionStatusJoins.m instead.
+// Make changes to WMInterventionStatusJoin.m instead.
 
-#import "_WMInterventionStatusJoins.h"
+#import "_WMInterventionStatusJoin.h"
 
-const struct WMInterventionStatusJoinsAttributes WMInterventionStatusJoinsAttributes = {
+const struct WMInterventionStatusJoinAttributes WMInterventionStatusJoinAttributes = {
 };
 
-const struct WMInterventionStatusJoinsRelationships WMInterventionStatusJoinsRelationships = {
+const struct WMInterventionStatusJoinRelationships WMInterventionStatusJoinRelationships = {
 	.fromStatus = @"fromStatus",
 	.toStatus = @"toStatus",
 };
 
-const struct WMInterventionStatusJoinsFetchedProperties WMInterventionStatusJoinsFetchedProperties = {
+const struct WMInterventionStatusJoinFetchedProperties WMInterventionStatusJoinFetchedProperties = {
 };
 
-@implementation WMInterventionStatusJoinsID
+@implementation WMInterventionStatusJoinID
 @end
 
-@implementation _WMInterventionStatusJoins
+@implementation _WMInterventionStatusJoin
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
@@ -33,8 +33,8 @@ const struct WMInterventionStatusJoinsFetchedProperties WMInterventionStatusJoin
 	return [NSEntityDescription entityForName:@"WMInterventionStatusJoin" inManagedObjectContext:moc_];
 }
 
-- (WMInterventionStatusJoinsID*)objectID {
-	return (WMInterventionStatusJoinsID*)[super objectID];
+- (WMInterventionStatusJoinID*)objectID {
+	return (WMInterventionStatusJoinID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {

@@ -10,6 +10,10 @@
 
 @implementation WMInterventionEvent
 
-// Custom logic goes here.
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.dateEvent = [NSDate date];
+}
 
 @end

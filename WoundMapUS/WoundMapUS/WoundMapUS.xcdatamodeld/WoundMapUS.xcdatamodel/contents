@@ -362,7 +362,7 @@
         <relationship name="toStatusJoins" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionStatusJoin" inverseName="fromStatus" inverseEntity="WMInterventionStatusJoin" syncable="YES"/>
         <relationship name="treatmentGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundTreatmentGroup" inverseName="status" inverseEntity="WMWoundTreatmentGroup" syncable="YES"/>
     </entity>
-    <entity name="WMInterventionStatusJoin" representedClassName="WMInterventionStatusJoins" syncable="YES">
+    <entity name="WMInterventionStatusJoin" representedClassName="WMInterventionStatusJoin" syncable="YES">
         <relationship name="fromStatus" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="toStatusJoins" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="toStatus" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="fromStatusJoins" inverseEntity="WMInterventionStatus" syncable="YES"/>
     </entity>
@@ -867,10 +867,14 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="wmwoundmeasurementgroup_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurementInterventionEvent" inverseName="measurementGroup" inverseEntity="WMWoundMeasurementInterventionEvent" syncable="YES"/>
         <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="measurementGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWoundMeasurementValue" inverseName="group" inverseEntity="WMWoundMeasurementValue" syncable="YES"/>
         <relationship name="wound" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="measurementGroups" inverseEntity="WMWound" syncable="YES"/>
         <relationship name="woundPhoto" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundPhoto" inverseName="measurementGroups" inverseEntity="WMWoundPhoto" syncable="YES"/>
+    </entity>
+    <entity name="WMWoundMeasurementInterventionEvent" representedClassName="WMWoundMeasurementInterventionEvent" parentEntity="WMInterventionEvent" syncable="YES">
+        <relationship name="measurementGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundMeasurementGroup" inverseName="interventionEvents" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
     </entity>
     <entity name="WMWoundMeasurementTunnelValue" representedClassName="WMWoundMeasurementTunnelValue" parentEntity="WMWoundMeasurementValue" syncable="YES">
         <attribute name="fromOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="3" syncable="YES"/>
@@ -1138,5 +1142,6 @@
         <element name="WMPsychoSocialInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMSkinAssessmentInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundTreatmentInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>
