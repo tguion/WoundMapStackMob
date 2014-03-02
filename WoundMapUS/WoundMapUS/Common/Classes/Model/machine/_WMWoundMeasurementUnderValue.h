@@ -1,32 +1,32 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMWoundMeasurementUndermineValue.h instead.
+// Make changes to WMWoundMeasurementUnderValue.h instead.
 
 #import <CoreData/CoreData.h>
 #import "WMWoundMeasurementTunnelValue.h"
 
-extern const struct WMWoundMeasurementUndermineValueAttributes {
+extern const struct WMWoundMeasurementUnderValueAttributes {
 	__unsafe_unretained NSString *toOClockValue;
 	__unsafe_unretained NSString *wmwoundmeasurementunderminevalue_id;
-} WMWoundMeasurementUndermineValueAttributes;
+} WMWoundMeasurementUnderValueAttributes;
 
-extern const struct WMWoundMeasurementUndermineValueRelationships {
-} WMWoundMeasurementUndermineValueRelationships;
+extern const struct WMWoundMeasurementUnderValueRelationships {
+} WMWoundMeasurementUnderValueRelationships;
 
-extern const struct WMWoundMeasurementUndermineValueFetchedProperties {
-} WMWoundMeasurementUndermineValueFetchedProperties;
-
-
+extern const struct WMWoundMeasurementUnderValueFetchedProperties {
+} WMWoundMeasurementUnderValueFetchedProperties;
 
 
 
-@interface WMWoundMeasurementUndermineValueID : NSManagedObjectID {}
+
+
+@interface WMWoundMeasurementUnderValueID : NSManagedObjectID {}
 @end
 
-@interface _WMWoundMeasurementUndermineValue : WMWoundMeasurementTunnelValue {}
+@interface _WMWoundMeasurementUnderValue : WMWoundMeasurementTunnelValue {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (WMWoundMeasurementUndermineValueID*)objectID;
+- (WMWoundMeasurementUnderValueID*)objectID;
 
 
 
@@ -59,11 +59,11 @@ extern const struct WMWoundMeasurementUndermineValueFetchedProperties {
 
 @end
 
-@interface _WMWoundMeasurementUndermineValue (CoreDataGeneratedAccessors)
+@interface _WMWoundMeasurementUnderValue (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _WMWoundMeasurementUndermineValue (CoreDataGeneratedPrimitiveAccessors)
+@interface _WMWoundMeasurementUnderValue (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSNumber*)primitiveToOClockValue;

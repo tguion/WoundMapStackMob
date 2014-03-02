@@ -1,32 +1,32 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMSkinAssessmentInterventionEvent.h instead.
+// Make changes to WMSkinAssessmentIntEvent.h instead.
 
 #import <CoreData/CoreData.h>
 #import "WMInterventionEvent.h"
 
-extern const struct WMSkinAssessmentInterventionEventAttributes {
+extern const struct WMSkinAssessmentIntEventAttributes {
 	__unsafe_unretained NSString *wmskinassessmentinterventionevent_id;
-} WMSkinAssessmentInterventionEventAttributes;
+} WMSkinAssessmentIntEventAttributes;
 
-extern const struct WMSkinAssessmentInterventionEventRelationships {
+extern const struct WMSkinAssessmentIntEventRelationships {
 	__unsafe_unretained NSString *skinAssessmentGroup;
-} WMSkinAssessmentInterventionEventRelationships;
+} WMSkinAssessmentIntEventRelationships;
 
-extern const struct WMSkinAssessmentInterventionEventFetchedProperties {
-} WMSkinAssessmentInterventionEventFetchedProperties;
+extern const struct WMSkinAssessmentIntEventFetchedProperties {
+} WMSkinAssessmentIntEventFetchedProperties;
 
 @class WMSkinAssessmentGroup;
 
 
 
-@interface WMSkinAssessmentInterventionEventID : NSManagedObjectID {}
+@interface WMSkinAssessmentIntEventID : NSManagedObjectID {}
 @end
 
-@interface _WMSkinAssessmentInterventionEvent : WMInterventionEvent {}
+@interface _WMSkinAssessmentIntEvent : WMInterventionEvent {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (WMSkinAssessmentInterventionEventID*)objectID;
+- (WMSkinAssessmentIntEventID*)objectID;
 
 
 
@@ -52,11 +52,11 @@ extern const struct WMSkinAssessmentInterventionEventFetchedProperties {
 
 @end
 
-@interface _WMSkinAssessmentInterventionEvent (CoreDataGeneratedAccessors)
+@interface _WMSkinAssessmentIntEvent (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _WMSkinAssessmentInterventionEvent (CoreDataGeneratedPrimitiveAccessors)
+@interface _WMSkinAssessmentIntEvent (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSString*)primitiveWmskinassessmentinterventionevent_id;

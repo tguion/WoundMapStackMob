@@ -1,22 +1,22 @@
-#import "WMSkinAssessmentInterventionEvent.h"
+#import "WMSkinAssessmentIntEvent.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMParticipant.h"
 #import "WMUtilities.h"
 #import "StackMob.h"
 
-@interface WMSkinAssessmentInterventionEvent ()
+@interface WMSkinAssessmentIntEvent ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation WMSkinAssessmentInterventionEvent
+@implementation WMSkinAssessmentIntEvent
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                        persistentStore:(NSPersistentStore *)store
 {
-    WMSkinAssessmentInterventionEvent *skinAssessmentInterventionEvent = [[WMSkinAssessmentInterventionEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentInterventionEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    WMSkinAssessmentIntEvent *skinAssessmentInterventionEvent = [[WMSkinAssessmentIntEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentIntEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
 	if (store) {
 		[managedObjectContext assignObject:skinAssessmentInterventionEvent toPersistentStore:store];
 	}
@@ -24,7 +24,7 @@
 	return skinAssessmentInterventionEvent;
 }
 
-+ (WMSkinAssessmentInterventionEvent *)skinAssessmentInterventionEventForSkinAssessmentGroup:(WMSkinAssessmentGroup *)skinAssessmentGroup
++ (WMSkinAssessmentIntEvent *)skinAssessmentInterventionEventForSkinAssessmentGroup:(WMSkinAssessmentGroup *)skinAssessmentGroup
                                                                                   changeType:(InterventionEventChangeType)changeType
                                                                                        title:(NSString *)title
                                                                                    valueFrom:(id)valueFrom
@@ -44,7 +44,7 @@
     if (nil != store) {
         [request setAffectedStores:[NSArray arrayWithObject:store]];
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentInterventionEvent" inManagedObjectContext:managedObjectContext]];
+    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentIntEvent" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:
                            @"skinAssessmentGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
                            skinAssessmentGroup, changeType, title, valueFrom, valueTo, eventType, participant]];
@@ -54,7 +54,7 @@
         [WMUtilities logError:error];
     }
     // else
-    WMSkinAssessmentInterventionEvent *skinAssessmentInterventionEvent = [array lastObject];
+    WMSkinAssessmentIntEvent *skinAssessmentInterventionEvent = [array lastObject];
     if (create && nil == skinAssessmentInterventionEvent) {
         skinAssessmentInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
         skinAssessmentInterventionEvent.skinAssessmentGroup = skinAssessmentGroup;

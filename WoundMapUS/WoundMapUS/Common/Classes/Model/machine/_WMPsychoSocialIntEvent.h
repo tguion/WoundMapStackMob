@@ -1,32 +1,32 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMPsychoSocialInterventionEvent.h instead.
+// Make changes to WMPsychoSocialIntEvent.h instead.
 
 #import <CoreData/CoreData.h>
 #import "WMInterventionEvent.h"
 
-extern const struct WMPsychoSocialInterventionEventAttributes {
+extern const struct WMPsychoSocialIntEventAttributes {
 	__unsafe_unretained NSString *wmpsychosocialinterventionevent_id;
-} WMPsychoSocialInterventionEventAttributes;
+} WMPsychoSocialIntEventAttributes;
 
-extern const struct WMPsychoSocialInterventionEventRelationships {
+extern const struct WMPsychoSocialIntEventRelationships {
 	__unsafe_unretained NSString *group;
-} WMPsychoSocialInterventionEventRelationships;
+} WMPsychoSocialIntEventRelationships;
 
-extern const struct WMPsychoSocialInterventionEventFetchedProperties {
-} WMPsychoSocialInterventionEventFetchedProperties;
+extern const struct WMPsychoSocialIntEventFetchedProperties {
+} WMPsychoSocialIntEventFetchedProperties;
 
 @class WMPsychoSocialGroup;
 
 
 
-@interface WMPsychoSocialInterventionEventID : NSManagedObjectID {}
+@interface WMPsychoSocialIntEventID : NSManagedObjectID {}
 @end
 
-@interface _WMPsychoSocialInterventionEvent : WMInterventionEvent {}
+@interface _WMPsychoSocialIntEvent : WMInterventionEvent {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (WMPsychoSocialInterventionEventID*)objectID;
+- (WMPsychoSocialIntEventID*)objectID;
 
 
 
@@ -52,11 +52,11 @@ extern const struct WMPsychoSocialInterventionEventFetchedProperties {
 
 @end
 
-@interface _WMPsychoSocialInterventionEvent (CoreDataGeneratedAccessors)
+@interface _WMPsychoSocialIntEvent (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _WMPsychoSocialInterventionEvent (CoreDataGeneratedPrimitiveAccessors)
+@interface _WMPsychoSocialIntEvent (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSString*)primitiveWmpsychosocialinterventionevent_id;

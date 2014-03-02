@@ -1,22 +1,22 @@
-#import "WMWoundTreatmentInterventionEvent.h"
+#import "WMWoundTreatmentIntEvent.h"
 #import "WMWoundTreatmentGroup.h"
 #import "WMParticipant.h"
 #import "WMUtilities.h"
 #import "StackMob.h"
 
-@interface WMWoundTreatmentInterventionEvent ()
+@interface WMWoundTreatmentIntEvent ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation WMWoundTreatmentInterventionEvent
+@implementation WMWoundTreatmentIntEvent
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                        persistentStore:(NSPersistentStore *)store
 {
-    WMWoundTreatmentInterventionEvent *woundTreatmentInterventionEvent = [[WMWoundTreatmentInterventionEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentInterventionEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    WMWoundTreatmentIntEvent *woundTreatmentInterventionEvent = [[WMWoundTreatmentIntEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentIntEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
 	if (store) {
 		[managedObjectContext assignObject:woundTreatmentInterventionEvent toPersistentStore:store];
 	}
@@ -24,7 +24,7 @@
 	return woundTreatmentInterventionEvent;
 }
 
-+ (WMWoundTreatmentInterventionEvent *)woundTreatmentInterventionEventForWoundTreatmentGroup:(WMWoundTreatmentGroup *)woundTreatmentGroup
++ (WMWoundTreatmentIntEvent *)woundTreatmentInterventionEventForWoundTreatmentGroup:(WMWoundTreatmentGroup *)woundTreatmentGroup
                                                                                   changeType:(InterventionEventChangeType)changeType
                                                                                        title:(NSString *)title
                                                                                    valueFrom:(id)valueFrom
@@ -44,7 +44,7 @@
     if (nil != store) {
         [request setAffectedStores:[NSArray arrayWithObject:store]];
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentInterventionEvent" inManagedObjectContext:managedObjectContext]];
+    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentIntEvent" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:
                            @"treatmentGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
                            woundTreatmentGroup, changeType, title, valueFrom, valueTo, eventType, participant]];
@@ -54,7 +54,7 @@
         [WMUtilities logError:error];
     }
     // else
-    WMWoundTreatmentInterventionEvent *woundTreatmentInterventionEvent = [array lastObject];
+    WMWoundTreatmentIntEvent *woundTreatmentInterventionEvent = [array lastObject];
     if (create && nil == woundTreatmentInterventionEvent) {
         woundTreatmentInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
         woundTreatmentInterventionEvent.treatmentGroup = woundTreatmentGroup;

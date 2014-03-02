@@ -4,6 +4,9 @@
 #import "_WMInterventionStatusJoin.h"
 
 const struct WMInterventionStatusJoinAttributes WMInterventionStatusJoinAttributes = {
+	.createddate = @"createddate",
+	.lastmoddate = @"lastmoddate",
+	.wmintervetionstatusjoin_id = @"wmintervetionstatusjoin_id",
 };
 
 const struct WMInterventionStatusJoinRelationships WMInterventionStatusJoinRelationships = {
@@ -43,6 +46,27 @@ const struct WMInterventionStatusJoinFetchedProperties WMInterventionStatusJoinF
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic createddate;
+
+
+
+
+
+
+@dynamic lastmoddate;
+
+
+
+
+
+
+@dynamic wmintervetionstatusjoin_id;
+
+
 
 
 

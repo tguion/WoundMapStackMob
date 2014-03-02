@@ -1,14 +1,14 @@
-#import "WMWoundMeasurementUndermineValue.h"
+#import "WMWoundMeasurementUnderValue.h"
 #import "StackMob.h"
 
-@interface WMWoundMeasurementUndermineValue ()
+@interface WMWoundMeasurementUnderValue ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation WMWoundMeasurementUndermineValue
+@implementation WMWoundMeasurementUnderValue
 
 - (NSString *)labelText
 {
@@ -23,7 +23,7 @@
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                        persistentStore:(NSPersistentStore *)store
 {
-    WMWoundMeasurementUndermineValue *woundMeasurementUndermineValue = [[WMWoundMeasurementUndermineValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementUndermineValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    WMWoundMeasurementUnderValue *woundMeasurementUndermineValue = [[WMWoundMeasurementUnderValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementUnderValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
 	if (store) {
 		[managedObjectContext assignObject:woundMeasurementUndermineValue toPersistentStore:store];
 	}

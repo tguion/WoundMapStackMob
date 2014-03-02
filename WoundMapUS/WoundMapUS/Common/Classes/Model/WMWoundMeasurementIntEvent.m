@@ -1,22 +1,22 @@
-#import "WMWoundMeasurementInterventionEvent.h"
+#import "WMWoundMeasurementIntEvent.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMParticipant.h"
 #import "WMUtilities.h"
 #import "StackMob.h"
 
-@interface WMWoundMeasurementInterventionEvent ()
+@interface WMWoundMeasurementIntEvent ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation WMWoundMeasurementInterventionEvent
+@implementation WMWoundMeasurementIntEvent
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                        persistentStore:(NSPersistentStore *)store
 {
-    WMWoundMeasurementInterventionEvent *woundMeasurementInterventionEvent = [[WMWoundMeasurementInterventionEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementInterventionEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    WMWoundMeasurementIntEvent *woundMeasurementInterventionEvent = [[WMWoundMeasurementIntEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementIntEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
 	if (store) {
 		[managedObjectContext assignObject:woundMeasurementInterventionEvent toPersistentStore:store];
 	}
@@ -24,7 +24,7 @@
 	return woundMeasurementInterventionEvent;
 }
 
-+ (WMWoundMeasurementInterventionEvent *)woundMeasurementInterventionEventForWoundMeasurementGroup:(WMWoundMeasurementGroup *)woundMeasurementGroup
++ (WMWoundMeasurementIntEvent *)woundMeasurementInterventionEventForWoundMeasurementGroup:(WMWoundMeasurementGroup *)woundMeasurementGroup
                                                                                         changeType:(InterventionEventChangeType)changeType
                                                                                              title:(NSString *)title
                                                                                          valueFrom:(id)valueFrom
@@ -44,7 +44,7 @@
     if (nil != store) {
         [request setAffectedStores:[NSArray arrayWithObject:store]];
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementInterventionEvent" inManagedObjectContext:managedObjectContext]];
+    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementIntEvent" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:
                            @"measurementGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
                            woundMeasurementGroup, changeType, title, valueFrom, valueTo, eventType, participant]];
@@ -54,7 +54,7 @@
         [WMUtilities logError:error];
     }
     // else
-    WMWoundMeasurementInterventionEvent *woundMeasurementInterventionEvent = [array lastObject];
+    WMWoundMeasurementIntEvent *woundMeasurementInterventionEvent = [array lastObject];
     if (create && nil == woundMeasurementInterventionEvent) {
         woundMeasurementInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
         woundMeasurementInterventionEvent.measurementGroup = woundMeasurementGroup;

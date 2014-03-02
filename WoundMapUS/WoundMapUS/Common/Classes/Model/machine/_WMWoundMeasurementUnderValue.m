@@ -1,40 +1,40 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to WMWoundMeasurementUndermineValue.m instead.
+// Make changes to WMWoundMeasurementUnderValue.m instead.
 
-#import "_WMWoundMeasurementUndermineValue.h"
+#import "_WMWoundMeasurementUnderValue.h"
 
-const struct WMWoundMeasurementUndermineValueAttributes WMWoundMeasurementUndermineValueAttributes = {
+const struct WMWoundMeasurementUnderValueAttributes WMWoundMeasurementUnderValueAttributes = {
 	.toOClockValue = @"toOClockValue",
 	.wmwoundmeasurementunderminevalue_id = @"wmwoundmeasurementunderminevalue_id",
 };
 
-const struct WMWoundMeasurementUndermineValueRelationships WMWoundMeasurementUndermineValueRelationships = {
+const struct WMWoundMeasurementUnderValueRelationships WMWoundMeasurementUnderValueRelationships = {
 };
 
-const struct WMWoundMeasurementUndermineValueFetchedProperties WMWoundMeasurementUndermineValueFetchedProperties = {
+const struct WMWoundMeasurementUnderValueFetchedProperties WMWoundMeasurementUnderValueFetchedProperties = {
 };
 
-@implementation WMWoundMeasurementUndermineValueID
+@implementation WMWoundMeasurementUnderValueID
 @end
 
-@implementation _WMWoundMeasurementUndermineValue
+@implementation _WMWoundMeasurementUnderValue
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"WMWoundMeasurementUndermineValue" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"WMWoundMeasurementUnderValue" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"WMWoundMeasurementUndermineValue";
+	return @"WMWoundMeasurementUnderValue";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"WMWoundMeasurementUndermineValue" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"WMWoundMeasurementUnderValue" inManagedObjectContext:moc_];
 }
 
-- (WMWoundMeasurementUndermineValueID*)objectID {
-	return (WMWoundMeasurementUndermineValueID*)[super objectID];
+- (WMWoundMeasurementUnderValueID*)objectID {
+	return (WMWoundMeasurementUnderValueID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
