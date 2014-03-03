@@ -15,6 +15,9 @@
 NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSynchFinishedNotification";
 
 @interface CoreDataHelper () <UIAlertViewDelegate>
+
+@property (nonatomic, readwrite, strong) NSPersistentStoreCoordinator *localCoordinator;  // StackMob has it's own psc - use with local stores
+
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status;
@@ -199,6 +202,8 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         DLog(@"*** WARNING *** failed server deletes: %@", objects);
     }];
     
+    [self loadLocalStore];
+    
     return self;
 }
 
@@ -237,16 +242,36 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     return sourceContext;
 }
 
+- (NSManagedObjectContext *)localContext
+{
+    NSManagedObjectContext *localContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    [localContext performBlockAndWait:^{
+        [localContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+        [localContext setUndoManager:nil]; // the default on iOS
+    }];
+    return localContext;
+}
+
+- (NSPersistentStoreCoordinator *)localCoordinator
+{
+    if (nil == _localCoordinator) {
+        _localCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
+    }
+    return _localCoordinator;
+}
+
 - (void)loadStore
 {
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
-    if (_store) {return;} // Don’t load store if it’s already loaded
-    
+    if (_store) {
+        // Don’t load store if it’s already loaded
+        return;
+    }
+    // else
     BOOL useMigrationManager = NO;
-    if (useMigrationManager &&
-        [self isMigrationNecessaryForStore:[self storeURL]]) {
+    if (useMigrationManager && [self isMigrationNecessaryForStore:[self storeURL]]) {
         [self performBackgroundManagedMigrationForStore:[self storeURL]];
     } else {
         NSDictionary *options =
@@ -262,13 +287,14 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
                                                   options:options
                                                     error:&error];
         if (!_store) {
-            NSLog(@"Failed to add store. Error: %@", error);abort();
+            NSLog(@"Failed to add store. Error: %@", error);
+            abort();
         } else {
             NSLog(@"Successfully added store: %@", _store);
         }
     }
-    
 }
+
 - (void)loadSourceStore
 {
     if (debug==1) {
@@ -294,7 +320,39 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         NSLog(@"Successfully added source store: %@", _sourceStore);
     }
 }
-- (void)setupCoreData {
+
+- (void)loadLocalStore
+{
+    if (debug==1) {
+        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+    }
+    if (_localStore) {
+        return;
+    } // Don’t load source store if it's already loaded
+    
+    NSDictionary *options =
+    @{
+      NSMigratePersistentStoresAutomaticallyOption:@YES
+      ,NSInferMappingModelAutomaticallyOption:@YES
+      //,NSSQLitePragmasOption: @{@"journal_mode": @"DELETE"} // Uncomment to disable WAL journal mode
+      };
+    NSError *error = nil;
+    _localStore = [self.localCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                      configuration:nil
+                                                                URL:[self localStoreURL]
+                                                            options:options
+                                                              error:&error];
+    if (!_localStore) {
+        NSLog(@"Failed to add source store. Error: %@", error);
+        abort();
+    } else {
+        NSLog(@"Successfully added source store: %@", _localStore);
+        // seed
+    }
+}
+
+- (void)setupCoreData
+{
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
@@ -499,32 +557,28 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     
     // Perform migration in the background, so it doesn't freeze the UI.
     // This way progress can be shown to the user
-    dispatch_async(
-                   dispatch_get_global_queue(
-                                             DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                       BOOL done = [self migrateStore:storeURL];
-                       if(done) {
-                           // When migration finishes, add the newly migrated store
-                           dispatch_async(dispatch_get_main_queue(), ^{
-                               NSError *error = nil;
-                               _store =
-                               [_coordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                          configuration:nil
-                                                                    URL:[self storeURL]
-                                                                options:nil
-                                                                  error:&error];
-                               if (!_store) {
-                                   NSLog(@"Failed to add a migrated store. Error: %@",
-                                         error);abort();}
-                               else {
-                                   NSLog(@"Successfully added a migrated store: %@",
-                                         _store);}
-                               [self.migrationVC dismissViewControllerAnimated:NO
-                                                                    completion:nil];
-                               self.migrationVC = nil;
-                           });
-                       }
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        BOOL done = [self migrateStore:storeURL];
+        if (done) {
+            // When migration finishes, add the newly migrated store
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSError *error = nil;
+                _store = [_coordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                           configuration:nil
+                                                     URL:[self storeURL]
+                                                 options:nil
+                                                   error:&error];
+                if (!_store) {
+                    NSLog(@"Failed to add a migrated store. Error: %@", error);
+                    abort();
+                } else {
+                    NSLog(@"Successfully added a migrated store: %@", _store);
+                }
+                [self.migrationVC dismissViewControllerAnimated:NO completion:nil];
+                self.migrationVC = nil;
+            });
+        }
+    });
 }
 
 #pragma mark - VALIDATION ERROR HANDLING

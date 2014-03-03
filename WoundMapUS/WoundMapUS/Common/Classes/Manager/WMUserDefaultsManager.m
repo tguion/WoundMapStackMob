@@ -135,4 +135,67 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+#pragma mark - Email
+
+- (NSString *)encryptionPassword
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.encryptionPassword"];
+}
+
+- (void)setEncryptionPassword:(NSString *)encryptionPassword
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:encryptionPassword forKey:@"com.mobilehealthware.woundmap.encryptionPassword"];
+    [userDefaults synchronize];
+}
+
+- (NSArray *)emailPDFtoRecipients
+{
+    return [[NSUserDefaults standardUserDefaults] arrayForKey:@"com.mobilehealthware.woundmap.emailPDFtoRecipients"];
+}
+
+- (void)setEmailPDFtoRecipients:(NSArray *)emailPDFtoRecipients
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:emailPDFtoRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFtoRecipients"];
+    [userDefaults synchronize];
+}
+
+- (NSArray *)emailPDFccRecipients
+{
+    return [[NSUserDefaults standardUserDefaults] arrayForKey:@"com.mobilehealthware.woundmap.emailPDFccRecipients"];
+}
+
+- (void)setEmailPDFccRecipients:(NSArray *)emailPDFccRecipients
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:emailPDFccRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFccRecipients"];
+    [userDefaults synchronize];
+}
+
+- (NSArray *)emailPDFbccRecipients
+{
+    return [[NSUserDefaults standardUserDefaults] arrayForKey:@"com.mobilehealthware.woundmap.emailPDFbccRecipients"];
+}
+
+- (void)setEmailPDFbccRecipients:(NSArray *)emailPDFbccRecipients
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:emailPDFbccRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFbccRecipients"];
+    [userDefaults synchronize];
+}
+
+- (NSString *)pdfHeaderPrefix
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.pdfHeaderPrefix"];
+}
+
+- (void)setPdfHeaderPrefix:(NSString *)pdfHeaderPrefix
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:pdfHeaderPrefix forKey:@"com.mobilehealthware.woundmap.pdfHeaderPrefix"];
+    [userDefaults synchronize];
+}
+
+
 @end

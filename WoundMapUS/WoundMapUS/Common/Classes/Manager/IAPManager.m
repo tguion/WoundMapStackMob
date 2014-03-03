@@ -9,14 +9,16 @@
 //  This seeding needs to occur as soon as the local store has been initialized
 
 #import "IAPManager.h"
-#import "DocumentManager.h"
-#import "IAPProduct+Custom.h"
+#import "WMLocalStoreManager.h"
+#import "IAPProduct.h"
+#import "WMIAPTransaction.h"
 #import "IAPDeviceTransactionAggregate.h"
-#import "IAPCreditTransaction.h"
-#import "WCIAPTransaction+Custom.h"
-#import "WCUtilities.h"
+#import "WMIAPCreditTransaction.h"
+#import "WCIAPTransaction.h"
+#import "WMUtilities.h"
 #import "WCAppDelegate.h"
-#import "CoreDataController.h"
+#import "CoreDataHelper.h"
+#import "WMLocalStoreManager.h"
 
 NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print5.token";
 NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print10.token";
@@ -33,6 +35,9 @@ NSString *const kIAPDeviceId = @"iap-device-id.txt";
 
 @interface IAPManager ()
 
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
+@property (readonly, nonatomic) WMLocalStoreManager *localStoreManager;
+@property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSPersistentStore *store;
 
@@ -56,13 +61,6 @@ NSString* _deviceId;
     dispatch_once(&onceToken, ^{
         SharedInstance = [[IAPManager alloc] init];
         __weak __typeof(SharedInstance) weakSelf = SharedInstance;
-        [[NSNotificationCenter defaultCenter] addObserverForName:kLocalStoresLoadedNotification
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification *notification) {
-                                                          [weakSelf updateAggregateTotalForDevice];
-                                                      }];
-
         [[NSNotificationCenter defaultCenter] addObserverForName:NSUbiquitousKeyValueStoreDidChangeExternallyNotification
                                                           object:nil
                                                            queue:[NSOperationQueue mainQueue]
@@ -74,16 +72,29 @@ NSString* _deviceId;
     return SharedInstance;
 }
 
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (WMLocalStoreManager *)localStoreManager
+{
+    return  [WMLocalStoreManager sharedInstance];
+}
+
+- (CoreDataHelper *)coreDataHelper
+{
+    return self.appDelegate.coreDataHelper;
+}
+
 - (NSManagedObjectContext *)managedObjectContext
 {
-    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    return appDelegate.coreDataController.mainThreadContext;
+    return self.localStoreManager.managedObjectContext;
 }
 
 - (NSPersistentStore *)store
 {
-    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    return appDelegate.coreDataController.iCloudStoreOrFallbackStore;
+    return self.localStoreManager.store;
 }
 
 - (id)init {
@@ -246,14 +257,18 @@ NSString* _deviceId;
 
 #pragma mark - IAP Management Methods
 
-- (void) productWithProductId:(NSString*)productId successHandler:(IAPSuccessHandler)successHandler failureHandler:(IAPFailureHandler)failureHandler {
+- (void) productWithProductId:(NSString*)productId
+               successHandler:(IAPSuccessHandler)successHandler
+               failureHandler:(IAPFailureHandler)failureHandler {
     NSSet * productIdSet = [NSSet setWithObjects:
                                   productId,
                                   nil];
     [self productsWithProductIdSet:productIdSet successHandler:successHandler failureHandler:failureHandler];
 }
 
-- (void) productsWithProductIdSet:(NSSet*)productIdSet successHandler:(IAPSuccessHandler)successHandler failureHandler:(IAPFailureHandler)failureHandler {
+- (void) productsWithProductIdSet:(NSSet*)productIdSet
+                   successHandler:(IAPSuccessHandler)successHandler
+                   failureHandler:(IAPFailureHandler)failureHandler {
     _successHandler = [successHandler copy];
     _failureHandler = [failureHandler copy];
     SKProductsRequest* request = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdSet];
@@ -281,15 +296,15 @@ NSString* _deviceId;
 - (void) diagDumpAction
 {
     __block NSArray *diagList = nil;
-    [self.managedObjectContext performBlockAndWait:^{
-        
-        diagList = [WCIAPTransaction enumerateTransactions:self.managedObjectContext persistentStore:self.store];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSPersistentStore *store = self.store;
+    [managedObjectContext performBlockAndWait:^{
+        diagList = [WMIAPTransaction enumerateTransactions:managedObjectContext persistentStore:store];
         DLog(@"total of %i WCIAPTransactions", [diagList count]);
         [diagList enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            WCIAPTransaction *txn = (WCIAPTransaction *)obj;
+            WMIAPTransaction *txn = (WMIAPTransaction *)obj;
             DLog(@"txnId: %@ has count of %i and a flag of %i, startCredits: %i, txnDate: %@", [txn txnId], [[txn credits] integerValue], [[txn flags] integerValue], [[txn startupCredits] integerValue], [txn txnDate]);
         }];
-
     }];
     
     NSUbiquitousKeyValueStore *ukvStore = [NSUbiquitousKeyValueStore defaultStore];
@@ -317,8 +332,7 @@ NSString* _deviceId;
 
 - (void) resetIndexStoreAndKeyValueStores
 {
-    [WCIAPTransaction deleteAllTxns:self.managedObjectContext persistentStore:self.store];
-    
+    [WMIAPTransaction deleteAllTxns:self.managedObjectContext persistentStore:self.store];
     NSUbiquitousKeyValueStore *ukvStore = [NSUbiquitousKeyValueStore defaultStore];
     [ukvStore removeObjectForKey:kIAPDeviceTransactionAggregate];
     [ukvStore synchronize];
@@ -339,14 +353,16 @@ NSString* _deviceId;
 {
     __block NSInteger result = 0;
     if ([self isStoreAvailable]) {
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        NSPersistentStore *store = self.store;
         __weak __typeof(self) weakSelf = self;
-        [self.managedObjectContext performBlockAndWait:^{
+        [managedObjectContext performBlockAndWait:^{
             // gather values from indexed store
-            result = [[WCIAPTransaction sumTokens:weakSelf.managedObjectContext persistentStore:weakSelf.store] integerValue];
+            result = [[WMIAPTransaction sumTokens:managedObjectContext persistentStore:store] integerValue];
             NSString *deviceId = [weakSelf getIAPDeviceGuid];
             // add in aggregated values from other devices
-            NSUbiquitousKeyValueStore *store = [NSUbiquitousKeyValueStore defaultStore];
-            NSDictionary* txnHash = (NSDictionary*)[store objectForKey:kIAPDeviceTransactionAggregate];
+            NSUbiquitousKeyValueStore *keyValueStore = [NSUbiquitousKeyValueStore defaultStore];
+            NSDictionary* txnHash = (NSDictionary*)[keyValueStore objectForKey:kIAPDeviceTransactionAggregate];
             if (nil != txnHash) {
                 for (NSString *key in txnHash) {
                     NSData *encodedTxn = [txnHash objectForKey:key];
@@ -367,9 +383,10 @@ NSString* _deviceId;
 - (NSDate *)lastCreditPurchaseDate
 {
     __block NSDate *resultDate = nil;
-    __weak __typeof(self) weakSelf = self;
-    [self.managedObjectContext performBlockAndWait:^{
-        resultDate = [WCIAPTransaction lastPurchasedCreditDate:weakSelf.managedObjectContext persistentStore:weakSelf.store];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSPersistentStore *store = self.store;
+    [managedObjectContext performBlockAndWait:^{
+        resultDate = [WMIAPTransaction lastPurchasedCreditDate:managedObjectContext persistentStore:store];
     }];
     
     return resultDate;
@@ -384,22 +401,27 @@ NSString* _deviceId;
     [self addCreditTransaction:[[NSNumber alloc] initWithInteger:-1]];
 }
 
-- (WCIAPTransaction *) addCreditTransaction:(NSNumber *)credits
+- (WMIAPTransaction *) addCreditTransaction:(NSNumber *)credits
 {
     return [self addCreditTransaction:credits startupCredits:NO];
 }
 
-- (WCIAPTransaction *) addCreditTransaction:(NSNumber *)credits startupCredits:(BOOL)startupCredits
+- (WMIAPTransaction *) addCreditTransaction:(NSNumber *)credits startupCredits:(BOOL)startupCredits
 {
-    __block WCIAPTransaction *iapTxn = nil;
+    __block WMIAPTransaction *iapTxn = nil;
     if ([self isStoreAvailable]) {
-        __weak __typeof(self) weakSelf = self;
-        [self.managedObjectContext performBlockAndWait:^{
-            iapTxn = [WCIAPTransaction instanceWithManagedObjectContext:weakSelf.managedObjectContext persistentStore:weakSelf.store credits:credits startupCredits:startupCredits];
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        NSPersistentStore *store = self.store;
+        [managedObjectContext performBlockAndWait:^{
+            iapTxn = [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext persistentStore:store credits:credits startupCredits:startupCredits];
             // save
-            [WCUtilities saveContextToStore:weakSelf.managedObjectContext];
+            NSError *error = nil;
+            [managedObjectContext saveAndWait:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
         }];
-        [weakSelf updateAggregateTotalForDevice];
+        [self updateAggregateTotalForDevice];
     } else {
         DLog(@"IAPManager store not available at addCreditTransaction time.");
         abort();
@@ -410,12 +432,14 @@ NSString* _deviceId;
 - (void) updateAggregateTotalForDevice
 {
     if ([self isStoreAvailable]) {
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        NSPersistentStore *store = self.store;
         __weak __typeof(self) weakSelf = self;
-        [self.managedObjectContext performBlockAndWait:^{
-            NSNumber *numberOfCredits = [WCIAPTransaction sumTokens:weakSelf.managedObjectContext persistentStore:weakSelf.store];
+        [managedObjectContext performBlockAndWait:^{
+            NSNumber *numberOfCredits = [WMIAPTransaction sumTokens:managedObjectContext persistentStore:store];
             NSString *deviceId = [weakSelf getIAPDeviceGuid];
-            NSUbiquitousKeyValueStore *store = [NSUbiquitousKeyValueStore defaultStore];
-            NSDictionary* immutableHash = (NSDictionary*)[store objectForKey:kIAPDeviceTransactionAggregate];
+            NSUbiquitousKeyValueStore *keyValueStore = [NSUbiquitousKeyValueStore defaultStore];
+            NSDictionary* immutableHash = (NSDictionary*)[keyValueStore objectForKey:kIAPDeviceTransactionAggregate];
             NSMutableDictionary *txnHash = [[NSMutableDictionary alloc] initWithDictionary:immutableHash];
             if (nil == txnHash) {
                 txnHash = [(NSMutableDictionary *)[NSMutableDictionary alloc]init];
@@ -424,29 +448,27 @@ NSString* _deviceId;
             if (nil == encodedTxn) {
                 NSString *startupTxnId = nil;
                 NSDate *startupTxnDate = nil;
-                WCIAPTransaction *startupCredits = [WCIAPTransaction startupCredits:weakSelf.managedObjectContext persistentStore:weakSelf.store];
+                WMIAPTransaction *startupCredits = [WMIAPTransaction startupCredits:managedObjectContext persistentStore:store];
                 if (nil == startupCredits) {
                     startupTxnId = [startupCredits txnId];
                     startupTxnDate = [startupCredits txnDate];
                 }
-                IAPDeviceTransactionAggregate *aggregateTxn =
-                    [[IAPDeviceTransactionAggregate alloc] initWithDeviceId:deviceId aggregatedCredits:numberOfCredits];
+                IAPDeviceTransactionAggregate *aggregateTxn = [[IAPDeviceTransactionAggregate alloc] initWithDeviceId:deviceId aggregatedCredits:numberOfCredits];
                 encodedTxn = [aggregateTxn archive];
             } else {
                 IAPDeviceTransactionAggregate *txn = [IAPDeviceTransactionAggregate unarchive:encodedTxn];
-                
                 [txn setAggregatedCredits:numberOfCredits];
                 encodedTxn = [txn archive];
             }
             [txnHash setValue:encodedTxn forKey:deviceId];
             immutableHash = [[NSDictionary alloc] initWithDictionary:txnHash];
-            [store setObject:immutableHash forKey:kIAPDeviceTransactionAggregate];
-            [store synchronize];
+            [keyValueStore setObject:immutableHash forKey:kIAPDeviceTransactionAggregate];
+            [keyValueStore synchronize];
         }];
     }
 }
 
--(NSString *)getIAPDeviceGuid
+- (NSString *)getIAPDeviceGuid
 {
     if (nil == _deviceId) {
         if (![self deviceIdFileExists]) {
@@ -459,7 +481,7 @@ NSString* _deviceId;
 }
 
 // writes string to text file
--(void) writeDeviceIdToFile:(NSString *)deviceId
+- (void)writeDeviceIdToFile:(NSString *)deviceId
 {
     NSString *fileName = [IAPManager deviceIdFilename];
     [deviceId writeToFile:fileName
@@ -469,7 +491,7 @@ NSString* _deviceId;
     
 }
 
--(NSString *) readDeviceIdFromFile
+- (NSString *)readDeviceIdFromFile
 {
     NSString *fileName = [IAPManager deviceIdFilename];
     NSString *deviceId = [[NSString alloc] initWithContentsOfFile:fileName
@@ -477,11 +499,13 @@ NSString* _deviceId;
                                                            error:nil];
     return deviceId;
 }
--(BOOL) deviceIdFileExists
+
+- (BOOL)deviceIdFileExists
 {
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[IAPManager deviceIdFilename]];
     return fileExists;
 }
+
 +(NSString *)deviceIdFilename
 {
     //get the documents directory:
@@ -493,20 +517,26 @@ NSString* _deviceId;
     return fileName;
 }
 
-- (void) recordCredits:(IAPCreditTransaction *)inboundTxn
+- (void)recordCredits:(WMIAPCreditTransaction *)inboundTxn
 {
-    WCIAPTransaction *iapTxn = [inboundTxn makeIapTransaction:self.managedObjectContext store:self.store];
-
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSPersistentStore *store = self.store;
+    WMIAPTransaction *iapTxn = [inboundTxn makeIapTransaction:managedObjectContext store:store];
     [iapTxn setKeyValueStoreTransmittedFlag:YES];
     // save
-    [WCUtilities saveContextToStore:self.managedObjectContext];
-    
+    NSError *error = nil;
+    [managedObjectContext saveAndWait:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
 }
 
-- (BOOL) isStoreAvailable
+- (BOOL)isStoreAvailable
 {
     BOOL result = NO;
-    if (nil != self.managedObjectContext && nil != self.store) {
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSPersistentStore *store = self.store;
+    if (nil != managedObjectContext && nil != store) {
         result = YES;
     }
     return result;
