@@ -8,6 +8,7 @@
 
 #import "WCAppDelegate.h"
 #import "WMWelcomeToWoundMapViewController.h"
+#import "WMLocalStoreManager.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
@@ -51,7 +52,10 @@
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
+    // handle stores
     [self cdh];
+    WMLocalStoreManager *localStoreManager = [WMLocalStoreManager sharedInstance];
+    [localStoreManager seedLocalDatabase];
     // initialize UI
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]];

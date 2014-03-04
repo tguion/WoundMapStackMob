@@ -15,13 +15,17 @@ extern NSString *const kStackMobNetworkSynchFinishedNotification;
 
 @interface CoreDataHelper : NSObject <UIAlertViewDelegate,NSXMLParserDelegate>
 
-@property (nonatomic, readonly) NSManagedObjectContext *parentContext;      // StackMob context for current thread
-@property (nonatomic, readonly) NSManagedObjectContext *context;            // child context of StackMob managedObjectContext
-@property (nonatomic, readonly) NSManagedObjectContext *importContext;      // child context of context
+@property (nonatomic, readonly) NSManagedObjectContext *parentContext;          // StackMob context for current thread
+@property (nonatomic, readonly) NSManagedObjectContext *context;                // child context of StackMob managedObjectContext
+@property (nonatomic, readonly) NSManagedObjectContext *importContext;          // child context of context
 
 @property (nonatomic, readonly) NSManagedObjectModel *model;
-@property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;
-@property (nonatomic, readonly) NSPersistentStore *store;
+@property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;      // StackMob has it's own psc - use with local stores
+@property (nonatomic, readonly) NSPersistentStore *store;                       // not used - StackMob has it's own store
+
+@property (nonatomic, readonly) NSManagedObjectContext *localContext;           // local store context on main thread
+@property (nonatomic, readonly) NSPersistentStoreCoordinator *localCoordinator; // StackMob has it's own psc - use with local stores
+@property (nonatomic, readonly) NSPersistentStore *localStore;                  // local store, not StackMob - use for instructions and such
 
 @property (nonatomic, readonly) NSManagedObjectContext *sourceContext;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator *sourceCoordinator;

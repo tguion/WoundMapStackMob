@@ -38,7 +38,7 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 
 - (WMIAPTransaction *)addCreditTransaction:(NSNumber *)credits;
 
-- (void) resetTokenCount;
-- (void) diagDumpAction;
+- (void)resetTokenCount;
+- (void)diagDumpAction;
 
 @end

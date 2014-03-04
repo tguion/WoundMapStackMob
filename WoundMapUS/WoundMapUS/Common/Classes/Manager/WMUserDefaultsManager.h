@@ -18,6 +18,11 @@
 @property (nonatomic) NSString *lastPatientId;
 @property (nonatomic) NSDate *lastDateOfBirth;
 @property (nonatomic) NSString *defaultNavigationTrackId;
+@property (strong, nonatomic) NSString *encryptionPassword;       // password to protect PDF
+@property (strong, nonatomic) NSArray *emailPDFtoRecipients;
+@property (strong, nonatomic) NSArray *emailPDFccRecipients;
+@property (strong, nonatomic) NSArray *emailPDFbccRecipients;
+@property (strong, nonatomic) NSString *pdfHeaderPrefix;
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 

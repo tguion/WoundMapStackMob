@@ -369,6 +369,16 @@
 		7DF4E99E18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E99D18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m */; };
 		7DF4E9A118C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A018C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m */; };
 		7DF4E9A418C3D168000A3F5B /* WMWoundTreatmentIntEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A318C3D168000A3F5B /* WMWoundTreatmentIntEvent.m */; };
+		7DF4E9A718C4B06D000A3F5B /* WMLocalStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A618C4B06D000A3F5B /* WMLocalStoreManager.m */; };
+		7DF4E9AA18C4B76B000A3F5B /* WMEmailManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */; };
+		7DF4E9AD18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9AC18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m */; };
+		7DF4E9B018C4C7FE000A3F5B /* WMIAPCreditTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9AF18C4C7FE000A3F5B /* WMIAPCreditTransaction.m */; };
+		7DF4E9B318C4C8EA000A3F5B /* WMPDFPrintManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9B218C4C8EA000A3F5B /* WMPDFPrintManager.m */; };
+		7DF4E9C018C4CAAE000A3F5B /* PDFRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9B918C4CAAE000A3F5B /* PDFRenderer.m */; };
+		7DF4E9C118C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9BB18C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.m */; };
+		7DF4E9C218C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9BD18C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.m */; };
+		7DF4E9C318C4CAAE000A3F5B /* PrintConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9BF18C4CAAE000A3F5B /* PrintConfiguration.m */; };
+		7DF4E9D918C4CF58000A3F5B /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DF4E9D718C4CF0D000A3F5B /* libCorePlot-CocoaTouch.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -378,6 +388,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7DB2060418A7D3400004DC32;
 			remoteInfo = WoundMapUS;
+		};
+		7DF4E9D618C4CF0D000A3F5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DF4E9D018C4CF0C000A3F5B /* CorePlot-CocoaTouch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BC9B83470FB8A0A40035D8DA;
+			remoteInfo = "CorePlot-CocoaTouch";
+		};
+		7DF4E9DA18C4D0D5000A3F5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DF4E9D018C4CF0C000A3F5B /* CorePlot-CocoaTouch.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BC9B83460FB8A0A40035D8DA;
+			remoteInfo = "CorePlot-CocoaTouch";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1044,6 +1068,25 @@
 		7DF4E9A018C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundTreatmentIntEvent.m; sourceTree = "<group>"; };
 		7DF4E9A218C3D168000A3F5B /* WMWoundTreatmentIntEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentIntEvent.h; sourceTree = "<group>"; };
 		7DF4E9A318C3D168000A3F5B /* WMWoundTreatmentIntEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentIntEvent.m; sourceTree = "<group>"; };
+		7DF4E9A518C4B06D000A3F5B /* WMLocalStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMLocalStoreManager.h; sourceTree = "<group>"; };
+		7DF4E9A618C4B06D000A3F5B /* WMLocalStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMLocalStoreManager.m; sourceTree = "<group>"; };
+		7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMEmailManager.h; sourceTree = "<group>"; };
+		7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMEmailManager.m; sourceTree = "<group>"; };
+		7DF4E9AB18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPDeviceTransactionAggregate.h; sourceTree = "<group>"; };
+		7DF4E9AC18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPDeviceTransactionAggregate.m; sourceTree = "<group>"; };
+		7DF4E9AE18C4C7FE000A3F5B /* WMIAPCreditTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreditTransaction.h; sourceTree = "<group>"; };
+		7DF4E9AF18C4C7FE000A3F5B /* WMIAPCreditTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreditTransaction.m; sourceTree = "<group>"; };
+		7DF4E9B118C4C8EA000A3F5B /* WMPDFPrintManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPDFPrintManager.h; sourceTree = "<group>"; };
+		7DF4E9B218C4C8EA000A3F5B /* WMPDFPrintManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPDFPrintManager.m; sourceTree = "<group>"; };
+		7DF4E9B818C4CAAE000A3F5B /* PDFRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFRenderer.h; sourceTree = "<group>"; };
+		7DF4E9B918C4CAAE000A3F5B /* PDFRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRenderer.m; sourceTree = "<group>"; };
+		7DF4E9BA18C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFRendererTwoColumnsSOAP.h; sourceTree = "<group>"; };
+		7DF4E9BB18C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRendererTwoColumnsSOAP.m; sourceTree = "<group>"; };
+		7DF4E9BC18C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFRendererTwoColumnsTwoPhotos.h; sourceTree = "<group>"; };
+		7DF4E9BD18C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRendererTwoColumnsTwoPhotos.m; sourceTree = "<group>"; };
+		7DF4E9BE18C4CAAE000A3F5B /* PrintConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrintConfiguration.h; sourceTree = "<group>"; };
+		7DF4E9BF18C4CAAE000A3F5B /* PrintConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrintConfiguration.m; sourceTree = "<group>"; };
+		7DF4E9D018C4CF0C000A3F5B /* CorePlot-CocoaTouch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CorePlot-CocoaTouch.xcodeproj"; path = "framework/CorePlot-CocoaTouch.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1051,6 +1094,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DF4E9D918C4CF58000A3F5B /* libCorePlot-CocoaTouch.a in Frameworks */,
 				7DDCDD4518AC28C9001D3BA9 /* libstackmob-v2.2.0.a in Frameworks */,
 				7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */,
 				7DB2068918A7D4320004DC32 /* MobileCoreServices.framework in Frameworks */,
@@ -1226,6 +1270,7 @@
 		7DB205FC18A7D3400004DC32 = {
 			isa = PBXGroup;
 			children = (
+				7DF4E9D018C4CF0C000A3F5B /* CorePlot-CocoaTouch.xcodeproj */,
 				7DB2064918A7D3FF0004DC32 /* StackMob-v2.2.0 */,
 				7DB2061018A7D3400004DC32 /* WoundMapUS */,
 				7DB2063918A7D3400004DC32 /* WoundMapUSTests */,
@@ -1546,6 +1591,9 @@
 		7DB2068F18A7D6950004DC32 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				7DF4E9B718C4CAAE000A3F5B /* PDF Support */,
+				7DF4E9AB18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.h */,
+				7DF4E9AC18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m */,
 				7DD3EA4718C011A70093E370 /* IAPManager.h */,
 				7DD3EA4818C011A70093E370 /* IAPManager.m */,
 				7DB2069018A7D6950004DC32 /* Core Data */,
@@ -1561,6 +1609,12 @@
 				7D39DADC18B7D0450054DDC3 /* WMPhotoManager.m */,
 				7D39DAE118B7DC120054DDC3 /* WMPolicyManager.h */,
 				7D39DAE218B7DC120054DDC3 /* WMPolicyManager.m */,
+				7DF4E9A518C4B06D000A3F5B /* WMLocalStoreManager.h */,
+				7DF4E9A618C4B06D000A3F5B /* WMLocalStoreManager.m */,
+				7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */,
+				7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */,
+				7DF4E9B118C4C8EA000A3F5B /* WMPDFPrintManager.h */,
+				7DF4E9B218C4C8EA000A3F5B /* WMPDFPrintManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -1629,6 +1683,8 @@
 				7DF4E96018C29A07000A3F5B /* WMDeviceInterventionEvent.m */,
 				7D39DB9318B94FFD0054DDC3 /* WMDeviceValue.h */,
 				7D39DB9418B94FFD0054DDC3 /* WMDeviceValue.m */,
+				7DF4E9AE18C4C7FE000A3F5B /* WMIAPCreditTransaction.h */,
+				7DF4E9AF18C4C7FE000A3F5B /* WMIAPCreditTransaction.m */,
 				7DF4E90618C22F27000A3F5B /* WMIAPTransaction.h */,
 				7DF4E90718C22F27000A3F5B /* WMIAPTransaction.m */,
 				7DB206C518A839180004DC32 /* WMId.h */,
@@ -2097,6 +2153,29 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
+		7DF4E9B718C4CAAE000A3F5B /* PDF Support */ = {
+			isa = PBXGroup;
+			children = (
+				7DF4E9B818C4CAAE000A3F5B /* PDFRenderer.h */,
+				7DF4E9B918C4CAAE000A3F5B /* PDFRenderer.m */,
+				7DF4E9BA18C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.h */,
+				7DF4E9BB18C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.m */,
+				7DF4E9BC18C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.h */,
+				7DF4E9BD18C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.m */,
+				7DF4E9BE18C4CAAE000A3F5B /* PrintConfiguration.h */,
+				7DF4E9BF18C4CAAE000A3F5B /* PrintConfiguration.m */,
+			);
+			path = "PDF Support";
+			sourceTree = "<group>";
+		};
+		7DF4E9D118C4CF0C000A3F5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7DF4E9D718C4CF0D000A3F5B /* libCorePlot-CocoaTouch.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2111,6 +2190,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				7DF4E9DB18C4D0D5000A3F5B /* PBXTargetDependency */,
 			);
 			name = WoundMapUS;
 			productName = WoundMapUS;
@@ -2164,6 +2244,12 @@
 			mainGroup = 7DB205FC18A7D3400004DC32;
 			productRefGroup = 7DB2060618A7D3400004DC32 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7DF4E9D118C4CF0C000A3F5B /* Products */;
+					ProjectRef = 7DF4E9D018C4CF0C000A3F5B /* CorePlot-CocoaTouch.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				7DB2060418A7D3400004DC32 /* WoundMapUS */,
@@ -2171,6 +2257,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		7DF4E9D718C4CF0D000A3F5B /* libCorePlot-CocoaTouch.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libCorePlot-CocoaTouch.a";
+			remoteRef = 7DF4E9D618C4CF0D000A3F5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7DB2060318A7D3400004DC32 /* Resources */ = {
@@ -2380,6 +2476,7 @@
 				7DF4E93818C22F27000A3F5B /* WMWoundPositionValue.m in Sources */,
 				5F67D21C18AC4DF400460C37 /* UIView+Custom.m in Sources */,
 				7D39DB5918B828630054DDC3 /* WMPsychoSocialGroupViewController.m in Sources */,
+				7DF4E9B018C4C7FE000A3F5B /* WMIAPCreditTransaction.m in Sources */,
 				7DF4E8E918C22EEC000A3F5B /* _WMDefinitionKeyword.m in Sources */,
 				7DF4E93E18C2550F000A3F5B /* SearchUtilities.m in Sources */,
 				7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */,
@@ -2388,6 +2485,7 @@
 				7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */,
 				7D39DB7618B947250054DDC3 /* _WMMedicationCategory.m in Sources */,
 				7D39DAE318B7DC120054DDC3 /* WMPolicyManager.m in Sources */,
+				7DF4E9B318C4C8EA000A3F5B /* WMPDFPrintManager.m in Sources */,
 				7DF4E93B18C22F27000A3F5B /* WMWoundTreatmentValue.m in Sources */,
 				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
 				7D39DB9618B94FFD0054DDC3 /* WMDeviceCategory.m in Sources */,
@@ -2452,11 +2550,13 @@
 				7DDBEDF018BEA96C00FEF3FA /* WMBradenSection.m in Sources */,
 				7DB206D318A839180004DC32 /* WMId.m in Sources */,
 				5F6DE51E18B589B300E87F7E /* WMInstructionTableViewCell.m in Sources */,
+				7DF4E9A718C4B06D000A3F5B /* WMLocalStoreManager.m in Sources */,
 				7D39DAE718B7E5DD0054DDC3 /* WMSelectWoundViewController.m in Sources */,
 				5F67D1C418AC39B800460C37 /* WMParticipantType.m in Sources */,
 				7D9AA27418AFF74C00C1B698 /* WMConsultingGroup.m in Sources */,
 				7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */,
 				7DF4E97318C29A07000A3F5B /* WMInterventionEvent.m in Sources */,
+				7DF4E9C218C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.m in Sources */,
 				7DB206D518A839180004DC32 /* WMPatient.m in Sources */,
 				7DF4E95518C299DC000A3F5B /* _WMInterventionEvent.m in Sources */,
 				7D39DB1718B7FBA10054DDC3 /* WMWoundTreatmentViewController.m in Sources */,
@@ -2486,7 +2586,9 @@
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
 				5F6DE51018B586F600E87F7E /* WMInstructionsViewController.m in Sources */,
 				7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */,
+				7DF4E9C018C4CAAE000A3F5B /* PDFRenderer.m in Sources */,
 				7DF4E97518C29A07000A3F5B /* WMInterventionStatus.m in Sources */,
+				7DF4E9C318C4CAAE000A3F5B /* PrintConfiguration.m in Sources */,
 				7DF4E97218C29A07000A3F5B /* WMDeviceInterventionEvent.m in Sources */,
 				7DF4E9A118C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m in Sources */,
 				7D39DB2D18B8230F0054DDC3 /* WMBradenScaleViewController.m in Sources */,
@@ -2496,6 +2598,7 @@
 				7D39DB4418B826620054DDC3 /* WMCarePlanGroupViewController.m in Sources */,
 				7D39DB2218B8217A0054DDC3 /* _WMPhoto.m in Sources */,
 				5F6DE51A18B5885E00E87F7E /* WMInstructionContentViewController.m in Sources */,
+				7DF4E9C118C4CAAE000A3F5B /* PDFRendererTwoColumnsSOAP.m in Sources */,
 				7DF4E8E518C22EEC000A3F5B /* _WMCarePlanGroup.m in Sources */,
 				7DF4E92F18C22F27000A3F5B /* WMPsychoSocialValue.m in Sources */,
 				7D39DB6E18B924D30054DDC3 /* UnderlayToolbar.m in Sources */,
@@ -2504,7 +2607,9 @@
 				7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */,
 				7DF4E98C18C3C036000A3F5B /* WMPsychoSocialIntEvent.m in Sources */,
 				7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */,
+				7DF4E9AD18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m in Sources */,
 				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
+				7DF4E9AA18C4B76B000A3F5B /* WMEmailManager.m in Sources */,
 				7DB206B018A7D6950004DC32 /* Faulter.m in Sources */,
 				7D39DBBE18BAB4960054DDC3 /* WMPhotoMeasureViewController.m in Sources */,
 				7DDBEDB318BC0DD300FEF3FA /* _WMWoundMeasurement.m in Sources */,
@@ -2560,6 +2665,11 @@
 			isa = PBXTargetDependency;
 			target = 7DB2060418A7D3400004DC32 /* WoundMapUS */;
 			targetProxy = 7DB2063718A7D3400004DC32 /* PBXContainerItemProxy */;
+		};
+		7DF4E9DB18C4D0D5000A3F5B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CorePlot-CocoaTouch";
+			targetProxy = 7DF4E9DA18C4D0D5000A3F5B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2665,12 +2775,20 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"${PROJECT_DIR}/framework/**",
+				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"~/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS/StackMob-v2.2.0",
 				);
-				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2684,12 +2802,20 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"${PROJECT_DIR}/framework/**",
+				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"~/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS/StackMob-v2.2.0",
 				);
-				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
