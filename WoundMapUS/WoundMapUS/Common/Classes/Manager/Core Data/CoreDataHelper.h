@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "MigrationVC.h"
-#import "StackMob.h"
 
 extern NSString *const kStackMobNetworkSynchFinishedNotification;
 

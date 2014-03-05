@@ -6,16 +6,12 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //  NS_DESIGNATED_INITIALIZER
 
-#import "StackMob.h"
-
 @class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager, WMPatientManager;
 @class WMPatient, WMWound, WMWoundPhoto, WMNavigationTrack, WMNavigationStage;
 @class WMProgressViewHUD;
 
 @interface WMBaseViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
-@property (nonatomic) SMFetchPolicy fetchPolicy;
-@property (nonatomic) SMSavePolicy savePolicy;
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) BOOL isIPadIdiom;

@@ -16,7 +16,6 @@
 #import "WMPatientManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
-#import "StackMob.h"
 
 #define kPatientTableViewCellHeight 76.0
 

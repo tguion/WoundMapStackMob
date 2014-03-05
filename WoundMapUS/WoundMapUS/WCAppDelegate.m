@@ -12,6 +12,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
+#import <FFEF/FatFractal.h>
 
 @interface WCAppDelegate ()
 
