@@ -497,15 +497,12 @@
         </userInfo>
     </entity>
     <entity name="WMParticipant" representedClassName="WMParticipant" syncable="YES">
-        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateCreated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateLastSignin" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="permissions" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="wmparticipant_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="participant" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="participant" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
@@ -529,7 +526,6 @@
         <attribute name="archivedFlag" attributeType="Boolean" defaultValueString="NO">
             <userInfo/>
         </attribute>
-        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateCreated" attributeType="Date">
             <userInfo/>
         </attribute>
@@ -539,14 +535,11 @@
             <userInfo/>
         </attribute>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sm_owner" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ssn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
             <userInfo/>
         </attribute>
-        <attribute name="wmpatient_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="bradenScales" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMBradenScale" inverseName="patient" inverseEntity="WMBradenScale" syncable="YES"/>
         <relationship name="carePlanGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanGroup" inverseName="patient" inverseEntity="WMCarePlanGroup" syncable="YES"/>
         <relationship name="deviceGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceGroup" inverseName="patient" inverseEntity="WMDeviceGroup" syncable="YES"/>
@@ -572,8 +565,6 @@
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="patientConsultants" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">
-        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="nameFamily" optional="YES" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="attributeName" value="family"/>
@@ -594,7 +585,6 @@
                 <entry key="attributeName" value="suffix"/>
             </userInfo>
         </attribute>
-        <attribute name="wmperson_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="addresses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMAddress" inverseName="person" inverseEntity="WMAddress" syncable="YES">
             <userInfo>
                 <entry key="attributeName" value="addr"/>
@@ -757,13 +747,10 @@
         </relationship>
     </entity>
     <entity name="WMTelecomType" representedClassName="WMTelecomType" syncable="YES">
-        <attribute name="createddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastmoddate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="wmtelecomtype_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMTelecom" inverseName="telecomType" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
     <entity name="WMWound" representedClassName="WMWound" syncable="YES">
@@ -1159,17 +1146,29 @@
         <element name="WMBradenCell" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMBradenScale" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMBradenSection" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMCarePlanCategory" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMCarePlanGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMCarePlanInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMCarePlanValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMConsultingGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDefinition" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDefinitionKeyword" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDevice" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDeviceCategory" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDeviceGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMDeviceInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMDeviceValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMIAPTransaction" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMId" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMInstruction" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMInterventionEventType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMInterventionStatus" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMInterventionStatusJoin" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMMedication" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMMedicationCategory" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMMedicationGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMMedicationInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationNode" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="0" height="0"/>
@@ -1180,47 +1179,35 @@
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPerson" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWound" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundMeasurement" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundMeasurementGroup" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundMeasurementTunnelValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundMeasurementUnderValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundMeasurementValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundOdor" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundPhoto" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMCarePlanCategory" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMCarePlanGroup" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMCarePlanValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDefinition" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDefinitionKeyword" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMPsychoSocialIntEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPsychoSocialItem" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMPsychoSocialValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMSkinAssessment" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMSkinAssessmentCategory" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMSkinAssessmentIntEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMTelecom" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMTelecomType" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWound" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundLocation" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundLocationPositionJoin" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundLocationValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurement" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementGroup" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementIntEvent" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementTunnelValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementUnderValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundMeasurementValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundOdor" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundPhoto" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundPosition" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundPositionValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundLocationValue" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundTreatment" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMCarePlanInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMDeviceInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMInterventionEventType" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMInterventionStatus" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMInterventionStatusJoin" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMMedicationInterventionEvent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMPsychoSocialIntEvent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMSkinAssessmentIntEvent" positionX="0" positionY="0" width="0" height="0"/>
         <element name="WMWoundTreatmentIntEvent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WMWoundMeasurementIntEvent" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WMWoundType" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

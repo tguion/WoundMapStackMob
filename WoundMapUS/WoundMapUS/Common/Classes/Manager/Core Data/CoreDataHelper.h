@@ -9,27 +9,22 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "MigrationVC.h"
-#import "StackMob.h"
 
 extern NSString *const kStackMobNetworkSynchFinishedNotification;
+extern NSString *storeFilename;
+extern NSString *sourceStoreFilename;
+extern NSString *localStoreFilename;
 
 @interface CoreDataHelper : NSObject <UIAlertViewDelegate,NSXMLParserDelegate>
 
-@property (nonatomic, readonly) NSManagedObjectContext *parentContext;          // StackMob context for current thread
-@property (nonatomic, readonly) NSManagedObjectContext *context;                // child context of StackMob managedObjectContext
+@property (nonatomic, readonly) NSManagedObjectContext *parentContext;          // ??? context for current thread
+@property (nonatomic, readonly) NSManagedObjectContext *context;                // child context of parentContext managedObjectContext
 @property (nonatomic, readonly) NSManagedObjectContext *importContext;          // child context of context
 
 @property (nonatomic, readonly) NSManagedObjectModel *model;
-@property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;      // StackMob has it's own psc - use with local stores
-@property (nonatomic, readonly) NSPersistentStore *store;                       // not used - StackMob has it's own store
-
-@property (nonatomic, readonly) NSManagedObjectContext *localContext;           // local store context on main thread
-@property (nonatomic, readonly) NSPersistentStoreCoordinator *localCoordinator; // StackMob has it's own psc - use with local stores
-@property (nonatomic, readonly) NSPersistentStore *localStore;                  // local store, not StackMob - use for instructions and such
-
-@property (nonatomic, readonly) NSManagedObjectContext *sourceContext;
-@property (nonatomic, readonly) NSPersistentStoreCoordinator *sourceCoordinator;
-@property (nonatomic, readonly) NSPersistentStore *sourceStore;
+@property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;      // coordinator for stores
+@property (nonatomic, readonly) NSPersistentStore *store;                       // ???
+@property (nonatomic, readonly) NSPersistentStore *localStore;                  // local store - use for instructions and such
 
 @property (nonatomic, retain) MigrationVC *migrationVC;
 
@@ -39,14 +34,6 @@ extern NSString *const kStackMobNetworkSynchFinishedNotification;
 
 @property (nonatomic, strong) NSTimer *importTimer;
 
-@property (retain, nonatomic) SMClient *stackMobClient;
-@property (retain, nonatomic) SMCoreDataStore *stackMobStore;
-
-@property (nonatomic) BOOL synchWithStackMobOnNetworkAvailable;     // synch with StackMob when network becomes available
-
 - (void)setupCoreData;
-- (void)saveContext;
-- (void)backgroundSaveContext;
-- (void)saveContextWithCompletionHandler:(void (^)(NSError *))handler;
 
 @end

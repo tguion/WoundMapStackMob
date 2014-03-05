@@ -1,5 +1,4 @@
 #import "WMAddress.h"
-#import "StackMob.h"
 
 @interface WMAddress ()
 
@@ -17,7 +16,6 @@
 	if (store) {
 		[managedObjectContext assignObject:address toPersistentStore:store];
 	}
-    [address setValue:[address assignObjectId] forKey:[address primaryKeyField]];
 	return address;
 }
 

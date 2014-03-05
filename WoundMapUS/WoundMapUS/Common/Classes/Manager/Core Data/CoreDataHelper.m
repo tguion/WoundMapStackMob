@@ -9,6 +9,11 @@
 #import "CoreDataHelper.h"
 #import "CoreDataImporter.h"
 #import "Faulter.h"
+#import "WMBradenCare.h"
+#import "WMWoundType.h"
+#import "WMDefinition.h"
+#import "WMInstruction.h"
+#import "IAPProduct.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -16,11 +21,22 @@ NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSyn
 
 @interface CoreDataHelper () <UIAlertViewDelegate>
 
-@property (nonatomic, readwrite, strong) NSPersistentStoreCoordinator *localCoordinator;  // StackMob has it's own psc - use with local stores
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *parentContext;          // context for private queue
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *context;                // child context main thread with parentContext managedObjectContext
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *importContext;          // child context private queue with context parent
+
+@property (nonatomic, strong) WMNetworkReachability *networkReachability;
+
+@property (nonatomic, readonly) NSURL *storeURL;
+@property (nonatomic, readonly) NSURL *sourceStoreURL;
+@property (nonatomic, readonly) NSURL *localStoreURL;
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
 - (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status;
+
+- (void)seedLocalDatabase;
+
 @end
 
 @implementation CoreDataHelper
@@ -32,8 +48,6 @@ NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSyn
 }
 
 #pragma mark - FILES
-
-NSString *teamModelFilename = @"WoundMapUS";
 
 NSString *storeFilename = @"WoundMap.sqlite";
 NSString *sourceStoreFilename = @"DefaultData.sqlite";
@@ -107,14 +121,16 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     return storesDirectory;
 }
 
-- (NSURL *)storeURL {
+- (NSURL *)storeURL
+{
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     return [[self applicationStoresDirectory] URLByAppendingPathComponent:storeFilename];
 }
 
-- (NSURL *)sourceStoreURL {
+- (NSURL *)sourceStoreURL
+{
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
@@ -124,7 +140,8 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
                                    ofType:[sourceStoreFilename pathExtension]]];
 }
 
-- (NSURL *)localStoreURL {
+- (NSURL *)localStoreURL
+{
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
@@ -146,23 +163,8 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         return nil;
     }
     
-    _model = [NSManagedObjectModel mergedModelFromBundles:nil];
-    
-    // Use StackMob Cache Store in case network is unavailable
-    SM_CACHE_ENABLED = YES;
-    // Verbose logging
-    SM_CORE_DATA_DEBUG = NO;
-    // synch when network comes online
-    _synchWithStackMobOnNetworkAvailable = YES;
-    
-    // APIVersion 0 = Dev, 1 = Prod
-    _stackMobClient  = [[SMClient alloc] initWithAPIVersion:@"0" publicKey:@"69230b76-7939-4342-8d8f-4fb739e2aef4"];
-    _stackMobStore = [_stackMobClient coreDataStoreWithManagedObjectModel:_model];
-    // fetch from cache until user logged in - each view controller should update the policy as needed
-    _stackMobStore.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    _stackMobStore.savePolicy = SMSavePolicyNetworkThenCache;
-    
-    __weak SMCoreDataStore *cds = _stackMobStore;
+    [self setupCoreData];
+    // monitor network
     __weak __typeof(self) weakSelf = self;
     [_stackMobClient.session.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^SMFetchPolicy(SMNetworkStatus status) {
         [weakSelf alertUserNetworkReachabilityChanged:status];
@@ -181,174 +183,31 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         // else
         return SMFetchPolicyCacheOnly;
     }];
-    
-    __weak __typeof(_stackMobStore) weakStackMobStore = _stackMobStore;
-    [_stackMobStore setSyncCompletionCallback:^(NSArray *objects){
-        // Our syncing is complete, so change the policy to fetch from the network
-        [weakStackMobStore setFetchPolicy:SMFetchPolicyTryNetworkElseCache];
-        // Notify other views that they should reload their data from the network
-        [[NSNotificationCenter defaultCenter] postNotificationName:kStackMobNetworkSynchFinishedNotification object:nil];
-    }];
-    [_stackMobStore setSyncCallbackForFailedUpdates:^(NSArray *objects){
-        // Use to set a callback executed when updates on the server fail during a sync.
-        DLog(@"*** WARNING *** failed server updates: %@", objects);
-    }];
-    [_stackMobStore setSyncCallbackForFailedInserts:^(NSArray *objects){
-        // Use to set a callback executed when updates on the server fail during a sync.
-        DLog(@"*** WARNING *** failed server inserts: %@", objects);
-    }];
-    [_stackMobStore setSyncCallbackForFailedDeletes:^(NSArray *objects){
-        // Use to set a callback executed when updates on the server fail during a sync.
-        DLog(@"*** WARNING *** failed server deletes: %@", objects);
-    }];
-    
-    [self loadLocalStore];
+
     
     return self;
 }
 
-- (NSManagedObjectContext *)context
-{
-    WM_ASSERT_MAIN_THREAD;
-    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    [context setParentContext:[_stackMobStore mainThreadContext]];
-    [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-    [context setContextShouldObtainPermanentIDsBeforeSaving:YES];
-    [context setUndoManager:nil]; // the default on iOS
-    return context;
-}
-
 - (NSManagedObjectContext *)importContext
 {
-    NSManagedObjectContext *importContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [importContext performBlockAndWait:^{
-        [importContext setParentContext:[_stackMobStore contextForCurrentThread]];
-        [importContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-        [importContext setContextShouldObtainPermanentIDsBeforeSaving:YES];
-        [importContext setUndoManager:nil]; // the default on iOS
-    }];
-    return importContext;
+    WM_ASSERT_MAIN_THREAD;
+    return [NSManagedObjectContext MR_defaultContext];
 }
 
 - (NSManagedObjectContext *)sourceContext
 {
-    NSManagedObjectContext *sourceContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [sourceContext performBlockAndWait:^{
-        [sourceContext setParentContext:[_stackMobStore contextForCurrentThread]];
-        [sourceContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-        [sourceContext setContextShouldObtainPermanentIDsBeforeSaving:YES];
-        [sourceContext setUndoManager:nil]; // the default on iOS
-    }];
-    return sourceContext;
+    WM_ASSERT_MAIN_THREAD;
+    return [NSManagedObjectContext MR_defaultContext];
 }
 
-- (NSManagedObjectContext *)localContext
+- (NSManagedObjectModel *)model
 {
-    NSManagedObjectContext *localContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    [localContext performBlockAndWait:^{
-        [localContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-        [localContext setUndoManager:nil]; // the default on iOS
-    }];
-    return localContext;
+    return [NSManagedObjectModel defaultManagedObjectModel];
 }
 
-- (NSPersistentStoreCoordinator *)localCoordinator
+- (NSPersistentStoreCoordinator *)coordinator
 {
-    if (nil == _localCoordinator) {
-        _localCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
-    }
-    return _localCoordinator;
-}
-
-- (void)loadStore
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (_store) {
-        // Don’t load store if it’s already loaded
-        return;
-    }
-    // else
-    BOOL useMigrationManager = NO;
-    if (useMigrationManager && [self isMigrationNecessaryForStore:[self storeURL]]) {
-        [self performBackgroundManagedMigrationForStore:[self storeURL]];
-    } else {
-        NSDictionary *options =
-        @{
-          NSMigratePersistentStoresAutomaticallyOption:@YES
-          ,NSInferMappingModelAutomaticallyOption:@YES
-          //,NSSQLitePragmasOption: @{@"journal_mode": @"DELETE"} // Uncomment to disable WAL journal mode
-          };
-        NSError *error = nil;
-        _store = [_coordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                            configuration:nil
-                                                      URL:[self storeURL]
-                                                  options:options
-                                                    error:&error];
-        if (!_store) {
-            NSLog(@"Failed to add store. Error: %@", error);
-            abort();
-        } else {
-            NSLog(@"Successfully added store: %@", _store);
-        }
-    }
-}
-
-- (void)loadSourceStore
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (_sourceStore) {return;} // Don’t load source store if it's already loaded
-    
-    NSDictionary *options =
-    @{
-      NSReadOnlyPersistentStoreOption:@YES
-      };
-    NSError *error = nil;
-    _sourceStore =
-    [_sourceCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                     configuration:nil
-                                               URL:[self sourceStoreURL]
-                                           options:options
-                                             error:&error];
-    if (!_sourceStore) {
-        NSLog(@"Failed to add source store. Error: %@",
-              error);abort();
-    } else {
-        NSLog(@"Successfully added source store: %@", _sourceStore);
-    }
-}
-
-- (void)loadLocalStore
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (_localStore) {
-        return;
-    } // Don’t load source store if it's already loaded
-    
-    NSDictionary *options =
-    @{
-      NSMigratePersistentStoresAutomaticallyOption:@YES
-      ,NSInferMappingModelAutomaticallyOption:@YES
-      //,NSSQLitePragmasOption: @{@"journal_mode": @"DELETE"} // Uncomment to disable WAL journal mode
-      };
-    NSError *error = nil;
-    _localStore = [self.localCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                      configuration:nil
-                                                                URL:[self localStoreURL]
-                                                            options:options
-                                                              error:&error];
-    if (!_localStore) {
-        NSLog(@"Failed to add source store. Error: %@", error);
-        abort();
-    } else {
-        NSLog(@"Successfully added source store: %@", _localStore);
-        // seed
-    }
+    return [NSPersistentStoreCoordinator defaultStoreCoordinator];
 }
 
 - (void)setupCoreData
@@ -356,61 +215,28 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
+    
+    
+    _context = [NSManagedObjectContext MR_context];
+    _parentContext = _context.parentContext;
+    _importContext = [NSManagedObjectContext MR_contextWithParent:_context];
+
+    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:self.storeURL];
+    _localStore = [self.coordinator addAutoMigratingSqliteStoreNamed:self.localStoreURL];
+    [self seedLocalDatabase];
+
     //[self setDefaultDataStoreAsInitialStore];
     //[self loadStore];
     //[self importGroceryDudeTestData];
     //[self checkIfDefaultDataNeedsImporting];
 }
 
-#pragma mark - SAVING
-
-- (void)saveContext
+- (WMNetworkReachability *)networkReachability
 {
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+    if (nil == _networkReachability) {
+        _networkReachability = [[WMNetworkReachability alloc] init];
     }
-    NSManagedObjectContext *stackMobContext = [_stackMobStore contextForCurrentThread];
-    if (!stackMobContext) {
-        NSLog(@"StackMob context is nil, so FAILED to save");
-        return;
-    }
-    
-    NSError *error;
-    [stackMobContext saveAndWait:&error];
-    if (!error) {
-        NSLog(@"SAVED changes to StackMob store (in the foreground)");
-    } else {
-        NSLog(@"FAILED to save changes to StackMob store (in the foreground): %@", error);
-    }
-}
-
-- (void)backgroundSaveContext
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    NSManagedObjectContext *stackMobContext = [_stackMobStore contextForCurrentThread];
-    if (!stackMobContext) {
-        NSLog(@"StackMob context is nil, so FAILED to save");
-        return;
-    }
-    
-    [stackMobContext saveOnSuccess:^{
-        NSLog(@"SAVED changes to StackMob store (in the background)");
-    } onFailure:^(NSError *error) {
-        NSLog(@"FAILED to save changes to StackMob store (in the background): %@", error);
-    }];
-}
-
-- (void)saveContextWithCompletionHandler:(void (^)(NSError *))handler
-{
-    NSParameterAssert(handler != nil);
-    NSManagedObjectContext *stackMobContext = [_stackMobStore contextForCurrentThread];
-    [stackMobContext saveOnSuccess:^{
-        handler(nil);
-    } onFailure:^(NSError *error) {
-        handler(error);
-    }];
+    return _networkReachability;
 }
 
 #pragma mark - MIGRATION MANAGER
@@ -426,7 +252,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     }
     NSError *error = nil;
     NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:storeUrl error:&error];
-    NSManagedObjectModel *destinationModel = _coordinator.managedObjectModel;
+    NSManagedObjectModel *destinationModel = self.coordinator.managedObjectModel;
     if ([destinationModel isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata]) {
         if (debug==1) {
             NSLog(@"SKIPPED MIGRATION: Source is already compatible");}
@@ -483,19 +309,10 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     BOOL success = NO;
     NSError *error = nil;
     // STEP 1 - Gather the Source, Destination and Mapping Model
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator
-                                    metadataForPersistentStoreOfType:NSSQLiteStoreType
-                                    URL:sourceStore
-                                    error:&error];
-    
+    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:sourceStore error:&error];
     NSManagedObjectModel *sourceModel = [NSManagedObjectModel mergedModelFromBundles:nil forStoreMetadata:sourceMetadata];
-    
-    NSManagedObjectModel *destinModel = _model;
-    
-    NSMappingModel *mappingModel =
-    [NSMappingModel mappingModelFromBundles:nil
-                             forSourceModel:sourceModel
-                           destinationModel:destinModel];
+    NSManagedObjectModel *destinModel = self.model;
+    NSMappingModel *mappingModel = [NSMappingModel mappingModelFromBundles:nil forSourceModel:sourceModel destinationModel:destinModel];
     
     // STEP 2 - Perform migration, assuming the mapping model isn't null
     if (mappingModel) {
@@ -563,11 +380,11 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
             // When migration finishes, add the newly migrated store
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSError *error = nil;
-                _store = [_coordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                           configuration:nil
-                                                     URL:[self storeURL]
-                                                 options:nil
-                                                   error:&error];
+                _store = [self.coordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                        configuration:nil
+                                                                  URL:[self storeURL]
+                                                              options:nil
+                                                                error:&error];
                 if (!_store) {
                     NSLog(@"Failed to add a migrated store. Error: %@", error);
                     abort();
@@ -679,6 +496,24 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 }
 
 #pragma mark – DATA IMPORT
+
+- (void)seedLocalDatabase
+{
+    NSManagedObjectContext *managedObjectContext = self.importContext;
+    NSPersistentStore *store = self.localStore;
+    [managedObjectContext performBlock:^{
+        [WMBradenCare seedDatabase:managedObjectContext persistentStore:store];
+        [WMDefinition seedDatabase:managedObjectContext persistentStore:store];
+        [WMWoundType seedDatabase:managedObjectContext persistentStore:store];
+        [IAPProduct seedDatabase:managedObjectContext persistentStore:store];
+        [WMInstruction seedDatabase:managedObjectContext persistentStore:store];
+        [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            if (nil != error) {
+                [WMUtilities logError:error];
+            }
+        }];
+    }];
+}
 
 - (BOOL)isDefaultDataAlreadyImportedForStoreWithURL:(NSURL*)url
                                              ofType:(NSString*)type

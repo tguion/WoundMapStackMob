@@ -52,10 +52,8 @@
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
-    // handle stores
+    // initialize Core Data
     [self cdh];
-    WMLocalStoreManager *localStoreManager = [WMLocalStoreManager sharedInstance];
-    [localStoreManager seedLocalDatabase];
     // initialize UI
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]];

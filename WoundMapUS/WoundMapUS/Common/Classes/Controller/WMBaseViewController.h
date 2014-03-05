@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //  NS_DESIGNATED_INITIALIZER
 
-#import "StackMob.h"
-
 @class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager, WMPatientManager;
 @class WMPatient, WMWound, WMWoundPhoto, WMNavigationTrack, WMNavigationStage;
 @class WMProgressViewHUD;
