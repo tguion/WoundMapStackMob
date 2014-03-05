@@ -12,8 +12,6 @@
 
 @interface WMBaseViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
-@property (nonatomic) SMFetchPolicy fetchPolicy;
-@property (nonatomic) SMSavePolicy savePolicy;
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) BOOL isIPadIdiom;
@@ -40,6 +38,9 @@
 - (void)clearViewReferences NS_REQUIRES_SUPER;                              // clear all references to views
 - (void)clearDataCache NS_REQUIRES_SUPER;                                   // clear all cached data for new or nil document
 - (void)clearAllReferences NS_REQUIRES_SUPER;                               // clear all references and all observers
+
+- (void)registerForNotifications;
+- (void)unregisterForNotifications;
 
 @property (readonly, nonatomic) NSFetchRequest *fetchRequestForFetchedResultsController;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;

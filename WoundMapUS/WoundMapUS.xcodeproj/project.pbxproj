@@ -95,6 +95,7 @@
 		5F6DE54918B6FA4E00E87F7E /* WMIdListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE54718B6FA4E00E87F7E /* WMIdListViewController.xib */; };
 		5F6DE54D18B6FBF400E87F7E /* WMIdEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE54B18B6FBF400E87F7E /* WMIdEditorViewController.m */; };
 		5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE54C18B6FBF400E87F7E /* WMIdEditorViewController.xib */; };
+		5F910A3718C6B6D300CFA003 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F910A3618C6B6D300CFA003 /* FFEF.framework */; };
 		7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */; };
 		7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACD18B7CBA90054DDC3 /* WMWound.m */; };
 		7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DAD018B7CD480054DDC3 /* WMNavigationNodeButton.m */; };
@@ -562,6 +563,7 @@
 		5F6DE54A18B6FBF400E87F7E /* WMIdEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIdEditorViewController.h; sourceTree = "<group>"; };
 		5F6DE54B18B6FBF400E87F7E /* WMIdEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIdEditorViewController.m; sourceTree = "<group>"; };
 		5F6DE54C18B6FBF400E87F7E /* WMIdEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIdEditorViewController.xib; sourceTree = "<group>"; };
+		5F910A3618C6B6D300CFA003 /* FFEF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FFEF.framework; sourceTree = "<group>"; };
 		7D39DAC918B7CB9B0054DDC3 /* _WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWound.h; sourceTree = "<group>"; };
 		7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWound.m; sourceTree = "<group>"; };
 		7D39DACC18B7CBA90054DDC3 /* WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWound.h; sourceTree = "<group>"; };
@@ -1157,6 +1159,7 @@
 				7DB2068B18A7D4320004DC32 /* SystemConfiguration.framework in Frameworks */,
 				7DB2060B18A7D3400004DC32 /* CoreGraphics.framework in Frameworks */,
 				7DB2060F18A7D3400004DC32 /* CoreData.framework in Frameworks */,
+				5F910A3718C6B6D300CFA003 /* FFEF.framework in Frameworks */,
 				7DB2060D18A7D3400004DC32 /* UIKit.framework in Frameworks */,
 				7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */,
 			);
@@ -1327,6 +1330,7 @@
 		7DB205FC18A7D3400004DC32 = {
 			isa = PBXGroup;
 			children = (
+				5F910A3618C6B6D300CFA003 /* FFEF.framework */,
 				7DF4E9D018C4CF0C000A3F5B /* CorePlot-CocoaTouch.xcodeproj */,
 				7DB2061018A7D3400004DC32 /* WoundMapUS */,
 				7DB2063918A7D3400004DC32 /* WoundMapUSTests */,
@@ -2917,6 +2921,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/todd/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -2944,6 +2952,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/todd/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
 				HEADER_SEARCH_PATHS = (

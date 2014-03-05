@@ -8,6 +8,7 @@
 
 #import "CoreDataHelper.h"
 
+@class APLFatFractal;
 @class WMNavigationCoordinator;
 @class WMParticipant, User;
 
@@ -19,6 +20,6 @@
 @property (nonatomic, readonly) WMNavigationCoordinator *navigationCoordinator;
 
 @property (nonatomic, strong) WMParticipant *participant;   // clinician using the app
-@property (nonatomic, strong) NSString *stackMobUsername;   // logged team in StackMob
+@property (readonly, strong, nonatomic) APLFatFractal *ffInstance;
 
 @end
