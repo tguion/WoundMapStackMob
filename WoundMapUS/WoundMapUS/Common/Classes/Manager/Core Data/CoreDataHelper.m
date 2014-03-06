@@ -15,9 +15,8 @@
 #import "WMInstruction.h"
 #import "IAPProduct.h"
 #import "WMUtilities.h"
+#import "WMNetworkReachability.h"
 #import "WCAppDelegate.h"
-
-NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSynchFinishedNotification";
 
 @interface CoreDataHelper () <UIAlertViewDelegate>
 
@@ -25,7 +24,7 @@ NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSyn
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *context;                // child context main thread with parentContext managedObjectContext
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *importContext;          // child context private queue with context parent
 
-@property (nonatomic, strong) WMNetworkReachability *networkReachability;
+@property (nonatomic, strong) WMNetworkReachability *networkMonitor;
 
 @property (nonatomic, readonly) NSURL *storeURL;
 @property (nonatomic, readonly) NSURL *sourceStoreURL;
@@ -33,18 +32,27 @@ NSString *const kStackMobNetworkSynchFinishedNotification = @"StackMobNetworkSyn
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
-- (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status;
+- (void)alertUserNetworkReachabilityChanged:(WMNetworkStatus)status;
 
 - (void)seedLocalDatabase;
 
 @end
 
 @implementation CoreDataHelper
+
 #define debug 1
 
 - (WCAppDelegate *)appDelegate
 {
     return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (WMNetworkReachability *)networkMonitor
+{
+    if (nil == _networkMonitor) {
+        _networkMonitor = [WMNetworkReachability sharedInstance];
+    }
+    return _networkMonitor;
 }
 
 #pragma mark - FILES
@@ -166,25 +174,19 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     [self setupCoreData];
     // monitor network
     __weak __typeof(self) weakSelf = self;
-    [_stackMobClient.session.networkMonitor setNetworkStatusChangeBlockWithFetchPolicyReturn:^SMFetchPolicy(SMNetworkStatus status) {
+    [self.networkMonitor setNetworkStatusChangeBlock:^(WMNetworkStatus status) {
         [weakSelf alertUserNetworkReachabilityChanged:status];
-        if (status == SMNetworkStatusReachable) {
-            if (nil == weakSelf.appDelegate.stackMobUsername) {
-                return SMFetchPolicyCacheOnly;
-            }
-            // else
-            if (weakSelf.synchWithStackMobOnNetworkAvailable) {
-                [cds syncWithServer];
-                return SMFetchPolicyTryNetworkElseCache;
-            }
-            // else
-            return SMFetchPolicyCacheOnly;
+        // other stuff ??
+        switch (status) {
+            case WMNetworkStatusUnknown:
+                break;
+            case WMNetworkStatusNotReachable:
+                break;
+            case WMNetworkStatusReachable:
+                break;
         }
-        // else
-        return SMFetchPolicyCacheOnly;
     }];
 
-    
     return self;
 }
 

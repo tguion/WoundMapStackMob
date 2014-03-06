@@ -296,6 +296,7 @@
 		7DD8376218C7A5080028C2D3 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375718C7A5080028C2D3 /* AFURLConnectionOperation.m */; };
 		7DD8376318C7A5080028C2D3 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375918C7A5080028C2D3 /* AFXMLRequestOperation.m */; };
 		7DD8376418C7A5080028C2D3 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */; };
+		7DD8376818C8B3980028C2D3 /* WMNetworkReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */; };
 		7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */; };
 		7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
@@ -916,6 +917,8 @@
 		7DD8375918C7A5080028C2D3 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		7DD8375A18C7A5080028C2D3 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		7DD8376618C8B3980028C2D3 /* WMNetworkReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNetworkReachability.h; sourceTree = "<group>"; };
+		7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNetworkReachability.m; sourceTree = "<group>"; };
 		7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateConsultantViewController.h; sourceTree = "<group>"; };
 		7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateConsultantViewController.m; sourceTree = "<group>"; };
 		7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPCreateConsultantViewController.xib; sourceTree = "<group>"; };
@@ -1600,6 +1603,8 @@
 				7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */,
 				7DF4E9B118C4C8EA000A3F5B /* WMPDFPrintManager.h */,
 				7DF4E9B218C4C8EA000A3F5B /* WMPDFPrintManager.m */,
+				7DD8376618C8B3980028C2D3 /* WMNetworkReachability.h */,
+				7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -2513,6 +2518,7 @@
 				7D39DB2318B8217A0054DDC3 /* _WMWoundPhoto.m in Sources */,
 				7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */,
 				7DB206D218A839180004DC32 /* WMAddress.m in Sources */,
+				7DD8376818C8B3980028C2D3 /* WMNetworkReachability.m in Sources */,
 				7D39DBCC18BAB5EA0054DDC3 /* WMAdjustAlpaView.m in Sources */,
 				7DB206AE18A7D6950004DC32 /* CoreDataPickerTF.m in Sources */,
 				7DF4E95718C299DC000A3F5B /* _WMInterventionStatus.m in Sources */,

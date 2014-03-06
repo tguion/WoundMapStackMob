@@ -10,7 +10,6 @@
 #import <CoreData/CoreData.h>
 #import "MigrationVC.h"
 
-extern NSString *const kStackMobNetworkSynchFinishedNotification;
 extern NSString *storeFilename;
 extern NSString *sourceStoreFilename;
 extern NSString *localStoreFilename;
