@@ -76,7 +76,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return [self.coreDataHelper.stackMobStore mainThreadContext];
+    return self.coreDataHelper.context;
 }
 
 #pragma mark - Core
@@ -417,10 +417,11 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
     // wait for notification that document has saved
     self.exitingWoundMeasurement = YES;
-    [self.managedObjectContext saveOnSuccess:^{
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error){
         // nothing more
-    } onFailure:^(NSError *error){
-        [WMUtilities logError:error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
     }];
 }
 

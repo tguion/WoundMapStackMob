@@ -8,7 +8,7 @@
 
 #import "CoreDataHelper.h"
 
-@class APLFatFractal;
+@class FatFractal;
 @class WMNavigationCoordinator;
 @class WMParticipant, User;
 
@@ -20,6 +20,6 @@
 @property (nonatomic, readonly) WMNavigationCoordinator *navigationCoordinator;
 
 @property (nonatomic, strong) WMParticipant *participant;   // clinician using the app
-@property (readonly, strong, nonatomic) APLFatFractal *ffInstance;
+@property (readonly, strong, nonatomic) FatFractal *ff;
 
 @end

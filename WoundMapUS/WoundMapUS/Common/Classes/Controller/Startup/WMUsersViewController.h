@@ -9,11 +9,11 @@
 #import "WMBaseViewController.h"
 #import "WMUserSignInViewController.h"
 
-// TODO use WMBaseViewController
+@class WMParticipant;
 
-@interface WMUsersViewController : UITableViewController
+@interface WMUsersViewController : WMBaseViewController
 
 @property (nonatomic, weak) id<UserSignInDelegate> delegate;
-@property (strong, nonatomic) User *selectedUser;
+@property (strong, nonatomic) WMParticipant *selectedParticipant;
 
 @end

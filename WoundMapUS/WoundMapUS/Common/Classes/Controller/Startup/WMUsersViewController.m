@@ -7,31 +7,20 @@
 //
 
 #import "WMUsersViewController.h"
-#import "User.h"
+#import "WMParticipant.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
-@interface WMUsersViewController () <UserSignInDelegate, NSFetchedResultsControllerDelegate>
+@interface WMUsersViewController () <UserSignInDelegate>
+
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation WMUsersViewController
-
-- (WCAppDelegate *)appDelegate
-{
-    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-- (NSManagedObjectContext *)managedObjectContext
-{
-    return [self.appDelegate.coreDataHelper.stackMobStore contextForCurrentThread];
-}
 
 - (WMUserSignInViewController *)userSignInViewController
 {

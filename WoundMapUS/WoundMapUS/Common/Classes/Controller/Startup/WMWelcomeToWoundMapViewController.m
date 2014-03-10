@@ -18,7 +18,6 @@
 #import "WMInstructionsViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMButtonCell.h"
-#import "User.h"
 #import "WMParticipant.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
@@ -29,6 +28,7 @@
 #import "WMNavigationCoordinator.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
+#import <FFEF/FatFractal.h>
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateInitial,
@@ -79,9 +79,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    self.savePolicy = SMSavePolicyNetworkThenCache;
     self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
+    id<FFUserProtocol> user = [     loggedInUser
     if([self.coreDataHelper.stackMobClient isLoggedIn]) {
         __weak __typeof(self) weakSelf = self;
         [self.coreDataHelper.stackMobClient getLoggedInUserOnSuccess:^(NSDictionary *result) {

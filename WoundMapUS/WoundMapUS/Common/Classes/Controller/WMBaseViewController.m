@@ -367,16 +367,13 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return [self.appDelegate.coreDataHelper.stackMobStore contextForCurrentThread];
+    WM_ASSERT_MAIN_THREAD;
+    return self.appDelegate.coreDataHelper.context;
 }
 
 - (NSPersistentStore *)store
 {
-//    NSArray *persistentStores = [self.appDelegate.coreDataHelper.stackMobStore.persistentStoreCoordinator persistentStores];
-//    NSPersistentStore *store = [persistentStores firstObject];
-//    NSAssert1([store isKindOfClass:[SMIncrementalStore class]], @"Unexpected class, expected SMIncrementalStore, found %@", store);
-//    return store;
-    return nil;
+    return self.appDelegate.coreDataHelper.store;
 }
 
 - (WMUserDefaultsManager *)userDefaultsManager

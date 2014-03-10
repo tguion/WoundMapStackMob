@@ -42,7 +42,7 @@
 #import "WoundStatusMeasurementRollup.h"
 #import "WoundStatusMeasurementPlotDataSource.h"
 #import "PrintConfiguration.h"
-#import "CorePlotManager.h"
+#import "WMCorePlotManager.h"
 #import "LocalStoreManager.h"
 #import "UserDefaultsManager.h"
 #import "DocumentManager.h"

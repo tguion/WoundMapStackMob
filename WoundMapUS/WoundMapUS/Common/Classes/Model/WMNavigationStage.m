@@ -2,7 +2,6 @@
 #import "WMNavigationTrack.h"
 #import "WMNavigationNode.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 NSString *const kInitialWorkupStageTitle = @"Initial Workup";
 NSString *const kFollowupStageTitle = @"Follow Up";
