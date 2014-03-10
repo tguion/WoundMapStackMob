@@ -20,15 +20,7 @@
 
 @interface CoreDataHelper () <UIAlertViewDelegate>
 
-@property (nonatomic, readwrite, strong) NSManagedObjectContext *parentContext;          // context for private queue
-@property (nonatomic, readwrite, strong) NSManagedObjectContext *context;                // child context main thread with parentContext managedObjectContext
-@property (nonatomic, readwrite, strong) NSManagedObjectContext *importContext;          // child context private queue with context parent
-
 @property (nonatomic, strong) WMNetworkReachability *networkMonitor;
-
-@property (nonatomic, readonly) NSURL *storeURL;
-@property (nonatomic, readonly) NSURL *sourceStoreURL;
-@property (nonatomic, readonly) NSURL *localStoreURL;
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
@@ -58,17 +50,12 @@
 #pragma mark - FILES
 
 NSString *storeFilename = @"WoundMap.sqlite";
-NSString *sourceStoreFilename = @"DefaultData.sqlite";
 NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 #pragma mark - Alerts
 
-- (void)alertUserNetworkReachabilityChanged:(SMNetworkStatus)status
+- (void)alertUserNetworkReachabilityChanged:(WMNetworkStatus)status
 {
-    if (nil == self.appDelegate.stackMobUsername) {
-        return;
-    }
-    // else
     if (nil != _networkReachabilityAlertView) {
         return;
     }
@@ -76,15 +63,15 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     NSString *title = @"Network reachability changed";
     NSString *message = nil;
     switch (status) {
-        case SMNetworkStatusUnknown: {
+        case WMNetworkStatusUnknown: {
             message = @"Network reachability in unknown";
             break;
         }
-        case SMNetworkStatusNotReachable: {
+        case WMNetworkStatusNotReachable: {
             message = @"The network is no longer reachable. You will not receive updates from team members, nor team members have access to patient data you enter until the network becomes reachable again.";
             break;
         }
-        case SMNetworkStatusReachable: {
+        case WMNetworkStatusReachable: {
             message = @"The network is now reachable. You will receive updates from team members, and team members will have access to patient data you entered while the network was unavailable.";
             break;
         }
@@ -98,65 +85,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
                                               otherButtonTitles:nil];
     [alertView show];
     _networkReachabilityAlertView = alertView;
-}
-
-#pragma mark - PATHS
-
-- (NSString *)applicationDocumentsDirectory {
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class,NSStringFromSelector(_cmd));
-    }
-    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask,YES) lastObject];
-}
-
-- (NSURL *)applicationStoresDirectory {
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    NSURL *storesDirectory = [[NSURL fileURLWithPath:[self applicationDocumentsDirectory]] URLByAppendingPathComponent:@"Stores"];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:[storesDirectory path]]) {
-        NSError *error = nil;
-        if ([fileManager createDirectoryAtURL:storesDirectory
-                  withIntermediateDirectories:YES
-                                   attributes:nil
-                                        error:&error]) {
-            if (debug==1) {
-                NSLog(@"Successfully created Stores directory");}
-        }
-        else {NSLog(@"FAILED to create Stores directory: %@", error);}
-    }
-    return storesDirectory;
-}
-
-- (NSURL *)storeURL
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    return [[self applicationStoresDirectory] URLByAppendingPathComponent:storeFilename];
-}
-
-- (NSURL *)sourceStoreURL
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    
-    return [NSURL fileURLWithPath:[[NSBundle mainBundle]
-                                   pathForResource:[sourceStoreFilename stringByDeletingPathExtension]
-                                   ofType:[sourceStoreFilename pathExtension]]];
-}
-
-- (NSURL *)localStoreURL
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    
-    return [NSURL fileURLWithPath:[[NSBundle mainBundle]
-                                   pathForResource:[localStoreFilename stringByDeletingPathExtension]
-                                   ofType:[localStoreFilename pathExtension]]];
 }
 
 #pragma mark - SETUP
@@ -190,18 +118,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     return self;
 }
 
-- (NSManagedObjectContext *)importContext
-{
-    WM_ASSERT_MAIN_THREAD;
-    return [NSManagedObjectContext MR_defaultContext];
-}
-
-- (NSManagedObjectContext *)sourceContext
-{
-    WM_ASSERT_MAIN_THREAD;
-    return [NSManagedObjectContext MR_defaultContext];
-}
-
 - (NSManagedObjectModel *)model
 {
     return [NSManagedObjectModel defaultManagedObjectModel];
@@ -218,186 +134,18 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     
-    
-    _context = [NSManagedObjectContext MR_context];
-    _parentContext = _context.parentContext;
-    _importContext = [NSManagedObjectContext MR_contextWithParent:_context];
-
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:self.storeURL];
-    _localStore = [self.coordinator addAutoMigratingSqliteStoreNamed:self.localStoreURL];
+    [MagicalRecord setupCoreDataStackWithStoreNamed:[NSPersistentStore MR_urlForStoreName:storeFilename]];
+    _localStore = [self.coordinator MR_addSqliteStoreNamed:[NSPersistentStore MR_urlForStoreName:localStoreFilename] withOptions:nil configuration:@"Local"];
     [self seedLocalDatabase];
 
-    //[self setDefaultDataStoreAsInitialStore];
-    //[self loadStore];
-    //[self importGroceryDudeTestData];
-    //[self checkIfDefaultDataNeedsImporting];
 }
 
 - (WMNetworkReachability *)networkReachability
 {
-    if (nil == _networkReachability) {
-        _networkReachability = [[WMNetworkReachability alloc] init];
+    if (nil == _networkMonitor) {
+        _networkMonitor = [[WMNetworkReachability alloc] init];
     }
-    return _networkReachability;
-}
-
-#pragma mark - MIGRATION MANAGER
-
-- (BOOL)isMigrationNecessaryForStore:(NSURL*)storeUrl
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[self storeURL].path]) {
-        if (debug==1) {NSLog(@"SKIPPED MIGRATION: Source database missing.");}
-        return NO;
-    }
-    NSError *error = nil;
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:storeUrl error:&error];
-    NSManagedObjectModel *destinationModel = self.coordinator.managedObjectModel;
-    if ([destinationModel isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata]) {
-        if (debug==1) {
-            NSLog(@"SKIPPED MIGRATION: Source is already compatible");}
-        return NO;
-    }
-    return YES;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context
-{
-    if ([keyPath isEqualToString:@"migrationProgress"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            float progress = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-            self.migrationVC.progressView.progress = progress;
-            int percentage = progress * 100;
-            NSString *string =
-            [NSString stringWithFormat:@"Migration Progress: %i%%", percentage];
-            NSLog(@"%@",string);
-            self.migrationVC.label.text = string;
-        });
-    }
-}
-
-- (BOOL)replaceStore:(NSURL*)old withStore:(NSURL*)new
-{
-    BOOL success = NO;
-    NSError *Error = nil;
-    if ([[NSFileManager defaultManager] removeItemAtURL:old error:&Error]) {
-        Error = nil;
-        if ([[NSFileManager defaultManager]
-             moveItemAtURL:new toURL:old error:&Error]) {
-            success = YES;
-        } else {
-            if (debug==1) {
-                NSLog(@"FAILED to re-home new store %@", Error);
-            }
-        }
-    } else {
-        if (debug==1) {
-            NSLog(@"FAILED to remove old store %@: Error:%@", old, Error);
-        }
-    }
-    return success;
-}
-
-- (BOOL)migrateStore:(NSURL*)sourceStore
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    BOOL success = NO;
-    NSError *error = nil;
-    // STEP 1 - Gather the Source, Destination and Mapping Model
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:sourceStore error:&error];
-    NSManagedObjectModel *sourceModel = [NSManagedObjectModel mergedModelFromBundles:nil forStoreMetadata:sourceMetadata];
-    NSManagedObjectModel *destinModel = self.model;
-    NSMappingModel *mappingModel = [NSMappingModel mappingModelFromBundles:nil forSourceModel:sourceModel destinationModel:destinModel];
-    
-    // STEP 2 - Perform migration, assuming the mapping model isn't null
-    if (mappingModel) {
-        NSError *error = nil;
-        NSMigrationManager *migrationManager =
-        [[NSMigrationManager alloc] initWithSourceModel:sourceModel
-                                       destinationModel:destinModel];
-        [migrationManager addObserver:self
-                           forKeyPath:@"migrationProgress"
-                              options:NSKeyValueObservingOptionNew
-                              context:NULL];
-        
-        NSURL *destinStore =
-        [[self applicationStoresDirectory]
-         URLByAppendingPathComponent:@"Temp.sqlite"];
-        
-        success =
-        [migrationManager migrateStoreFromURL:sourceStore
-                                         type:NSSQLiteStoreType options:nil
-                             withMappingModel:mappingModel
-                             toDestinationURL:destinStore
-                              destinationType:NSSQLiteStoreType
-                           destinationOptions:nil
-                                        error:&error];
-        if (success) {
-            // STEP 3 - Replace the old store with the new migrated store
-            if ([self replaceStore:sourceStore withStore:destinStore]) {
-                if (debug==1) {
-                    NSLog(@"SUCCESSFULLY MIGRATED %@ to the Current Model",
-                          sourceStore.path);}
-                [migrationManager removeObserver:self
-                                      forKeyPath:@"migrationProgress"];
-            }
-        }
-        else {
-            if (debug==1) {NSLog(@"FAILED MIGRATION: %@",error);}
-        }
-    }
-    else {
-        if (debug==1) {NSLog(@"FAILED MIGRATION: Mapping Model is null");}
-    }
-    return YES; // indicates migration has finished, regardless of outcome
-}
-
-- (void)performBackgroundManagedMigrationForStore:(NSURL*)storeURL
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    
-    // Show migration progress view preventing the user from using the app
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    self.migrationVC =
-    [sb instantiateViewControllerWithIdentifier:@"migration"];
-    UIApplication *sa = [UIApplication sharedApplication];
-    UINavigationController *nc =
-    (UINavigationController*)sa.keyWindow.rootViewController;
-    [nc presentViewController:self.migrationVC animated:NO completion:nil];
-    
-    // Perform migration in the background, so it doesn't freeze the UI.
-    // This way progress can be shown to the user
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        BOOL done = [self migrateStore:storeURL];
-        if (done) {
-            // When migration finishes, add the newly migrated store
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *error = nil;
-                _store = [self.coordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                        configuration:nil
-                                                                  URL:[self storeURL]
-                                                              options:nil
-                                                                error:&error];
-                if (!_store) {
-                    NSLog(@"Failed to add a migrated store. Error: %@", error);
-                    abort();
-                } else {
-                    NSLog(@"Successfully added a migrated store: %@", _store);
-                }
-                [self.migrationVC dismissViewControllerAnimated:NO completion:nil];
-                self.migrationVC = nil;
-            });
-        }
-    });
+    return _networkMonitor;
 }
 
 #pragma mark - VALIDATION ERROR HANDLING
@@ -501,7 +249,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 - (void)seedLocalDatabase
 {
-    NSManagedObjectContext *managedObjectContext = self.importContext;
+    NSManagedObjectContext *managedObjectContext = self.parentContext;
     NSPersistentStore *store = self.localStore;
     [managedObjectContext performBlock:^{
         [WMBradenCare seedDatabase:managedObjectContext persistentStore:store];
@@ -516,379 +264,5 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         }];
     }];
 }
-
-- (BOOL)isDefaultDataAlreadyImportedForStoreWithURL:(NSURL*)url
-                                             ofType:(NSString*)type
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    NSError *error;
-    NSDictionary *dictionary =
-    [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:type
-                                                               URL:url
-                                                             error:&error];
-    if (error) {
-        NSLog(@"Error reading persistent store metadata: %@",
-              error.localizedDescription);
-    }
-    else {
-        NSNumber *defaultDataAlreadyImported =
-        [dictionary valueForKey:@"DefaultDataImported"];
-        if (![defaultDataAlreadyImported boolValue]) {
-            NSLog(@"Default Data has NOT already been imported");
-            return NO;
-        }
-    }
-    if (debug==1) {NSLog(@"Default Data HAS already been imported");}
-    return YES;
-}
-
-- (void)checkIfDefaultDataNeedsImporting
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (![self isDefaultDataAlreadyImportedForStoreWithURL:[self storeURL]
-                                                    ofType:NSSQLiteStoreType]) {
-        self.importAlertView =
-        [[UIAlertView alloc] initWithTitle:@"Import Default Data?"
-                                   message:@"If you've never used Grocery Cloud before then some default data might help you understand how to use it. Tap 'Import' to import default data. Tap 'Cancel' to skip the import, especially if you've done this before on other devices."
-                                  delegate:self
-                         cancelButtonTitle:@"Cancel"
-                         otherButtonTitles:@"Import", nil];
-        [self.importAlertView show];
-    }
-}
-
-- (void)importFromXML:(NSURL*)url
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    self.parser = [[NSXMLParser alloc] initWithContentsOfURL:url];
-    self.parser.delegate = self;
-    
-    NSLog(@"**** START PARSE OF %@", url.path);
-    [self.parser parse];
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"SomethingChanged" object:nil];
-    NSLog(@"***** END PARSE OF %@", url.path);
-}
-
-- (void)setDefaultDataAsImportedForStore:(NSPersistentStore*)aStore
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    // get metadata dictionary
-    NSMutableDictionary *dictionary =
-    [NSMutableDictionary dictionaryWithDictionary:[[aStore metadata] copy]];
-    
-    if (debug==1) {
-        NSLog(@"__Store Metadata BEFORE changes__ \n %@", dictionary);
-    }
-    
-    // edit metadata dictionary
-    [dictionary setObject:@YES forKey:@"DefaultDataImported"];
-    
-    // set metadata dictionary
-    [self.coordinator setMetadata:dictionary forPersistentStore:aStore];
-    
-    if (debug==1) {NSLog(@"__Store Metadata AFTER changes__ \n %@", dictionary);}
-}
-
-- (void)setDefaultDataStoreAsInitialStore
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:self.storeURL.path]) {
-        NSURL *defaultDataURL =
-        [NSURL fileURLWithPath:[[NSBundle mainBundle]
-                                pathForResource:@"DefaultData" ofType:@"sqlite"]];
-        NSError *error;
-        if (![fileManager copyItemAtURL:defaultDataURL
-                                  toURL:self.storeURL
-                                  error:&error]) {
-            NSLog(@"DefaultData.sqlite copy FAIL: %@",
-                  error.localizedDescription);
-        }
-        else {
-            NSLog(@"A copy of DefaultData.sqlite was set as the initial store for %@",
-                  self.storeURL.path);
-        }
-    }
-}
-
-- (void)deepCopyFromPersistentStore:(NSURL*)url
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@' %@", self.class,
-              NSStringFromSelector(_cmd),url.path);
-    }
-    // Periodically refresh the interface during the import
-    _importTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
-                                                    target:self
-                                                  selector:@selector(somethingChanged)
-                                                  userInfo:nil
-                                                   repeats:YES];
-    
-    NSManagedObjectContext *sourceContext = self.sourceContext;
-    NSManagedObjectContext *importContext = self.importContext;
-    NSManagedObjectContext *context = self.context;
-    [sourceContext performBlock:^{
-        
-        NSLog(@"*** STARTED DEEP COPY FROM DEFAULT DATA PERSISTENT STORE ***");
-        
-        NSArray *entitiesToCopy = [NSArray arrayWithObjects:@"LocationAtHome",@"LocationAtShop",@"Unit",@"Item", nil];
-        
-        CoreDataImporter *importer = [[CoreDataImporter alloc] initWithUniqueAttributes:[self selectedUniqueAttributes]];
-        
-        [importer deepCopyEntities:entitiesToCopy
-                       fromContext:sourceContext
-                         toContext:importContext];
-        
-        [context performBlock:^{
-            // Stop periodically refreshing the interface
-            [_importTimer invalidate];
-            
-            // Tell the interface to refresh once import completes
-            [self somethingChanged];
-        }];
-        
-        NSLog(@"*** FINISHED DEEP COPY FROM DEFAULT DATA PERSISTENT STORE ***");
-    }];
-}
-
-#pragma mark – TEST DATA IMPORT (This code is Grocery Cloud data specific)
-
-- (void)importGroceryDudeTestData
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    NSNumber *imported =
-    [[NSUserDefaults standardUserDefaults] objectForKey:@"TestDataImport"];
-    
-    if (!imported.boolValue) {
-        NSLog(@"Importing test data...");
-        NSManagedObjectContext *importContext = self.importContext;
-        [importContext performBlock:^{
-            
-            NSManagedObject *locationAtHome =
-            [NSEntityDescription insertNewObjectForEntityForName:@"LocationAtHome"
-                                          inManagedObjectContext:importContext];
-            NSManagedObject *locationAtShop =
-            [NSEntityDescription insertNewObjectForEntityForName:@"LocationAtShop"
-                                          inManagedObjectContext:importContext];
-            [locationAtHome setValue:@"Test Home Location" forKey:@"storedIn"];
-            [locationAtShop setValue:@"Test Shop Location" forKey:@"aisle"];
-            
-            for (int a = 1; a < 101; a++) {
-                
-                @autoreleasepool {
-                    
-                    // Insert Item
-                    NSManagedObject *item =
-                    [NSEntityDescription insertNewObjectForEntityForName:@"Item"
-                                                  inManagedObjectContext:importContext];
-                    [item setValue:[NSString stringWithFormat:@"Test Item %i",a]
-                            forKey:@"name"];
-                    [item setValue:locationAtHome
-                            forKey:@"locationAtHome"];
-                    [item setValue:locationAtShop
-                            forKey:@"locationAtShop"];
-                    
-                    // Insert Photo
-                    NSManagedObject *photo =
-                    [NSEntityDescription insertNewObjectForEntityForName:@"Item_Photo"
-                                                  inManagedObjectContext:importContext];
-                    [photo setValue:UIImagePNGRepresentation(
-                                                             [UIImage imageNamed:@"GroceryHead.png"])
-                             forKey:@"data"];
-                    
-                    // Relate Item and Photo
-                    [item setValue:photo forKey:@"photo"];
-                    
-                    NSLog(@"Inserting %@", [item valueForKey:@"name"]);
-                    [Faulter faultObjectWithID:photo.objectID
-                                     inContext:importContext];
-                    [Faulter faultObjectWithID:item.objectID
-                                     inContext:importContext];
-                }
-            }
-            [importContext reset];
-            
-            // ensure import was a one off
-            [[NSUserDefaults standardUserDefaults]
-             setObject:[NSNumber numberWithBool:YES]
-             forKey:@"TestDataImport"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }];
-    }
-    else {
-        NSLog(@"Skipped test data import");
-    }
-}
-
-#pragma mark - DELEGATE: UIAlertView
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (alertView == _networkReachabilityAlertView) {
-        _networkReachabilityAlertView = nil;
-        return;
-    }
-    // else
-    if (alertView == self.importAlertView) {
-        if (buttonIndex == 1) { // The ‘Import’ button on the importAlertView
-            
-            NSLog(@"Default Data Import Approved by User");
-            // XML Import
-            NSManagedObjectContext *importContext = self.importContext;
-            [importContext performBlock:^{
-                [self importFromXML:[[NSBundle mainBundle]
-                                     URLForResource:@"DefaultData"
-                                     withExtension:@"xml"]];
-            }];
-            // Deep Copy Import From Persistent Store
-            //[self loadSourceStore];
-            //[self deepCopyFromPersistentStore:[self sourceStoreURL]];
-            
-        } else {
-            NSLog(@"Default Data Import Cancelled by User");
-        }
-        // Set the data as imported regardless of the user's decision
-        [self setDefaultDataAsImportedForStore:_store];
-    }
-}
-
-// Called when we cancel a view (eg. the user clicks the Home button). This is not called when the user clicks the cancel button.
-// If not defined in the delegate, we simulate a click in the cancel button
-- (void)alertViewCancel:(UIAlertView *)alertView
-{
-    if (alertView == _networkReachabilityAlertView) {
-        _networkReachabilityAlertView = nil;
-    }
-}
-
-#pragma mark - UNIQUE ATTRIBUTE SELECTION (This code is Grocery Cloud data specific and is used when instantiating CoreDataImporter)
-
-- (NSDictionary*)selectedUniqueAttributes
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    NSMutableArray *entities   = [NSMutableArray new];
-    NSMutableArray *attributes = [NSMutableArray new];
-    
-    // Select an attribute in each entity for uniqueness
-    [entities addObject:@"Item"];[attributes addObject:@"name"];
-    [entities addObject:@"Unit"];[attributes addObject:@"name"];
-    [entities addObject:@"LocationAtHome"];[attributes addObject:@"storedIn"];
-    [entities addObject:@"LocationAtShop"];[attributes addObject:@"aisle"];
-    [entities addObject:@"Item_Photo"];[attributes addObject:@"data"];
-    
-    NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:attributes
-                                                           forKeys:entities];
-    return dictionary;
-}
-
-#pragma mark - DELEGATE: NSXMLParser (This code is Grocery Cloud data specific)
-
-- (void)parser:(NSXMLParser *)parser
-parseErrorOccurred:(NSError *)parseError
-{
-    if (debug==1) {
-        NSLog(@"Parser Error: %@", parseError.localizedDescription);
-    }
-}
-
-- (void)parser:(NSXMLParser *)parser
-didStartElement:(NSString *)elementName
-  namespaceURI:(NSString *)namespaceURI
- qualifiedName:(NSString *)qName
-    attributes:(NSDictionary *)attributeDict
-{
-    NSManagedObjectContext *importContext = self.importContext;
-    [importContext performBlockAndWait:^{
-        
-        // STEP 1: Process only the 'item' element in the XML file
-        if ([elementName isEqualToString:@"item"]) {
-            
-            // STEP 2: Prepare the Core Data Importer
-            CoreDataImporter *importer =
-            [[CoreDataImporter alloc] initWithUniqueAttributes:
-             [self selectedUniqueAttributes]];
-            
-            // STEP 3a: Insert a unique 'Item' object
-            NSManagedObject *item =
-            [importer insertBasicObjectInTargetEntity:@"Item"
-                                targetEntityAttribute:@"name"
-                                   sourceXMLAttribute:@"name"
-                                        attributeDict:attributeDict
-                                              context:importContext];
-            
-            // STEP 3b: Insert a unique 'Unit' object
-            NSManagedObject *unit =
-            [importer insertBasicObjectInTargetEntity:@"Unit"
-                                targetEntityAttribute:@"name"
-                                   sourceXMLAttribute:@"unit"
-                                        attributeDict:attributeDict
-                                              context:importContext];
-            
-            // STEP 3c: Insert a unique 'LocationAtHome' object
-            NSManagedObject *locationAtHome =
-            [importer insertBasicObjectInTargetEntity:@"LocationAtHome"
-                                targetEntityAttribute:@"storedIn"
-                                   sourceXMLAttribute:@"locationathome"
-                                        attributeDict:attributeDict
-                                              context:importContext];
-            
-            // STEP 3d: Insert a unique 'LocationAtShop' object
-            NSManagedObject *locationAtShop =
-            [importer insertBasicObjectInTargetEntity:@"LocationAtShop"
-                                targetEntityAttribute:@"aisle"
-                                   sourceXMLAttribute:@"locationatshop"
-                                        attributeDict:attributeDict
-                                              context:importContext];
-            
-            // STEP 4: Manually add extra attribute values.
-            [item setValue:@NO forKey:@"listed"];
-            
-            // STEP 5: Create relationships
-            [item setValue:unit forKey:@"unit"];
-            [item setValue:locationAtHome forKey:@"locationAtHome"];
-            [item setValue:locationAtShop forKey:@"locationAtShop"];
-            
-            // STEP 6: Save new objects to the persistent store.
-            [CoreDataImporter saveContext:importContext];
-            
-            // STEP 7: Turn objects into faults to save memory
-            [Faulter faultObjectWithID:item.objectID inContext:importContext];
-            [Faulter faultObjectWithID:unit.objectID inContext:importContext];
-            [Faulter faultObjectWithID:locationAtHome.objectID inContext:importContext];
-            [Faulter faultObjectWithID:locationAtShop.objectID inContext:importContext];
-        }
-    }];
-}
-
-#pragma mark – UNDERLYING DATA CHANGE NOTIFICATION
-
-- (void)somethingChanged
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    // Send a notification that tells observing interfaces to refresh their data
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"SomethingChanged" object:nil];
-}
-
 
 @end

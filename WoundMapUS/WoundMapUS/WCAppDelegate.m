@@ -80,7 +80,8 @@
     }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [[self cdh] saveContext];
+    // TODO saves changes in the application's managed object context before the application terminates.
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -105,22 +106,10 @@
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
-    // Saves changes in the application's managed object context before the application terminates.
-    [[self cdh] saveContext];
+    // TODO saves changes in the application's managed object context before the application terminates.
+
 }
 
-#pragma mark - Global Data
-
-- (void)setStackMobUsername:(NSString *)stackMobUsername
-{
-    if (_stackMobUsername == stackMobUsername) {
-        return;
-    }
-    // else
-    _stackMobUsername = stackMobUsername;
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    userDefaultsManager.lastTeamName = stackMobUsername;
-}
 
 #pragma mark - Managers
 

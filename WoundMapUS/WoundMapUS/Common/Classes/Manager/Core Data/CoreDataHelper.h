@@ -16,22 +16,13 @@ extern NSString *localStoreFilename;
 
 @interface CoreDataHelper : NSObject <UIAlertViewDelegate,NSXMLParserDelegate>
 
-@property (nonatomic, readonly) NSManagedObjectContext *parentContext;          // ??? context for current thread
+@property (nonatomic, readonly) NSManagedObjectContext *parentContext;          // MagicalRecord private queue parent managedObjectContext
 @property (nonatomic, readonly) NSManagedObjectContext *context;                // child context of parentContext managedObjectContext
-@property (nonatomic, readonly) NSManagedObjectContext *importContext;          // child context of context
 
 @property (nonatomic, readonly) NSManagedObjectModel *model;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;      // coordinator for stores
-@property (nonatomic, readonly) NSPersistentStore *store;                       // ???
+@property (nonatomic, readonly) NSPersistentStore *store;                       // MagicalRecord default store
 @property (nonatomic, readonly) NSPersistentStore *localStore;                  // local store - use for instructions and such
-
-@property (nonatomic, retain) MigrationVC *migrationVC;
-
-@property (nonatomic, retain) UIAlertView *importAlertView;
-
-@property (nonatomic, strong) NSXMLParser *parser;
-
-@property (nonatomic, strong) NSTimer *importTimer;
 
 - (void)setupCoreData;
 
