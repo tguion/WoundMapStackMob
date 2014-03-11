@@ -4,12 +4,12 @@
 #import "_WMTelecom.h"
 
 const struct WMTelecomAttributes WMTelecomAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
+	.updatedAt = @"updatedAt",
 	.use = @"use",
 	.value = @"value",
-	.wmtelecom_id = @"wmtelecom_id",
 };
 
 const struct WMTelecomRelationships WMTelecomRelationships = {
@@ -58,7 +58,14 @@ const struct WMTelecomFetchedProperties WMTelecomFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -91,7 +98,7 @@ const struct WMTelecomFetchedProperties WMTelecomFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
+@dynamic updatedAt;
 
 
 
@@ -106,13 +113,6 @@ const struct WMTelecomFetchedProperties WMTelecomFetchedProperties = {
 
 
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmtelecom_id;
 
 
 

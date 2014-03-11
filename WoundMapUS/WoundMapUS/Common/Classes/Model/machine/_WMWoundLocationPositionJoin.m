@@ -4,10 +4,10 @@
 #import "_WMWoundLocationPositionJoin.h"
 
 const struct WMWoundLocationPositionJoinAttributes WMWoundLocationPositionJoinAttributes = {
-	.createddate = @"createddate",
-	.lastmoddate = @"lastmoddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.sortRank = @"sortRank",
-	.wmwoundlocationpositionjoin_id = @"wmwoundlocationpositionjoin_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMWoundLocationPositionJoinRelationships WMWoundLocationPositionJoinRelationships = {
@@ -56,14 +56,14 @@ const struct WMWoundLocationPositionJoinFetchedProperties WMWoundLocationPositio
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -96,7 +96,7 @@ const struct WMWoundLocationPositionJoinFetchedProperties WMWoundLocationPositio
 
 
 
-@dynamic wmwoundlocationpositionjoin_id;
+@dynamic updatedAt;
 
 
 

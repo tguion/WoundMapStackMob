@@ -6,13 +6,11 @@
 const struct WMCarePlanGroupAttributes WMCarePlanGroupAttributes = {
 	.closedFlag = @"closedFlag",
 	.continueCount = @"continueCount",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
-	.wmcareplangroup_id = @"wmcareplangroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMCarePlanGroupRelationships WMCarePlanGroupRelationships = {
@@ -125,21 +123,7 @@ const struct WMCarePlanGroupFetchedProperties WMCarePlanGroupFetchedProperties =
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -147,6 +131,13 @@ const struct WMCarePlanGroupFetchedProperties WMCarePlanGroupFetchedProperties =
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -179,14 +170,7 @@ const struct WMCarePlanGroupFetchedProperties WMCarePlanGroupFetchedProperties =
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
-@dynamic wmcareplangroup_id;
+@dynamic updatedAt;
 
 
 

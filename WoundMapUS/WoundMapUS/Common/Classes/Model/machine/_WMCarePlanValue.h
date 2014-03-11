@@ -5,15 +5,13 @@
 
 
 extern const struct WMCarePlanValueAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *revisedFlag;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *value;
-	__unsafe_unretained NSString *wmcareplanvalue_id;
 } WMCarePlanValueAttributes;
 
 extern const struct WMCarePlanValueRelationships {
@@ -26,8 +24,6 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 @class WMCarePlanCategory;
 @class WMCarePlanGroup;
-
-
 
 
 
@@ -50,31 +46,21 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* dateModified;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -89,16 +75,6 @@ extern const struct WMCarePlanValueFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -128,21 +104,21 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* value;
 
 
 
 //- (BOOL)validateValue:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmcareplanvalue_id;
-
-
-
-//- (BOOL)validateWmcareplanvalue_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -172,20 +148,14 @@ extern const struct WMCarePlanValueFetchedProperties {
 @interface _WMCarePlanValue (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -195,12 +165,6 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -220,14 +184,14 @@ extern const struct WMCarePlanValueFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmcareplanvalue_id;
-- (void)setPrimitiveWmcareplanvalue_id:(NSString*)value;
 
 
 

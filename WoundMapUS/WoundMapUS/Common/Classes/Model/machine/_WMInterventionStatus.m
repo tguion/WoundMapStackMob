@@ -5,16 +5,16 @@
 
 const struct WMInterventionStatusAttributes WMInterventionStatusAttributes = {
 	.activeFlag = @"activeFlag",
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wminterventionstatus_id = @"wminterventionstatus_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMInterventionStatusRelationships WMInterventionStatusRelationships = {
@@ -111,7 +111,7 @@ const struct WMInterventionStatusFetchedProperties WMInterventionStatusFetchedPr
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -119,6 +119,13 @@ const struct WMInterventionStatusFetchedProperties WMInterventionStatusFetchedPr
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -146,13 +153,6 @@ const struct WMInterventionStatusFetchedProperties WMInterventionStatusFetchedPr
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -231,7 +231,7 @@ const struct WMInterventionStatusFetchedProperties WMInterventionStatusFetchedPr
 
 
 
-@dynamic wminterventionstatus_id;
+@dynamic updatedAt;
 
 
 

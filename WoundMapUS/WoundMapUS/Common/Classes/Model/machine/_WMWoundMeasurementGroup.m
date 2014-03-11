@@ -6,13 +6,11 @@
 const struct WMWoundMeasurementGroupAttributes WMWoundMeasurementGroupAttributes = {
 	.closedFlag = @"closedFlag",
 	.continueCount = @"continueCount",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
-	.wmwoundmeasurementgroup_id = @"wmwoundmeasurementgroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMWoundMeasurementGroupRelationships WMWoundMeasurementGroupRelationships = {
@@ -126,21 +124,7 @@ const struct WMWoundMeasurementGroupFetchedProperties WMWoundMeasurementGroupFet
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -148,6 +132,13 @@ const struct WMWoundMeasurementGroupFetchedProperties WMWoundMeasurementGroupFet
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -180,14 +171,7 @@ const struct WMWoundMeasurementGroupFetchedProperties WMWoundMeasurementGroupFet
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
-@dynamic wmwoundmeasurementgroup_id;
+@dynamic updatedAt;
 
 
 

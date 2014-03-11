@@ -5,13 +5,13 @@
 
 
 extern const struct WMWoundTreatmentAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *iapIdentifier;
 	__unsafe_unretained NSString *keyboardType;
 	__unsafe_unretained NSString *label;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *options;
 	__unsafe_unretained NSString *placeHolder;
@@ -21,8 +21,8 @@ extern const struct WMWoundTreatmentAttributes {
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *unit;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *valueTypeCode;
-	__unsafe_unretained NSString *wmwoundtreatment_id;
 } WMWoundTreatmentAttributes;
 
 extern const struct WMWoundTreatmentRelationships {
@@ -72,11 +72,11 @@ extern const struct WMWoundTreatmentFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -87,6 +87,16 @@ extern const struct WMWoundTreatmentFetchedProperties {
 
 
 //- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -135,16 +145,6 @@ extern const struct WMWoundTreatmentFetchedProperties {
 
 
 //- (BOOL)validateLabel:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -248,6 +248,16 @@ extern const struct WMWoundTreatmentFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* valueTypeCode;
 
 
@@ -257,16 +267,6 @@ extern const struct WMWoundTreatmentFetchedProperties {
 - (void)setValueTypeCodeValue:(int16_t)value_;
 
 //- (BOOL)validateValueTypeCode:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmwoundtreatment_id;
-
-
-
-//- (BOOL)validateWmwoundtreatment_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -325,14 +325,20 @@ extern const struct WMWoundTreatmentFetchedProperties {
 @interface _WMWoundTreatment (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSString*)primitiveDefinition;
 - (void)setPrimitiveDefinition:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -363,12 +369,6 @@ extern const struct WMWoundTreatmentFetchedProperties {
 
 - (NSString*)primitiveLabel;
 - (void)setPrimitiveLabel:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -433,17 +433,17 @@ extern const struct WMWoundTreatmentFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveValueTypeCode;
 - (void)setPrimitiveValueTypeCode:(NSNumber*)value;
 
 - (int16_t)primitiveValueTypeCodeValue;
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmwoundtreatment_id;
-- (void)setPrimitiveWmwoundtreatment_id:(NSString*)value;
 
 
 

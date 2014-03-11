@@ -4,17 +4,17 @@
 #import "_WMMedicationCategory.h"
 
 const struct WMMedicationCategoryAttributes WMMedicationCategoryAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.iapIdentifier = @"iapIdentifier",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmmedicationcategory_id = @"wmmedicationcategory_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMMedicationCategoryRelationships WMMedicationCategoryRelationships = {
@@ -73,7 +73,7 @@ const struct WMMedicationCategoryFetchedProperties WMMedicationCategoryFetchedPr
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -81,6 +81,13 @@ const struct WMMedicationCategoryFetchedProperties WMMedicationCategoryFetchedPr
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -114,13 +121,6 @@ const struct WMMedicationCategoryFetchedProperties WMMedicationCategoryFetchedPr
 
 
 @dynamic iapIdentifier;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -200,7 +200,7 @@ const struct WMMedicationCategoryFetchedProperties WMMedicationCategoryFetchedPr
 
 
 
-@dynamic wmmedicationcategory_id;
+@dynamic updatedAt;
 
 
 

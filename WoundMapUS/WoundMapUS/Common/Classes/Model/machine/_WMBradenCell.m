@@ -4,14 +4,14 @@
 #import "_WMBradenCell.h"
 
 const struct WMBradenCellAttributes WMBradenCellAttributes = {
-	.createddate = @"createddate",
-	.lastmoddate = @"lastmoddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.primaryDescription = @"primaryDescription",
 	.secondaryDescription = @"secondaryDescription",
 	.selectedFlag = @"selectedFlag",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmbradencell_id = @"wmbradencell_id",
 };
 
 const struct WMBradenCellRelationships WMBradenCellRelationships = {
@@ -64,14 +64,14 @@ const struct WMBradenCellFetchedProperties WMBradenCellFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -125,6 +125,13 @@ const struct WMBradenCellFetchedProperties WMBradenCellFetchedProperties = {
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
 
 
@@ -146,13 +153,6 @@ const struct WMBradenCellFetchedProperties WMBradenCellFetchedProperties = {
 - (void)setPrimitiveValueValue:(int16_t)value_ {
 	[self setPrimitiveValue:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmbradencell_id;
-
 
 
 

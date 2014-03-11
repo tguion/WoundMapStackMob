@@ -4,10 +4,10 @@
 #import "_WMOrganization.h"
 
 const struct WMOrganizationAttributes WMOrganizationAttributes = {
-	.createddate = @"createddate",
-	.lastmoddate = @"lastmoddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.name = @"name",
-	.wmorganization_id = @"wmorganization_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMOrganizationRelationships WMOrganizationRelationships = {
@@ -51,14 +51,14 @@ const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -72,7 +72,7 @@ const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
 
 
 
-@dynamic wmorganization_id;
+@dynamic updatedAt;
 
 
 

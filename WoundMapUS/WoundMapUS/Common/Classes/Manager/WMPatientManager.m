@@ -10,7 +10,6 @@
 #import "WMPatient.h"
 #import "WMPerson.h"
 #import "WMPatientConsultant.h"
-#import "User.h"
 #import "WMParticipant.h"
 #import "WMNavigationStage.h"
 #import "CoreDataHelper.h"
@@ -57,12 +56,12 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return [self.coreDataHelper.stackMobStore contextForCurrentThread];
+    return [NSManagedObjectContext MR_contextForCurrentThread];
 }
 
 - (NSPersistentStore *)store
 {
-    return nil;
+    return self.coreDataHelper.store;
 }
 
 - (WMUserDefaultsManager *)userDefaultsManager

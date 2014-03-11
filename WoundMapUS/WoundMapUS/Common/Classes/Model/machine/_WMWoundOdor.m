@@ -4,7 +4,9 @@
 #import "_WMWoundOdor.h"
 
 const struct WMWoundOdorAttributes WMWoundOdorAttributes = {
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.label = @"label",
 	.loincCode = @"loincCode",
@@ -15,6 +17,7 @@ const struct WMWoundOdorAttributes WMWoundOdorAttributes = {
 	.sortRank = @"sortRank",
 	.title = @"title",
 	.unit = @"unit",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
 };
 
@@ -78,7 +81,21 @@ const struct WMWoundOdorFetchedProperties WMWoundOdorFetchedProperties = {
 
 
 
+@dynamic createdAt;
+
+
+
+
+
+
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -206,6 +223,13 @@ const struct WMWoundOdorFetchedProperties WMWoundOdorFetchedProperties = {
 
 
 @dynamic unit;
+
+
+
+
+
+
+@dynamic updatedAt;
 
 
 

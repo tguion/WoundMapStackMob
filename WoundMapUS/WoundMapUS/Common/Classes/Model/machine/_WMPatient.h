@@ -7,18 +7,16 @@
 extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *acquiredByConsultant;
 	__unsafe_unretained NSString *archivedFlag;
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateOfBirth;
+	__unsafe_unretained NSString *ffUrl;
+	__unsafe_unretained NSString *ffUrl1;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *gender;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *patientStatusMessages;
-	__unsafe_unretained NSString *sm_owner;
 	__unsafe_unretained NSString *ssn;
 	__unsafe_unretained NSString *thumbnail;
-	__unsafe_unretained NSString *wmpatient_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMPatientAttributes;
 
 extern const struct WMPatientRelationships {
@@ -49,8 +47,6 @@ extern const struct WMPatientFetchedProperties {
 @class WMSkinAssessmentGroup;
 @class WMNavigationStage;
 @class WMWound;
-
-
 
 
 
@@ -106,31 +102,11 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateModified;
-
-
-
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -141,6 +117,26 @@ extern const struct WMPatientFetchedProperties {
 
 
 //- (BOOL)validateDateOfBirth:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl1;
+
+
+
+//- (BOOL)validateFfUrl1:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -170,31 +166,11 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* patientStatusMessages;
 
 
 
 //- (BOOL)validatePatientStatusMessages:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* sm_owner;
-
-
-
-//- (BOOL)validateSm_owner:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -220,11 +196,11 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmpatient_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmpatient_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -380,26 +356,26 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSDate*)primitiveDateOfBirth;
 - (void)setPrimitiveDateOfBirth:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl1;
+- (void)setPrimitiveFfUrl1:(NSString*)value;
 
 
 
@@ -419,20 +395,8 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitivePatientStatusMessages;
 - (void)setPrimitivePatientStatusMessages:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveSm_owner;
-- (void)setPrimitiveSm_owner:(NSString*)value;
 
 
 
@@ -449,8 +413,8 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSString*)primitiveWmpatient_id;
-- (void)setPrimitiveWmpatient_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

@@ -20,6 +20,7 @@
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
 #import "WMPolicyManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -37,6 +38,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
 
 @property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueWidth;
 @property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueLength;
@@ -79,6 +81,11 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     return self.coreDataHelper.context;
 }
 
+- (WMUserDefaultsManager *)userDefaultsManager
+{
+    return [WMUserDefaultsManager sharedInstance];
+}
+
 #pragma mark - Core
 
 - (void)clearPatientCache
@@ -100,6 +107,10 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     // else
     [self clearPatientCache];
     _patient = patient;
+    // save user defaults
+    if ([patient.ffUrl length] > 0) {
+        self.userDefaultsManager.lastPatientId = patient.ffUrl;
+    }
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
     }
@@ -125,9 +136,9 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
     // else
     WMWound *wound = nil;
-    NSString *patientId = _patient.wmpatient_id;
-    NSString *woundId = [[WMUserDefaultsManager sharedInstance] lastWoundIdOnDeviceForPatietId:patientId];
-    if ([woundId length] > 0) {
+    NSString *ffUrl = _patient.ffUrl;
+    NSString *woundFFURL = [[WMUserDefaultsManager sharedInstance] lastWoundFFURLOnDeviceForPatientFFURL:ffUrl];
+    if ([woundFFURL length] > 0) {
         wound = [WMWound woundForPatient:_patient woundId:woundId];
     }
     if (nil == wound) {

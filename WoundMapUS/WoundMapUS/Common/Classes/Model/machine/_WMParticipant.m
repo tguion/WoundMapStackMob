@@ -4,15 +4,14 @@
 #import "_WMParticipant.h"
 
 const struct WMParticipantAttributes WMParticipantAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
+	.createdAt = @"createdAt",
 	.dateLastSignin = @"dateLastSignin",
 	.email = @"email",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.name = @"name",
 	.permissions = @"permissions",
-	.wmparticipant_id = @"wmparticipant_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMParticipantRelationships WMParticipantRelationships = {
@@ -68,14 +67,7 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
+@dynamic createdAt;
 
 
 
@@ -90,6 +82,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 @dynamic email;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -117,13 +116,6 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -162,7 +154,7 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
-@dynamic wmparticipant_id;
+@dynamic updatedAt;
 
 
 

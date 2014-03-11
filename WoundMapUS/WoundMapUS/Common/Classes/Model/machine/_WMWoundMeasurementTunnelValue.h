@@ -8,7 +8,6 @@ extern const struct WMWoundMeasurementTunnelValueAttributes {
 	__unsafe_unretained NSString *fromOClockValue;
 	__unsafe_unretained NSString *sectionTitle;
 	__unsafe_unretained NSString *sortRank;
-	__unsafe_unretained NSString *wmwoundmeasurementtunnelvalue_id;
 } WMWoundMeasurementTunnelValueAttributes;
 
 extern const struct WMWoundMeasurementTunnelValueRelationships {
@@ -16,7 +15,6 @@ extern const struct WMWoundMeasurementTunnelValueRelationships {
 
 extern const struct WMWoundMeasurementTunnelValueFetchedProperties {
 } WMWoundMeasurementTunnelValueFetchedProperties;
-
 
 
 
@@ -74,16 +72,6 @@ extern const struct WMWoundMeasurementTunnelValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmwoundmeasurementtunnelvalue_id;
-
-
-
-//- (BOOL)validateWmwoundmeasurementtunnelvalue_id:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 
 @end
 
@@ -114,12 +102,6 @@ extern const struct WMWoundMeasurementTunnelValueFetchedProperties {
 
 - (int16_t)primitiveSortRankValue;
 - (void)setPrimitiveSortRankValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmwoundmeasurementtunnelvalue_id;
-- (void)setPrimitiveWmwoundmeasurementtunnelvalue_id:(NSString*)value;
 
 
 

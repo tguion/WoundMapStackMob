@@ -4,14 +4,12 @@
 #import "_WMWoundPositionValue.h"
 
 const struct WMWoundPositionValueAttributes WMWoundPositionValueAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmwoundpositionvalue_id = @"wmwoundpositionvalue_id",
 };
 
 const struct WMWoundPositionValueRelationships WMWoundPositionValueRelationships = {
@@ -60,21 +58,14 @@ const struct WMWoundPositionValueFetchedProperties WMWoundPositionValueFetchedPr
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic ffUrl;
 
 
 
@@ -107,13 +98,6 @@ const struct WMWoundPositionValueFetchedProperties WMWoundPositionValueFetchedPr
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic title;
 
 
@@ -121,14 +105,14 @@ const struct WMWoundPositionValueFetchedProperties WMWoundPositionValueFetchedPr
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmwoundpositionvalue_id;
 
 
 

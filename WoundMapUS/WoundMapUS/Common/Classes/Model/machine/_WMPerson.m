@@ -4,13 +4,13 @@
 #import "_WMPerson.h"
 
 const struct WMPersonAttributes WMPersonAttributes = {
-	.createddate = @"createddate",
-	.lastmoddate = @"lastmoddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.nameFamily = @"nameFamily",
 	.nameGiven = @"nameGiven",
 	.namePrefix = @"namePrefix",
 	.nameSuffix = @"nameSuffix",
-	.wmperson_id = @"wmperson_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMPersonRelationships WMPersonRelationships = {
@@ -56,14 +56,14 @@ const struct WMPersonFetchedProperties WMPersonFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -98,7 +98,7 @@ const struct WMPersonFetchedProperties WMPersonFetchedProperties = {
 
 
 
-@dynamic wmperson_id;
+@dynamic updatedAt;
 
 
 

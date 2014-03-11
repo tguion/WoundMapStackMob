@@ -5,8 +5,8 @@
 
 const struct WMWoundPhotoAttributes WMWoundPhotoAttributes = {
 	.comments = @"comments",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.imageHeight = @"imageHeight",
 	.imageOrientation = @"imageOrientation",
@@ -21,6 +21,7 @@ const struct WMWoundPhotoAttributes WMWoundPhotoAttributes = {
 	.transformSizeAsString = @"transformSizeAsString",
 	.transformTranslationX = @"transformTranslationX",
 	.transformTranslationY = @"transformTranslationY",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMWoundPhotoRelationships WMWoundPhotoRelationships = {
@@ -112,14 +113,14 @@ const struct WMWoundPhotoFetchedProperties WMWoundPhotoFetchedProperties = {
 
 
 
-@dynamic dateCreated;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic dateModified;
+@dynamic ffUrl;
 
 
 
@@ -371,6 +372,13 @@ const struct WMWoundPhotoFetchedProperties WMWoundPhotoFetchedProperties = {
 - (void)setPrimitiveTransformTranslationYValue:(float)value_ {
 	[self setPrimitiveTransformTranslationY:[NSNumber numberWithFloat:value_]];
 }
+
+
+
+
+
+@dynamic updatedAt;
+
 
 
 

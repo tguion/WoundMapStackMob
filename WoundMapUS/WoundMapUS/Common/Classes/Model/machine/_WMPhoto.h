@@ -5,14 +5,14 @@
 
 
 extern const struct WMPhotoAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *originalFlag;
 	__unsafe_unretained NSString *photo;
 	__unsafe_unretained NSString *scale;
 	__unsafe_unretained NSString *sortRank;
-	__unsafe_unretained NSString *wmphoto_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMPhotoAttributes;
 
 extern const struct WMPhotoRelationships {
@@ -46,11 +46,21 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -65,16 +75,6 @@ extern const struct WMPhotoFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -132,11 +132,11 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmphoto_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmphoto_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -159,8 +159,14 @@ extern const struct WMPhotoFetchedProperties {
 @interface _WMPhoto (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -170,12 +176,6 @@ extern const struct WMPhotoFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -213,8 +213,8 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-- (NSString*)primitiveWmphoto_id;
-- (void)setPrimitiveWmphoto_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

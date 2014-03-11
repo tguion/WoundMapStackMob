@@ -4,17 +4,17 @@
 #import "_WMDeviceCategory.h"
 
 const struct WMDeviceCategoryAttributes WMDeviceCategoryAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.iapIdentifier = @"iapIdentifier",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmdevicecategory_id = @"wmdevicecategory_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMDeviceCategoryRelationships WMDeviceCategoryRelationships = {
@@ -73,7 +73,7 @@ const struct WMDeviceCategoryFetchedProperties WMDeviceCategoryFetchedProperties
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -81,6 +81,13 @@ const struct WMDeviceCategoryFetchedProperties WMDeviceCategoryFetchedProperties
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -114,13 +121,6 @@ const struct WMDeviceCategoryFetchedProperties WMDeviceCategoryFetchedProperties
 
 
 @dynamic iapIdentifier;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -200,7 +200,7 @@ const struct WMDeviceCategoryFetchedProperties WMDeviceCategoryFetchedProperties
 
 
 
-@dynamic wmdevicecategory_id;
+@dynamic updatedAt;
 
 
 

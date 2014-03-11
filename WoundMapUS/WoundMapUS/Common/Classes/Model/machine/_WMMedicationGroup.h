@@ -7,17 +7,15 @@
 extern const struct WMMedicationGroupAttributes {
 	__unsafe_unretained NSString *closedFlag;
 	__unsafe_unretained NSString *continueCount;
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *datePushed;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *snomedCID;
 	__unsafe_unretained NSString *snomedFSN;
-	__unsafe_unretained NSString *wmmedicationgroup_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMMedicationGroupAttributes;
 
 extern const struct WMMedicationGroupRelationships {
@@ -34,8 +32,6 @@ extern const struct WMMedicationGroupFetchedProperties {
 @class WMMedication;
 @class WMPatient;
 @class WMInterventionStatus;
-
-
 
 
 
@@ -90,31 +86,11 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateModified;
-
-
-
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -140,6 +116,16 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -149,16 +135,6 @@ extern const struct WMMedicationGroupFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -198,11 +174,11 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmmedicationgroup_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmmedicationgroup_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -274,20 +250,8 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -304,17 +268,17 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -340,8 +304,8 @@ extern const struct WMMedicationGroupFetchedProperties {
 
 
 
-- (NSString*)primitiveWmmedicationgroup_id;
-- (void)setPrimitiveWmmedicationgroup_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

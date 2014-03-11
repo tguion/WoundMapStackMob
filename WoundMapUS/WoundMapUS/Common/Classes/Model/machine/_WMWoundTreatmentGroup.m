@@ -6,13 +6,11 @@
 const struct WMWoundTreatmentGroupAttributes WMWoundTreatmentGroupAttributes = {
 	.closedFlag = @"closedFlag",
 	.continueCount = @"continueCount",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
-	.wmwoundtreatmentgroup_id = @"wmwoundtreatmentgroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMWoundTreatmentGroupRelationships WMWoundTreatmentGroupRelationships = {
@@ -125,21 +123,7 @@ const struct WMWoundTreatmentGroupFetchedProperties WMWoundTreatmentGroupFetched
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -147,6 +131,13 @@ const struct WMWoundTreatmentGroupFetchedProperties WMWoundTreatmentGroupFetched
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -179,14 +170,7 @@ const struct WMWoundTreatmentGroupFetchedProperties WMWoundTreatmentGroupFetched
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
-@dynamic wmwoundtreatmentgroup_id;
+@dynamic updatedAt;
 
 
 

@@ -4,12 +4,10 @@
 #import "_WMWoundLocationValue.h"
 
 const struct WMWoundLocationValueAttributes WMWoundLocationValueAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
-	.lastmoddate = @"lastmoddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.sortRank = @"sortRank",
-	.wmwoundlocationvalue_id = @"wmwoundlocationvalue_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMWoundLocationValueRelationships WMWoundLocationValueRelationships = {
@@ -58,28 +56,14 @@ const struct WMWoundLocationValueFetchedProperties WMWoundLocationValueFetchedPr
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
-
-
-
-
-
-
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -112,7 +96,7 @@ const struct WMWoundLocationValueFetchedProperties WMWoundLocationValueFetchedPr
 
 
 
-@dynamic wmwoundlocationvalue_id;
+@dynamic updatedAt;
 
 
 

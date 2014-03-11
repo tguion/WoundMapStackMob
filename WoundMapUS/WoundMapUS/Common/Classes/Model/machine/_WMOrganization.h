@@ -5,10 +5,10 @@
 
 
 extern const struct WMOrganizationAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *name;
-	__unsafe_unretained NSString *wmorganization_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMOrganizationAttributes;
 
 extern const struct WMOrganizationRelationships {
@@ -40,21 +40,21 @@ extern const struct WMOrganizationFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -70,11 +70,11 @@ extern const struct WMOrganizationFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmorganization_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmorganization_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -114,14 +114,14 @@ extern const struct WMOrganizationFetchedProperties {
 @interface _WMOrganization (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -132,8 +132,8 @@ extern const struct WMOrganizationFetchedProperties {
 
 
 
-- (NSString*)primitiveWmorganization_id;
-- (void)setPrimitiveWmorganization_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

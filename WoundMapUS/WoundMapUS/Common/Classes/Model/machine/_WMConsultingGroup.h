@@ -5,21 +5,19 @@
 
 
 extern const struct WMConsultingGroupAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *name;
-	__unsafe_unretained NSString *wmconsultinggroup_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMConsultingGroupAttributes;
 
 extern const struct WMConsultingGroupRelationships {
-	__unsafe_unretained NSString *stackMobUser;
 } WMConsultingGroupRelationships;
 
 extern const struct WMConsultingGroupFetchedProperties {
 } WMConsultingGroupFetchedProperties;
 
-@class User;
 
 
 
@@ -40,11 +38,21 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -64,16 +72,6 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* name;
 
 
@@ -84,19 +82,12 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmconsultinggroup_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmconsultinggroup_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
-
-
-
-
-@property (nonatomic, strong) User *stackMobUser;
-
-//- (BOOL)validateStackMobUser:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -111,8 +102,14 @@ extern const struct WMConsultingGroupFetchedProperties {
 @interface _WMConsultingGroup (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -126,27 +123,16 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
 
 
 
 
-- (NSString*)primitiveWmconsultinggroup_id;
-- (void)setPrimitiveWmconsultinggroup_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
-
-
-
-- (User*)primitiveStackMobUser;
-- (void)setPrimitiveStackMobUser:(User*)value;
 
 
 @end

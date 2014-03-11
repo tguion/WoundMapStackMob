@@ -5,14 +5,13 @@
 
 
 extern const struct WMWoundAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *desc;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *sortRank;
-	__unsafe_unretained NSString *wmwound_id;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *woundLocationValue;
 	__unsafe_unretained NSString *woundTypeValue;
 } WMWoundAttributes;
@@ -48,7 +47,6 @@ extern const struct WMWoundFetchedProperties {
 
 
 
-
 @interface WMWoundID : NSManagedObjectID {}
 @end
 
@@ -62,21 +60,11 @@ extern const struct WMWoundFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -92,6 +80,16 @@ extern const struct WMWoundFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -101,16 +99,6 @@ extern const struct WMWoundFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -140,11 +128,11 @@ extern const struct WMWoundFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmwound_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmwound_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -249,14 +237,8 @@ extern const struct WMWoundFetchedProperties {
 @interface _WMWound (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -267,17 +249,17 @@ extern const struct WMWoundFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -297,8 +279,8 @@ extern const struct WMWoundFetchedProperties {
 
 
 
-- (NSString*)primitiveWmwound_id;
-- (void)setPrimitiveWmwound_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

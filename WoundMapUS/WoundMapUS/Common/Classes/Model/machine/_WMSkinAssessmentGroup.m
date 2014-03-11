@@ -6,13 +6,11 @@
 const struct WMSkinAssessmentGroupAttributes WMSkinAssessmentGroupAttributes = {
 	.closedFlag = @"closedFlag",
 	.continueCount = @"continueCount",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
-	.wmskinassessmentgroup_id = @"wmskinassessmentgroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMSkinAssessmentGroupRelationships WMSkinAssessmentGroupRelationships = {
@@ -125,21 +123,7 @@ const struct WMSkinAssessmentGroupFetchedProperties WMSkinAssessmentGroupFetched
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -147,6 +131,13 @@ const struct WMSkinAssessmentGroupFetchedProperties WMSkinAssessmentGroupFetched
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -179,14 +170,7 @@ const struct WMSkinAssessmentGroupFetchedProperties WMSkinAssessmentGroupFetched
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
-@dynamic wmskinassessmentgroup_id;
+@dynamic updatedAt;
 
 
 

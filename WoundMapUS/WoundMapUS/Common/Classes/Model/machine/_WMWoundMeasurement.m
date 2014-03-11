@@ -4,14 +4,14 @@
 #import "_WMWoundMeasurement.h"
 
 const struct WMWoundMeasurementAttributes WMWoundMeasurementAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.graphableFlag = @"graphableFlag",
 	.iapIdentifier = @"iapIdentifier",
 	.keyboardType = @"keyboardType",
 	.label = @"label",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.placeHolder = @"placeHolder",
 	.sectionTitle = @"sectionTitle",
@@ -20,10 +20,10 @@ const struct WMWoundMeasurementAttributes WMWoundMeasurementAttributes = {
 	.sortRank = @"sortRank",
 	.title = @"title",
 	.unit = @"unit",
+	.updatedAt = @"updatedAt",
 	.valueMaximum = @"valueMaximum",
 	.valueMinimum = @"valueMinimum",
 	.valueTypeCode = @"valueTypeCode",
-	.wmwoundmeasurement_id = @"wmwoundmeasurement_id",
 };
 
 const struct WMWoundMeasurementRelationships WMWoundMeasurementRelationships = {
@@ -109,7 +109,7 @@ const struct WMWoundMeasurementFetchedProperties WMWoundMeasurementFetchedProper
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -117,6 +117,13 @@ const struct WMWoundMeasurementFetchedProperties WMWoundMeasurementFetchedProper
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -209,13 +216,6 @@ const struct WMWoundMeasurementFetchedProperties WMWoundMeasurementFetchedProper
 
 
 @dynamic label;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -316,6 +316,13 @@ const struct WMWoundMeasurementFetchedProperties WMWoundMeasurementFetchedProper
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueMaximum;
 
 
@@ -389,13 +396,6 @@ const struct WMWoundMeasurementFetchedProperties WMWoundMeasurementFetchedProper
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmwoundmeasurement_id;
-
 
 
 

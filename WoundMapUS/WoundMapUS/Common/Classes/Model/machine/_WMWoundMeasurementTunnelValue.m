@@ -7,7 +7,6 @@ const struct WMWoundMeasurementTunnelValueAttributes WMWoundMeasurementTunnelVal
 	.fromOClockValue = @"fromOClockValue",
 	.sectionTitle = @"sectionTitle",
 	.sortRank = @"sortRank",
-	.wmwoundmeasurementtunnelvalue_id = @"wmwoundmeasurementtunnelvalue_id",
 };
 
 const struct WMWoundMeasurementTunnelValueRelationships WMWoundMeasurementTunnelValueRelationships = {
@@ -113,13 +112,6 @@ const struct WMWoundMeasurementTunnelValueFetchedProperties WMWoundMeasurementTu
 - (void)setPrimitiveSortRankValue:(int16_t)value_ {
 	[self setPrimitiveSortRank:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmwoundmeasurementtunnelvalue_id;
-
 
 
 

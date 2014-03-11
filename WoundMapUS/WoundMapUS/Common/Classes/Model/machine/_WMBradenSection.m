@@ -4,12 +4,12 @@
 #import "_WMBradenSection.h"
 
 const struct WMBradenSectionAttributes WMBradenSectionAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.desc = @"desc",
-	.lastmoddate = @"lastmoddate",
+	.ffUrl = @"ffUrl",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmbradensection_id = @"wmbradensection_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMBradenSectionRelationships WMBradenSectionRelationships = {
@@ -58,7 +58,7 @@ const struct WMBradenSectionFetchedProperties WMBradenSectionFetchedProperties =
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -72,7 +72,7 @@ const struct WMBradenSectionFetchedProperties WMBradenSectionFetchedProperties =
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -112,7 +112,7 @@ const struct WMBradenSectionFetchedProperties WMBradenSectionFetchedProperties =
 
 
 
-@dynamic wmbradensection_id;
+@dynamic updatedAt;
 
 
 

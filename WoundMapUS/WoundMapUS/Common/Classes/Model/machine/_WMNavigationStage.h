@@ -5,16 +5,16 @@
 
 
 extern const struct WMNavigationStageAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *disabledFlag;
 	__unsafe_unretained NSString *displayTitle;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *icon;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmnavigationstage_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMNavigationStageAttributes;
 
 extern const struct WMNavigationStageRelationships {
@@ -54,11 +54,11 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -98,6 +98,16 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -117,16 +127,6 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 //- (BOOL)validateIcon:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -156,11 +156,11 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmnavigationstage_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmnavigationstage_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -207,8 +207,8 @@ extern const struct WMNavigationStageFetchedProperties {
 @interface _WMNavigationStage (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -234,6 +234,12 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
@@ -245,12 +251,6 @@ extern const struct WMNavigationStageFetchedProperties {
 
 - (NSString*)primitiveIcon;
 - (void)setPrimitiveIcon:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -270,8 +270,8 @@ extern const struct WMNavigationStageFetchedProperties {
 
 
 
-- (NSString*)primitiveWmnavigationstage_id;
-- (void)setPrimitiveWmnavigationstage_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

@@ -5,13 +5,10 @@
 
 
 extern const struct WMDefinitionAttributes {
-	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *definition;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *scope;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *term;
-	__unsafe_unretained NSString *wmdefinition_id;
 } WMDefinitionAttributes;
 
 extern const struct WMDefinitionRelationships {
@@ -22,9 +19,6 @@ extern const struct WMDefinitionFetchedProperties {
 } WMDefinitionFetchedProperties;
 
 @class WMDefinitionKeyword;
-
-
-
 
 
 
@@ -44,31 +38,11 @@ extern const struct WMDefinitionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
-
-
-
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* definition;
 
 
 
 //- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -112,16 +86,6 @@ extern const struct WMDefinitionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmdefinition_id;
-
-
-
-//- (BOOL)validateWmdefinition_id:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSSet *keywords;
 
 - (NSMutableSet*)keywordsSet;
@@ -144,20 +108,8 @@ extern const struct WMDefinitionFetchedProperties {
 @interface _WMDefinition (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveDefinition;
 - (void)setPrimitiveDefinition:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -182,12 +134,6 @@ extern const struct WMDefinitionFetchedProperties {
 
 - (NSString*)primitiveTerm;
 - (void)setPrimitiveTerm:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmdefinition_id;
-- (void)setPrimitiveWmdefinition_id:(NSString*)value;
 
 
 

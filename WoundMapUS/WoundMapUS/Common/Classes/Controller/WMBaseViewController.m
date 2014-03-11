@@ -331,7 +331,6 @@
 
 - (void)handlePatientChanged:(WMPatient *)patient
 {
-    
 }
 
 - (void)handleWoundChanged:(WMWound *)wound
@@ -341,7 +340,6 @@
 
 - (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto
 {
-    
 }
 
 // patient navigationTrack changed

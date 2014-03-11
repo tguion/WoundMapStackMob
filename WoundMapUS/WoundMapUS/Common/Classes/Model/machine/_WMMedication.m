@@ -4,16 +4,16 @@
 #import "_WMMedication.h"
 
 const struct WMMedicationAttributes WMMedicationAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmmedication_id = @"wmmedication_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMMedicationRelationships WMMedicationRelationships = {
@@ -72,7 +72,7 @@ const struct WMMedicationFetchedProperties WMMedicationFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -80,6 +80,13 @@ const struct WMMedicationFetchedProperties WMMedicationFetchedProperties = {
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -107,13 +114,6 @@ const struct WMMedicationFetchedProperties WMMedicationFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -192,7 +192,7 @@ const struct WMMedicationFetchedProperties WMMedicationFetchedProperties = {
 
 
 
-@dynamic wmmedication_id;
+@dynamic updatedAt;
 
 
 

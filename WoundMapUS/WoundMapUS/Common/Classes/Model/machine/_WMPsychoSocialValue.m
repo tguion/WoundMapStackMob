@@ -4,16 +4,14 @@
 #import "_WMPsychoSocialValue.h"
 
 const struct WMPsychoSocialValueAttributes WMPsychoSocialValueAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.revisedFlag = @"revisedFlag",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmpsychosocialvalue_id = @"wmpsychosocialvalue_id",
 };
 
 const struct WMPsychoSocialValueRelationships WMPsychoSocialValueRelationships = {
@@ -67,21 +65,7 @@ const struct WMPsychoSocialValueFetchedProperties WMPsychoSocialValueFetchedProp
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -89,6 +73,13 @@ const struct WMPsychoSocialValueFetchedProperties WMPsychoSocialValueFetchedProp
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -116,13 +107,6 @@ const struct WMPsychoSocialValueFetchedProperties WMPsychoSocialValueFetchedProp
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -161,14 +145,14 @@ const struct WMPsychoSocialValueFetchedProperties WMPsychoSocialValueFetchedProp
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmpsychosocialvalue_id;
 
 
 

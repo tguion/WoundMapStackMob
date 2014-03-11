@@ -62,30 +62,30 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
-- (NSString *)lastWoundIdOnDeviceForPatietId:(NSString *)patientId
+- (NSString *)lastWoundFFURLOnDeviceForPatientFFURL:(NSString *)ffUrl
 {
-    NSDictionary *dictionary = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"com.mobilehealthware.woundmap.lastWoundIdOnDevice"];
-    return [dictionary objectForKey:patientId];
+    NSDictionary *dictionary = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"com.mobilehealthware.woundmap.lastWoundFFURLOnDevice"];
+    return [dictionary objectForKey:ffUrl];
 }
 
-- (void)setLastWoundIdOnDevice:(NSString *)lastWoundIdOnDevice forPatientId:(NSString *)patientId
+- (void)setLastWoundFFURLOnDevice:(NSString *)lastWoundFFURLOnDevice forPatientFFURL:(NSString *)ffUrl
 {
-    if ([patientId length] == 0) {
-        DLog(@"%@ setLastWoundIdOnDevice:forPatientId - patientId is nil !!!", NSStringFromClass([self class]));
+    if ([ffUrl length] == 0) {
+        DLog(@"%@ setLastWoundIdOnDevice:forPatientId - patient.ffUrl is nil !!!", NSStringFromClass([self class]));
         return;
     }
     // else
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *dictionary = [[userDefaults dictionaryForKey:@"com.mobilehealthware.woundmap.lastWoundIdOnDevice"] mutableCopy];
+    NSMutableDictionary *dictionary = [[userDefaults dictionaryForKey:@"com.mobilehealthware.woundmap.lastWoundFFURLOnDevice"] mutableCopy];
     if (nil == dictionary) {
         dictionary = [[NSMutableDictionary alloc] initWithCapacity:2];
     }
-    if (nil == lastWoundIdOnDevice) {
-        [dictionary removeObjectForKey:lastWoundIdOnDevice];
+    if (nil == lastWoundFFURLOnDevice) {
+        [dictionary removeObjectForKey:lastWoundFFURLOnDevice];
     } else {
-        [dictionary setValue:lastWoundIdOnDevice forKey:patientId];
+        [dictionary setValue:lastWoundFFURLOnDevice forKey:ffUrl];
     }
-    [userDefaults setObject:dictionary forKey:@"com.mobilehealthware.woundmap.lastWoundIdOnDevice"];
+    [userDefaults setObject:dictionary forKey:@"com.mobilehealthware.woundmap.lastWoundFFURLOnDevice"];
     [userDefaults synchronize];
 }
 

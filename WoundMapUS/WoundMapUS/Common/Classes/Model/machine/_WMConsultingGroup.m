@@ -4,15 +4,14 @@
 #import "_WMConsultingGroup.h"
 
 const struct WMConsultingGroupAttributes WMConsultingGroupAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.name = @"name",
-	.wmconsultinggroup_id = @"wmconsultinggroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMConsultingGroupRelationships WMConsultingGroupRelationships = {
-	.stackMobUser = @"stackMobUser",
 };
 
 const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperties = {
@@ -56,7 +55,14 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -89,13 +95,6 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic name;
 
 
@@ -103,16 +102,12 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 
-@dynamic wmconsultinggroup_id;
+@dynamic updatedAt;
 
 
 
 
 
-
-@dynamic stackMobUser;
-
-	
 
 
 

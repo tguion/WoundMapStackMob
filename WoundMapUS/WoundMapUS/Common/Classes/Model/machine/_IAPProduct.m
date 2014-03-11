@@ -4,13 +4,11 @@
 #import "_IAPProduct.h"
 
 const struct IAPProductAttributes IAPProductAttributes = {
-	.createddate = @"createddate",
 	.desc = @"desc",
 	.descHTML = @"descHTML",
 	.flags = @"flags",
 	.iapproduct_id = @"iapproduct_id",
 	.identifier = @"identifier",
-	.lastmoddate = @"lastmoddate",
 	.price = @"price",
 	.proposition = @"proposition",
 	.purchasedFlag = @"purchasedFlag",
@@ -23,7 +21,6 @@ const struct IAPProductAttributes IAPProductAttributes = {
 const struct IAPProductRelationships IAPProductRelationships = {
 	.options = @"options",
 	.parent = @"parent",
-	.user = @"user",
 	.woundType = @"woundType",
 };
 
@@ -83,13 +80,6 @@ const struct IAPProductFetchedProperties IAPProductFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
 @dynamic desc;
 
 
@@ -138,13 +128,6 @@ const struct IAPProductFetchedProperties IAPProductFetchedProperties = {
 
 
 @dynamic identifier;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -271,10 +254,6 @@ const struct IAPProductFetchedProperties IAPProductFetchedProperties = {
 	
 
 @dynamic parent;
-
-	
-
-@dynamic user;
 
 	
 

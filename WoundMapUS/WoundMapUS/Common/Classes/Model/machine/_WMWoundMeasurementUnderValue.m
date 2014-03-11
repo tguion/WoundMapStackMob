@@ -5,7 +5,6 @@
 
 const struct WMWoundMeasurementUnderValueAttributes WMWoundMeasurementUnderValueAttributes = {
 	.toOClockValue = @"toOClockValue",
-	.wmwoundmeasurementunderminevalue_id = @"wmwoundmeasurementunderminevalue_id",
 };
 
 const struct WMWoundMeasurementUnderValueRelationships WMWoundMeasurementUnderValueRelationships = {
@@ -73,13 +72,6 @@ const struct WMWoundMeasurementUnderValueFetchedProperties WMWoundMeasurementUnd
 - (void)setPrimitiveToOClockValueValue:(int16_t)value_ {
 	[self setPrimitiveToOClockValue:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmwoundmeasurementunderminevalue_id;
-
 
 
 

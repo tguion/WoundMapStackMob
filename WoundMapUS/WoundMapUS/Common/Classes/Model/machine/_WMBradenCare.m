@@ -4,15 +4,12 @@
 #import "_WMBradenCare.h"
 
 const struct WMBradenCareAttributes WMBradenCareAttributes = {
-	.createddate = @"createddate",
 	.desc = @"desc",
-	.lastmoddate = @"lastmoddate",
 	.scoreMaximum = @"scoreMaximum",
 	.scoreMinimum = @"scoreMinimum",
 	.sectionTitle = @"sectionTitle",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmbradencare_id = @"wmbradencare_id",
 };
 
 const struct WMBradenCareRelationships WMBradenCareRelationships = {
@@ -69,21 +66,7 @@ const struct WMBradenCareFetchedProperties WMBradenCareFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
 @dynamic desc;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -176,13 +159,6 @@ const struct WMBradenCareFetchedProperties WMBradenCareFetchedProperties = {
 
 
 @dynamic title;
-
-
-
-
-
-
-@dynamic wmbradencare_id;
 
 
 

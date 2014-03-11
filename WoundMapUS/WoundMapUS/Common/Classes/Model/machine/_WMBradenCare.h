@@ -5,15 +5,12 @@
 
 
 extern const struct WMBradenCareAttributes {
-	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *desc;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *scoreMaximum;
 	__unsafe_unretained NSString *scoreMinimum;
 	__unsafe_unretained NSString *sectionTitle;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmbradencare_id;
 } WMBradenCareAttributes;
 
 extern const struct WMBradenCareRelationships {
@@ -21,9 +18,6 @@ extern const struct WMBradenCareRelationships {
 
 extern const struct WMBradenCareFetchedProperties {
 } WMBradenCareFetchedProperties;
-
-
-
 
 
 
@@ -46,31 +40,11 @@ extern const struct WMBradenCareFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
-
-
-
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* desc;
 
 
 
 //- (BOOL)validateDesc:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -138,16 +112,6 @@ extern const struct WMBradenCareFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmbradencare_id;
-
-
-
-//- (BOOL)validateWmbradencare_id:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 
 @end
 
@@ -158,20 +122,8 @@ extern const struct WMBradenCareFetchedProperties {
 @interface _WMBradenCare (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveDesc;
 - (void)setPrimitiveDesc:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -211,12 +163,6 @@ extern const struct WMBradenCareFetchedProperties {
 
 - (NSString*)primitiveTitle;
 - (void)setPrimitiveTitle:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmbradencare_id;
-- (void)setPrimitiveWmbradencare_id:(NSString*)value;
 
 
 

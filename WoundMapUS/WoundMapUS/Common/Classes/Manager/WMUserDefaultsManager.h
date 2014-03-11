@@ -26,7 +26,7 @@
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 
-- (NSString *)lastWoundIdOnDeviceForPatietId:(NSString *)patientId;
-- (void)setLastWoundIdOnDevice:(NSString *)lastWoundIdOnDevice forPatientId:(NSString *)patientId;
+- (NSString *)lastWoundFFURLOnDeviceForPatientFFURL:(NSString *)ffUrl;
+- (void)setLastWoundFFURLOnDevice:(NSString *)lastWoundFFURLOnDevice forPatientFFURL:(NSString *)ffUrl;
 
 @end

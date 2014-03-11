@@ -5,13 +5,13 @@
 
 
 extern const struct WMTelecomTypeAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *icon;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmtelecomtype_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMTelecomTypeAttributes;
 
 extern const struct WMTelecomTypeRelationships {
@@ -44,11 +44,21 @@ extern const struct WMTelecomTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -78,16 +88,6 @@ extern const struct WMTelecomTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSNumber* sortRank;
 
 
@@ -112,11 +112,11 @@ extern const struct WMTelecomTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmtelecomtype_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmtelecomtype_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -144,8 +144,14 @@ extern const struct WMTelecomTypeFetchedProperties {
 @interface _WMTelecomType (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -165,12 +171,6 @@ extern const struct WMTelecomTypeFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSNumber*)primitiveSortRank;
 - (void)setPrimitiveSortRank:(NSNumber*)value;
 
@@ -186,8 +186,8 @@ extern const struct WMTelecomTypeFetchedProperties {
 
 
 
-- (NSString*)primitiveWmtelecomtype_id;
-- (void)setPrimitiveWmtelecomtype_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

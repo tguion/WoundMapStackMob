@@ -6,13 +6,13 @@
 const struct WMAddressAttributes WMAddressAttributes = {
 	.city = @"city",
 	.country = @"country",
-	.createddate = @"createddate",
-	.lastmoddate = @"lastmoddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.postalCode = @"postalCode",
 	.state = @"state",
 	.streetAddressLine = @"streetAddressLine",
 	.streetAddressLine1 = @"streetAddressLine1",
-	.wmaddress_id = @"wmaddress_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMAddressRelationships WMAddressRelationships = {
@@ -70,14 +70,14 @@ const struct WMAddressFetchedProperties WMAddressFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -112,7 +112,7 @@ const struct WMAddressFetchedProperties WMAddressFetchedProperties = {
 
 
 
-@dynamic wmaddress_id;
+@dynamic updatedAt;
 
 
 

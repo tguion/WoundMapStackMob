@@ -4,14 +4,12 @@
 #import "_WMSkinAssessmentValue.h"
 
 const struct WMSkinAssessmentValueAttributes WMSkinAssessmentValueAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmskinassessmentvalue_id = @"wmskinassessmentvalue_id",
 };
 
 const struct WMSkinAssessmentValueRelationships WMSkinAssessmentValueRelationships = {
@@ -60,21 +58,14 @@ const struct WMSkinAssessmentValueFetchedProperties WMSkinAssessmentValueFetched
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic ffUrl;
 
 
 
@@ -107,13 +98,6 @@ const struct WMSkinAssessmentValueFetchedProperties WMSkinAssessmentValueFetched
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic title;
 
 
@@ -121,14 +105,14 @@ const struct WMSkinAssessmentValueFetchedProperties WMSkinAssessmentValueFetched
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmskinassessmentvalue_id;
 
 
 

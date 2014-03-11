@@ -9,7 +9,6 @@
 #import "WMWoundPositionValue.h"
 #import "WMWoundLocationPositionJoin.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMWound ()
 
@@ -36,7 +35,6 @@
 	if (store) {
 		[managedObjectContext assignObject:wound toPersistentStore:store];
 	}
-    [wound setValue:[wound assignObjectId] forKey:[wound primaryKeyField]];
 	return wound;
 }
 
@@ -49,65 +47,28 @@
 
 + (NSInteger)woundCountForPatient:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWound" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    NSError *error = nil;
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyTryCacheElseNetwork];
-    NSInteger count = [managedObjectContext countForFetchRequestAndWait:request options:options error:&error];
-    [WMUtilities logError:error];
-    return count;
+    return [WMWound MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                          inContext:[patient managedObjectContext]];
 }
 
-+ (WMWound *)woundForPatient:(WMPatient *)patient woundId:(NSString *)woundId
++ (WMWound *)woundForPatient:(WMPatient *)patient woundFFURL:(NSString *)ffUrl
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WCWound" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND wmwound_id == %@", patient, woundId]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return (WMWound *)[WMWound MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND ffUrl == %@", patient, ffUrl]
+                                               inContext:[patient managedObjectContext]];
 }
 
 + (NSArray *)sortedWounds:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    if (nil == managedObjectContext) {
-        return [NSArray array];
-    }
-    // else
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WCWound" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWound MR_findAllSortedBy:@"sortRank"
+                             ascending:YES
+                         withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                             inContext:[patient managedObjectContext]];
 }
 
 - (NSInteger)woundPhotosCount
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    NSError *error = nil;
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return count;
+    return [WMWoundPhoto MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]
+                                               inContext:[self managedObjectContext]];
 }
 
 + (NSInteger)woundPhotoCountForWound:(WMWound *)wound
@@ -145,77 +106,52 @@
 
 + (NSDate *)mostRecentWoundPhotoDateModifiedForWound:(WMWound *)wound
 {
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMWoundPhoto"];
     request.predicate = [NSPredicate predicateWithFormat:@"wound == %@", wound];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    NSError *error = nil;
-    NSArray *results = [[wound managedObjectContext] executeFetchRequestAndWait:request error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    return [results firstObject][@"dateModified"];
+    id result = [WMWoundPhoto MR_executeFetchRequestAndReturnFirstObject:request inContext:[wound managedObjectContext]];
+    return result[@"updatedAt"];
 }
 
 + (NSDate *)mostRecentWoundPhotoDateCreatedForWound:(WMWound *)wound
 {
-    NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-    NSExpression *dateCreatedExpression = [NSExpression expressionForKeyPath:@"dateCreated"];
+    NSExpression *dateCreatedExpression = [NSExpression expressionForKeyPath:@"createdAt"];
     NSExpressionDescription *dateCreatedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateCreatedExpressionDescription.name = @"dateCreated";
+    dateCreatedExpressionDescription.name = @"createdAt";
     dateCreatedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateCreatedExpression]];
     dateCreatedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMWoundPhoto"];
     request.predicate = [NSPredicate predicateWithFormat:@"wound == %@", wound];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateCreatedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    return [results firstObject][@"dateCreated"];
+    id result = [WMWoundPhoto MR_executeFetchRequestAndReturnFirstObject:request inContext:[wound managedObjectContext]];
+    return result[@"createdAt"];
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (NSArray *)woundPositionValuesForJoin:(WMWoundLocationPositionJoin *)woundPositionJoin
                                   value:(id)value
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPositionValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND woundPosition IN (%@)", self, woundPositionJoin.positions]];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    return results;
+    return [WMWoundPositionValue MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND woundPosition IN (%@)", self, woundPositionJoin.positions]
+                                               inContext:[self managedObjectContext]];
 }
 
 - (WMWoundPositionValue *)woundPositionValueForJoin:(WMWoundLocationPositionJoin *)woundPositionJoin
                                              create:(BOOL)create
                                               value:(id)value
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     WMWoundPositionValue *woundPositionValue = [[self woundPositionValuesForJoin:woundPositionJoin value:value] lastObject];
     if (create && nil == woundPositionValue) {
         woundPositionValue = [WMWoundPositionValue woundPositionValueForWound:self];
@@ -229,17 +165,8 @@
                                                        value:(id)value
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPositionValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND woundPosition == %@", self, woundPosition]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-        abort();
-    }
-    // else
-    WMWoundPositionValue *woundPositionValue = [array lastObject];
+    WMWoundPositionValue *woundPositionValue = [WMWoundPositionValue MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND woundPosition == %@", self, woundPosition]
+                                                                                     inContext:managedObjectContext];
     if (create && nil == woundPositionValue) {
         woundPositionValue = [WMWoundPositionValue woundPositionValueForWound:self];
         woundPositionValue.woundPosition = woundPosition;
@@ -299,14 +226,9 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
     [request setResultType:NSManagedObjectIDResultType];
-    NSError *error = nil;
-    NSArray *objectIDs = [managedObjectContext executeFetchRequestAndWait:request returnManagedObjectIDs:YES error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    return objectIDs;
+    return [WMWoundPhoto MR_executeFetchRequest:request inContext:managedObjectContext];
 }
 
 - (WMWoundTreatmentGroup *)lastWoundTreatmentGroup
@@ -316,38 +238,20 @@
 
 - (WMWoundPhoto *)woundPhotoForDate:(NSDate *)date
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dateCreated == %@", date];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"createdAt == %@", date];
     return [[[self.photos allObjects] filteredArrayUsingPredicate:predicate] lastObject];
 }
 
 - (NSInteger)woundPositionCount
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPositionValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    NSError *error = nil;
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return count;
+    return [WMWoundPositionValue MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]
+                                                       inContext:[self managedObjectContext]];
 }
 
 - (NSInteger)woundTreatmentGroupCount
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    NSError *error = nil;
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return count;
+    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]
+                                                        inContext:[self managedObjectContext]];
 }
 
 - (NSDictionary *)minimumAndMaximumWoundPhotoDates
@@ -359,7 +263,7 @@
     // Specify that the request should return dictionaries.
     [request setResultType:NSDictionaryResultType];
     // MIN: Create an expression for the key path.
-    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"dateCreated"];
+    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"createdAt"];
     // Create an expression to represent the minimum value at the key path 'creationDate'
     NSExpression *expression = [NSExpression expressionForFunction:@"min:" arguments:[NSArray arrayWithObject:keyPathExpression]];
     // Create an expression description using the expression and returning a date.
@@ -418,7 +322,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
@@ -434,7 +338,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WCWoundMeasurementGroup" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:ascending]]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:ascending]]];
     NSError *error = nil;
     NSArray *woundMeasurements = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
@@ -456,7 +360,7 @@
 
 - (NSArray *)sortedWoundTreatmentsAscending:(BOOL)ascending
 {
-    return [[self.treatmentGroups allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:ascending]]];
+    return [[self.treatmentGroups allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:ascending]]];
 }
 
 - (NSString *)positionValuesForDisplay
@@ -499,7 +403,7 @@
     CGFloat delta = MAXFLOAT;
     WMWoundTreatmentGroup *result = nil;
     for (WMWoundTreatmentGroup *woundTreatmentGroup in sortedWoundTreatments) {
-        CGFloat deltaCandidate = ABS([woundTreatmentGroup.dateCreated timeIntervalSinceReferenceDate] - dateTimeInterval);
+        CGFloat deltaCandidate = ABS([woundTreatmentGroup.createdAt timeIntervalSinceReferenceDate] - dateTimeInterval);
         if (deltaCandidate < delta) {
             result = woundTreatmentGroup;
             delta = deltaCandidate;

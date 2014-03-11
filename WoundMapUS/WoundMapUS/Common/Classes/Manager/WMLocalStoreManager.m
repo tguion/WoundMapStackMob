@@ -15,11 +15,14 @@
 #import "IAPProduct.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
+#import <<#header#>>
 
 @interface WMLocalStoreManager ()
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSPersistentStore *store;
 
 @end
 
@@ -37,7 +40,7 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.coreDataHelper.localContext;
+    return self.coreDataHelper.context;
 }
 
 - (NSPersistentStore *)store
@@ -55,24 +58,6 @@
         SharedInstance = [[WMLocalStoreManager alloc] init];
     });
     return SharedInstance;
-}
-
-- (void)seedLocalDatabase
-{
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    NSPersistentStore *store = self.store;
-    [managedObjectContext performBlock:^{
-        [WMBradenCare seedDatabase:managedObjectContext persistentStore:store];
-        [WMDefinition seedDatabase:self.managedObjectContext persistentStore:self.store];
-        [WMWoundType seedDatabase:self.managedObjectContext persistentStore:self.store];
-        [IAPProduct seedDatabase:self.managedObjectContext persistentStore:self.store];
-        [WMInstruction seedDatabase:self.managedObjectContext persistentStore:self.store];
-        NSError *error = nil;
-        [managedObjectContext saveAndWait:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-    }];
 }
 
 #pragma mark - IAP

@@ -6,16 +6,15 @@
 
 extern const struct WMPatientConsultantAttributes {
 	__unsafe_unretained NSString *acquiredFlag;
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateAquired;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sm_owner;
-	__unsafe_unretained NSString *wmpatientconsultant_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMPatientConsultantAttributes;
 
 extern const struct WMPatientConsultantRelationships {
-	__unsafe_unretained NSString *consultant;
 	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *patient;
 } WMPatientConsultantRelationships;
@@ -23,7 +22,6 @@ extern const struct WMPatientConsultantRelationships {
 extern const struct WMPatientConsultantFetchedProperties {
 } WMPatientConsultantFetchedProperties;
 
-@class User;
 @class WMParticipant;
 @class WMPatient;
 
@@ -62,11 +60,11 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -77,6 +75,16 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 //- (BOOL)validateDateAquired:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -96,16 +104,6 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* sm_owner;
 
 
@@ -116,19 +114,12 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmpatientconsultant_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmpatientconsultant_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
-
-
-
-
-@property (nonatomic, strong) User *consultant;
-
-//- (BOOL)validateConsultant:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -166,14 +157,20 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSDate*)primitiveDateAquired;
 - (void)setPrimitiveDateAquired:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -187,27 +184,16 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveSm_owner;
 - (void)setPrimitiveSm_owner:(NSString*)value;
 
 
 
 
-- (NSString*)primitiveWmpatientconsultant_id;
-- (void)setPrimitiveWmpatientconsultant_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
-
-
-
-- (User*)primitiveConsultant;
-- (void)setPrimitiveConsultant:(User*)value;
 
 
 

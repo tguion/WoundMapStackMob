@@ -5,12 +5,12 @@
 
 
 extern const struct WMBradenSectionAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *desc;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmbradensection_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMBradenSectionAttributes;
 
 extern const struct WMBradenSectionRelationships {
@@ -44,11 +44,11 @@ extern const struct WMBradenSectionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -64,11 +64,11 @@ extern const struct WMBradenSectionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -98,11 +98,11 @@ extern const struct WMBradenSectionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmbradensection_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmbradensection_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -137,8 +137,8 @@ extern const struct WMBradenSectionFetchedProperties {
 @interface _WMBradenSection (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -149,8 +149,8 @@ extern const struct WMBradenSectionFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -170,8 +170,8 @@ extern const struct WMBradenSectionFetchedProperties {
 
 
 
-- (NSString*)primitiveWmbradensection_id;
-- (void)setPrimitiveWmbradensection_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

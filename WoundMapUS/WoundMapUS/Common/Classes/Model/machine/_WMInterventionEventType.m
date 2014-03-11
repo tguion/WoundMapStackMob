@@ -4,16 +4,16 @@
 #import "_WMInterventionEventType.h"
 
 const struct WMInterventionEventTypeAttributes WMInterventionEventTypeAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wminterventioneventtype_id = @"wminterventioneventtype_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMInterventionEventTypeRelationships WMInterventionEventTypeRelationships = {
@@ -71,7 +71,7 @@ const struct WMInterventionEventTypeFetchedProperties WMInterventionEventTypeFet
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -79,6 +79,13 @@ const struct WMInterventionEventTypeFetchedProperties WMInterventionEventTypeFet
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -106,13 +113,6 @@ const struct WMInterventionEventTypeFetchedProperties WMInterventionEventTypeFet
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -191,7 +191,7 @@ const struct WMInterventionEventTypeFetchedProperties WMInterventionEventTypeFet
 
 
 
-@dynamic wminterventioneventtype_id;
+@dynamic updatedAt;
 
 
 

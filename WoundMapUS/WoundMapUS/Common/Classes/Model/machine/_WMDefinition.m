@@ -4,13 +4,10 @@
 #import "_WMDefinition.h"
 
 const struct WMDefinitionAttributes WMDefinitionAttributes = {
-	.createddate = @"createddate",
 	.definition = @"definition",
-	.lastmoddate = @"lastmoddate",
 	.scope = @"scope",
 	.sortRank = @"sortRank",
 	.term = @"term",
-	.wmdefinition_id = @"wmdefinition_id",
 };
 
 const struct WMDefinitionRelationships WMDefinitionRelationships = {
@@ -63,21 +60,7 @@ const struct WMDefinitionFetchedProperties WMDefinitionFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
 @dynamic definition;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -137,13 +120,6 @@ const struct WMDefinitionFetchedProperties WMDefinitionFetchedProperties = {
 
 
 @dynamic term;
-
-
-
-
-
-
-@dynamic wmdefinition_id;
 
 
 

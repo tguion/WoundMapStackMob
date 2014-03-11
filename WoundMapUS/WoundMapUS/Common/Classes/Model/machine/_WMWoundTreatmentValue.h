@@ -5,13 +5,13 @@
 
 
 extern const struct WMWoundTreatmentValueAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *revisedFlag;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *value;
-	__unsafe_unretained NSString *wmwoundtreatmentvalue_id;
 } WMWoundTreatmentValueAttributes;
 
 extern const struct WMWoundTreatmentValueRelationships {
@@ -46,11 +46,21 @@ extern const struct WMWoundTreatmentValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -65,16 +75,6 @@ extern const struct WMWoundTreatmentValueFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -104,21 +104,21 @@ extern const struct WMWoundTreatmentValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* value;
 
 
 
 //- (BOOL)validateValue:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmwoundtreatmentvalue_id;
-
-
-
-//- (BOOL)validateWmwoundtreatmentvalue_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -148,8 +148,14 @@ extern const struct WMWoundTreatmentValueFetchedProperties {
 @interface _WMWoundTreatmentValue (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -159,12 +165,6 @@ extern const struct WMWoundTreatmentValueFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -184,14 +184,14 @@ extern const struct WMWoundTreatmentValueFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmwoundtreatmentvalue_id;
-- (void)setPrimitiveWmwoundtreatmentvalue_id:(NSString*)value;
 
 
 

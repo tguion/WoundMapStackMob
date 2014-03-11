@@ -4,15 +4,13 @@
 #import "_WMCarePlanValue.h"
 
 const struct WMCarePlanValueAttributes WMCarePlanValueAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.revisedFlag = @"revisedFlag",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmcareplanvalue_id = @"wmcareplanvalue_id",
 };
 
 const struct WMCarePlanValueRelationships WMCarePlanValueRelationships = {
@@ -66,21 +64,14 @@ const struct WMCarePlanValueFetchedProperties WMCarePlanValueFetchedProperties =
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic ffUrl;
 
 
 
@@ -108,13 +99,6 @@ const struct WMCarePlanValueFetchedProperties WMCarePlanValueFetchedProperties =
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -153,14 +137,14 @@ const struct WMCarePlanValueFetchedProperties WMCarePlanValueFetchedProperties =
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmcareplanvalue_id;
 
 
 

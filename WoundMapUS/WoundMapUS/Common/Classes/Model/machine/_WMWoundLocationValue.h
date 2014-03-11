@@ -5,12 +5,10 @@
 
 
 extern const struct WMWoundLocationValueAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *sortRank;
-	__unsafe_unretained NSString *wmwoundlocationvalue_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMWoundLocationValueAttributes;
 
 extern const struct WMWoundLocationValueRelationships {
@@ -23,8 +21,6 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 @class WMWoundLocation;
 @class WMWound;
-
-
 
 
 
@@ -44,41 +40,21 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* dateModified;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -98,11 +74,11 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmwoundlocationvalue_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmwoundlocationvalue_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -132,26 +108,14 @@ extern const struct WMWoundLocationValueFetchedProperties {
 @interface _WMWoundLocationValue (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -165,8 +129,8 @@ extern const struct WMWoundLocationValueFetchedProperties {
 
 
 
-- (NSString*)primitiveWmwoundlocationvalue_id;
-- (void)setPrimitiveWmwoundlocationvalue_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

@@ -4,13 +4,13 @@
 #import "_WMTelecomType.h"
 
 const struct WMTelecomTypeAttributes WMTelecomTypeAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.icon = @"icon",
-	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmtelecomtype_id = @"wmtelecomtype_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMTelecomTypeRelationships WMTelecomTypeRelationships = {
@@ -63,7 +63,14 @@ const struct WMTelecomTypeFetchedProperties WMTelecomTypeFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -103,13 +110,6 @@ const struct WMTelecomTypeFetchedProperties WMTelecomTypeFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic sortRank;
 
 
@@ -143,7 +143,7 @@ const struct WMTelecomTypeFetchedProperties WMTelecomTypeFetchedProperties = {
 
 
 
-@dynamic wmtelecomtype_id;
+@dynamic updatedAt;
 
 
 

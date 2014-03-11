@@ -6,18 +6,16 @@
 const struct WMPatientAttributes WMPatientAttributes = {
 	.acquiredByConsultant = @"acquiredByConsultant",
 	.archivedFlag = @"archivedFlag",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.dateOfBirth = @"dateOfBirth",
+	.ffUrl = @"ffUrl",
+	.ffUrl1 = @"ffUrl1",
 	.flags = @"flags",
 	.gender = @"gender",
-	.lastmoddate = @"lastmoddate",
 	.patientStatusMessages = @"patientStatusMessages",
-	.sm_owner = @"sm_owner",
 	.ssn = @"ssn",
 	.thumbnail = @"thumbnail",
-	.wmpatient_id = @"wmpatient_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMPatientRelationships WMPatientRelationships = {
@@ -137,21 +135,7 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -159,6 +143,20 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 @dynamic dateOfBirth;
+
+
+
+
+
+
+@dynamic ffUrl;
+
+
+
+
+
+
+@dynamic ffUrl1;
 
 
 
@@ -198,21 +196,7 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic patientStatusMessages;
-
-
-
-
-
-
-@dynamic sm_owner;
 
 
 
@@ -233,7 +217,7 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
-@dynamic wmpatient_id;
+@dynamic updatedAt;
 
 
 

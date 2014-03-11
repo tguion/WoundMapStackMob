@@ -5,16 +5,16 @@
 
 const struct WMNavigationTrackAttributes WMNavigationTrackAttributes = {
 	.activeFlag = @"activeFlag",
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.desc = @"desc",
 	.disabledFlag = @"disabledFlag",
 	.displayTitle = @"displayTitle",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.icon = @"icon",
-	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmnavigationtrack_id = @"wmnavigationtrack_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMNavigationTrackRelationships WMNavigationTrackRelationships = {
@@ -103,7 +103,7 @@ const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperti
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -150,6 +150,13 @@ const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperti
 
 
 
+@dynamic ffUrl;
+
+
+
+
+
+
 @dynamic flags;
 
 
@@ -177,13 +184,6 @@ const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperti
 
 
 @dynamic icon;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -223,7 +223,7 @@ const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperti
 
 
 
-@dynamic wmnavigationtrack_id;
+@dynamic updatedAt;
 
 
 

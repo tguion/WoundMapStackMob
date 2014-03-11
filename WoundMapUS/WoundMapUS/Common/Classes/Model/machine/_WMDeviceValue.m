@@ -4,17 +4,15 @@
 #import "_WMDeviceValue.h"
 
 const struct WMDeviceValueAttributes WMDeviceValueAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.dateAttach = @"dateAttach",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
 	.dateRemove = @"dateRemove",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.revisedFlag = @"revisedFlag",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmdevicevalue_id = @"wmdevicevalue_id",
 };
 
 const struct WMDeviceValueRelationships WMDeviceValueRelationships = {
@@ -68,7 +66,7 @@ const struct WMDeviceValueFetchedProperties WMDeviceValueFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -82,21 +80,14 @@ const struct WMDeviceValueFetchedProperties WMDeviceValueFetchedProperties = {
 
 
 
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
-
-
-
-
-
-
 @dynamic dateRemove;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -124,13 +115,6 @@ const struct WMDeviceValueFetchedProperties WMDeviceValueFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -169,14 +153,14 @@ const struct WMDeviceValueFetchedProperties WMDeviceValueFetchedProperties = {
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmdevicevalue_id;
 
 
 

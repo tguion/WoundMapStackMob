@@ -4,16 +4,16 @@
 #import "_WMParticipantType.h"
 
 const struct WMParticipantTypeAttributes WMParticipantTypeAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmparticipanttype_id = @"wmparticipanttype_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMParticipantTypeRelationships WMParticipantTypeRelationships = {
@@ -71,7 +71,7 @@ const struct WMParticipantTypeFetchedProperties WMParticipantTypeFetchedProperti
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -79,6 +79,13 @@ const struct WMParticipantTypeFetchedProperties WMParticipantTypeFetchedProperti
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -106,13 +113,6 @@ const struct WMParticipantTypeFetchedProperties WMParticipantTypeFetchedProperti
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -191,7 +191,7 @@ const struct WMParticipantTypeFetchedProperties WMParticipantTypeFetchedProperti
 
 
 
-@dynamic wmparticipanttype_id;
+@dynamic updatedAt;
 
 
 

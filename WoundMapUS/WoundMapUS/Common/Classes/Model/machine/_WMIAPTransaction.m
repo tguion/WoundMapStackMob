@@ -4,14 +4,14 @@
 #import "_WMIAPTransaction.h"
 
 const struct WMIAPTransactionAttributes WMIAPTransactionAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.credits = @"credits",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.startupCredits = @"startupCredits",
 	.txnDate = @"txnDate",
 	.txnId = @"txnId",
-	.wmiaptransaction_id = @"wmiaptransaction_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMIAPTransactionRelationships WMIAPTransactionRelationships = {
@@ -68,7 +68,7 @@ const struct WMIAPTransactionFetchedProperties WMIAPTransactionFetchedProperties
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -101,6 +101,13 @@ const struct WMIAPTransactionFetchedProperties WMIAPTransactionFetchedProperties
 
 
 
+@dynamic ffUrl;
+
+
+
+
+
+
 @dynamic flags;
 
 
@@ -122,13 +129,6 @@ const struct WMIAPTransactionFetchedProperties WMIAPTransactionFetchedProperties
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -174,7 +174,7 @@ const struct WMIAPTransactionFetchedProperties WMIAPTransactionFetchedProperties
 
 
 
-@dynamic wmiaptransaction_id;
+@dynamic updatedAt;
 
 
 

@@ -5,13 +5,11 @@
 
 
 extern const struct IAPProductAttributes {
-	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *descHTML;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *iapproduct_id;
 	__unsafe_unretained NSString *identifier;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *price;
 	__unsafe_unretained NSString *proposition;
 	__unsafe_unretained NSString *purchasedFlag;
@@ -24,7 +22,6 @@ extern const struct IAPProductAttributes {
 extern const struct IAPProductRelationships {
 	__unsafe_unretained NSString *options;
 	__unsafe_unretained NSString *parent;
-	__unsafe_unretained NSString *user;
 	__unsafe_unretained NSString *woundType;
 } IAPProductRelationships;
 
@@ -33,10 +30,7 @@ extern const struct IAPProductFetchedProperties {
 
 @class IAPProduct;
 @class IAPProduct;
-@class User;
 @class WMWoundType;
-
-
 
 
 
@@ -59,16 +53,6 @@ extern const struct IAPProductFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (IAPProductID*)objectID;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* createddate;
-
-
-
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -123,16 +107,6 @@ extern const struct IAPProductFetchedProperties {
 
 
 //- (BOOL)validateIdentifier:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -234,13 +208,6 @@ extern const struct IAPProductFetchedProperties {
 
 
 
-@property (nonatomic, strong) User *user;
-
-//- (BOOL)validateUser:(id*)value_ error:(NSError**)error_;
-
-
-
-
 @property (nonatomic, strong) WMWoundType *woundType;
 
 //- (BOOL)validateWoundType:(id*)value_ error:(NSError**)error_;
@@ -261,12 +228,6 @@ extern const struct IAPProductFetchedProperties {
 @end
 
 @interface _IAPProduct (CoreDataGeneratedPrimitiveAccessors)
-
-
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
 
 
 - (NSString*)primitiveDesc;
@@ -298,12 +259,6 @@ extern const struct IAPProductFetchedProperties {
 
 - (NSString*)primitiveIdentifier;
 - (void)setPrimitiveIdentifier:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -367,11 +322,6 @@ extern const struct IAPProductFetchedProperties {
 
 - (IAPProduct*)primitiveParent;
 - (void)setPrimitiveParent:(IAPProduct*)value;
-
-
-
-- (User*)primitiveUser;
-- (void)setPrimitiveUser:(User*)value;
 
 
 

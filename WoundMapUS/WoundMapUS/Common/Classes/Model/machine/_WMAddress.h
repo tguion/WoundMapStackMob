@@ -7,13 +7,13 @@
 extern const struct WMAddressAttributes {
 	__unsafe_unretained NSString *city;
 	__unsafe_unretained NSString *country;
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *postalCode;
 	__unsafe_unretained NSString *state;
 	__unsafe_unretained NSString *streetAddressLine;
 	__unsafe_unretained NSString *streetAddressLine1;
-	__unsafe_unretained NSString *wmaddress_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMAddressAttributes;
 
 extern const struct WMAddressRelationships {
@@ -70,21 +70,21 @@ extern const struct WMAddressFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -130,11 +130,11 @@ extern const struct WMAddressFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmaddress_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmaddress_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,14 +176,14 @@ extern const struct WMAddressFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -212,8 +212,8 @@ extern const struct WMAddressFetchedProperties {
 
 
 
-- (NSString*)primitiveWmaddress_id;
-- (void)setPrimitiveWmaddress_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

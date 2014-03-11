@@ -6,13 +6,11 @@
 const struct WMDeviceGroupAttributes WMDeviceGroupAttributes = {
 	.closedFlag = @"closedFlag",
 	.continueCount = @"continueCount",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
-	.wmdevicegroup_id = @"wmdevicegroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMDeviceGroupRelationships WMDeviceGroupRelationships = {
@@ -125,21 +123,7 @@ const struct WMDeviceGroupFetchedProperties WMDeviceGroupFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -147,6 +131,13 @@ const struct WMDeviceGroupFetchedProperties WMDeviceGroupFetchedProperties = {
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -179,14 +170,7 @@ const struct WMDeviceGroupFetchedProperties WMDeviceGroupFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
-@dynamic wmdevicegroup_id;
+@dynamic updatedAt;
 
 
 

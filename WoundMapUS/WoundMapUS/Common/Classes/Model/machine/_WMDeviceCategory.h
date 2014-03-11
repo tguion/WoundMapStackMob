@@ -5,17 +5,17 @@
 
 
 extern const struct WMDeviceCategoryAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *iapIdentifier;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *snomedCID;
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmdevicecategory_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMDeviceCategoryAttributes;
 
 extern const struct WMDeviceCategoryRelationships {
@@ -54,11 +54,11 @@ extern const struct WMDeviceCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -69,6 +69,16 @@ extern const struct WMDeviceCategoryFetchedProperties {
 
 
 //- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -93,16 +103,6 @@ extern const struct WMDeviceCategoryFetchedProperties {
 
 
 //- (BOOL)validateIapIdentifier:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -166,11 +166,11 @@ extern const struct WMDeviceCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmdevicecategory_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmdevicecategory_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -210,14 +210,20 @@ extern const struct WMDeviceCategoryFetchedProperties {
 @interface _WMDeviceCategory (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSString*)primitiveDefinition;
 - (void)setPrimitiveDefinition:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -233,12 +239,6 @@ extern const struct WMDeviceCategoryFetchedProperties {
 
 - (NSString*)primitiveIapIdentifier;
 - (void)setPrimitiveIapIdentifier:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -279,8 +279,8 @@ extern const struct WMDeviceCategoryFetchedProperties {
 
 
 
-- (NSString*)primitiveWmdevicecategory_id;
-- (void)setPrimitiveWmdevicecategory_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

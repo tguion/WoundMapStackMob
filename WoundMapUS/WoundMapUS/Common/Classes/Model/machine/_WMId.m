@@ -4,12 +4,12 @@
 #import "_WMId.h"
 
 const struct WMIdAttributes WMIdAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.extension = @"extension",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.root = @"root",
-	.wmid_id = @"wmid_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMIdRelationships WMIdRelationships = {
@@ -58,7 +58,7 @@ const struct WMIdFetchedProperties WMIdFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -66,6 +66,13 @@ const struct WMIdFetchedProperties WMIdFetchedProperties = {
 
 
 @dynamic extension;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -98,13 +105,6 @@ const struct WMIdFetchedProperties WMIdFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic root;
 
 
@@ -112,7 +112,7 @@ const struct WMIdFetchedProperties WMIdFetchedProperties = {
 
 
 
-@dynamic wmid_id;
+@dynamic updatedAt;
 
 
 

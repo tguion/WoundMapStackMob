@@ -8,16 +8,16 @@ extern const struct WMNavigationNodeAttributes {
 	__unsafe_unretained NSString *activeFlag;
 	__unsafe_unretained NSString *closeUnit;
 	__unsafe_unretained NSString *closeValue;
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *disabledFlag;
 	__unsafe_unretained NSString *displayTitle;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *frequencyUnit;
 	__unsafe_unretained NSString *frequencyValue;
 	__unsafe_unretained NSString *iapIdentifier;
 	__unsafe_unretained NSString *icon;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *patientFlag;
 	__unsafe_unretained NSString *requiresPatientFlag;
 	__unsafe_unretained NSString *requiresWoundFlag;
@@ -25,8 +25,8 @@ extern const struct WMNavigationNodeAttributes {
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *taskIdentifier;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *userSortRank;
-	__unsafe_unretained NSString *wmnavigationnode_id;
 	__unsafe_unretained NSString *woundFlag;
 	__unsafe_unretained NSString *woundTypeCodes;
 } WMNavigationNodeAttributes;
@@ -124,11 +124,11 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -163,6 +163,16 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 //- (BOOL)validateDisplayTitle:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -225,16 +235,6 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 //- (BOOL)validateIcon:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -334,6 +334,16 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* userSortRank;
 
 
@@ -343,16 +353,6 @@ extern const struct WMNavigationNodeFetchedProperties {
 - (void)setUserSortRankValue:(int16_t)value_;
 
 //- (BOOL)validateUserSortRank:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmnavigationnode_id;
-
-
-
-//- (BOOL)validateWmnavigationnode_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -445,8 +445,8 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -468,6 +468,12 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 - (NSString*)primitiveDisplayTitle;
 - (void)setPrimitiveDisplayTitle:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -507,12 +513,6 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 - (NSString*)primitiveIcon;
 - (void)setPrimitiveIcon:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -577,17 +577,17 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveUserSortRank;
 - (void)setPrimitiveUserSortRank:(NSNumber*)value;
 
 - (int16_t)primitiveUserSortRankValue;
 - (void)setPrimitiveUserSortRankValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmnavigationnode_id;
-- (void)setPrimitiveWmnavigationnode_id:(NSString*)value;
 
 
 

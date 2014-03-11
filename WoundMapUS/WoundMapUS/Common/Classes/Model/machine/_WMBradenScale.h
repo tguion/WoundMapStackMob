@@ -7,13 +7,11 @@
 extern const struct WMBradenScaleAttributes {
 	__unsafe_unretained NSString *closedFlag;
 	__unsafe_unretained NSString *completeFlag;
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *score;
-	__unsafe_unretained NSString *wmbradenscale_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMBradenScaleAttributes;
 
 extern const struct WMBradenScaleRelationships {
@@ -26,8 +24,6 @@ extern const struct WMBradenScaleFetchedProperties {
 
 @class WMPatient;
 @class WMBradenSection;
-
-
 
 
 
@@ -78,31 +74,21 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* dateModified;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -122,16 +108,6 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSNumber* score;
 
 
@@ -146,11 +122,11 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmbradenscale_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmbradenscale_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -203,20 +179,14 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -230,12 +200,6 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSNumber*)primitiveScore;
 - (void)setPrimitiveScore:(NSNumber*)value;
 
@@ -245,8 +209,8 @@ extern const struct WMBradenScaleFetchedProperties {
 
 
 
-- (NSString*)primitiveWmbradenscale_id;
-- (void)setPrimitiveWmbradenscale_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

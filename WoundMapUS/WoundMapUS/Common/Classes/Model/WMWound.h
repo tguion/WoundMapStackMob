@@ -10,7 +10,7 @@
 
 + (NSInteger)woundCountForPatient:(WMPatient *)patient;
 
-+ (WMWound *)woundForPatient:(WMPatient *)patient woundId:(NSString *)woundId;
++ (WMWound *)woundForPatient:(WMPatient *)patient woundFFURL:(NSString *)ffUrl;
 
 + (NSArray *)sortedWounds:(WMPatient *)patient;
 

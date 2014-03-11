@@ -5,15 +5,14 @@
 
 
 extern const struct WMParticipantAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateLastSignin;
 	__unsafe_unretained NSString *email;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *permissions;
-	__unsafe_unretained NSString *wmparticipant_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMParticipantAttributes;
 
 extern const struct WMParticipantRelationships {
@@ -40,7 +39,6 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
-
 @interface WMParticipantID : NSManagedObjectID {}
 @end
 
@@ -54,21 +52,11 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -94,6 +82,16 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -103,16 +101,6 @@ extern const struct WMParticipantFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -142,11 +130,11 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmparticipant_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmparticipant_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -200,14 +188,8 @@ extern const struct WMParticipantFetchedProperties {
 @interface _WMParticipant (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -224,17 +206,17 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -254,8 +236,8 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
-- (NSString*)primitiveWmparticipant_id;
-- (void)setPrimitiveWmparticipant_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

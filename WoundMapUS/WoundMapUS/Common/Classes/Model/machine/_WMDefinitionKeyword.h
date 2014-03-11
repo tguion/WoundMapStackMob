@@ -5,11 +5,8 @@
 
 
 extern const struct WMDefinitionKeywordAttributes {
-	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *keyword;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *scope;
-	__unsafe_unretained NSString *wmdefinitionkeyword_id;
 } WMDefinitionKeywordAttributes;
 
 extern const struct WMDefinitionKeywordRelationships {
@@ -20,9 +17,6 @@ extern const struct WMDefinitionKeywordFetchedProperties {
 } WMDefinitionKeywordFetchedProperties;
 
 @class WMDefinition;
-
-
-
 
 
 
@@ -40,31 +34,11 @@ extern const struct WMDefinitionKeywordFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
-
-
-
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* keyword;
 
 
 
 //- (BOOL)validateKeyword:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -79,16 +53,6 @@ extern const struct WMDefinitionKeywordFetchedProperties {
 - (void)setScopeValue:(int16_t)value_;
 
 //- (BOOL)validateScope:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmdefinitionkeyword_id;
-
-
-
-//- (BOOL)validateWmdefinitionkeyword_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -111,20 +75,8 @@ extern const struct WMDefinitionKeywordFetchedProperties {
 @interface _WMDefinitionKeyword (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveKeyword;
 - (void)setPrimitiveKeyword:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -134,12 +86,6 @@ extern const struct WMDefinitionKeywordFetchedProperties {
 
 - (int16_t)primitiveScopeValue;
 - (void)setPrimitiveScopeValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmdefinitionkeyword_id;
-- (void)setPrimitiveWmdefinitionkeyword_id:(NSString*)value;
 
 
 

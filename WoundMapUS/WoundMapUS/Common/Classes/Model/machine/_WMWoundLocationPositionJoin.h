@@ -5,10 +5,10 @@
 
 
 extern const struct WMWoundLocationPositionJoinAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *sortRank;
-	__unsafe_unretained NSString *wmwoundlocationpositionjoin_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMWoundLocationPositionJoinAttributes;
 
 extern const struct WMWoundLocationPositionJoinRelationships {
@@ -40,21 +40,21 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -74,11 +74,11 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmwoundlocationpositionjoin_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmwoundlocationpositionjoin_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -113,14 +113,14 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 @interface _WMWoundLocationPositionJoin (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -134,8 +134,8 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 
 
 
-- (NSString*)primitiveWmwoundlocationpositionjoin_id;
-- (void)setPrimitiveWmwoundlocationpositionjoin_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

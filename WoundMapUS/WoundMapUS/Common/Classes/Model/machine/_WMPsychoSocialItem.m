@@ -4,11 +4,11 @@
 #import "_WMPsychoSocialItem.h"
 
 const struct WMPsychoSocialItemAttributes WMPsychoSocialItemAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.iapIdentifier = @"iapIdentifier",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.options = @"options",
 	.prefixTitle = @"prefixTitle",
@@ -20,8 +20,8 @@ const struct WMPsychoSocialItemAttributes WMPsychoSocialItemAttributes = {
 	.subitemPrompt = @"subitemPrompt",
 	.subtitle = @"subtitle",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmpsychosocialitem_id = @"wmpsychosocialitem_id",
 };
 
 const struct WMPsychoSocialItemRelationships WMPsychoSocialItemRelationships = {
@@ -92,7 +92,7 @@ const struct WMPsychoSocialItemFetchedProperties WMPsychoSocialItemFetchedProper
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -100,6 +100,13 @@ const struct WMPsychoSocialItemFetchedProperties WMPsychoSocialItemFetchedProper
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -133,13 +140,6 @@ const struct WMPsychoSocialItemFetchedProperties WMPsychoSocialItemFetchedProper
 
 
 @dynamic iapIdentifier;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -280,6 +280,13 @@ const struct WMPsychoSocialItemFetchedProperties WMPsychoSocialItemFetchedProper
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -301,13 +308,6 @@ const struct WMPsychoSocialItemFetchedProperties WMPsychoSocialItemFetchedProper
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmpsychosocialitem_id;
-
 
 
 

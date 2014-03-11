@@ -5,15 +5,15 @@
 
 const struct WMInterventionEventAttributes WMInterventionEventAttributes = {
 	.changeType = @"changeType",
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.dateEvent = @"dateEvent",
 	.datePushed = @"datePushed",
-	.lastmoddate = @"lastmoddate",
+	.ffUrl = @"ffUrl",
 	.path = @"path",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.valueFrom = @"valueFrom",
 	.valueTo = @"valueTo",
-	.wminterventionevent_id = @"wminterventionevent_id",
 };
 
 const struct WMInterventionEventRelationships WMInterventionEventRelationships = {
@@ -88,7 +88,7 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -109,7 +109,7 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 
 
 
-@dynamic lastmoddate;
+@dynamic ffUrl;
 
 
 
@@ -130,6 +130,13 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueFrom;
 
 
@@ -138,13 +145,6 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 
 
 @dynamic valueTo;
-
-
-
-
-
-
-@dynamic wminterventionevent_id;
 
 
 

@@ -6,14 +6,11 @@
 const struct WMInstructionAttributes WMInstructionAttributes = {
 	.contentFileExtension = @"contentFileExtension",
 	.contentFileName = @"contentFileName",
-	.createddate = @"createddate",
 	.desc = @"desc",
 	.flags = @"flags",
 	.iconFileName = @"iconFileName",
-	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wminstruction_id = @"wminstruction_id",
 };
 
 const struct WMInstructionRelationships WMInstructionRelationships = {
@@ -79,13 +76,6 @@ const struct WMInstructionFetchedProperties WMInstructionFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
 @dynamic desc;
 
 
@@ -126,13 +116,6 @@ const struct WMInstructionFetchedProperties WMInstructionFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic sortRank;
 
 
@@ -160,13 +143,6 @@ const struct WMInstructionFetchedProperties WMInstructionFetchedProperties = {
 
 
 @dynamic title;
-
-
-
-
-
-
-@dynamic wminstruction_id;
 
 
 

@@ -5,16 +5,14 @@
 
 
 extern const struct WMWoundMeasurementValueAttributes {
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *datePushed;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *revisedFlag;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *value;
-	__unsafe_unretained NSString *wmwoundmeasurementvalue_id;
 } WMWoundMeasurementValueAttributes;
 
 extern const struct WMWoundMeasurementValueRelationships {
@@ -41,8 +39,6 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
-
-
 @interface WMWoundMeasurementValueID : NSManagedObjectID {}
 @end
 
@@ -56,31 +52,11 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateModified;
-
-
-
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -96,6 +72,16 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -105,16 +91,6 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -144,21 +120,21 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* value;
 
 
 
 //- (BOOL)validateValue:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmwoundmeasurementvalue_id;
-
-
-
-//- (BOOL)validateWmwoundmeasurementvalue_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -202,20 +178,8 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 @interface _WMWoundMeasurementValue (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -226,17 +190,17 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -256,14 +220,14 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmwoundmeasurementvalue_id;
-- (void)setPrimitiveWmwoundmeasurementvalue_id:(NSString*)value;
 
 
 

@@ -5,12 +5,12 @@
 
 
 extern const struct WMTelecomAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *use;
 	__unsafe_unretained NSString *value;
-	__unsafe_unretained NSString *wmtelecom_id;
 } WMTelecomAttributes;
 
 extern const struct WMTelecomRelationships {
@@ -44,11 +44,21 @@ extern const struct WMTelecomFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -68,11 +78,11 @@ extern const struct WMTelecomFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -93,16 +103,6 @@ extern const struct WMTelecomFetchedProperties {
 
 
 //- (BOOL)validateValue:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmtelecom_id;
-
-
-
-//- (BOOL)validateWmtelecom_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -132,8 +132,14 @@ extern const struct WMTelecomFetchedProperties {
 @interface _WMTelecom (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -147,8 +153,8 @@ extern const struct WMTelecomFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 
@@ -161,12 +167,6 @@ extern const struct WMTelecomFetchedProperties {
 
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmtelecom_id;
-- (void)setPrimitiveWmtelecom_id:(NSString*)value;
 
 
 

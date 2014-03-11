@@ -6,17 +6,15 @@
 const struct WMMedicationGroupAttributes WMMedicationGroupAttributes = {
 	.closedFlag = @"closedFlag",
 	.continueCount = @"continueCount",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
-	.wmmedicationgroup_id = @"wmmedicationgroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMMedicationGroupRelationships WMMedicationGroupRelationships = {
@@ -134,21 +132,7 @@ const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperti
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -163,6 +147,13 @@ const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperti
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -190,13 +181,6 @@ const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperti
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -242,7 +226,7 @@ const struct WMMedicationGroupFetchedProperties WMMedicationGroupFetchedProperti
 
 
 
-@dynamic wmmedicationgroup_id;
+@dynamic updatedAt;
 
 
 

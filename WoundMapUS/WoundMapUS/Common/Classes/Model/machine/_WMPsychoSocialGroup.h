@@ -6,13 +6,11 @@
 
 extern const struct WMPsychoSocialGroupAttributes {
 	__unsafe_unretained NSString *closedFlag;
-	__unsafe_unretained NSString *createddate;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *datePushed;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
-	__unsafe_unretained NSString *wmpsychosocialgroup_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMPsychoSocialGroupAttributes;
 
 extern const struct WMPsychoSocialGroupRelationships {
@@ -29,8 +27,6 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 @class WMPatient;
 @class WMInterventionStatus;
 @class WMPsychoSocialValue;
-
-
 
 
 
@@ -66,31 +62,11 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateModified;
-
-
-
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -101,6 +77,16 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 //- (BOOL)validateDatePushed:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -120,21 +106,11 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmpsychosocialgroup_id;
-
-
-
-//- (BOOL)validateWmpsychosocialgroup_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -197,26 +173,20 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSDate*)primitiveDatePushed;
 - (void)setPrimitiveDatePushed:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -230,14 +200,8 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
-- (NSString*)primitiveWmpsychosocialgroup_id;
-- (void)setPrimitiveWmpsychosocialgroup_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

@@ -4,13 +4,13 @@
 #import "_WMWoundTreatment.h"
 
 const struct WMWoundTreatmentAttributes WMWoundTreatmentAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.iapIdentifier = @"iapIdentifier",
 	.keyboardType = @"keyboardType",
 	.label = @"label",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.options = @"options",
 	.placeHolder = @"placeHolder",
@@ -20,8 +20,8 @@ const struct WMWoundTreatmentAttributes WMWoundTreatmentAttributes = {
 	.sortRank = @"sortRank",
 	.title = @"title",
 	.unit = @"unit",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmwoundtreatment_id = @"wmwoundtreatment_id",
 };
 
 const struct WMWoundTreatmentRelationships WMWoundTreatmentRelationships = {
@@ -92,7 +92,7 @@ const struct WMWoundTreatmentFetchedProperties WMWoundTreatmentFetchedProperties
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -100,6 +100,13 @@ const struct WMWoundTreatmentFetchedProperties WMWoundTreatmentFetchedProperties
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -166,13 +173,6 @@ const struct WMWoundTreatmentFetchedProperties WMWoundTreatmentFetchedProperties
 
 
 @dynamic label;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -280,6 +280,13 @@ const struct WMWoundTreatmentFetchedProperties WMWoundTreatmentFetchedProperties
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -301,13 +308,6 @@ const struct WMWoundTreatmentFetchedProperties WMWoundTreatmentFetchedProperties
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmwoundtreatment_id;
-
 
 
 

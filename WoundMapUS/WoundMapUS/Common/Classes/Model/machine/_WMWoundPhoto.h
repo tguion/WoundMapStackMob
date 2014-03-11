@@ -6,8 +6,8 @@
 
 extern const struct WMWoundPhotoAttributes {
 	__unsafe_unretained NSString *comments;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
+	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *imageHeight;
 	__unsafe_unretained NSString *imageOrientation;
@@ -22,6 +22,7 @@ extern const struct WMWoundPhotoAttributes {
 	__unsafe_unretained NSString *transformSizeAsString;
 	__unsafe_unretained NSString *transformTranslationX;
 	__unsafe_unretained NSString *transformTranslationY;
+	__unsafe_unretained NSString *updatedAt;
 } WMWoundPhotoAttributes;
 
 extern const struct WMWoundPhotoRelationships {
@@ -36,6 +37,7 @@ extern const struct WMWoundPhotoFetchedProperties {
 @class WMWoundMeasurementGroup;
 @class WMPhoto;
 @class WMWound;
+
 
 
 
@@ -78,21 +80,21 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* dateCreated;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSDate* dateModified;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -270,6 +272,16 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSSet *measurementGroups;
 
 - (NSMutableSet*)measurementGroupsSet;
@@ -317,14 +329,14 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -433,6 +445,12 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 - (float)primitiveTransformTranslationYValue;
 - (void)setPrimitiveTransformTranslationYValue:(float)value_;
+
+
+
+
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

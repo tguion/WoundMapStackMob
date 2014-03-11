@@ -5,11 +5,11 @@
 
 
 extern const struct WMWoundTypeAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *label;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *options;
 	__unsafe_unretained NSString *placeHolder;
@@ -18,8 +18,8 @@ extern const struct WMWoundTypeAttributes {
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *valueTypeCode;
-	__unsafe_unretained NSString *wmwoundtype_id;
 	__unsafe_unretained NSString *woundTypeCode;
 } WMWoundTypeAttributes;
 
@@ -82,11 +82,11 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -97,6 +97,16 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 //- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -121,16 +131,6 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 //- (BOOL)validateLabel:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -224,6 +224,16 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* valueTypeCode;
 
 
@@ -233,16 +243,6 @@ extern const struct WMWoundTypeFetchedProperties {
 - (void)setValueTypeCodeValue:(int16_t)value_;
 
 //- (BOOL)validateValueTypeCode:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmwoundtype_id;
-
-
-
-//- (BOOL)validateWmwoundtype_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -399,14 +399,20 @@ extern const struct WMWoundTypeFetchedProperties {
 @interface _WMWoundType (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSString*)primitiveDefinition;
 - (void)setPrimitiveDefinition:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -422,12 +428,6 @@ extern const struct WMWoundTypeFetchedProperties {
 
 - (NSString*)primitiveLabel;
 - (void)setPrimitiveLabel:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -486,17 +486,17 @@ extern const struct WMWoundTypeFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveValueTypeCode;
 - (void)setPrimitiveValueTypeCode:(NSNumber*)value;
 
 - (int16_t)primitiveValueTypeCodeValue;
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmwoundtype_id;
-- (void)setPrimitiveWmwoundtype_id:(NSString*)value;
 
 
 

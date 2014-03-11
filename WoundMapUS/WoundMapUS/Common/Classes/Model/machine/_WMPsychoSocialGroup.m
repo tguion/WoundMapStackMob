@@ -5,13 +5,11 @@
 
 const struct WMPsychoSocialGroupAttributes WMPsychoSocialGroupAttributes = {
 	.closedFlag = @"closedFlag",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
 	.datePushed = @"datePushed",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
-	.wmpsychosocialgroup_id = @"wmpsychosocialgroup_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMPsychoSocialGroupRelationships WMPsychoSocialGroupRelationships = {
@@ -93,21 +91,7 @@ const struct WMPsychoSocialGroupFetchedProperties WMPsychoSocialGroupFetchedProp
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic createdAt;
 
 
 
@@ -115,6 +99,13 @@ const struct WMPsychoSocialGroupFetchedProperties WMPsychoSocialGroupFetchedProp
 
 
 @dynamic datePushed;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -147,14 +138,7 @@ const struct WMPsychoSocialGroupFetchedProperties WMPsychoSocialGroupFetchedProp
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
-@dynamic wmpsychosocialgroup_id;
+@dynamic updatedAt;
 
 
 

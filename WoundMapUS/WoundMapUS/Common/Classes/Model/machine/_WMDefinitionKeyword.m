@@ -4,11 +4,8 @@
 #import "_WMDefinitionKeyword.h"
 
 const struct WMDefinitionKeywordAttributes WMDefinitionKeywordAttributes = {
-	.createddate = @"createddate",
 	.keyword = @"keyword",
-	.lastmoddate = @"lastmoddate",
 	.scope = @"scope",
-	.wmdefinitionkeyword_id = @"wmdefinitionkeyword_id",
 };
 
 const struct WMDefinitionKeywordRelationships WMDefinitionKeywordRelationships = {
@@ -56,21 +53,7 @@ const struct WMDefinitionKeywordFetchedProperties WMDefinitionKeywordFetchedProp
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
 @dynamic keyword;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -98,13 +81,6 @@ const struct WMDefinitionKeywordFetchedProperties WMDefinitionKeywordFetchedProp
 - (void)setPrimitiveScopeValue:(int16_t)value_ {
 	[self setPrimitiveScope:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmdefinitionkeyword_id;
-
 
 
 

@@ -5,10 +5,10 @@
 
 
 extern const struct WMWoundLocationAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *placeHolder;
 	__unsafe_unretained NSString *sectionTitle;
@@ -16,8 +16,8 @@ extern const struct WMWoundLocationAttributes {
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *valueTypeCode;
-	__unsafe_unretained NSString *wmwoundlocation_id;
 } WMWoundLocationAttributes;
 
 extern const struct WMWoundLocationRelationships {
@@ -58,11 +58,11 @@ extern const struct WMWoundLocationFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -78,6 +78,16 @@ extern const struct WMWoundLocationFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -87,16 +97,6 @@ extern const struct WMWoundLocationFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -180,6 +180,16 @@ extern const struct WMWoundLocationFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* valueTypeCode;
 
 
@@ -189,16 +199,6 @@ extern const struct WMWoundLocationFetchedProperties {
 - (void)setValueTypeCodeValue:(int16_t)value_;
 
 //- (BOOL)validateValueTypeCode:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmwoundlocation_id;
-
-
-
-//- (BOOL)validateWmwoundlocation_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -238,8 +238,8 @@ extern const struct WMWoundLocationFetchedProperties {
 @interface _WMWoundLocation (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -250,17 +250,17 @@ extern const struct WMWoundLocationFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -313,17 +313,17 @@ extern const struct WMWoundLocationFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveValueTypeCode;
 - (void)setPrimitiveValueTypeCode:(NSNumber*)value;
 
 - (int16_t)primitiveValueTypeCodeValue;
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmwoundlocation_id;
-- (void)setPrimitiveWmwoundlocation_id:(NSString*)value;
 
 
 

@@ -7,14 +7,11 @@
 extern const struct WMInstructionAttributes {
 	__unsafe_unretained NSString *contentFileExtension;
 	__unsafe_unretained NSString *contentFileName;
-	__unsafe_unretained NSString *createddate;
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *iconFileName;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wminstruction_id;
 } WMInstructionAttributes;
 
 extern const struct WMInstructionRelationships {
@@ -22,9 +19,6 @@ extern const struct WMInstructionRelationships {
 
 extern const struct WMInstructionFetchedProperties {
 } WMInstructionFetchedProperties;
-
-
-
 
 
 
@@ -68,16 +62,6 @@ extern const struct WMInstructionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
-
-
-
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* desc;
 
 
@@ -112,16 +96,6 @@ extern const struct WMInstructionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSNumber* sortRank;
 
 
@@ -141,16 +115,6 @@ extern const struct WMInstructionFetchedProperties {
 
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wminstruction_id;
-
-
-
-//- (BOOL)validateWminstruction_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -178,12 +142,6 @@ extern const struct WMInstructionFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveDesc;
 - (void)setPrimitiveDesc:(NSString*)value;
 
@@ -205,12 +163,6 @@ extern const struct WMInstructionFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSNumber*)primitiveSortRank;
 - (void)setPrimitiveSortRank:(NSNumber*)value;
 
@@ -222,12 +174,6 @@ extern const struct WMInstructionFetchedProperties {
 
 - (NSString*)primitiveTitle;
 - (void)setPrimitiveTitle:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWminstruction_id;
-- (void)setPrimitiveWminstruction_id:(NSString*)value;
 
 
 

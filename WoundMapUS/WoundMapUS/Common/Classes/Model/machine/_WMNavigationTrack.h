@@ -6,16 +6,16 @@
 
 extern const struct WMNavigationTrackAttributes {
 	__unsafe_unretained NSString *activeFlag;
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *disabledFlag;
 	__unsafe_unretained NSString *displayTitle;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *icon;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmnavigationtrack_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMNavigationTrackAttributes;
 
 extern const struct WMNavigationTrackRelationships {
@@ -66,11 +66,11 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -110,6 +110,16 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -129,16 +139,6 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 //- (BOOL)validateIcon:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -168,11 +168,11 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmnavigationtrack_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmnavigationtrack_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -209,8 +209,8 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -236,6 +236,12 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
@@ -247,12 +253,6 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 - (NSString*)primitiveIcon;
 - (void)setPrimitiveIcon:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -272,8 +272,8 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
-- (NSString*)primitiveWmnavigationtrack_id;
-- (void)setPrimitiveWmnavigationtrack_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

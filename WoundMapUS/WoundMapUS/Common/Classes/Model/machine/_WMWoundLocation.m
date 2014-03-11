@@ -4,10 +4,10 @@
 #import "_WMWoundLocation.h"
 
 const struct WMWoundLocationAttributes WMWoundLocationAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.placeHolder = @"placeHolder",
 	.sectionTitle = @"sectionTitle",
@@ -15,8 +15,8 @@ const struct WMWoundLocationAttributes WMWoundLocationAttributes = {
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmwoundlocation_id = @"wmwoundlocation_id",
 };
 
 const struct WMWoundLocationRelationships WMWoundLocationRelationships = {
@@ -80,7 +80,7 @@ const struct WMWoundLocationFetchedProperties WMWoundLocationFetchedProperties =
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -88,6 +88,13 @@ const struct WMWoundLocationFetchedProperties WMWoundLocationFetchedProperties =
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -115,13 +122,6 @@ const struct WMWoundLocationFetchedProperties WMWoundLocationFetchedProperties =
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -214,6 +214,13 @@ const struct WMWoundLocationFetchedProperties WMWoundLocationFetchedProperties =
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -235,13 +242,6 @@ const struct WMWoundLocationFetchedProperties WMWoundLocationFetchedProperties =
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmwoundlocation_id;
-
 
 
 

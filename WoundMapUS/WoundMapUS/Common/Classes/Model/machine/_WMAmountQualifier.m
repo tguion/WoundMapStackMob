@@ -4,11 +4,11 @@
 #import "_WMAmountQualifier.h"
 
 const struct WMAmountQualifierAttributes WMAmountQualifierAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.label = @"label",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.placeHolder = @"placeHolder",
 	.sectionTitle = @"sectionTitle",
@@ -17,8 +17,8 @@ const struct WMAmountQualifierAttributes WMAmountQualifierAttributes = {
 	.sortRank = @"sortRank",
 	.title = @"title",
 	.unit = @"unit",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmamountqualifier_id = @"wmamountqualifier_id",
 };
 
 const struct WMAmountQualifierRelationships WMAmountQualifierRelationships = {
@@ -81,7 +81,7 @@ const struct WMAmountQualifierFetchedProperties WMAmountQualifierFetchedProperti
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -89,6 +89,13 @@ const struct WMAmountQualifierFetchedProperties WMAmountQualifierFetchedProperti
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -122,13 +129,6 @@ const struct WMAmountQualifierFetchedProperties WMAmountQualifierFetchedProperti
 
 
 @dynamic label;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -229,6 +229,13 @@ const struct WMAmountQualifierFetchedProperties WMAmountQualifierFetchedProperti
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -250,13 +257,6 @@ const struct WMAmountQualifierFetchedProperties WMAmountQualifierFetchedProperti
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmamountqualifier_id;
-
 
 
 

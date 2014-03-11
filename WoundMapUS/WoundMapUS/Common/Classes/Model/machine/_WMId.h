@@ -5,12 +5,12 @@
 
 
 extern const struct WMIdAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *extension;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *root;
-	__unsafe_unretained NSString *wmid_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMIdAttributes;
 
 extern const struct WMIdRelationships {
@@ -44,11 +44,11 @@ extern const struct WMIdFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -59,6 +59,16 @@ extern const struct WMIdFetchedProperties {
 
 
 //- (BOOL)validateExtension:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -78,16 +88,6 @@ extern const struct WMIdFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* root;
 
 
@@ -98,11 +98,11 @@ extern const struct WMIdFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmid_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmid_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -132,14 +132,20 @@ extern const struct WMIdFetchedProperties {
 @interface _WMId (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSString*)primitiveExtension;
 - (void)setPrimitiveExtension:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -153,20 +159,14 @@ extern const struct WMIdFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
-
-
-
-
 - (NSString*)primitiveRoot;
 - (void)setPrimitiveRoot:(NSString*)value;
 
 
 
 
-- (NSString*)primitiveWmid_id;
-- (void)setPrimitiveWmid_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

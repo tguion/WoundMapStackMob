@@ -5,7 +5,9 @@
 
 
 extern const struct WMWoundOdorAttributes {
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *label;
 	__unsafe_unretained NSString *loincCode;
@@ -16,6 +18,7 @@ extern const struct WMWoundOdorAttributes {
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *unit;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *valueTypeCode;
 } WMWoundOdorAttributes;
 
@@ -27,6 +30,9 @@ extern const struct WMWoundOdorFetchedProperties {
 } WMWoundOdorFetchedProperties;
 
 @class WMWoundMeasurementValue;
+
+
+
 
 
 
@@ -54,11 +60,31 @@ extern const struct WMWoundOdorFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* createdAt;
+
+
+
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* definition;
 
 
 
 //- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,6 +202,16 @@ extern const struct WMWoundOdorFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* valueTypeCode;
 
 
@@ -212,8 +248,20 @@ extern const struct WMWoundOdorFetchedProperties {
 @interface _WMWoundOdor (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveDefinition;
 - (void)setPrimitiveDefinition:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -283,6 +331,12 @@ extern const struct WMWoundOdorFetchedProperties {
 
 - (NSString*)primitiveUnit;
 - (void)setPrimitiveUnit:(NSString*)value;
+
+
+
+
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

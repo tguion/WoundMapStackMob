@@ -4,11 +4,11 @@
 #import "_WMSkinAssessment.h"
 
 const struct WMSkinAssessmentAttributes WMSkinAssessmentAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.label = @"label",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.options = @"options",
 	.placeHolder = @"placeHolder",
@@ -16,8 +16,8 @@ const struct WMSkinAssessmentAttributes WMSkinAssessmentAttributes = {
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmskinassessment_id = @"wmskinassessment_id",
 };
 
 const struct WMSkinAssessmentRelationships WMSkinAssessmentRelationships = {
@@ -81,7 +81,7 @@ const struct WMSkinAssessmentFetchedProperties WMSkinAssessmentFetchedProperties
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -89,6 +89,13 @@ const struct WMSkinAssessmentFetchedProperties WMSkinAssessmentFetchedProperties
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -122,13 +129,6 @@ const struct WMSkinAssessmentFetchedProperties WMSkinAssessmentFetchedProperties
 
 
 @dynamic label;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -222,6 +222,13 @@ const struct WMSkinAssessmentFetchedProperties WMSkinAssessmentFetchedProperties
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -243,13 +250,6 @@ const struct WMSkinAssessmentFetchedProperties WMSkinAssessmentFetchedProperties
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmskinassessment_id;
-
 
 
 

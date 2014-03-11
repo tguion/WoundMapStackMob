@@ -5,17 +5,15 @@
 
 
 extern const struct WMDeviceValueAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateAttach;
-	__unsafe_unretained NSString *dateCreated;
-	__unsafe_unretained NSString *dateModified;
 	__unsafe_unretained NSString *dateRemove;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *revisedFlag;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *value;
-	__unsafe_unretained NSString *wmdevicevalue_id;
 } WMDeviceValueAttributes;
 
 extern const struct WMDeviceValueRelationships {
@@ -28,8 +26,6 @@ extern const struct WMDeviceValueFetchedProperties {
 
 @class WMDevice;
 @class WMDeviceGroup;
-
-
 
 
 
@@ -54,11 +50,11 @@ extern const struct WMDeviceValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -74,31 +70,21 @@ extern const struct WMDeviceValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* dateCreated;
-
-
-
-//- (BOOL)validateDateCreated:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* dateModified;
-
-
-
-//- (BOOL)validateDateModified:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSDate* dateRemove;
 
 
 
 //- (BOOL)validateDateRemove:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -113,16 +99,6 @@ extern const struct WMDeviceValueFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -152,21 +128,21 @@ extern const struct WMDeviceValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* value;
 
 
 
 //- (BOOL)validateValue:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmdevicevalue_id;
-
-
-
-//- (BOOL)validateWmdevicevalue_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -196,8 +172,8 @@ extern const struct WMDeviceValueFetchedProperties {
 @interface _WMDeviceValue (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -208,20 +184,14 @@ extern const struct WMDeviceValueFetchedProperties {
 
 
 
-- (NSDate*)primitiveDateCreated;
-- (void)setPrimitiveDateCreated:(NSDate*)value;
-
-
-
-
-- (NSDate*)primitiveDateModified;
-- (void)setPrimitiveDateModified:(NSDate*)value;
-
-
-
-
 - (NSDate*)primitiveDateRemove;
 - (void)setPrimitiveDateRemove:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -231,12 +201,6 @@ extern const struct WMDeviceValueFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -256,14 +220,14 @@ extern const struct WMDeviceValueFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWmdevicevalue_id;
-- (void)setPrimitiveWmdevicevalue_id:(NSString*)value;
 
 
 

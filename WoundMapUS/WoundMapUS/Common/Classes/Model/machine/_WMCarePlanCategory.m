@@ -4,13 +4,13 @@
 #import "_WMCarePlanCategory.h"
 
 const struct WMCarePlanCategoryAttributes WMCarePlanCategoryAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.iapIdentifier = @"iapIdentifier",
 	.keyboardType = @"keyboardType",
 	.label = @"label",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.options = @"options",
 	.placeHolder = @"placeHolder",
@@ -18,8 +18,8 @@ const struct WMCarePlanCategoryAttributes WMCarePlanCategoryAttributes = {
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmcareplancategory_id = @"wmcareplancategory_id",
 };
 
 const struct WMCarePlanCategoryRelationships WMCarePlanCategoryRelationships = {
@@ -90,7 +90,7 @@ const struct WMCarePlanCategoryFetchedProperties WMCarePlanCategoryFetchedProper
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -98,6 +98,13 @@ const struct WMCarePlanCategoryFetchedProperties WMCarePlanCategoryFetchedProper
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -164,13 +171,6 @@ const struct WMCarePlanCategoryFetchedProperties WMCarePlanCategoryFetchedProper
 
 
 @dynamic label;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -264,6 +264,13 @@ const struct WMCarePlanCategoryFetchedProperties WMCarePlanCategoryFetchedProper
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -285,13 +292,6 @@ const struct WMCarePlanCategoryFetchedProperties WMCarePlanCategoryFetchedProper
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmcareplancategory_id;
-
 
 
 

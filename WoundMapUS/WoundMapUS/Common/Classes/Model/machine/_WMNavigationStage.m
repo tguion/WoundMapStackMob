@@ -4,16 +4,16 @@
 #import "_WMNavigationStage.h"
 
 const struct WMNavigationStageAttributes WMNavigationStageAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.desc = @"desc",
 	.disabledFlag = @"disabledFlag",
 	.displayTitle = @"displayTitle",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.icon = @"icon",
-	.lastmoddate = @"lastmoddate",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmnavigationstage_id = @"wmnavigationstage_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMNavigationStageRelationships WMNavigationStageRelationships = {
@@ -73,7 +73,7 @@ const struct WMNavigationStageFetchedProperties WMNavigationStageFetchedProperti
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -120,6 +120,13 @@ const struct WMNavigationStageFetchedProperties WMNavigationStageFetchedProperti
 
 
 
+@dynamic ffUrl;
+
+
+
+
+
+
 @dynamic flags;
 
 
@@ -147,13 +154,6 @@ const struct WMNavigationStageFetchedProperties WMNavigationStageFetchedProperti
 
 
 @dynamic icon;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -193,7 +193,7 @@ const struct WMNavigationStageFetchedProperties WMNavigationStageFetchedProperti
 
 
 
-@dynamic wmnavigationstage_id;
+@dynamic updatedAt;
 
 
 

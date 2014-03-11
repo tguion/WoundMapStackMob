@@ -4,18 +4,18 @@
 #import "_WMSkinAssessmentCategory.h"
 
 const struct WMSkinAssessmentCategoryAttributes WMSkinAssessmentCategoryAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.iapIdentifier = @"iapIdentifier",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.section = @"section",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
-	.wmskinassessmentcategory_id = @"wmskinassessmentcategory_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMSkinAssessmentCategoryRelationships WMSkinAssessmentCategoryRelationships = {
@@ -74,7 +74,7 @@ const struct WMSkinAssessmentCategoryFetchedProperties WMSkinAssessmentCategoryF
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -82,6 +82,13 @@ const struct WMSkinAssessmentCategoryFetchedProperties WMSkinAssessmentCategoryF
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -115,13 +122,6 @@ const struct WMSkinAssessmentCategoryFetchedProperties WMSkinAssessmentCategoryF
 
 
 @dynamic iapIdentifier;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -208,7 +208,7 @@ const struct WMSkinAssessmentCategoryFetchedProperties WMSkinAssessmentCategoryF
 
 
 
-@dynamic wmskinassessmentcategory_id;
+@dynamic updatedAt;
 
 
 

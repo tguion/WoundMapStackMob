@@ -6,13 +6,11 @@
 const struct WMBradenScaleAttributes WMBradenScaleAttributes = {
 	.closedFlag = @"closedFlag",
 	.completeFlag = @"completeFlag",
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
-	.dateModified = @"dateModified",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.score = @"score",
-	.wmbradenscale_id = @"wmbradenscale_id",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMBradenScaleRelationships WMBradenScaleRelationships = {
@@ -128,21 +126,14 @@ const struct WMBradenScaleFetchedProperties WMBradenScaleFetchedProperties = {
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
 
 
 
-@dynamic dateCreated;
-
-
-
-
-
-
-@dynamic dateModified;
+@dynamic ffUrl;
 
 
 
@@ -175,13 +166,6 @@ const struct WMBradenScaleFetchedProperties WMBradenScaleFetchedProperties = {
 
 
 
-@dynamic lastmoddate;
-
-
-
-
-
-
 @dynamic score;
 
 
@@ -208,7 +192,7 @@ const struct WMBradenScaleFetchedProperties WMBradenScaleFetchedProperties = {
 
 
 
-@dynamic wmbradenscale_id;
+@dynamic updatedAt;
 
 
 

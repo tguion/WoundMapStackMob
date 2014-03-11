@@ -7,16 +7,16 @@ const struct WMNavigationNodeAttributes WMNavigationNodeAttributes = {
 	.activeFlag = @"activeFlag",
 	.closeUnit = @"closeUnit",
 	.closeValue = @"closeValue",
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.desc = @"desc",
 	.disabledFlag = @"disabledFlag",
 	.displayTitle = @"displayTitle",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.frequencyUnit = @"frequencyUnit",
 	.frequencyValue = @"frequencyValue",
 	.iapIdentifier = @"iapIdentifier",
 	.icon = @"icon",
-	.lastmoddate = @"lastmoddate",
 	.patientFlag = @"patientFlag",
 	.requiresPatientFlag = @"requiresPatientFlag",
 	.requiresWoundFlag = @"requiresWoundFlag",
@@ -24,8 +24,8 @@ const struct WMNavigationNodeAttributes WMNavigationNodeAttributes = {
 	.sortRank = @"sortRank",
 	.taskIdentifier = @"taskIdentifier",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.userSortRank = @"userSortRank",
-	.wmnavigationnode_id = @"wmnavigationnode_id",
 	.woundFlag = @"woundFlag",
 	.woundTypeCodes = @"woundTypeCodes",
 };
@@ -225,7 +225,7 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -266,6 +266,13 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 
 
 @dynamic displayTitle;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -358,13 +365,6 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 
 
 @dynamic icon;
-
-
-
-
-
-
-@dynamic lastmoddate;
 
 
 
@@ -534,6 +534,13 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic userSortRank;
 
 
@@ -555,13 +562,6 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 - (void)setPrimitiveUserSortRankValue:(int16_t)value_ {
 	[self setPrimitiveUserSortRank:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmnavigationnode_id;
-
 
 
 

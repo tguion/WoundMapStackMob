@@ -14,11 +14,6 @@
 
 + (WMLocalStoreManager *)sharedInstance;
 
-- (void)seedLocalDatabase;
-
-@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, nonatomic) NSPersistentStore *store;
-
 - (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                       score:(NSInteger)score;
 

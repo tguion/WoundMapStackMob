@@ -6,18 +6,18 @@
 
 extern const struct WMWoundPositionAttributes {
 	__unsafe_unretained NSString *commonTitle;
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *prompt;
 	__unsafe_unretained NSString *snomedCID;
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *valueTypeCode;
-	__unsafe_unretained NSString *wmwoundposition_id;
 } WMWoundPositionAttributes;
 
 extern const struct WMWoundPositionRelationships {
@@ -68,11 +68,11 @@ extern const struct WMWoundPositionFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -88,6 +88,16 @@ extern const struct WMWoundPositionFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* flags;
 
 
@@ -97,16 +107,6 @@ extern const struct WMWoundPositionFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -180,6 +180,16 @@ extern const struct WMWoundPositionFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* valueTypeCode;
 
 
@@ -189,16 +199,6 @@ extern const struct WMWoundPositionFetchedProperties {
 - (void)setValueTypeCodeValue:(int16_t)value_;
 
 //- (BOOL)validateValueTypeCode:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wmwoundposition_id;
-
-
-
-//- (BOOL)validateWmwoundposition_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -244,8 +244,8 @@ extern const struct WMWoundPositionFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -256,17 +256,17 @@ extern const struct WMWoundPositionFetchedProperties {
 
 
 
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -313,17 +313,17 @@ extern const struct WMWoundPositionFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSNumber*)primitiveValueTypeCode;
 - (void)setPrimitiveValueTypeCode:(NSNumber*)value;
 
 - (int16_t)primitiveValueTypeCodeValue;
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmwoundposition_id;
-- (void)setPrimitiveWmwoundposition_id:(NSString*)value;
 
 
 

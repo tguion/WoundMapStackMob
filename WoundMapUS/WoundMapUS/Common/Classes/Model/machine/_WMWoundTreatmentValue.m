@@ -4,13 +4,13 @@
 #import "_WMWoundTreatmentValue.h"
 
 const struct WMWoundTreatmentValueAttributes WMWoundTreatmentValueAttributes = {
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.revisedFlag = @"revisedFlag",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.value = @"value",
-	.wmwoundtreatmentvalue_id = @"wmwoundtreatmentvalue_id",
 };
 
 const struct WMWoundTreatmentValueRelationships WMWoundTreatmentValueRelationships = {
@@ -64,7 +64,14 @@ const struct WMWoundTreatmentValueFetchedProperties WMWoundTreatmentValueFetched
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -92,13 +99,6 @@ const struct WMWoundTreatmentValueFetchedProperties WMWoundTreatmentValueFetched
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -137,14 +137,14 @@ const struct WMWoundTreatmentValueFetchedProperties WMWoundTreatmentValueFetched
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic value;
-
-
-
-
-
-
-@dynamic wmwoundtreatmentvalue_id;
 
 
 

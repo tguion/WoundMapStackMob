@@ -5,18 +5,18 @@
 
 const struct WMWoundPositionAttributes WMWoundPositionAttributes = {
 	.commonTitle = @"commonTitle",
-	.createddate = @"createddate",
+	.createdAt = @"createdAt",
 	.definition = @"definition",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.loincCode = @"loincCode",
 	.prompt = @"prompt",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
 	.sortRank = @"sortRank",
 	.title = @"title",
+	.updatedAt = @"updatedAt",
 	.valueTypeCode = @"valueTypeCode",
-	.wmwoundposition_id = @"wmwoundposition_id",
 };
 
 const struct WMWoundPositionRelationships WMWoundPositionRelationships = {
@@ -87,7 +87,7 @@ const struct WMWoundPositionFetchedProperties WMWoundPositionFetchedProperties =
 
 
 
-@dynamic createddate;
+@dynamic createdAt;
 
 
 
@@ -95,6 +95,13 @@ const struct WMWoundPositionFetchedProperties WMWoundPositionFetchedProperties =
 
 
 @dynamic definition;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -122,13 +129,6 @@ const struct WMWoundPositionFetchedProperties WMWoundPositionFetchedProperties =
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -214,6 +214,13 @@ const struct WMWoundPositionFetchedProperties WMWoundPositionFetchedProperties =
 
 
 
+@dynamic updatedAt;
+
+
+
+
+
+
 @dynamic valueTypeCode;
 
 
@@ -235,13 +242,6 @@ const struct WMWoundPositionFetchedProperties WMWoundPositionFetchedProperties =
 - (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
 	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic wmwoundposition_id;
-
 
 
 

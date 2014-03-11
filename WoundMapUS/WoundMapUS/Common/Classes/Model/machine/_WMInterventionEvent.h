@@ -6,15 +6,15 @@
 
 extern const struct WMInterventionEventAttributes {
 	__unsafe_unretained NSString *changeType;
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateEvent;
 	__unsafe_unretained NSString *datePushed;
-	__unsafe_unretained NSString *lastmoddate;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *path;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *valueFrom;
 	__unsafe_unretained NSString *valueTo;
-	__unsafe_unretained NSString *wminterventionevent_id;
 } WMInterventionEventAttributes;
 
 extern const struct WMInterventionEventRelationships {
@@ -66,11 +66,11 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -96,11 +96,11 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* lastmoddate;
+@property (nonatomic, strong) NSString* ffUrl;
 
 
 
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -126,6 +126,16 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* valueFrom;
 
 
@@ -141,16 +151,6 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 //- (BOOL)validateValueTo:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* wminterventionevent_id;
-
-
-
-//- (BOOL)validateWminterventionevent_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -189,8 +189,8 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
@@ -207,8 +207,8 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -225,6 +225,12 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveValueFrom;
 - (void)setPrimitiveValueFrom:(NSString*)value;
 
@@ -233,12 +239,6 @@ extern const struct WMInterventionEventFetchedProperties {
 
 - (NSString*)primitiveValueTo;
 - (void)setPrimitiveValueTo:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveWminterventionevent_id;
-- (void)setPrimitiveWminterventionevent_id:(NSString*)value;
 
 
 

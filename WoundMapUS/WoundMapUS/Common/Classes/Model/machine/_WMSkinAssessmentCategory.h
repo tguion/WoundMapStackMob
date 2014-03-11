@@ -5,18 +5,18 @@
 
 
 extern const struct WMSkinAssessmentCategoryAttributes {
-	__unsafe_unretained NSString *createddate;
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *definition;
+	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *iapIdentifier;
-	__unsafe_unretained NSString *lastmoddate;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *section;
 	__unsafe_unretained NSString *snomedCID;
 	__unsafe_unretained NSString *snomedFSN;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
-	__unsafe_unretained NSString *wmskinassessmentcategory_id;
+	__unsafe_unretained NSString *updatedAt;
 } WMSkinAssessmentCategoryAttributes;
 
 extern const struct WMSkinAssessmentCategoryRelationships {
@@ -56,11 +56,11 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* createddate;
+@property (nonatomic, strong) NSDate* createdAt;
 
 
 
-//- (BOOL)validateCreateddate:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -71,6 +71,16 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 
 
 //- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -95,16 +105,6 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 
 
 //- (BOOL)validateIapIdentifier:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSDate* lastmoddate;
-
-
-
-//- (BOOL)validateLastmoddate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -178,11 +178,11 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmskinassessmentcategory_id;
+@property (nonatomic, strong) NSDate* updatedAt;
 
 
 
-//- (BOOL)validateWmskinassessmentcategory_id:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -222,14 +222,20 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 @interface _WMSkinAssessmentCategory (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSDate*)primitiveCreateddate;
-- (void)setPrimitiveCreateddate:(NSDate*)value;
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
 - (NSString*)primitiveDefinition;
 - (void)setPrimitiveDefinition:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
 
 
 
@@ -245,12 +251,6 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 
 - (NSString*)primitiveIapIdentifier;
 - (void)setPrimitiveIapIdentifier:(NSString*)value;
-
-
-
-
-- (NSDate*)primitiveLastmoddate;
-- (void)setPrimitiveLastmoddate:(NSDate*)value;
 
 
 
@@ -297,8 +297,8 @@ extern const struct WMSkinAssessmentCategoryFetchedProperties {
 
 
 
-- (NSString*)primitiveWmskinassessmentcategory_id;
-- (void)setPrimitiveWmskinassessmentcategory_id:(NSString*)value;
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

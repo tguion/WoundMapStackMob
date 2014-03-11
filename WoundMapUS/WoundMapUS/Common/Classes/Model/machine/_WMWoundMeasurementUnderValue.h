@@ -6,7 +6,6 @@
 
 extern const struct WMWoundMeasurementUnderValueAttributes {
 	__unsafe_unretained NSString *toOClockValue;
-	__unsafe_unretained NSString *wmwoundmeasurementunderminevalue_id;
 } WMWoundMeasurementUnderValueAttributes;
 
 extern const struct WMWoundMeasurementUnderValueRelationships {
@@ -14,7 +13,6 @@ extern const struct WMWoundMeasurementUnderValueRelationships {
 
 extern const struct WMWoundMeasurementUnderValueFetchedProperties {
 } WMWoundMeasurementUnderValueFetchedProperties;
-
 
 
 
@@ -46,16 +44,6 @@ extern const struct WMWoundMeasurementUnderValueFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* wmwoundmeasurementunderminevalue_id;
-
-
-
-//- (BOOL)validateWmwoundmeasurementunderminevalue_id:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 
 @end
 
@@ -71,12 +59,6 @@ extern const struct WMWoundMeasurementUnderValueFetchedProperties {
 
 - (int16_t)primitiveToOClockValueValue;
 - (void)setPrimitiveToOClockValueValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveWmwoundmeasurementunderminevalue_id;
-- (void)setPrimitiveWmwoundmeasurementunderminevalue_id:(NSString*)value;
 
 
 

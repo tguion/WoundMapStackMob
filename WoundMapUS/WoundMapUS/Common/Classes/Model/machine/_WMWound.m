@@ -4,14 +4,13 @@
 #import "_WMWound.h"
 
 const struct WMWoundAttributes WMWoundAttributes = {
-	.createddate = @"createddate",
-	.dateCreated = @"dateCreated",
+	.createdAt = @"createdAt",
 	.desc = @"desc",
+	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.lastmoddate = @"lastmoddate",
 	.name = @"name",
 	.sortRank = @"sortRank",
-	.wmwound_id = @"wmwound_id",
+	.updatedAt = @"updatedAt",
 	.woundLocationValue = @"woundLocationValue",
 	.woundTypeValue = @"woundTypeValue",
 };
@@ -72,14 +71,7 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 
 
 
-@dynamic createddate;
-
-
-
-
-
-
-@dynamic dateCreated;
+@dynamic createdAt;
 
 
 
@@ -87,6 +79,13 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 
 
 @dynamic desc;
+
+
+
+
+
+
+@dynamic ffUrl;
 
 
 
@@ -114,13 +113,6 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic lastmoddate;
-
 
 
 
@@ -159,7 +151,7 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 
 
 
-@dynamic wmwound_id;
+@dynamic updatedAt;
 
 
 
