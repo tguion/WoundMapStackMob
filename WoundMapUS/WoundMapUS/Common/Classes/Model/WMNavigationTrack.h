@@ -15,11 +15,6 @@
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 
-+ (void)seedDatabaseSourceManagedObjectContext:(NSManagedObjectContext *)sourceManagedObjectContext
-                         sourcePersistentStore:(NSPersistentStore *)sourceStore
-                    targetManagedObjectContext:(NSManagedObjectContext *)targetManagedObjectContext
-                        targetPersistenceStore:(NSPersistentStore *)targetStore;
-
 + (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 
 + (WMNavigationTrack *)trackForTitle:(NSString *)title
@@ -27,8 +22,8 @@
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
                      persistentStore:(NSPersistentStore *)store;
 
-+ (WMNavigationTrack *)trackForId:(NSString *)navigationTrackId
-             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                  persistentStore:(NSPersistentStore *)store;
++ (WMNavigationTrack *)trackForFFURL:(NSString *)ffUrl
+                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                     persistentStore:(NSPersistentStore *)store;
 
 @end

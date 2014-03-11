@@ -2,7 +2,7 @@
 #import "WMNavigationStage.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
+#import "WCAppDelegate.h"
 
 typedef enum {
     NavigationNodeFlagsRequired     = 0,
@@ -25,11 +25,10 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:navigationNode toPersistentStore:store];
 	}
-    [navigationNode setValue:[navigationNode assignObjectId] forKey:[navigationNode primaryKeyField]];
 	return navigationNode;
 }
 
-+ (NSInteger)navigationNodeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSInteger)navigationNodeCount:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
@@ -130,52 +129,16 @@ typedef enum {
     return aRange.length > 0;
 }
 
-- (void)updateFromNavigationNode:(WMNavigationNode *)navigationNode
-      targetManagedObjectContext:(NSManagedObjectContext *)targetManagedObjectContext
-          targetPersistenceStore:(NSPersistentStore *)targetStore
-{
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:targetManagedObjectContext];
-    NSDictionary *attributesByName = entityDescription.attributesByName;
-    for (NSString *key in attributesByName) {
-        id value = [navigationNode valueForKey:key];
-        [self setValue:value forKey:key];
-    }
-    // update subnodes
-    __block NSSet *subnodes = nil;
-    [[navigationNode managedObjectContext] performBlockAndWait:^{
-        subnodes = navigationNode.subnodes;
-    }];
-    for (WMNavigationNode *subnode in subnodes) {
-        __block NSString *title = nil;
-        [[navigationNode managedObjectContext] performBlockAndWait:^{
-            title = subnode.title;
-        }];
-        WMNavigationNode *subnode2 = [WMNavigationNode nodeForTitle:title
-                                                              stage:self.stage
-                                                         parentNode:self
-                                                             create:YES
-                                               managedObjectContext:targetManagedObjectContext
-                                                    persistentStore:targetStore];
-        [subnode2 updateFromNavigationNode:subnode
-                targetManagedObjectContext:targetManagedObjectContext
-                    targetPersistenceStore:targetStore];
-    }
-}
-
 + (WMNavigationNode *)updateNodeFromDictionary:(NSDictionary *)dictionary
                                          stage:(WMNavigationStage *)stage
                                     parentNode:(WMNavigationNode *)parentNode
                                         create:(BOOL)create
-                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationNode *navigationNode = [WMNavigationNode nodeForTitle:title
                                                                 stage:stage
                                                            parentNode:parentNode
-                                                               create:create
-                                                 managedObjectContext:managedObjectContext
-                                                      persistentStore:store];
+                                                               create:create];
     if (nil == navigationNode) {
         return nil;
     }
@@ -234,45 +197,38 @@ typedef enum {
         navigationNode.woundTypeCodes = woundTypes;
     }
     // save node before attempting to form relationship with subnode
-    NSError *error = nil;
-    [managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
-    id subnodes = [dictionary objectForKey:@"subnodes"];
-    if ([subnodes isKindOfClass:[NSArray class]]) {
-        for (NSDictionary *d in subnodes) {
-            [WMNavigationNode updateNodeFromDictionary:d
-                                                 stage:stage
-                                            parentNode:navigationNode
-                                                create:YES
-                                  managedObjectContext:managedObjectContext
-                                       persistentStore:store];
+    NSManagedObjectContext *managedObjectContext = [stage managedObjectContext];
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            // save to back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
+            id subnodes = [dictionary objectForKey:@"subnodes"];
+            if ([subnodes isKindOfClass:[NSArray class]]) {
+                for (NSDictionary *d in subnodes) {
+                    [WMNavigationNode updateNodeFromDictionary:d
+                                                         stage:stage
+                                                    parentNode:navigationNode
+                                                        create:YES];
+                }
+            }
         }
-    }
+    }];
     return navigationNode;
 }
 
-+ (NSArray *)patientNodes:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)patientNodes:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patientFlag == YES"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patientFlag == YES"] inContext:managedObjectContext];
 }
 
-+ (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     // select
-    WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+    WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Select patient from patient list";
     navigationNode.disabledFlag = @NO;
@@ -284,8 +240,9 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
+    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // edit
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Edit current patient";
     navigationNode.disabledFlag = @NO;
@@ -297,8 +254,9 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
+    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // add
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Add a new patient";
     navigationNode.disabledFlag = @NO;
@@ -310,30 +268,22 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
+    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
 }
 
-+ (NSArray *)woundNodes:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)woundNodes:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"woundFlag == YES"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMNavigationNode MR_findAllSortedBy:@"sortRank"
+                                      ascending:YES
+                                  withPredicate:[NSPredicate predicateWithFormat:@"woundFlag == YES"]
+                                      inContext:managedObjectContext];
 }
 
-+ (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     // select
-    WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+    WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Select wound from identified wounds";
     navigationNode.disabledFlag = @NO;
@@ -345,8 +295,9 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
+    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // edit
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Edit current wound";
     navigationNode.disabledFlag = @NO;
@@ -358,8 +309,9 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
+    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // add
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Add a new wound";
     navigationNode.disabledFlag = @NO;
@@ -371,105 +323,77 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
+    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
 }
 
 + (WMNavigationNode *)navigationNodeForTaskIdentifier:(NSInteger)navigationNodeIdentifier
                                constrainToPatientFlag:(BOOL)constrainToPatientFlag
                                  constrainToWoundFlag:(BOOL)constrainToWoundFlag
                                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                      persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"taskIdentifier == %d", navigationNodeIdentifier];
     if (constrainToPatientFlag) {
         predicate = [NSPredicate predicateWithFormat:@"patientFlag == YES AND taskIdentifier == %d", navigationNodeIdentifier];
     } else if (constrainToWoundFlag) {
         predicate = [NSPredicate predicateWithFormat:@"woundFlag == YES AND taskIdentifier == %d", navigationNodeIdentifier];
     }
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMNavigationNode MR_findFirstWithPredicate:predicate inContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)addPatientNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)addPatientNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
     return [self navigationNodeForTaskIdentifier:kAddPatientNode
                           constrainToPatientFlag:YES
                             constrainToWoundFlag:NO
-                            managedObjectContext:managedObjectContext persistentStore:store];
+                            managedObjectContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)selectPatientNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)selectPatientNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
     return [self navigationNodeForTaskIdentifier:kSelectPatientNode
                           constrainToPatientFlag:YES
                             constrainToWoundFlag:NO
-                            managedObjectContext:managedObjectContext
-                                 persistentStore:store];
+                            managedObjectContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)editPatientNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)editPatientNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
     return [self navigationNodeForTaskIdentifier:kEditPatientNode
                           constrainToPatientFlag:YES
                             constrainToWoundFlag:NO
-                            managedObjectContext:managedObjectContext
-                                 persistentStore:store];
+                            managedObjectContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)addWoundNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)addWoundNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
     return [self navigationNodeForTaskIdentifier:kAddWoundNode
                           constrainToPatientFlag:NO
                             constrainToWoundFlag:YES
-                            managedObjectContext:managedObjectContext
-                                 persistentStore:store];
+                            managedObjectContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)selectWoundNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)selectWoundNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
     return [self navigationNodeForTaskIdentifier:kSelectWoundNode
                           constrainToPatientFlag:NO
                             constrainToWoundFlag:YES
-                            managedObjectContext:managedObjectContext
-                                 persistentStore:store];
+                            managedObjectContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)editWoundNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)editWoundNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
     return [self navigationNodeForTaskIdentifier:kEditWoundNode
                           constrainToPatientFlag:NO
                             constrainToWoundFlag:YES
-                            managedObjectContext:managedObjectContext
-                                 persistentStore:store];
+                            managedObjectContext:managedObjectContext];
 }
 
-+ (WMNavigationNode *)browsePhotosNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)browsePhotosNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kBrowsePhotosNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kBrowsePhotosNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Review photos of selected wound.";
         navigationNode.disabledFlag = @NO;
@@ -485,23 +409,12 @@ typedef enum {
     return navigationNode;
 }
 
-+ (WMNavigationNode *)viewGraphsNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)viewGraphsNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kViewGraphsNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kViewGraphsNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Review graphs of measurements for selected wound.";
         navigationNode.disabledFlag = @NO;
@@ -512,28 +425,19 @@ typedef enum {
         navigationNode.sortRank = @1;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kViewGraphsNode];
         navigationNode.title = @"View Graphs";
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
 }
 
-+ (WMNavigationNode *)shareNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)shareNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kShareNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kShareNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Share patient record via email, print, or EMR.";
         navigationNode.disabledFlag = @NO;
@@ -546,28 +450,19 @@ typedef enum {
         navigationNode.title = @"Share Patient Record";
         // TODO: add subnodes
         
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
 }
 
-+ (WMNavigationNode *)initialStageNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)initialStageNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kInitialStageNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kInitialStageNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Initial workup stage for new patient.";
         navigationNode.disabledFlag = @NO;
@@ -578,28 +473,19 @@ typedef enum {
         navigationNode.sortRank = @0;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kInitialStageNode];
         navigationNode.title = @"Initial Workup";
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
 }
 
-+ (WMNavigationNode *)followupStageNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)followupStageNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kFollowupStageNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kFollowupStageNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Follow-up stage for revisiting an existing patient.";
         navigationNode.disabledFlag = @NO;
@@ -610,28 +496,19 @@ typedef enum {
         navigationNode.sortRank = @0;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kFollowupStageNode];
         navigationNode.title = @"Follow Up";
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
 }
 
-+ (WMNavigationNode *)dischargeStageNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)dischargeStageNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kDischargeStageNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kDischargeStageNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Discharge stage for an existing patient.";
         navigationNode.disabledFlag = @NO;
@@ -642,28 +519,19 @@ typedef enum {
         navigationNode.sortRank = @0;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kDischargeStageNode];
         navigationNode.title = @"Discharge";
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
 }
 
-+ (WMNavigationNode *)carePlanNavigationNode:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMNavigationNode *)carePlanNavigationNode:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kCarePlanNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kCarePlanNode]
+                                                                         inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Care Plan";
         navigationNode.disabledFlag = @NO;
@@ -677,6 +545,8 @@ typedef enum {
         navigationNode.requiresPatientFlag = @YES;
         navigationNode.requiresWoundFlag = @NO;
         navigationNode.requiresWoundPhotoFlag = @NO;
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -684,49 +554,30 @@ typedef enum {
 
 + (NSArray *)sortedRootNodesForStage:(WMNavigationStage *)navigationStage
 {
-    NSManagedObjectContext *managedObjectContext = [navigationStage managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"stage == %@ AND parentNode == nil", navigationStage]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMNavigationNode MR_findAllSortedBy:@"sortRank"
+                                      ascending:YES
+                                  withPredicate:[NSPredicate predicateWithFormat:@"stage == %@ AND parentNode == nil", navigationStage]
+                                      inContext:[navigationStage managedObjectContext]];
 }
 
 + (WMNavigationNode *)nodeForTitle:(NSString *)title
                              stage:(WMNavigationStage *)stage
                         parentNode:(WMNavigationNode *)parentNode
                             create:(BOOL)create
-              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                   persistentStore:(NSPersistentStore *)store
 {
-    stage = (WMNavigationStage *)[managedObjectContext objectWithID:[stage objectID]];
-    if (nil != parentNode) {
-        parentNode = (WMNavigationNode *)[managedObjectContext objectWithID:[parentNode objectID]];
+    if (nil != stage && nil != parentNode) {
+        NSParameterAssert([[stage managedObjectContext] isEqual:[parentNode managedObjectContext]]);
     }
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND stage == %@ AND parentNode == %@", title, stage, parentNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    NSManagedObjectContext *managedObjectContext = [stage managedObjectContext];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND stage == %@ AND parentNode == %@", title, stage, parentNode]
+                                                                         inContext:managedObjectContext];
     if (create && nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.title = title;
         navigationNode.stage = stage;
         navigationNode.parentNode = parentNode;
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     return navigationNode;
 }
@@ -735,31 +586,20 @@ typedef enum {
                                   stage:(WMNavigationStage *)stage
                              parentNode:(WMNavigationNode *)parentNode
                                  create:(BOOL)create
-                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                        persistentStore:(NSPersistentStore *)store
 {
-    stage = (WMNavigationStage *)[managedObjectContext objectWithID:[stage objectID]];
-    if (nil != parentNode) {
-        parentNode = (WMNavigationNode *)[managedObjectContext objectWithID:[parentNode objectID]];
+    if (nil != stage && nil != parentNode) {
+        NSParameterAssert([[stage managedObjectContext] isEqual:[parentNode managedObjectContext]]);
     }
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d AND stage == %@ AND parentNode == %@", taskIdentifier, stage, parentNode]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationNode *navigationNode = [array lastObject];
+    NSManagedObjectContext *managedObjectContext = [stage managedObjectContext];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d AND stage == %@ AND parentNode == %@", taskIdentifier, stage, parentNode]
+                                                                         inContext:managedObjectContext];
     if (create && nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationNode.taskIdentifier = [NSNumber numberWithInteger:taskIdentifier];
         navigationNode.stage = stage;
         navigationNode.parentNode = parentNode;
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     return navigationNode;
 }

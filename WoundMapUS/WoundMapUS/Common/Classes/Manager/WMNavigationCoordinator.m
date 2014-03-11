@@ -139,7 +139,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     NSString *ffUrl = _patient.ffUrl;
     NSString *woundFFURL = [[WMUserDefaultsManager sharedInstance] lastWoundFFURLOnDeviceForPatientFFURL:ffUrl];
     if ([woundFFURL length] > 0) {
-        wound = [WMWound woundForPatient:_patient woundId:woundId];
+        wound = [WMWound woundForPatient:_patient woundFFURL:woundFFURL];
     }
     if (nil == wound) {
         wound = _patient.lastActiveWound;

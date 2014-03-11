@@ -17,7 +17,7 @@
 @property (nonatomic) NSString *lastTeamName;
 @property (nonatomic) NSString *lastPatientId;
 @property (nonatomic) NSDate *lastDateOfBirth;
-@property (nonatomic) NSString *defaultNavigationTrackId;
+@property (nonatomic) NSString *defaultNavigationTrackFFURL;
 @property (strong, nonatomic) NSString *encryptionPassword;       // password to protect PDF
 @property (strong, nonatomic) NSArray *emailPDFtoRecipients;
 @property (strong, nonatomic) NSArray *emailPDFccRecipients;

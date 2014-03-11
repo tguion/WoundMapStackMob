@@ -2,6 +2,7 @@
 #import "WMWoundType.h"
 #import "WMWoundPhoto.h"
 #import "WMPatient.h"
+#import "WMWoundMeasurementGroup.h"
 #import "WMWoundTreatmentGroup.h"
 #import "WMWoundLocation.h"
 #import "WMWoundLocationValue.h"
@@ -274,12 +275,9 @@
     [expressionDescription setExpressionResultType:NSDateAttributeType];
     // Set the request's properties to fetch just the property represented by the expressions.
     [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
-    // Execute the fetch.
-    NSError *error = nil;
-    NSArray *objects = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (objects == nil) {
-        [WMUtilities logError:error];
-    } else if ([objects count] > 0) {
+    // Execute the fetch
+    NSArray *objects = [WMWoundPhoto MR_executeFetchRequest:request inContext:managedObjectContext];
+    if ([objects count] > 0) {
         [dictionary addEntriesFromDictionary:objects[0]];
     }
     // MAX: Create an expression to represent the minimum value at the key path 'creationDate'
@@ -291,10 +289,8 @@
     // Set the request's properties to fetch just the property represented by the expressions.
     [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
     // Execute the fetch.
-    objects = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (objects == nil) {
-        [WMUtilities logError:error];
-    } else if ([objects count] > 0) {
+    objects = [WMWoundPhoto MR_executeFetchRequest:request inContext:managedObjectContext];
+    if ([objects count] > 0) {
         [dictionary addEntriesFromDictionary:objects[0]];
     }
     return dictionary;
@@ -302,50 +298,26 @@
 
 - (NSArray *)sortedPositionValues
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPositionValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"woundPosition.sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundPositionValue MR_findAllSortedBy:@"woundPosition.sortRank"
+                                          ascending:YES
+                                      withPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]
+                                          inContext:[self managedObjectContext]];
 }
 
 - (NSArray *)sortedWoundPhotos
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundPhoto MR_findAllSortedBy:@"createdAt"
+                                  ascending:YES
+                              withPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]
+                                  inContext:[self managedObjectContext]];
 }
 
 - (NSArray *)sortedWoundMeasurementsAscending:(BOOL)ascending
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WCWoundMeasurementGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:ascending]]];
-    NSError *error = nil;
-    NSArray *woundMeasurements = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return woundMeasurements;
+    return [WMWoundMeasurementGroup MR_findAllSortedBy:@"createdAt"
+                                             ascending:ascending
+                                         withPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]
+                                             inContext:[self managedObjectContext]];
 }
 
 - (NSArray *)sortedWoundMeasurements

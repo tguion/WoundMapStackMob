@@ -7,10 +7,17 @@
 //
 
 #import "CoreDataHelper.h"
+#import <FFEF/FatFractal.h>
 
 @class WMFatFractal;
 @class WMNavigationCoordinator;
 @class WMParticipant, User;
+
+@interface WMFatFractal : FatFractal
+
++ (WMFatFractal *)sharedInstance;
+
+@end
 
 @interface WCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 

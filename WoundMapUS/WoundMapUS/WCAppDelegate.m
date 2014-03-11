@@ -13,15 +13,8 @@
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
 #import "WMUtilities.h"
-#import <FFEF/FatFractal.h>
 
 static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
-
-@interface WMFatFractal : FatFractal
-
-+ (WMFatFractal *)sharedInstance;
-
-@end
 
 @implementation WMFatFractal
 
@@ -30,7 +23,8 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
     static WMFatFractal *SharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SharedInstance = [[WMFatFractal alloc] init];
+        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl];
+        SharedInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
     });
     return SharedInstance;
 }

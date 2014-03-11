@@ -2,7 +2,6 @@
 #import "WMParticipantType.h"
 #import "WMPerson.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMParticipant ()
 
@@ -20,105 +19,37 @@
 	if (store) {
 		[managedObjectContext assignObject:participant toPersistentStore:store];
 	}
-    [participant setValue:[participant assignObjectId] forKey:[participant primaryKeyField]];
 	return participant;
 }
 
-+ (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMParticipant MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 + (WMParticipant *)bestMatchingParticipantForUserName:(NSString *)name managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [self bestMatchingParticipantFetchRequestForUserName:name
-                                                              managedObjectContext:managedObjectContext];
-    __block WMParticipant *participant = nil;
-    [managedObjectContext performBlockAndWait:^{
-        NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-        // else
-        participant = [array lastObject];
-    }];
-    return participant;
-}
-
-+ (NSFetchRequest *)bestMatchingParticipantFetchRequestForUserName:(NSString *)name
-                                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-{
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH[cd] %@", name]];
-    return request;
-}
-
-+ (NSFetchRequest *)matchingParticipantFetchRequestForUserName:(NSString *)name
-                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-{
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"name == %@", name]];
-    return request;
+    return [WMParticipant MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH[cd] %@", name] inContext:managedObjectContext];
 }
 
 + (WMParticipant *)participantForName:(NSString *)name
                                create:(BOOL)create
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                      persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipant" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"name == %@", name]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMParticipant *participant = [array lastObject];
+    WMParticipant *participant = [WMParticipant MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"name == %@", name]
+                                                                inContext:managedObjectContext];
     if (create && nil == participant) {
-        participant = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        participant = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         participant.name = name;
     }
     return participant;
 }
 
-+ (WMParticipant *)duplicateParticipant:(WMParticipant *)participant
-                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                        persistentStore:(NSPersistentStore *)store
-{
-    WMParticipant *duplicatedParticipant = [self participantForName:participant.name create:NO managedObjectContext:managedObjectContext persistentStore:store];
-    if (nil == duplicatedParticipant) {
-        duplicatedParticipant = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
-        duplicatedParticipant.name = participant.name;
-    }
-    duplicatedParticipant.dateCreated = participant.dateCreated;
-    duplicatedParticipant.dateLastSignin = participant.dateLastSignin;
-    duplicatedParticipant.email = participant.email;
-    duplicatedParticipant.flags = participant.flags;
-    duplicatedParticipant.permissions = participant.permissions;
-    WMParticipantType *participantType = participant.participantType;
-    if (nil != participantType) {
-        duplicatedParticipant.participantType = [WMParticipantType participantTypeForTitle:participantType.title
-                                                                                    create:NO
-                                                                      managedObjectContext:managedObjectContext
-                                                                           persistentStore:store];
-    }
-    return duplicatedParticipant;
-}
-
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (NSString *)lastNameFirstName

@@ -2,7 +2,8 @@
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
+#import "WCAppDelegate.h"
+#import <FFEF/FatFractal.h>
 
 typedef enum {
     NavigationTrackFlagsIgnoreStages                = 0,
@@ -84,15 +85,12 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:navigationTrack toPersistentStore:store];
 	}
-    [navigationTrack setValue:[navigationTrack assignObjectId] forKey:[navigationTrack primaryKeyField]];
 	return navigationTrack;
 }
 
 + (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationTrack" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMNavigationTrack MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 // first attempt to find WMNavigationTrack data in index store
@@ -122,68 +120,9 @@ typedef enum {
                 [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext persistentStore:store];
             }
             // create patient and wound nodes
-            [WMNavigationNode seedPatientNodes:managedObjectContext persistentStore:store];
-            [WMNavigationNode seedWoundNodes:managedObjectContext persistentStore:store];
+            [WMNavigationNode seedPatientNodes:managedObjectContext];
+            [WMNavigationNode seedWoundNodes:managedObjectContext];
         }];
-    }
-}
-
-+ (void)seedDatabaseSourceManagedObjectContext:(NSManagedObjectContext *)sourceManagedObjectContext
-                         sourcePersistentStore:(NSPersistentStore *)sourceStore
-                    targetManagedObjectContext:(NSManagedObjectContext *)targetManagedObjectContext
-                        targetPersistenceStore:(NSPersistentStore *)targetStore
-{
-    __block NSArray *navigationTracks = nil;
-    [sourceManagedObjectContext performBlockAndWait:^{
-        navigationTracks = [WMNavigationTrack sortedTracks:sourceManagedObjectContext persistentStore:sourceStore];
-    }];
-    for (WMNavigationTrack *navigationTrack in navigationTracks) {
-        __block NSString *title = nil;
-        [sourceManagedObjectContext performBlockAndWait:^{
-            title = navigationTrack.title;
-        }];
-        WMNavigationTrack *navigationTrack2 = [self trackForTitle:title
-                                                           create:YES
-                                             managedObjectContext:targetManagedObjectContext
-                                                  persistentStore:targetStore];
-        NSAssert(nil != navigationTrack2, @"WCNavigtionTrack missing for %@", navigationTrack.title);
-        [navigationTrack2 updateFromNavigationTrack:navigationTrack
-                         targetManagedObjectContext:targetManagedObjectContext
-                             targetPersistenceStore:targetStore];
-    }
-    
-}
-
-// - (NSDictionary *)relationshipsByName
-- (void)updateFromNavigationTrack:(WMNavigationTrack *)navigationTrack
-       targetManagedObjectContext:(NSManagedObjectContext *)targetManagedObjectContext
-           targetPersistenceStore:(NSPersistentStore *)targetStore
-{
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"WMNavigationTrack" inManagedObjectContext:[self managedObjectContext]];
-    NSDictionary *attributesByName = entityDescription.attributesByName;
-    for (NSString *key in attributesByName) {
-        id value = [navigationTrack valueForKey:key];
-        [self setValue:value forKey:key];
-    }
-    // update stages
-    __block NSSet *stages = nil;
-    [[navigationTrack managedObjectContext] performBlockAndWait:^{
-        stages = navigationTrack.stages;
-    }];
-    for (WMNavigationStage *navigationStage in stages) {
-        __block NSString *title = nil;
-        [[navigationTrack managedObjectContext] performBlockAndWait:^{
-            title = navigationStage.title;
-        }];
-        WMNavigationStage *navigationStage2 = [WMNavigationStage stageForTitle:title
-                                                                         track:self
-                                                                        create:YES
-                                                          managedObjectContext:targetManagedObjectContext
-                                                               persistentStore:targetStore];
-        NSAssert(nil != navigationStage2, @"WMNavigationStage missing for %@", navigationStage.title);
-        [navigationStage2 updateFromNavigationStage:navigationStage
-                         targetManagedObjectContext:targetManagedObjectContext
-                             targetPersistenceStore:targetStore];
     }
 }
 
@@ -208,37 +147,29 @@ typedef enum {
     navigationTrack.skipCarePlanFlag = [[dictionary objectForKey:@"skipCarePlanFlag"] boolValue];
     navigationTrack.skipPolicyEditor = [[dictionary objectForKey:@"skipPolicyEditor"] boolValue];
     // save track before attempting to form relationship with stage
-    NSError *error = nil;
-    [managedObjectContext saveAndWait:&error];
-    [WMUtilities logError:error];
-    id stages = [dictionary objectForKey:@"stages"];
-    if ([stages isKindOfClass:[NSArray class]]) {
-        for (NSDictionary *d in stages) {
-            [WMNavigationStage updateStageFromDictionary:d
-                                                   track:navigationTrack
-                                                  create:create
-                                    managedObjectContext:managedObjectContext
-                                         persistentStore:store];
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            // save to back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff queueCreateObj:navigationTrack atUri:@"/WMNavigationTrack"];
+            id stages = [dictionary objectForKey:@"stages"];
+            if ([stages isKindOfClass:[NSArray class]]) {
+                for (NSDictionary *d in stages) {
+                    [WMNavigationStage updateStageFromDictionary:d
+                                                           track:navigationTrack
+                                                          create:create];
+                }
+            }
         }
-    }
+    }];
     return navigationTrack;
 }
 
 + (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WCNavigationTrack" inManagedObjectContext:managedObjectContext]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMNavigationTrack MR_findAllSortedBy:@"sortRank" ascending:YES];
 }
 
 + (WMNavigationTrack *)trackForTitle:(NSString *)title
@@ -246,19 +177,7 @@ typedef enum {
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
                      persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationTrack" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMNavigationTrack *navigationTrack = [array lastObject];
+    WMNavigationTrack *navigationTrack = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == navigationTrack) {
         navigationTrack = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
         navigationTrack.title = title;
@@ -266,23 +185,11 @@ typedef enum {
     return navigationTrack;
 }
 
-+ (WMNavigationTrack *)trackForId:(NSString *)navigationTrackId
-             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                  persistentStore:(NSPersistentStore *)store
++ (WMNavigationTrack *)trackForFFURL:(NSString *)ffUrl
+                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                     persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMNavigationTrack" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wmnavigationtrack_id == %@", navigationTrackId]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl] inContext:managedObjectContext];
 }
 
 @end
