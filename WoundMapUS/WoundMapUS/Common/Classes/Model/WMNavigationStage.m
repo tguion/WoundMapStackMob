@@ -4,6 +4,7 @@
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import <FFEF/FatFractal.h>
+#import "NSObject+performBlockAfterDelay.h"
 
 NSString *const kInitialWorkupStageTitle = @"Initial Workup";
 NSString *const kFollowupStageTitle = @"Follow Up";
@@ -25,6 +26,11 @@ NSString *const kDischargeStageTitle = @"Discharge";
 	if (store) {
 		[managedObjectContext assignObject:navigationStage toPersistentStore:store];
 	}
+    // save to back end
+    [navigationStage performBlock:^{
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationStage atUri:@"/WMNavigationStage"];
+    } afterDelay:0.5];
 	return navigationStage;
 }
 
@@ -69,9 +75,6 @@ NSString *const kDischargeStageTitle = @"Discharge";
         if (error) {
             [WMUtilities logError:error];
         } else {
-            // save to back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff queueCreateObj:navigationStage atUri:@"/WMNavigationStage"];
             id nodes = [dictionary objectForKey:@"nodes"];
             if ([nodes isKindOfClass:[NSArray class]]) {
                 for (NSDictionary *d in nodes) {
@@ -120,8 +123,6 @@ NSString *const kDischargeStageTitle = @"Discharge";
         navigationStage = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationStage.title = title;
         navigationStage.track = navigationTrack;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationTrack atUri:@"/WMNavigationStage"];
     }
     return navigationStage;
 }

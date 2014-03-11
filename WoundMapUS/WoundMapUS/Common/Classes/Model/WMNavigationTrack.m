@@ -4,6 +4,7 @@
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 #import <FFEF/FatFractal.h>
+#import "NSObject+performBlockAfterDelay.h"
 
 typedef enum {
     NavigationTrackFlagsIgnoreStages                = 0,
@@ -85,6 +86,11 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:navigationTrack toPersistentStore:store];
 	}
+    // save to back end
+    [navigationTrack performBlock:^{
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationTrack atUri:@"/WMNavigationTrack"];
+    } afterDelay:0.5];
 	return navigationTrack;
 }
 
@@ -151,9 +157,6 @@ typedef enum {
         if (error) {
             [WMUtilities logError:error];
         } else {
-            // save to back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff queueCreateObj:navigationTrack atUri:@"/WMNavigationTrack"];
             id stages = [dictionary objectForKey:@"stages"];
             if ([stages isKindOfClass:[NSArray class]]) {
                 for (NSDictionary *d in stages) {

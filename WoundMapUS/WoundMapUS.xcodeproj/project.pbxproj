@@ -94,6 +94,7 @@
 		5F910A3718C6B6D300CFA003 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F910A3618C6B6D300CFA003 /* FFEF.framework */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
+		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
 		7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */; };
 		7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACD18B7CBA90054DDC3 /* WMWound.m */; };
 		7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DAD018B7CD480054DDC3 /* WMNavigationNodeButton.m */; };
@@ -560,6 +561,8 @@
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFFMetadata.m; sourceTree = "<group>"; };
+		7D13026118CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+performBlockAfterDelay.h"; sourceTree = "<group>"; };
+		7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+performBlockAfterDelay.m"; sourceTree = "<group>"; };
 		7D39DAC918B7CB9B0054DDC3 /* _WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWound.h; sourceTree = "<group>"; };
 		7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWound.m; sourceTree = "<group>"; };
 		7D39DACC18B7CBA90054DDC3 /* WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWound.h; sourceTree = "<group>"; };
@@ -1254,6 +1257,8 @@
 			children = (
 				5F67D21A18AC4DF400460C37 /* UIView+Custom.h */,
 				5F67D21B18AC4DF400460C37 /* UIView+Custom.m */,
+				7D13026118CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.h */,
+				7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2662,6 +2667,7 @@
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */,
 				7DF4E92718C22F27000A3F5B /* WMCarePlanGroup.m in Sources */,
+				7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */,
 				7DF4E95618C299DC000A3F5B /* _WMInterventionEventType.m in Sources */,
 				7D39DAFB18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.m in Sources */,
 				7DF4E8EE18C22EEC000A3F5B /* _WMSkinAssessment.m in Sources */,

@@ -3,6 +3,7 @@
 #import "WMWoundType.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
+#import "NSObject+performBlockAfterDelay.h"
 
 typedef enum {
     NavigationNodeFlagsRequired     = 0,
@@ -25,6 +26,11 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:navigationNode toPersistentStore:store];
 	}
+    // save to back end
+    [navigationNode performBlock:^{
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
+    } afterDelay:0.5];
 	return navigationNode;
 }
 
@@ -202,9 +208,6 @@ typedef enum {
         if (error) {
             [WMUtilities logError:error];
         } else {
-            // save to back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
             id subnodes = [dictionary objectForKey:@"subnodes"];
             if ([subnodes isKindOfClass:[NSArray class]]) {
                 for (NSDictionary *d in subnodes) {
@@ -226,7 +229,6 @@ typedef enum {
 
 + (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     // select
     WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
@@ -240,7 +242,6 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
-    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // edit
     navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
@@ -254,7 +255,6 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
-    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // add
     navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
@@ -268,7 +268,6 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
-    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
 }
 
 + (NSArray *)woundNodes:(NSManagedObjectContext *)managedObjectContext
@@ -281,7 +280,6 @@ typedef enum {
 
 + (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     // select
     WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
@@ -295,7 +293,6 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
-    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // edit
     navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
@@ -309,7 +306,6 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
-    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     // add
     navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     navigationNode.activeFlag = @YES;
@@ -323,7 +319,6 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
-    [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
 }
 
 + (WMNavigationNode *)navigationNodeForTaskIdentifier:(NSInteger)navigationNodeIdentifier
@@ -425,8 +420,6 @@ typedef enum {
         navigationNode.sortRank = @1;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kViewGraphsNode];
         navigationNode.title = @"View Graphs";
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -450,8 +443,6 @@ typedef enum {
         navigationNode.title = @"Share Patient Record";
         // TODO: add subnodes
         
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -473,8 +464,6 @@ typedef enum {
         navigationNode.sortRank = @0;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kInitialStageNode];
         navigationNode.title = @"Initial Workup";
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -496,8 +485,6 @@ typedef enum {
         navigationNode.sortRank = @0;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kFollowupStageNode];
         navigationNode.title = @"Follow Up";
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -519,8 +506,6 @@ typedef enum {
         navigationNode.sortRank = @0;
         navigationNode.taskIdentifier = [NSNumber numberWithInt:kDischargeStageNode];
         navigationNode.title = @"Discharge";
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -545,8 +530,6 @@ typedef enum {
         navigationNode.requiresPatientFlag = @YES;
         navigationNode.requiresWoundFlag = @NO;
         navigationNode.requiresWoundPhotoFlag = @NO;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     // else
     return navigationNode;
@@ -576,8 +559,6 @@ typedef enum {
         navigationNode.title = title;
         navigationNode.stage = stage;
         navigationNode.parentNode = parentNode;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     return navigationNode;
 }
@@ -598,8 +579,6 @@ typedef enum {
         navigationNode.taskIdentifier = [NSNumber numberWithInteger:taskIdentifier];
         navigationNode.stage = stage;
         navigationNode.parentNode = parentNode;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
     }
     return navigationNode;
 }
