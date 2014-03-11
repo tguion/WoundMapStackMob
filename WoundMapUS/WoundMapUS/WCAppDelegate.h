@@ -8,7 +8,7 @@
 
 #import "CoreDataHelper.h"
 
-@class FatFractal;
+@class WMFatFractal;
 @class WMNavigationCoordinator;
 @class WMParticipant, User;
 
@@ -17,9 +17,9 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong, readonly) CoreDataHelper *coreDataHelper;
+@property (readonly, strong, nonatomic) WMFatFractal *ff;
 @property (nonatomic, readonly) WMNavigationCoordinator *navigationCoordinator;
 
 @property (nonatomic, strong) WMParticipant *participant;   // clinician using the app
-@property (readonly, strong, nonatomic) FatFractal *ff;
 
 @end

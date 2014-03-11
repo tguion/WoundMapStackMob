@@ -12,33 +12,99 @@
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
+#import "WMUtilities.h"
 #import <FFEF/FatFractal.h>
+
+static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
+
+@interface WMFatFractal : FatFractal
+
++ (WMFatFractal *)sharedInstance;
+
+@end
+
+@implementation WMFatFractal
+
++ (WMFatFractal *)sharedInstance
+{
+    static WMFatFractal *SharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SharedInstance = [[WMFatFractal alloc] init];
+    });
+    return SharedInstance;
+}
+
+- (id)findExistingObjectWithClass:(Class)clazz
+                            ffUrl:(NSString *)ffUrl
+             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                  persistentStore:(NSPersistentStore *)store
+{
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(clazz) inManagedObjectContext:managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    if (store) {
+        [request setAffectedStores:@[store]];
+    }
+    [request setPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl]];
+    return [NSManagedObject MR_findFirstInContext:managedObjectContext];
+}
+
+/**
+ * Let the FatFractal SDK know how to handle your CoreData objects, by creating a [custom FatFractal subclass]
+ * This is the code that holds everything together. We're over-riding
+ - (id) createInstanceOfClass:(Class) class forObjectWithMetaData:(FFMetaData *)objMetaData
+ * so that when the FatFractal SDK needs to create an instance of one of your objects, then you can control how that's done.
+ * In this example, then if it's an NSManagedObject subclass, we're first checking to see if we already have that object locally, and if not then we're calling the appropriate CoreData initializer.
+ */
+
+- (id)createInstanceOfClass:(Class)clazz forObjectWithMetaData:(FFMetaData *)objMetaData
+{
+    if ([clazz isSubclassOfClass:[NSManagedObject class]]) {
+        WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        NSPersistentStore *store = appDelegate.coreDataHelper.store;
+        id obj = [self findExistingObjectWithClass:clazz ffUrl:objMetaData.ffUrl managedObjectContext:managedObjectContext persistentStore:store];
+        if (obj) {
+            DLog(@"Found existing %@ object with ffUrl %@ in managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
+            return obj;
+        }
+        // else
+        DLog(@"Inserting new %@ object with ffUrl %@ into managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
+        return [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(clazz) inManagedObjectContext:managedObjectContext];
+    }
+    // else
+    return [[clazz alloc] init];
+}
+
+@end
 
 @interface WCAppDelegate ()
 
+@property (nonatomic, strong, readwrite) CoreDataHelper *coreDataHelper;
+@property (nonatomic, strong, readwrite) WMFatFractal *ff;
 @property (nonatomic, strong, readwrite) WMNavigationCoordinator *navigationCoordinator;
 
 @end
 
-@implementation WCAppDelegate {
-    CoreDataHelper *cdh;
-}
+@implementation WCAppDelegate
 
 #define debug 1
 
-- (CoreDataHelper*)cdh
+- (CoreDataHelper *)coreDataHelper
 {
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-    if (!_coreDataHelper) {
-        static dispatch_once_t predicate;
-        dispatch_once(&predicate, ^{
-            _coreDataHelper = [CoreDataHelper new];
-        });
-        [_coreDataHelper setupCoreData];
+    if (nil == _coreDataHelper) {
+        _coreDataHelper = [CoreDataHelper sharedInstance];
     }
     return _coreDataHelper;
+}
+
+- (WMFatFractal *)ff
+{
+    if (nil == _ff) {
+        _ff = [WMFatFractal sharedInstance];
+    }
+    return _ff;
 }
 
 - (void)demo
@@ -54,7 +120,7 @@
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     // initialize Core Data
-    [self cdh];
+    [self.coreDataHelper setupCoreData];
     // initialize UI
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]];
@@ -116,8 +182,8 @@
 - (WMNavigationCoordinator *)navigationCoordinator
 {
     if (nil == _navigationCoordinator) {
-        BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom];
-        if (isIPadIdiom) {
+        BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+        if (isPad) {
             _navigationCoordinator = [WMNavigationCoordinator_iPad sharedInstance];
         } else {
             _navigationCoordinator = [WMNavigationCoordinator sharedInstance];

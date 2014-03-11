@@ -7,7 +7,6 @@
 //
 
 #import "CoreDataHelper.h"
-#import "CoreDataImporter.h"
 #import "Faulter.h"
 #import "WMBradenCare.h"
 #import "WMWoundType.h"
@@ -33,6 +32,17 @@
 @implementation CoreDataHelper
 
 #define debug 1
+
+
++ (CoreDataHelper *)sharedInstance
+{
+    static CoreDataHelper *SharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SharedInstance = [[CoreDataHelper alloc] init];
+    });
+    return SharedInstance;
+}
 
 - (WCAppDelegate *)appDelegate
 {
