@@ -1,8 +1,6 @@
 #import "WMCarePlanCategory.h"
-#import "WMCarePlanItem.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WMCarePlanCategoryFlagsInputValueInline             = 0,
@@ -27,7 +25,7 @@ typedef enum {
 
 - (void)setCombineKeyAndValue:(BOOL)combineKeyAndValue
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsCombineKeyAndValue to:combineKeyAndValue]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsCombineKeyAndValue to:combineKeyAndValue]);
 }
 
 - (BOOL)inputValueInline
@@ -37,7 +35,7 @@ typedef enum {
 
 - (void)setInputValueInline:(BOOL)inputValueInline
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsInputValueInline to:inputValueInline]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsInputValueInline to:inputValueInline]);
 }
 
 - (BOOL)allowMultipleChildSelection
@@ -47,7 +45,7 @@ typedef enum {
 
 - (void)setAllowMultipleChildSelection:(BOOL)allowMultipleChildrenSelection
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsAllowMultipleChildSelection to:allowMultipleChildrenSelection]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsAllowMultipleChildSelection to:allowMultipleChildrenSelection]);
 }
 
 - (BOOL)skipSelectionIcon
@@ -57,7 +55,7 @@ typedef enum {
 
 - (void)setSkipSelectionIcon:(BOOL)skipSelectionIcon
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsSkipSelectionIcon to:skipSelectionIcon]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsSkipSelectionIcon to:skipSelectionIcon]);
 }
 
 - (BOOL)hasSubcategories
@@ -91,44 +89,26 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:carePlanCategory toPersistentStore:store];
 	}
-    [carePlanCategory setValue:[carePlanCategory assignObjectId] forKey:[carePlanCategory primaryKeyField]];
 	return carePlanCategory;
 }
 
 + (NSArray *)sortedRootCarePlanCategories:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanCategory" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"parent = nil"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMCarePlanCategory MR_findAllSortedBy:@"sortRank"
+                                        ascending:YES
+                                    withPredicate:[NSPredicate predicateWithFormat:@"parent = nil"]
+                                        inContext:managedObjectContext];
 }
 
 + (WMCarePlanCategory *)carePlanCategoryForTitle:(NSString *)title
                                           parent:(WMCarePlanCategory *)parent
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:@[store]];
+    if (nil != parent) {
+        NSParameterAssert(managedObjectContext == [parent managedObjectContext]);
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanCategory" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parent == %@", title, parent]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMCarePlanCategory *carePlanCategory = [array lastObject];
+    WMCarePlanCategory *carePlanCategory = [WMCarePlanCategory MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parent == %@", title, parent] inContext:managedObjectContext];
     if (create && nil == carePlanCategory) {
         carePlanCategory = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         carePlanCategory.title = title;
@@ -140,14 +120,12 @@ typedef enum {
 + (WMCarePlanCategory *)updateCarePlanCategoryFromDictionary:(NSDictionary *)dictionary
                                                       parent:(WMCarePlanCategory *)parent
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                             persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMCarePlanCategory *carePlanCategory = [self carePlanCategoryForTitle:title
                                                                    parent:parent
                                                                    create:YES
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
     carePlanCategory.definition = [dictionary objectForKey:@"definition"];
     carePlanCategory.loincCode = [dictionary objectForKey:@"LOINC Code"];
     carePlanCategory.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
@@ -166,8 +144,7 @@ typedef enum {
         NSMutableSet *set = [NSMutableSet set];
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
             [set addObjectsFromArray:woundTypes];
         }
         [carePlanCategory setWoundTypes:set];
@@ -177,8 +154,7 @@ typedef enum {
     for (NSDictionary *d in subcategories) {
         [self updateCarePlanCategoryFromDictionary:d
                                             parent:carePlanCategory
-                              managedObjectContext:managedObjectContext
-                                   persistentStore:store];
+                              managedObjectContext:managedObjectContext];
     }
     // now options
     id options = [dictionary objectForKey:@"options"];
@@ -186,26 +162,17 @@ typedef enum {
         // check if we are at the leaf of the tree
         [self updateCarePlanCategoryFromDictionary:d
                                             parent:carePlanCategory
-                              managedObjectContext:managedObjectContext
-                                   persistentStore:store];
+                              managedObjectContext:managedObjectContext];
     }
     return carePlanCategory;
 }
 
 + (NSSet *)carePlanCategories:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanCategory" inManagedObjectContext:managedObjectContext]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [NSSet setWithArray:array];
+    return [NSSet setWithArray:[WMCarePlanCategory MR_findAllInContext:managedObjectContext]];
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"CarePlan" withExtension:@"plist"];
@@ -222,7 +189,7 @@ typedef enum {
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateCarePlanCategoryFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateCarePlanCategoryFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext];
         }
     }
 }

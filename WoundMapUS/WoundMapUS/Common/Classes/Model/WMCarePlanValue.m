@@ -1,6 +1,5 @@
 #import "WMCarePlanValue.h"
 #import "WMCarePlanCategory.h"
-#import "StackMob.h"
 
 @interface WMCarePlanValue ()
 
@@ -50,7 +49,6 @@
 	if (store) {
 		[managedObjectContext assignObject:carePlanValue toPersistentStore:store];
 	}
-    [carePlanValue setValue:[carePlanValue assignObjectId] forKey:[carePlanValue primaryKeyField]];
 	return carePlanValue;
 }
 

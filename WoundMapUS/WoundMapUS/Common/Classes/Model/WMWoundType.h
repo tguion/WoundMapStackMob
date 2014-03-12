@@ -27,6 +27,8 @@ typedef enum {
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 
++ (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
+
 + (WMWoundType *)woundTypeForTitle:(NSString *)title
                             create:(BOOL)create
               managedObjectContext:(NSManagedObjectContext *)managedObjectContext

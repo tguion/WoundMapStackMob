@@ -1,6 +1,5 @@
 #import "WMBradenCare.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMBradenCare ()
 
@@ -18,48 +17,21 @@
 	if (store) {
 		[managedObjectContext assignObject:bradenCare toPersistentStore:store];
 	}
-    [bradenCare setValue:[bradenCare assignObjectId] forKey:[bradenCare primaryKeyField]];
 	return bradenCare;
 }
 
 + (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                    sortRank:(NSNumber *)sortRank
                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                            persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (store) {
-        [request setAffectedStores:@[store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMBradenCare" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"sectionTitle == %@ AND sortRank == %@", sectionTitle, sortRank]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return (WMBradenCare *)[array lastObject];
+    return [WMBradenCare MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"sectionTitle == %@ AND sortRank == %@", sectionTitle, sortRank] inContext:managedObjectContext];
 }
 
 + (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                       score:(NSNumber *)score
                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                            persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (store) {
-        [request setAffectedStores:@[store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMBradenCare" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"sectionTitle == %@ AND scoreMinimum <= %@ AND scoreMaximum >= %@", sectionTitle, score, score]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return (WMBradenCare *)[array lastObject];
+    return [WMBradenCare MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"sectionTitle == %@ AND scoreMinimum <= %@ AND scoreMaximum >= %@", sectionTitle, score, score] inContext:managedObjectContext];
 }
 
 #pragma mark - Seed
@@ -83,7 +55,7 @@
             // attempt to fetch existing instance
             NSString *sectionTitle = [dictionary objectForKey:@"sectionTitle"];
             NSNumber *sortRank = [dictionary objectForKey:@"sortRank"];
-            WMBradenCare *bradenCare = [WMBradenCare bradenCareForSectionTitle:sectionTitle sortRank:sortRank managedObjectContext:managedObjectContext persistentStore:store];
+            WMBradenCare *bradenCare = [WMBradenCare bradenCareForSectionTitle:sectionTitle sortRank:sortRank managedObjectContext:managedObjectContext];
             if (nil == bradenCare) {
                 bradenCare = [WMBradenCare instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
             }

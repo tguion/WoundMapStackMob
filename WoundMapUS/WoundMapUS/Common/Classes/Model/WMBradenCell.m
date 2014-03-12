@@ -1,6 +1,5 @@
 #import "WMBradenCell.h"
 #import "WMBradenSection.h"
-#import "StackMob.h"
 
 @interface WMBradenCell ()
 
@@ -17,7 +16,6 @@
 {
 	NSAssert([[bradenSection managedObjectContext] isEqual:managedObjectContext], @"Bad managedObjectContext");
 	WMBradenCell *bradenCell = [[WMBradenCell alloc] initWithEntity:[NSEntityDescription entityForName:@"WMBradenCell" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-    [bradenCell setValue:[bradenCell assignObjectId] forKey:[bradenCell primaryKeyField]];
 	bradenCell.section = bradenSection;
 	if (store) {
 		[managedObjectContext assignObject:bradenCell toPersistentStore:store];

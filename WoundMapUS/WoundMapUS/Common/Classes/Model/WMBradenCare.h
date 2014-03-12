@@ -9,12 +9,10 @@
 
 + (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                    sortRank:(NSNumber *)sortRank
-                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                            persistentStore:(NSPersistentStore *)store;
+                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                       score:(NSNumber *)score
-                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                            persistentStore:(NSPersistentStore *)store;
+                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

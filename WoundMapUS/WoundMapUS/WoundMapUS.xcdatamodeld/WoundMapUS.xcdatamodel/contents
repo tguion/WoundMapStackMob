@@ -1034,12 +1034,13 @@
         <memberEntity name="WMDefinition"/>
         <memberEntity name="WMDefinitionKeyword"/>
         <memberEntity name="WMInstruction"/>
+        <memberEntity name="IAPProduct"/>
+        <memberEntity name="WMBradenCare"/>
+        <memberEntity name="WMWoundType"/>
     </configuration>
     <configuration name="Team">
-        <memberEntity name="IAPProduct"/>
         <memberEntity name="WMAddress"/>
         <memberEntity name="WMAmountQualifier"/>
-        <memberEntity name="WMBradenCare"/>
         <memberEntity name="WMBradenCell"/>
         <memberEntity name="WMBradenScale"/>
         <memberEntity name="WMBradenSection"/>

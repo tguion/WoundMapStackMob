@@ -18,29 +18,25 @@ typedef enum {
 
 @interface WMDefinition : _WMDefinition {}
 
-+ (NSInteger)definitionsCount:(NSManagedObjectContext *)managedObjectContext
-              persistentStore:(NSPersistentStore *)store;
++ (NSInteger)definitionsCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMDefinition *)definitionForTerm:(NSString *)term
                          definition:(NSString *)definition
                               scope:(WoundPUMPScope)scope
                              create:(BOOL)create
-               managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                    persistentStore:(NSPersistentStore *)store;
+               managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSInteger)updateKeywords:(WMDefinition *)definition
                   inserting:(BOOL)inserting
-       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-            persistentStore:(NSPersistentStore *)store;
+       managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSInteger)addWordsAsKeywords:(WMDefinition *)definition
                           words:(NSArray *)words
-           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                persistentStore:(NSPersistentStore *)store;
+           managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSPredicate *)predicateForSearchInput:(NSString *)searchString;
 + (NSPredicate *)predicateForSearchInput:(NSString *)searchString section:(WoundPUMPScope)woundPUMPScope;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 @end

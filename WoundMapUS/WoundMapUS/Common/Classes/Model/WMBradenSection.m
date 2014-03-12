@@ -2,7 +2,6 @@
 #import "WMBradenScale.h"
 #import "WMBradenCell.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMBradenSection ()
 
@@ -23,25 +22,14 @@
 	if (store) {
 		[managedObjectContext assignObject:bradenSection toPersistentStore:store];
 	}
-    [bradenSection setValue:[bradenSection assignObjectId] forKey:[bradenSection primaryKeyField]];
 	return bradenSection;
 }
 
 + (WMBradenSection *)bradenSectionBradenScale:(WMBradenScale *)bradenScale sortRank:(NSInteger)sortRank
 {
     NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenSection" inManagedObjectContext:managedObjectContext]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"bradenScale == %@ AND sortRank == %d", bradenScale, sortRank]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return nil;
-    }
-	// else
-	NSAssert1([array count] < 2, @"More than one WCBradenSection for sortRank %d", sortRank);
-	return (WMBradenSection *)[array lastObject];
+    return [WMBradenSection MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"bradenScale == %@ AND sortRank == %d", bradenScale, sortRank]
+                                            inContext:managedObjectContext];
 }
 
 - (BOOL)isScored
@@ -52,15 +40,7 @@
 - (BOOL)isScoredCalculated
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WCBradenCell" inManagedObjectContext:managedObjectContext]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"section == %@ AND selectedFlag == YES", self]];
-    NSError *error = nil;
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-	// else
+    NSInteger count = [WMBradenCell MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"section == %@ AND selectedFlag == YES", self] inContext:managedObjectContext];
 	return (count > 0);
 }
 

@@ -2,7 +2,6 @@
 #import "WMDefinitionKeyword.h"
 #import "SearchUtilities.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMDefinition ()
 
@@ -17,41 +16,26 @@ static NSDictionary *kDefinitionScope2DataFileMap;
 static NSMutableCharacterSet *keywordDelimiters;
 
 + (void)initialize {
-    kDefinitionScope2DataFileMap = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    @"WoundTypeDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundType],
-                                    @"WoundAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundAssessment],
-                                    @"MedicationsDefinitions", [NSNumber numberWithInt:WoundPUMPScopeMedications],
-                                    @"SkinAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeMedications],
-                                    @"WoundMeasurementDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundMeasurement],
-                                    @"WoundTreatmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundTreatment],
-                                    @"PsychoSocialDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundPsychSocial],
-                                    @"DeviceDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundDevice],
-                                    @"WoundPositionDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundPosition],
-                                    nil];
-	keywordDelimiters = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
-	[keywordDelimiters formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"/-,()."]];
-}
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMDefinition *definition = [[WMDefinition alloc] initWithEntity:[NSEntityDescription entityForName:@"WMDefinition" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:definition toPersistentStore:store];
-	}
-    [definition setValue:[definition assignObjectId] forKey:[definition primaryKeyField]];
-	return definition;
+    if (self == [WMDefinition class]) {
+        kDefinitionScope2DataFileMap = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        @"WoundTypeDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundType],
+                                        @"WoundAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundAssessment],
+                                        @"MedicationsDefinitions", [NSNumber numberWithInt:WoundPUMPScopeMedications],
+                                        @"SkinAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeMedications],
+                                        @"WoundMeasurementDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundMeasurement],
+                                        @"WoundTreatmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundTreatment],
+                                        @"PsychoSocialDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundPsychSocial],
+                                        @"DeviceDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundDevice],
+                                        @"WoundPositionDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundPosition],
+                                        nil];
+        keywordDelimiters = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
+        [keywordDelimiters formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"/-,()."]];
+    }
 }
 
 + (NSInteger)definitionsCount:(NSManagedObjectContext *)managedObjectContext
-              persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDefinition" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMDefinition MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 + (WMDefinition *)definitionForTerm:(NSString *)term
@@ -59,36 +43,22 @@ static NSMutableCharacterSet *keywordDelimiters;
                               scope:(WoundPUMPScope)scope
                              create:(BOOL)create
                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                    persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDefinition" inManagedObjectContext:managedObjectContext]];
     NSPredicate *predicate = nil;
     if (scope == WoundPUMPScopeAll) {
         predicate = [NSPredicate predicateWithFormat:@"term == %@", term];
     } else {
         predicate = [NSPredicate predicateWithFormat:@"term == %@ AND scope == %d", term, scope];
     }
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMDefinition *result = [array lastObject];
+    WMDefinition *result = [WMDefinition MR_findFirstWithPredicate:predicate inContext:managedObjectContext];
     if (create && nil == result) {
-        result = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        result = [WMDefinition MR_createInContext:managedObjectContext];
         result.term = term;
         result.definition = definition;
         result.scope = [NSNumber numberWithInt:scope];
         [self updateKeywords:result
                    inserting:YES
-        managedObjectContext:managedObjectContext
-             persistentStore:store];
+        managedObjectContext:managedObjectContext];
     }
     return result;
 }
@@ -96,9 +66,10 @@ static NSMutableCharacterSet *keywordDelimiters;
 + (NSInteger)updateKeywords:(WMDefinition *)definition
                   inserting:(BOOL)inserting
        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-            persistentStore:(NSPersistentStore *)store
 {
-	NSAssert([[definition managedObjectContext] isEqual:managedObjectContext], @"Invalid mocs");
+	if (nil != definition) {
+        NSParameterAssert(managedObjectContext == [definition managedObjectContext]);
+    }
 	// remove current keywords
 	if (!inserting) {
 		for (WMDefinitionKeyword *keyword in definition.keywords) {
@@ -119,16 +90,16 @@ static NSMutableCharacterSet *keywordDelimiters;
 	}
 	return [self addWordsAsKeywords:definition
                               words:[words allObjects]
-               managedObjectContext:managedObjectContext
-                    persistentStore:store];
+               managedObjectContext:managedObjectContext];
 }
 
 + (NSInteger)addWordsAsKeywords:(WMDefinition *)definition
                           words:(NSArray *)words
            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                persistentStore:(NSPersistentStore *)store
 {
-	NSAssert([[definition managedObjectContext] isEqual:managedObjectContext], @"Invalid mocs");
+	if (nil != definition) {
+        NSParameterAssert(managedObjectContext == [definition managedObjectContext]);
+    }
 	NSInteger counter = 0;
 	WMDefinitionKeyword *keyword = nil;
 	for (NSString *word in words) {
@@ -138,7 +109,7 @@ static NSMutableCharacterSet *keywordDelimiters;
 		}
 		// else create
 		NSString *trimmedWord = [word stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		keyword = [WMDefinitionKeyword instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+		keyword = [WMDefinitionKeyword MR_createInContext:managedObjectContext];
 		keyword.keyword = trimmedWord;
 		keyword.definition = definition;
         keyword.scope = definition.scope;
@@ -181,9 +152,9 @@ static NSMutableCharacterSet *keywordDelimiters;
 	return predicate;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
-    if ([self definitionsCount:managedObjectContext persistentStore:store] > 0) {
+    if ([self definitionsCount:managedObjectContext] > 0) {
         // already loaded
         return;
     }
@@ -212,9 +183,8 @@ static NSMutableCharacterSet *keywordDelimiters;
                                                                         definition:[propertyList objectForKey:term]
                                                                              scope:[key intValue]
                                                                             create:YES
-                                                              managedObjectContext:managedObjectContext
-                                                                   persistentStore:store];
-                        definition.sortRank = [NSNumber numberWithInt:sortRank++];
+                                                              managedObjectContext:managedObjectContext];
+                        definition.sortRank = @(sortRank++);
                     }
                 }];
             }

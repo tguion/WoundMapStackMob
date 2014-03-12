@@ -3,7 +3,6 @@
 #import "WMBradenSection.h"
 #import "WMBradenCell.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 NSString * const kBradenScaleTitle = @"Braden Scale";
 NSInteger const kBradenSectionCount = 6;
@@ -24,7 +23,6 @@ NSInteger const kBradenSectionCount = 6;
 	if (store) {
 		[managedObjectContext assignObject:bradenScale toPersistentStore:store];
 	}
-    [bradenScale setValue:[bradenScale assignObjectId] forKey:[bradenScale primaryKeyField]];
 	[bradenScale populateSections];
 	return bradenScale;
 }
@@ -40,17 +38,10 @@ NSInteger const kBradenSectionCount = 6;
 + (WMBradenScale *)latestBradenScale:(WMPatient *)patient create:(BOOL)create
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-	[request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-	// else
-    WMBradenScale *bradenScale = (WMBradenScale *)[array lastObject];
+    WMBradenScale *bradenScale = [WMBradenScale MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                                                 sortedBy:@"createdAt"
+                                                                ascending:NO
+                                                                inContext:managedObjectContext];
     if (create && nil == bradenScale) {
         bradenScale = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
     }
@@ -60,16 +51,10 @@ NSInteger const kBradenSectionCount = 6;
 + (WMBradenScale *)latestCompleteBradenScale:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-	[request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-	// else
+    NSArray *array = [WMBradenScale MR_findAllSortedBy:@"createdAt"
+                                             ascending:NO
+                                         withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                             inContext:managedObjectContext];
     for (WMBradenScale *bradenScale in array) {
         if (bradenScale.isScored) {
             return bradenScale;
@@ -91,16 +76,11 @@ NSInteger const kBradenSectionCount = 6;
     request.predicate = [NSPredicate predicateWithFormat:@"patient == %@ AND completeFlag == YES", patient];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
+    NSDictionary *dates = (NSDictionary *)[WMBradenScale MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    if ([dates count] == 0)
         return nil;
     // else
-    return [results firstObject][@"updatedAt"];
+    return dates[@"updatedAt"];
 }
 
 + (NSArray *)sortedScoredBradenScales:(WMPatient *)patient
@@ -109,27 +89,18 @@ NSInteger const kBradenSectionCount = 6;
     // first delete
     [self deleteIncompleteClosedBradenScales:patient];
     // now fetch
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-	[request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
-    NSError *error = nil;
-    return [managedObjectContext executeFetchRequestAndWait:request error:&error];
+    return [WMBradenScale MR_findAllSortedBy:@"createdAt"
+                                   ascending:YES
+                               withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                   inContext:managedObjectContext];
 }
 
 + (NSInteger)closeBradenScalesCreatedBefore:(NSDate *)date
                                     patient:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-	// else
+    NSArray *array = [WMBradenScale MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]
+                                                  inContext:managedObjectContext];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
@@ -137,16 +108,7 @@ NSInteger const kBradenSectionCount = 6;
 + (void)deleteIncompleteClosedBradenScales:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return;
-    }
-	// else
+    NSArray *array = [WMBradenScale MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:managedObjectContext];
     for (WMBradenScale *bradenScale in array) {
         if (bradenScale.isClosed && !bradenScale.isScored) {
             [managedObjectContext deleteObject:bradenScale];
@@ -157,7 +119,7 @@ NSInteger const kBradenSectionCount = 6;
 - (void)awakeFromInsert
 {
 	[super awakeFromInsert];
-	self.dateCreated = [NSDate date];
+	self.createdAt = [NSDate date];
 	self.updatedAt = [NSDate date];
 }
 
@@ -186,16 +148,8 @@ NSInteger const kBradenSectionCount = 6;
 
 - (BOOL)isScoredCalculated
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMBradenCell" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"section.bradenScale == %@ AND selectedFlag == YES", self]];
-    NSError *error = nil;
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-	// else
+    NSInteger count = [WMBradenCell MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"section.bradenScale == %@ AND selectedFlag == YES", self]
+                                                          inContext:[self managedObjectContext]];
     return (count == kBradenSectionCount);
 }
 

@@ -1,6 +1,5 @@
 #import "WMAmountQualifier.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMAmountQualifier ()
 
@@ -18,30 +17,16 @@
 	if (store) {
 		[managedObjectContext assignObject:amountQualifier toPersistentStore:store];
 	}
-    [amountQualifier setValue:[amountQualifier assignObjectId] forKey:[amountQualifier primaryKeyField]];
 	return amountQualifier;
 }
 
 + (WMAmountQualifier *)amountQualifierForTitle:(NSString *)title
                                         create:(BOOL)create
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMAmountQualifier" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMAmountQualifier *amountQualifier = [array lastObject];
+    WMAmountQualifier *amountQualifier = [WMAmountQualifier MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == amountQualifier) {
-        amountQualifier = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        amountQualifier = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         amountQualifier.title = title;
     }
     return amountQualifier;
@@ -54,8 +39,7 @@
     id title = [dictionary objectForKey:@"title"];
     WMAmountQualifier *amountQualifier = [self amountQualifierForTitle:title
                                                                 create:YES
-                                                  managedObjectContext:managedObjectContext
-                                                       persistentStore:store];
+                                                  managedObjectContext:managedObjectContext];
     amountQualifier.loincCode = [dictionary objectForKey:@"LOINC Code"];
     amountQualifier.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
     amountQualifier.snomedFSN = [dictionary objectForKey:@"SNOMED CT FSN"];

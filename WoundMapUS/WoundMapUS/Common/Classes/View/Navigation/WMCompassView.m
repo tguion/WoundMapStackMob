@@ -48,10 +48,12 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 + (void)initialize
 {
-    CompassTransformWest = CGAffineTransformMakeRotation(M_PI);
-    CompassTransformNorth = CGAffineTransformMakeRotation(-M_PI_2);
-    CompassTransformEast = CGAffineTransformIdentity;
-    CompassTransformSouth = CGAffineTransformMakeRotation(M_PI_2);
+    if (self == [WMCompassView class]) {
+        CompassTransformWest = CGAffineTransformMakeRotation(M_PI);
+        CompassTransformNorth = CGAffineTransformMakeRotation(-M_PI_2);
+        CompassTransformEast = CGAffineTransformIdentity;
+        CompassTransformSouth = CGAffineTransformMakeRotation(M_PI_2);
+    }
 }
 
 - (void)awakeFromNib

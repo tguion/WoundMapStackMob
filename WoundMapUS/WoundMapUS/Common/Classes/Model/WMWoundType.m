@@ -1,6 +1,5 @@
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 NSString * const kOtherWoundTypeTitle = @"Other";
 
@@ -56,13 +55,22 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 	if (store) {
 		[managedObjectContext assignObject:woundType toPersistentStore:store];
 	}
-    [woundType setValue:[woundType assignObjectId] forKey:[woundType primaryKeyField]];
-    // get a permanent objectID
-    NSError *error = nil;
-    if (![managedObjectContext obtainPermanentIDsForObjects:@[woundType] error:&error]) {
-        DLog(@"Couldn't obtain a permanent ID for object %@", error);
-    }
 	return woundType;
+}
+
++ (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
+{
+    NSError *error = nil;
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    if (nil != store) {
+        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    }
+    [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
+    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+    return count;
 }
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
@@ -80,7 +88,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
         [request setAffectedStores:[NSArray arrayWithObject:store]];
     }
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
-    NSInteger count = [managedObjectContext countForFetchRequestAndWait:request error:&error];
+    NSInteger count = [self woundTypeCount:managedObjectContext persistentStore:store];
     if (count > 0 && count != NSNotFound) {
         return;
     }
@@ -138,13 +146,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     }
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMWoundType *woundType = [array lastObject];
+    WMWoundType *woundType = [[WMWoundType MR_executeFetchRequest:request inContext:managedObjectContext] lastObject];
     if (create && nil == woundType) {
         woundType = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
         woundType.title = title;
@@ -162,13 +164,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     }
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"woundTypeCode == %d", woundTypeCodeValue]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundType MR_executeFetchRequest:request inContext:managedObjectContext];
 }
 
 + (WMWoundType *)otherWoundType:(NSManagedObjectContext *)managedObjectContext
@@ -180,13 +176,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     }
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundTypeTitle]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [[WMWoundType MR_executeFetchRequest:request inContext:managedObjectContext] lastObject];
 }
 
 #pragma mark - AssessmentGroup

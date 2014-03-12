@@ -2,7 +2,6 @@
 #import "WMCarePlanGroup.h"
 #import "WMParticipant.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMCarePlanInterventionEvent ()
 
@@ -20,7 +19,6 @@
 	if (store) {
 		[managedObjectContext assignObject:carePlanInterventionEvent toPersistentStore:store];
 	}
-    [carePlanInterventionEvent setValue:[carePlanInterventionEvent assignObjectId] forKey:[carePlanInterventionEvent primaryKeyField]];
 	return carePlanInterventionEvent;
 }
 
@@ -34,30 +32,18 @@
                                                                participant:(WMParticipant *)participant
                                                                     create:(BOOL)create
                                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                           persistentStore:(NSPersistentStore *)store
 {
     carePlanGroup = (WMCarePlanGroup *)[managedObjectContext objectWithID:[carePlanGroup objectID]];
     if (nil != eventType) {
         eventType = (WMInterventionEventType *)[managedObjectContext objectWithID:[eventType objectID]];
     }
     participant = (WMParticipant *)[managedObjectContext objectWithID:[participant objectID]];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanInterventionEvent" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:
-                           @"carePlanGroup == %@ AND changeType == %d AND path == %@ AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
-                           carePlanGroup, changeType, path, title, valueFrom, valueTo, eventType, participant]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMCarePlanInterventionEvent *carePlanInterventionEvent = [array lastObject];
+    WMCarePlanInterventionEvent *carePlanInterventionEvent = [WMCarePlanInterventionEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
+                                                                                                                     @"carePlanGroup == %@ AND changeType == %d AND path == %@ AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                                                     carePlanGroup, changeType, path, title, valueFrom, valueTo, eventType, participant]
+                                                                                                          inContext:managedObjectContext];
     if (create && nil == carePlanInterventionEvent) {
-        carePlanInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        carePlanInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         carePlanInterventionEvent.carePlanGroup = carePlanGroup;
         carePlanInterventionEvent.changeType = [NSNumber numberWithInt:changeType];
         carePlanInterventionEvent.path = path;

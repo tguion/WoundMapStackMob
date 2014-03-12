@@ -13,11 +13,14 @@
 
 static NSPredicate *normalizedTitlePredicateTemplate;
 
-+ (void)initialize {
-    // pre-parse predicate for quick substitution in reverseTransformedValue:
-    // instead of using a 'contains' operator, we simplify the predicate using a check between a high and low bound
-    // this allows us to potentially use indexes
-    normalizedTitlePredicateTemplate = [NSPredicate predicateWithFormat:@"normalizedTitle >= $lowBound and normalizedTitle < $highBound"];
++ (void)initialize
+{
+    if (self == [SearchUtilities class]) {
+        // pre-parse predicate for quick substitution in reverseTransformedValue:
+        // instead of using a 'contains' operator, we simplify the predicate using a check between a high and low bound
+        // this allows us to potentially use indexes
+        normalizedTitlePredicateTemplate = [NSPredicate predicateWithFormat:@"normalizedTitle >= $lowBound and normalizedTitle < $highBound"];
+    }
 }
 
 + (NSString *)normalizeString:(NSString *)unprocessedValue {

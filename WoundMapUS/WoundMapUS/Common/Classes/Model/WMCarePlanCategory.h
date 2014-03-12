@@ -15,10 +15,15 @@
 - (NSString *)combineKeyAndValue:(NSString *)value;
 - (void)aggregateSubcategories:(NSMutableSet *)set;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSArray *)sortedRootCarePlanCategories:(NSManagedObjectContext *)managedObjectContext;
 + (NSSet *)carePlanCategories:(NSManagedObjectContext *)managedObjectContext;
+
++ (WMCarePlanCategory *)carePlanCategoryForTitle:(NSString *)title
+                                          parent:(WMCarePlanCategory *)parent
+                                          create:(BOOL)create
+                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSPredicate *)predicateForParent:(WMCarePlanCategory *)parent woundType:(WMWoundType *)woundType;
 

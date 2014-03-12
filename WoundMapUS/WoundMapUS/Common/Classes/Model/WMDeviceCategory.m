@@ -2,7 +2,6 @@
 #import "WMDevice.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMDeviceCategory ()
 
@@ -13,37 +12,13 @@
 
 @implementation WMDeviceCategory
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMDeviceCategory *deviceCategory = [[WMDeviceCategory alloc] initWithEntity:[NSEntityDescription entityForName:@"WMDeviceCategory" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:deviceCategory toPersistentStore:store];
-	}
-    [deviceCategory setValue:[deviceCategory assignObjectId] forKey:[deviceCategory primaryKeyField]];
-	return deviceCategory;
-}
-
 + (WMDeviceCategory *)deviceCategoryForTitle:(NSString *)title
                                       create:(BOOL)create
                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                             persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDeviceCategory" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMDeviceCategory *deviceCategory = [array lastObject];
+    WMDeviceCategory *deviceCategory = [WMDeviceCategory MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == deviceCategory) {
-        deviceCategory = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        deviceCategory = [WMDeviceCategory MR_createInContext:managedObjectContext];
         deviceCategory.title = title;
     }
     return deviceCategory;
@@ -51,33 +26,18 @@
 
 + (WMDeviceCategory *)deviceCategoryForSortRank:(id)sortRank
                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDeviceCategory" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"sortRank == %@", sortRank]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMDeviceCategory MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"sortRank == %@", sortRank] inContext:managedObjectContext];
 }
 
 // Restrict to
 + (WMDeviceCategory *)updateDeviceCategoryFromDictionary:(NSDictionary *)dictionary
                                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                         persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMDeviceCategory *deviceCategory = [self deviceCategoryForTitle:title
                                                              create:YES
-                                               managedObjectContext:managedObjectContext
-                                                    persistentStore:store];
+                                               managedObjectContext:managedObjectContext];
     deviceCategory.definition = [dictionary objectForKey:@"definition"];
     deviceCategory.loincCode = [dictionary objectForKey:@"LOINC Code"];
     deviceCategory.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
@@ -89,8 +49,7 @@
         NSMutableSet *set = [NSMutableSet set];
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
             [set addObjectsFromArray:woundTypes];
         }
         [deviceCategory setWoundTypes:set];
@@ -99,7 +58,7 @@
     id devices = [dictionary objectForKey:@"devices"];
     for (NSDictionary *d in devices) {
         title = [d objectForKey:@"title"];
-        WMDevice *device = [WMDevice deviceForTitle:title create:YES managedObjectContext:managedObjectContext persistentStore:store];
+        WMDevice *device = [WMDevice deviceForTitle:title create:YES managedObjectContext:managedObjectContext];
         device.definition = [d objectForKey:@"definition"];
         device.sortRank = [d objectForKey:@"sortRank"];
         device.loincCode = [d objectForKey:@"LOINC Code"];
@@ -115,7 +74,7 @@
     return deviceCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Devices" withExtension:@"plist"];
@@ -135,7 +94,7 @@
         __weak __typeof(self) weakSelf = self;
         [managedObjectContext performBlockAndWait:^{
             for (NSDictionary *dictionary in propertyList) {
-                [weakSelf updateDeviceCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext persistentStore:store];
+                [weakSelf updateDeviceCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
             }
         }];
     }

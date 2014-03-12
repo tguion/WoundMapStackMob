@@ -9,7 +9,6 @@ const struct WMPatientConsultantAttributes WMPatientConsultantAttributes = {
 	.dateAquired = @"dateAquired",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
-	.sm_owner = @"sm_owner",
 	.updatedAt = @"updatedAt",
 };
 
@@ -132,13 +131,6 @@ const struct WMPatientConsultantFetchedProperties WMPatientConsultantFetchedProp
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic sm_owner;
-
 
 
 

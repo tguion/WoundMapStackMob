@@ -1,6 +1,5 @@
 #import "WMIAPTransaction.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WMIAPTransactionFlagsKVSTransmitted = 0,
@@ -39,7 +38,6 @@ typedef enum {
         if (store) {
             [managedObjectContext assignObject:iapTransaction toPersistentStore:store];
         }
-        [iapTransaction setValue:[iapTransaction assignObjectId] forKey:[iapTransaction primaryKeyField]];
     }
 	return iapTransaction;
 }

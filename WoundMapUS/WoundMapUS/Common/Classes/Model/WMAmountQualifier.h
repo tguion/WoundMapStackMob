@@ -4,8 +4,7 @@
 
 + (WMAmountQualifier *)amountQualifierForTitle:(NSString *)title
                                         create:(BOOL)create
-                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store;
+                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 

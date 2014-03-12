@@ -9,9 +9,11 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 	.email = @"email",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
+	.guid = @"guid",
 	.name = @"name",
 	.permissions = @"permissions",
 	.updatedAt = @"updatedAt",
+	.userName = @"userName",
 };
 
 const struct WMParticipantRelationships WMParticipantRelationships = {
@@ -19,6 +21,7 @@ const struct WMParticipantRelationships WMParticipantRelationships = {
 	.interventionEvents = @"interventionEvents",
 	.participantType = @"participantType",
 	.person = @"person",
+	.team = @"team",
 };
 
 const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
@@ -121,6 +124,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
+@dynamic guid;
+
+
+
+
+
+
 @dynamic name;
 
 
@@ -161,6 +171,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
+@dynamic userName;
+
+
+
+
+
+
 @dynamic acquiredConsults;
 
 	
@@ -192,6 +209,10 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 	
 
 @dynamic person;
+
+	
+
+@dynamic team;
 
 	
 

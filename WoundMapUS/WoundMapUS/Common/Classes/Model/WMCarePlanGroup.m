@@ -4,7 +4,6 @@
 #import "WMCarePlanCategory.h"
 #import "WMCarePlanValue.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMCarePlanGroup ()
 
@@ -35,24 +34,16 @@
 	if (store) {
 		[managedObjectContext assignObject:carePlanGroup toPersistentStore:store];
 	}
-    [carePlanGroup setValue:[carePlanGroup assignObjectId] forKey:[carePlanGroup primaryKeyField]];
 	return carePlanGroup;
 }
 
 + (WMCarePlanGroup *)activeCarePlanGroup:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMCarePlanGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient]
+                                             sortedBy:@"updatedAt"
+                                            ascending:NO
+                                            inContext:managedObjectContext];
 }
 
 + (WMCarePlanGroup *)mostRecentOrActiveCarePlanGroup:(WMPatient *)patient
@@ -60,16 +51,10 @@
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMCarePlanGroup *carePlanGroup = [self activeCarePlanGroup:patient];
     if (nil == carePlanGroup) {
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
-        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-        NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-        // else
-        carePlanGroup = [array lastObject];
+        carePlanGroup = [WMCarePlanGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                                          sortedBy:@"updatedAt"
+                                                         ascending:NO
+                                                         inContext:managedObjectContext];
     }
     return carePlanGroup;
 }
@@ -85,49 +70,23 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMCarePlanGroup"];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    return [results firstObject][@"updatedAt"];
+    NSDictionary *date = (NSDictionary *)[WMCarePlanGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    return date[@"updatedAt"];
 }
 
 + (NSInteger)closeCarePlanGroupsCreatedBefore:(NSDate *)date
                                       patient:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return 0;
-    }
-	// else
+    NSArray *array = [WMCarePlanGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]
+                                                    inContext:managedObjectContext];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
 
 + (NSSet *)carePlanValuesForCarePlanGroup:(WMCarePlanGroup *)carePlanGroup
 {
-    NSManagedObjectContext *managedObjectContext = [carePlanGroup managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@", carePlanGroup]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [NSSet setWithArray:array];
+    return [NSSet setWithArray:[WMCarePlanGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"group == %@", carePlanGroup] inContext:[carePlanGroup managedObjectContext]]];
 }
 
 + (BOOL)carePlanGroupsHaveHistory:(WMPatient *)patient
@@ -137,33 +96,22 @@
 
 + (NSInteger)carePlanGroupsCount:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMCarePlanGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
 }
 
 + (NSArray *)sortedCarePlanGroups:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMCarePlanGroup MR_findAllSortedBy:@"createdAt"
+                                     ascending:NO
+                                 withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                     inContext:[patient managedObjectContext]];
 }
 
 - (WMCarePlanValue *)carePlanValueForPatient:(WMPatient *)patient
@@ -172,12 +120,14 @@
                                        value:(NSString *)value
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSAssert([managedObjectContext isEqual:[carePlanCategory managedObjectContext]], @"Invalid mocs");
+    if (nil != carePlanCategory) {
+        NSParameterAssert(managedObjectContext == [carePlanCategory managedObjectContext]);
+    }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group.patient == %@ AND category == %@", patient, carePlanCategory];
     if (nil != value) {
         predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];
     }
-    WMCarePlanValue *carePlanValue = [[self.values filteredSetUsingPredicate:predicate] anyObject];
+    WMCarePlanValue *carePlanValue = [WMCarePlanValue MR_findFirstWithPredicate:predicate inContext:managedObjectContext];
     if (create && nil == carePlanValue) {
         carePlanValue = [WMCarePlanValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         carePlanValue.category = carePlanCategory;

@@ -3,25 +3,23 @@
 @interface WMIAPTransaction : _WMIAPTransaction {}
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
                                credits:(NSNumber *)credits;
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
                                credits:(NSNumber *)credits
                         startupCredits:(BOOL)startupCredits;
 
-+ (NSNumber *)sumTokens:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (NSDate *)lastPurchasedCreditDate:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (NSUInteger)transactionCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (WMIAPTransaction *)transactionWithId:(NSString *)txnId managedObjectContext:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (NSArray *)creditTransactionsNotTransmitted:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (BOOL) hasStartupCredits:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (WMIAPTransaction *) startupCredits:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSNumber *)sumTokens:(NSManagedObjectContext *)managedObjectContext;
++ (NSDate *)lastPurchasedCreditDate:(NSManagedObjectContext *)managedObjectContext;
++ (NSUInteger)transactionCount:(NSManagedObjectContext *)managedObjectContext;
++ (WMIAPTransaction *)transactionWithId:(NSString *)txnId managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (NSArray *)creditTransactionsNotTransmitted:(NSManagedObjectContext *)managedObjectContext;
++ (BOOL) hasStartupCredits:(NSManagedObjectContext *)managedObjectContext;
++ (WMIAPTransaction *) startupCredits:(NSManagedObjectContext *)managedObjectContext;
 
-+ (void)deleteTransaction:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store transaction:(WMIAPTransaction *) transaction;
++ (void)deleteTransaction:(NSManagedObjectContext *)managedObjectContext transaction:(WMIAPTransaction *) transaction;
 
-+ (void)deleteAllTxns:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
-+ (NSArray *)enumerateTransactions:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)deleteAllTxns:(NSManagedObjectContext *)managedObjectContext;
++ (NSArray *)enumerateTransactions:(NSManagedObjectContext *)managedObjectContext;
 
 
 - (BOOL)hasBeenKeyValueStoreTransmitted;

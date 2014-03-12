@@ -2,7 +2,6 @@
 #import "WMDeviceGroup.h"
 #import "WMParticipant.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMDeviceInterventionEvent ()
 
@@ -13,17 +12,6 @@
 
 @implementation WMDeviceInterventionEvent
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMDeviceInterventionEvent *deviceInterventionEvent = [[WMDeviceInterventionEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMDeviceInterventionEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:deviceInterventionEvent toPersistentStore:store];
-	}
-    [deviceInterventionEvent setValue:[deviceInterventionEvent assignObjectId] forKey:[deviceInterventionEvent primaryKeyField]];
-	return deviceInterventionEvent;
-}
-
 + (WMDeviceInterventionEvent *)deviceInterventionEventForDeviceGroup:(WMDeviceGroup *)deviceGroup
                                                           changeType:(InterventionEventChangeType)changeType
                                                                title:(NSString *)title
@@ -33,30 +21,18 @@
                                                          participant:(WMParticipant *)participant
                                                               create:(BOOL)create
                                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                     persistentStore:(NSPersistentStore *)store
 {
     deviceGroup = (WMDeviceGroup *)[managedObjectContext objectWithID:[deviceGroup objectID]];
     if (nil != eventType) {
         eventType = (WMInterventionEventType *)[managedObjectContext objectWithID:[eventType objectID]];
     }
     participant = (WMParticipant *)[managedObjectContext objectWithID:[participant objectID]];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDeviceInterventionEvent" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:
-                           @"deviceGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
-                           deviceGroup, changeType, title, valueFrom, valueTo, eventType, participant]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMDeviceInterventionEvent *deviceInterventionEvent = [array lastObject];
+    WMDeviceInterventionEvent *deviceInterventionEvent = [WMDeviceInterventionEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
+                                                                                                               @"deviceGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                                               deviceGroup, changeType, title, valueFrom, valueTo, eventType, participant]
+                                                                                                    inContext:managedObjectContext];
     if (create && nil == deviceInterventionEvent) {
-        deviceInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        deviceInterventionEvent = [WMDeviceInterventionEvent MR_createInContext:managedObjectContext];
         deviceInterventionEvent.deviceGroup = deviceGroup;
         deviceInterventionEvent.changeType = [NSNumber numberWithInt:changeType];
         deviceInterventionEvent.title = title;

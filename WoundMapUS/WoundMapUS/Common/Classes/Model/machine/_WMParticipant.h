@@ -10,9 +10,11 @@ extern const struct WMParticipantAttributes {
 	__unsafe_unretained NSString *email;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *guid;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *permissions;
 	__unsafe_unretained NSString *updatedAt;
+	__unsafe_unretained NSString *userName;
 } WMParticipantAttributes;
 
 extern const struct WMParticipantRelationships {
@@ -20,6 +22,7 @@ extern const struct WMParticipantRelationships {
 	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *participantType;
 	__unsafe_unretained NSString *person;
+	__unsafe_unretained NSString *team;
 } WMParticipantRelationships;
 
 extern const struct WMParticipantFetchedProperties {
@@ -29,6 +32,9 @@ extern const struct WMParticipantFetchedProperties {
 @class WMInterventionEvent;
 @class WMParticipantType;
 @class WMPerson;
+@class WMTeam;
+
+
 
 
 
@@ -106,6 +112,16 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* guid;
+
+
+
+//- (BOOL)validateGuid:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* name;
 
 
@@ -140,6 +156,16 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* userName;
+
+
+
+//- (BOOL)validateUserName:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSSet *acquiredConsults;
 
 - (NSMutableSet*)acquiredConsultsSet;
@@ -164,6 +190,13 @@ extern const struct WMParticipantFetchedProperties {
 @property (nonatomic, strong) WMPerson *person;
 
 //- (BOOL)validatePerson:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMTeam *team;
+
+//- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -221,6 +254,12 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+- (NSString*)primitiveGuid;
+- (void)setPrimitiveGuid:(NSString*)value;
+
+
+
+
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
 
@@ -238,6 +277,12 @@ extern const struct WMParticipantFetchedProperties {
 
 - (NSDate*)primitiveUpdatedAt;
 - (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveUserName;
+- (void)setPrimitiveUserName:(NSString*)value;
 
 
 
@@ -260,6 +305,11 @@ extern const struct WMParticipantFetchedProperties {
 
 - (WMPerson*)primitivePerson;
 - (void)setPrimitivePerson:(WMPerson*)value;
+
+
+
+- (WMTeam*)primitiveTeam;
+- (void)setPrimitiveTeam:(WMTeam*)value;
 
 
 @end

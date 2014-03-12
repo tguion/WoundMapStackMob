@@ -1,6 +1,5 @@
 #import "WMDevice.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WCDeviceExludeOtherValues             = 0,
@@ -15,37 +14,13 @@ typedef enum {
 
 @implementation WMDevice
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMDevice *device = [[WMDevice alloc] initWithEntity:[NSEntityDescription entityForName:@"WMDevice" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:device toPersistentStore:store];
-	}
-    [device setValue:[device assignObjectId] forKey:[device primaryKeyField]];
-	return device;
-}
-
 + (WMDevice *)deviceForTitle:(NSString *)title
                       create:(BOOL)create
         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-             persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDevice" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMDevice *device = [array lastObject];
+    WMDevice *device = [WMDevice MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == device) {
-        device = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        device = [WMDevice MR_createInContext:managedObjectContext];
         device.title = title;
     }
     return device;
@@ -53,13 +28,11 @@ typedef enum {
 
 + (WMDevice *)updateDeviceFromDictionary:(NSDictionary *)dictionary
                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                         persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMDevice *device = [self deviceForTitle:title
                                      create:YES
-                       managedObjectContext:managedObjectContext
-                            persistentStore:store];
+                       managedObjectContext:managedObjectContext];
     device.definition = [dictionary objectForKey:@"definition"];
     device.loincCode = [dictionary objectForKey:@"LOINC Code"];
     device.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
@@ -91,7 +64,7 @@ typedef enum {
 
 - (void)setExludesOtherValues:(BOOL)exludesOtherValues
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WCDeviceExludeOtherValues to:exludesOtherValues]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WCDeviceExludeOtherValues to:exludesOtherValues]);
 }
 
 #pragma mark - AssessmentGroup

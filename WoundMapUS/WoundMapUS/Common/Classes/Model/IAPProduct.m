@@ -1,7 +1,6 @@
 #import "IAPProduct.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     IAPProductFlagsAggregator             = 0,
@@ -23,7 +22,6 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:iapProduct toPersistentStore:store];
 	}
-    [iapProduct setValue:[iapProduct assignObjectId] forKey:[iapProduct primaryKeyField]];
 	return iapProduct;
 }
 
@@ -101,9 +99,7 @@ typedef enum {
 
 + (NSInteger)productCount:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"IAPProduct" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [IAPProduct MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 + (IAPProduct *)productForIdentifier:(NSString *)identifier
@@ -111,19 +107,7 @@ typedef enum {
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
                      persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"IAPProduct" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"identifier == %@", identifier]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    IAPProduct *iapProduct = [array lastObject];
+    IAPProduct *iapProduct = [IAPProduct MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"identifier == %@", identifier] inContext:managedObjectContext];
     if (create && nil == iapProduct) {
         iapProduct = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
         iapProduct.identifier = identifier;
@@ -138,9 +122,6 @@ typedef enum {
     }
     // else update our attributes
     NSAssert2([skProduct.productIdentifier isEqualToString:self.identifier], @"IAP product identifier mismatch: %@, %@", skProduct.productIdentifier, self.identifier);
-    //    DLog(@"skProduct.productIdentifier is %@ vs self.identifier: %@", skProduct.productIdentifier, self.identifier);
-    //    DLog(@"skProduct.localizedTitle is %@ vs self.title: %@", skProduct.localizedTitle, self.title);
-    //    DLog(@"skProduct.localizedDescription is %@ vs self.desc: %@", skProduct.localizedDescription, self.desc);
     self.title = skProduct.localizedTitle;
     self.desc = skProduct.localizedDescription;
     self.price = skProduct.price;
@@ -153,7 +134,7 @@ typedef enum {
 
 - (void)setAggregatorFlag:(BOOL)aggregatorFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:IAPProductFlagsAggregator to:aggregatorFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:IAPProductFlagsAggregator to:aggregatorFlag]);
 }
 
 @end

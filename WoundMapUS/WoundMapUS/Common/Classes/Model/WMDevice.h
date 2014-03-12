@@ -9,12 +9,10 @@
 
 + (WMDevice *)deviceForTitle:(NSString *)title
                       create:(BOOL)create
-        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-             persistentStore:(NSPersistentStore *)store;
+        managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMDevice *)updateDeviceFromDictionary:(NSDictionary *)dictionary
-                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                         persistentStore:(NSPersistentStore *)store;
+                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSPredicate *)predicateForWoundType:(WMWoundType *)woundType;
 

@@ -10,7 +10,6 @@ extern const struct WMPatientConsultantAttributes {
 	__unsafe_unretained NSString *dateAquired;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *sm_owner;
 	__unsafe_unretained NSString *updatedAt;
 } WMPatientConsultantAttributes;
 
@@ -24,7 +23,6 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 @class WMParticipant;
 @class WMPatient;
-
 
 
 
@@ -104,16 +102,6 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* sm_owner;
-
-
-
-//- (BOOL)validateSm_owner:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSDate* updatedAt;
 
 
@@ -180,12 +168,6 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSString*)primitiveSm_owner;
-- (void)setPrimitiveSm_owner:(NSString*)value;
 
 
 
