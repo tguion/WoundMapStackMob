@@ -12,6 +12,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
+#import "WMParticipant.h"
 #import "WMUtilities.h"
 
 static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
@@ -25,6 +26,8 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
     dispatch_once(&onceToken, ^{
         SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl];
         SharedInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
+        // Then just make sure and let the SDK know you want to use this class instead of FFUser
+        [SharedInstance registerClass:[WMParticipant class] forClazz:@"FFUser"];
     });
     return SharedInstance;
 }

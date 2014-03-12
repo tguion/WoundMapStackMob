@@ -1,6 +1,9 @@
 #import "_WMParticipant.h"
+#import <FFEF/FatFractal.h>
 
-@interface WMParticipant : _WMParticipant {}
+@class FFUser;
+
+@interface WMParticipant : _WMParticipant <FFUserProtocol> {}
 
 + (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext;
 

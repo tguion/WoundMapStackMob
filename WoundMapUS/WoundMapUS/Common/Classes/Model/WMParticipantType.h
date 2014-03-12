@@ -2,14 +2,13 @@
 
 @interface WMParticipantType : _WMParticipantType {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
-+ (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMParticipantType *)participantTypeForTitle:(NSString *)title
                                         create:(BOOL)create
-                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store;
+                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSArray *)sortedParticipantTypes:(NSManagedObjectContext *)managedObjectContext;
 

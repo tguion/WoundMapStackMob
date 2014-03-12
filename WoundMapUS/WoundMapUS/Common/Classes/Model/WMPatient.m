@@ -1,8 +1,9 @@
 #import "WMPatient.h"
+#import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMId.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
+#import "WCAppDelegate.h"
 
 @interface WMPatient ()
 
@@ -13,7 +14,7 @@
 
 @implementation WMPatient
 
-@dynamic managedObjectContext, objectID;
+@synthesize participantGroup=_participantGroup, consultantGroup=_consultantGroup;
 
 + (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                  persistentStore:(NSPersistentStore *)store
@@ -22,65 +23,112 @@
 	if (store) {
 		[managedObjectContext assignObject:patient toPersistentStore:store];
 	}
-    [patient setValue:[patient assignObjectId] forKey:[patient primaryKeyField]];
 	return patient;
 }
 
-+ (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
-    NSError *error = nil;
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyTryCacheElseNetwork];
-    NSInteger count = [managedObjectContext countForFetchRequestAndWait:request options:options error:&error];
-    [WMUtilities logError:error];
-    return count;
+    return [WMPatient MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
-+ (WMPatient *)patientForPatientId:(NSString *)patientId managedObjectContext:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wmpatient_id == %@", patientId]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMPatient MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl] inContext:managedObjectContext];
 }
 
 + (WMPatient *)lastModifiedActivePatient:(NSManagedObjectContext *)managedObjectContext
-                         persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"archivedFlag == NO"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMPatient MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"archivedFlag == NO"]
+                                       sortedBy:@"updatedAt"
+                                      ascending:NO
+                                      inContext:managedObjectContext];
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+}
+
+/**
+ Call this method when a patient is created and when fetched since the team may have changed
+ */
+- (void)updateParticipantGroupWithParticipants:(NSArray *)participants
+{
+    FFUserGroup *participantGroup = self.participantGroup;
+    NSError *error = nil;
+    NSMutableArray *currentParticipants = [[participantGroup getUsersWithError:&error] mutableCopy];
+    for (id<FFUserProtocol>participant in participants) {
+        [participantGroup addUser:participant error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [currentParticipants removeObjectIdenticalTo:participant];
+    }
+    // remove remaining users
+    for (id<FFUserProtocol>participant in currentParticipants) {
+        [participantGroup removeUser:participant error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    // queue update
+    [[WMFatFractal sharedInstance] queueUpdateObj:self];
+}
+
+- (void)addParticipant:(id<FFUserProtocol>)participant
+{
+    NSError *error = nil;
+    [self.participantGroup addUser:participant error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+}
+
+- (void)addConsultant:(id<FFUserProtocol>)consultant
+{
+    NSError *error = nil;
+    [self.consultantGroup addUser:consultant error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+}
+
+- (void)removeParticipant:(id<FFUserProtocol>)participant
+{
+    NSError *error = nil;
+    [self.participantGroup removeUser:participant error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+}
+
+- (void)removeConsultant:(id<FFUserProtocol>)consultant
+{
+    NSError *error = nil;
+    [self.consultantGroup removeUser:consultant error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+}
+
+- (FFUserGroup *)participantGroup
+{
+    if (nil == _participantGroup) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        _participantGroup = [[FFUserGroup alloc] initWithFF:ff];
+    }
+    return _participantGroup;
+}
+
+- (FFUserGroup *)consultantGroup
+{
+    if (nil == _consultantGroup) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        _consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
+    }
+    return _consultantGroup;
 }
 
 - (NSString *)lastNameFirstName

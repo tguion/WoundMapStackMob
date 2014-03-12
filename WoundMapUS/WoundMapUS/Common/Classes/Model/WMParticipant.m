@@ -2,6 +2,7 @@
 #import "WMParticipantType.h"
 #import "WMPerson.h"
 #import "WMUtilities.h"
+#import "WCAppDelegate.h"
 
 @interface WMParticipant ()
 

@@ -1,6 +1,5 @@
 #import "WMParticipantType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMParticipantType ()
 
@@ -18,41 +17,21 @@
 	if (store) {
 		[managedObjectContext assignObject:participantType toPersistentStore:store];
 	}
-    [participantType setValue:[participantType assignObjectId] forKey:[participantType primaryKeyField]];
 	return participantType;
 }
 
-+ (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext
 {
-    __block NSInteger count = 0;
-    [managedObjectContext performBlockAndWait:^{
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
-        count = [managedObjectContext countForFetchRequest:request error:NULL];
-    }];
-    return count;
+    return [WMParticipantType MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 + (WMParticipantType *)participantTypeForTitle:(NSString *)title
                                         create:(BOOL)create
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMParticipantType *participantType = [array lastObject];
+    WMParticipantType *participantType = [WMParticipantType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == participantType) {
-        participantType = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        participantType = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         participantType.title = title;
     }
     return participantType;
@@ -60,27 +39,16 @@
 
 + (NSArray *)sortedParticipantTypes:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMParticipantType MR_findAllSortedBy:@"sortRank" ascending:YES inContext:managedObjectContext];
 }
 
 + (WMParticipantType *)updateParticipantTypeFromDictionary:(NSDictionary *)dictionary
                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                           persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMParticipantType *participantType = [self participantTypeForTitle:title
                                                                 create:YES
-                                                  managedObjectContext:managedObjectContext
-                                                       persistentStore:store];
+                                                  managedObjectContext:managedObjectContext];
     participantType.sortRank = [dictionary objectForKey:@"sortRank"];
     participantType.definition = [dictionary objectForKey:@"definition"];
     participantType.loincCode = [dictionary objectForKey:@"LOINC Code"];
@@ -89,7 +57,7 @@
     return participantType;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"RoleType" withExtension:@"plist"];
@@ -98,7 +66,7 @@
 		return;
 	}
     // else check count
-    if ([WMParticipantType participantTypeCount:managedObjectContext persistentStore:store] > 0) {
+    if ([WMParticipantType participantTypeCount:managedObjectContext] > 0) {
         return;
     }
     // else
@@ -111,7 +79,7 @@
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateParticipantTypeFromDictionary:dictionary managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateParticipantTypeFromDictionary:dictionary managedObjectContext:managedObjectContext];
         }
     }
 }
