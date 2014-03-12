@@ -8,7 +8,7 @@
 
 #import "IAPBaseViewController.h"
 #import "IAPManager.h"
-#import "IAPProduct+Custom.h"
+#import "IAPProduct.h"
 #import "IAPProductTextTableViewCell.h"
 #import "InstructionContentViewController.h"
 #import "WCUtilities.h"

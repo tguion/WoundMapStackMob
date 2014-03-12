@@ -95,6 +95,16 @@
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
+		7D13026A18D0873500AE33B2 /* PDFRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026518D0873500AE33B2 /* PDFRenderer.m */; };
+		7D13026B18D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026718D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.m */; };
+		7D13026C18D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026918D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.m */; };
+		7D13027B18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026E18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m */; };
+		7D13027C18D08AD500AE33B2 /* WMDeviceGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027018D08AD500AE33B2 /* WMDeviceGroup+CoreText.m */; };
+		7D13027D18D08AD500AE33B2 /* WMMedicationGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027218D08AD500AE33B2 /* WMMedicationGroup+CoreText.m */; };
+		7D13027E18D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027418D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m */; };
+		7D13027F18D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027618D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m */; };
+		7D13028018D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */; };
+		7D13028118D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */; };
 		7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */; };
 		7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACD18B7CBA90054DDC3 /* WMWound.m */; };
 		7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DAD018B7CD480054DDC3 /* WMNavigationNodeButton.m */; };
@@ -563,6 +573,26 @@
 		7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13026118CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+performBlockAfterDelay.h"; sourceTree = "<group>"; };
 		7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+performBlockAfterDelay.m"; sourceTree = "<group>"; };
+		7D13026418D0873400AE33B2 /* PDFRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFRenderer.h; sourceTree = "<group>"; };
+		7D13026518D0873500AE33B2 /* PDFRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRenderer.m; sourceTree = "<group>"; };
+		7D13026618D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFRendererTwoColumnsSOAP.h; sourceTree = "<group>"; };
+		7D13026718D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRendererTwoColumnsSOAP.m; sourceTree = "<group>"; };
+		7D13026818D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFRendererTwoColumnsTwoPhotos.h; sourceTree = "<group>"; };
+		7D13026918D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFRendererTwoColumnsTwoPhotos.m; sourceTree = "<group>"; };
+		7D13026D18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMCarePlanGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13026E18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMCarePlanGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13026F18D08AD500AE33B2 /* WMDeviceGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMDeviceGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13027018D08AD500AE33B2 /* WMDeviceGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMDeviceGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13027118D08AD500AE33B2 /* WMMedicationGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMMedicationGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13027218D08AD500AE33B2 /* WMMedicationGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMMedicationGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13027318D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMPsychoSocialGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13027418D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMPsychoSocialGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13027518D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMSkinAssessmentGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13027618D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMSkinAssessmentGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13027718D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMWoundMeasurementGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMWoundMeasurementGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13027918D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMWoundTreatmentGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMWoundTreatmentGroup+CoreText.m"; sourceTree = "<group>"; };
 		7D39DAC918B7CB9B0054DDC3 /* _WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWound.h; sourceTree = "<group>"; };
 		7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWound.m; sourceTree = "<group>"; };
 		7D39DACC18B7CBA90054DDC3 /* WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWound.h; sourceTree = "<group>"; };
@@ -1578,6 +1608,12 @@
 				7DD3EA4718C011A70093E370 /* IAPManager.h */,
 				7DD3EA4818C011A70093E370 /* IAPManager.m */,
 				7DF4E9B718C4CAAE000A3F5B /* PDF Support */,
+				7D13026418D0873400AE33B2 /* PDFRenderer.h */,
+				7D13026518D0873500AE33B2 /* PDFRenderer.m */,
+				7D13026618D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.h */,
+				7D13026718D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.m */,
+				7D13026818D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.h */,
+				7D13026918D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.m */,
 				7DDE754618CE42AA00B15C77 /* WMCorePlotManager.h */,
 				7DDE754718CE42AA00B15C77 /* WMCorePlotManager.m */,
 				7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */,
@@ -2233,6 +2269,20 @@
 		7DDAFAFD18B62C9C00A05F5D /* CoreText */ = {
 			isa = PBXGroup;
 			children = (
+				7D13026D18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.h */,
+				7D13026E18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m */,
+				7D13026F18D08AD500AE33B2 /* WMDeviceGroup+CoreText.h */,
+				7D13027018D08AD500AE33B2 /* WMDeviceGroup+CoreText.m */,
+				7D13027118D08AD500AE33B2 /* WMMedicationGroup+CoreText.h */,
+				7D13027218D08AD500AE33B2 /* WMMedicationGroup+CoreText.m */,
+				7D13027318D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.h */,
+				7D13027418D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m */,
+				7D13027518D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.h */,
+				7D13027618D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m */,
+				7D13027718D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.h */,
+				7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */,
+				7D13027918D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.h */,
+				7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */,
 				7DDAFAFE18B62C9C00A05F5D /* WCModelTextKitAtrributes.h */,
 				7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */,
 				7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */,
@@ -2563,6 +2613,7 @@
 				7DF4E97718C29A07000A3F5B /* WMMedicationInterventionEvent.m in Sources */,
 				7D39DB0018B7E6560054DDC3 /* WMShareViewController.m in Sources */,
 				7DF4E92618C22F27000A3F5B /* WMCarePlanCategory.m in Sources */,
+				7D13027C18D08AD500AE33B2 /* WMDeviceGroup+CoreText.m in Sources */,
 				7DF4E97D18C362D2000A3F5B /* _WMInterventionStatusJoin.m in Sources */,
 				7DF4E8EA18C22EEC000A3F5B /* _WMIAPTransaction.m in Sources */,
 				7DF4E8E718C22EEC000A3F5B /* _WMCarePlanValue.m in Sources */,
@@ -2580,12 +2631,14 @@
 				7D39DB7F18B947330054DDC3 /* WMMedicationCategory.m in Sources */,
 				7DB2062718A7D3400004DC32 /* WCMasterViewController.m in Sources */,
 				7D39DAD718B7CE6E0054DDC3 /* WMCompassView.m in Sources */,
+				7D13027F18D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m in Sources */,
 				7D39DBB418BAB2CC0054DDC3 /* WMTransformPhotoViewController.m in Sources */,
 				7D39DB9518B94FFD0054DDC3 /* WMDevice.m in Sources */,
 				7DB2074A18ABAD800004DC32 /* WCPatientPhotoImageView.m in Sources */,
 				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
 				7DD8376318C7A5080028C2D3 /* AFXMLRequestOperation.m in Sources */,
 				7D39DBC818BAB5540054DDC3 /* WMUndermineTunnelViewController.m in Sources */,
+				7D13027B18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m in Sources */,
 				7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */,
 				7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */,
 				7DF4E92A18C22F27000A3F5B /* WMDefinition.m in Sources */,
@@ -2608,21 +2661,26 @@
 				7DD8374318C78A3A0028C2D3 /* MagicalRecord+ShorthandSupport.m in Sources */,
 				7DF4E93E18C2550F000A3F5B /* SearchUtilities.m in Sources */,
 				7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */,
+				7D13026B18D0873500AE33B2 /* PDFRendererTwoColumnsSOAP.m in Sources */,
 				7DF4E93718C22F27000A3F5B /* WMWoundPosition.m in Sources */,
 				7DD8375C18C7A5080028C2D3 /* AFHTTPClient.m in Sources */,
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
 				7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */,
+				7D13027D18D08AD500AE33B2 /* WMMedicationGroup+CoreText.m in Sources */,
 				7D39DB7618B947250054DDC3 /* _WMMedicationCategory.m in Sources */,
 				7D39DAE318B7DC120054DDC3 /* WMPolicyManager.m in Sources */,
+				7D13028018D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m in Sources */,
 				7DF4E9B318C4C8EA000A3F5B /* WMPDFPrintManager.m in Sources */,
 				7DF4E93B18C22F27000A3F5B /* WMWoundTreatmentValue.m in Sources */,
 				5F6DE50718B2D37000E87F7E /* WMTextFieldTableViewCell.m in Sources */,
 				7D39DB9618B94FFD0054DDC3 /* WMDeviceCategory.m in Sources */,
 				7DF4E8E418C22EEC000A3F5B /* _WMCarePlanCategory.m in Sources */,
+				7D13028118D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m in Sources */,
 				7DD8373218C78A390028C2D3 /* NSManagedObject+MagicalAggregation.m in Sources */,
 				7DF4E98F18C3C4D1000A3F5B /* _WMSkinAssessmentIntEvent.m in Sources */,
 				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
 				7DF4E93618C22F27000A3F5B /* WMWoundLocationValue.m in Sources */,
+				7D13027E18D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m in Sources */,
 				7DF4E93018C22F27000A3F5B /* WMSkinAssessment.m in Sources */,
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				7D39DB0918B7EFE30054DDC3 /* WMCarePlanTableViewCell.m in Sources */,
@@ -2720,6 +2778,7 @@
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
+				7D13026A18D0873500AE33B2 /* PDFRenderer.m in Sources */,
 				7D39DBC318BAB4FB0054DDC3 /* WMPhotoDepthViewController.m in Sources */,
 				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
 				7D39DBAC18BA97A70054DDC3 /* IAPAggregatorViewController.m in Sources */,
@@ -2765,6 +2824,7 @@
 				7DDBEDB318BC0DD300FEF3FA /* _WMWoundMeasurement.m in Sources */,
 				7DF4E8F818C22EEC000A3F5B /* _WMWoundTreatmentGroup.m in Sources */,
 				7D39DAF618B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m in Sources */,
+				7D13026C18D0873500AE33B2 /* PDFRendererTwoColumnsTwoPhotos.m in Sources */,
 				7DF4E8F218C22EEC000A3F5B /* _WMWoundLocation.m in Sources */,
 				5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */,
 				7D39DB3718B824060054DDC3 /* WMDevicesViewController.m in Sources */,

@@ -8,7 +8,7 @@
 
 #import "IAPAggregatorViewController.h"
 #import "IAPNonConsumableViewController.h"
-#import "IAPProduct+Custom.h"
+#import "IAPProduct.h"
 #import "IAPProduct.h"
 #import "IAPProductOptionTableViewCell.h"
 #import "IAPManager.h"

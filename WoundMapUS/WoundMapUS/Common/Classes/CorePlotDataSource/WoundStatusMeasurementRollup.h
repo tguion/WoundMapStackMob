@@ -5,7 +5,7 @@
 //  Created by etreasure consulting LLC on 2/6/13.
 //  Copyright (c) 2013 etreasure consulting inc. All rights reserved.
 //
-//  Data rollup for WCWoundMeasurementValues in WCWoundMeasurementGroup for key or for Braden Scale series
+//  Data rollup for WCWoundMeasurementValues in WMWoundMeasurementGroup for key or for Braden Scale series
 
 #import <Foundation/Foundation.h>
 #import "CorePlot-CocoaTouch.h"

@@ -7,7 +7,7 @@
 //
 
 #import "WMIAPCreditTransaction.h"
-#import "WCIAPTransaction+Custom.h"
+#import "WMIAPTransaction.h"
 
 @implementation WMIAPCreditTransaction
 
@@ -44,7 +44,7 @@
     return self;
 }
 
-+ (WMIAPCreditTransaction *)makeCreditTransaction:(WCIAPTransaction *)iapTransaction
++ (WMIAPCreditTransaction *)makeCreditTransaction:(WMIAPTransaction *)iapTransaction
 {
     WMIAPCreditTransaction *creditTransaction = [[WMIAPCreditTransaction alloc] initWithTransactionCredits:[iapTransaction credits]];
     [creditTransaction setTxnId:[iapTransaction txnId]];
@@ -54,9 +54,9 @@
     return creditTransaction;
 }
 
-- (WCIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store
+- (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store
 {
-    WCIAPTransaction *iapTxn = [WCIAPTransaction instanceWithManagedObjectContext:managedObjectContext persistentStore:store credits:[self credits]];
+    WMIAPTransaction *iapTxn = [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext persistentStore:store credits:[self credits]];
     [iapTxn setTxnId: [self txnId]];
     [iapTxn setFlags:[self flags]];
     [iapTxn setTxnDate:[self txnDate]];

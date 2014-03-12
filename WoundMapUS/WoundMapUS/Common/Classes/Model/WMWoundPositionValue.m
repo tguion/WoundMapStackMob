@@ -34,7 +34,7 @@
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 @end

@@ -1249,7 +1249,7 @@
         [self.managedObjectContext deleteObject:viewController.bradenScale];
     }
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1270,7 +1270,7 @@
         hasChanges = YES;
     }
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1305,7 +1305,7 @@
         hasChanges = YES;
     }
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1342,7 +1342,7 @@
         hasChanges = YES;
     }
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1378,7 +1378,7 @@
         hasChanges = YES;
     }
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1492,7 +1492,7 @@
 - (void)carePlanGroupViewControllerDidSave:(WMCarePlanGroupViewController *)viewController
 {
     BOOL hasChanges = self.managedObjectContext.hasChanges;
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1520,7 +1520,7 @@
 - (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
 {
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {
@@ -1539,7 +1539,7 @@
 - (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
 {
     [viewController clearAllReferences];
-    // save in order to update dateModified
+    // save in order to update updatedAt
     NSError *error = nil;
     [self.managedObjectContext saveAndWait:&error];
     if (nil != error) {

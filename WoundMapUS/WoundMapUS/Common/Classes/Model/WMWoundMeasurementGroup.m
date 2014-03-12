@@ -77,9 +77,9 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 + (NSDate *)mostRecentWoundMeasurementGroupDateModified:(WMWoundPhoto *)woundPhoto
 {
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMWoundMeasurementGroup"];
@@ -95,15 +95,15 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     if ([results count] == 0)
         return nil;
     // else
-    return [results firstObject][@"dateModified"];
+    return [results firstObject][@"updatedAt"];
 }
 
 + (NSDate *)mostRecentWoundMeasurementGroupDateModifiedForDimensions:(WMWoundPhoto *)woundPhoto
 {
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMWoundMeasurementValue"];
@@ -119,7 +119,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     if ([results count] == 0)
         return nil;
     // else
-    return [results firstObject][@"dateModified"];
+    return [results firstObject][@"updatedAt"];
 }
 
 + (NSDate *)mostRecentWoundMeasurementGroupDateCreatedForDimensions:(WMWoundPhoto *)woundPhoto
@@ -149,9 +149,9 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 + (NSDate *)mostRecentWoundMeasurementGroupDateModifiedExcludingDimensions:(WMWoundPhoto *)woundPhoto
 {
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMWoundMeasurementValue"];
@@ -167,7 +167,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     if ([results count] == 0)
         return nil;
     // else
-    return [results firstObject][@"dateModified"];
+    return [results firstObject][@"updatedAt"];
 }
 
 + (WMWoundMeasurementGroup *)activeWoundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto
@@ -231,7 +231,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (WMWoundMeasurementValue *)measurementValueWidth
@@ -288,7 +288,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 // determine the latest date for a length, width or depth measurement
 - (NSDate *)lastWoundMeasurementDate
 {
-    NSDate *dateModified = nil;
+    NSDate *updatedAt = nil;
     // get the parent WMWoundMeasurement
     WMWoundMeasurement *parentMeasurement = [WMWoundMeasurement woundMeasureForTitle:kDimensionsWoundMeasurementTitle
                                                               parentWoundMeasurement:nil
@@ -305,7 +305,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                                                              create:NO
                                                                                               value:nil];
     if (nil != woundMeasurementValue) {
-        dateModified = woundMeasurementValue.dateModified;
+        updatedAt = woundMeasurementValue.updatedAt;
     }
     // get the length WMWoundMeasurement
     measurement = [WMWoundMeasurement woundMeasureForTitle:kDimensionLengthWoundMeasurementTitle
@@ -317,7 +317,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                                     create:NO
                                                                      value:nil];
     if (nil != woundMeasurementValue) {
-        dateModified = [woundMeasurementValue.dateModified laterDate:dateModified];
+        updatedAt = [woundMeasurementValue.updatedAt laterDate:updatedAt];
     }
     // get the depth WMWoundMeasurement
     measurement = [WMWoundMeasurement woundMeasureForTitle:kDimensionDepthWoundMeasurementTitle
@@ -329,23 +329,23 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                                     create:NO
                                                                      value:nil];
     if (nil != woundMeasurementValue) {
-        dateModified = [woundMeasurementValue.dateModified laterDate:dateModified];
+        updatedAt = [woundMeasurementValue.updatedAt laterDate:updatedAt];
     }
-    return dateModified;
+    return updatedAt;
 }
 
 - (NSDate *)dateModifiedExludingMeasurement
 {
-    NSArray *values = [[self.values allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:NO]]];
-    NSDate *dateModified = nil;
+    NSArray *values = [[self.values allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:NO]]];
+    NSDate *updatedAt = nil;
     NSArray *measurementTitles = @[kDimensionWidthWoundMeasurementTitle, kDimensionLengthWoundMeasurementTitle, kDimensionDepthWoundMeasurementTitle, kDimensionUndermineTunnelMeasurementTitle];
     for (WMWoundMeasurementValue *value in values) {
         if (![measurementTitles containsObject:value.woundMeasurement.title]) {
-            dateModified = value.dateModified;
+            updatedAt = value.updatedAt;
             break;
         }
     }
-    return dateModified;
+    return updatedAt;
 }
 
 - (NSInteger)tunnelingValueCount

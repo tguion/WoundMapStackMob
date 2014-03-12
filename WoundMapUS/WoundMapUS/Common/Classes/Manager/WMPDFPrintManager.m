@@ -52,7 +52,7 @@
     return [self.templateTitles objectAtIndex:printTemplate];
 }
 
-- (void)drawPDFToURL:(NSURL *)url forPatient:(WCPatient *)patient printConfiguration:(PrintConfiguration *)printConfiguration
+- (void)drawPDFToURL:(NSURL *)url forPatient:(WMPatient *)patient printConfiguration:(PrintConfiguration *)printConfiguration
 {
     PDFRenderer *renderer = [self rendererForPrintTemplate:printConfiguration.printTemplate];
     renderer.patient = patient;
@@ -60,7 +60,7 @@
     [renderer drawToURL:url];
 }
 
-- (NSURL *)pdfURLForPatient:(WCPatient *)patient
+- (NSURL *)pdfURLForPatient:(WMPatient *)patient
 {
     NSString *fileName = [NSString stringWithFormat:@"%@.%@.%lf", patient.lastName, patient.firstName, [[NSDate date] timeIntervalSince1970]];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -76,7 +76,7 @@
     return url;
 }
 
-- (void)printURL:(NSURL *)url patient:(WCPatient *)patient fromBarButtonItem:(UIBarButtonItem *)barButtonItem onPrintFinish:(OnPrintFinish)onPrintFinish
+- (void)printURL:(NSURL *)url patient:(WMPatient *)patient fromBarButtonItem:(UIBarButtonItem *)barButtonItem onPrintFinish:(OnPrintFinish)onPrintFinish
 {
     UIPrintInteractionController *printController = [UIPrintInteractionController sharedPrintController];
     printController.delegate = self;

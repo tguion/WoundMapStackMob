@@ -63,19 +63,19 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
 
 #pragma mark - Plot Helper Methods
 
-// map for WCWoundMeasurement.title to map of WCWoundMeasurement.title (measurement child) -> WoundStatusMeasurementRollup instances
+// map for WMWoundMeasurement.title to map of WMWoundMeasurement.title (measurement child) -> WoundStatusMeasurementRollup instances
 - (NSMutableDictionary *)wountStatusMeasurementTitle2RollupByKeyMapMapForWound:(WMWound *)wound graphableMeasurementTitles:(NSArray *)graphableMeasurementTitles
 {
     NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
     NSMutableDictionary *wountStatusMeasurementTitle2RollupByKeyMapMap = [[NSMutableDictionary alloc] initWithCapacity:32];
-    // collect all WCWoundMeasurementGroup instance for self.wound, and collect (date,value) for each WCWoundMeasurementValue
+    // collect all WMWoundMeasurementGroup instance for self.wound, and collect (date,value) for each WMWoundMeasurementValue
     NSArray *sortedWoundMeasurementGroups = wound.sortedWoundMeasurements;
     for (NSString *title in graphableMeasurementTitles) {
-        // check for Braden Scale, which is not an WCWoundMeasurement
+        // check for Braden Scale, which is not an WMWoundMeasurement
         if ([title isEqualToString:kBradenScaleTitle]) {
             // delete any incomplete and closed
             [WMBradenScale deleteIncompleteClosedBradenScales:wound.managedObjectContext];
-            // rollup the WCBradenScale instances
+            // rollup the WMBradenScale instances
             [self updateRollupForBradenScalesForWountStatusMeasurementTitle2RollupByKeyMapMap:(NSMutableDictionary *)wountStatusMeasurementTitle2RollupByKeyMapMap
                                                                          managedObjectContext:[wound managedObjectContext]];
         } else {
@@ -122,7 +122,7 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
                     // e.g. wound pain
                     NSDate *date = woundMeasurementGroup.dateCreated;
                     NSString *key = woundMeasurement.title;
-                    WCWoundMeasurementValue *woundMeasurementValue = [woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
+                    WMWoundMeasurementValue *woundMeasurementValue = [woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
                                                                                                                               create:NO
                                                                                                                                value:nil
                                                                                                                 managedObjectContext:managedObjectContext];

@@ -18,7 +18,7 @@ extern NSString *const kTaskDidCompleteNotification;
 
 + (NSInteger)complianceDeltaForFrequencyUnit:(NavigationNodeFrequencyUnit)frequencyUnit
                               frequencyValue:(NSInteger)frequencyValue
-                                dateModified:(NSDate *)dateModified;
+                                updatedAt:(NSDate *)updatedAt;
 
 - (void)handleICloudAccountChanged;
 

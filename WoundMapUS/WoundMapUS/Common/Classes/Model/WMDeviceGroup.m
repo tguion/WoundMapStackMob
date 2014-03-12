@@ -1,8 +1,8 @@
 #import "WMDeviceGroup.h"
+#import "WMPatient.h"
 #import "WMDeviceValue.h"
 #import "WMDevice.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMDeviceGroup ()
 
@@ -38,7 +38,6 @@
 	if (store) {
 		[managedObjectContext assignObject:deviceGroup toPersistentStore:store];
 	}
-    [deviceGroup setValue:[deviceGroup assignObjectId] forKey:[deviceGroup primaryKeyField]];
 	return deviceGroup;
 }
 
@@ -56,154 +55,72 @@
     return result;
 }
 
-+ (BOOL)deviceGroupsHaveHistory:(NSManagedObjectContext *)managedObjectContext
++ (BOOL)deviceGroupsHaveHistory:(WMPatient *)patient
 {
-    return [self deviceGroupsCount:managedObjectContext] > 1;
+    return [self deviceGroupsCount:patient] > 1;
 }
 
-+ (NSInteger)deviceGroupsCount:(NSManagedObjectContext *)managedObjectContext
++ (NSInteger)deviceGroupsCount:(WMPatient *)patient
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext]];
-    __block NSInteger count = 0;
-    [managedObjectContext performBlockAndWait:^{
-        count = [managedObjectContext countForFetchRequest:request error:NULL];
-    }];
-    return count;
+    return [WMDeviceGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
-+ (WMDeviceGroup *)deviceGroupByRevising:(WMDeviceGroup *)deviceGroup
-                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
++ (WMDeviceGroup *)activeDeviceGroup:(WMPatient *)patient
 {
-    if (nil == deviceGroup) {
-        return [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
-    }
-    // TODO else
-    
-    return nil;
-}
-
-+ (WMDeviceGroup *)activeDeviceGroup:(NSManagedObjectContext *)managedObjectContext
-{
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMDeviceGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO", patient] sortedBy:@"updatedAt" ascending:NO inContext:[patient managedObjectContext]];
 }
 
 + (NSInteger)closeDeviceGroupsCreatedBefore:(NSDate *)date
-                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                            persistentStore:(NSPersistentStore *)store
+                                    patient:(WMPatient *)patient
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:@[store]];
-    }
-	[request setEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO AND dateCreated < %@", date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return 0;
-    }
-	// else
+    NSArray *array = [WMDeviceGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date] inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
 
-+ (WMDeviceGroup *)mostRecentOrActiveDeviceGroup:(NSManagedObjectContext *)managedObjectContext
++ (WMDeviceGroup *)mostRecentOrActiveDeviceGroup:(WMPatient *)patient
 {
-    WMDeviceGroup *deviceGroup = [self activeDeviceGroup:managedObjectContext];
+    WMDeviceGroup *deviceGroup = [self activeDeviceGroup:patient];
     if (nil == deviceGroup) {
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext]];
-        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
-        NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-        // else
-        deviceGroup = [array lastObject];
+        deviceGroup = [WMDeviceGroup MR_findFirstOrderedByAttribute:@"updatedAt" ascending:NO inContext:[patient managedObjectContext]];
     }
     return deviceGroup;
 }
 
-+ (NSDate *)mostRecentOrActiveDeviceGroupDateModified:(NSManagedObjectContext *)managedObjectContext
++ (NSDate *)mostRecentOrActiveDeviceGroupDateModified:(WMPatient *)patient
 {
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMDeviceGroup"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    NSDictionary *dates = [results firstObject];
-    return dates[@"dateModified"];
+    NSDictionary *dates = (NSDictionary *)[WMDeviceGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:[patient managedObjectContext]];
+    return dates[@"updatedAt"];
 }
 
-+ (NSArray *)sortedDeviceGroups:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)sortedDeviceGroups:(WMPatient *)patient
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMDeviceGroup MR_findAllSortedBy:@"createdAt" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (WMDeviceValue *)deviceValueForDevice:(WMDevice *)device
                                  create:(BOOL)create
                                   value:(NSString *)value
-                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    device = (WMDevice *)[managedObjectContext objectWithID:[device objectID]];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMDeviceValue" inManagedObjectContext:managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND device == %@", self, device];
-    if (nil != value) {
-        predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];
-    }
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMDeviceValue *deviceValue = [array lastObject];
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSParameterAssert(managedObjectContext == [device managedObjectContext]);
+    WMDeviceValue *deviceValue = [WMDeviceValue MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND device == %@", self, device] inContext:managedObjectContext];
     if (create && nil == deviceValue) {
         deviceValue = [WMDeviceValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         deviceValue.device = device;

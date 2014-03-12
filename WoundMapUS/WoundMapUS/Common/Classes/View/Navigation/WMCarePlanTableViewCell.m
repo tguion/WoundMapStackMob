@@ -92,7 +92,7 @@
         return;
     }
     // else
-//    WCCarePlanGroup *carePlanGroup = [WMCarePlanGroup mostRecentOrActiveCarePlanGroup:patient];
+//    WMCarePlanGroup *carePlanGroup = [WMCarePlanGroup mostRecentOrActiveCarePlanGroup:patient];
 //    if (nil == carePlanGroup) {
 //        return;
 //    }
@@ -102,7 +102,7 @@
 //    CGFloat x = roundf(CGRectGetMidX(rect));
 //    CGFloat y = roundf((CGRectGetHeight(rect) - textHeight)/2.0);
 //    NSString *entryText = ([carePlanGroup.values count] == 1 ? @"entry":@"entries");
-//    NSString *string = [NSString stringWithFormat:@"%d %@ / %@", [carePlanGroup.values count], entryText, [NSDateFormatter localizedStringFromDate:carePlanGroup.dateModified dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle]];
+//    NSString *string = [NSString stringWithFormat:@"%d %@ / %@", [carePlanGroup.values count], entryText, [NSDateFormatter localizedStringFromDate:carePlanGroup.updatedAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle]];
 //    CGRect textRect = CGRectMake(x, y, textWidth, self.valuesTextHeight);
 //    [string drawInRect:textRect withAttributes:self.valuesTextAttributes];
 //    y += self.valuesTextHeight;

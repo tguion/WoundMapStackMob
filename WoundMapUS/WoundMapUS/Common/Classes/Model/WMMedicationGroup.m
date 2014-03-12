@@ -39,7 +39,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
@@ -55,7 +55,7 @@
     if (nil == medicationGroup) {
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
+        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
         NSError *error = nil;
         NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
         if (nil != error) {
@@ -69,9 +69,9 @@
 
 + (NSDate *)mostRecentOrActiveMedicationGroupDateModified:(NSManagedObjectContext *)managedObjectContext
 {
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMMedicationGroup"];
@@ -87,7 +87,7 @@
         return nil;
     // else
     NSDictionary *dates = [results firstObject];
-    return dates[@"dateModified"];
+    return dates[@"updatedAt"];
 }
 
 + (NSInteger)closeMedicationGroupsCreatedBefore:(NSDate *)date
@@ -144,7 +144,7 @@
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (BOOL)isClosed

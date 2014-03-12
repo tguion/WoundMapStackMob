@@ -14,7 +14,7 @@
 #import "WMIAPTransaction.h"
 #import "IAPDeviceTransactionAggregate.h"
 #import "WMIAPCreditTransaction.h"
-#import "WCIAPTransaction.h"
+#import "WMIAPTransaction.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 #import "CoreDataHelper.h"

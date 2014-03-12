@@ -45,7 +45,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
@@ -62,7 +62,7 @@
     if (nil == carePlanGroup) {
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         [request setEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext]];
-        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
+        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
         NSError *error = nil;
         NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
         if (nil != error) {
@@ -77,9 +77,9 @@
 + (NSDate *)mostRecentOrActiveCarePlanGroupDateModified:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMCarePlanGroup"];
@@ -94,7 +94,7 @@
     if ([results count] == 0)
         return nil;
     // else
-    return [results firstObject][@"dateModified"];
+    return [results firstObject][@"updatedAt"];
 }
 
 + (NSInteger)closeCarePlanGroupsCreatedBefore:(NSDate *)date
@@ -147,7 +147,7 @@
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 + (NSArray *)sortedCarePlanGroups:(WMPatient *)patient

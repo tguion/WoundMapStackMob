@@ -8,7 +8,7 @@
 
 #import "IAPNonConsumableViewController.h"
 #import "IAPProduct.h"
-#import "IAPProduct+Custom.h"
+#import "IAPProduct.h"
 #import "IAPManager.h"
 #import "IAPBaseViewController.h"
 

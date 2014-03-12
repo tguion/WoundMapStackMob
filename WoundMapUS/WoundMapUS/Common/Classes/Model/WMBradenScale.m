@@ -82,12 +82,12 @@ NSInteger const kBradenSectionCount = 6;
 + (NSDate *)lastCompleteBradenScaleDataModified:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WCBradenScale"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMBradenScale"];
     request.predicate = [NSPredicate predicateWithFormat:@"patient == %@ AND completeFlag == YES", patient];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
@@ -100,7 +100,7 @@ NSInteger const kBradenSectionCount = 6;
     if ([results count] == 0)
         return nil;
     // else
-    return [results firstObject][@"dateModified"];
+    return [results firstObject][@"updatedAt"];
 }
 
 + (NSArray *)sortedScoredBradenScales:(WMPatient *)patient
@@ -110,7 +110,7 @@ NSInteger const kBradenSectionCount = 6;
     [self deleteIncompleteClosedBradenScales:patient];
     // now fetch
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WCBradenScale" inManagedObjectContext:managedObjectContext]];
+	[request setEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
 	[request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
     NSError *error = nil;
@@ -158,7 +158,7 @@ NSInteger const kBradenSectionCount = 6;
 {
 	[super awakeFromInsert];
 	self.dateCreated = [NSDate date];
-	self.dateModified = [NSDate date];
+	self.updatedAt = [NSDate date];
 }
 
 - (NSString *)scoreMessage

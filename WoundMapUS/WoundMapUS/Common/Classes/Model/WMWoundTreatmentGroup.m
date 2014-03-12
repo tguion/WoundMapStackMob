@@ -59,9 +59,9 @@
 + (NSDate *)mostRecentDateModified:(WMWound *)wound
 {
     NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"dateModified"];
+    NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
-    dateModifiedExpressionDescription.name = @"dateModified";
+    dateModifiedExpressionDescription.name = @"updatedAt";
     dateModifiedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateModifiedExpression]];
     dateModifiedExpressionDescription.expressionResultType = NSDateAttributeType;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMWoundTreatmentGroup"];
@@ -77,7 +77,7 @@
     if ([results count] == 0)
         return nil;
     // else
-    return [results firstObject][@"dateModified"];
+    return [results firstObject][@"updatedAt"];
 }
 
 + (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound
@@ -176,7 +176,7 @@
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (BOOL)isClosed

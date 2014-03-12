@@ -66,7 +66,7 @@
     }
     [request setEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"archivedFlag == NO"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:YES]]];
+    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
     if (nil != error) {
@@ -80,7 +80,7 @@
 {
     [super awakeFromInsert];
     self.dateCreated = [NSDate date];
-    self.dateModified = [NSDate date];
+    self.updatedAt = [NSDate date];
 }
 
 - (NSString *)lastNameFirstName

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WCIAPTransaction.h"
+#import "WMIAPTransaction.h"
 
 @interface WMIAPCreditTransaction : NSObject
 
@@ -21,10 +21,10 @@
 
 - (id)initWithTransactionCredits:(NSNumber *)credits;
 // makes a non core data IAP credit transaction
-+ (WMIAPCreditTransaction *)makeCreditTransaction:(WCIAPTransaction *)iapTransaction;
++ (WMIAPCreditTransaction *)makeCreditTransaction:(WMIAPTransaction *)iapTransaction;
 
 // makes a core data IAP credit transaction -- could not figure out how to deserialize
-// WCIAPTransaction so using WMIAPCreditTransaction for serialization purposes.
-- (WCIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store;
+// WMIAPTransaction so using WMIAPCreditTransaction for serialization purposes.
+- (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store;
 
 @end
