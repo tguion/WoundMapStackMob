@@ -10,7 +10,6 @@
 @property (strong, nonatomic) FFUserGroup *consultantGroup;
 
 - (void)updateParticipantGroupWithParticipants:(NSArray *)participants;
-- (void)updateParticipantGroupWithConsultants:(NSArray *)consultants;
 - (void)addParticipant:(id<FFUserProtocol>)participant;
 - (void)addConsultant:(id<FFUserProtocol>)consultant;
 - (void)removeParticipant:(id<FFUserProtocol>)participant;

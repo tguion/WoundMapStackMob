@@ -10,16 +10,6 @@
 
 @implementation WMParticipantType
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMParticipantType *participantType = [[WMParticipantType alloc] initWithEntity:[NSEntityDescription entityForName:@"WMParticipantType" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:participantType toPersistentStore:store];
-	}
-	return participantType;
-}
-
 + (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMParticipantType MR_countOfEntitiesWithContext:managedObjectContext];
@@ -31,7 +21,7 @@
 {
     WMParticipantType *participantType = [WMParticipantType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == participantType) {
-        participantType = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        participantType = [WMParticipantType MR_createInContext:managedObjectContext];
         participantType.title = title;
     }
     return participantType;

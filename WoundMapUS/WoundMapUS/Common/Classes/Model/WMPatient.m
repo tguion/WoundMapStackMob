@@ -15,6 +15,7 @@
 @implementation WMPatient
 
 @synthesize participantGroup=_participantGroup, consultantGroup=_consultantGroup;
+@dynamic managedObjectContext, objectID;
 
 + (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                  persistentStore:(NSPersistentStore *)store
@@ -52,7 +53,7 @@
 }
 
 /**
- Call this method when a patient is created and when fetched since the team may have changed
+ Call this method when a patient is created
  */
 - (void)updateParticipantGroupWithParticipants:(NSArray *)participants
 {
@@ -60,11 +61,13 @@
     NSError *error = nil;
     NSMutableArray *currentParticipants = [[participantGroup getUsersWithError:&error] mutableCopy];
     for (id<FFUserProtocol>participant in participants) {
-        [participantGroup addUser:participant error:&error];
-        if (error) {
-            [WMUtilities logError:error];
+        if (![currentParticipants containsObject:participant]) {
+            [participantGroup addUser:participant error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [currentParticipants removeObjectIdenticalTo:participant];
         }
-        [currentParticipants removeObjectIdenticalTo:participant];
     }
     // remove remaining users
     for (id<FFUserProtocol>participant in currentParticipants) {
@@ -73,8 +76,6 @@
             [WMUtilities logError:error];
         }
     }
-    // queue update
-    [[WMFatFractal sharedInstance] queueUpdateObj:self];
 }
 
 - (void)addParticipant:(id<FFUserProtocol>)participant

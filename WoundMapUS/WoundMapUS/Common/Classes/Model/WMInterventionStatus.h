@@ -12,15 +12,14 @@ extern NSString * const kInterventionStatusNotAdopted;
 @property (readonly, nonatomic) BOOL isActive;
 @property (readonly, nonatomic) BOOL isInProcess;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMInterventionStatus *)initialInterventionStatus:(NSManagedObjectContext *)managedObjectContext;
 + (WMInterventionStatus *)completedInterventionStatus:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMInterventionStatus *)interventionStatusForTitle:(NSString *)title
                                               create:(BOOL)create
-                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                     persistentStore:(NSPersistentStore *)store;
+                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 - (BOOL)canUpdateToStatus:(WMInterventionStatus *)interventionStatus;
 

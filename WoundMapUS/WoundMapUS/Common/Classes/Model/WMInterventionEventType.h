@@ -19,17 +19,15 @@ typedef enum {
 
 @interface WMInterventionEventType : _WMInterventionEventType {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMInterventionEventType *)interventionEventTypeForTitle:(NSString *)title
                                                     create:(BOOL)create
-                                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                           persistentStore:(NSPersistentStore *)store;
+                                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSString *)interventionEventTypeTitleForInterventionStatusTitle:(NSString *)title;
 + (WMInterventionEventType *)interventionEventTypeForStatusTitle:(NSString *)title
-                                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                 persistentStore:(NSPersistentStore *)store;
+                                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSString *)stringForChangeType:(InterventionEventChangeType)changeType;
 

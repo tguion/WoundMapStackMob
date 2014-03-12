@@ -1,7 +1,6 @@
 #import "WMMedication.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WMMedicationExludeOtherValues             = 0,
@@ -23,40 +22,16 @@ typedef enum {
 
 - (void)setExludesOtherValues:(BOOL)exludesOtherValues
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMMedicationExludeOtherValues to:exludesOtherValues]];
-}
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMMedication *medication = [[WMMedication alloc] initWithEntity:[NSEntityDescription entityForName:@"WMMedication" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:medication toPersistentStore:store];
-	}
-    [medication setValue:[medication assignObjectId] forKey:[medication primaryKeyField]];
-	return medication;
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMMedicationExludeOtherValues to:exludesOtherValues]);
 }
 
 + (WMMedication *)medicationForTitle:(NSString *)title
                               create:(BOOL)create
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedication" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMMedication *medication = [array lastObject];
+    WMMedication *medication = [WMMedication MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == medication) {
-        medication = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        medication = [WMMedication MR_createInContext:managedObjectContext];
         medication.title = title;
     }
     return medication;
@@ -64,13 +39,11 @@ typedef enum {
 
 + (WMMedication *)updateMedicationFromDictionary:(NSDictionary *)dictionary
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMMedication *medication = [self medicationForTitle:title
                                                  create:YES
-                                   managedObjectContext:managedObjectContext
-                                        persistentStore:store];
+                                   managedObjectContext:managedObjectContext];
     medication.definition = [dictionary objectForKey:@"definition"];
     medication.loincCode = [dictionary objectForKey:@"LOINC Code"];
     medication.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];

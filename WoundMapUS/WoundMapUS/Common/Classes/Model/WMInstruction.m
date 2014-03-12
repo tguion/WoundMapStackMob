@@ -1,6 +1,5 @@
 #import "WMInstruction.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMInstruction ()
 
@@ -11,18 +10,7 @@
 
 @implementation WMInstruction
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMInstruction *instruction = [[WMInstruction alloc] initWithEntity:[NSEntityDescription entityForName:@"WMInstruction" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:instruction toPersistentStore:store];
-	}
-    [instruction setValue:[instruction assignObjectId] forKey:[instruction primaryKeyField]];
-	return instruction;
-}
-
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Instructions" withExtension:@"plist"];
@@ -48,38 +36,25 @@
             }
             // else
             for (NSDictionary *dictionary in propertyList) {
-                [weakSelf updateInstructionFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext persistentStore:store];
+                [weakSelf updateInstructionFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
             }
         }];
     }
 }
 
-+ (NSInteger)instructionCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSInteger)instructionCount:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMInstruction" inManagedObjectContext:managedObjectContext]];
-    NSError *error = nil;
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return count;
+    return [WMInstruction MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 + (WMInstruction *)updateInstructionFromDictionary:(NSDictionary *)dictionary
                                             create:(BOOL)create
                               managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                   persistentStore:(NSPersistentStore *)store
 {
     id object = [dictionary objectForKey:@"title"];
     WMInstruction *instruction = [WMInstruction instructionForTitle:object
                                                              create:create
-                                               managedObjectContext:managedObjectContext
-                                                    persistentStore:store];
+                                               managedObjectContext:managedObjectContext];
     instruction.contentFileExtension = [dictionary objectForKey:@"contentFileExtension"];
     instruction.contentFileName = [dictionary objectForKey:@"contentFileName"];
     instruction.sortRank = [dictionary objectForKey:@"sortRank"];
@@ -91,23 +66,10 @@
 + (WMInstruction *)instructionForTitle:(NSString *)title
                                 create:(BOOL)create
                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMInstruction" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMInstruction *instruction = [array lastObject];
+    WMInstruction *instruction = [WMInstruction MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == instruction) {
-        instruction = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        instruction = [self MR_createInContext:managedObjectContext];
         instruction.title = title;
     }
     return instruction;

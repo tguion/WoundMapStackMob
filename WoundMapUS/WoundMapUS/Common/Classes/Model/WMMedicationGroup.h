@@ -1,26 +1,24 @@
 #import "_WMMedicationGroup.h"
 #import "WoundCareProtocols.h"
 
+@class WMPatient;
+
 @interface WMMedicationGroup : _WMMedicationGroup  <AssessmentGroup> {}
 
 @property (readonly, nonatomic) NSArray *sortedMedications;
 @property (readonly, nonatomic) NSArray *medicationsInGroup;
 @property (readonly, nonatomic) BOOL isClosed;
 
-+ (WMMedicationGroup *)medicationGroupByRevising:(WMMedicationGroup *)medicationGroup
-                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
-
-+ (WMMedicationGroup *)activeMedicationGroup:(NSManagedObjectContext *)managedObjectContext;
-+ (WMMedicationGroup *)mostRecentOrActiveMedicationGroup:(NSManagedObjectContext *)managedObjectContext;
-+ (NSDate *)mostRecentOrActiveMedicationGroupDateModified:(NSManagedObjectContext *)managedObjectContext;
++ (WMMedicationGroup *)activeMedicationGroup:(WMPatient *)patient;
++ (WMMedicationGroup *)mostRecentOrActiveMedicationGroup:(WMPatient *)patient;
++ (NSDate *)mostRecentOrActiveMedicationGroupDateModified:(WMPatient *)patient;
 + (NSInteger)closeMedicationGroupsCreatedBefore:(NSDate *)date
-                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                persistentStore:(NSPersistentStore *)store;
+                                        patient:(WMPatient *)patient;
 
-+ (BOOL)medicalGroupsHaveHistory:(NSManagedObjectContext *)managedObjectContext;
-+ (NSInteger)medicalGroupsCount:(NSManagedObjectContext *)managedObjectContext;
++ (BOOL)medicalGroupsHaveHistory:(WMPatient *)patient;
++ (NSInteger)medicalGroupsCount:(WMPatient *)patient;
 
-+ (NSArray *)sortedMedicationGroups:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSArray *)sortedMedicationGroups:(WMPatient *)patient;
 
 - (BOOL)removeExcludesOtherValues;
 - (void)incrementContinueCount;

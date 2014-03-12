@@ -2,17 +2,16 @@
 
 @interface WMInstruction : _WMInstruction {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
+
 + (WMInstruction *)updateInstructionFromDictionary:(NSDictionary *)dictionary
                                             create:(BOOL)create
-                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                   persistentStore:(NSPersistentStore *)store;
+                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-+ (NSInteger)instructionCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSInteger)instructionCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMInstruction *)instructionForTitle:(NSString *)title
                                 create:(BOOL)create
-                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store;
+                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

@@ -3,7 +3,6 @@
 #import "WMWound.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMMedicationCategory ()
 
@@ -14,37 +13,13 @@
 
 @implementation WMMedicationCategory
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMMedicationCategory *medicationCategory = [[WMMedicationCategory alloc] initWithEntity:[NSEntityDescription entityForName:@"WMMedicationCategory" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:medicationCategory toPersistentStore:store];
-	}
-    [medicationCategory setValue:[medicationCategory assignObjectId] forKey:[medicationCategory primaryKeyField]];
-	return medicationCategory;
-}
-
 + (WMMedicationCategory *)medicationCategoryForTitle:(NSString *)title
                                               create:(BOOL)create
                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                     persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedicationCategory" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMMedicationCategory *medicationCategory = [array lastObject];
+    WMMedicationCategory *medicationCategory = [WMMedicationCategory MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == medicationCategory) {
-        medicationCategory = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        medicationCategory = [WMMedicationCategory MR_createInContext:managedObjectContext];
         medicationCategory.title = title;
     }
     return medicationCategory;
@@ -52,32 +27,17 @@
 
 + (WMMedicationCategory *)medicationCategoryForSortRank:(id)sortRank
                                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                        persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedicationCategory" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"sortRank == %@", sortRank]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMMedicationCategory MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"sortRank == %@", sortRank] inContext:managedObjectContext];
 }
 
 + (WMMedicationCategory *)updateMedicationCategoryFromDictionary:(NSDictionary *)dictionary
                                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                 persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMMedicationCategory *medicationCategory = [self medicationCategoryForTitle:title
                                                                          create:YES
-                                                           managedObjectContext:managedObjectContext
-                                                                persistentStore:store];
+                                                           managedObjectContext:managedObjectContext];
     medicationCategory.definition = [dictionary objectForKey:@"definition"];
     medicationCategory.loincCode = [dictionary objectForKey:@"LOINC Code"];
     medicationCategory.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
@@ -96,7 +56,7 @@
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
                                                      managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                          persistentStore:nil];
             [set addObjectsFromArray:woundTypes];
         }
         [medicationCategory setWoundTypes:set];
@@ -104,13 +64,13 @@
     // now medications
     id medications = [dictionary objectForKey:@"Medications"];
     for (NSDictionary *d in medications) {
-        WMMedication *medication = [WMMedication updateMedicationFromDictionary:d managedObjectContext:managedObjectContext persistentStore:store];
+        WMMedication *medication = [WMMedication updateMedicationFromDictionary:d managedObjectContext:managedObjectContext];
         medication.category = medicationCategory;
     }
     return medicationCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Medications" withExtension:@"plist"];
@@ -128,7 +88,7 @@
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateMedicationCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateMedicationCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
         }
     }
 }

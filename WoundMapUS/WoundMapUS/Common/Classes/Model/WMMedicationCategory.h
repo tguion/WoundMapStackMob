@@ -2,15 +2,13 @@
 
 @interface WMMedicationCategory : _WMMedicationCategory {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMMedicationCategory *)medicationCategoryForTitle:(NSString *)title
                                               create:(BOOL)create
-                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                     persistentStore:(NSPersistentStore *)store;
+                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMMedicationCategory *)medicationCategoryForSortRank:(id)sortRank
-                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                        persistentStore:(NSPersistentStore *)store;
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

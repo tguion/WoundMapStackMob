@@ -9,12 +9,10 @@
 
 + (WMMedication *)medicationForTitle:(NSString *)title
                               create:(BOOL)create
-                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store;
+                managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMMedication *)updateMedicationFromDictionary:(NSDictionary *)dictionary
-                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store;
+                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSPredicate *)predicateForWoundType:(WMWoundType *)woundType;
 

@@ -1,7 +1,7 @@
 #import "WMMedicationGroup.h"
 #import "WMMedication.h"
+#import "WMPatient.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMMedicationGroup ()
 
@@ -12,62 +12,27 @@
 
 @implementation WMMedicationGroup
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
++ (WMMedicationGroup *)activeMedicationGroup:(WMPatient *)patient
 {
-    WMMedicationGroup *medicationGroup = [[WMMedicationGroup alloc] initWithEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:medicationGroup toPersistentStore:store];
-	}
-    [medicationGroup setValue:[medicationGroup assignObjectId] forKey:[medicationGroup primaryKeyField]];
-	return medicationGroup;
+    return [WMMedicationGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO", patient]
+                                               sortedBy:@"updatedAt"
+                                              ascending:NO
+                                              inContext:[patient managedObjectContext]];
 }
 
-+ (WMMedicationGroup *)medicationGroupByRevising:(WMMedicationGroup *)medicationGroup
-                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
++ (WMMedicationGroup *)mostRecentOrActiveMedicationGroup:(WMPatient *)patient
 {
+    WMMedicationGroup *medicationGroup = [self activeMedicationGroup:patient];
     if (nil == medicationGroup) {
-        return [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
-    }
-    // TODO else
-    
-    return nil;
-}
-
-+ (WMMedicationGroup *)activeMedicationGroup:(NSManagedObjectContext *)managedObjectContext
-{
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
-}
-
-+ (WMMedicationGroup *)mostRecentOrActiveMedicationGroup:(NSManagedObjectContext *)managedObjectContext
-{
-    WMMedicationGroup *medicationGroup = [self activeMedicationGroup:managedObjectContext];
-    if (nil == medicationGroup) {
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-        NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-        // else
-        medicationGroup = [array lastObject];
+        medicationGroup = [WMMedicationGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                                              sortedBy:@"updatedAt"
+                                                             ascending:NO
+                                                             inContext:[patient managedObjectContext]];
     }
     return medicationGroup;
 }
 
-+ (NSDate *)mostRecentOrActiveMedicationGroupDateModified:(NSManagedObjectContext *)managedObjectContext
++ (NSDate *)mostRecentOrActiveMedicationGroupDateModified:(WMPatient *)patient
 {
     NSExpression *dateModifiedExpression = [NSExpression expressionForKeyPath:@"updatedAt"];
     NSExpressionDescription *dateModifiedExpressionDescription = [[NSExpressionDescription alloc] init];
@@ -77,79 +42,47 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"WMMedicationGroup"];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    NSDictionary *dates = [results firstObject];
-    return dates[@"updatedAt"];
+    NSDictionary *date = (NSDictionary *)[WMMedicationGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:[patient managedObjectContext]];
+    return date[@"updatedAt"];
 }
 
 + (NSInteger)closeMedicationGroupsCreatedBefore:(NSDate *)date
-                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                persistentStore:(NSPersistentStore *)store
+                                        patient:(WMPatient *)patient
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:@[store]];
-    }
-	[request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"closedFlag == NO AND dateCreated < %@", date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return 0;
-    }
-	// else
+    NSArray *array = [WMMedicationGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]
+                                                      inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
 
-+ (BOOL)medicalGroupsHaveHistory:(NSManagedObjectContext *)managedObjectContext
++ (BOOL)medicalGroupsHaveHistory:(WMPatient *)patient
 {
-    return [self medicalGroupsCount:managedObjectContext] > 1;
+    return [self medicalGroupsCount:patient] > 1;
 }
 
-+ (NSInteger)medicalGroupsCount:(NSManagedObjectContext *)managedObjectContext
++ (NSInteger)medicalGroupsCount:(WMPatient *)patient
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMMedicationGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
-+ (NSArray *)sortedMedicationGroups:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)sortedMedicationGroups:(WMPatient *)patient
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedicationGroup" inManagedObjectContext:managedObjectContext]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMMedicationGroup MR_findAllSortedBy:@"createdAt"
+                                       ascending:NO
+                                   withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                       inContext:[patient managedObjectContext]];
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
 }
 
 - (BOOL)isClosed
 {
-    return [self.closedFlag boolValue];
+    return self.closedFlagValue;
 }
 
 - (BOOL)removeExcludesOtherValues
@@ -174,22 +107,12 @@
 
 - (NSArray *)medicationsInGroup
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMMedication" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"groups CONTAINS (%@)", self]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMMedication MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"groups CONTAINS (%@)", self] inContext:[self managedObjectContext]];
 }
 
 - (void)incrementContinueCount
 {
-    self.continueCount = [NSNumber numberWithInt:([self.continueCount intValue] + 1)];
+    self.continueCountValue = self.continueCountValue + 1;
 }
 
 #pragma mark - AssessmentGroup
