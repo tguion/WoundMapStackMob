@@ -109,6 +109,20 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+#pragma mark - FF
+
+- (NSNumber *)lastRefreshTime
+{
+    return [[NSUserDefaults standardUserDefaults] valueForKey:@"com.mobilehealthware.woundmap.lastRefreshTime"];
+}
+
+- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastRefreshTime forKey:@"com.mobilehealthware.woundmap.lastRefreshTime"];
+    [userDefaults synchronize];
+}
+
 #pragma mark - Clinical Care Setting/Stage of Care
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store

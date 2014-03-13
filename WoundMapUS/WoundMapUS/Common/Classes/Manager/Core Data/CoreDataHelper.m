@@ -8,6 +8,7 @@
 
 #import "CoreDataHelper.h"
 #import "Faulter.h"
+#import "WMPatient.h"
 #import "WMBradenCare.h"
 #import "WMWoundType.h"
 #import "WMDefinition.h"
@@ -15,6 +16,8 @@
 #import "IAPProduct.h"
 #import "WMUtilities.h"
 #import "WMNetworkReachability.h"
+#import "WMUserDefaultsManager.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
 @interface CoreDataHelper () <UIAlertViewDelegate>
@@ -161,22 +164,93 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 - (void)saveContext:(NSManagedObjectContext *)managedObjectContext
 {
+    WMFatFractalManager *fatFractalManager = [WMFatFractalManager sharedInstance];
     NSSet *insertedObjects = [managedObjectContext insertedObjects];
     NSSet *updatedObjects = [managedObjectContext updatedObjects];
     NSSet *deletedObjects = [managedObjectContext deletedObjects];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __block BOOL signInRequired = NO;
+    // first save local
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
-        for (id insertedObject in insertedObjects) {
-            [ff queueCreateObj:insertedObjects atUri:NSStringFromClass([insertedObjects class])];
+        // now update backend - inserts
+        for (NSManagedObject *insertedObject in insertedObjects) {
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", NSStringFromClass([insertedObject class])];
+            [ff createObj:insertedObject atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    if (response.statusCode == 401) {
+                        signInRequired = YES;
+                    } else {
+                        [WMUtilities logError:error];
+                    }
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                    }];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff queueCreateObj:insertedObject atUri:ffUrl];
+                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                }];
+            }];
+            if (signInRequired) {
+                [fatFractalManager showLoginWithTitle:@"Please Sign In" andMessage:nil];
+                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                }];
+                return;
+            }
         }
-        for (id updatedObject in updatedObjects) {
-            [ff queueUpdateObj:updatedObject];
+        // now update backend - updates
+        for (NSManagedObject *updatedObject in updatedObjects) {
+            [ff updateObj:updatedObject onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                    }];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff queueUpdateObj:updatedObject];
+                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                }];
+            }];
         }
-        for (id deletedObject in deletedObjects) {
-            [ff queueDeleteObj:deletedObject];
+        // now update backend - deletes
+        for (NSManagedObject *deletedObject in deletedObjects) {
+            [ff deleteObj:deletedObject onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                    }];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff queueDeleteObj:deletedObject];
+                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                }];
+            }];
         }
     }];
 }
@@ -285,11 +359,11 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     NSManagedObjectContext *managedObjectContext = self.parentContext;
     NSPersistentStore *store = self.localStore;
     [managedObjectContext performBlock:^{
-        [WMBradenCare seedDatabase:managedObjectContext persistentStore:store];
-        [WMDefinition seedDatabase:managedObjectContext persistentStore:store];
+        [WMBradenCare seedDatabase:managedObjectContext persistentStore:store];// TODO remove store parameters
+        [WMDefinition seedDatabase:managedObjectContext];
         [WMWoundType seedDatabase:managedObjectContext persistentStore:store];
         [IAPProduct seedDatabase:managedObjectContext persistentStore:store];
-        [WMInstruction seedDatabase:managedObjectContext persistentStore:store];
+        [WMInstruction seedDatabase:managedObjectContext];
         [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             if (nil != error) {
                 [WMUtilities logError:error];

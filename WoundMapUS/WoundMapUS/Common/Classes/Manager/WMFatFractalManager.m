@@ -1,0 +1,132 @@
+//
+//  WMFatFractalManager.m
+//  WoundMapUS
+//
+//  Created by Todd Guion on 3/13/14.
+//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//
+
+#import "WMFatFractalManager.h"
+#import "WMPatient.h"
+#import "WMUserDefaultsManager.h"
+#import "CoreDataHelper.h"
+#import "WCAppDelegate.h"
+#import "WMUtilities.h"
+
+@interface WMFatFractalManager ()
+
+@property (nonatomic) NSNumber *lastRefreshTime;
+
+@end
+
+@implementation WMFatFractalManager
+
+@synthesize lastRefreshTime=_lastRefreshTime;
+
++ (WMFatFractalManager *)sharedInstance
+{
+    static WMFatFractalManager *SharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SharedInstance = [[WMFatFractalManager alloc] init];
+    });
+    return SharedInstance;
+}
+
+#pragma mark - Sign In
+
+- (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message
+{
+    UIAlertView *prompt = [[UIAlertView alloc] initWithTitle:title
+                                                     message:message
+                                                    delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           otherButtonTitles:@"Enter", nil];
+    [prompt setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+    [prompt show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSError *error = nil;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff loginWithUserName:[[alertView textFieldAtIndex:0] text]
+              andPassword:[[alertView textFieldAtIndex:1] text] error:&error];
+    if (error) {
+        [self showLoginWithTitle:@"Sign In Failed - please try again" andMessage:[error localizedDescription]];
+    } else {
+        CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
+        [self fetchPatients:coreDataHelper.context];
+    }
+}
+
+#pragma mark - Fetch
+
+- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext
+{
+    NSArray *patientsExisting = [WMPatient MR_findAllInContext:managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    // Fetch any events that have been updated on the backend
+    // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
+    // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
+    // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
+    NSString *queryString = [NSString stringWithFormat:@"/WMPatient/(updatedAt gt %@)?depthGb=1&depthRef=1", self.lastRefreshTime];
+    [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
+        NSArray *patientsRetrieved = response.objs;
+        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        }];
+        if (response.error) {
+            [WMUtilities logError:response.error];
+        } else {
+            self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
+            BOOL newAdditions = NO;
+            for (WMPatient *patientRetrieved in patientsRetrieved) {
+                BOOL foundLocally = NO;
+                for (WMPatient *patientExisting in patientsExisting) {
+                    if ([patientExisting.ffUrl isEqualToString:patientRetrieved.ffUrl]) {
+                        foundLocally = YES;
+                        break;
+                    }
+                }
+                if (foundLocally) {
+                    DLog(@"   WMPatient with ffUrl %@ from backend found locally", patientRetrieved.ffUrl);
+                } else {
+                    DLog(@"   Adding new WMPatient with ffUrl %@ from backend", patientRetrieved.ffUrl);
+                    newAdditions = YES;
+                }
+            }
+            if (newAdditions) {
+                DLog(@"   Got new stuff from backend; reloading data");
+            }
+        }
+    }];
+}
+
+- (NSNumber *)lastRefreshTime
+{
+    if (_lastRefreshTime)
+        return _lastRefreshTime;
+    // else
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    _lastRefreshTime = userDefaultsManager.lastRefreshTime;
+    if (_lastRefreshTime == nil) {
+        [self setLastRefreshTime:@(0)];
+    }
+    return _lastRefreshTime;
+}
+
+- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime
+{
+    if (_lastRefreshTime == lastRefreshTime) {
+        return;
+    }
+    // else
+    _lastRefreshTime = lastRefreshTime;
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    userDefaultsManager.lastRefreshTime = lastRefreshTime;
+}
+
+@end

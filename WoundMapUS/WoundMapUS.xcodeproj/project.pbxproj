@@ -92,6 +92,7 @@
 		5F6DE54D18B6FBF400E87F7E /* WMIdEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6DE54B18B6FBF400E87F7E /* WMIdEditorViewController.m */; };
 		5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6DE54C18B6FBF400E87F7E /* WMIdEditorViewController.xib */; };
 		5F910A3718C6B6D300CFA003 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F910A3618C6B6D300CFA003 /* FFEF.framework */; };
+		7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -567,6 +568,8 @@
 		5F6DE54B18B6FBF400E87F7E /* WMIdEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIdEditorViewController.m; sourceTree = "<group>"; };
 		5F6DE54C18B6FBF400E87F7E /* WMIdEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIdEditorViewController.xib; sourceTree = "<group>"; };
 		5F910A3618C6B6D300CFA003 /* FFEF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FFEF.framework; sourceTree = "<group>"; };
+		7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFatFractalManager.h; sourceTree = "<group>"; };
+		7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFatFractalManager.m; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -1636,6 +1639,8 @@
 				7D9AA26D18AFD35F00C1B698 /* WMSeedDatabaseManager.m */,
 				5F67D20C18AC447400460C37 /* WMUserDefaultsManager.h */,
 				5F67D20D18AC447400460C37 /* WMUserDefaultsManager.m */,
+				7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */,
+				7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -2860,6 +2865,7 @@
 				7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */,
 				7DDE755018CE456800B15C77 /* WoundAreaPlotDataSource.m in Sources */,
 				7DD8373D18C78A3A0028C2D3 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
+				7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */,
 				7DF4E98918C3C017000A3F5B /* _WMPsychoSocialIntEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
