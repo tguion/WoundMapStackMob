@@ -33,7 +33,6 @@
 
 #define debug 1
 
-
 + (CoreDataHelper *)sharedInstance
 {
     static CoreDataHelper *SharedInstance = nil;
@@ -156,6 +155,30 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         _networkMonitor = [[WMNetworkReachability alloc] init];
     }
     return _networkMonitor;
+}
+
+#pragma mark - Save
+
+- (void)saveContext:(NSManagedObjectContext *)managedObjectContext
+{
+    NSSet *insertedObjects = [managedObjectContext insertedObjects];
+    NSSet *updatedObjects = [managedObjectContext updatedObjects];
+    NSSet *deletedObjects = [managedObjectContext deletedObjects];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        for (id insertedObject in insertedObjects) {
+            [ff queueCreateObj:insertedObjects atUri:NSStringFromClass([insertedObjects class])];
+        }
+        for (id updatedObject in updatedObjects) {
+            [ff queueUpdateObj:updatedObject];
+        }
+        for (id deletedObject in deletedObjects) {
+            [ff queueDeleteObj:deletedObject];
+        }
+    }];
 }
 
 #pragma mark - VALIDATION ERROR HANDLING

@@ -39,9 +39,6 @@
 - (void)clearDataCache NS_REQUIRES_SUPER;                                   // clear all cached data for new or nil document
 - (void)clearAllReferences NS_REQUIRES_SUPER;                               // clear all references and all observers
 
-- (void)registerForNotifications;
-- (void)unregisterForNotifications;
-
 @property (readonly, nonatomic) NSFetchRequest *fetchRequestForFetchedResultsController;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (readonly, nonatomic) NSString *fetchedResultsControllerEntityName;

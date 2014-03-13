@@ -28,4 +28,6 @@ extern NSString *localStoreFilename;
 
 - (void)setupCoreData;
 
+- (void)saveContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end
