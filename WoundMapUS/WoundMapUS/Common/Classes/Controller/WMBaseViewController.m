@@ -9,7 +9,6 @@
 #import "WMBaseViewController.h"
 #import "WMProgressViewHUD.h"
 #import "IAPProduct.h"
-#import "StackMob.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
 #import "WMUtilities.h"
@@ -44,9 +43,8 @@
 
 - (void)viewDidLoad
 {
+    DLog(@"%@ %@.viewWillAppear:", self, NSStringFromClass([self class]));
     [super viewDidLoad];
-    _fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    _savePolicy = SMSavePolicyNetworkThenCache;
     // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated.
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
@@ -60,41 +58,18 @@
     [self registerForNotifications];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    DLog(@"%@ %@.viewWillDisappear:", self, NSStringFromClass([self class]));
+    [super viewWillDisappear:animated];
+    // stop listening
+    [self unregisterForNotifications];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Fetch/Save Policy
-
-- (void)setFetchPolicy:(SMFetchPolicy)fetchPolicy
-{
-    if (_fetchPolicy == fetchPolicy) {
-        return;
-    }
-    // else
-    _fetchPolicy = fetchPolicy;
-}
-
-- (void)setSavePolicy:(SMSavePolicy)savePolicy
-{
-    if (_savePolicy == savePolicy) {
-        return;
-    }
-    // else
-    _savePolicy = savePolicy;
-    self.coreDataHelper.stackMobStore.savePolicy = savePolicy;
-}
-
-- (void)updateStackMobToFetchPolicy
-{
-    self.coreDataHelper.stackMobStore.fetchPolicy = _fetchPolicy;
-}
-
-- (void)updateStackMobToSavePolicy
-{
-    self.coreDataHelper.stackMobStore.fetchPolicy = _savePolicy;
 }
 
 #pragma mark - Core
@@ -179,7 +154,6 @@
     [self.refreshControl endRefreshing];
 }
 
-
 #pragma mark - Progress view
 
 - (WMProgressViewHUD *)progressView
@@ -234,22 +208,14 @@
         // add observers
     }
     if (0 == [self.persistantObservers count]) {
-        // StackMob network synch finished
-        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kStackMobNetworkSynchFinishedNotification
+        // update for change in patient
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kPatientChangedNotification
                                                                         object:nil
                                                                          queue:[NSOperationQueue mainQueue]
                                                                     usingBlock:^(NSNotification *notification) {
-                                                                        [weakSelf handleStackMobNetworkSynchFinished:notification];
+                                                                        WMPatient *patient = (WMPatient *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                        [weakSelf handlePatientChanged:patient];
                                                                     }];
-        [self.persistantObservers addObject:observer];
-        // update for change in patient
-        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kPatientChangedNotification
-                                                                     object:nil
-                                                                      queue:[NSOperationQueue mainQueue]
-                                                                 usingBlock:^(NSNotification *notification) {
-                                                                     WMPatient *patient = (WMPatient *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
-                                                                     [weakSelf handlePatientChanged:patient];
-                                                                 }];
         [self.persistantObservers addObject:observer];
         // update for change in wound
         observer = [[NSNotificationCenter defaultCenter] addObserverForName:kWoundChangedNotification
@@ -629,8 +595,6 @@
 	}
 	// else
     NSFetchRequest *fetchRequest = [self fetchRequestForFetchedResultsController];
-    // enforce the fetch policy set by view controller
-    [self updateStackMobToFetchPolicy];
     // Edit the section name key path and cache name if appropriate - nil for section name key path means "no sections".
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 																	 managedObjectContext:self.managedObjectContext

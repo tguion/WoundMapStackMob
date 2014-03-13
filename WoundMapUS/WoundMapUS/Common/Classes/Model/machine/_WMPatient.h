@@ -58,7 +58,7 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-
+@class NSObject;
 
 
 @interface WMPatientID : NSManagedObjectID {}
@@ -186,7 +186,7 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* thumbnail;
+@property (nonatomic, strong) id thumbnail;
 
 
 
@@ -407,8 +407,8 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSString*)primitiveThumbnail;
-- (void)setPrimitiveThumbnail:(NSString*)value;
+- (id)primitiveThumbnail;
+- (void)setPrimitiveThumbnail:(id)value;
 
 
 

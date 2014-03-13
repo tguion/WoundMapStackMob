@@ -8,7 +8,6 @@
 
 #import "WCPatientPhotoImageView.h"
 #import "WMPatient.h"
-#import "StackMob.h"
 
 @implementation WCPatientPhotoImageView
 
@@ -28,18 +27,11 @@
     if (nil == patient) {
         self.image = [WMPatient missingThumbnailImage];
     }
-    NSString *picString = patient.thumbnail;
-    if ([SMBinaryDataConversion stringContainsURL:picString]) {
-        self.imageURL = [NSURL URLWithString:picString relativeToURL:nil];
-    } else {
-        UIImage *image = nil;
-        if (nil == picString) {
-            image = [WMPatient missingThumbnailImage];
-        } else {
-            image = [UIImage imageWithData:[SMBinaryDataConversion dataForString:picString]];
-        }
-        self.image = image;
+    UIImage *thumbnail = patient.thumbnail;
+    if (nil == thumbnail) {
+        thumbnail = [WMPatient missingThumbnailImage];
     }
+    self.image = thumbnail;
 }
 
 - (void)installClippingPath

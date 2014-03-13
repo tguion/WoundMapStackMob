@@ -170,7 +170,21 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     NSSet *deletedObjects = [managedObjectContext deletedObjects];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __block BOOL signInRequired = NO;
-    // first save local
+    // now update backend - deletes
+    for (NSManagedObject *deletedObject in deletedObjects) {
+        [ff deleteObj:deletedObject onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                if (response.statusCode == 401) {
+                    signInRequired = YES;
+                } else {
+                    [WMUtilities logError:error];
+                }
+            }
+        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff queueDeleteObj:deletedObject];
+        }];
+    }
+    // now save local
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             [WMUtilities logError:error];
@@ -202,11 +216,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
             }];
             if (signInRequired) {
                 [fatFractalManager showLoginWithTitle:@"Please Sign In" andMessage:nil];
-                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                }];
                 return;
             }
         }
@@ -224,27 +233,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
                 }
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [ff queueUpdateObj:updatedObject];
-                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                }];
-            }];
-        }
-        // now update backend - deletes
-        for (NSManagedObject *deletedObject in deletedObjects) {
-            [ff deleteObj:deletedObject onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
-                }
-            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff queueDeleteObj:deletedObject];
                 [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];

@@ -516,7 +516,7 @@
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ssn" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="thumbnail" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
+        <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES">
             <userInfo/>
         </attribute>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
@@ -580,7 +580,7 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="originalFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="photo" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer" storedInTruthFile="YES">
+        <attribute name="photo" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES" storedInTruthFile="YES">
             <userInfo/>
         </attribute>
         <attribute name="scale" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -900,11 +900,11 @@
         <attribute name="imageOrientation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="imageWidth" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="metadata" optional="YES" attributeType="String" valueTransformerName="DictionaryToDataTransformer" syncable="YES"/>
-        <attribute name="thumbnail" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
+        <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES">
             <userInfo/>
         </attribute>
-        <attribute name="thumbnailLarge" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
-        <attribute name="thumbnailMini" optional="YES" attributeType="String" valueTransformerName="ImageToDataTransformer">
+        <attribute name="thumbnailLarge" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="thumbnailMini" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES">
             <userInfo/>
         </attribute>
         <attribute name="transformAsString" optional="YES" attributeType="String" syncable="YES"/>
@@ -1143,10 +1143,10 @@
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="135"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="268"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="390"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="388"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPhoto" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="128" height="195"/>
         <element name="WMPsychoSocialIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMPsychoSocialItem" positionX="0" positionY="0" width="128" height="375"/>
@@ -1169,7 +1169,7 @@
         <element name="WMWoundMeasurementUnderValue" positionX="0" positionY="0" width="128" height="60"/>
         <element name="WMWoundMeasurementValue" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMWoundOdor" positionX="0" positionY="0" width="128" height="285"/>
-        <element name="WMWoundPhoto" positionX="0" positionY="0" width="128" height="360"/>
+        <element name="WMWoundPhoto" positionX="0" positionY="0" width="128" height="358"/>
         <element name="WMWoundPosition" positionX="0" positionY="0" width="128" height="270"/>
         <element name="WMWoundPositionValue" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMWoundTreatment" positionX="0" positionY="0" width="128" height="375"/>

@@ -46,9 +46,9 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-
-
-
+@class NSObject;
+@class NSObject;
+@class NSObject;
 
 
 
@@ -166,7 +166,7 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* thumbnail;
+@property (nonatomic, strong) id thumbnail;
 
 
 
@@ -176,7 +176,7 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* thumbnailLarge;
+@property (nonatomic, strong) id thumbnailLarge;
 
 
 
@@ -186,7 +186,7 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* thumbnailMini;
+@property (nonatomic, strong) id thumbnailMini;
 
 
 
@@ -383,20 +383,20 @@ extern const struct WMWoundPhotoFetchedProperties {
 
 
 
-- (NSString*)primitiveThumbnail;
-- (void)setPrimitiveThumbnail:(NSString*)value;
+- (id)primitiveThumbnail;
+- (void)setPrimitiveThumbnail:(id)value;
 
 
 
 
-- (NSString*)primitiveThumbnailLarge;
-- (void)setPrimitiveThumbnailLarge:(NSString*)value;
+- (id)primitiveThumbnailLarge;
+- (void)setPrimitiveThumbnailLarge:(id)value;
 
 
 
 
-- (NSString*)primitiveThumbnailMini;
-- (void)setPrimitiveThumbnailMini:(NSString*)value;
+- (id)primitiveThumbnailMini;
+- (void)setPrimitiveThumbnailMini:(id)value;
 
 
 

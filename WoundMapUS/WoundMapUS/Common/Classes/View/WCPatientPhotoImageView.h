@@ -6,11 +6,9 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "AsyncImageView.h"
-
 @class WMPatient;
 
-@interface WCPatientPhotoImageView : AsyncImageView
+@interface WCPatientPhotoImageView : UIImageView
 
 - (void)updateForPatient:(WMPatient *)patient;
 

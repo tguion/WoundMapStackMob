@@ -28,7 +28,7 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-
+@class NSObject;
 
 
 
@@ -94,7 +94,7 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* photo;
+@property (nonatomic, strong) id photo;
 
 
 
@@ -189,8 +189,8 @@ extern const struct WMPhotoFetchedProperties {
 
 
 
-- (NSString*)primitivePhoto;
-- (void)setPrimitivePhoto:(NSString*)value;
+- (id)primitivePhoto;
+- (void)setPrimitivePhoto:(id)value;
 
 
 
