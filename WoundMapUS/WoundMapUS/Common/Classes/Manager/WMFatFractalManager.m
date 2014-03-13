@@ -16,6 +16,7 @@
 @interface WMFatFractalManager ()
 
 @property (nonatomic) NSNumber *lastRefreshTime;
+@property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;
 
 @end
 
@@ -105,28 +106,55 @@
     }];
 }
 
-- (NSNumber *)lastRefreshTime
+- (void)fetchCollection:(NSString *)collection
+                  query:(NSString *)query
+   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+             onComplete:(FFHttpMethodCompletion)onComplete
 {
-    if (_lastRefreshTime)
-        return _lastRefreshTime;
-    // else
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    _lastRefreshTime = userDefaultsManager.lastRefreshTime;
-    if (_lastRefreshTime == nil) {
-        [self setLastRefreshTime:@(0)];
-    }
-    return _lastRefreshTime;
+    NSString *queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=1&depthRef=1", collection, self.lastRefreshTimeMap[collection], query];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
+        if (response.error) {
+            [WMUtilities logError:response.error];
+            onComplete(response.error, response.objs, response.httpResponse);
+        } else {
+            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                onComplete(response.error, response.objs, response.httpResponse);
+            }];
+        }
+    }];
 }
 
-- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime
+#pragma mark - Refresh
+
+- (NSMutableDictionary *)lastRefreshTimeMap
 {
-    if (_lastRefreshTime == lastRefreshTime) {
-        return;
+    if (nil == _lastRefreshTimeMap) {
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        _lastRefreshTimeMap = [userDefaultsManager.lastRefreshTimeMap mutableCopy];
     }
-    // else
-    _lastRefreshTime = lastRefreshTime;
+    return _lastRefreshTimeMap;
+}
+
+- (NSNumber *)lastRefreshTime:(NSString *)collection
+{
+    NSDictionary *lastRefreshTimeMap = self.lastRefreshTimeMap;
+    NSNumber *lastRefreshTime = lastRefreshTimeMap[collection];
+    if (lastRefreshTime == nil) {
+        lastRefreshTime = @(0);
+    }
+    return lastRefreshTime;
+}
+
+- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime forCollection:(NSString *)collection
+{
+    NSMutableDictionary *lastRefreshTimeMap = self.lastRefreshTimeMap;
+    lastRefreshTimeMap[collection] = lastRefreshTime;
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    userDefaultsManager.lastRefreshTime = lastRefreshTime;
+    userDefaultsManager.lastRefreshTimeMap = lastRefreshTimeMap;
 }
 
 @end

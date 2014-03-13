@@ -17,8 +17,8 @@
 #import "WMPlotGraphViewController.h"
 #import "WMNavigationPatientPhotoButton.h"
 #import "WMNavigationNodeButton.h"
-#import "UnderlayNavigationBar.h"
-#import "UnderlayToolbar.h"
+#import "WMUnderlayNavigationBar.h"
+#import "WMUnderlayToolbar.h"
 #import "User.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
@@ -78,7 +78,7 @@
         // already a UINavigationController
         navigationController = (UINavigationController *)viewController;
     } else {
-        navigationController = [[UINavigationController alloc] initWithNavigationBarClass:[UnderlayNavigationBar class] toolbarClass:[UnderlayToolbar class]];
+        navigationController = [[UINavigationController alloc] initWithNavigationBarClass:[WMUnderlayNavigationBar class] toolbarClass:[WMUnderlayToolbar class]];
         navigationController.delegate = self.appDelegate;
         [navigationController setViewControllers:@[viewController]];
     }

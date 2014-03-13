@@ -23,7 +23,7 @@
 @property (strong, nonatomic) NSArray *emailPDFccRecipients;
 @property (strong, nonatomic) NSArray *emailPDFbccRecipients;
 @property (strong, nonatomic) NSString *pdfHeaderPrefix;
-@property (nonatomic) NSNumber *lastRefreshTime;
+@property (nonatomic) NSDictionary *lastRefreshTimeMap;
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
 

@@ -51,7 +51,8 @@
 - (void)fetchedResultsControllerDidFetch;                                   // called when frc finishes fetching Core Data
 - (void)nilFetchedResultsController;                                        // nil the reference _fetchedResultsController
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
-- (void)refreshTable;                                                       // refetch using StackMob
+- (void)refreshTable;                                                       // refetch using FatFractal
+@property (readonly, nonatomic) NSString *ffQuery;                          // query string that fetches same as predicate from FatFractal
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource
 - (NSIndexPath *)indexPathTableToFetchedResultsController:(NSIndexPath *)indexPath;

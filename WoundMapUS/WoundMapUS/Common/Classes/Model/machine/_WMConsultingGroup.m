@@ -12,6 +12,7 @@ const struct WMConsultingGroupAttributes WMConsultingGroupAttributes = {
 };
 
 const struct WMConsultingGroupRelationships WMConsultingGroupRelationships = {
+	.team = @"team",
 };
 
 const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperties = {
@@ -108,6 +109,10 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 
+
+@dynamic team;
+
+	
 
 
 

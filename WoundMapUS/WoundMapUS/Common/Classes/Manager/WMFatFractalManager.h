@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <FFEF/FatFractal.h>
 
 @interface WMFatFractalManager : NSObject
 
@@ -14,5 +15,10 @@
 
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext;
+
+- (void)fetchCollection:(NSString *)collection
+                  query:(NSString *)query
+   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+             onComplete:(FFHttpMethodCompletion)onComplete;
 
 @end

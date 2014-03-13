@@ -7,12 +7,22 @@
 //
 
 #import "WMBaseViewController.h"
+#import "IAPBaseViewController.h"
+#import "IAPAggregatorViewController.h"
+#import "IAPNonConsumableViewController.h"
 #import "WMProgressViewHUD.h"
+#import "WMNavigationNodeButton.h"
+#import "WMUnderlayNavigationBar.h"
+#import "WMUnderlayToolbar.h"
 #import "IAPProduct.h"
+#import "WMWound.h"
+#import "WMWoundType.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
 #import "WMUtilities.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractalManager.h"
+#import "IAPManager.h"
 #import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
@@ -20,6 +30,8 @@
 @property (strong, nonatomic) NSManagedObjectID *patientObjectID;
 @property (strong, nonatomic) NSManagedObjectID *woundObjectID;
 @property (strong, nonatomic) NSManagedObjectID *woundPhotoObjectID;
+
+@property (strong, nonatomic) UIPopoverController *iapPopoverController;
 
 @end
 
@@ -145,13 +157,15 @@
 - (void)refreshTable
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    NSFetchRequest *fetchRequest = self.fetchRequestForFetchedResultsController;
-    NSError *error = nil;
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyNetworkOnly];
-    // results should autopopulate the table view view the fetchedResultsController delegate methods
-    [managedObjectContext executeFetchRequestAndWait:fetchRequest returnManagedObjectIDs:NO options:options error:&error];
-    [WMUtilities logError:error];
-    [self.refreshControl endRefreshing];
+    NSString *collection = self.fetchedResultsControllerEntityName;
+    NSString *query = self.ffQuery;
+    WMFatFractalManager *fatFractalManager = [WMFatFractalManager sharedInstance];
+    [fatFractalManager fetchCollection:collection
+                                 query:query
+                  managedObjectContext:managedObjectContext
+                            onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                [self.refreshControl endRefreshing];
+                            }];
 }
 
 #pragma mark - Progress view
@@ -411,7 +425,8 @@
         return YES;
     }
     // has user purchased the product ?
-    if (proceedAlways || ![self.iapManager isProductPurchased:iapProduct]) {
+    IAPManager *iapManager = [IAPManager sharedInstance];
+    if (proceedAlways || ![iapManager isProductPurchased:iapProduct]) {
         BOOL shouldPresentPurchaseIAPViewController = NO;
         if (proceedAlways) {
             shouldPresentPurchaseIAPViewController = YES;
@@ -445,12 +460,12 @@
                         [_iapPopoverController dismissPopoverAnimated:YES];
                         _iapPopoverController = nil;
                         // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
-                        [weakSelf performSelector:selector withObject:object];
+                        SuppressPerformSelectorLeakWarning([weakSelf performSelector:selector withObject:object]);
                         [weakViewController clearAllReferences];
                     } else {
                         [weakSelf dismissViewControllerAnimated:YES completion:^{
                             // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
-                            [weakSelf performSelector:selector withObject:object];
+                            SuppressPerformSelectorLeakWarning([weakSelf performSelector:selector withObject:object]);
                             [weakViewController clearAllReferences];
                         }];
                     }
@@ -473,7 +488,7 @@
             
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
             navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
-            if ([object isKindOfClass:[NavigationNodeButton class]] && self.isIPadIdiom) {
+            if ([object isKindOfClass:[WMNavigationNodeButton class]] && self.isIPadIdiom) {
                 UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navigationController];
                 UIButton *button = (UIButton *)object;
                 CGRect rect = [self.view convertRect:button.frame fromView:button.superview];
@@ -484,9 +499,8 @@
                 _iapPopoverController = popoverController;
             } else if ([object isKindOfClass:[UIView class]] && self.isIPadIdiom) {
                 UINavigationController *navigationController =
-                [[UINavigationController alloc] initWithNavigationBarClass:[UnderlayNavigationBar class] toolbarClass:[UnderlayToolbar class]];
+                [[UINavigationController alloc] initWithNavigationBarClass:[WMUnderlayNavigationBar class] toolbarClass:[WMUnderlayToolbar class]];
                 [navigationController setViewControllers:@[viewController]];
-                
                 UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navigationController];
                 UIView *uiView = (UIView *)object;
                 CGRect rect = [self.view convertRect:uiView.frame fromView:uiView.superview];
@@ -624,6 +638,11 @@
 {
     _fetchedResultsController = nil;
     [self.activeTableView reloadData];
+}
+
+- (NSString *)ffQuery
+{
+    return nil;
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate

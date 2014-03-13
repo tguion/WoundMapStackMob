@@ -1,15 +1,15 @@
 //
-//  UnderlayNavigationBar.m
+//  WMUnderlayNavigationBar.m
 //  WoundMAP
 //
 //  Created by Todd Guion on 11/28/13.
 //  Copyright (c) 2013 etreasure consulting LLC. All rights reserved.
 //
 
-#import "UnderlayNavigationBar.h"
+#import "WMUnderlayNavigationBar.h"
 #import "WMDesignUtilities.h"
 
-@interface UnderlayNavigationBar ()
+@interface WMUnderlayNavigationBar ()
 {
 	UIView* _underlayView;
 }
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation UnderlayNavigationBar
+@implementation WMUnderlayNavigationBar
 
 - (void) didAddSubview:(UIView *)subview
 {

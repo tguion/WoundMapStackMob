@@ -184,20 +184,4 @@
     return [[self.wounds allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
 }
 
-- (WMPatientConsultant *)patientConsultantSubmittedSource
-{
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sm_owner == %@", self.sm_owner];
-    NSArray *patientConsultants = [self.patientConsultants.allObjects filteredArrayUsingPredicate:predicate];
-    NSAssert1([patientConsultants count] < 2, @"Expected only one WMPatientConsultant, but got %d", [patientConsultants count]);
-    return [patientConsultants lastObject];
-}
-
-- (WMPatientConsultant *)patientConsultantSubmittedTarget
-{
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sm_owner != %@", self.sm_owner];
-    NSArray *patientConsultants = [self.patientConsultants.allObjects filteredArrayUsingPredicate:predicate];
-    NSAssert1([patientConsultants count] < 2, @"Expected only one WMPatientConsultant, but got %d", [patientConsultants count]);
-    return [patientConsultants lastObject];
-}
-
 @end

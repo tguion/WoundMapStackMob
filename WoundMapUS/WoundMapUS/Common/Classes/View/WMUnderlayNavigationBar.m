@@ -1,15 +1,15 @@
 //
-//  WMUnderlayToolbar.m
+//  WMUnderlayNavigationBar.m
 //  WoundMAP
 //
 //  Created by Todd Guion on 11/28/13.
 //  Copyright (c) 2013 etreasure consulting LLC. All rights reserved.
 //
 
-#import "WMUnderlayToolbar.h"
-#import "WMDesignUtilities.h"
+#import "WMUnderlayNavigationBar.h"
+#import "DesignUtilities.h"
 
-@interface WMUnderlayToolbar ()
+@interface WMUnderlayNavigationBar ()
 {
 	UIView* _underlayView;
 }
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation WMUnderlayToolbar
+@implementation WMUnderlayNavigationBar
 
 - (void) didAddSubview:(UIView *)subview
 {
@@ -41,7 +41,7 @@
         
 		_underlayView = [[UIView alloc] initWithFrame:CGRectMake(0, -statusBarHeight, selfSize.width, selfSize.height + statusBarHeight)];
 		[_underlayView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-		[_underlayView setBackgroundColor:[WMDesignUtilities tintColorForBarInPopoverPUMP]];
+		[_underlayView setBackgroundColor:[DesignUtilities tintColorForBarInPopoverPUMP]];
 		[_underlayView setAlpha:0.36f];
 		[_underlayView setUserInteractionEnabled:NO];
 	}

@@ -19,6 +19,8 @@
 #import "WMValue1TableViewCell.h"
 #import "WMButtonCell.h"
 #import "WMParticipant.h"
+#import "WMTeam.h"
+#import "WMConsultingGroup.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
@@ -31,9 +33,10 @@
 #import <FFEF/FatFractal.h>
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
-    WMWelcomeStateInitial,
-    WMWelcomeStateTeamSelected,
-    WMWelcomeStateDeferTeam,
+    WMWelcomeStateInitial,      // Sign In, Create Account
+    WMWelcomeStateSignedIn,     // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
+    WMWelcomeStateTeamSelected, // Sign Out | Team (value) | Clinical Setting | Patient
+    WMWelcomeStateDeferTeam,    // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
 @interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
@@ -80,20 +83,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     [super viewWillAppear:animated];
     self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
-    id<FFUserProtocol> user = [     loggedInUser
-    if([self.coreDataHelper.stackMobClient isLoggedIn]) {
-        __weak __typeof(self) weakSelf = self;
-        [self.coreDataHelper.stackMobClient getLoggedInUserOnSuccess:^(NSDictionary *result) {
-            weakSelf.appDelegate.stackMobUsername = [result objectForKey:@"username"];
-            _welcomeState = WMWelcomeStateTeamSelected;
-            [weakSelf.tableView reloadData];
-        } onFailure:^(NSError *error) {
-            self.appDelegate.stackMobUsername = nil;
-            [weakSelf.tableView reloadData];
-        }];
-    } else {
-        self.appDelegate.stackMobUsername = nil;
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -106,12 +95,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (BOOL)connectedTeamIsConsultingGroup
 {
-    if (nil == self.appDelegate.stackMobUsername) {
-        return NO;
-    }
-    // else
-    User *user = [User userForUsername:self.appDelegate.stackMobUsername managedObjectContext:self.managedObjectContext persistentStore:self.store];
-    return nil != user.consultingGroup;
+    return nil != self.appDelegate.participant.team.consultingGroup;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath

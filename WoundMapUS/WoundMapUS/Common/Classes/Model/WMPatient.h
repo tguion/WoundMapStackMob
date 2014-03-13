@@ -25,8 +25,6 @@
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (readonly, nonatomic) NSInteger genderIndex;
 @property (readonly, nonatomic) WMWound *lastActiveWound;
-@property (readonly, nonatomic) WMPatientConsultant *patientConsultantSubmittedSource;
-@property (readonly, nonatomic) WMPatientConsultant *patientConsultantSubmittedTarget;
 
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

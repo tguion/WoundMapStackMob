@@ -7,7 +7,7 @@
 //
 
 #import "WMUnderlayToolbar.h"
-#import "WMDesignUtilities.h"
+#import "DesignUtilities.h"
 
 @interface WMUnderlayToolbar ()
 {
@@ -41,7 +41,7 @@
         
 		_underlayView = [[UIView alloc] initWithFrame:CGRectMake(0, -statusBarHeight, selfSize.width, selfSize.height + statusBarHeight)];
 		[_underlayView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-		[_underlayView setBackgroundColor:[WMDesignUtilities tintColorForBarInPopoverPUMP]];
+		[_underlayView setBackgroundColor:[DesignUtilities tintColorForBarInPopoverPUMP]];
 		[_underlayView setAlpha:0.36f];
 		[_underlayView setUserInteractionEnabled:NO];
 	}

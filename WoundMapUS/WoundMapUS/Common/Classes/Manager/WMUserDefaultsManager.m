@@ -111,15 +111,15 @@ NSDateFormatter * DOB_Formatter;
 
 #pragma mark - FF
 
-- (NSNumber *)lastRefreshTime
+- (NSDictionary *)lastRefreshTimeMap
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:@"com.mobilehealthware.woundmap.lastRefreshTime"];
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"com.mobilehealthware.woundmap.lastRefreshTimeMap"];
 }
 
-- (void)setLastRefreshTime:(NSNumber *)lastRefreshTime
+- (void)setLastRefreshTime:(NSDictionary *)lastRefreshTimeMap
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastRefreshTime forKey:@"com.mobilehealthware.woundmap.lastRefreshTime"];
+    [userDefaults setObject:lastRefreshTimeMap forKey:@"com.mobilehealthware.woundmap.lastRefreshTimeMap"];
     [userDefaults synchronize];
 }
 

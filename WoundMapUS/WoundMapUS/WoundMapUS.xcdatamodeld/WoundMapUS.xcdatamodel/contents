@@ -162,6 +162,7 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="consultingGroup" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
     <entity name="WMDefinition" representedClassName="WMDefinition" syncable="YES">
         <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
@@ -706,6 +707,7 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="team" inverseEntity="WMConsultingGroup" syncable="YES"/>
         <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="team" inverseEntity="WMParticipant" syncable="YES"/>
     </entity>
     <entity name="WMTelecom" representedClassName="WMTelecom" syncable="YES">
@@ -1117,7 +1119,7 @@
         <element name="WMCarePlanGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMCarePlanInterventionEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMCarePlanValue" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="133"/>
         <element name="WMDefinition" positionX="0" positionY="0" width="128" height="120"/>
         <element name="WMDefinitionKeyword" positionX="0" positionY="0" width="128" height="90"/>
         <element name="WMDevice" positionX="0" positionY="0" width="128" height="285"/>
@@ -1177,6 +1179,6 @@
         <element name="WMWoundTreatmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="118"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="133"/>
     </elements>
 </model>

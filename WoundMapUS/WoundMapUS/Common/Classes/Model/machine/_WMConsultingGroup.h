@@ -13,11 +13,13 @@ extern const struct WMConsultingGroupAttributes {
 } WMConsultingGroupAttributes;
 
 extern const struct WMConsultingGroupRelationships {
+	__unsafe_unretained NSString *team;
 } WMConsultingGroupRelationships;
 
 extern const struct WMConsultingGroupFetchedProperties {
 } WMConsultingGroupFetchedProperties;
 
+@class WMTeam;
 
 
 
@@ -92,6 +94,13 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMTeam *team;
+
+//- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -133,6 +142,11 @@ extern const struct WMConsultingGroupFetchedProperties {
 - (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
+
+
+
+- (WMTeam*)primitiveTeam;
+- (void)setPrimitiveTeam:(WMTeam*)value;
 
 
 @end

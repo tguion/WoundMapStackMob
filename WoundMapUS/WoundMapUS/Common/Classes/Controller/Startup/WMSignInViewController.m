@@ -91,25 +91,9 @@ typedef enum {
         id firstResponder = [self.view findFirstResponder];
         if ([firstResponder isEqual:self.nameTextField]) {
             NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-            NSLog(@"Searching for name matching %@ in %ld participants", self.nameInput, (long)[WMParticipant participantCount:managedObjectContext persistentStore:self.store]);
-            NSFetchRequest *request = [WMParticipant bestMatchingParticipantFetchRequestForUserName:self.nameInput managedObjectContext:managedObjectContext];
-            SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-            NSError *error = nil;
-            NSArray *participants = [managedObjectContext executeFetchRequestAndWait:request
-                                                              returnManagedObjectIDs:NO
-                                                                             options:options
-                                                                               error:&error];
-            [WMUtilities logError:error];
-            // if not found, go to network to find
-            if (0 == [participants count]) {
-                request = [WMParticipant matchingParticipantFetchRequestForUserName:self.nameInput managedObjectContext:managedObjectContext];
-                options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyNetworkOnly];
-                participants = [managedObjectContext executeFetchRequestAndWait:request
-                                                         returnManagedObjectIDs:NO
-                                                                        options:options
-                                                                          error:&error];
-            }
-            self.possibleParticipant = [participants firstObject];
+            NSLog(@"Searching for name matching %@ in %ld participants", self.nameInput, (long)[WMParticipant participantCount:managedObjectContext]);
+            // search only local cache - if user
+            self.possibleParticipant = [WMParticipant bestMatchingParticipantForUserName:self.nameInput managedObjectContext:managedObjectContext];
         }
     } else {
         self.possibleParticipant = nil;
@@ -219,8 +203,6 @@ typedef enum {
     }
     [self.navigationItem setHidesBackButton:YES];
     [self.delegate signInViewControllerWillAppear:self];
-    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    self.savePolicy = SMSavePolicyNetworkThenCache;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -273,8 +255,7 @@ typedef enum {
     if (nil == _participant && self.hasNameInput) {
         _participant = [WMParticipant participantForName:self.nameInput
                                                   create:NO
-                                    managedObjectContext:self.managedObjectContext
-                                         persistentStore:nil];
+                                    managedObjectContext:self.managedObjectContext];
     }
     return  _participant;
 }
