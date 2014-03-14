@@ -12,6 +12,7 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 	.guid = @"guid",
 	.name = @"name",
 	.permissions = @"permissions",
+	.thumbnail = @"thumbnail",
 	.updatedAt = @"updatedAt",
 	.userName = @"userName",
 };
@@ -159,6 +160,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 - (void)setPrimitivePermissionsValue:(int32_t)value_ {
 	[self setPrimitivePermissions:[NSNumber numberWithInt:value_]];
 }
+
+
+
+
+
+@dynamic thumbnail;
+
 
 
 

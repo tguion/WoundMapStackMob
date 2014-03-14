@@ -9,16 +9,25 @@
 #import <Foundation/Foundation.h>
 #import <FFEF/FatFractal.h>
 
+@class WMParticipant;
+
 @interface WMFatFractalManager : NSObject
 
 + (WMFatFractalManager *)sharedInstance;
 
+// simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
+
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext;
 
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
              onComplete:(FFHttpMethodCompletion)onComplete;
+
+- (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))handler;
+
+- (void)clearOperationCache;
+- (void)submitOperationsToQueue;
 
 @end

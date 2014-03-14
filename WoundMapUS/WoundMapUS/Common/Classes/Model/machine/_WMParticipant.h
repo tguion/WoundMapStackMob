@@ -13,6 +13,7 @@ extern const struct WMParticipantAttributes {
 	__unsafe_unretained NSString *guid;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *permissions;
+	__unsafe_unretained NSString *thumbnail;
 	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *userName;
 } WMParticipantAttributes;
@@ -42,6 +43,7 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@class NSObject;
 
 
 
@@ -141,6 +143,16 @@ extern const struct WMParticipantFetchedProperties {
 - (void)setPermissionsValue:(int32_t)value_;
 
 //- (BOOL)validatePermissions:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) id thumbnail;
+
+
+
+//- (BOOL)validateThumbnail:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -271,6 +283,12 @@ extern const struct WMParticipantFetchedProperties {
 
 - (int32_t)primitivePermissionsValue;
 - (void)setPrimitivePermissionsValue:(int32_t)value_;
+
+
+
+
+- (id)primitiveThumbnail;
+- (void)setPrimitiveThumbnail:(id)value;
 
 
 
