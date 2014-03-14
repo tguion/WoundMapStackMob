@@ -13,12 +13,28 @@
 #import "WMAddress.h"
 #import "WMTelecom.h"
 #import "WMPatient.h"
+#import "WMBradenScale.h"
+#import "WMBradenSection.h"
+#import "WMBradenCell.h"
+#import "WMCarePlanGroup.h"
+#import "WMCarePlanValue.h"
+#import "WMDeviceGroup.h"
+#import "WMId.h"
+#import "WMMedicationGroup.h"
+#import "WMPatientConsultant.h"
+#import "WMPsychoSocialGroup.h"
+#import "WMSkinAssessmentGroup.h"
+#import "WMNavigationStage.h"
+#import "WMWound.h"
+#import "WMCarePlanInterventionEvent.h"
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
 static const NSInteger WMMaxQueueConcurrency = 24;
+
+typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object);
 
 @interface WMFatFractalManager ()
 
@@ -190,14 +206,19 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     }
                     [WMUtilities logError:error];
                 } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                        if (participant.team) {
-                            [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
-                        }
-                    }];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    if (participant.team) {
+                        [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                    }
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueUpdateObj:participant];
+                    if (participant.team) {
+                        [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                    }
                 }
             }];
         } else {
@@ -206,37 +227,42 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 if (error) {
                     [WMUtilities logError:error];
                 } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    if (participant.team) {
+                        [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                    }
                 }
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff queueCreateObj:participant atUri:ffUrl];
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:participant atUri:ffUrl];
+                    if (participant.team) {
+                        [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                    }
+                }
             }];
         }
     }];
     [_operationQueue addOperation:participantOperation];
     WMTeam *team = participant.team;
     if (nil != team) {
-        NSManagedObjectID *teamD = [team objectID];
+        NSManagedObjectID *teamID = [team objectID];
         NSBlockOperation *teamOperation = [NSBlockOperation blockOperationWithBlock:^{
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            WMTeam *team = (WMTeam *)[managedObjectContext objectWithID:teamD];
+            WMTeam *team = (WMTeam *)[managedObjectContext objectWithID:teamID];
             if (team.ffUrl) {
                 [ff updateObj:team onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     if (error) {
-                        if (response.statusCode == 401) {
-                            DLog(@"Participant not logged in: %@", error);
-                        }
                         [WMUtilities logError:error];
                     } else {
-                        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                        }];
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    }
+                } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        [ff queueUpdateObj:team];
                     }
                 }];
             } else {
@@ -245,14 +271,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     if (error) {
                         [WMUtilities logError:error];
                     } else {
-                        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                        }];
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
                     }
                 } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    [ff queueCreateObj:team atUri:ffUrl];
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        [ff queueCreateObj:team atUri:ffUrl];
+                    }
                 }];
             }
         }];
@@ -283,6 +309,12 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             }
         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [ff queueCreateObj:person atUri:ffUrl];
+            for (WMAddress *address in person.addresses) {
+                [ff queueGrabBagAddItemAtUri:address.ffUrl toObjAtUri:person.ffUrl grabBagName:@"addresses"];
+            }
+            for (WMTelecom *telecom in person.telecoms) {
+                [ff queueGrabBagAddItemAtUri:telecom.ffUrl toObjAtUri:person.ffUrl grabBagName:@"telecoms"];
+            }
         }];
     }];
     [participantOperation addDependency:personOperation];
@@ -297,14 +329,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 if (error) {
                     [WMUtilities logError:error];
                 } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff queueCreateObj:address atUri:ffUrl];
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:address atUri:ffUrl];
+                }
             }];
         }];
         [personOperation addDependency:addressOperation];
@@ -320,18 +352,393 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 if (error) {
                     [WMUtilities logError:error];
                 } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff queueCreateObj:telecom atUri:ffUrl];
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:telecom atUri:ffUrl];
+                }
             }];
         }];
         [personOperation addDependency:telecomOperation];
         [_operationQueue addOperation:telecomOperation];
+    }
+}
+
+- (void)addParticipantToTeam:(WMParticipant *)participant
+{
+    NSParameterAssert([participant.ffUrl length] > 0);
+    NSParameterAssert(nil != participant.team);
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMTeam *team = participant.team;
+    NSManagedObjectID *teamID = [team objectID];
+    NSBlockOperation *teamOperation = [NSBlockOperation blockOperationWithBlock:^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMTeam *team = (WMTeam *)[managedObjectContext objectWithID:teamID];
+        if (team.ffUrl) {
+            [ff updateObj:team onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueUpdateObj:team];
+                    [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                }
+            }];
+        } else {
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMTeam entityName]];
+            [ff createObj:team atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:team atUri:ffUrl];
+                    [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+                }
+            }];
+        }
+    }];
+    [_operationQueue addOperation:teamOperation];
+}
+
+- (void)createPatient:(WMPatient *)patient
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    NSBlockOperation *patientOperation = [weakSelf createOperation:patient collection:[WMPatient entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+        [weakSelf queuePatientGrabBagAdd:(WMPatient *)object ff:ff];
+    }];
+    [_operationQueue addOperation:patientOperation];
+    // bradenScales
+    for (WMBradenScale *bradenScale in patient.bradenScales) {
+        NSBlockOperation *bradenScaleOperation = [weakSelf createOperation:bradenScale collection:[WMBradenScale entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+            [weakSelf queueBradenScaleGrabBagAdd:(WMBradenScale *)object ff:ff];
+        }];
+        [patientOperation addDependency:bradenScaleOperation];
+        [_operationQueue addOperation:bradenScaleOperation];
+        // sections
+        for (WMBradenSection *section in bradenScale.sections) {
+            NSBlockOperation *sectionOperation = [weakSelf createOperation:section collection:[WMBradenSection entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+                // nothing
+            }];
+            [bradenScaleOperation addDependency:sectionOperation];
+            [_operationQueue addOperation:sectionOperation];
+            // cells
+            for (WMBradenCell *cell in section.cells) {
+                NSBlockOperation *cellOperation = [weakSelf createOperation:cell collection:[WMBradenCell entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+                    // nothing
+                }];
+                [sectionOperation addDependency:cellOperation];
+                [_operationQueue addOperation:cellOperation];
+            }
+        }
+    }
+    // carePlanGroups
+    for (WMCarePlanGroup *carePlanGroup in patient.carePlanGroups) {
+        NSBlockOperation *carePlanGroupOperation = [weakSelf createOperation:carePlanGroup collection:[WMCarePlanGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+            [weakSelf queueCarePlanGroupGrabBagAdd:(WMCarePlanGroup *)object ff:ff];
+        }];
+        [patientOperation addDependency:carePlanGroupOperation];
+        [_operationQueue addOperation:carePlanGroupOperation];
+        // interventionEvents
+        for (WMCarePlanInterventionEvent *event in carePlanGroup.interventionEvents) {
+            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+                // nothing
+            }];
+            [carePlanGroupOperation addDependency:interventionEventOperation];
+            [_operationQueue addOperation:interventionEventOperation];
+        }
+        // values
+        for (WMCarePlanValue *value in carePlanGroup.values) {
+            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMCarePlanValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object) {
+                // nothing
+            }];
+            [carePlanGroupOperation addDependency:valueOperation];
+            [_operationQueue addOperation:valueOperation];
+        }
+    }
+    // deviceGroups
+    for (WMDeviceGroup *deviceGroup in patient.deviceGroups) {
+        NSParameterAssert([deviceGroup.ffUrl length] == 0);
+        NSManagedObjectID *deviceGroupID = [deviceGroup objectID];
+        NSBlockOperation *deviceGroupOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMDeviceGroup *deviceGroup = (WMDeviceGroup *)[managedObjectContext objectWithID:deviceGroupID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMDeviceGroup entityName]];
+            [ff createObj:deviceGroup atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:deviceGroup atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:deviceGroupOperation];
+        [_operationQueue addOperation:deviceGroupOperation];
+        // interventionEvents
+        // values
+    }
+    // ids
+    for (WMId *anId in patient.ids) {
+        NSParameterAssert([anId.ffUrl length] == 0);
+        NSManagedObjectID *anIdID = [anId objectID];
+        NSBlockOperation *anIdOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMId *anId = (WMId *)[managedObjectContext objectWithID:anIdID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMId entityName]];
+            [ff createObj:anId atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:anId atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:anIdOperation];
+        [_operationQueue addOperation:anIdOperation];
+    }
+    // medicationGroups
+    for (WMMedicationGroup *medicationGroup in patient.medicationGroups) {
+        NSParameterAssert([medicationGroup.ffUrl length] == 0);
+        NSManagedObjectID *medicationGroupID = [medicationGroup objectID];
+        NSBlockOperation *medicationGroupOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMMedicationGroup *medicationGroup = (WMMedicationGroup *)[managedObjectContext objectWithID:medicationGroupID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMMedicationGroup entityName]];
+            [ff createObj:medicationGroup atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:medicationGroup atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:medicationGroupOperation];
+        [_operationQueue addOperation:medicationGroupOperation];
+        // interventionEvents
+        // medications
+    }
+    // patientConsultants
+    for (WMPatientConsultant *patientConsultant in patient.patientConsultants) {
+        NSParameterAssert([patientConsultant.ffUrl length] == 0);
+        NSManagedObjectID *patientConsultantID = [patientConsultant objectID];
+        NSBlockOperation *patientConsultantOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMPatientConsultant *patientConsultant = (WMPatientConsultant *)[managedObjectContext objectWithID:patientConsultantID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMPatientConsultant entityName]];
+            [ff createObj:patientConsultant atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:patientConsultant atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:patientConsultantOperation];
+        [_operationQueue addOperation:patientConsultantOperation];
+    }
+    // psychosocialGroups
+    for (WMPsychoSocialGroup *psychosocialGroup in patient.psychosocialGroups) {
+        NSParameterAssert([psychosocialGroup.ffUrl length] == 0);
+        NSManagedObjectID *psychosocialGroupID = [psychosocialGroup objectID];
+        NSBlockOperation *psychosocialGroupOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMPsychoSocialGroup *psychosocialGroup = (WMPsychoSocialGroup *)[managedObjectContext objectWithID:psychosocialGroupID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMPsychoSocialGroup entityName]];
+            [ff createObj:psychosocialGroup atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:psychosocialGroup atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:psychosocialGroupOperation];
+        [_operationQueue addOperation:psychosocialGroupOperation];
+        // interventionEvents
+        // values
+    }
+    // skinAssessmentGroups
+    for (WMSkinAssessmentGroup *skinAssessmentGroup in patient.skinAssessmentGroups) {
+        NSParameterAssert([skinAssessmentGroup.ffUrl length] == 0);
+        NSManagedObjectID *skinAssessmentGroupID = [skinAssessmentGroup objectID];
+        NSBlockOperation *skinAssessmentGroupOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMSkinAssessmentGroup *skinAssessmentGroup = (WMSkinAssessmentGroup *)[managedObjectContext objectWithID:skinAssessmentGroupID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]];
+            [ff createObj:skinAssessmentGroup atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:skinAssessmentGroup atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:skinAssessmentGroupOperation];
+        [_operationQueue addOperation:skinAssessmentGroupOperation];
+        // interventionEvents
+        // values
+    }
+    // wounds
+    for (WMWound *wound in patient.wounds) {
+        NSParameterAssert([wound.ffUrl length] == 0);
+        NSManagedObjectID *woundID = [wound objectID];
+        NSBlockOperation *woundOperation = [NSBlockOperation blockOperationWithBlock:^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            WMWound *wound = (WMWound *)[managedObjectContext objectWithID:woundID];
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [WMWound entityName]];
+            [ff createObj:wound atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:wound atUri:ffUrl];
+                }
+            }];
+        }];
+        [patientOperation addDependency:woundOperation];
+        [_operationQueue addOperation:woundOperation];
+        // measurementGroups
+        // photos
+        // positionValues
+        // treatmentGroups
+    }
+}
+
+- (NSBlockOperation *)createOperation:(NSManagedObject *)object collection:(NSString *)collection ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+{
+    NSParameterAssert([[object valueForKey:@"ffUrl"] length] == 0);
+    NSManagedObjectID *objectID = [object objectID];
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+        NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+        [ff createObj:object atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+            }
+            block(error, object);
+        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff queueCreateObj:object atUri:ffUrl];
+            }
+            block(error, object);
+        }];
+    }];
+    return operation;
+}
+
+- (void)queuePatientGrabBagAdd:(WMPatient *)patient ff:(WMFatFractal *)ff
+{
+    for (WMBradenScale *bradenScale in patient.bradenScales) {
+        [ff queueGrabBagAddItemAtUri:bradenScale.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"bradenScales"];
+    }
+    for (WMCarePlanGroup *carePlanGroup in patient.carePlanGroups) {
+        [ff queueGrabBagAddItemAtUri:carePlanGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"carePlanGroups"];
+    }
+    for (WMDeviceGroup *deviceGroup in patient.deviceGroups) {
+        [ff queueGrabBagAddItemAtUri:deviceGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"deviceGroups"];
+    }
+    for (WMId *anId in patient.ids) {
+        [ff queueGrabBagAddItemAtUri:anId.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"ids"];
+    }
+    for (WMMedicationGroup *medicationGroup in patient.medicationGroups) {
+        [ff queueGrabBagAddItemAtUri:medicationGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"medicationGroups"];
+    }
+    for (WMPatientConsultant *patientConsultant in patient.patientConsultants) {
+        [ff queueGrabBagAddItemAtUri:patientConsultant.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"patientConsultants"];
+    }
+    for (WMPsychoSocialGroup *psychosocialGroup in patient.psychosocialGroups) {
+        [ff queueGrabBagAddItemAtUri:psychosocialGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"psychosocialGroups"];
+    }
+    for (WMSkinAssessmentGroup *skinAssessmentGroup in patient.skinAssessmentGroups) {
+        [ff queueGrabBagAddItemAtUri:skinAssessmentGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"skinAssessmentGroups"];
+    }
+    for (WMWound *wound in patient.wounds) {
+        [ff queueGrabBagAddItemAtUri:wound.ffUrl toObjAtUri:patient.ffUrl grabBagName:@"wounds"];
+    }
+}
+
+- (void)queueBradenScaleGrabBagAdd:(WMBradenScale *)bradenScale  ff:(WMFatFractal *)ff
+{
+    for (WMBradenSection *bradenSection in bradenScale.sections) {
+        [ff queueGrabBagAddItemAtUri:bradenSection.ffUrl toObjAtUri:bradenScale.ffUrl grabBagName:@"sections"];
+    }
+}
+
+- (void)queueBradenSectionGrabBagAdd:(WMBradenSection *)bradenSection  ff:(WMFatFractal *)ff
+{
+    for (WMBradenCell *cell in bradenSection.cells) {
+        [ff queueGrabBagAddItemAtUri:cell.ffUrl toObjAtUri:bradenSection.ffUrl grabBagName:@"cells"];
+    }
+}
+
+- (void)queueCarePlanGroupGrabBagAdd:(WMCarePlanGroup *)carePlanGroup ff:(WMFatFractal *)ff
+{
+    for (WMCarePlanInterventionEvent *event in carePlanGroup.interventionEvents) {
+        [ff queueGrabBagAddItemAtUri:event.ffUrl toObjAtUri:carePlanGroup.ffUrl grabBagName:@"interventionEvents"];
+    }
+    for (WMCarePlanValue *value in carePlanGroup.values) {
+        [ff queueGrabBagAddItemAtUri:value.ffUrl toObjAtUri:carePlanGroup.ffUrl grabBagName:@"values"];
     }
 }
 

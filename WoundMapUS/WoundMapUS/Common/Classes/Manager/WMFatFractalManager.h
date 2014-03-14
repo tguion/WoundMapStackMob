@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <FFEF/FatFractal.h>
 
-@class WMParticipant;
+@class WMParticipant, WMPatient;
 
 @interface WMFatFractalManager : NSObject
 
@@ -26,6 +26,9 @@
              onComplete:(FFHttpMethodCompletion)onComplete;
 
 - (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))handler;
+- (void)addParticipantToTeam:(WMParticipant *)participant;
+
+- (void)createPatient:(WMPatient *)patient;
 
 - (void)clearOperationCache;
 - (void)submitOperationsToQueue;
