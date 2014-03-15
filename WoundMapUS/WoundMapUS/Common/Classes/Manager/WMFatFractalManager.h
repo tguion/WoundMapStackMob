@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <FFEF/FatFractal.h>
 
+typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOOL signInRequired);
+
+@class WMFatFractal;
 @class WMParticipant, WMPatient;
 
 @interface WMFatFractalManager : NSObject
@@ -29,6 +32,9 @@
 - (void)addParticipantToTeam:(WMParticipant *)participant;
 
 - (void)createPatient:(WMPatient *)patient;
+
+- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block;
+- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block;
 
 - (void)clearOperationCache;
 - (void)submitOperationsToQueue;
