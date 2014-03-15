@@ -21,21 +21,25 @@ typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOO
 // simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
 
-- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext;
+- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler;
 
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query
+                     ff:(WMFatFractal *)ff
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-             onComplete:(FFHttpMethodCompletion)onComplete;
+      completionHandler:(FFHttpMethodCompletion)completionHandler;
 
-- (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))handler;
-- (void)addParticipantToTeam:(WMParticipant *)participant;
+- (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))completionHandler;
+- (void)createTeamWithParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 
 - (void)createPatient:(WMPatient *)patient;
 
-- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block;
-- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block;
+- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 
+@property (readonly, nonatomic) BOOL isCacheEmpty;
 - (void)clearOperationCache;
 - (void)submitOperationsToQueue;
 

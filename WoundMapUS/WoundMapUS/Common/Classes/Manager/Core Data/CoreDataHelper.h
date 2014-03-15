@@ -28,6 +28,6 @@ extern NSString *localStoreFilename;
 
 - (void)setupCoreData;
 
-- (void)saveContext:(NSManagedObjectContext *)managedObjectContext;
+- (BOOL)saveContext:(NSManagedObjectContext *)managedObjectContext;             // return YES if sign in required
 
 @end

@@ -125,14 +125,13 @@ NSDateFormatter * DOB_Formatter;
 
 #pragma mark - Clinical Care Setting/Stage of Care
 
-- (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
+- (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext
 {
     NSString *defaultNavigationTrackFFURL = self.defaultNavigationTrackFFURL;
     WMNavigationTrack *navigationTrack = nil;
     if (defaultNavigationTrackFFURL) {
         navigationTrack = [WMNavigationTrack trackForFFURL:defaultNavigationTrackFFURL
-                                      managedObjectContext:managedObjectContext
-                                           persistentStore:store];
+                                      managedObjectContext:managedObjectContext];
     }
     return navigationTrack;
 }

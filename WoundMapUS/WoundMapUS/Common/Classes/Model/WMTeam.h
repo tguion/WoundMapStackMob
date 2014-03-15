@@ -1,5 +1,10 @@
 #import "_WMTeam.h"
+#import <FFEF/FatFractal.h>
 
 @interface WMTeam : _WMTeam {}
-// Custom logic goes here.
+
+@property (strong, nonatomic) FFUserGroup *participantGroup;
+
+- (void)addParticipantsToParticipantGroup;
+
 @end

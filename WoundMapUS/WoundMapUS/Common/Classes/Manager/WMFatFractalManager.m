@@ -106,18 +106,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
               andPassword:[[alertView textFieldAtIndex:1] text] error:&error];
     if (error) {
         [self showLoginWithTitle:@"Sign In Failed - please try again" andMessage:[error localizedDescription]];
-    } else {
-        CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
-        [self fetchPatients:coreDataHelper.context];
     }
 }
 
 #pragma mark - Fetch
 
-- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext
+- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler
 {
     NSArray *patientsExisting = [WMPatient MR_findAllInContext:managedObjectContext];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     // Fetch any events that have been updated on the backend
     // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
@@ -130,6 +126,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 [WMUtilities logError:error];
             }
         }];
+        NSMutableArray *patientObjectIDs = [[NSMutableArray alloc] init];
         if (response.error) {
             [WMUtilities logError:response.error];
         } else {
@@ -141,6 +138,8 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     if ([patientExisting.ffUrl isEqualToString:patientRetrieved.ffUrl]) {
                         foundLocally = YES;
                         break;
+                    } else {
+                        [patientObjectIDs addObject:[patientRetrieved objectID]];
                     }
                 }
                 if (foundLocally) {
@@ -153,27 +152,28 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             if (newAdditions) {
                 DLog(@"   Got new stuff from backend; reloading data");
             }
+            completionHandler(response.error, patientObjectIDs, nil);
         }
     }];
 }
 
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query
+                     ff:(WMFatFractal *)ff
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-             onComplete:(FFHttpMethodCompletion)onComplete
+      completionHandler:(FFHttpMethodCompletion)completionHandler
 {
     NSString *queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=1&depthRef=1", collection, self.lastRefreshTimeMap[collection], query];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         if (response.error) {
             [WMUtilities logError:response.error];
-            onComplete(response.error, response.objs, response.httpResponse);
+            completionHandler(response.error, response.objs, response.httpResponse);
         } else {
             [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
-                onComplete(response.error, response.objs, response.httpResponse);
+                completionHandler(response.error, response.objs, response.httpResponse);
             }];
         }
     }];
@@ -181,20 +181,34 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 
 #pragma mark - Updates
 
-- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
-    NSBlockOperation *operation = [self updateOperation:object ff:ff block:block];
+    NSBlockOperation *operation = [self updateOperation:object ff:ff completionHandler:completionHandler];
     [_operationQueue addOperation:operation];
 }
 
 #pragma mark - Deletes
 
-- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
-
+    NSBlockOperation *operation = [self deleteOperation:object ff:ff completionHandler:completionHandler];
+    [_operationQueue addOperation:operation];
 }
 
-#pragma mark - Operations
+#pragma mark - Load Blobs
+
+- (void)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *operation = [self loadBlobsOperation:object ff:ff completionHandler:completionHandler];
+    [_operationQueue addOperation:operation];
+}
+
+#pragma mark - Operations Cache
+
+- (BOOL)isCacheEmpty
+{
+    return [_operationCache count] == 0;
+}
 
 - (void)clearOperationCache
 {
@@ -206,13 +220,16 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [_operationQueue addOperations:_operationCache waitUntilFinished:NO];
 }
 
-- (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))handler
+
+#pragma mark - Operations
+
+- (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))completionHandler
 {
     NSParameterAssert(nil == participant.ffUrl);
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff registerUser:participant password:password onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [self createParticipant:participant];
-        handler(error);
+        completionHandler(error);
     }];
 }
 
@@ -229,9 +246,9 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
     };
     if (participantFFURL) {
-        participantOperation = [self updateOperation:participant ff:ff block:participantBlock];
+        participantOperation = [self updateOperation:participant ff:ff completionHandler:participantBlock];
     } else {
-        participantOperation = [self createOperation:participant collection:[WMParticipant entityName] ff:ff block:participantBlock];
+        participantOperation = [self createOperation:participant collection:[WMParticipant entityName] ff:ff completionHandler:participantBlock];
     }
     [_operationCache addObject:participantOperation];
     
@@ -239,11 +256,11 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     if (nil != team) {
         NSBlockOperation *teamOperation = nil;
         if (team.ffUrl) {
-            teamOperation = [self updateOperation:team ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            teamOperation = [self updateOperation:team ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
         } else {
-            teamOperation = [self createOperation:team collection:[WMTeam entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            teamOperation = [self createOperation:team collection:[WMTeam entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
         }
@@ -264,18 +281,18 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             }
         }
     };
-    NSBlockOperation *personOperation = [self createOperation:person collection:[WMPerson entityName] ff:ff block:personBlock];
+    NSBlockOperation *personOperation = [self createOperation:person collection:[WMPerson entityName] ff:ff completionHandler:personBlock];
     [participantOperation addDependency:personOperation];
     [_operationCache addObject:personOperation];
     for (WMAddress *address in person.addresses) {
-        NSBlockOperation *addressOperation = [self createOperation:address collection:[WMAddress entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *addressOperation = [self createOperation:address collection:[WMAddress entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             // nothing
         }];
         [personOperation addDependency:addressOperation];
         [_operationCache addObject:addressOperation];
     }
     for (WMTelecom *telecom in person.telecoms) {
-        NSBlockOperation *telecomOperation = [self createOperation:telecom collection:[WMTelecom entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *telecomOperation = [self createOperation:telecom collection:[WMTelecom entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             // nothing
         }];
         [personOperation addDependency:telecomOperation];
@@ -283,41 +300,57 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
 }
 
-- (void)addParticipantToTeam:(WMParticipant *)participant
+- (void)createTeamWithParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff block:(WMOperationCallback)block;
 {
     NSParameterAssert([participant.ffUrl length] > 0);
     NSParameterAssert(nil != participant.team);
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSParameterAssert([participant.team.ffUrl length] > 0);
+    NSParameterAssert(participant.isTeamLeader);
+    WMTeam *team = participant.team;
+    FFUserGroup *participantGroup = [[FFUserGroup alloc] initWithFF:ff];
+    [participantGroup setGroupName:@"participantGroup"];
+    team.participantGroup = participantGroup;
+    NSBlockOperation *userGroupOperation = [self createOperation:participantGroup collection:@"/FFUserGroup" ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSError *userGroupError = nil;
+        [team.participantGroup addUser:participant error:&userGroupError];
+        if (userGroupError) {
+            [WMUtilities logError:error];
+        }
+        block(error, object, signInRequired);
+    }];
+    [_operationCache addObject:userGroupOperation];
+
+}
+
+- (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+{
+    NSParameterAssert([participant.ffUrl length] > 0);
+    NSParameterAssert(nil != participant.team);
+    NSParameterAssert([participant.team.ffUrl length] > 0);
     NSString *participantFFURL = participant.ffUrl;
     WMTeam *team = participant.team;
-    NSBlockOperation *operation = nil;
-    if (team.ffUrl) {
-        operation = [self updateOperation:team ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            if (error) {
+    NSBlockOperation *teamOperation = [self updateOperation:team ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            WMTeam *team = (WMTeam *)object;
+            [ff queueGrabBagAddItemAtUri:participantFFURL toObjAtUri:team.ffUrl grabBagName:@"participants"];
+            NSError *userGroupError = nil;
+            [team.participantGroup addUser:participant error:&userGroupError];
+            if (userGroupError) {
                 [WMUtilities logError:error];
-            } else {
-                WMTeam *team = (WMTeam *)object;
-                [ff queueGrabBagAddItemAtUri:participantFFURL toObjAtUri:team.ffUrl grabBagName:@"participants"];
             }
-        }];
-    } else {
-        operation = [self createOperation:team collection:[WMTeam entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                WMTeam *team = (WMTeam *)object;
-                [ff queueGrabBagAddItemAtUri:participantFFURL toObjAtUri:team.ffUrl grabBagName:@"participants"];
-            }
-        }];
-    }
-    [_operationCache addObject:operation];
+        }
+        block(error, object, signInRequired);
+    }];
+    [_operationCache addObject:teamOperation];
 }
 
 - (void)createPatient:(WMPatient *)patient
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    NSBlockOperation *patientOperation = [weakSelf createOperation:patient collection:[WMPatient entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+    NSBlockOperation *patientOperation = [weakSelf createOperation:patient collection:[WMPatient entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
         WMPatient *patient = (WMPatient *)object;
         [weakSelf queuePatientGrabBagAdd:patient ff:ff];
         if (patient.thumbnail) {
@@ -331,25 +364,27 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     }
              }];
         }
+        // consultantGroup REFERENCE /FFUserGroup, participantGroup REFERENCE /FFUserGroup
+        
     }];
     [_operationCache addObject:patientOperation];
     // bradenScales
     for (WMBradenScale *bradenScale in patient.bradenScales) {
-        NSBlockOperation *bradenScaleOperation = [weakSelf createOperation:bradenScale collection:[WMBradenScale entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *bradenScaleOperation = [weakSelf createOperation:bradenScale collection:[WMBradenScale entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queueBradenScaleGrabBagAdd:(WMBradenScale *)object ff:ff];
         }];
         [patientOperation addDependency:bradenScaleOperation];
         [_operationCache addObject:bradenScaleOperation];
         // sections
         for (WMBradenSection *section in bradenScale.sections) {
-            NSBlockOperation *sectionOperation = [weakSelf createOperation:section collection:[WMBradenSection entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *sectionOperation = [weakSelf createOperation:section collection:[WMBradenSection entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [bradenScaleOperation addDependency:sectionOperation];
             [_operationCache addObject:sectionOperation];
             // cells
             for (WMBradenCell *cell in section.cells) {
-                NSBlockOperation *cellOperation = [weakSelf createOperation:cell collection:[WMBradenCell entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                NSBlockOperation *cellOperation = [weakSelf createOperation:cell collection:[WMBradenCell entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                     // nothing
                 }];
                 [sectionOperation addDependency:cellOperation];
@@ -359,14 +394,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // carePlanGroups
     for (WMCarePlanGroup *carePlanGroup in patient.carePlanGroups) {
-        NSBlockOperation *carePlanGroupOperation = [weakSelf createOperation:carePlanGroup collection:[WMCarePlanGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *carePlanGroupOperation = [weakSelf createOperation:carePlanGroup collection:[WMCarePlanGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queueCarePlanGroupGrabBagAdd:(WMCarePlanGroup *)object ff:ff];
         }];
         [patientOperation addDependency:carePlanGroupOperation];
         [_operationCache addObject:carePlanGroupOperation];
         // interventionEvents
         for (WMCarePlanInterventionEvent *event in carePlanGroup.interventionEvents) {
-            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [carePlanGroupOperation addDependency:interventionEventOperation];
@@ -374,7 +409,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // values
         for (WMCarePlanValue *value in carePlanGroup.values) {
-            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMCarePlanValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMCarePlanValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [carePlanGroupOperation addDependency:valueOperation];
@@ -383,14 +418,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // deviceGroups
     for (WMDeviceGroup *deviceGroup in patient.deviceGroups) {
-        NSBlockOperation *deviceGroupOperation = [weakSelf createOperation:deviceGroup collection:[WMDeviceGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *deviceGroupOperation = [weakSelf createOperation:deviceGroup collection:[WMDeviceGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queueDeviceGroupGrabBagAdd:(WMDeviceGroup *)object ff:ff];
         }];
         [patientOperation addDependency:deviceGroupOperation];
         [_operationCache addObject:deviceGroupOperation];
         // interventionEvents
         for (WMDeviceInterventionEvent *event in deviceGroup.interventionEvents) {
-            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [deviceGroupOperation addDependency:interventionEventOperation];
@@ -398,7 +433,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // values
         for (WMDeviceValue *value in deviceGroup.values) {
-            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMDeviceValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMDeviceValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [deviceGroupOperation   addDependency:valueOperation];
@@ -407,7 +442,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // ids
     for (WMId *anId in patient.ids) {
-        NSBlockOperation *anIdOperation = [weakSelf createOperation:anId collection:[WMId entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *anIdOperation = [weakSelf createOperation:anId collection:[WMId entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             // nothing
         }];
         [patientOperation addDependency:anIdOperation];
@@ -415,14 +450,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // medicationGroups
     for (WMMedicationGroup *medicationGroup in patient.medicationGroups) {
-        NSBlockOperation *medicationGroupOperation = [weakSelf createOperation:medicationGroup collection:[WMMedicationGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *medicationGroupOperation = [weakSelf createOperation:medicationGroup collection:[WMMedicationGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queueMedicationGroupGrabBagAdd:(WMMedicationGroup *)object ff:ff];
         }];
         [patientOperation addDependency:medicationGroupOperation];
         [_operationCache addObject:medicationGroupOperation];
         // interventionEvents
         for (WMInterventionEvent *event in medicationGroup.interventionEvents) {
-            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [medicationGroupOperation addDependency:interventionEventOperation];
@@ -432,7 +467,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // patientConsultants
     for (WMPatientConsultant *patientConsultant in patient.patientConsultants) {
-        NSBlockOperation *patientConsultantOperation = [weakSelf createOperation:patientConsultant collection:[WMPatientConsultant entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *patientConsultantOperation = [weakSelf createOperation:patientConsultant collection:[WMPatientConsultant entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             // nothing
         }];
         [patientOperation addDependency:patientConsultantOperation];
@@ -440,14 +475,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // psychosocialGroups
     for (WMPsychoSocialGroup *psychosocialGroup in patient.psychosocialGroups) {
-        NSBlockOperation *psychosocialGroupOperation = [weakSelf createOperation:psychosocialGroup collection:[WMPsychoSocialGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *psychosocialGroupOperation = [weakSelf createOperation:psychosocialGroup collection:[WMPsychoSocialGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queuePsychoSocialGroupGrabBagAdd:(WMPsychoSocialGroup *)object ff:ff];
         }];
         [patientOperation addDependency:psychosocialGroupOperation];
         [_operationCache addObject:psychosocialGroupOperation];
         // interventionEvents
         for (WMInterventionEvent *event in psychosocialGroup.interventionEvents) {
-            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [psychosocialGroupOperation addDependency:interventionEventOperation];
@@ -455,7 +490,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // values
         for (WMPsychoSocialValue *value in psychosocialGroup.values) {
-            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMDeviceValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMDeviceValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [psychosocialGroupOperation   addDependency:valueOperation];
@@ -464,14 +499,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // skinAssessmentGroups
     for (WMSkinAssessmentGroup *skinAssessmentGroup in patient.skinAssessmentGroups) {
-        NSBlockOperation *skinAssessmentGroupOperation = [weakSelf createOperation:skinAssessmentGroup collection:[WMSkinAssessmentGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *skinAssessmentGroupOperation = [weakSelf createOperation:skinAssessmentGroup collection:[WMSkinAssessmentGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queueSkinAssessmentGroupGrabBagAdd:(WMSkinAssessmentGroup *)object ff:ff];
         }];
         [patientOperation addDependency:skinAssessmentGroupOperation];
         [_operationCache addObject:skinAssessmentGroupOperation];
         // interventionEvents
         for (WMInterventionEvent *event in skinAssessmentGroup.interventionEvents) {
-            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [skinAssessmentGroupOperation addDependency:interventionEventOperation];
@@ -479,7 +514,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // values
         for (WMSkinAssessmentValue *value in skinAssessmentGroup.values) {
-            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMSkinAssessmentValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMSkinAssessmentValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [skinAssessmentGroupOperation   addDependency:valueOperation];
@@ -488,21 +523,21 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
     // wounds
     for (WMWound *wound in patient.wounds) {
-        NSBlockOperation *woundOperation = [weakSelf createOperation:wound collection:[WMWound entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSBlockOperation *woundOperation = [weakSelf createOperation:wound collection:[WMWound entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
             [weakSelf queueWoundGrabBagAdd:(WMWound *)object ff:ff];
         }];
         [patientOperation addDependency:woundOperation];
         [_operationCache addObject:woundOperation];
         // measurementGroups
         for (WMWoundMeasurementGroup *measurementGroup in wound.measurementGroups) {
-            NSBlockOperation *measurementGroupOperation = [weakSelf createOperation:measurementGroup collection:[WMWoundMeasurementGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *measurementGroupOperation = [weakSelf createOperation:measurementGroup collection:[WMWoundMeasurementGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 [weakSelf queueWoundMeasurementGroupGrabBagAdd:(WMWoundMeasurementGroup *)object ff:ff];
             }];
             [woundOperation addDependency:measurementGroupOperation];
             [_operationCache addObject:measurementGroupOperation];
             // interventionEvents
             for (WMInterventionEvent *event in measurementGroup.interventionEvents) {
-                NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                     // nothing
                 }];
                 [measurementGroupOperation addDependency:interventionEventOperation];
@@ -510,7 +545,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             }
             // values
             for (WMWoundMeasurementValue *value in measurementGroup.values) {
-                NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMWoundMeasurementValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMWoundMeasurementValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                     // nothing
                 }];
                 [measurementGroupOperation addDependency:valueOperation];
@@ -519,7 +554,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // photos
         for (WMWoundPhoto *woundPhoto in wound.photos) {
-            NSBlockOperation *woundPhotoOperation = [weakSelf createOperation:woundPhoto collection:[WMWoundPhoto entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *woundPhotoOperation = [weakSelf createOperation:woundPhoto collection:[WMWoundPhoto entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 [weakSelf queueWoundPhotoGrabBagAdd:(WMWoundPhoto *)object ff:ff];
             }];
             [woundOperation addDependency:woundPhotoOperation];
@@ -527,7 +562,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             // measurementGroups - already handled with wound
             // photos
             for (WMPhoto *photo in woundPhoto.photos) {
-                NSBlockOperation *photoOperation = [weakSelf createOperation:photo collection:[WMPhoto entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                NSBlockOperation *photoOperation = [weakSelf createOperation:photo collection:[WMPhoto entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                     // add blob
                     WMPhoto *photo = (WMPhoto *)object;
                     [ff updateBlob:UIImagePNGRepresentation(photo.photo)
@@ -546,7 +581,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // positionValues
         for (WMWoundPositionValue *value in wound.positionValues) {
-            NSBlockOperation *woundPositionOperation = [weakSelf createOperation:value collection:[WMWoundPositionValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *woundPositionOperation = [weakSelf createOperation:value collection:[WMWoundPositionValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 // nothing
             }];
             [woundOperation addDependency:woundPositionOperation];
@@ -554,14 +589,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         }
         // treatmentGroups
         for (WMWoundTreatmentGroup *treatmentGroup in wound.treatmentGroups) {
-            NSBlockOperation *treatmentGroupOperation = [weakSelf createOperation:treatmentGroup collection:[WMWoundTreatmentGroup entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSBlockOperation *treatmentGroupOperation = [weakSelf createOperation:treatmentGroup collection:[WMWoundTreatmentGroup entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                 [weakSelf queueWoundTreatmentGroupGrabBagAdd:(WMWoundTreatmentGroup *)object ff:ff];
             }];
             [woundOperation addDependency:treatmentGroupOperation];
             [_operationCache addObject:treatmentGroupOperation];
             // interventionEvents
             for (WMInterventionEvent *event in treatmentGroup.interventionEvents) {
-                NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                NSBlockOperation *interventionEventOperation = [weakSelf createOperation:event collection:[WMInterventionEvent entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                     // nothing
                 }];
                 [treatmentGroupOperation addDependency:interventionEventOperation];
@@ -569,7 +604,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             }
             // values
             for (WMWoundTreatmentValue *value in treatmentGroup.values) {
-                NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMWoundTreatmentValue entityName] ff:ff block:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                NSBlockOperation *valueOperation = [weakSelf createOperation:value collection:[WMWoundTreatmentValue entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                     // nothing
                 }];
                 [treatmentGroupOperation addDependency:valueOperation];
@@ -579,7 +614,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
 }
 
-- (NSBlockOperation *)createOperation:(NSManagedObject *)object collection:(NSString *)collection ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+- (NSBlockOperation *)createOperation:(id)object collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
     NSParameterAssert([[object valueForKey:@"ffUrl"] length] == 0);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -596,20 +631,20 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 object = [object MR_inContext:managedObjectContext];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
             }
-            block(error, object, signInRequired);
+            completionHandler(error, object, signInRequired);
         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             } else {
                 [ff queueCreateObj:object atUri:ffUrl];
             }
-            block(error, object, NO);
+            completionHandler(error, object, NO);
         }];
     }];
     return operation;
 }
 
-- (NSBlockOperation *)updateOperation:(id)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+- (NSBlockOperation *)updateOperation:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
     NSParameterAssert([[object valueForKey:@"ffUrl"] length] > 0);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -625,20 +660,20 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 object = [object MR_inContext:managedObjectContext];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
             }
-            block(error, object, signInRequired);
+            completionHandler(error, object, signInRequired);
         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             } else {
                 [ff queueUpdateObj:object];
             }
-            block(error, object, NO);
+            completionHandler(error, object, NO);
         }];
     }];
     return operation;
 }
 
-- (NSBlockOperation *)deleteOperation:(id)object ff:(WMFatFractal *)ff block:(WMOperationCallback)block
+- (NSBlockOperation *)deleteOperation:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
     NSParameterAssert([[object valueForKey:@"ffUrl"] length] > 0);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -651,14 +686,35 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     [WMUtilities logError:error];
                 }
             }
-            block(error, object, signInRequired);
+            completionHandler(error, object, signInRequired);
         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             } else {
                 [ff queueDeleteObj:object];
             }
-            block(error, object, NO);
+            completionHandler(error, object, NO);
+        }];
+    }];
+    return operation;
+}
+
+- (NSBlockOperation *)loadBlobsOperation:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        [ff loadBlobsForObj:object onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            BOOL signInRequired = NO;
+            if (error) {
+                if (response.statusCode == 401) {
+                    signInRequired = YES;
+                }
+                [WMUtilities logError:error];
+            } else if ([object isKindOfClass:[NSManagedObject class]]) {
+                NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                object = [object MR_inContext:managedObjectContext];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+            }
+            completionHandler(error, object, signInRequired);
         }];
     }];
     return operation;

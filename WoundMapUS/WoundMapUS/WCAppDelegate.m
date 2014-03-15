@@ -28,6 +28,9 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
         SharedInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
         // Then just make sure and let the SDK know you want to use this class instead of FFUser
         [SharedInstance registerClass:[WMParticipant class] forClazz:@"FFUser"];
+        // must load blobs explicitely
+        SharedInstance.autoLoadBlobs = NO;
+        SharedInstance.autoLoadRefs = YES;
     });
     return SharedInstance;
 }

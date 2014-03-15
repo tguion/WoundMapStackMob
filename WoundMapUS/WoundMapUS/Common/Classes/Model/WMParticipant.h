@@ -1,8 +1,6 @@
 #import "_WMParticipant.h"
 #import <FFEF/FatFractal.h>
 
-@class FFUser;
-
 @interface WMParticipant : _WMParticipant <FFUserProtocol> {}
 
 + (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext;
@@ -14,5 +12,6 @@
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
+@property (nonatomic) BOOL isTeamLeader;
 
 @end

@@ -489,6 +489,7 @@
         <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="participant" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="participant" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
+        <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="participant" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="participant" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="participants" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
@@ -513,7 +514,6 @@
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateOfBirth" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="ffUrl1" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
             <userInfo/>
         </attribute>
@@ -529,11 +529,13 @@
         <relationship name="deviceGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceGroup" inverseName="patient" inverseEntity="WMDeviceGroup" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
+        <relationship name="participant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="patients" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="patient" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="psychosocialGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPsychoSocialGroup" inverseName="patient" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
         <relationship name="skinAssessmentGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMSkinAssessmentGroup" inverseName="patient" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="patients" inverseEntity="WMTeam" syncable="YES"/>
         <relationship name="wounds" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMWound" inverseName="patient" inverseEntity="WMWound" syncable="YES"/>
     </entity>
     <entity name="WMPatientConsultant" representedClassName="WMPatientConsultant" syncable="YES">
@@ -712,6 +714,7 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="team" inverseEntity="WMConsultingGroup" syncable="YES"/>
         <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="team" inverseEntity="WMParticipant" syncable="YES"/>
+        <relationship name="patients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatient" inverseName="team" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMTelecom" representedClassName="WMTelecom" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -1146,9 +1149,9 @@
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="283"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="298"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="388"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="403"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
@@ -1182,6 +1185,6 @@
         <element name="WMWoundTreatmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="133"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="148"/>
     </elements>
 </model>

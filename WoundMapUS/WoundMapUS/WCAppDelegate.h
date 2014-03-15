@@ -11,7 +11,7 @@
 
 @class WMFatFractal;
 @class WMNavigationCoordinator;
-@class WMParticipant, User;
+@class WMParticipant, WMNavigationTrack;
 
 @interface WMFatFractal : FatFractal
 
@@ -27,6 +27,6 @@
 @property (readonly, strong, nonatomic) WMFatFractal *ff;
 @property (nonatomic, readonly) WMNavigationCoordinator *navigationCoordinator;
 
-@property (nonatomic, strong) WMParticipant *participant;   // clinician using the app
+@property (nonatomic, strong) WMParticipant *participant;           // clinician using the app
 
 @end

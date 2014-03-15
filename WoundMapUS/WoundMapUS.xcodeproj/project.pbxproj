@@ -232,7 +232,6 @@
 		7DB2061718A7D3400004DC32 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2061618A7D3400004DC32 /* main.m */; };
 		7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2061A18A7D3400004DC32 /* WCAppDelegate.m */; };
 		7DB2062418A7D3400004DC32 /* WoundMapUS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2062218A7D3400004DC32 /* WoundMapUS.xcdatamodeld */; };
-		7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2062918A7D3400004DC32 /* WCDetailViewController.m */; };
 		7DB2062C18A7D3400004DC32 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DB2062B18A7D3400004DC32 /* Images.xcassets */; };
 		7DB2063318A7D3400004DC32 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2063218A7D3400004DC32 /* XCTest.framework */; };
 		7DB2063418A7D3400004DC32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060818A7D3400004DC32 /* Foundation.framework */; };
@@ -817,8 +816,6 @@
 		7DB2061918A7D3400004DC32 /* WCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCAppDelegate.h; sourceTree = "<group>"; };
 		7DB2061A18A7D3400004DC32 /* WCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WCAppDelegate.m; sourceTree = "<group>"; };
 		7DB2062318A7D3400004DC32 /* WoundMapUS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WoundMapUS.xcdatamodel; sourceTree = "<group>"; };
-		7DB2062818A7D3400004DC32 /* WCDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDetailViewController.h; sourceTree = "<group>"; };
-		7DB2062918A7D3400004DC32 /* WCDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WCDetailViewController.m; sourceTree = "<group>"; };
 		7DB2062B18A7D3400004DC32 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7DB2063118A7D3400004DC32 /* WoundMapUSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WoundMapUSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DB2063218A7D3400004DC32 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -1420,8 +1417,6 @@
 				7DB206A618A7D6950004DC32 /* iPhone */,
 				7DB2061918A7D3400004DC32 /* WCAppDelegate.h */,
 				7DB2061A18A7D3400004DC32 /* WCAppDelegate.m */,
-				7DB2062818A7D3400004DC32 /* WCDetailViewController.h */,
-				7DB2062918A7D3400004DC32 /* WCDetailViewController.m */,
 				7DB2062B18A7D3400004DC32 /* Images.xcassets */,
 				7DB2062218A7D3400004DC32 /* WoundMapUS.xcdatamodeld */,
 				7DB2061118A7D3400004DC32 /* Supporting Files */,
@@ -2813,7 +2808,6 @@
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7D13026A18D0873500AE33B2 /* PDFRenderer.m in Sources */,
 				7D39DBC318BAB4FB0054DDC3 /* WMPhotoDepthViewController.m in Sources */,
-				7DB2062A18A7D3400004DC32 /* WCDetailViewController.m in Sources */,
 				7D39DBAC18BA97A70054DDC3 /* IAPAggregatorViewController.m in Sources */,
 				7DD8373A18C78A3A0028C2D3 /* NSManagedObjectContext+MagicalThreading.m in Sources */,
 				7DF4E99818C3CC45000A3F5B /* WMWoundMeasurementIntEvent.m in Sources */,

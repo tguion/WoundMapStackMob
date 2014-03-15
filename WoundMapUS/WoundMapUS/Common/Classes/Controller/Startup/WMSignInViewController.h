@@ -13,9 +13,8 @@
 
 @protocol SignInViewControllerDelegate <NSObject>
 
-- (void)signInViewControllerWillAppear:(WMSignInViewController *)viewController;
-- (void)signInViewControllerWillDisappear:(WMSignInViewController *)viewController;
 - (void)signInViewController:(WMSignInViewController *)viewController didSignInParticipant:(WMParticipant *)participant;
+- (void)signInViewControllerDidCancel:(WMSignInViewController *)viewController;
 
 @end
 

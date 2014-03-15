@@ -1,5 +1,4 @@
 #import "WMPerson.h"
-#import "StackMob.h"
 
 @interface WMPerson ()
 
@@ -19,7 +18,6 @@
 	if (store) {
 		[managedObjectContext assignObject:person toPersistentStore:store];
 	}
-    [person setValue:[person assignObjectId] forKey:[person primaryKeyField]];
 	return person;
 }
 

@@ -30,7 +30,7 @@ typedef enum {
 
 - (void)setIgnoresStagesFlag:(BOOL)ignoresStagesFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsIgnoreStages to:ignoresStagesFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsIgnoreStages to:ignoresStagesFlag]);
 }
 
 - (BOOL)ignoresSignInFlag
@@ -40,7 +40,7 @@ typedef enum {
 
 - (void)setIgnoresSignInFlag:(BOOL)ignoresSignInFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsIgnoreSignin to:ignoresSignInFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsIgnoreSignin to:ignoresSignInFlag]);
 }
 
 - (BOOL)limitToSinglePatientFlag
@@ -50,7 +50,7 @@ typedef enum {
 
 - (void)setLimitToSinglePatientFlag:(BOOL)limitToSinglePatientFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsLimitToSinglePatient to:limitToSinglePatientFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsLimitToSinglePatient to:limitToSinglePatientFlag]);
 }
 
 - (BOOL)skipCarePlanFlag
@@ -60,7 +60,7 @@ typedef enum {
 
 - (void)setSkipCarePlanFlag:(BOOL)skipCarePlanFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsSkipCarePlan to:skipCarePlanFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsSkipCarePlan to:skipCarePlanFlag]);
 }
 
 - (BOOL)skipPolicyEditor
@@ -70,7 +70,7 @@ typedef enum {
 
 - (void)setSkipPolicyEditor:(BOOL)skipPolicyEditor
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsSkipPolicyEditor to:skipPolicyEditor]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationTrackFlagsSkipPolicyEditor to:skipPolicyEditor]);
 }
 
 - (WMNavigationStage *)initialStage
@@ -86,21 +86,16 @@ typedef enum {
 	if (store) {
 		[managedObjectContext assignObject:navigationTrack toPersistentStore:store];
 	}
-    // save to back end
-    [navigationTrack performBlock:^{
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationTrack atUri:@"/WMNavigationTrack"];
-    } afterDelay:0.5];
 	return navigationTrack;
 }
 
-+ (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMNavigationTrack MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 // first attempt to find WMNavigationTrack data in index store
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
@@ -109,7 +104,7 @@ typedef enum {
         return;
     }
     // else check if already loaded
-    if ([WMNavigationTrack navigationTrackCount:managedObjectContext persistentStore:store] > 0) {
+    if ([WMNavigationTrack navigationTrackCount:managedObjectContext] > 0) {
         return;
     }
     // else
@@ -123,7 +118,7 @@ typedef enum {
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
         [managedObjectContext performBlockAndWait:^{
             for (NSDictionary *dictionary in propertyList) {
-                [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext persistentStore:store];
+                [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
             }
             // create patient and wound nodes
             [WMNavigationNode seedPatientNodes:managedObjectContext];
@@ -135,13 +130,11 @@ typedef enum {
 + (WMNavigationTrack *)updateTrackFromDictionary:(NSDictionary *)dictionary
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationTrack *navigationTrack = [WMNavigationTrack trackForTitle:title
                                                                    create:create
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
     navigationTrack.displayTitle = [dictionary objectForKey:@"displayTitle"];
     navigationTrack.icon = [dictionary objectForKey:@"icon"];
     navigationTrack.sortRank = [dictionary objectForKey:@"sortRank"];
@@ -170,7 +163,7 @@ typedef enum {
     return navigationTrack;
 }
 
-+ (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMNavigationTrack MR_findAllSortedBy:@"sortRank" ascending:YES];
 }
@@ -178,11 +171,10 @@ typedef enum {
 + (WMNavigationTrack *)trackForTitle:(NSString *)title
                               create:(BOOL)create
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store
 {
     WMNavigationTrack *navigationTrack = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == navigationTrack) {
-        navigationTrack = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        navigationTrack = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
         navigationTrack.title = title;
     }
     return navigationTrack;
@@ -190,7 +182,6 @@ typedef enum {
 
 + (WMNavigationTrack *)trackForFFURL:(NSString *)ffUrl
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store
 {
     return [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl] inContext:managedObjectContext];
 }

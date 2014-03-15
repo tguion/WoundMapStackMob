@@ -11,7 +11,6 @@
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
 #import "WMIAPCreateConsultantViewController.h"
-#import "WMUserSignInViewController.h"
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
 #import "WMPatientTableViewController.h"
@@ -23,7 +22,6 @@
 #import "WMConsultingGroup.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
-#import "WMPatientConsultant.h"
 #import "WMUserDefaultsManager.h"
 #import "WMPatientManager.h"
 #import "WMSeedDatabaseManager.h"
@@ -33,18 +31,17 @@
 #import <FFEF/FatFractal.h>
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
-    WMWelcomeStateInitial,      // Sign In, Create Account
-    WMWelcomeStateSignedIn,     // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
-    WMWelcomeStateTeamSelected, // Sign Out | Team (value) | Clinical Setting | Patient
-    WMWelcomeStateDeferTeam,    // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
+    WMWelcomeStateInitial,          // Sign In, Create Account
+    WMWelcomeStateSignedInNoTeam,   // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
+    WMWelcomeStateTeamSelected,     // Sign Out | Team (value) | Clinical Setting | Patient
+    WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, UserSignInDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
-@property (readonly, nonatomic) WMUserSignInViewController *userSignInViewController;
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 
@@ -103,30 +100,29 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     NSString *cellReuseIdentifier = @"Cell";
     switch (indexPath.section) {
         case 0: {
-            switch (indexPath.row) {
-                case 0: {
-                    // Join Team or Conntected
-                    cellReuseIdentifier = (_welcomeState == WMWelcomeStateTeamSelected ? @"ValueCell":@"Cell");
+            // section 0
+            switch (self.welcomeState) {
+                case WMWelcomeStateInitial: {
+                    cellReuseIdentifier = @"ValueCell";
                     break;
                 }
-                case 1: {
-                    // Create Team or Disconnect
-                    cellReuseIdentifier = (_welcomeState == WMWelcomeStateTeamSelected ? @"ButtonCell":@"Cell");
+                case WMWelcomeStateSignedInNoTeam: {
+                    cellReuseIdentifier = @"ValueCell";
                     break;
                 }
-                case 2: {
-                    // Defer or Consultant
-                    if (_welcomeState == WMWelcomeStateInitial || _welcomeState == WMWelcomeStateDeferTeam) {
-                        cellReuseIdentifier = @"DeferCell";
-                    } else {
-                        cellReuseIdentifier = @"ValueCell";
-                    }
+                case WMWelcomeStateTeamSelected: {
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+                }
+                case WMWelcomeStateDeferTeam: {
+                    cellReuseIdentifier = @"ValueCell";
                     break;
                 }
             }
             break;
         }
         case 1: {
+            // section 1
             switch (indexPath.row) {
                 case 0: {
                     cellReuseIdentifier = @"ValueCell";
@@ -153,7 +149,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         return NO;
     }
     // else
-    if (nil == self.userDefaultsManager.defaultNavigationTrackId) {
+    if (nil == self.userDefaultsManager.defaultNavigationTrackFFURL) {
         return NO;
     }
     // else
@@ -165,13 +161,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMSignInViewController *signInViewController = [[WMSignInViewController alloc] initWithNibName:@"WMSignInViewController" bundle:nil];
     signInViewController.delegate = self;
     return signInViewController;
-}
-
-- (WMUserSignInViewController *)userSignInViewController
-{
-    WMUserSignInViewController *userSignInViewController = [[WMUserSignInViewController alloc] initWithNibName:@"WMUserSignInViewController" bundle:nil];
-    userSignInViewController.delegate = self;
-    return userSignInViewController;
 }
 
 - (WMIAPJoinTeamViewController *)iapJoinTeamViewController
@@ -246,28 +235,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (IBAction)deferTeamAction:(id)sender
 {
     UISwitch *deferTeamSwitch = (UISwitch *)sender;
-    self.welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateInitial);
+    self.welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateSignedInNoTeam);
     if (deferTeamSwitch.isOn) {
         self.tableView.tableFooterView = _footerView;
     } else {
         self.tableView.tableFooterView = nil;
     }
     [self.tableView reloadData];
-}
-
-- (IBAction)disconnectFromTeamAction:(id)sender
-{
-    [self showProgressViewWithMessage:@"Disconnecting from Team"];
-    __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper.stackMobClient logoutOnSuccess:^(NSDictionary *result) {
-        DLog(@"result: %@", result);
-        _welcomeState = WMWelcomeStateInitial;
-        weakSelf.appDelegate.stackMobUsername = nil;
-        [weakSelf.tableView reloadData];
-        [weakSelf hideProgressView];
-    } onFailure:^(NSError *error) {
-        [weakSelf hideProgressView];
-    }];
 }
 
 - (IBAction)enterWoundMapAction:(id)sender
@@ -400,7 +374,26 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return (_welcomeState >= WMWelcomeStateTeamSelected ? 2:1);
+    NSInteger count = 0;
+    switch (self.welcomeState) {
+        case WMWelcomeStateInitial: {
+            count = 1;
+            break;
+        }
+        case WMWelcomeStateSignedInNoTeam: {
+            count = 2;
+            break;
+        }
+        case WMWelcomeStateTeamSelected: {
+            count = 4;
+            break;
+        }
+        case WMWelcomeStateDeferTeam: {
+            count = 4;
+            break;
+        }
+    }
+    return count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -408,11 +401,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     NSString *title = nil;
     switch (section) {
         case 0: {
-            title = @"Team Configuration";
+            title = @"Participant Configuration";
             break;
         }
         case 1: {
-            title = @"Participant Configuration";
+            title = @"Team Configuration";
+            break;
+        }
+        case 2: {
+            title = @"Clinical Setting";
+            break;
+        }
+        case 3: {
+            title = @"Current Patient";
             break;
         }
     }
@@ -422,18 +423,43 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger count = 0;
-    switch (section) {
-        case 0: {
-            count = 3;
+    switch (self.welcomeState) {
+        case WMWelcomeStateInitial: {
+            count = 2;
             break;
         }
-        case 1: {
-            if (nil == self.appDelegate.participant) {
-                count = 1;
-            } else if (nil == self.userDefaultsManager.defaultNavigationTrackId) {
-                count = 2;
-            } else {
-                count = 3;
+        case WMWelcomeStateSignedInNoTeam: {
+            switch (section) {
+                case 0: {
+                    count = 1;
+                    break;
+                }
+                case 1: {
+                    count = 3;
+                    break;
+                }
+            }
+            break;
+        }
+        case WMWelcomeStateTeamSelected: {
+            count = 1;
+            break;
+        }
+        case WMWelcomeStateDeferTeam: {
+            switch (section) {
+                case 0: {
+                    count = 1;
+                    break;
+                }
+                case 1: {
+                    count = 3;
+                    break;
+                }
+                case 2:
+                case 3: {
+                    count = 1;
+                    break;
+                }
             }
             break;
         }
@@ -456,59 +482,50 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     UIImage *image = nil;
     UITableViewCellAccessoryType accessoryType = UITableViewCellAccessoryNone;
     UIView *accessoryView = nil;
-    switch (indexPath.section) {
-        case 0: {
+    switch (self.welcomeState) {
+        case WMWelcomeStateInitial: {
+            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             switch (indexPath.row) {
                 case 0: {
-                    // join team or connected
-                    if (_welcomeState == WMWelcomeStateTeamSelected) {
-                        title = @"Connected:";
-                        image = [UIImage imageNamed:@"ui_checkmark"];
-                        value = self.appDelegate.stackMobUsername;
-                    } else {
-                        title = @"Join a Team";
-                        accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    }
+                    title = @"Sign In";
                     break;
                 }
                 case 1: {
-                    // create or disconnect
-                    if (_welcomeState == WMWelcomeStateTeamSelected) {
-                        WMButtonCell *myCell = (WMButtonCell *)cell;
-                        NSAssert1([myCell isKindOfClass:[WMButtonCell class]], @"Expected WMButtonCell, but have %@", cell);
-                        if (0 == [myCell.button.allTargets count]) {
-                            [myCell.button setTitle:[NSString stringWithFormat:@"Disconnect from Team %@", self.appDelegate.stackMobUsername] forState:UIControlStateNormal];
-                            [myCell.button addTarget:self action:@selector(disconnectFromTeamAction:) forControlEvents:UIControlEventTouchUpInside];
-                        }
-                    } else {
-                        title = @"Create a Team";
-                        accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    }
+                    title = @"Create Account";
                     break;
                 }
-                case 2: {
-                    // defer OR become consultant or team is a consultant
-                    if (_welcomeState == WMWelcomeStateTeamSelected) {
-                        if (self.connectedTeamIsConsultingGroup) {
-                            title = @"Team is Register Consultant";
-                        } else {
-                            title = @"Register as a Consultant";
+            };
+            break;
+        }
+        case WMWelcomeStateSignedInNoTeam: {
+            switch (indexPath.section) {
+                case 0: {
+                    title = @"Sign Out";
+                    value = self.appDelegate.participant.userName;
+                    break;
+                }
+                case 1: {
+                    switch (indexPath.row) {
+                        case 0: {
+                            title = @"Join Team";
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
                         }
-                    } else {
-                        // defer
-                        if (_welcomeState == WMWelcomeStateInitial) {
+                        case 1: {
+                            title = @"Create Team";
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                        case 2: {
                             title = @"Defer Joining Team";
-                            if (nil == cell.accessoryView && ![cell.accessoryView isKindOfClass:[UISwitch class]]) {
+                            if (nil == cell.accessoryView || ![cell.accessoryView isKindOfClass:[UISwitch class]]) {
                                 UISwitch *deferTeamSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
                                 [deferTeamSwitch addTarget:self action:@selector(deferTeamAction:) forControlEvents:UIControlEventValueChanged];
                                 accessoryView = deferTeamSwitch;
                             } else {
                                 accessoryView = cell.accessoryView;
                             }
-                        } else if (_welcomeState == WMWelcomeStateDeferTeam) {
-                            title = @"Deferring Joining Team";
-                            accessoryView = cell.accessoryView;
+                            break;
                         }
                     }
                     break;
@@ -516,75 +533,84 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             }
             break;
         }
-        case 1: {
-            switch (indexPath.row) {
+        case WMWelcomeStateTeamSelected: {
+            switch (indexPath.section) {
                 case 0: {
-                    if (nil == self.appDelegate.participant) {
-                        title = @"Create Account/Sign In";
-                        image = [UIImage imageNamed:@"ui_circle"];
-                    } else {
-                        title = @"Change Account";
-                        value = self.appDelegate.participant.name;
-                        image = [UIImage imageNamed:@"ui_checkmark"];
-                    }
-                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    title = @"Sign Out";
+                    value = self.appDelegate.participant.userName;
                     break;
                 }
                 case 1: {
-                    WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext persistentStore:self.store];
-                    title = @"Clinical Setting";
-                    if (nil == navigationTrack) {
-                        image = [UIImage imageNamed:@"ui_circle"];
-                    } else {
-                        value = navigationTrack.displayTitle;
-                        image = [UIImage imageNamed:@"ui_checkmark"];
-                    }
-                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    title = @"Team";
+                    value = self.appDelegate.participant.team.name;
                     break;
                 }
                 case 2: {
-                    if (self.coreDataHelper.stackMobStore.syncInProgress) {
-                        title = @"Waiting for Patient Records";
-                        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-                        accessoryView = activityIndicatorView;
-                        [activityIndicatorView startAnimating];
-                        cell.accessoryView = activityIndicatorView;
-                    } else {
-                        WMPatient *patient = self.appDelegate.navigationCoordinator.patient;
-                        WMPatientManager *patientManager = self.patientManager;
-                        NSInteger patientCount = patientManager.patientCount;
-                        if (nil == patient) {
-                            if (0 == patientCount) {
-                                title = @"Add Patient";
-                                image = [UIImage imageNamed:@"ui_circle"];
-                                accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                            } else {
-                                if (patientCount == 1) {
-                                    title = @"Patient Added";
-                                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                                } else {
-                                    title = @"Current Patient";
-                                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                                }
-                                patient = patientManager.lastModifiedActivePatient;
-                                value = patient.lastNameFirstName;
-                                image = [UIImage imageNamed:@"ui_checkmark"];
-                                self.appDelegate.navigationCoordinator.patient = patient;
-                                self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
-                            }
-                        } else {
-                            title = @"Patient";
-                            accessoryType = (patientCount == 1 ? UITableViewCellAccessoryNone:UITableViewCellAccessoryDisclosureIndicator);
-                            value = patient.lastNameFirstName;
-                            image = [UIImage imageNamed:@"ui_checkmark"];
-                        }
-                    }
+                    title = @"Clinical Setting";
+                    WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext];
+                    value = navigationTrack.title;
+                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                }
+                case 3: {
+                    title = @"Patient";
+                    value = self.patient.lastNameFirstName;
+                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
             }
             break;
         }
+        case WMWelcomeStateDeferTeam: {
+            switch (indexPath.section) {
+                case 0: {
+                    title = @"Sign Out";
+                    value = self.appDelegate.participant.userName;
+                    break;
+                }
+                case 1: {
+                    switch (indexPath.row) {
+                        case 0: {
+                            title = @"Join Team";
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                        case 1: {
+                            title = @"Create Team";
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                        case 2: {
+                            title = @"Defer Joining Team";
+                            if (nil == cell.accessoryView || ![cell.accessoryView isKindOfClass:[UISwitch class]]) {
+                                UISwitch *deferTeamSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+                                [deferTeamSwitch addTarget:self action:@selector(deferTeamAction:) forControlEvents:UIControlEventValueChanged];
+                                accessoryView = deferTeamSwitch;
+                            } else {
+                                accessoryView = cell.accessoryView;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 2: {
+                    title = @"Clinical Setting";
+                    WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext];
+                    value = navigationTrack.title;
+                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                }
+                case 3: {
+                    title = @"Patient";
+                    value = self.patient.lastNameFirstName;
+                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                }
+            }
+        }
     }
+
     cell.textLabel.text = title;
     cell.detailTextLabel.text = value;
     cell.imageView.image = image;
@@ -595,16 +621,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - SignInViewControllerDelegate
 
-- (void)signInViewControllerWillAppear:(WMSignInViewController *)viewController
-{
-    
-}
-
-- (void)signInViewControllerWillDisappear:(WMSignInViewController *)viewController
-{
-    
-}
-
 - (void)signInViewController:(WMSignInViewController *)viewController didSignInParticipant:(WMParticipant *)participant
 {
     participant.dateLastSignin = [NSDate date];
@@ -612,34 +628,22 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self showProgressViewWithMessage:@"Updating Participant account"];
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [weakSelf hideProgressView];
         weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
         [weakSelf.tableView reloadData];
     }];
 }
 
-#pragma mark - UserSignInDelegate
-
-- (void)userSignInViewController:(WMUserSignInViewController *)viewController didSignInUsername:(NSString *)username
-{
-    [self showProgressViewWithMessage:@"Updating Team Account"];
-    __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
-        weakSelf.appDelegate.stackMobUsername = username;
-        [weakSelf.navigationController popViewControllerAnimated:YES];
-        weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-        // now that we have a team, synch with server and wait for call back
-        [weakSelf.coreDataHelper.stackMobStore syncWithServer];
-    }];
-}
-
-- (void)userSignInViewControllerDidCancel:(WMUserSignInViewController *)viewController
+- (void)signInViewControllerDidCancel:(WMSignInViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
 }
 
 #pragma mark - WMIAPJoinTeamViewControllerDelegate
@@ -648,12 +652,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     __weak __typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        WMUserSignInViewController *userSignInViewController = weakSelf.userSignInViewController;
-        userSignInViewController.createNewUserFlag = NO;
-        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-        User *user = [User userForUsername:userDefaultsManager.lastTeamName managedObjectContext:weakSelf.managedObjectContext persistentStore:weakSelf.store];
-        userSignInViewController.selectedUser = user;
-        [weakSelf.navigationController pushViewController:userSignInViewController animated:YES];
+        // TODO navigate to join team authentication
     }];
 }
 
@@ -670,9 +669,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     __weak __typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        WMUserSignInViewController *userSignInViewController = weakSelf.userSignInViewController;
-        userSignInViewController.createNewUserFlag = YES;
-        [weakSelf.navigationController pushViewController:userSignInViewController animated:YES];
+        // TODO navigate to create team
     }];
 }
 
@@ -704,7 +701,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {
     WMUserDefaultsManager *userDefaultsManger = self.userDefaultsManager;
-    userDefaultsManger.defaultNavigationTrackId = navigationTrack.wmnavigationtrack_id;
+    userDefaultsManger.defaultNavigationTrackFFURL = navigationTrack.ffUrl;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     [self.tableView reloadData];
@@ -732,41 +729,24 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // nothing
         }];
     }
-    CoreDataHelper *coreDataHelper = self.coreDataHelper;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    NSPersistentStore *store = self.store;
     // make sure the track/stage is set
     if (nil == patient.stage) {
         // set stage to initial for default clinical setting
-        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
+        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext];
         WMNavigationStage *navigationStage = navigationTrack.initialStage;
         patient.stage = navigationStage;
     }
     [self showProgressViewWithMessage:@"Saving patient record"];
     __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
-        // make sure the user (sm_owner) has access via the consultants relationship
-        User *user = nil;
-        if([coreDataHelper.stackMobClient isLoggedIn]) {
-            user = [User userForUsername:weakSelf.appDelegate.stackMobUsername
-                    managedObjectContext:managedObjectContext persistentStore:store];
-            WMParticipant *participant = weakSelf.appDelegate.participant;
-            WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
-                                                                                           consultant:user
-                                                                                          participant:participant
-                                                                                               create:YES
-                                                                                 managedObjectContext:managedObjectContext
-                                                                                      persistentStore:store];
-            patientConsultant.acquiredFlagValue = NO;
-        }
-        [weakSelf.tableView reloadData];
-        weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-        // save again
-        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
             [WMUtilities logError:error];
-            [weakSelf hideProgressView];
-        }];
+        } else {
+            [weakSelf.tableView reloadData];
+            weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
+            // make sure participant belongs to consultantGroup REFERENCE /FFUserGroup, participantGroup REFERENCE /FFUserGroup
+        }
     }];
 }
 

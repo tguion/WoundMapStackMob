@@ -4,6 +4,10 @@
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
+typedef NS_ENUM(int16_t, WMParticipantFlags) {
+    ParticipantFlagsTeamLeader  = 0,
+};
+
 @interface WMParticipant ()
 
 // Private interface goes here.
@@ -66,6 +70,16 @@
         [array addObject:@"New Person"];
     }
     return [array componentsJoinedByString:@", "];
+}
+
+- (BOOL)isTeamLeader
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader];
+}
+
+- (void)setIsTeamLeader:(BOOL)isTeamLeader
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader to:isTeamLeader]);
 }
 
 @end

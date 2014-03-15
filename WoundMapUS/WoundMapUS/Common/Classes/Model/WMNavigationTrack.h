@@ -11,19 +11,17 @@
 @property (nonatomic) BOOL skipPolicyEditor;
 @property (readonly, nonatomic) WMNavigationStage *initialStage;
 
-+ (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
-+ (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMNavigationTrack *)trackForTitle:(NSString *)title
                               create:(BOOL)create
-                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store;
+                managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMNavigationTrack *)trackForFFURL:(NSString *)ffUrl
-                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store;
+                managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

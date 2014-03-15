@@ -162,85 +162,39 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 #pragma mark - Save
 
-- (void)saveContext:(NSManagedObjectContext *)managedObjectContext
+- (BOOL)saveContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMFatFractalManager *fatFractalManager = [WMFatFractalManager sharedInstance];
-    NSSet *insertedObjects = [managedObjectContext insertedObjects];
     NSSet *updatedObjects = [managedObjectContext updatedObjects];
     NSSet *deletedObjects = [managedObjectContext deletedObjects];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    __block BOOL signInRequired = NO;
+    WMFatFractalManager *ffManager = [WMFatFractalManager sharedInstance];
+    BOOL operationCacheIsEmpty = ffManager.isCacheEmpty;
+    __block BOOL _signInRequired = NO;
     // now update backend - deletes
     for (NSManagedObject *deletedObject in deletedObjects) {
-        [ff deleteObj:deletedObject onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                if (response.statusCode == 401) {
-                    signInRequired = YES;
-                } else {
-                    [WMUtilities logError:error];
-                }
-            }
-        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff queueDeleteObj:deletedObject];
-        }];
+        if ([deletedObject valueForKey:@"ffUrl"]) {
+            [ffManager deleteObject:deletedObject ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                _signInRequired = signInRequired;
+            }];
+        }
     }
     // now save local
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
-        // now update backend - inserts
-        for (NSManagedObject *insertedObject in insertedObjects) {
-            NSString *ffUrl = [NSString stringWithFormat:@"/%@", NSStringFromClass([insertedObject class])];
-            [ff createObj:insertedObject atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    if (response.statusCode == 401) {
-                        signInRequired = YES;
-                    } else {
-                        [WMUtilities logError:error];
-                    }
-                } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
-                }
-            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff queueCreateObj:insertedObject atUri:ffUrl];
-                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                }];
-            }];
-            if (signInRequired) {
-                [fatFractalManager showLoginWithTitle:@"Please Sign In" andMessage:nil];
-                return;
-            }
-        }
+        // now update backend - inserts need to be handled separately
         // now update backend - updates
         for (NSManagedObject *updatedObject in updatedObjects) {
-            [ff updateObj:updatedObject onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
-                }
-            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff queueUpdateObj:updatedObject];
-                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                }];
+            [ffManager updateObject:updatedObject ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                _signInRequired = signInRequired;
             }];
         }
     }];
+    if (operationCacheIsEmpty && !_signInRequired) {
+        [ffManager submitOperationsToQueue];
+    }
+    return _signInRequired;
 }
 
 #pragma mark - VALIDATION ERROR HANDLING

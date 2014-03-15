@@ -159,13 +159,15 @@
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     NSString *collection = self.fetchedResultsControllerEntityName;
     NSString *query = self.ffQuery;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *fatFractalManager = [WMFatFractalManager sharedInstance];
     [fatFractalManager fetchCollection:collection
                                  query:query
+                                    ff:ff
                   managedObjectContext:managedObjectContext
-                            onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                [self.refreshControl endRefreshing];
-                            }];
+                     completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                         [self.refreshControl endRefreshing];
+                     }];
 }
 
 #pragma mark - Progress view

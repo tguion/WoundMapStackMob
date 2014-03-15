@@ -25,7 +25,7 @@
 @property (strong, nonatomic) NSString *pdfHeaderPrefix;
 @property (nonatomic) NSDictionary *lastRefreshTimeMap;
 
-- (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
+- (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext;
 
 - (NSString *)lastWoundFFURLOnDeviceForPatientFFURL:(NSString *)ffUrl;
 - (void)setLastWoundFFURLOnDevice:(NSString *)lastWoundFFURLOnDevice forPatientFFURL:(NSString *)ffUrl;

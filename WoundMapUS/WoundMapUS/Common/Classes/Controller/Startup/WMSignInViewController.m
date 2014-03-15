@@ -202,7 +202,6 @@ typedef enum {
         [self.nameTextField becomeFirstResponder];
     }
     [self.navigationItem setHidesBackButton:YES];
-    [self.delegate signInViewControllerWillAppear:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -211,7 +210,6 @@ typedef enum {
     if (self.isIPadIdiom) {
         [self.navigationController setNavigationBarHidden:YES];
     }
-    [self.delegate signInViewControllerWillDisappear:self];
 }
 
 - (void)didReceiveMemoryWarning
