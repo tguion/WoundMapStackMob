@@ -99,6 +99,8 @@
 		7D10CD6618D24D5100AD43E3 /* WMUnderlayToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD6418D24D5000AD43E3 /* WMUnderlayToolbar.m */; };
 		7D10CD6918D258FC00AD43E3 /* _WMTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD6818D258FC00AD43E3 /* _WMTeam.m */; };
 		7D10CD6C18D2590E00AD43E3 /* WMTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD6B18D2590E00AD43E3 /* WMTeam.m */; };
+		7D10CD7018D4EA9E00AD43E3 /* WMCreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD6E18D4EA9E00AD43E3 /* WMCreateAccountViewController.m */; };
+		7D10CD7118D4EA9E00AD43E3 /* WMCreateAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD6F18D4EA9E00AD43E3 /* WMCreateAccountViewController.xib */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -586,6 +588,9 @@
 		7D10CD6818D258FC00AD43E3 /* _WMTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMTeam.m; sourceTree = "<group>"; };
 		7D10CD6A18D2590E00AD43E3 /* WMTeam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTeam.h; sourceTree = "<group>"; };
 		7D10CD6B18D2590E00AD43E3 /* WMTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTeam.m; sourceTree = "<group>"; };
+		7D10CD6D18D4EA9E00AD43E3 /* WMCreateAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCreateAccountViewController.h; sourceTree = "<group>"; };
+		7D10CD6E18D4EA9E00AD43E3 /* WMCreateAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCreateAccountViewController.m; sourceTree = "<group>"; };
+		7D10CD6F18D4EA9E00AD43E3 /* WMCreateAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCreateAccountViewController.xib; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -1226,21 +1231,24 @@
 		5F67D1AF18AC2FD000460C37 /* Startup */ = {
 			isa = PBXGroup;
 			children = (
-				5F67D20F18AC4A2800460C37 /* WMSignInViewController.h */,
-				5F67D21018AC4A2800460C37 /* WMSignInViewController.m */,
-				5F67D21118AC4A2800460C37 /* WMSignInViewController.xib */,
-				5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */,
-				5F67D1B118AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m */,
-				5F67D1B218AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib */,
+				7D10CD6D18D4EA9E00AD43E3 /* WMCreateAccountViewController.h */,
+				7D10CD6E18D4EA9E00AD43E3 /* WMCreateAccountViewController.m */,
+				7D10CD6F18D4EA9E00AD43E3 /* WMCreateAccountViewController.xib */,
+				7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */,
+				7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */,
+				7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */,
 				7D9AA27818B1038400C1B698 /* WMIAPCreateTeamViewController.h */,
 				7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */,
 				7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */,
 				5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */,
 				5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */,
 				5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */,
-				7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */,
-				7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */,
-				7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */,
+				5F67D20F18AC4A2800460C37 /* WMSignInViewController.h */,
+				5F67D21018AC4A2800460C37 /* WMSignInViewController.m */,
+				5F67D21118AC4A2800460C37 /* WMSignInViewController.xib */,
+				5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */,
+				5F67D1B118AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m */,
+				5F67D1B218AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -2533,6 +2541,7 @@
 				5F67D1F718AC3BE000460C37 /* Medications.plist in Resources */,
 				7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
+				7D10CD7118D4EA9E00AD43E3 /* WMCreateAccountViewController.xib in Resources */,
 				7D39DAED18B7E5F80054DDC3 /* WMWoundDetailViewController.xib in Resources */,
 				5F67D1F618AC3BE000460C37 /* InterventionStatus.plist in Resources */,
 				7D39DB9D18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib in Resources */,
@@ -2794,6 +2803,7 @@
 				7DDBEDB718BC0DD300FEF3FA /* _WMWoundMeasurementValue.m in Sources */,
 				7DD8372C18C78A390028C2D3 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				7DF4E92D18C22F27000A3F5B /* WMPsychoSocialGroup.m in Sources */,
+				7D10CD7018D4EA9E00AD43E3 /* WMCreateAccountViewController.m in Sources */,
 				7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */,
 				7D39DB1218B7FA750054DDC3 /* WMSelectWoundLocationViewController.m in Sources */,
 				5F67D1B318AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m in Sources */,
