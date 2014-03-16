@@ -55,6 +55,7 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     [super awakeFromInsert];
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+    self.person = [WMPerson MR_createInContext:[self managedObjectContext]];
 }
 
 - (NSString *)lastNameFirstName

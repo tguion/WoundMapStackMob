@@ -10,7 +10,6 @@ extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateOfBirth;
 	__unsafe_unretained NSString *ffUrl;
-	__unsafe_unretained NSString *ffUrl1;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *gender;
 	__unsafe_unretained NSString *patientStatusMessages;
@@ -25,11 +24,13 @@ extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *deviceGroups;
 	__unsafe_unretained NSString *ids;
 	__unsafe_unretained NSString *medicationGroups;
+	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *patientConsultants;
 	__unsafe_unretained NSString *person;
 	__unsafe_unretained NSString *psychosocialGroups;
 	__unsafe_unretained NSString *skinAssessmentGroups;
 	__unsafe_unretained NSString *stage;
+	__unsafe_unretained NSString *team;
 	__unsafe_unretained NSString *wounds;
 } WMPatientRelationships;
 
@@ -41,13 +42,14 @@ extern const struct WMPatientFetchedProperties {
 @class WMDeviceGroup;
 @class WMId;
 @class WMMedicationGroup;
+@class WMParticipant;
 @class WMPatientConsultant;
 @class WMPerson;
 @class WMPsychoSocialGroup;
 @class WMSkinAssessmentGroup;
 @class WMNavigationStage;
+@class WMTeam;
 @class WMWound;
-
 
 
 
@@ -127,16 +129,6 @@ extern const struct WMPatientFetchedProperties {
 
 
 //- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* ffUrl1;
-
-
-
-//- (BOOL)validateFfUrl1:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -241,6 +233,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMParticipant *participant;
+
+//- (BOOL)validateParticipant:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *patientConsultants;
 
 - (NSMutableSet*)patientConsultantsSet;
@@ -272,6 +271,13 @@ extern const struct WMPatientFetchedProperties {
 @property (nonatomic, strong) WMNavigationStage *stage;
 
 //- (BOOL)validateStage:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMTeam *team;
+
+//- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -374,12 +380,6 @@ extern const struct WMPatientFetchedProperties {
 
 
 
-- (NSString*)primitiveFfUrl1;
-- (void)setPrimitiveFfUrl1:(NSString*)value;
-
-
-
-
 - (NSNumber*)primitiveFlags;
 - (void)setPrimitiveFlags:(NSNumber*)value;
 
@@ -445,6 +445,11 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+- (WMParticipant*)primitiveParticipant;
+- (void)setPrimitiveParticipant:(WMParticipant*)value;
+
+
+
 - (NSMutableSet*)primitivePatientConsultants;
 - (void)setPrimitivePatientConsultants:(NSMutableSet*)value;
 
@@ -467,6 +472,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (WMNavigationStage*)primitiveStage;
 - (void)setPrimitiveStage:(WMNavigationStage*)value;
+
+
+
+- (WMTeam*)primitiveTeam;
+- (void)setPrimitiveTeam:(WMTeam*)value;
 
 
 

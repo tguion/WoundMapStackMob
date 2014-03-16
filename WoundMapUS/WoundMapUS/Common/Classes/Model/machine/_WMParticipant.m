@@ -21,8 +21,10 @@ const struct WMParticipantRelationships WMParticipantRelationships = {
 	.acquiredConsults = @"acquiredConsults",
 	.interventionEvents = @"interventionEvents",
 	.participantType = @"participantType",
+	.patients = @"patients",
 	.person = @"person",
 	.team = @"team",
+	.teamInvitation = @"teamInvitation",
 };
 
 const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
@@ -216,11 +218,28 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 	
 
+@dynamic patients;
+
+	
+- (NSMutableSet*)patientsSet {
+	[self willAccessValueForKey:@"patients"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"patients"];
+  
+	[self didAccessValueForKey:@"patients"];
+	return result;
+}
+	
+
 @dynamic person;
 
 	
 
 @dynamic team;
+
+	
+
+@dynamic teamInvitation;
 
 	
 

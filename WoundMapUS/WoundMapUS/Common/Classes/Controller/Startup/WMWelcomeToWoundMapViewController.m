@@ -8,6 +8,7 @@
 
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMSignInViewController.h"
+#import "WMCreateAccountViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
 #import "WMIAPCreateConsultantViewController.h"
@@ -27,6 +28,7 @@
 #import "WMSeedDatabaseManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMUtilities.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 #import <FFEF/FatFractal.h>
 
@@ -42,6 +44,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
+@property (readonly, nonatomic) WMCreateAccountViewController *createAccountViewController;
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 
@@ -163,6 +166,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return signInViewController;
 }
 
+- (WMCreateAccountViewController *)createAccountViewController
+{
+    WMCreateAccountViewController *createAccountViewController = [[WMCreateAccountViewController alloc] initWithNibName:@"WMCreateAccountViewController" bundle:nil];
+    createAccountViewController.delegate = self;
+    return createAccountViewController;
+}
+
 - (WMIAPJoinTeamViewController *)iapJoinTeamViewController
 {
     WMIAPJoinTeamViewController *iapJoinTeamViewController = [[WMIAPJoinTeamViewController alloc] initWithNibName:@"WMIAPJoinTeamViewController" bundle:nil];
@@ -194,6 +204,26 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (WMInstructionsViewController *)instructionsViewController
 {
     return [[WMInstructionsViewController alloc] initWithNibName:@"WMInstructionsViewController" bundle:nil];
+}
+
+- (void)presentJoinTeamViewController
+{
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
+}
+
+- (void)presentCreateTeamViewController
+{
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateTeamViewController];
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
 }
 
 - (void)presentChooseNavigationTrack
@@ -289,36 +319,26 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.section) {
         case 0: {
+            // participant
             switch (indexPath.row) {
                 case 0: {
-                    // join team or connected
-                    if (_welcomeState == WMWelcomeStateTeamSelected) {
-                        // nothing - should not be able to select
-                        break;
+                    // sign in or sign out
+                    if (_welcomeState == WMWelcomeStateInitial) {
+                        // sign in - navigate to sign in vc
+                        [self.navigationController pushViewController:self.signInViewController animated:YES];
+                    } else {
+                        // sign out
+                        WMFatFractal *ff = [WMFatFractal sharedInstance];
+                        [ff logout];
+                        self.appDelegate.participant = nil;
+                        self.welcomeState = WMWelcomeStateInitial;
+                        [tableView reloadData];
                     }
-                    // else navigate to join team
-                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
-                    [self presentViewController:navigationController
-                                       animated:YES
-                                     completion:^{
-                                         // nothing
-                                     }];
-
                     break;
                 }
                 case 1: {
-                    // create team or disconnect
-                    if (_welcomeState == WMWelcomeStateTeamSelected) {
-                        // disconnect - should not select this cell
-                        break;
-                    }
-                    // else navigate to create team
-                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateTeamViewController];
-                    [self presentViewController:navigationController
-                                       animated:YES
-                                     completion:^{
-                                         // nothing
-                                     }];
+                    // create account
+                    [self.navigationController pushViewController:self.createAccountViewController animated:YES];
                     break;
                 }
                 case 2: {
@@ -336,34 +356,46 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                              // nothing
                                          }];
                     }
-                    // else user selected to defer - should not be able to select cell
                     break;
                 }
             }
             break;
         }
         case 1: {
+            // team
             switch (indexPath.row) {
                 case 0: {
-                    // create account/sign in
-                    [self.navigationController pushViewController:self.signInViewController animated:YES];
+                    // join team or team joined
+                    if (self.welcomeState == WMWelcomeStateSignedInNoTeam || self.welcomeState == WMWelcomeStateDeferTeam) {
+                        [self presentJoinTeamViewController];
+                    }
+                    // else should not select - cell indicates the team
                     break;
                 }
                 case 1: {
-                    // choose navigation track
-                    [self presentChooseNavigationTrack];
+                    // create team
+                    [self presentCreateTeamViewController];
                     break;
                 }
                 case 2: {
-                    // add/change patient
-                    NSInteger patientCount = self.patientManager.patientCount;
-                    if (4 == patientCount) {
-                        [self presentAddPatientViewController];
-                    } else {
-                        [self presentChoosePatientViewController];
-                    }
+                    // else user selected to defer - should not be able to select cell
                     break;
                 }
+            }
+            break;
+        }
+        case 2: {
+            // clinical setting
+            [self presentChooseNavigationTrack];
+            break;
+        }
+        case 3: {
+            // patient
+            NSInteger patientCount = self.patientManager.patientCount;
+            if (0 == patientCount) {
+                [self presentAddPatientViewController];
+            } else {
+                [self presentChoosePatientViewController];
             }
             break;
         }
@@ -646,11 +678,30 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [viewController clearAllReferences];
 }
 
+#pragma mark - CreateAccountDelegate
+
+- (void)createAccountViewController:(WMCreateAccountViewController *)viewController didCreateParticipant:(WMParticipant *)participant
+{
+    participant.dateLastSignin = [NSDate date];
+    self.appDelegate.participant = participant;
+    [self showProgressViewWithMessage:@"Updating Participant account"];
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+    // participant has logged in as new user - now push data to backend
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    
+}
+
+- (void)createAccountViewControllerDidCancel:(WMCreateAccountViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
 #pragma mark - WMIAPJoinTeamViewControllerDelegate
 
 - (void)iapJoinTeamViewControllerDidPurchase:(WMIAPJoinTeamViewController *)viewController
 {
-    __weak __typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // TODO navigate to join team authentication
     }];
@@ -667,7 +718,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)iapCreateTeamViewControllerDidPurchase:(WMIAPCreateTeamViewController *)viewController
 {
-    __weak __typeof(self) weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // TODO navigate to create team
     }];

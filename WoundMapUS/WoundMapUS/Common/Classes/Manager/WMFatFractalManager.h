@@ -13,6 +13,7 @@ typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOO
 
 @class WMFatFractal;
 @class WMParticipant, WMPatient;
+@class WMTeamInvitation, WMTeam;
 
 @interface WMFatFractalManager : NSObject
 
@@ -30,6 +31,7 @@ typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOO
       completionHandler:(FFHttpMethodCompletion)completionHandler;
 
 - (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))completionHandler;
+- (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 - (void)createTeamWithParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 - (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 

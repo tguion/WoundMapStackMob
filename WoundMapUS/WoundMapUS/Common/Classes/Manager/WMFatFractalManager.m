@@ -10,6 +10,7 @@
 #import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMTeam.h"
+#import "WMTeamInvitation.h"
 #import "WMAddress.h"
 #import "WMTelecom.h"
 #import "WMPatient.h"
@@ -221,22 +222,23 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 }
 
 
-#pragma mark - Operations
+#pragma mark - Backend Updates
 
 - (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))completionHandler
 {
     NSParameterAssert(nil == participant.ffUrl);
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff registerUser:participant password:password onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [self createParticipant:participant];
+        if (error) {
+            [WMUtilities logError:error];
+        }
         completionHandler(error);
     }];
 }
 
 // create participant, with reference objects person and team
-- (void)createParticipant:(WMParticipant *)participant
+- (void)createParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSString *participantFFURL = participant.ffUrl;
     NSBlockOperation *participantOperation = nil;
     WMOperationCallback participantBlock = ^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
@@ -300,7 +302,19 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
 }
 
-- (void)createTeamWithParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff block:(WMOperationCallback)block;
+- (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    NSParameterAssert([teamInvitation.ffUrl length] == 0);
+    NSParameterAssert(nil != teamInvitation.team);
+    NSParameterAssert([teamInvitation.team.ffUrl length] > 0);
+    NSParameterAssert(nil != teamInvitation.invitee);
+    NSBlockOperation *teamInvitationOperation = [self createOperation:teamInvitation collection:[WMTeamInvitation entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        completionHandler(error);
+    }];
+    [_operationCache addObject:teamInvitationOperation];
+}
+
+- (void)createTeamWithParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 {
     NSParameterAssert([participant.ffUrl length] > 0);
     NSParameterAssert(nil != participant.team);
@@ -311,38 +325,22 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [participantGroup setGroupName:@"participantGroup"];
     team.participantGroup = participantGroup;
     NSBlockOperation *userGroupOperation = [self createOperation:participantGroup collection:@"/FFUserGroup" ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        NSError *userGroupError = nil;
-        [team.participantGroup addUser:participant error:&userGroupError];
-        if (userGroupError) {
-            [WMUtilities logError:error];
-        }
-        block(error, object, signInRequired);
-    }];
-    [_operationCache addObject:userGroupOperation];
-
-}
-
-- (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff block:(WMOperationCallback)block
-{
-    NSParameterAssert([participant.ffUrl length] > 0);
-    NSParameterAssert(nil != participant.team);
-    NSParameterAssert([participant.team.ffUrl length] > 0);
-    NSString *participantFFURL = participant.ffUrl;
-    WMTeam *team = participant.team;
-    NSBlockOperation *teamOperation = [self updateOperation:team ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            WMTeam *team = (WMTeam *)object;
-            [ff queueGrabBagAddItemAtUri:participantFFURL toObjAtUri:team.ffUrl grabBagName:@"participants"];
+        if (!error) {
             NSError *userGroupError = nil;
             [team.participantGroup addUser:participant error:&userGroupError];
             if (userGroupError) {
-                [WMUtilities logError:error];
+                [WMUtilities logError:userGroupError];
+                error = userGroupError;
             }
         }
-        block(error, object, signInRequired);
+        completionHandler(error, object, signInRequired);
     }];
+    [_operationCache addObject:userGroupOperation];
+}
+
+- (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *teamOperation = [self addParticipantToTeamOperation:participant ff:ff completionHandler:completionHandler];
     [_operationCache addObject:teamOperation];
 }
 
@@ -614,6 +612,8 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
 }
 
+#pragma mark - Operations
+
 - (NSBlockOperation *)createOperation:(id)object collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
     NSParameterAssert([[object valueForKey:@"ffUrl"] length] == 0);
@@ -715,6 +715,29 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
             }
             completionHandler(error, object, signInRequired);
+        }];
+    }];
+    return operation;
+}
+
+- (NSBlockOperation *)addParticipantToTeamOperation:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSParameterAssert([participant.ffUrl length] > 0);
+    NSParameterAssert(nil != participant.team);
+    NSParameterAssert([participant.team.ffUrl length] > 0);
+    NSManagedObjectID *objectID = [participant objectID];
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMParticipant *participant = (WMParticipant *)[managedObjectContext objectWithID:objectID];
+        WMTeam *team = participant.team;
+        // update participant
+        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:team.ffUrl grabBagName:@"participants"];
+            NSError *userGroupError = nil;
+            [team.participantGroup addUser:participant error:&userGroupError];
+            if (userGroupError) {
+                [WMUtilities logError:userGroupError];
+            }
         }];
     }];
     return operation;

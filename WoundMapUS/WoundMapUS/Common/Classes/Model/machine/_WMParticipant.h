@@ -22,8 +22,10 @@ extern const struct WMParticipantRelationships {
 	__unsafe_unretained NSString *acquiredConsults;
 	__unsafe_unretained NSString *interventionEvents;
 	__unsafe_unretained NSString *participantType;
+	__unsafe_unretained NSString *patients;
 	__unsafe_unretained NSString *person;
 	__unsafe_unretained NSString *team;
+	__unsafe_unretained NSString *teamInvitation;
 } WMParticipantRelationships;
 
 extern const struct WMParticipantFetchedProperties {
@@ -32,8 +34,10 @@ extern const struct WMParticipantFetchedProperties {
 @class WMPatientConsultant;
 @class WMInterventionEvent;
 @class WMParticipantType;
+@class WMPatient;
 @class WMPerson;
 @class WMTeam;
+@class WMTeamInvitation;
 
 
 
@@ -199,6 +203,13 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *patients;
+
+- (NSMutableSet*)patientsSet;
+
+
+
+
 @property (nonatomic, strong) WMPerson *person;
 
 //- (BOOL)validatePerson:(id*)value_ error:(NSError**)error_;
@@ -209,6 +220,13 @@ extern const struct WMParticipantFetchedProperties {
 @property (nonatomic, strong) WMTeam *team;
 
 //- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMTeamInvitation *teamInvitation;
+
+//- (BOOL)validateTeamInvitation:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -227,6 +245,11 @@ extern const struct WMParticipantFetchedProperties {
 - (void)removeInterventionEvents:(NSSet*)value_;
 - (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
 - (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
+
+- (void)addPatients:(NSSet*)value_;
+- (void)removePatients:(NSSet*)value_;
+- (void)addPatientsObject:(WMPatient*)value_;
+- (void)removePatientsObject:(WMPatient*)value_;
 
 @end
 
@@ -321,6 +344,11 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+- (NSMutableSet*)primitivePatients;
+- (void)setPrimitivePatients:(NSMutableSet*)value;
+
+
+
 - (WMPerson*)primitivePerson;
 - (void)setPrimitivePerson:(WMPerson*)value;
 
@@ -328,6 +356,11 @@ extern const struct WMParticipantFetchedProperties {
 
 - (WMTeam*)primitiveTeam;
 - (void)setPrimitiveTeam:(WMTeam*)value;
+
+
+
+- (WMTeamInvitation*)primitiveTeamInvitation;
+- (void)setPrimitiveTeamInvitation:(WMTeamInvitation*)value;
 
 
 @end

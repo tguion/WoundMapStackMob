@@ -9,7 +9,6 @@ const struct WMPatientAttributes WMPatientAttributes = {
 	.createdAt = @"createdAt",
 	.dateOfBirth = @"dateOfBirth",
 	.ffUrl = @"ffUrl",
-	.ffUrl1 = @"ffUrl1",
 	.flags = @"flags",
 	.gender = @"gender",
 	.patientStatusMessages = @"patientStatusMessages",
@@ -24,11 +23,13 @@ const struct WMPatientRelationships WMPatientRelationships = {
 	.deviceGroups = @"deviceGroups",
 	.ids = @"ids",
 	.medicationGroups = @"medicationGroups",
+	.participant = @"participant",
 	.patientConsultants = @"patientConsultants",
 	.person = @"person",
 	.psychosocialGroups = @"psychosocialGroups",
 	.skinAssessmentGroups = @"skinAssessmentGroups",
 	.stage = @"stage",
+	.team = @"team",
 	.wounds = @"wounds",
 };
 
@@ -150,13 +151,6 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 @dynamic ffUrl;
-
-
-
-
-
-
-@dynamic ffUrl1;
 
 
 
@@ -289,6 +283,10 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 }
 	
 
+@dynamic participant;
+
+	
+
 @dynamic patientConsultants;
 
 	
@@ -333,6 +331,10 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 	
 
 @dynamic stage;
+
+	
+
+@dynamic team;
 
 	
 

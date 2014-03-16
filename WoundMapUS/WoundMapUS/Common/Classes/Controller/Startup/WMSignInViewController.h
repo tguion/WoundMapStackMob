@@ -22,6 +22,4 @@
 
 @property (weak, nonatomic) id<SignInViewControllerDelegate> delegate;
 
-- (void)reset;
-
 @end

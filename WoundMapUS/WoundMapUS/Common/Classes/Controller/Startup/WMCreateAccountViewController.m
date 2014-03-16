@@ -7,23 +7,36 @@
 //
 
 #import "WMCreateAccountViewController.h"
-#import "WMParticipant.h"
+#import "WMSimpleTableViewController.h"
+#import "WMPersonEditorViewController.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
+#import "WMParticipant.h"
+#import "WMParticipantType.h"
+#import "WMPerson.h"
+#import "WMFatFractalManager.h"
+#import "WCAppDelegate.h"
+#import "WMUtilities.h"
+
+#define kMinimumUserNameLength 3
 
 typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     CreateAccountInitial,           // username, password, password confirm
-    WMWelcomeStateSignedInNoTeam,   // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
-    WMWelcomeStateTeamSelected,     // Sign Out | Team (value) | Clinical Setting | Patient
-    WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
+    CreateAccountAccountCreated,    // account created, value | Contact Details, Role, Organization
 };
 
-@interface WMCreateAccountViewController () <UITextFieldDelegate>
+@interface WMCreateAccountViewController () <UITextFieldDelegate, SimpleTableViewControllerDelegate, PersonEditorViewControllerDelegate>
 
 @property (nonatomic) WMCreateAccountState state;
 @property (strong, nonatomic) WMParticipant *participant;
-@property (strong, nonatomic) NSString *password;
-@property (strong, nonatomic) NSString *passwordConfirm;
+@property (strong, nonatomic) WMParticipantType *selectedParticipantType;
+@property (strong, nonatomic) NSString *userNameTextInput;
+@property (strong, nonatomic) NSString *passwordTextInput;
+@property (strong, nonatomic) NSString *passwordConfirmTextInput;
+@property (strong, nonatomic) IBOutlet UIView *signInButtonContainerView;
+
+@property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
+@property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 
 @end
 
@@ -58,9 +71,26 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 #pragma mark - Core
 
+- (WMSimpleTableViewController *)simpleTableViewController
+{
+    WMSimpleTableViewController *simpleTableViewController = [[WMSimpleTableViewController alloc] initWithNibName:@"WMSimpleTableViewController" bundle:nil];
+    simpleTableViewController.delegate = self;
+    simpleTableViewController.allowMultipleSelection = NO;
+    return simpleTableViewController;
+}
+
+- (WMPersonEditorViewController *)personEditorViewController
+{
+    WMPersonEditorViewController *personEditorViewController = [[WMPersonEditorViewController alloc] initWithNibName:@"WMPersonEditorViewController" bundle:nil];
+    personEditorViewController.delegate = self;
+    return personEditorViewController;
+}
+
 - (WMParticipant *)participant
 {
     if (nil == _participant) {
+        NSParameterAssert([self checkForValidUserName]);
+        NSParameterAssert([self checkForMatchingPasswords]);
         _participant = [WMParticipant MR_createInContext:self.managedObjectContext];
     }
     return _participant;
@@ -71,7 +101,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     NSString *cellReuseIdentifier = nil;
     switch (indexPath.section) {
         case 0: {
-            cellReuseIdentifier = @"TextCell";
+            cellReuseIdentifier = (self.state == CreateAccountInitial ? @"TextCell":@"ValueCell") ;
             break;
         }
         case 1: {
@@ -82,19 +112,72 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return cellReuseIdentifier;
 }
 
-- (void)checkForMatchingPasswords
+- (BOOL)checkForValidUserName
 {
-    if (![self.password isEqualToString:self.passwordConfirm]) {
+    if ([self.userNameTextInput length] < kMinimumUserNameLength) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"
+                                                            message:@"Your username must be a least three characters."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)checkForMatchingPasswords
+{
+    if (![self.passwordTextInput isEqualToString:self.passwordConfirmTextInput]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Mismatch Passwords"
                                                             message:@"Password and Confirm Password do not match."
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
         [alertView show];
+        return NO;
     }
+    // else
+    return YES;
 }
 
 #pragma mark - Actions
+
+- (IBAction)createAccountAction:(id)sender
+{
+    [self.view endEditing:YES];
+    [self performSelector:@selector(delayedCreateAccountAction) withObject:nil afterDelay:0.0];
+}
+
+- (IBAction)delayedCreateAccountAction
+{
+    if (![self checkForMatchingPasswords]) {
+        return;
+    }
+    if (![self checkForValidUserName]) {
+        return;
+    }
+    // else
+    [self showProgressViewWithMessage:@"Creating account..."];
+    __weak __typeof(&*self)weakSelf = self;
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm registerParticipant:self.participant password:self.passwordTextInput completionHandler:^(NSError *error) {
+        WM_ASSERT_MAIN_THREAD;
+        [weakSelf hideProgressView];
+        if (error) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
+                                                                message:[NSString stringWithFormat:@"Unable to create an account: %@", error.localizedDescription]
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Try Again"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        } else {
+            weakSelf.state = CreateAccountAccountCreated;
+            [weakSelf.tableView reloadData];
+        }
+    }];
+}
 
 - (IBAction)cancelAction:(id)sender
 {
@@ -126,7 +209,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     NSIndexPath *indexPathPassword = [NSIndexPath indexPathForRow:1 inSection:0];
     NSIndexPath *indexPathPasswordConfirm = [NSIndexPath indexPathForRow:2 inSection:0];
     if ([indexPath isEqual:indexPathPassword]) {
-        self.passwordConfirm = nil;
+        self.passwordConfirmTextInput = nil;
         WMTextFieldTableViewCell *cell = (WMTextFieldTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathPasswordConfirm];
         cell.textField.text = nil;
     }
@@ -142,17 +225,17 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             switch (indexPath.row) {
                 case 0: {
                     // userName
-                    self.participant.userName = textField.text;
+                    self.userNameTextInput = textField.text;
                     break;
                 }
                 case 1: {
                     // password
-                    self.password = textField.text;
+                    self.passwordTextInput = textField.text;
                     break;
                 }
                 case 2: {
                     // password
-                    self.passwordConfirm = textField.text;
+                    self.passwordConfirmTextInput = textField.text;
                     [self checkForMatchingPasswords];
                     break;
                 }
@@ -162,6 +245,61 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     }
 }
 
+#pragma mark - SimpleTableViewControllerDelegate
+
+- (NSString *)navigationTitle
+{
+    return @"Sign In";
+}
+
+- (NSArray *)valuesForDisplay
+{
+    return [[WMParticipantType sortedParticipantTypes:self.managedObjectContext] valueForKeyPath:@"title"];
+}
+
+- (NSArray *)selectedValuesForDisplay
+{
+    if (nil == _selectedParticipantType) {
+        return [NSArray array];
+    }
+    // else
+    return [NSArray arrayWithObject:_selectedParticipantType.title];
+}
+
+- (void)simpleTableViewController:(WMSimpleTableViewController *)viewController didSelectValues:(NSArray *)selectedValues
+{
+    NSString *title = [selectedValues lastObject];
+    if ([title length] > 0) {
+        _selectedParticipantType = [WMParticipantType participantTypeForTitle:title
+                                                                       create:NO
+                                                         managedObjectContext:self.managedObjectContext];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
+- (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
+#pragma mark - PersonEditorViewControllerDelegate
+
+- (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
+{
+    self.person = person;
+    [self.navigationController popViewControllerAnimated:YES];
+    self.state = SignInViewControllerCreateAccount;
+    [self.tableView reloadData];
+}
+
+- (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
@@ -169,11 +307,51 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return (indexPath.section > 0);
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (self.state == CreateAccountInitial) {
+        return _signInButtonContainerView;
+    }
+    // else
+    return nil;
+}
+
+// Called after the user changes the selection.
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 0) {
+        return;
+    }
+    // else
+    switch (indexPath.row) {
+        case 0: {
+            // contact details
+            WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
+            personEditorViewController.person = self.participant.person;
+            [self.navigationController pushViewController:personEditorViewController animated:YES];
+            break;
+        }
+        case 1: {
+            // role
+            WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
+            [self.navigationController pushViewController:simpleTableViewController animated:YES];
+            simpleTableViewController.title = @"Select Role";
+            break;
+        }
+        case 2: {
+            // organization
+            
+            break;
+        }
+    }
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return (self.state == CreateAccountInitial ? 1:2);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -181,7 +359,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     NSInteger count = 0;
     switch (section) {
         case 0: {
-            count = 3;
+            count = (self.state == CreateAccountInitial ? 3:1);
             break;
         }
         case 1: {
@@ -210,18 +388,25 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         case 0: {
             switch (indexPath.row) {
                 case 0: {
-                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-                    [myCell updateWithLabelText:@"User name" valueText:self.participant.userName valuePrompt:@"unique username"];
+                    if (self.state == CreateAccountInitial) {
+                        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                        [myCell updateWithLabelText:@"User name" valueText:self.participant.userName valuePrompt:@"Unique username"];
+                    } else {
+                        cell.textLabel.text = @"User Name";
+                        cell.detailTextLabel.text = self.userNameTextInput;
+                    }
                     break;
                 }
                 case 1: {
                     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-                    [myCell updateWithLabelText:@"Password" valueText:self.password valuePrompt:@"enter a password"];
+                    myCell.textField.secureTextEntry = YES;
+                    [myCell updateWithLabelText:@"Password" valueText:self.passwordTextInput valuePrompt:@"Enter a password"];
                     break;
                 }
                 case 2: {
                     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-                    [myCell updateWithLabelText:@"Password Confirm" valueText:self.passwordConfirm valuePrompt:@"confirm password"];
+                    myCell.textField.secureTextEntry = YES;
+                    [myCell updateWithLabelText:@"Password Confirm" valueText:self.passwordConfirmTextInput valuePrompt:@"Confirm password"];
                     break;
                 }
             }
