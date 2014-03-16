@@ -687,9 +687,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self showProgressViewWithMessage:@"Updating Participant account"];
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    // participant has logged in as new user - now push data to backend
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    
 }
 
 - (void)createAccountViewControllerDidCancel:(WMCreateAccountViewController *)viewController

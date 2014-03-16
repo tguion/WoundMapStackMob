@@ -59,6 +59,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                          target:self
+                                                                                          action:@selector(doneAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
 }
@@ -142,6 +145,28 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return YES;
 }
 
+- (BOOL)dataInputIsComplete
+{
+    NSMutableArray *messages = [[NSMutableArray alloc] init];
+    if ([self.participant.email length] == 0) {
+        [messages addObject:@"Please enter an email address in Contact Details"];
+    }
+    if ([self.participant.name length] == 0) {
+        [messages addObject:@"Please complete your name in Contact Details"];
+    }
+    if ([messages count]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Information"
+                                                            message:[messages componentsJoinedByString:@"\r"]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return NO;
+    }
+    // else
+    return YES;
+}
+
 #pragma mark - Actions
 
 - (IBAction)createAccountAction:(id)sender
@@ -189,7 +214,23 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (IBAction)doneAction:(id)sender
 {
-    [self.delegate createAccountViewController:self didCreateParticipant:self.participant];
+    // make sure all necessary data has been entered
+    if ([self dataInputIsComplete]) {
+        __weak __typeof(&*self)weakSelf = self;
+        [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            // participant has logged in as new user - now push data to backend
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm createParticipant:weakSelf.participant ff:ff completionHandler:^(NSError *error) {
+                if (error) {
+                    [ffm clearOperationCache];
+                } else {
+                    [ffm submitOperationsToQueue];
+                    [weakSelf.delegate createAccountViewController:self didCreateParticipant:self.participant];
+                }
+            }];
+        }];
+    }
 }
 
 #pragma mark - BaseViewController
@@ -288,14 +329,17 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
 {
-    self.person = person;
     [self.navigationController popViewControllerAnimated:YES];
-    self.state = SignInViewControllerCreateAccount;
-    [self.tableView reloadData];
+    [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
 {
+    [self.managedObjectContext MR_deleteObjects:@[self.participant.person]];
+    self.participant.person = nil;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
 }

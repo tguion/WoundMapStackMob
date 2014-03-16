@@ -101,7 +101,7 @@
 - (WMAddress *)addressForIndex:(NSInteger)index
 {
     if (nil == _addresses) {
-        _addresses = [[self.delegate.source.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastmoddate" ascending:YES]]];
+        _addresses = [[self.delegate.source.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     }
     return _addresses[index];
 }

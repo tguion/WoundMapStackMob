@@ -1,29 +1,28 @@
 //
-//  WMPersonEditorViewController.m
+//  WMTelecomEditorViewController.m
 //  WoundMapUS
 //
-//  Created by etreasure consulting LLC on 2/17/14.
+//  Created by Todd Guion on 3/16/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMPersonEditorViewController.h"
-#import "WMAddressListViewController.h"
-#import "WMValue1TableViewCell.h"
+#import "WMTelecomEditorViewController.h"
 #import "WMTextFieldTableViewCell.h"
-#import "WMPerson.h"
-#import "CoreDataHelper.h"
+#import "WMValue1TableViewCell.h"
+#import "WMTelecom.h"
+#import "WMTelecomType.h"
+#import "WCAppDelegate.h"
+#import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 
-@interface WMPersonEditorViewController () <UITextFieldDelegate, AddressListViewControllerDelegate>
+@interface WMTelecomEditorViewController () <UITextFieldDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
-@property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
-
-- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
+@property (strong, nonatomic) WMTelecomType *telecomType;
 
 @end
 
-@implementation WMPersonEditorViewController
+@implementation WMTelecomEditorViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,13 +37,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Contact Details";
+    self.title = @"Telecom Details";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelAction:)];
+                                                                                          target:self
+                                                                                          action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     // we want to support cancel, so make sure we have an undoManager
@@ -68,53 +67,23 @@
     return self.delegate.managedObjectContext;
 }
 
-- (WMPerson *)person
-{
-    if (nil == _person) {
-        _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
-    }
-    return _person;
-}
-
-- (WMAddressListViewController *)addressListViewController
-{
-    WMAddressListViewController *addressListViewController = [[WMAddressListViewController alloc] initWithNibName:@"WMAddressListViewController" bundle:nil];
-    addressListViewController.delegate = self;
-    return addressListViewController;
-}
-
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
 {
     NSString *cellReuseIdentifier = nil;
     switch (indexPath.row) {
         case 0: {
-            // prefix
-            cellReuseIdentifier = @"TextCell";
+            // use
+            cellReuseIdentifier = @"TextCell";  // TODO: select value set
             break;
         }
         case 1: {
-            // given name
-            cellReuseIdentifier = @"TextCell";
+            // type
+            cellReuseIdentifier = @"ValueCell";
             break;
         }
         case 2: {
-            // family name
+            // value
             cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 3: {
-            // suffix
-            cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 4: {
-            // addresses
-            cellReuseIdentifier = @"ValueCell";
-            break;
-        }
-        case 5: {
-            // telecoms
-            cellReuseIdentifier = @"ValueCell";
             break;
         }
     }
@@ -124,10 +93,12 @@
 - (BOOL)validateInput
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([self.person.telecoms count] == 0) {
-        [messages addObject:@"Please add at least one email address"];
+    if ([self.telecom.value length] == 0) {
+        [messages addObject:@"Please enter a valid telecom value"];
     }
-    
+    if (nil == _telecomType) {
+        [messages addObject:@"Please select a telecom type"];
+    }
     if ([messages count]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Information"
                                                             message:[messages componentsJoinedByString:@"\r"]
@@ -139,6 +110,34 @@
     }
     // else
     return YES;
+}
+
+- (void)navigateToTelecomType
+{
+    // make sure we have data
+    if ([WMTelecomType MR_countOfEntitiesWithContext:self.managedObjectContext]) {
+        // ok to navigate
+    }
+    // else backend may not have data or device has not fetched
+    [self showProgressViewWithMessage:@"Updating telecom data"];
+    __weak __typeof(&*self)weakSelf = self;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMTelecomType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WM_ASSERT_MAIN_THREAD;
+        if (error) {
+            [WMUtilities logError:error];
+            [weakSelf hideProgressView];
+        } else {
+            WM_ASSERT_MAIN_THREAD;
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    // ok to navigate
+                }
+            }];
+        }
+    }];
 }
 
 #pragma mark - Actions
@@ -158,7 +157,8 @@
         if (_removeUndoManagerWhenDone) {
             self.managedObjectContext.undoManager = nil;
         }
-        [self.delegate personEditorViewController:self didEditPerson:_person];
+        self.telecom.telecomType = _telecomType;
+        [self.delegate telecomEditorViewController:self didEditTelecom:_telecom];
     }
 }
 
@@ -175,7 +175,7 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
-    [self.delegate personEditorViewControllerDidCancel:self];
+    [self.delegate telecomEditorViewControllerDidCancel:self];
 }
 
 #pragma mark - WMBaseViewController
@@ -183,32 +183,8 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _person = nil;
-}
-
-#pragma mark - AddressListViewControllerDelegate
-
-- (id<AddressSource>)source
-{
-    return _person;
-}
-
-- (NSString *)relationshipKey
-{
-    return @"person";
-}
-
-- (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
-}
-
-- (void)addressListViewControllerDidCancel:(WMAddressListViewController *)viewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
+    _telecom = nil;
+    _telecomType = nil;
 }
 
 #pragma mark - UITextFieldDelegate
@@ -219,24 +195,14 @@
     UITableViewCell *cell = [self cellForView:textField];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     switch (indexPath.row) {
-        case 0: {
-            // prefix
-            self.person.namePrefix = textField.text;
-            break;
-        }
         case 1: {
-            // given name
-            self.person.nameGiven = textField.text;
+            // use
+            self.telecom.use = textField.text;
             break;
         }
         case 2: {
-            // family name
-            self.person.nameFamily = textField.text;
-            break;
-        }
-        case 3: {
-            // suffix
-            self.person.nameSuffix = textField.text;
+            // value
+            self.telecom.value = textField.text;
             break;
         }
     }
@@ -248,11 +214,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 4) {
-        // address
-        [self.navigationController pushViewController:self.addressListViewController animated:YES];
-    } else if (indexPath.row == 5) {
-        // telecom
+    if (indexPath.row == 2) {
+        [self navigateToTelecomType];
     }
 }
 
@@ -265,7 +228,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 6;
+    return 3;
 }
 
 // Customize the appearance of table view cells.
@@ -285,42 +248,21 @@
 {
     switch (indexPath.row) {
         case 0: {
-            // prefix
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix valuePrompt:@"Dr, Mr, Ms, etc"];
+            // type
+            cell.textLabel.text = @"Type";
+            cell.detailTextLabel.text = self.telecomType.title;
             break;
         }
         case 1: {
-            // given name
+            // use
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Given Name" valueText:self.person.nameGiven valuePrompt:@"Given or First Name"];
+            [myCell updateWithLabelText:@"Use" valueText:self.telecom.value valuePrompt:@"DIR"];
             break;
         }
         case 2: {
-            // family name
+            // city
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Family Name" valueText:self.person.nameFamily valuePrompt:@"Family or Last Name"];
-            break;
-        }
-        case 3: {
-            // suffix
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Suffix" valueText:self.person.nameSuffix valuePrompt:@"III, Esquire, etc"];
-            break;
-        }
-        case 4: {
-            // addresses
-            cell.textLabel.text = @"Addresses";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d addresses", [self.person.addresses count]];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            break;
-        }
-        case 5: {
-            // telecoms
-            cell.textLabel.text = @"Telecoms";
-            NSString *addressString = ([self.person.telecoms count] == 1 ? @"address":@"addresses");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [self.person.telecoms count], addressString];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            [myCell updateWithLabelText:@"Value" valueText:self.telecom.value valuePrompt:@"you@host.org"]; // TODO adjust value and use using type
             break;
         }
     }

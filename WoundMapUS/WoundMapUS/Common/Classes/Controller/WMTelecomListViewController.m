@@ -1,27 +1,28 @@
 //
-//  WMIdListViewController
+//  WMTelecomListViewController.m
 //  WoundMapUS
 //
-//  Created by etreasure consulting LLC on 2/20/14.
+//  Created by Todd Guion on 3/16/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMIdListViewController.h"
-#import "WMIdEditorViewController.h"
-#import "WMValue1TableViewCell.h"
-#import "WMId.h"
+#import "WMTelecomListViewController.h"
+#import "WMTelecomEditorViewController.h"
+#import "WMTelecom.h"
+#import "WMTelecom+CoreText.h"
+#import "WMUtilities.h"
 
-@interface WMIdListViewController () <idEditorViewControllerDelegate>
+@interface WMTelecomListViewController () <TelecomEditorViewControllerDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
-@property (readonly, nonatomic) WMIdEditorViewController *idEditorViewController;
-@property (strong, nonatomic) NSArray *ids;
+@property (readonly, nonatomic) WMTelecomEditorViewController *telecomEditorViewController;
+@property (strong, nonatomic) NSArray *telecoms;
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
-@implementation WMIdListViewController
+@implementation WMTelecomListViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,14 +37,14 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Identifiers";
+    self.title = @"Telecoms";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
-    [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"AddCell"];
     // allow editing
     [self.tableView setEditing:YES animated:NO];
@@ -70,7 +71,7 @@
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
 {
-    NSString *cellReuseIdentifier = @"ValueCell";
+    NSString *cellReuseIdentifier = @"Cell";
     if ([self isAddIndexPath:indexPath]) {
         cellReuseIdentifier = @"AddCell";
     }
@@ -79,45 +80,45 @@
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row == [self.delegate.source.ids count];
+    return indexPath.row == [self.delegate.source.telecoms count];
 }
 
-- (WMId *)idForIndex:(NSInteger)index
+- (WMTelecomEditorViewController *)telecomEditorViewController
 {
-    if (nil == _ids) {
-        _ids = [[self.delegate.source.ids allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+    WMTelecomEditorViewController *telecomEditorViewController = [[WMTelecomEditorViewController alloc] initWithNibName:@"WMTelecomEditorViewController" bundle:nil];
+    telecomEditorViewController.delegate = self;
+    return telecomEditorViewController;
+}
+
+- (void)navigateToTelecomEditorForTelecom:(WMTelecom *)telecom
+{
+    WMTelecomEditorViewController *telecomEditorViewController = self.telecomEditorViewController;
+    telecomEditorViewController.telecom = telecom;
+    [self.navigationController pushViewController:telecomEditorViewController animated:YES];
+}
+
+- (WMTelecom *)telecomForIndex:(NSInteger)index
+{
+    if (nil == _telecoms) {
+        _telecoms = [[self.delegate.source.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     }
-    return _ids[index];
+    return _addresses[index];
 }
 
-- (WMIdEditorViewController *)idEditorViewController
-{
-    WMIdEditorViewController *idEditorViewController = [[WMIdEditorViewController alloc] initWithNibName:@"WMIdEditorViewController" bundle:nil];
-    idEditorViewController.delegate = self;
-    return idEditorViewController;
-}
-
-- (void)navigateToIdEditorForId:(WMId *)anId
-{
-    WMIdEditorViewController *idEditorViewController = self.idEditorViewController;
-    idEditorViewController.anId = anId;
-    [self.navigationController pushViewController:idEditorViewController animated:YES];
-}
-
-#pragma mark - Core
+#pragma mark - WMBaseViewController
 
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _ids = nil;
+    _addresses = nil;
 }
 
 #pragma mark - Actions
 
 - (IBAction)addAction:(id)sender
 {
-    WMId *anId = [WMId instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
-    [self navigateToIdEditorForId:anId];
+    WMAddress *address = [WMAddress instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
+    [self navigateToAddressEditorForAddress:address];
 }
 
 - (IBAction)doneAction:(id)sender
@@ -128,7 +129,7 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
-    [self.delegate idListViewControllerDidFinish:self];
+    [self.delegate addressListViewControllerDidFinish:self];
 }
 
 - (IBAction)cancelAction:(id)sender
@@ -136,36 +137,50 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
         if (self.managedObjectContext.undoManager.canUndo) {
-            // this should undo the insert of new id
+            // this should undo the insert of new person
             [self.managedObjectContext.undoManager undoNestedGroup];
         }
     }
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
-    [self.delegate idListViewControllerDidCancel:self];
+    [self.delegate addressListViewControllerDidCancel:self];
 }
 
 #pragma mark - WMBaseViewController
 
-#pragma mark - idEditorViewControllerDelegate
+#pragma mark - AddressEditorViewControllerDelegate
 
-- (void)idEditorViewController:(WMIdEditorViewController *)viewController didEditId:(WMId *)anId
+- (void)addressEditorViewController:(WMAddressEditorViewController *)viewController didEditAddress:(WMAddress *)address
 {
-    [self.delegate.source addIdsObject:anId];
+    [self.delegate.source addAddressesObject:address];
     [self.navigationController popViewControllerAnimated:YES];
-    _ids = nil;
+    _addresses = nil;
     [self.tableView reloadData];
     [viewController clearAllReferences];
 }
 
-- (void)idEditorViewControllerDidCancel:(WMIdEditorViewController *)viewController
+- (void)addressEditorViewControllerDidCancel:(WMAddressEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 44.0;
+    if (![self isAddIndexPath:indexPath]) {
+        WMAddress *address = [self addressForIndex:indexPath.row];
+        NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
+        CGSize aSize = CGSizeMake(CGRectGetWidth(self.tableView.bounds) - self.tableView.separatorInset.left - self.tableView.separatorInset.right, CGFLOAT_MAX);
+        height = ceilf([attributedString boundingRectWithSize:aSize
+                                                      options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                      context:nil].size.height) + 32.0;
+    }
+    return height;
+}
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -184,11 +199,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([self isAddIndexPath:indexPath]) {
-        // add id
+        // add address
         [self addAction:nil];
     } else {
-        // edit id
-        [self navigateToIdEditorForId:[self idForIndex:indexPath.row]];
+        // edit address
+        [self navigateToAddressEditorForAddress:[self addressForIndex:indexPath.row]];
     }
 }
 
@@ -201,7 +216,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.delegate.source.ids count] + 1;
+    return [self.delegate.source.addresses count] + 1;
 }
 
 // Customize the appearance of table view cells.
@@ -217,11 +232,12 @@
 {
     if ([self isAddIndexPath:indexPath]) {
         cell.textLabel.font = [UIFont systemFontOfSize:15.0];
-        cell.textLabel.text = @"Add ID";
+        cell.textLabel.text = @"Add Address";
     } else {
-        WMId *anId = [self idForIndex:indexPath.row];
-        cell.textLabel.text = anId.extension;
-        cell.detailTextLabel.text = anId.root;
+        WMAddress *address = [self addressForIndex:indexPath.row];
+        NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
+        cell.textLabel.numberOfLines = 0;
+        cell.textLabel.attributedText = attributedString;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 }
@@ -230,9 +246,9 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        WMId *anId = [self idForIndex:indexPath.row];
-        [self.delegate.source removeIdsObject:anId];
-        _ids = nil;
+        WMAddress *address = [self addressForIndex:indexPath.row];
+        [self.delegate.source removeAddressesObject:address];
+        _addresses = nil;
         [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView endUpdates];
@@ -240,5 +256,8 @@
         [self addAction:nil];
     }
 }
+
+// FRC did not work
+// 2014-02-20 14:04:49.272 WoundMapUS[2323:70b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Cannot retrieve referenceObject from an objectID that was not created by this store'
 
 @end

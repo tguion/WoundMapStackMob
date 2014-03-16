@@ -103,6 +103,11 @@
 		7D10CD7118D4EA9E00AD43E3 /* WMCreateAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD6F18D4EA9E00AD43E3 /* WMCreateAccountViewController.xib */; };
 		7D10CD7418D618B600AD43E3 /* _WMTeamInvitation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD7318D618B600AD43E3 /* _WMTeamInvitation.m */; };
 		7D10CD7718D618CD00AD43E3 /* WMTeamInvitation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD7618D618CD00AD43E3 /* WMTeamInvitation.m */; };
+		7D10CD7B18D63B1600AD43E3 /* WMTelecomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD7918D63B1600AD43E3 /* WMTelecomListViewController.m */; };
+		7D10CD7C18D63B1600AD43E3 /* WMTelecomListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD7A18D63B1600AD43E3 /* WMTelecomListViewController.xib */; };
+		7D10CD8018D63B3000AD43E3 /* WMTelecomEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD7E18D63B3000AD43E3 /* WMTelecomEditorViewController.m */; };
+		7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD7F18D63B3000AD43E3 /* WMTelecomEditorViewController.xib */; };
+		7D10CD8418D63C1900AD43E3 /* WMTelecom+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -597,6 +602,14 @@
 		7D10CD7318D618B600AD43E3 /* _WMTeamInvitation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMTeamInvitation.m; sourceTree = "<group>"; };
 		7D10CD7518D618CD00AD43E3 /* WMTeamInvitation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTeamInvitation.h; sourceTree = "<group>"; };
 		7D10CD7618D618CD00AD43E3 /* WMTeamInvitation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTeamInvitation.m; sourceTree = "<group>"; };
+		7D10CD7818D63B1600AD43E3 /* WMTelecomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTelecomListViewController.h; sourceTree = "<group>"; };
+		7D10CD7918D63B1600AD43E3 /* WMTelecomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTelecomListViewController.m; sourceTree = "<group>"; };
+		7D10CD7A18D63B1600AD43E3 /* WMTelecomListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMTelecomListViewController.xib; sourceTree = "<group>"; };
+		7D10CD7D18D63B3000AD43E3 /* WMTelecomEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTelecomEditorViewController.h; sourceTree = "<group>"; };
+		7D10CD7E18D63B3000AD43E3 /* WMTelecomEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTelecomEditorViewController.m; sourceTree = "<group>"; };
+		7D10CD7F18D63B3000AD43E3 /* WMTelecomEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMTelecomEditorViewController.xib; sourceTree = "<group>"; };
+		7D10CD8218D63C1900AD43E3 /* WMTelecom+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMTelecom+CoreText.h"; sourceTree = "<group>"; };
+		7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMTelecom+CoreText.m"; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -1495,8 +1508,8 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7D39DBA318BA97A70054DDC3 /* IAP */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
+				7D39DBA318BA97A70054DDC3 /* IAP */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
 				7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */,
 				7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */,
@@ -1506,6 +1519,9 @@
 				7DDAFAFA18B61A4F00A05F5D /* WMAddressListViewController.xib */,
 				7DB2074B18ABC0850004DC32 /* WMBaseViewController.h */,
 				7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */,
+				7DDBEDD418BEA6E700FEF3FA /* WMBradenScaleInputViewController.h */,
+				7DDBEDD518BEA6E700FEF3FA /* WMBradenScaleInputViewController.m */,
+				7DDBEDD618BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib */,
 				7D39DB2A18B8230F0054DDC3 /* WMBradenScaleViewController.h */,
 				7D39DB2B18B8230F0054DDC3 /* WMBradenScaleViewController.m */,
 				7D39DB2C18B8230F0054DDC3 /* WMBradenScaleViewController.xib */,
@@ -1552,9 +1568,24 @@
 				5F6DE50018B2CC2200E87F7E /* WMPersonEditorViewController.h */,
 				5F6DE50118B2CC2200E87F7E /* WMPersonEditorViewController.m */,
 				5F6DE50218B2CC2200E87F7E /* WMPersonEditorViewController.xib */,
+				7D39DBC018BAB4FB0054DDC3 /* WMPhotoDepthViewController.h */,
+				7D39DBC118BAB4FB0054DDC3 /* WMPhotoDepthViewController.m */,
+				7D39DBC218BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib */,
+				7D39DBBB18BAB4960054DDC3 /* WMPhotoMeasureViewController.h */,
+				7D39DBBC18BAB4960054DDC3 /* WMPhotoMeasureViewController.m */,
+				7D39DBBD18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib */,
+				7D39DBB618BAB3BF0054DDC3 /* WMPhotoScaleViewController.h */,
+				7D39DBB718BAB3BF0054DDC3 /* WMPhotoScaleViewController.m */,
+				7D39DBB818BAB3BF0054DDC3 /* WMPhotoScaleViewController.xib */,
+				7D39DB5F18B921EE0054DDC3 /* WMPhotosContainerViewController.h */,
+				7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */,
+				7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */,
 				7D39DB1918B7FC350054DDC3 /* WMPlotConfigureGraphViewController.h */,
 				7D39DB1A18B7FC350054DDC3 /* WMPlotConfigureGraphViewController.m */,
 				7D39DB1B18B7FC350054DDC3 /* WMPlotConfigureGraphViewController.xib */,
+				7D39DB9E18BA8AB20054DDC3 /* WMPlotGraphViewController.h */,
+				7D39DB9F18BA8AB20054DDC3 /* WMPlotGraphViewController.m */,
+				7D39DBA018BA8AB20054DDC3 /* WMPlotGraphViewController.xib */,
 				7D39DAF818B7E6430054DDC3 /* WMPlotSelectDatasetViewController.h */,
 				7D39DAF918B7E6430054DDC3 /* WMPlotSelectDatasetViewController.m */,
 				7D39DAFA18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.xib */,
@@ -1585,6 +1616,18 @@
 				7D39DB4C18B827AB0054DDC3 /* WMTakePatientPhotoViewController.h */,
 				7D39DB4D18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m */,
 				7D39DB4E18B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib */,
+				7D10CD7D18D63B3000AD43E3 /* WMTelecomEditorViewController.h */,
+				7D10CD7E18D63B3000AD43E3 /* WMTelecomEditorViewController.m */,
+				7D10CD7F18D63B3000AD43E3 /* WMTelecomEditorViewController.xib */,
+				7D10CD7818D63B1600AD43E3 /* WMTelecomListViewController.h */,
+				7D10CD7918D63B1600AD43E3 /* WMTelecomListViewController.m */,
+				7D10CD7A18D63B1600AD43E3 /* WMTelecomListViewController.xib */,
+				7D39DBB118BAB2CC0054DDC3 /* WMTransformPhotoViewController.h */,
+				7D39DBB218BAB2CC0054DDC3 /* WMTransformPhotoViewController.m */,
+				7D39DBB318BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib */,
+				7D39DBC518BAB5530054DDC3 /* WMUndermineTunnelViewController.h */,
+				7D39DBC618BAB5530054DDC3 /* WMUndermineTunnelViewController.m */,
+				7D39DBC718BAB5530054DDC3 /* WMUndermineTunnelViewController.xib */,
 				7D39DAE918B7E5F80054DDC3 /* WMWoundDetailViewController.h */,
 				7D39DAEA18B7E5F80054DDC3 /* WMWoundDetailViewController.m */,
 				7D39DAEB18B7E5F80054DDC3 /* WMWoundDetailViewController.xib */,
@@ -1594,36 +1637,12 @@
 				7D39DAF318B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.h */,
 				7D39DAF418B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m */,
 				7D39DAF518B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib */,
-				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
-				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
-				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
-				7D39DB5F18B921EE0054DDC3 /* WMPhotosContainerViewController.h */,
-				7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */,
-				7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */,
 				7D39DB9918BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.h */,
 				7D39DB9A18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m */,
 				7D39DB9B18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib */,
-				7D39DB9E18BA8AB20054DDC3 /* WMPlotGraphViewController.h */,
-				7D39DB9F18BA8AB20054DDC3 /* WMPlotGraphViewController.m */,
-				7D39DBA018BA8AB20054DDC3 /* WMPlotGraphViewController.xib */,
-				7D39DBB118BAB2CC0054DDC3 /* WMTransformPhotoViewController.h */,
-				7D39DBB218BAB2CC0054DDC3 /* WMTransformPhotoViewController.m */,
-				7D39DBB318BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib */,
-				7D39DBB618BAB3BF0054DDC3 /* WMPhotoScaleViewController.h */,
-				7D39DBB718BAB3BF0054DDC3 /* WMPhotoScaleViewController.m */,
-				7D39DBB818BAB3BF0054DDC3 /* WMPhotoScaleViewController.xib */,
-				7D39DBBB18BAB4960054DDC3 /* WMPhotoMeasureViewController.h */,
-				7D39DBBC18BAB4960054DDC3 /* WMPhotoMeasureViewController.m */,
-				7D39DBBD18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib */,
-				7D39DBC018BAB4FB0054DDC3 /* WMPhotoDepthViewController.h */,
-				7D39DBC118BAB4FB0054DDC3 /* WMPhotoDepthViewController.m */,
-				7D39DBC218BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib */,
-				7D39DBC518BAB5530054DDC3 /* WMUndermineTunnelViewController.h */,
-				7D39DBC618BAB5530054DDC3 /* WMUndermineTunnelViewController.m */,
-				7D39DBC718BAB5530054DDC3 /* WMUndermineTunnelViewController.xib */,
-				7DDBEDD418BEA6E700FEF3FA /* WMBradenScaleInputViewController.h */,
-				7DDBEDD518BEA6E700FEF3FA /* WMBradenScaleInputViewController.m */,
-				7DDBEDD618BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib */,
+				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
+				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
+				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2330,6 +2349,8 @@
 				7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */,
 				7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */,
 				7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */,
+				7D10CD8218D63C1900AD43E3 /* WMTelecom+CoreText.h */,
+				7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */,
 			);
 			path = CoreText;
 			sourceTree = "<group>";
@@ -2526,6 +2547,7 @@
 				7D39DAF718B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib in Resources */,
 				7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
+				7D10CD7C18D63B1600AD43E3 /* WMTelecomListViewController.xib in Resources */,
 				7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */,
 				7DDBEDD818BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib in Resources */,
 				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
@@ -2573,6 +2595,7 @@
 				7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */,
 				7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */,
 				7D39DB0E18B7FA080054DDC3 /* WMSelectWoundTypeViewController.xib in Resources */,
+				7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */,
 				5F67D1F218AC3BE000460C37 /* CarePlan.plist in Resources */,
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
 				5F67D1FB18AC3BE000460C37 /* PsychoSocialDefinitions.plist in Resources */,
@@ -2782,11 +2805,13 @@
 				7D39DADA18B7CEF50054DDC3 /* WMNavigationPatientPhotoButton.m in Sources */,
 				7DB206ED18A839240004DC32 /* _WMPatient.m in Sources */,
 				7DD8372B18C78A390028C2D3 /* MagicalImportFunctions.m in Sources */,
+				7D10CD8418D63C1900AD43E3 /* WMTelecom+CoreText.m in Sources */,
 				7DD8373018C78A390028C2D3 /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				5F67D22318AD8DE200460C37 /* _WMNavigationNode.m in Sources */,
 				7DF4E97118C29A07000A3F5B /* WMCarePlanInterventionEvent.m in Sources */,
 				7DF4E93218C22F27000A3F5B /* WMSkinAssessmentGroup.m in Sources */,
 				7DD8376418C7A5080028C2D3 /* UIImageView+AFNetworking.m in Sources */,
+				7D10CD7B18D63B1600AD43E3 /* WMTelecomListViewController.m in Sources */,
 				7DD8372D18C78A390028C2D3 /* NSEntityDescription+MagicalDataImport.m in Sources */,
 				7DD8375E18C7A5080028C2D3 /* AFImageRequestOperation.m in Sources */,
 				7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */,
@@ -2887,6 +2912,7 @@
 				7DDBEDCC18BC0DED00FEF3FA /* WMWoundMeasurementGroup.m in Sources */,
 				7DF4E95418C299DC000A3F5B /* _WMDeviceInterventionEvent.m in Sources */,
 				7DDBEDB818BC0DD300FEF3FA /* _WMWoundOdor.m in Sources */,
+				7D10CD8018D63B3000AD43E3 /* WMTelecomEditorViewController.m in Sources */,
 				7DF4E8EF18C22EEC000A3F5B /* _WMSkinAssessmentCategory.m in Sources */,
 				7DD8375F18C7A5080028C2D3 /* AFJSONRequestOperation.m in Sources */,
 				7DF4E99E18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m in Sources */,

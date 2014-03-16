@@ -164,7 +164,8 @@ static const NSInteger WMMaxQueueConcurrency = 24;
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
       completionHandler:(FFHttpMethodCompletion)completionHandler
 {
-    NSString *queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=1&depthRef=1", collection, self.lastRefreshTimeMap[collection], query];
+    NSString *queryString = nil;
+    [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=1&depthRef=1", collection, self.lastRefreshTimeMap[collection], query];
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         if (response.error) {
             [WMUtilities logError:response.error];
@@ -237,14 +238,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 }
 
 // create participant, with reference objects person and team
-- (void)createParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)createParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 {
+    __block NSError *localError = nil;
     NSString *participantFFURL = participant.ffUrl;
     NSBlockOperation *participantOperation = nil;
     WMOperationCallback participantBlock = ^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        WMParticipant *participant = (WMParticipant *)object;
-        if (participant.team) {
-            [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:participant.team.ffUrl grabBagName:@"participants"];
+        if (error) {
+            localError = error;
         }
     };
     if (participantFFURL) {
@@ -253,26 +254,11 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         participantOperation = [self createOperation:participant collection:[WMParticipant entityName] ff:ff completionHandler:participantBlock];
     }
     [_operationCache addObject:participantOperation];
-    
-    WMTeam *team = participant.team;
-    if (nil != team) {
-        NSBlockOperation *teamOperation = nil;
-        if (team.ffUrl) {
-            teamOperation = [self updateOperation:team ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                // nothing
-            }];
-        } else {
-            teamOperation = [self createOperation:team collection:[WMTeam entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                // nothing
-            }];
-        }
-        [participantOperation addDependency:teamOperation];
-        [_operationCache addObject:teamOperation];
-    }
     WMPerson *person = participant.person;
     WMOperationCallback personBlock = ^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
         if (error) {
             [WMUtilities logError:error];
+            localError = error;
         } else {
             WMPerson *person = (WMPerson *)object;
             for (WMAddress *address in person.addresses) {
@@ -288,18 +274,23 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [_operationCache addObject:personOperation];
     for (WMAddress *address in person.addresses) {
         NSBlockOperation *addressOperation = [self createOperation:address collection:[WMAddress entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            // nothing
+            if (error) {
+                localError = error;
+            }
         }];
         [personOperation addDependency:addressOperation];
         [_operationCache addObject:addressOperation];
     }
     for (WMTelecom *telecom in person.telecoms) {
         NSBlockOperation *telecomOperation = [self createOperation:telecom collection:[WMTelecom entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            // nothing
+            if (error) {
+                localError = error;
+            }
         }];
         [personOperation addDependency:telecomOperation];
         [_operationCache addObject:telecomOperation];
     }
+    completionHandler(localError);
 }
 
 - (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler

@@ -383,7 +383,7 @@
 
 - (NSArray *)fetchedResultsControllerSortDescriptors
 {
-    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"lastmoddate" ascending:NO]];
+    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:NO]];
 }
 
 @end

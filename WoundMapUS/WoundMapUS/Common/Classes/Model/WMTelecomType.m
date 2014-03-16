@@ -10,6 +10,13 @@
 
 @implementation WMTelecomType
 
-// Custom logic goes here.
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
+{
+    NSParameterAssert([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0);
+    WMTelecomType *telecomType = [WMTelecomType MR_createInContext:managedObjectContext];
+    telecomType.sortRankValue = 0;
+    telecomType.title = @"email";
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+}
 
 @end
