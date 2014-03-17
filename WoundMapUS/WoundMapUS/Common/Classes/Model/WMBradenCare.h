@@ -2,10 +2,7 @@
 
 @interface WMBradenCare : _WMBradenCare {}
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store;
-
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                    sortRank:(NSNumber *)sortRank

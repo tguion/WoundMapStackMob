@@ -1,7 +1,6 @@
 #import "WMSkinAssessment.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMSkinAssessment ()
 
@@ -12,38 +11,14 @@
 
 @implementation WMSkinAssessment
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMSkinAssessment *skinInspection = [[WMSkinAssessment alloc] initWithEntity:[NSEntityDescription entityForName:@"WMSkinAssessment" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:skinInspection toPersistentStore:store];
-	}
-    [skinInspection setValue:[skinInspection assignObjectId] forKey:[skinInspection primaryKeyField]];
-	return skinInspection;
-}
-
 + (WMSkinAssessment *)skinInspectionForTitle:(NSString *)title
                                     category:(WMSkinAssessmentCategory *)category
                                       create:(BOOL)create
                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                             persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessment" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND category == %@", title, category]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMSkinAssessment *skinInspection = [array lastObject];
+    WMSkinAssessment *skinInspection = [WMSkinAssessment MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND category == %@", title, category] inContext:managedObjectContext];
     if (create && nil == skinInspection) {
-        skinInspection = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        skinInspection = [WMSkinAssessment MR_createInContext:managedObjectContext];
         skinInspection.title = title;
     }
     return skinInspection;
@@ -52,14 +27,12 @@
 + (WMSkinAssessment *)updateSkinAssessmentFromDictionary:(NSDictionary *)dictionary
                                                 category:(WMSkinAssessmentCategory *)category
                                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                         persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMSkinAssessment *skinInspection = [self skinInspectionForTitle:title
                                                            category:category
                                                              create:YES
-                                               managedObjectContext:managedObjectContext
-                                                    persistentStore:store];
+                                               managedObjectContext:managedObjectContext];
     skinInspection.definition = [dictionary objectForKey:@"definition"];
     skinInspection.loincCode = [dictionary objectForKey:@"LOINC Code"];
     skinInspection.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];

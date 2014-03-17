@@ -7,14 +7,12 @@
 
 + (WMSkinAssessment *)updateSkinAssessmentFromDictionary:(NSDictionary *)dictionary
                                                 category:(WMSkinAssessmentCategory *)category
-                                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                         persistentStore:(NSPersistentStore *)store;
+                                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMSkinAssessment *)skinInspectionForTitle:(NSString *)title
                                     category:(WMSkinAssessmentCategory *)category
                                       create:(BOOL)create
-                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                             persistentStore:(NSPersistentStore *)store;
+                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSPredicate *)predicateForWoundType:(WMWoundType *)woundType;
 

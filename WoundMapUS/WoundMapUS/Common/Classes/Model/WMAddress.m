@@ -9,16 +9,6 @@
 
 @implementation WMAddress
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
-{
-    WMAddress *address = [[WMAddress alloc] initWithEntity:[NSEntityDescription entityForName:@"WMAddress" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:address toPersistentStore:store];
-	}
-	return address;
-}
-
 - (NSString *)stringValue
 {
     NSMutableArray *array0 = [NSMutableArray arrayWithCapacity:4];

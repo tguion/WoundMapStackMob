@@ -10,16 +10,6 @@
 
 @implementation WMBradenCare
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMBradenCare *bradenCare = [[WMBradenCare alloc] initWithEntity:[NSEntityDescription entityForName:@"WMBradenCare" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:bradenCare toPersistentStore:store];
-	}
-	return bradenCare;
-}
-
 + (WMBradenCare *)bradenCareForSectionTitle:(NSString *)sectionTitle
                                    sortRank:(NSNumber *)sortRank
                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -36,7 +26,7 @@
 
 #pragma mark - Seed
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"BradenCare" withExtension:@"plist"];
 	if (nil == fileURL) {
@@ -57,7 +47,7 @@
             NSNumber *sortRank = [dictionary objectForKey:@"sortRank"];
             WMBradenCare *bradenCare = [WMBradenCare bradenCareForSectionTitle:sectionTitle sortRank:sortRank managedObjectContext:managedObjectContext];
             if (nil == bradenCare) {
-                bradenCare = [WMBradenCare instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+                bradenCare = [WMBradenCare MR_createInContext:managedObjectContext];
             }
             [bradenCare setValuesForKeysWithDictionary:dictionary];
         }

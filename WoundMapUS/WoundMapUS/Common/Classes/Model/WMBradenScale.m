@@ -16,21 +16,10 @@ NSInteger const kBradenSectionCount = 6;
 
 @implementation WMBradenScale
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMBradenScale *bradenScale = [[WMBradenScale alloc] initWithEntity:[NSEntityDescription entityForName:@"WMBradenScale" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:bradenScale toPersistentStore:store];
-	}
-	[bradenScale populateSections];
-	return bradenScale;
-}
-
 + (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    WMBradenScale *bradenScale = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    WMBradenScale *bradenScale = [WMBradenScale MR_createInContext:managedObjectContext];
     bradenScale.patient = patient;
     return bradenScale;
 }
@@ -43,7 +32,7 @@ NSInteger const kBradenSectionCount = 6;
                                                                 ascending:NO
                                                                 inContext:managedObjectContext];
     if (create && nil == bradenScale) {
-        bradenScale = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        bradenScale = [WMBradenScale MR_createInContext:managedObjectContext];
     }
 	return bradenScale;
 }
@@ -201,8 +190,7 @@ NSInteger const kBradenSectionCount = 6;
             if ([object isKindOfClass:[NSArray class]]) {
                 for (NSDictionary *d in object) {
                     WMBradenCell *bradenCell = [WMBradenCell instanceWithBradenSection:bradenSection
-                                                                  managedObjectContext:[self managedObjectContext]
-                                                                       persistentStore:nil];
+                                                                  managedObjectContext:[self managedObjectContext]];
                     bradenCell.title = [d objectForKey:@"title"];
                     bradenCell.primaryDescription = [d objectForKey:@"primaryDescription"];
                     id obj = [d objectForKey:@"secondaryDescription"];

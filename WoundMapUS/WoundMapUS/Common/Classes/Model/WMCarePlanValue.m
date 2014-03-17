@@ -42,14 +42,4 @@
     return [self.categoryPathToValue componentsJoinedByString:@","];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMCarePlanValue *carePlanValue = [[WMCarePlanValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMCarePlanValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:carePlanValue toPersistentStore:store];
-	}
-	return carePlanValue;
-}
-
 @end

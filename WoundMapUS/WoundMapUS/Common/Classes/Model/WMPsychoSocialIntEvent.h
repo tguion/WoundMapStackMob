@@ -12,6 +12,5 @@
                                                                          type:(WMInterventionEventType *)eventType
                                                                   participant:(WMParticipant *)participant
                                                                        create:(BOOL)create
-                                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                              persistentStore:(NSPersistentStore *)store;
+                                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 @end

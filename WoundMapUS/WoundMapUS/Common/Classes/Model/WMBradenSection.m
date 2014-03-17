@@ -14,14 +14,10 @@
 
 + (id)instanceWithBradenScale:(WMBradenScale *)bradenScale
 		 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-			  persistentStore:(NSPersistentStore *)store
 {
-    NSAssert([[bradenScale managedObjectContext] isEqual:managedObjectContext], @"Wrong managedObjectContext");
-    WMBradenSection *bradenSection = [[WMBradenSection alloc] initWithEntity:[NSEntityDescription entityForName:@"WMBradenSection" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+    NSParameterAssert([bradenScale managedObjectContext] == managedObjectContext);
+    WMBradenSection *bradenSection = [WMBradenSection MR_createInContext:managedObjectContext];
 	bradenSection.bradenScale = bradenScale;
-	if (store) {
-		[managedObjectContext assignObject:bradenSection toPersistentStore:store];
-	}
 	return bradenSection;
 }
 

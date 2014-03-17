@@ -10,23 +10,13 @@
 
 @implementation WMAmountQualifier
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMAmountQualifier *amountQualifier = [[WMAmountQualifier alloc] initWithEntity:[NSEntityDescription entityForName:@"WMAmountQualifier" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:amountQualifier toPersistentStore:store];
-	}
-	return amountQualifier;
-}
-
 + (WMAmountQualifier *)amountQualifierForTitle:(NSString *)title
                                         create:(BOOL)create
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     WMAmountQualifier *amountQualifier = [WMAmountQualifier MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == amountQualifier) {
-        amountQualifier = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        amountQualifier = [WMAmountQualifier MR_createInContext:managedObjectContext];
         amountQualifier.title = title;
     }
     return amountQualifier;
@@ -34,7 +24,6 @@
 
 + (WMAmountQualifier *)updateAmountQualifierFromDictionary:(NSDictionary *)dictionary
                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                           persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMAmountQualifier *amountQualifier = [self amountQualifierForTitle:title
@@ -47,7 +36,7 @@
     return amountQualifier;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"AmountQualifier" withExtension:@"plist"];
@@ -64,7 +53,7 @@
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateAmountQualifierFromDictionary:dictionary managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateAmountQualifierFromDictionary:dictionary managedObjectContext:managedObjectContext];
         }
     }
 }

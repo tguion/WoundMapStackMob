@@ -2,15 +2,13 @@
 
 @interface WMSkinAssessmentCategory : _WMSkinAssessmentCategory {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMSkinAssessmentCategory *)skinAssessmentCategoryForTitle:(NSString *)title
                                                       create:(BOOL)create
-                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                             persistentStore:(NSPersistentStore *)store;
+                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMSkinAssessmentCategory *)skinAssessmentCategoryForSortRank:(id)sortRank
-                                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                persistentStore:(NSPersistentStore *)store;
+                                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

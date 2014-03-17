@@ -2,8 +2,8 @@
 #import "WMPatient.h"
 #import "WMPsychoSocialItem.h"
 #import "WMPsychoSocialValue.h"
+#import "WMPsychoSocialIntEvent.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMPsychoSocialGroup ()
 
@@ -13,17 +13,6 @@
 
 
 @implementation WMPsychoSocialGroup
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMPsychoSocialGroup *psychoSocialGroup = [[WMPsychoSocialGroup alloc] initWithEntity:[NSEntityDescription entityForName:@"WMPsychoSocialGroup" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:psychoSocialGroup toPersistentStore:store];
-	}
-    [psychoSocialGroup setValue:[psychoSocialGroup assignObjectId] forKey:[psychoSocialGroup primaryKeyField]];
-	return psychoSocialGroup;
-}
 
 + (BOOL)psychoSocialGroupsHaveHistory:(WMPatient *)patient
 {
@@ -41,51 +30,25 @@
 
 + (NSSet *)psychoSocialValuesForPsychoSocialGroup:(WMPsychoSocialGroup *)psychoSocialGroup
 {
-    NSManagedObjectContext *managedObjectContext = [psychoSocialGroup managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@", psychoSocialGroup]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [NSSet setWithArray:array];
+    return [NSSet setWithArray:[WMPsychoSocialValue MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"group == %@", psychoSocialGroup] inContext:[psychoSocialGroup managedObjectContext]]];
 }
 
 + (WMPsychoSocialGroup *)activePsychoSocialGroup:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMPsychoSocialGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient]
+                                                 sortedBy:@"updatedAt"
+                                                ascending:NO
+                                                inContext:[patient managedObjectContext]];
 }
 
 + (WMPsychoSocialGroup *)mostRecentOrActivePsychosocialGroup:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMPsychoSocialGroup *psychoSocialGroup = [self activePsychoSocialGroup:patient];
     if (nil == psychoSocialGroup) {
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialGroup" inManagedObjectContext:managedObjectContext]];
-        [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-        [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-        NSError *error = nil;
-        NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-        // else
-        psychoSocialGroup = [array lastObject];
+        psychoSocialGroup = [WMPsychoSocialGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                                                  sortedBy:@"updatedAt"
+                                                                 ascending:NO
+                                                                 inContext:[patient managedObjectContext]];
     }
     return psychoSocialGroup;
 }
@@ -93,17 +56,7 @@
 + (NSInteger)closePsychoSocialGroupsCreatedBefore:(NSDate *)date
                                           patient:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return 0;
-    }
-	// else
+    NSArray *array = [WMPsychoSocialGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date] inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
@@ -120,95 +73,57 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
+    NSDictionary *date = (NSDictionary *)[WMPsychoSocialGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    if ([date count] == 0)
         return nil;
     // else
-    NSDictionary *dates = [results firstObject];
-    return dates[@"updatedAt"];
+    return date[@"updatedAt"];
 }
 
 + (NSArray *)sortedPsychoSocialGroups:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMPsychoSocialGroup MR_findAllSortedBy:@"createdAt" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
 + (NSArray *)sortedPsychoSocialValuesForGroup:(WMPsychoSocialGroup *)group parentPsychoSocialItem:(WMPsychoSocialItem *)parentItem
 {
     NSManagedObjectContext *managedObjectContext = [group managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem.parentItem == %@", group, parentItem]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"psychoSocialItem.sortRank" ascending:YES]]];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
+    if (parentItem) {
+        NSParameterAssert([parentItem managedObjectContext] == managedObjectContext);
     }
-    // else
-    return results;
+    return [WMPsychoSocialValue MR_findAllSortedBy:@"psychoSocialItem.sortRank" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem.parentItem == %@", group, parentItem] inContext:managedObjectContext];
 }
 
 + (NSArray *)sortedPsychoSocialValuesForGroup:(WMPsychoSocialGroup *)group psychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
 {
     NSManagedObjectContext *managedObjectContext = [group managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem == %@", group, psychoSocialItem]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"psychoSocialItem.sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
+    if (psychoSocialItem) {
+        NSParameterAssert([psychoSocialItem managedObjectContext] == managedObjectContext);
     }
-    // else
-    return array;
+    return [WMPsychoSocialValue MR_findAllSortedBy:@"psychoSocialItem.sortRank" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem == %@", group, psychoSocialItem] inContext:managedObjectContext];
 }
 
 + (BOOL)hasPsychoSocialValueForChildrenOfParentItem:(WMPsychoSocialGroup *)psychoSocialGroup
                              parentPsychoSocialItem:(WMPsychoSocialItem *)parentPsychoSocialItem
 {
     NSManagedObjectContext *managedObjectContext = [psychoSocialGroup managedObjectContext];
-    NSAssert([managedObjectContext isEqual:[parentPsychoSocialItem managedObjectContext]], @"Invalid mocs");
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND (psychoSocialItem.parentItem == %@ OR psychoSocialItem.parentItem.parentItem == %@)", psychoSocialGroup, parentPsychoSocialItem, parentPsychoSocialItem];
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSInteger count = [managedObjectContext countForFetchRequestAndWait:request options:(SMRequestOptions *)options error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
+    if (parentPsychoSocialItem) {
+        NSParameterAssert([parentPsychoSocialItem managedObjectContext] == managedObjectContext);
     }
-    // else
-    return count;
+    return [WMPsychoSocialValue MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND (psychoSocialItem.parentItem == %@ OR psychoSocialItem.parentItem.parentItem == %@)", psychoSocialGroup, parentPsychoSocialItem, parentPsychoSocialItem]
+                                                      inContext:managedObjectContext] > 0;
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+}
+
+- (BOOL)hasInterventionEvents
+{
+    return [self.interventionEvents count] > 0;
 }
 
 - (WMPsychoSocialValue *)psychoSocialValueForPsychoSocialGroup:(WMPsychoSocialGroup *)psychoSocialGroup
@@ -217,18 +132,16 @@
                                                          value:(NSString *)value
 {
     NSManagedObjectContext *managedObjectContext = [psychoSocialGroup managedObjectContext];
-    NSAssert([managedObjectContext isEqual:[psychoSocialItem managedObjectContext]], @"Invalid mocs");
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext]];
+    if (psychoSocialItem) {
+        NSParameterAssert([psychoSocialItem managedObjectContext] == managedObjectContext);
+    }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem == %@", psychoSocialGroup, psychoSocialItem];
     if (nil != value) {
         predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];
     }
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    WMPsychoSocialValue *psychoSocialValue = [[managedObjectContext executeFetchRequestAndWait:request error:&error] lastObject];
+    WMPsychoSocialValue *psychoSocialValue = [WMPsychoSocialValue MR_findFirstWithPredicate:predicate inContext:managedObjectContext];
     if (create && nil == psychoSocialValue) {
-        psychoSocialValue = [WMPsychoSocialValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        psychoSocialValue = [WMPsychoSocialValue MR_createInContext:managedObjectContext];
         psychoSocialValue.group = psychoSocialGroup;
         psychoSocialValue.psychoSocialItem = psychoSocialItem;
         psychoSocialValue.value = value;
@@ -240,21 +153,7 @@
 
 - (WMPsychoSocialValue *)psychoSocialValueForParentItem:(WMPsychoSocialItem *)parentItem
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem.parentItem == %@", self, parentItem]];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [results lastObject];
+    return [WMPsychoSocialValue MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem.parentItem == %@", self, parentItem] inContext:[self managedObjectContext]];
 }
 
 - (void)removePsychoSocialValuesForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
@@ -313,6 +212,92 @@
         }
     }
     return score;
+}
+
+#pragma mark - Events
+
+- (WMPsychoSocialIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                      path:(NSString *)path
+                                                     title:(NSString *)title
+                                                 valueFrom:(id)valueFrom
+                                                   valueTo:(id)valueTo
+                                                      type:(WMInterventionEventType *)type
+                                               participant:(WMParticipant *)participant
+                                                    create:(BOOL)create
+                                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    WMPsychoSocialIntEvent *event = [WMPsychoSocialIntEvent psychoSocialInterventionEventForPsychoSocialGroup:self
+                                                                                                   changeType:changeType
+                                                                                                         path:path
+                                                                                                        title:title
+                                                                                                    valueFrom:valueFrom
+                                                                                                      valueTo:valueTo
+                                                                                                         type:type
+                                                                                                  participant:participant
+                                                                                                       create:create
+                                                                                         managedObjectContext:managedObjectContext];
+    return event;
+}
+
+- (void)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return;
+    }
+    // else
+    NSMutableSet *addedValues = [self.values mutableCopy];
+    [addedValues minusSet:committedValues];
+    NSMutableSet *deletedValues = [committedValues mutableCopy];
+    [deletedValues minusSet:self.values];
+    for (WMPsychoSocialValue *psychoSocialValue in addedValues) {
+        NSString *title = psychoSocialValue.psychoSocialItem.title;
+        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                        path:psychoSocialValue.pathToValue
+                                       title:title
+                                   valueFrom:nil
+                                     valueTo:psychoSocialValue.value
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created add event %@", title);
+    }
+    for (WMPsychoSocialValue *psychoSocialValue in deletedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                        path:psychoSocialValue.pathToValue
+                                       title:psychoSocialValue.title
+                                   valueFrom:nil
+                                     valueTo:nil
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created delete event %@", psychoSocialValue.title);
+    }
+    for (WMPsychoSocialValue *psychoSocialValue in [self.managedObjectContext updatedObjects]) {
+        if ([psychoSocialValue isKindOfClass:[WMPsychoSocialValue class]]) {
+            committedValuesMap = [psychoSocialValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSString *oldValue = [committedValuesMap objectForKey:@"value"];
+            NSString *newValue = psychoSocialValue.value;
+            if ([oldValue isEqualToString:newValue]) {
+                continue;
+            }
+            // else it changed
+            NSString *title = psychoSocialValue.psychoSocialItem.title;
+            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                            path:psychoSocialValue.pathToValue
+                                           title:title
+                                       valueFrom:oldValue
+                                         valueTo:newValue
+                                            type:nil
+                                     participant:participant
+                                          create:YES
+                            managedObjectContext:self.managedObjectContext];
+            DLog(@"Created event %@->%@", oldValue, newValue);
+        }
+    }
 }
 
 #pragma mark - AssessmentGroup

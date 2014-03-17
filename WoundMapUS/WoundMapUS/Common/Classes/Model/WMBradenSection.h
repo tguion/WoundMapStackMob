@@ -5,8 +5,7 @@
 @interface WMBradenSection : _WMBradenSection {}
 
 + (id)instanceWithBradenScale:(WMBradenScale *)bradenScale
-		 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-			  persistentStore:(NSPersistentStore *)store;
+		 managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMBradenSection *)bradenSectionBradenScale:(WMBradenScale *)bradenScale sortRank:(NSInteger)sortRank;
 

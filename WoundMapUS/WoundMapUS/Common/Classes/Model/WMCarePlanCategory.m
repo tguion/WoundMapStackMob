@@ -82,16 +82,6 @@ typedef enum {
     return [self.title stringByReplacingOccurrencesOfString:@"_" withString:value];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMCarePlanCategory *carePlanCategory = [[WMCarePlanCategory alloc] initWithEntity:[NSEntityDescription entityForName:@"WMCarePlanCategory" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:carePlanCategory toPersistentStore:store];
-	}
-	return carePlanCategory;
-}
-
 + (NSArray *)sortedRootCarePlanCategories:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMCarePlanCategory MR_findAllSortedBy:@"sortRank"
@@ -110,7 +100,7 @@ typedef enum {
     }
     WMCarePlanCategory *carePlanCategory = [WMCarePlanCategory MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parent == %@", title, parent] inContext:managedObjectContext];
     if (create && nil == carePlanCategory) {
-        carePlanCategory = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        carePlanCategory = [WMCarePlanCategory MR_createInContext:managedObjectContext];
         carePlanCategory.title = title;
         carePlanCategory.parent = parent;
     }

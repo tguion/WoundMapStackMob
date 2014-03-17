@@ -1,7 +1,8 @@
 #import "_WMCarePlanGroup.h"
 #import "WoundCareProtocols.h"
+#import "WMInterventionEventType.h"
 
-@class WMPatient, WMCarePlanValue, WMCarePlanCategory;
+@class WMPatient, WMCarePlanValue, WMCarePlanCategory, WMCarePlanInterventionEvent, WMParticipant, WMInterventionEventType;
 
 @interface WMCarePlanGroup : _WMCarePlanGroup <AssessmentGroup> {}
 
@@ -30,6 +31,16 @@
 - (BOOL)hasValueForCategoryOrDescendants:(WMCarePlanCategory *)carePlanCategory;
 - (void)removeCarePlanValuesForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory;
 
+- (WMCarePlanInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                           path:(NSString *)path
+                                                          title:(NSString *)title
+                                                      valueFrom:(id)valueFrom
+                                                        valueTo:(id)valueTo
+                                                           type:(WMInterventionEventType *)type
+                                                    participant:(WMParticipant *)participant
+                                                         create:(BOOL)create
+                                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (void)createEditEventsForParticipant:(WMParticipant *)participant;
 - (void)incrementContinueCount;
 
 - (NSInteger)valuesCountForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory;

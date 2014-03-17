@@ -1,14 +1,12 @@
 #import "_WMPsychoSocialGroup.h"
 #import "WoundCareProtocols.h"
+#import "WMInterventionEventType.h"
 
-@class WMPatient, WMPsychoSocialItem, WMPsychoSocialValue;
+@class WMPatient, WMPsychoSocialItem, WMPsychoSocialValue, WMPsychoSocialIntEvent, WMParticipant;
 
 @interface WMPsychoSocialGroup : _WMPsychoSocialGroup <AssessmentGroup> {}
 
 @property (readonly, nonatomic) BOOL hasInterventionEvents;
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store;
 
 + (BOOL)psychoSocialGroupsHaveHistory:(WMPatient *)patient;
 + (NSInteger)psychoSocialGroupsCount:(WMPatient *)patient;
@@ -39,5 +37,16 @@
 - (NSInteger)valuesCountForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem;
 - (NSInteger)updatedScoreForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem;
 - (NSInteger)subitemValueCountForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem;
+
+- (WMPsychoSocialIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                      path:(NSString *)path
+                                                     title:(NSString *)title
+                                                 valueFrom:(id)valueFrom
+                                                   valueTo:(id)valueTo
+                                                      type:(WMInterventionEventType *)type
+                                               participant:(WMParticipant *)participant
+                                                    create:(BOOL)create
+                                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (void)createEditEventsForParticipant:(WMParticipant *)participant;
 
 @end

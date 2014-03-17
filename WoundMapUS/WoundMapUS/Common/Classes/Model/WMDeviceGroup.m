@@ -2,6 +2,7 @@
 #import "WMPatient.h"
 #import "WMDeviceValue.h"
 #import "WMDevice.h"
+#import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
 @interface WMDeviceGroup ()
@@ -29,16 +30,6 @@
 - (BOOL)isClosed
 {
     return [self.closedFlag boolValue];
-}
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMDeviceGroup *deviceGroup = [[WMDeviceGroup alloc] initWithEntity:[NSEntityDescription entityForName:@"WMDeviceGroup" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:deviceGroup toPersistentStore:store];
-	}
-	return deviceGroup;
 }
 
 - (BOOL)removeExcludesOtherValues
@@ -112,6 +103,8 @@
     [super awakeFromInsert];
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+    // initial status
+    self.status = [WMInterventionStatus initialInterventionStatus:[self managedObjectContext]];
 }
 
 - (WMDeviceValue *)deviceValueForDevice:(WMDevice *)device
@@ -122,13 +115,30 @@
     NSParameterAssert(managedObjectContext == [device managedObjectContext]);
     WMDeviceValue *deviceValue = [WMDeviceValue MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND device == %@", self, device] inContext:managedObjectContext];
     if (create && nil == deviceValue) {
-        deviceValue = [WMDeviceValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        deviceValue = [WMDeviceValue MR_createInContext:managedObjectContext];
         deviceValue.device = device;
         deviceValue.value = value;
         deviceValue.title = device.title;
         [self addValuesObject:deviceValue];
     }
     return deviceValue;
+}
+
+- (WMDeviceInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                        title:(NSString *)title
+                                                    valueFrom:(id)valueFrom
+                                                      valueTo:(id)valueTo
+                                                         type:(WMInterventionEventType *)type
+                                                  participant:(WMParticipant *)participant
+                                                       create:(BOOL)create
+                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    
+}
+
+- (void)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    
 }
 
 - (void)incrementContinueCount

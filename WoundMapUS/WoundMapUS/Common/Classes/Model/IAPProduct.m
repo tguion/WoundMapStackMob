@@ -15,17 +15,7 @@ typedef enum {
 
 @implementation IAPProduct
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    IAPProduct *iapProduct = [[IAPProduct alloc] initWithEntity:[NSEntityDescription entityForName:@"IAPProduct" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:iapProduct toPersistentStore:store];
-	}
-	return iapProduct;
-}
-
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"IAPProducts" withExtension:@"plist"];
@@ -47,7 +37,7 @@ typedef enum {
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateProductFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateProductFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext];
         }
     }
 }
@@ -55,7 +45,6 @@ typedef enum {
 + (void)updateProductFromDictionary:(NSDictionary *)dictionary
                              parent:(IAPProduct *)parent
                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                    persistentStore:(NSPersistentStore *)store
 {
     if (0 == [dictionary count]) {
         return;
@@ -64,7 +53,7 @@ typedef enum {
     IAPProduct *iapProduct = nil;
     id object = [dictionary objectForKey:@"identifier"];
     if ([object isKindOfClass:[NSString class]]) {
-        iapProduct = [self productForIdentifier:object create:YES managedObjectContext:managedObjectContext persistentStore:store];
+        iapProduct = [self productForIdentifier:object create:YES managedObjectContext:managedObjectContext];
     }
     iapProduct.parent = parent;
     object = [dictionary objectForKey:@"title"];
@@ -85,14 +74,13 @@ typedef enum {
     object = [dictionary objectForKey:@"woundTypeCode"];
     if ([object isKindOfClass:[NSNumber class]]) {
         WMWoundType *woundType = [[WMWoundType woundTypesForWoundTypeCode:[object integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store] lastObject];
+                                                     managedObjectContext:managedObjectContext] lastObject];
         iapProduct.woundType = woundType;
     }
     object = [dictionary objectForKey:@"options"];
     if ([object isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in object) {
-            [self updateProductFromDictionary:d parent:iapProduct managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateProductFromDictionary:d parent:iapProduct managedObjectContext:managedObjectContext];
         }
     }
 }
@@ -105,11 +93,10 @@ typedef enum {
 + (IAPProduct *)productForIdentifier:(NSString *)identifier
                               create:(BOOL)create
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                     persistentStore:(NSPersistentStore *)store
 {
     IAPProduct *iapProduct = [IAPProduct MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"identifier == %@", identifier] inContext:managedObjectContext];
     if (create && nil == iapProduct) {
-        iapProduct = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        iapProduct = [IAPProduct MR_createInContext:managedObjectContext];
         iapProduct.identifier = identifier;
     }
     return iapProduct;

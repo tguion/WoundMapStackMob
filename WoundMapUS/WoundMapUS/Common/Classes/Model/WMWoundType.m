@@ -48,32 +48,12 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     return [titles componentsJoinedByString:@","];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
++ (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext
 {
-    WMWoundType *woundType = [[WMWoundType alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundType toPersistentStore:store];
-	}
-	return woundType;
+    return [WMWoundType MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
-+ (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
-{
-    NSError *error = nil;
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
-    NSInteger count = [managedObjectContext countForFetchRequest:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-    return count;
-}
-
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundType" withExtension:@"plist"];
@@ -82,39 +62,32 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 		return;
 	}
     // else see if seeded
-    NSError *error = nil;
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
-    NSInteger count = [self woundTypeCount:managedObjectContext persistentStore:store];
+    NSInteger count = [self woundTypeCount:managedObjectContext];
     if (count > 0 && count != NSNotFound) {
         return;
     }
     // else
     @autoreleasepool {
         NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        NSError *error = nil;
         id propertyList = [NSPropertyListSerialization propertyListWithData:data
                                                                     options:NSPropertyListImmutable
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateWoundTypeFromDictionary:dictionary managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateWoundTypeFromDictionary:dictionary managedObjectContext:managedObjectContext];
         }
     }
 }
 
 + (WMWoundType *)updateWoundTypeFromDictionary:(NSDictionary *)dictionary
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundType *woundType = [WMWoundType woundTypeForTitle:title
                                                      create:YES
-                                       managedObjectContext:managedObjectContext
-                                            persistentStore:store];
+                                       managedObjectContext:managedObjectContext];
     woundType.definition = [dictionary objectForKey:@"definition"];
     woundType.label = [dictionary objectForKey:@"label"];
     woundType.options = [dictionary objectForKey:@"options"];
@@ -129,7 +102,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     id children = [dictionary objectForKey:@"children"];
     if ([children isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in children) {
-            [woundType addChildrenObject:[self updateWoundTypeFromDictionary:d managedObjectContext:managedObjectContext persistentStore:store]];
+            [woundType addChildrenObject:[self updateWoundTypeFromDictionary:d managedObjectContext:managedObjectContext]];
         }
     }
     return woundType;
@@ -138,17 +111,10 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 + (WMWoundType *)woundTypeForTitle:(NSString *)title
                             create:(BOOL)create
               managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                   persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    WMWoundType *woundType = [[WMWoundType MR_executeFetchRequest:request inContext:managedObjectContext] lastObject];
+    WMWoundType *woundType = [WMWoundType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == woundType) {
-        woundType = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        woundType = [WMWoundType MR_createInContext:managedObjectContext];
         woundType.title = title;
     }
     return woundType;
@@ -156,27 +122,13 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 
 + (NSArray *)woundTypesForWoundTypeCode:(NSInteger)woundTypeCodeValue
                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                        persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"woundTypeCode == %d", woundTypeCodeValue]];
-    return [WMWoundType MR_executeFetchRequest:request inContext:managedObjectContext];
+    return [WMWoundType MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"woundTypeCode == %d", woundTypeCodeValue] inContext:managedObjectContext];
 }
 
 + (WMWoundType *)otherWoundType:(NSManagedObjectContext *)managedObjectContext
-                persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundType" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundTypeTitle]];
-    return [[WMWoundType MR_executeFetchRequest:request inContext:managedObjectContext] lastObject];
+    return [WMWoundType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundTypeTitle] inContext:managedObjectContext];
 }
 
 #pragma mark - AssessmentGroup

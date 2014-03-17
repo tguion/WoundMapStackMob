@@ -5,8 +5,7 @@
 @interface WMBradenCell : _WMBradenCell {}
 
 + (id)instanceWithBradenSection:(WMBradenSection *)bradenSection
-		   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-				persistentStore:(NSPersistentStore *)store;
+		   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @property (readonly, nonatomic) BOOL isSelected;
 

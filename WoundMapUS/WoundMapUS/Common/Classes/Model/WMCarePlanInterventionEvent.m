@@ -12,16 +12,6 @@
 
 @implementation WMCarePlanInterventionEvent
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMCarePlanInterventionEvent *carePlanInterventionEvent = [[WMCarePlanInterventionEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMCarePlanInterventionEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:carePlanInterventionEvent toPersistentStore:store];
-	}
-	return carePlanInterventionEvent;
-}
-
 + (WMCarePlanInterventionEvent *)carePlanInterventionEventForCarePlanGroup:(WMCarePlanGroup *)carePlanGroup
                                                                 changeType:(InterventionEventChangeType)changeType
                                                                       path:(NSString *)path
@@ -43,7 +33,7 @@
                                                                                                                      carePlanGroup, changeType, path, title, valueFrom, valueTo, eventType, participant]
                                                                                                           inContext:managedObjectContext];
     if (create && nil == carePlanInterventionEvent) {
-        carePlanInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        carePlanInterventionEvent = [WMCarePlanInterventionEvent MR_createInContext:managedObjectContext];
         carePlanInterventionEvent.carePlanGroup = carePlanGroup;
         carePlanInterventionEvent.changeType = [NSNumber numberWithInt:changeType];
         carePlanInterventionEvent.path = path;

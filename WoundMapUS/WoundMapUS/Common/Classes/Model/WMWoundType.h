@@ -25,20 +25,17 @@ typedef enum {
 @property (readonly, nonatomic) BOOL childrenHaveSectionTitles;
 @property (readonly, nonatomic) NSString *titleForDisplay;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
-+ (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMWoundType *)woundTypeForTitle:(NSString *)title
                             create:(BOOL)create
-              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                   persistentStore:(NSPersistentStore *)store;
+              managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSArray *)woundTypesForWoundTypeCode:(NSInteger)woundTypeCodeValue
-                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                        persistentStore:(NSPersistentStore *)store;
+                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-+ (WMWoundType *)otherWoundType:(NSManagedObjectContext *)managedObjectContext
-                persistentStore:(NSPersistentStore *)store;
++ (WMWoundType *)otherWoundType:(NSManagedObjectContext *)managedObjectContext;
 
 @end

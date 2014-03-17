@@ -3,6 +3,7 @@
 #import "WMCarePlanGroup.h"
 #import "WMCarePlanCategory.h"
 #import "WMCarePlanValue.h"
+#import "WMCarePlanInterventionEvent.h"
 #import "WMUtilities.h"
 
 @interface WMCarePlanGroup ()
@@ -165,11 +166,6 @@
     }
 }
 
-- (void)incrementContinueCount
-{
-    self.continueCount = [NSNumber numberWithInt:([self.continueCount intValue] + 1)];
-}
-
 - (NSInteger)valuesCountForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
 {
     NSMutableSet *set = [[NSMutableSet alloc] initWithCapacity:32];
@@ -192,6 +188,97 @@
     for (WMCarePlanCategory *category in carePlanCategories) {
         [managedObjectContext refreshObject:category mergeChanges:category.hasChanges];
     }
+}
+
+#pragma mark - Events
+
+- (WMCarePlanInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                           path:(NSString *)path
+                                                          title:(NSString *)title
+                                                      valueFrom:(id)valueFrom
+                                                        valueTo:(id)valueTo
+                                                           type:(WMInterventionEventType *)type
+                                                    participant:(WMParticipant *)participant
+                                                         create:(BOOL)create
+                                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    WMCarePlanInterventionEvent *event = [WMCarePlanInterventionEvent carePlanInterventionEventForCarePlanGroup:self
+                                                                                                     changeType:changeType
+                                                                                                           path:path
+                                                                                                          title:title
+                                                                                                      valueFrom:valueFrom
+                                                                                                        valueTo:valueTo
+                                                                                                           type:type
+                                                                                                    participant:participant
+                                                                                                         create:create
+                                                                                           managedObjectContext:managedObjectContext];
+    return event;
+}
+
+- (void)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return;
+    }
+    // else
+    NSMutableSet *addedValues = [self.values mutableCopy];
+    [addedValues minusSet:committedValues];
+    NSMutableSet *deletedValues = [committedValues mutableCopy];
+    [deletedValues minusSet:self.values];
+    for (WMCarePlanValue *carePlanValue in addedValues) {
+        NSString *title = carePlanValue.category.title;
+        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                        path:carePlanValue.pathToValue
+                                       title:title
+                                   valueFrom:nil
+                                     valueTo:carePlanValue.value
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created add event %@", title);
+    }
+    for (WMCarePlanValue *carePlanValue in deletedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                        path:carePlanValue.pathToValue
+                                       title:carePlanValue.title
+                                   valueFrom:nil
+                                     valueTo:nil
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created delete event %@", carePlanValue.title);
+    }
+    for (WMCarePlanValue *carePlanValue in [self.managedObjectContext updatedObjects]) {
+        if ([carePlanValue isKindOfClass:[WMCarePlanValue class]]) {
+            committedValuesMap = [carePlanValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSString *oldValue = [committedValuesMap objectForKey:@"value"];
+            NSString *newValue = carePlanValue.value;
+            if ([oldValue isEqualToString:newValue]) {
+                continue;
+            }
+            // else it changed
+            NSString *title = carePlanValue.category.title;
+            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                            path:carePlanValue.pathToValue
+                                           title:title
+                                       valueFrom:oldValue
+                                         valueTo:newValue
+                                            type:nil
+                                     participant:participant
+                                          create:YES
+                            managedObjectContext:self.managedObjectContext];
+            DLog(@"Created event %@->%@", oldValue, newValue);
+        }
+    }
+}
+
+- (void)incrementContinueCount
+{
+    self.continueCount = @([self.continueCount intValue] + 1);
 }
 
 #pragma mark - AssessmentGroup
