@@ -486,7 +486,7 @@
         </attribute>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="participant" inverseEntity="WMPatientConsultant" syncable="YES"/>
+        <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="consultant" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="participant" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="participant" inverseEntity="WMPatient" syncable="YES"/>
@@ -546,7 +546,7 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <relationship name="participant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="acquiredConsults" inverseEntity="WMParticipant" syncable="YES"/>
+        <relationship name="consultant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="acquiredConsults" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="patientConsultants" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">

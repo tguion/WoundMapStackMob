@@ -13,7 +13,7 @@ const struct WMPatientConsultantAttributes WMPatientConsultantAttributes = {
 };
 
 const struct WMPatientConsultantRelationships WMPatientConsultantRelationships = {
-	.participant = @"participant",
+	.consultant = @"consultant",
 	.patient = @"patient",
 };
 
@@ -143,7 +143,7 @@ const struct WMPatientConsultantFetchedProperties WMPatientConsultantFetchedProp
 
 
 
-@dynamic participant;
+@dynamic consultant;
 
 	
 

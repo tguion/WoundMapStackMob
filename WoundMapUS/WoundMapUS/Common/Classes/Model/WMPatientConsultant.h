@@ -3,11 +3,9 @@
 @interface WMPatientConsultant : _WMPatientConsultant {}
 
 + (WMPatientConsultant *)patientConsultantForPatient:(WMPatient *)patient
-                                          consultant:(User *)consultant
-                                         participant:(WMParticipant *)participant
+                                         consultant:(WMParticipant *)consultant
                                               create:(BOOL)create
-                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                     persistentStore:(NSPersistentStore *)store;
+                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @property (readonly, nonatomic) NSString *consultingDescription;
 

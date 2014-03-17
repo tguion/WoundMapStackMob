@@ -1,9 +1,7 @@
 #import "WMPatientConsultant.h"
 #import "WMPatient.h"
 #import "WMParticipant.h"
-#import "User.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMPatientConsultant ()
 
@@ -21,45 +19,28 @@
 	if (store) {
 		[managedObjectContext assignObject:patientConsultant toPersistentStore:store];
 	}
-    [patientConsultant setValue:[patientConsultant assignObjectId] forKey:[patientConsultant primaryKeyField]];
 	return patientConsultant;
 }
 
 + (WMPatientConsultant *)patientConsultantForPatient:(WMPatient *)patient
-                                          consultant:(User *)consultant
-                                         participant:(WMParticipant *)participant
+                                          consultant:(WMParticipant *)consultant
                                               create:(BOOL)create
                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                     persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPatientConsultant" inManagedObjectContext:managedObjectContext]];
     NSMutableArray *predicates = [NSMutableArray array];
     if (nil != patient) {
+        NSParameterAssert([patient managedObjectContext] == managedObjectContext);
         [predicates addObject:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
     }
     if (nil != consultant) {
+        NSParameterAssert([consultant managedObjectContext] == managedObjectContext);
         [predicates addObject:[NSPredicate predicateWithFormat:@"consultant == %@", consultant]];
     }
-    if (nil != participant) {
-        [predicates addObject:[NSPredicate predicateWithFormat:@"participant == %@", participant]];
-    }
     NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMPatientConsultant *patientConsultant = [array lastObject];
+    WMPatientConsultant *patientConsultant = [WMPatientConsultant MR_findFirstWithPredicate:predicate inContext:managedObjectContext];
     if (create && nil == patientConsultant) {
-        patientConsultant = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        patientConsultant = [WMPatientConsultant MR_createInContext:managedObjectContext];
         patientConsultant.consultant = consultant;
-        patientConsultant.participant = participant;
         patientConsultant.patient = patient;
     }
     return patientConsultant;
@@ -69,9 +50,9 @@
 {
     NSString *string = nil;
     if (self.acquiredFlagValue) {
-        string = [NSString stringWithFormat:@"Referred by %@ acquired by %@", self.patient.sm_owner, self.participant.lastNameFirstName];
+        string = [NSString stringWithFormat:@"Referred by %@ acquired by %@", self.patient.participant.name, self.consultant.name];
     } else {
-        string = [NSString stringWithFormat:@"Referred by %@", self.patient.sm_owner];
+        string = [NSString stringWithFormat:@"Referred by %@", self.patient.participant.name];
     }
     return string;
 }

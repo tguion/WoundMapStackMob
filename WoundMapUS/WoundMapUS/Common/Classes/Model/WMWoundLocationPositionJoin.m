@@ -2,7 +2,6 @@
 #import "WMWoundLocation.h"
 #import "WMWoundPosition.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMWoundLocationPositionJoin ()
 
@@ -21,31 +20,18 @@
 		[managedObjectContext assignObject:join toPersistentStore:store];
 	}
     // get a permanent objectID
-    [join setValue:[join assignObjectId] forKey:[join primaryKeyField]];
 	return join;
 }
 
 + (WMWoundLocationPositionJoin *)joinForLocation:(WMWoundLocation *)location
                                        positions:(NSSet *)positions
                                           create:(BOOL)create
-                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundLocationPositionJoin" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"location == %@ AND positions CONTAINS (%@)", location, [positions anyObject]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMWoundLocationPositionJoin *join = [array lastObject];
+    NSManagedObjectContext *managedObjectContext = [location managedObjectContext];
+    WMWoundLocationPositionJoin *join = [WMWoundLocationPositionJoin MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"location == %@ AND positions CONTAINS (%@)", location, [positions anyObject]]
+                                                                                     inContext:managedObjectContext];
     if (create && nil == join) {
-        join = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        join = [WMWoundLocationPositionJoin MR_createInContext:managedObjectContext];
         join.location = location;
         join.positions = positions;
     }

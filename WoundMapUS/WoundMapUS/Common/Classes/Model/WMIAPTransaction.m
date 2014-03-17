@@ -15,15 +15,13 @@ typedef enum {
 @implementation WMIAPTransaction
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
                                credits:(NSNumber *)credits
 {
-	return [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext persistentStore:store credits:credits startupCredits:NO];
+	return [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext credits:credits startupCredits:NO];
 }
 
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
                                credits:(NSNumber *)credits
                         startupCredits:(BOOL)startupCredits
 {
@@ -35,14 +33,11 @@ typedef enum {
         [iapTransaction setFlags:[NSNumber numberWithInteger:0]];
         [iapTransaction setStartupCredits:[NSNumber numberWithBool:startupCredits]];
         [iapTransaction setTxnDate:[NSDate date]];
-        if (store) {
-            [managedObjectContext assignObject:iapTransaction toPersistentStore:store];
-        }
     }
 	return iapTransaction;
 }
 
-+(NSNumber *)sumTokens:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++(NSNumber *)sumTokens:(NSManagedObjectContext *)managedObjectContext
 {
     NSNumber *resultValue = nil;
     
@@ -57,24 +52,12 @@ typedef enum {
     NSArray *properties = [NSArray arrayWithObject:ed];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    
     
     [request setPropertiesToFetch:properties];
     [request setResultType:NSDictionaryResultType];
     
     if (nil != managedObjectContext) {
-        NSEntityDescription *entity = [NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext];
-        [request setEntity:entity];
-        SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-        NSError *error = nil;
-        NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                     returnManagedObjectIDs:NO
-                                                                    options:options
-                                                                      error:&error];
-        NSDictionary *resultsDictionary = [results objectAtIndex:0];
+        NSDictionary *resultsDictionary = (NSDictionary *)[WMIAPTransaction MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
         resultValue = [resultsDictionary objectForKey:@"result"];
     }
     //    DLog(@"sumTokens has resultValue: %i", [resultValue integerValue]);
@@ -82,7 +65,7 @@ typedef enum {
     
 }
 
-+(NSDate *)lastPurchasedCreditDate:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++(NSDate *)lastPurchasedCreditDate:(NSManagedObjectContext *)managedObjectContext
 {
     NSDate *lastPurchasedDate = nil;
     
@@ -97,9 +80,6 @@ typedef enum {
     NSArray *properties = [NSArray arrayWithObject:ed];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     
     [request setPropertiesToFetch:properties];
     [request setResultType:NSDictionaryResultType];
@@ -117,26 +97,20 @@ typedef enum {
     
 }
 
-+(BOOL) hasStartupCredits:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++(BOOL) hasStartupCredits:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     [request setPredicate:[NSPredicate predicateWithFormat:@"startupCredits != 0"]];
     int count = [managedObjectContext countForFetchRequest:request error:NULL];
     DLog(@"count of startupCredit records is %i", count);
     return count > 0;
 }
 
-+(WMIAPTransaction *) startupCredits:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++(WMIAPTransaction *) startupCredits:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     [request setPredicate:[NSPredicate predicateWithFormat:@"startupCredits != 0"]];
     
     NSError *error = nil;
@@ -148,25 +122,19 @@ typedef enum {
     return transaction;
 }
 
-+(NSUInteger)transactionCount:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++(NSUInteger)transactionCount:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     return [managedObjectContext countForFetchRequest:request error:NULL];
     
 }
 
 
-+ (WMIAPTransaction *)transactionWithId:(NSString *)txnId managedObjectContext:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (WMIAPTransaction *)transactionWithId:(NSString *)txnId managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     WMIAPTransaction *transaction = nil;
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"txnId == %@", txnId]];
     NSError *error = nil;
@@ -178,12 +146,9 @@ typedef enum {
     return transaction;
 }
 
-+ (NSArray *)creditTransactionsNotTransmitted:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)creditTransactionsNotTransmitted:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"flags == 0"]];
     NSError *error = nil;
@@ -194,12 +159,9 @@ typedef enum {
     return array;
 }
 
-+ (NSArray *)enumerateTransactions:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (NSArray *)enumerateTransactions:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
@@ -210,17 +172,14 @@ typedef enum {
 }
 
 //[WMIAPTransaction deleteTxnWithTxnId:[alreadyRecordedStartupCredits txnId]];
-+ (void)deleteTransaction:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store transaction:(WMIAPTransaction *) transaction
++ (void)deleteTransaction:(NSManagedObjectContext *)managedObjectContext transaction:(WMIAPTransaction *) transaction
 {
     [managedObjectContext deleteObject:transaction];
 }
 
-+ (void)deleteAllTxns:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)deleteAllTxns:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
     [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
     NSError *error = nil;
     NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
@@ -242,7 +201,7 @@ typedef enum {
 
 - (void)setKeyValueStoreTransmittedFlag:(BOOL)kvsTransmittedFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMIAPTransactionFlagsKVSTransmitted to:kvsTransmittedFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WMIAPTransactionFlagsKVSTransmitted to:kvsTransmittedFlag]);
 }
 
 //- (BOOL) isStartupCreditTransaction

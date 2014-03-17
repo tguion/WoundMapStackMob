@@ -108,6 +108,12 @@
 		7D10CD8018D63B3000AD43E3 /* WMTelecomEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD7E18D63B3000AD43E3 /* WMTelecomEditorViewController.m */; };
 		7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD7F18D63B3000AD43E3 /* WMTelecomEditorViewController.xib */; };
 		7D10CD8418D63C1900AD43E3 /* WMTelecom+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */; };
+		7D10CD8818D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD8618D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.m */; };
+		7D10CD8918D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD8718D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib */; };
+		7D10CD8D18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD8B18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m */; };
+		7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD8C18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib */; };
+		7D10CD9218D775E100AD43E3 /* WMSelectWoundOdorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD9018D775E100AD43E3 /* WMSelectWoundOdorViewController.m */; };
+		7D10CD9318D775E100AD43E3 /* WMSelectWoundOdorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CD9118D775E100AD43E3 /* WMSelectWoundOdorViewController.xib */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -167,8 +173,6 @@
 		7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB3E18B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib */; };
 		7D39DB4418B826620054DDC3 /* WMCarePlanGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB4218B826620054DDC3 /* WMCarePlanGroupViewController.m */; };
 		7D39DB4518B826620054DDC3 /* WMCarePlanGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB4318B826620054DDC3 /* WMCarePlanGroupViewController.xib */; };
-		7D39DB4A18B827180054DDC3 /* WMWoundMeasurementGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB4818B827180054DDC3 /* WMWoundMeasurementGroupViewController.m */; };
-		7D39DB4B18B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB4918B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib */; };
 		7D39DB4F18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB4D18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m */; };
 		7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DB4E18B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib */; };
 		7D39DB5418B828000054DDC3 /* WMPatientSummaryContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DB5218B828000054DDC3 /* WMPatientSummaryContainerViewController.m */; };
@@ -610,6 +614,15 @@
 		7D10CD7F18D63B3000AD43E3 /* WMTelecomEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMTelecomEditorViewController.xib; sourceTree = "<group>"; };
 		7D10CD8218D63C1900AD43E3 /* WMTelecom+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMTelecom+CoreText.h"; sourceTree = "<group>"; };
 		7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMTelecom+CoreText.m"; sourceTree = "<group>"; };
+		7D10CD8518D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementGroupViewController.h; sourceTree = "<group>"; };
+		7D10CD8618D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementGroupViewController.m; sourceTree = "<group>"; };
+		7D10CD8718D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundMeasurementGroupViewController.xib; sourceTree = "<group>"; };
+		7D10CD8A18D7755700AD43E3 /* WMSelectAmountQualifierViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSelectAmountQualifierViewController.h; sourceTree = "<group>"; };
+		7D10CD8B18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSelectAmountQualifierViewController.m; sourceTree = "<group>"; };
+		7D10CD8C18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMSelectAmountQualifierViewController.xib; sourceTree = "<group>"; };
+		7D10CD8F18D775E100AD43E3 /* WMSelectWoundOdorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSelectWoundOdorViewController.h; sourceTree = "<group>"; };
+		7D10CD9018D775E100AD43E3 /* WMSelectWoundOdorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSelectWoundOdorViewController.m; sourceTree = "<group>"; };
+		7D10CD9118D775E100AD43E3 /* WMSelectWoundOdorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMSelectWoundOdorViewController.xib; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -713,9 +726,6 @@
 		7D39DB4218B826620054DDC3 /* WMCarePlanGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanGroupViewController.m; sourceTree = "<group>"; };
 		7D39DB4318B826620054DDC3 /* WMCarePlanGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCarePlanGroupViewController.xib; sourceTree = "<group>"; };
 		7D39DB4618B826CB0054DDC3 /* TakePhotoProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TakePhotoProtocols.h; sourceTree = "<group>"; };
-		7D39DB4718B827180054DDC3 /* WMWoundMeasurementGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementGroupViewController.h; sourceTree = "<group>"; };
-		7D39DB4818B827180054DDC3 /* WMWoundMeasurementGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementGroupViewController.m; sourceTree = "<group>"; };
-		7D39DB4918B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundMeasurementGroupViewController.xib; sourceTree = "<group>"; };
 		7D39DB4C18B827AB0054DDC3 /* WMTakePatientPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTakePatientPhotoViewController.h; sourceTree = "<group>"; };
 		7D39DB4D18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTakePatientPhotoViewController.m; sourceTree = "<group>"; };
 		7D39DB4E18B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMTakePatientPhotoViewController.xib; sourceTree = "<group>"; };
@@ -1508,6 +1518,15 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7D10CD8F18D775E100AD43E3 /* WMSelectWoundOdorViewController.h */,
+				7D10CD9018D775E100AD43E3 /* WMSelectWoundOdorViewController.m */,
+				7D10CD9118D775E100AD43E3 /* WMSelectWoundOdorViewController.xib */,
+				7D10CD8A18D7755700AD43E3 /* WMSelectAmountQualifierViewController.h */,
+				7D10CD8B18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m */,
+				7D10CD8C18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib */,
+				7D10CD8518D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.h */,
+				7D10CD8618D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.m */,
+				7D10CD8718D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				7D39DBA318BA97A70054DDC3 /* IAP */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
@@ -1631,9 +1650,6 @@
 				7D39DAE918B7E5F80054DDC3 /* WMWoundDetailViewController.h */,
 				7D39DAEA18B7E5F80054DDC3 /* WMWoundDetailViewController.m */,
 				7D39DAEB18B7E5F80054DDC3 /* WMWoundDetailViewController.xib */,
-				7D39DB4718B827180054DDC3 /* WMWoundMeasurementGroupViewController.h */,
-				7D39DB4818B827180054DDC3 /* WMWoundMeasurementGroupViewController.m */,
-				7D39DB4918B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib */,
 				7D39DAF318B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.h */,
 				7D39DAF418B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m */,
 				7D39DAF518B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib */,
@@ -2537,6 +2553,7 @@
 				5F67D20118AC3BE000460C37 /* WoundAssessmentDefinitions.plist in Resources */,
 				5F6DE53B18B58BB000E87F7E /* InstructionsPhotoAndMeasurement.html in Resources */,
 				5F67D1F318AC3BE000460C37 /* DeviceDefinitions.plist in Resources */,
+				7D10CD9318D775E100AD43E3 /* WMSelectWoundOdorViewController.xib in Resources */,
 				5F6DE53718B58BB000E87F7E /* Instructions.plist in Resources */,
 				5F6DE53F18B58BB000E87F7E /* InstructionsSkinAssessment.html in Resources */,
 				5F6DE53918B58BB000E87F7E /* InstructionsIntroduction.html in Resources */,
@@ -2562,7 +2579,6 @@
 				5F6DE54118B58BB000E87F7E /* InstructionsWoundTreatment.html in Resources */,
 				7D39DAF218B7E6130054DDC3 /* WMChooseStageViewController.xib in Resources */,
 				7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */,
-				7D39DB4B18B827180054DDC3 /* WMWoundMeasurementGroupViewController.xib in Resources */,
 				5F6DE53818B58BB000E87F7E /* InstructionsAuditTrail.html in Resources */,
 				5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
@@ -2585,6 +2601,7 @@
 				5F67D20418AC3BE000460C37 /* WoundMeasurementDefinitions.plist in Resources */,
 				5F67D20618AC3BE000460C37 /* WoundOdor.plist in Resources */,
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
+				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
 				5F67D1F418AC3BE000460C37 /* Devices.plist in Resources */,
 				7D39DB0618B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib in Resources */,
@@ -2605,6 +2622,7 @@
 				7D39DB5A18B828630054DDC3 /* WMPsychoSocialGroupViewController.xib in Resources */,
 				7D39DBBF18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib in Resources */,
 				7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */,
+				7D10CD8918D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib in Resources */,
 				7D39DB1318B7FA750054DDC3 /* WMSelectWoundLocationViewController.xib in Resources */,
 				7D9AA27C18B1038400C1B698 /* WMIAPCreateTeamViewController.xib in Resources */,
 				5F67D20B18AC3BE000460C37 /* WoundTypeDefinitions.plist in Resources */,
@@ -2653,7 +2671,6 @@
 				7D39DB3218B823A30054DDC3 /* WMMedicationGroupViewController.m in Sources */,
 				5F67D1C318AC39B800460C37 /* WMParticipant.m in Sources */,
 				7DF4E8F618C22EEC000A3F5B /* _WMWoundPositionValue.m in Sources */,
-				7D39DB4A18B827180054DDC3 /* WMWoundMeasurementGroupViewController.m in Sources */,
 				7DF4E8F018C22EEC000A3F5B /* _WMSkinAssessmentGroup.m in Sources */,
 				7DDFD69218B7C2C000041927 /* WMNavigationPatientWoundView.m in Sources */,
 				7D39DB9C18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.m in Sources */,
@@ -2712,6 +2729,7 @@
 				7DDBEDB518BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m in Sources */,
 				7DDBEDE218BEA95C00FEF3FA /* _WMBradenCell.m in Sources */,
 				7DD8376018C7A5080028C2D3 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				7D10CD8D18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m in Sources */,
 				7D39DB7E18B947330054DDC3 /* WMMedication.m in Sources */,
 				5F6DE54818B6FA4E00E87F7E /* WMIdListViewController.m in Sources */,
 				7DD8373718C78A3A0028C2D3 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
@@ -2749,6 +2767,7 @@
 				7D13027E18D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m in Sources */,
 				7D10CD7718D618CD00AD43E3 /* WMTeamInvitation.m in Sources */,
 				7DF4E93018C22F27000A3F5B /* WMSkinAssessment.m in Sources */,
+				7D10CD8818D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.m in Sources */,
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				7D39DB0918B7EFE30054DDC3 /* WMCarePlanTableViewCell.m in Sources */,
 				7DF4E8F918C22EEC000A3F5B /* _WMWoundTreatmentValue.m in Sources */,
@@ -2916,6 +2935,7 @@
 				7DF4E8EF18C22EEC000A3F5B /* _WMSkinAssessmentCategory.m in Sources */,
 				7DD8375F18C7A5080028C2D3 /* AFJSONRequestOperation.m in Sources */,
 				7DF4E99E18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m in Sources */,
+				7D10CD9218D775E100AD43E3 /* WMSelectWoundOdorViewController.m in Sources */,
 				7DF4E92E18C22F27000A3F5B /* WMPsychoSocialItem.m in Sources */,
 				7D10CD6C18D2590E00AD43E3 /* WMTeam.m in Sources */,
 				7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */,

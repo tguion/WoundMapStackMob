@@ -9,9 +9,7 @@
 
 + (WMWoundLocationPositionJoin *)joinForLocation:(WMWoundLocation *)location
                                        positions:(NSSet *)positions
-                                          create:(BOOL)create
-                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store;
+                                          create:(BOOL)create;
 
 - (NSArray *)sortedPositions;
 - (WMWoundPosition *)positionAtIndex:(NSInteger)index;

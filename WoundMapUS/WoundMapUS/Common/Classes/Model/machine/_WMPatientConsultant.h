@@ -14,7 +14,7 @@ extern const struct WMPatientConsultantAttributes {
 } WMPatientConsultantAttributes;
 
 extern const struct WMPatientConsultantRelationships {
-	__unsafe_unretained NSString *participant;
+	__unsafe_unretained NSString *consultant;
 	__unsafe_unretained NSString *patient;
 } WMPatientConsultantRelationships;
 
@@ -112,9 +112,9 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-@property (nonatomic, strong) WMParticipant *participant;
+@property (nonatomic, strong) WMParticipant *consultant;
 
-//- (BOOL)validateParticipant:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateConsultant:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -179,8 +179,8 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
-- (WMParticipant*)primitiveParticipant;
-- (void)setPrimitiveParticipant:(WMParticipant*)value;
+- (WMParticipant*)primitiveConsultant;
+- (void)setPrimitiveConsultant:(WMParticipant*)value;
 
 
 

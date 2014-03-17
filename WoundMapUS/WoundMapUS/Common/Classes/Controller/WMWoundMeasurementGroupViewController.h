@@ -1,14 +1,14 @@
 //
 //  WMWoundMeasurementGroupViewController.h
-//  WoundMapUS
+//  WoundPUMP
 //
-//  Created by Todd Guion on 2/21/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Created by etreasure consulting LLC on 4/25/13.
+//  Copyright (c) 2013 etreasure consulting LLC. All rights reserved.
 //
 
 #import "WMBuildGroupViewController.h"
 
-@class WMWoundMeasurementGroupViewController, WMWoundMeasurementGroup, WMWoundMeasurement;
+@class WMWoundMeasurementGroupViewController, WMWoundPhoto, WMWoundMeasurementGroup, WMWoundMeasurement;
 
 @protocol WoundMeasurementGroupViewControllerDelegate <NSObject>
 
