@@ -747,8 +747,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {
-    WMUserDefaultsManager *userDefaultsManger = self.userDefaultsManager;
-    userDefaultsManger.defaultNavigationTrackFFURL = navigationTrack.ffUrl;
+    self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     [self.tableView reloadData];

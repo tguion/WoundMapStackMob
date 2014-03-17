@@ -176,7 +176,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     WM_ASSERT_MAIN_THREAD;
     WMNavigationTrack *navigationTrack = self.patient.stage.track;
     if (nil == navigationTrack) {
-        navigationTrack = [[WMUserDefaultsManager sharedInstance] defaultNavigationTrack:self.managedObjectContext persistentStore:nil];
+        navigationTrack = [[WMUserDefaultsManager sharedInstance] defaultNavigationTrack:self.managedObjectContext];
     }
     return navigationTrack;
 }
@@ -186,7 +186,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     WM_ASSERT_MAIN_THREAD;
     NSAssert(nil != navigationTrack, @"Do not set navigationTrack to nil");
     BOOL patientNavigationTrackDidChange = NO;
-    [[WMUserDefaultsManager sharedInstance] setDefaultNavigationTrackId:navigationTrack.wmnavigationtrack_id];
+    [[WMUserDefaultsManager sharedInstance] setDefaultNavigationTrackFFURL:navigationTrack.ffUrl];
     WMPatient *patient = self.patient;
     if (nil != patient) {
         WMNavigationTrack *patientNavigationTrack = patient.stage.track;
