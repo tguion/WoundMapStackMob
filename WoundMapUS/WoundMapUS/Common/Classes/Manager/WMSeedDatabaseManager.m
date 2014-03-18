@@ -15,9 +15,9 @@
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
 #import "CoreDataHelper.h"
+#import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
-#import "StackMob.h"
 
 @interface WMSeedDatabaseManager ()
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
@@ -44,12 +44,20 @@
 
 - (void)seedTeamDatabaseWithCompletionHandler:(void (^)(NSError *))handler
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CoreDataHelper *coreDataHelper = self.appDelegate.coreDataHelper;
-        NSManagedObjectContext *stackMobContext = [coreDataHelper.stackMobStore contextForCurrentThread];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
         DLog(@"reading plists and seeding database start");
-        [WMInstruction seedDatabase:stackMobContext persistentStore:nil];
-        [WMWoundType seedDatabase:stackMobContext persistentStore:nil];
+        [WMInstruction seedDatabase:managedObjectContext];
+        [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+            // update backend
+            for (NSManagedObjectID *objectID in objectIDs) {
+                WMWoundType *woundType = (WMWoundType *)[managedObjectContext objectWithID:objectID];
+                [ffm createObject:woundType ff:ff completionHandler:nil];
+            }
+        }];
         [WMParticipantType seedDatabase:stackMobContext persistentStore:nil];
 //        [WCAmountQualifier seedDatabase:managedObjectContext persistentStore:nil];
 //        [WCWoundOdor seedDatabase:managedObjectContext persistentStore:nil];

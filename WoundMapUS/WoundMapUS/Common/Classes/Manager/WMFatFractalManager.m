@@ -181,6 +181,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }];
 }
 
+#pragma mark - Create
+
+- (void)createObject:(id)object ffUrl:(NSString *)ffUrl ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *operation = [self createOperation:object collection:ffUrl ff:ff completionHandler:completionHandler];
+    [_operationQueue addOperation:operation];
+}
+
 #pragma mark - Updates
 
 - (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
@@ -622,14 +630,22 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 object = [object MR_inContext:managedObjectContext];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
             }
-            completionHandler(error, object, signInRequired);
+            if (completionHandler) {
+                completionHandler(error, object, signInRequired);
+            }
         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            BOOL signInRequired = NO;
             if (error) {
+                if (response.statusCode == 401) {
+                    signInRequired = YES;
+                }
                 [WMUtilities logError:error];
             } else {
                 [ff queueCreateObj:object atUri:ffUrl];
             }
-            completionHandler(error, object, NO);
+            if (completionHandler) {
+                completionHandler(error, object, signInRequired);
+            }
         }];
     }];
     return operation;

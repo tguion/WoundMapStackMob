@@ -295,9 +295,8 @@
         string = _patientConsultant.consultingDescription;
     } else {
         // check if submitted for consult
-        WMPatientConsultant *targetConsultant = _patient.patientConsultantSubmittedTarget;
-        if (targetConsultant) {
-            string = [NSString stringWithFormat:@"Submitted for consult to %@", targetConsultant.sm_owner];
+        if ([_patient.patientConsultants count]) {
+            string = [NSString stringWithFormat:@"Submitted for consult to %@", [_patient valueForKeyPath:@"patientConsultants.consultant.name"]];
         }
     }
     if ([string length] > 0) {

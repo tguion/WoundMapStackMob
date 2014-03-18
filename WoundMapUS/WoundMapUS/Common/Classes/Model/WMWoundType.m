@@ -53,7 +53,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     return [WMWoundType MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundType" withExtension:@"plist"];
@@ -75,14 +75,21 @@ NSString * const kOtherWoundTypeTitle = @"Other";
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateWoundTypeFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMWoundType *woundType = [self updateWoundTypeFromDictionary:dictionary managedObjectContext:managedObjectContext objectIDs:objectIDs];
+            NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[woundType objectID]];
+        }
+        if (completionHandler) {
+            completionHandler(nil, objectIDs);
         }
     }
 }
 
 + (WMWoundType *)updateWoundTypeFromDictionary:(NSDictionary *)dictionary
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                     objectIDs:(NSMutableArray *)objectIDs
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundType *woundType = [WMWoundType woundTypeForTitle:title
@@ -102,9 +109,14 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     id children = [dictionary objectForKey:@"children"];
     if ([children isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in children) {
-            [woundType addChildrenObject:[self updateWoundTypeFromDictionary:d managedObjectContext:managedObjectContext]];
+            WMWoundType *woundType = [self updateWoundTypeFromDictionary:d managedObjectContext:managedObjectContext objectIDs:objectIDs];
+            [woundType addChildrenObject:woundType];
+            NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[woundType objectID]];
         }
     }
+    NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
+    [objectIDs addObject:[woundType objectID]];
     return woundType;
 }
 
