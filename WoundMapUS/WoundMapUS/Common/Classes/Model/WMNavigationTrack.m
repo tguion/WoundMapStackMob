@@ -79,16 +79,6 @@ typedef enum {
     return [stages lastObject];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMNavigationTrack *navigationTrack = [[WMNavigationTrack alloc] initWithEntity:[NSEntityDescription entityForName:@"WMNavigationTrack" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:navigationTrack toPersistentStore:store];
-	}
-	return navigationTrack;
-}
-
 + (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMNavigationTrack MR_countOfEntitiesWithContext:managedObjectContext];
@@ -174,7 +164,7 @@ typedef enum {
 {
     WMNavigationTrack *navigationTrack = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == navigationTrack) {
-        navigationTrack = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationTrack = [WMNavigationTrack MR_createInContext:managedObjectContext];
         navigationTrack.title = title;
     }
     return navigationTrack;

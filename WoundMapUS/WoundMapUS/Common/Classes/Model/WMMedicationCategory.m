@@ -55,8 +55,7 @@
         NSMutableSet *set = [NSMutableSet set];
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:nil];
+                                                     managedObjectContext:managedObjectContext];
             [set addObjectsFromArray:woundTypes];
         }
         [medicationCategory setWoundTypes:set];

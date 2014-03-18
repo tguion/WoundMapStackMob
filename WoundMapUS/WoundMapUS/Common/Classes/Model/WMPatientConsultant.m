@@ -12,16 +12,6 @@
 
 @implementation WMPatientConsultant
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
-{
-    WMPatientConsultant *patientConsultant = [[WMPatientConsultant alloc] initWithEntity:[NSEntityDescription entityForName:@"WMPatientConsultant" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:patientConsultant toPersistentStore:store];
-	}
-	return patientConsultant;
-}
-
 + (WMPatientConsultant *)patientConsultantForPatient:(WMPatient *)patient
                                           consultant:(WMParticipant *)consultant
                                               create:(BOOL)create

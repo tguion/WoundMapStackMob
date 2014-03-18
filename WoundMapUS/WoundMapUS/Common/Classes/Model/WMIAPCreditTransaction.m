@@ -56,7 +56,7 @@
 
 - (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store
 {
-    WMIAPTransaction *iapTxn = [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext persistentStore:store credits:[self credits]];
+    WMIAPTransaction *iapTxn = [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext credits:[self credits]];
     [iapTxn setTxnId: [self txnId]];
     [iapTxn setFlags:[self flags]];
     [iapTxn setTxnDate:[self txnDate]];

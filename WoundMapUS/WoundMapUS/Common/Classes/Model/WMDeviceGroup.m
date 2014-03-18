@@ -3,6 +3,7 @@
 #import "WMDeviceValue.h"
 #import "WMDevice.h"
 #import "WMInterventionStatus.h"
+#import "WMDeviceInterventionEvent.h"
 #import "WMUtilities.h"
 
 @interface WMDeviceGroup ()
@@ -124,6 +125,8 @@
     return deviceValue;
 }
 
+#pragma mark - Events
+
 - (WMDeviceInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                         title:(NSString *)title
                                                     valueFrom:(id)valueFrom
@@ -133,12 +136,72 @@
                                                        create:(BOOL)create
                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    
+    WMDeviceInterventionEvent *event = [WMDeviceInterventionEvent deviceInterventionEventForDeviceGroup:self
+                                                                                             changeType:changeType
+                                                                                                  title:title
+                                                                                              valueFrom:valueFrom
+                                                                                                valueTo:valueTo
+                                                                                                   type:type
+                                                                                            participant:participant
+                                                                                                 create:create
+                                                                                   managedObjectContext:managedObjectContext];
+    return event;
 }
 
 - (void)createEditEventsForParticipant:(WMParticipant *)participant
 {
-    
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return;
+    }
+    // else
+    NSMutableSet *addedValues = [self.values mutableCopy];
+    [addedValues minusSet:committedValues];
+    NSMutableSet *deletedValues = [committedValues mutableCopy];
+    [deletedValues minusSet:self.values];
+    for (WMDeviceValue *deviceValue in addedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                       title:deviceValue.title
+                                   valueFrom:nil
+                                     valueTo:deviceValue.value
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created add event %@", deviceValue.title);
+    }
+    for (WMDeviceValue *deviceValue in deletedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                       title:deviceValue.title
+                                   valueFrom:nil
+                                     valueTo:nil
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created delete event %@", deviceValue.title);
+    }
+    for (WMDeviceValue *deviceValue in [self.managedObjectContext updatedObjects]) {
+        if ([deviceValue isKindOfClass:[WMDeviceValue class]]) {
+            committedValuesMap = [deviceValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSString *oldValue = [committedValuesMap objectForKey:@"value"];
+            NSString *newValue = deviceValue.value;
+            if ([oldValue isEqualToString:newValue]) {
+                continue;
+            }
+            // else it changed
+            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                           title:deviceValue.device.title
+                                       valueFrom:oldValue
+                                         valueTo:newValue
+                                            type:nil
+                                     participant:participant
+                                          create:YES
+                            managedObjectContext:self.managedObjectContext];
+            DLog(@"Created event %@->%@", oldValue, newValue);
+        }
+    }
 }
 
 - (void)incrementContinueCount

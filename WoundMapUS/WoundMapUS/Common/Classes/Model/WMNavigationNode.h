@@ -24,9 +24,6 @@ typedef NS_ENUM(int16_t, NavigationNodeFrequencyUnit) {
 
 - (BOOL)requiresIAPForWoundType:(WMWoundType *)woundType;
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store;
-
 + (WMNavigationNode *)updateNodeFromDictionary:(NSDictionary *)dictionary
                                          stage:(WMNavigationStage *)stage
                                     parentNode:(WMNavigationNode *)parentNode

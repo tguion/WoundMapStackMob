@@ -15,9 +15,6 @@
 - (void)removeParticipant:(id<FFUserProtocol>)participant;
 - (void)removeConsultant:(id<FFUserProtocol>)consultant;
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store;
-
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (UIImage *)missingThumbnailImage;

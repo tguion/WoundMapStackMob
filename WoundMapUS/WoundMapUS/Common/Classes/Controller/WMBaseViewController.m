@@ -419,8 +419,7 @@
     // check if this is constrained to wound type
     IAPProduct *iapProduct = [IAPProduct productForIdentifier:productIdentifier
                                                        create:NO
-                                         managedObjectContext:self.managedObjectContext
-                                              persistentStore:self.store];
+                                         managedObjectContext:self.managedObjectContext];
     // CAUTION: we should have an IAP for productIdentifier
     if (nil == iapProduct) {
         DLog(@"Missing productIdentifier:%@ - please update our IAP products in the IAPProducts.plist and in iTunes connect", productIdentifier);

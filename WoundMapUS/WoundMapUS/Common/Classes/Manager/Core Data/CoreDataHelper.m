@@ -299,12 +299,11 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 - (void)seedLocalDatabase
 {
     NSManagedObjectContext *managedObjectContext = self.parentContext;
-    NSPersistentStore *store = self.localStore;
     [managedObjectContext performBlock:^{
-        [WMBradenCare seedDatabase:managedObjectContext persistentStore:store];// TODO remove store parameters
+        [WMBradenCare seedDatabase:managedObjectContext];
         [WMDefinition seedDatabase:managedObjectContext];
-        [WMWoundType seedDatabase:managedObjectContext persistentStore:store];
-        [IAPProduct seedDatabase:managedObjectContext persistentStore:store];
+        [WMWoundType seedDatabase:managedObjectContext];
+        [IAPProduct seedDatabase:managedObjectContext];
         [WMInstruction seedDatabase:managedObjectContext];
         [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             if (nil != error) {

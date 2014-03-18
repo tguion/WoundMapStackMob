@@ -1,6 +1,5 @@
 #import "WMPsychoSocialValue.h"
 #import "WMPsychoSocialItem.h"
-#import "StackMob.h"
 
 @interface WMPsychoSocialValue ()
 
@@ -11,21 +10,10 @@
 
 @implementation WMPsychoSocialValue
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMPsychoSocialValue *psychoSocialValue = [[WMPsychoSocialValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMPsychoSocialValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:psychoSocialValue toPersistentStore:store];
-	}
-    [psychoSocialValue setValue:[psychoSocialValue assignObjectId] forKey:[psychoSocialValue primaryKeyField]];
-	return psychoSocialValue;
-}
-
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
 }
 

@@ -11,16 +11,6 @@
 
 @dynamic managedObjectContext, objectID;
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
-{
-    WMPerson *person = [[WMPerson alloc] initWithEntity:[NSEntityDescription entityForName:@"WMPerson" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:person toPersistentStore:store];
-	}
-	return person;
-}
-
 - (NSString *)lastNameFirstName
 {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];

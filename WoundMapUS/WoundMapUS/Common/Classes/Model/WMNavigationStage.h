@@ -9,9 +9,6 @@
 @property (readonly, nonatomic) NSArray *rootNavigationNodes;
 @property (readonly, nonatomic) BOOL isInitialStage;
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store;
-
 + (WMNavigationStage *)updateStageFromDictionary:(NSDictionary *)dictionary
                                            track:(WMNavigationTrack *)navigationTrack
                                           create:(BOOL)create;

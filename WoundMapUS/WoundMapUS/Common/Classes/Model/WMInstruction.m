@@ -30,7 +30,7 @@
         __weak __typeof(self) weakSelf = self;
         [managedObjectContext performBlockAndWait:^{
             // check if already seeded
-            NSInteger count = [WMInstruction instructionCount:managedObjectContext persistentStore:store];
+            NSInteger count = [WMInstruction instructionCount:managedObjectContext];
             if (count > 0 && count != NSNotFound) {
                 return;
             }

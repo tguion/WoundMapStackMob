@@ -3,8 +3,6 @@
 #import "WMNavigationNode.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
-#import <FFEF/FatFractal.h>
-#import "NSObject+performBlockAfterDelay.h"
 
 NSString *const kInitialWorkupStageTitle = @"Initial Workup";
 NSString *const kFollowupStageTitle = @"Follow Up";
@@ -18,21 +16,6 @@ NSString *const kDischargeStageTitle = @"Discharge";
 
 
 @implementation WMNavigationStage
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMNavigationStage *navigationStage = [[WMNavigationStage alloc] initWithEntity:[NSEntityDescription entityForName:@"WMNavigationStage" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:navigationStage toPersistentStore:store];
-	}
-    // save to back end
-    [navigationStage performBlock:^{
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationStage atUri:@"/WMNavigationStage"];
-    } afterDelay:0.5];
-	return navigationStage;
-}
 
 + (NSInteger)navigationStageCount:(NSManagedObjectContext *)managedObjectContext
 {
@@ -120,7 +103,7 @@ NSString *const kDischargeStageTitle = @"Discharge";
     WMNavigationStage *navigationStage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND track == %@", title, navigationTrack]
                                                                             inContext:managedObjectContext];
     if (create && nil == navigationStage) {
-        navigationStage = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationStage = [WMNavigationStage MR_createInContext:managedObjectContext];
         navigationStage.title = title;
         navigationStage.track = navigationTrack;
     }

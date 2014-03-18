@@ -2,8 +2,9 @@
 #import "WMPatient.h"
 #import "WMSkinAssessment.h"
 #import "WMSkinAssessmentValue.h"
+#import "WMSkinAssessmentIntEvent.h"
+#import "WMInterventionStatus.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMSkinAssessmentGroup ()
 
@@ -14,65 +15,22 @@
 
 @implementation WMSkinAssessmentGroup
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMSkinAssessmentGroup *skinAssessmentGroup = [[WMSkinAssessmentGroup alloc] initWithEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentGroup" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:skinAssessmentGroup toPersistentStore:store];
-	}
-    [skinAssessmentGroup setValue:[skinAssessmentGroup assignObjectId] forKey:[skinAssessmentGroup primaryKeyField]];
-	return skinAssessmentGroup;
-}
-
 + (WMSkinAssessmentGroup *)activeSkinAssessmentGroup:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMSkinAssessmentGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == YES AND closedFlag == NO", patient] sortedBy:@"updatedAt" ascending:NO inContext:[patient managedObjectContext]];
 }
 
 + (NSInteger)closeSkinAssessmentGroupsCreatedBefore:(NSDate *)date
                                             patient:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return 0;
-    }
-	// else
+    NSArray *array = [WMSkinAssessmentGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date] inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
 
 + (WMSkinAssessmentGroup *)mostRecentOrActiveSkinAssessmentGroup:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMSkinAssessmentGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] sortedBy:@"updatedAt" ascending:NO inContext:[patient managedObjectContext]];
 }
 
 + (NSDate *)mostRecentOrActiveSkinAssessmentGroupDateModified:(WMPatient *)patient
@@ -87,16 +45,8 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    return [results firstObject][@"updatedAt"];
+    NSDictionary *date = (NSDictionary *)[WMSkinAssessmentGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    return date[@"updatedAt"];
 }
 
 + (BOOL)skinAssessmentGroupsHaveHistory:(WMPatient *)patient
@@ -106,34 +56,21 @@
 
 + (NSInteger)skinAssessmentGroupsCount:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMSkinAssessmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
 + (NSArray *)sortedSkinAssessmentGroups:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMSkinAssessmentGroup MR_findAllSortedBy:@"createdAt" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+    // initial status
+    self.status = [WMInterventionStatus initialInterventionStatus:[self managedObjectContext]];
 }
 
 - (BOOL)isClosed
@@ -146,21 +83,9 @@
                                                           value:(id)value
 {
     NSManagedObjectContext *managedObjectContext = [skinAssessment managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentValue" inManagedObjectContext:managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND skinAssessment == %@", self, skinAssessment];
-    if (nil != value) {
-        predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];
-    }
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    WMSkinAssessmentValue *skinAssessmentValue = [array lastObject];
+    WMSkinAssessmentValue *skinAssessmentValue = [WMSkinAssessmentValue MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND skinAssessment == %@", self, skinAssessment] inContext:managedObjectContext];
     if (create && nil == skinAssessmentValue) {
-        skinAssessmentValue = [WMSkinAssessmentValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        skinAssessmentValue = [WMSkinAssessmentValue MR_createInContext:managedObjectContext];
         skinAssessmentValue.skinAssessment = skinAssessment;
         skinAssessmentValue.value = value;
         skinAssessmentValue.title = skinAssessment.title;
@@ -191,6 +116,85 @@
 - (BOOL)hasValues
 {
     return [self.values count] > 0;
+}
+
+#pragma mark - Events
+
+- (WMSkinAssessmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                       title:(NSString *)title
+                                                   valueFrom:(id)valueFrom
+                                                     valueTo:(id)valueTo
+                                                        type:(WMInterventionEventType *)type
+                                                 participant:(WMParticipant *)participant
+                                                      create:(BOOL)create
+                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    WMSkinAssessmentIntEvent *event = [WMSkinAssessmentIntEvent skinAssessmentInterventionEventForSkinAssessmentGroup:self
+                                                                                                           changeType:changeType
+                                                                                                                title:title
+                                                                                                            valueFrom:valueFrom
+                                                                                                              valueTo:valueTo
+                                                                                                                 type:type
+                                                                                                          participant:participant
+                                                                                                               create:create
+                                                                                                 managedObjectContext:managedObjectContext];
+    return event;
+}
+
+- (void)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return;
+    }
+    // else
+    NSMutableSet *addedValues = [self.values mutableCopy];
+    [addedValues minusSet:committedValues];
+    NSMutableSet *deletedValues = [committedValues mutableCopy];
+    [deletedValues minusSet:self.values];
+    for (WMSkinAssessmentValue *skinAssessmentValue in addedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                       title:skinAssessmentValue.skinAssessment.title
+                                   valueFrom:nil
+                                     valueTo:skinAssessmentValue.value
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created add event %@", skinAssessmentValue.skinAssessment.title);
+    }
+    for (WMSkinAssessmentValue *skinAssessmentValue in deletedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                       title:skinAssessmentValue.title
+                                   valueFrom:nil
+                                     valueTo:nil
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created delete event %@", skinAssessmentValue.title);
+    }
+    for (WMSkinAssessmentValue *skinAssessmentValue in [self.managedObjectContext updatedObjects]) {
+        if ([skinAssessmentValue isKindOfClass:[WMSkinAssessmentValue class]]) {
+            committedValuesMap = [skinAssessmentValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSString *oldValue = [committedValuesMap objectForKey:@"value"];
+            NSString *newValue = skinAssessmentValue.value;
+            if ([oldValue isEqualToString:newValue]) {
+                continue;
+            }
+            // else it changed
+            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                           title:skinAssessmentValue.skinAssessment.title
+                                       valueFrom:oldValue
+                                         valueTo:newValue
+                                            type:nil
+                                     participant:participant
+                                          create:YES
+                            managedObjectContext:self.managedObjectContext];
+            DLog(@"Created event %@->%@", oldValue, newValue);
+        }
+    }
 }
 
 // TODO: consider creating an event to record who/when

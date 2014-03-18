@@ -17,16 +17,6 @@
 @synthesize participantGroup=_participantGroup, consultantGroup=_consultantGroup;
 @dynamic managedObjectContext, objectID;
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
-{
-    WMPatient *patient = [[WMPatient alloc] initWithEntity:[NSEntityDescription entityForName:@"WMPatient" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:patient toPersistentStore:store];
-	}
-	return patient;
-}
-
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMPatient MR_countOfEntitiesWithContext:managedObjectContext];

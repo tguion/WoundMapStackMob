@@ -1,7 +1,6 @@
 #import "WMPsychoSocialItem.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WCPsychoSocialItemFlagsAllowMultipleChildSelection  = 0,
@@ -15,17 +14,6 @@ typedef enum {
 
 
 @implementation WMPsychoSocialItem
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMPsychoSocialItem *psychoSocialItem = [[WMPsychoSocialItem alloc] initWithEntity:[NSEntityDescription entityForName:@"WMPsychoSocialItem" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:psychoSocialItem toPersistentStore:store];
-	}
-    [psychoSocialItem setValue:[psychoSocialItem assignObjectId] forKey:[psychoSocialItem primaryKeyField]];
-	return psychoSocialItem;
-}
 
 - (NSInteger)updatedScore
 {
@@ -44,7 +32,7 @@ typedef enum {
 
 - (void)setAllowMultipleChildSelection:(BOOL)allowMultipleChildrenSelection
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WCPsychoSocialItemFlagsAllowMultipleChildSelection to:allowMultipleChildrenSelection]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WCPsychoSocialItemFlagsAllowMultipleChildSelection to:allowMultipleChildrenSelection]);
 }
 
 // add self, all items, and all subcategories with their subcategories and items
@@ -68,45 +56,21 @@ typedef enum {
 
 + (NSArray *)sortedPsychoSocialItemsForParentItem:(WMPsychoSocialItem *)parentItem
                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                  persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    if (parentItem) {
+        NSParameterAssert([parentItem managedObjectContext] == managedObjectContext);
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialItem" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"parentItem == %@", parentItem]];
-    [request setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMPsychoSocialItem MR_findAllSortedBy:@"sortRank" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"parentItem == %@", parentItem] inContext:managedObjectContext];
 }
 
 + (WMPsychoSocialItem *)psychoSocialItemForTitle:(NSString *)title
                                       parentItem:(WMPsychoSocialItem *)parentItem
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMPsychoSocialItem" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentItem == %@", title, parentItem]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMPsychoSocialItem *psychoSocialItem = [array lastObject];
+    WMPsychoSocialItem *psychoSocialItem = [WMPsychoSocialItem MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentItem == %@", title, parentItem] inContext:managedObjectContext];
     if (create && nil == psychoSocialItem) {
-        psychoSocialItem = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        psychoSocialItem = [WMPsychoSocialItem MR_createInContext:managedObjectContext];
         psychoSocialItem.title = title;
         psychoSocialItem.parentItem = parentItem;
     }
@@ -118,14 +82,12 @@ typedef enum {
 + (WMPsychoSocialItem *)updatePsychoSocialItemFromDictionary:(NSDictionary *)dictionary
                                                   parentItem:(WMPsychoSocialItem *)parentItem
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                             persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMPsychoSocialItem *psychoSocialItem = [self psychoSocialItemForTitle:title
                                                                parentItem:(WMPsychoSocialItem *)parentItem
                                                                    create:YES
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
     psychoSocialItem.definition = [dictionary objectForKey:@"definition"];
     psychoSocialItem.loincCode = [dictionary objectForKey:@"LOINC Code"];
     psychoSocialItem.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
@@ -151,8 +113,7 @@ typedef enum {
         NSMutableSet *set = [NSMutableSet set];
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
             [set addObjectsFromArray:woundTypes];
         }
         [psychoSocialItem setWoundTypes:set];
@@ -162,13 +123,12 @@ typedef enum {
     for (NSDictionary *d in subitems) {
         [self updatePsychoSocialItemFromDictionary:d
                                         parentItem:psychoSocialItem
-                              managedObjectContext:managedObjectContext
-                                   persistentStore:store];
+                              managedObjectContext:managedObjectContext];
     }
     return psychoSocialItem;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"PsychoSocial" withExtension:@"plist"];
@@ -189,8 +149,7 @@ typedef enum {
             for (NSDictionary *dictionary in propertyList) {
                 [self updatePsychoSocialItemFromDictionary:dictionary
                                                 parentItem:nil
-                                      managedObjectContext:managedObjectContext
-                                           persistentStore:store];
+                                      managedObjectContext:managedObjectContext];
             }
         }];
     }

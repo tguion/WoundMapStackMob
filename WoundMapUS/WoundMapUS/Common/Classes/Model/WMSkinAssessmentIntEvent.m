@@ -2,7 +2,6 @@
 #import "WMSkinAssessmentGroup.h"
 #import "WMParticipant.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMSkinAssessmentIntEvent ()
 
@@ -13,17 +12,6 @@
 
 @implementation WMSkinAssessmentIntEvent
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMSkinAssessmentIntEvent *skinAssessmentInterventionEvent = [[WMSkinAssessmentIntEvent alloc] initWithEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentIntEvent" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:skinAssessmentInterventionEvent toPersistentStore:store];
-	}
-    [skinAssessmentInterventionEvent setValue:[skinAssessmentInterventionEvent assignObjectId] forKey:[skinAssessmentInterventionEvent primaryKeyField]];
-	return skinAssessmentInterventionEvent;
-}
-
 + (WMSkinAssessmentIntEvent *)skinAssessmentInterventionEventForSkinAssessmentGroup:(WMSkinAssessmentGroup *)skinAssessmentGroup
                                                                                   changeType:(InterventionEventChangeType)changeType
                                                                                        title:(NSString *)title
@@ -33,30 +21,17 @@
                                                                                  participant:(WMParticipant *)participant
                                                                                       create:(BOOL)create
                                                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                                                             persistentStore:(NSPersistentStore *)store
 {
-    skinAssessmentGroup = (WMSkinAssessmentGroup *)[managedObjectContext objectWithID:[skinAssessmentGroup objectID]];
+    NSParameterAssert([skinAssessmentGroup managedObjectContext] == managedObjectContext);
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
     if (nil != eventType) {
-        eventType = (WMInterventionEventType *)[managedObjectContext objectWithID:[eventType objectID]];
+        NSParameterAssert([eventType managedObjectContext] == managedObjectContext);
     }
-    participant = (WMParticipant *)[managedObjectContext objectWithID:[participant objectID]];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMSkinAssessmentIntEvent" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:
-                           @"skinAssessmentGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
-                           skinAssessmentGroup, changeType, title, valueFrom, valueTo, eventType, participant]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMSkinAssessmentIntEvent *skinAssessmentInterventionEvent = [array lastObject];
+    WMSkinAssessmentIntEvent *skinAssessmentInterventionEvent = [WMSkinAssessmentIntEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
+                                                                                                                     @"skinAssessmentGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                                                     skinAssessmentGroup, changeType, title, valueFrom, valueTo, eventType, participant] inContext:managedObjectContext];
     if (create && nil == skinAssessmentInterventionEvent) {
-        skinAssessmentInterventionEvent = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        skinAssessmentInterventionEvent = [WMSkinAssessmentIntEvent MR_createInContext:managedObjectContext];
         skinAssessmentInterventionEvent.skinAssessmentGroup = skinAssessmentGroup;
         skinAssessmentInterventionEvent.changeType = [NSNumber numberWithInt:changeType];
         skinAssessmentInterventionEvent.title = title;

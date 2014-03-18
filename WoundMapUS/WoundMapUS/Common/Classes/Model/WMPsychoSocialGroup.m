@@ -3,6 +3,7 @@
 #import "WMPsychoSocialItem.h"
 #import "WMPsychoSocialValue.h"
 #import "WMPsychoSocialIntEvent.h"
+#import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
 @interface WMPsychoSocialGroup ()
@@ -119,6 +120,8 @@
     [super awakeFromInsert];
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+    // initial status
+    self.status = [WMInterventionStatus initialInterventionStatus:[self managedObjectContext]];
 }
 
 - (BOOL)hasInterventionEvents

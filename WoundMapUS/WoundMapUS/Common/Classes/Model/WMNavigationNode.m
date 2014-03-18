@@ -3,7 +3,6 @@
 #import "WMWoundType.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
-#import "NSObject+performBlockAfterDelay.h"
 
 typedef enum {
     NavigationNodeFlagsRequired     = 0,
@@ -18,21 +17,6 @@ typedef enum {
 
 
 @implementation WMNavigationNode
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMNavigationNode *navigationNode = [[WMNavigationNode alloc] initWithEntity:[NSEntityDescription entityForName:@"WMNavigationNode" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:navigationNode toPersistentStore:store];
-	}
-    // save to back end
-    [navigationNode performBlock:^{
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff queueCreateObj:navigationNode atUri:@"/WMNavigationNode"];
-    } afterDelay:0.5];
-	return navigationNode;
-}
 
 + (NSInteger)navigationNodeCount:(NSManagedObjectContext *)managedObjectContext
 {
@@ -106,7 +90,7 @@ typedef enum {
 
 - (void)setRequiredFlag:(BOOL)requiredFlag
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationNodeFlagsRequired to:requiredFlag]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationNodeFlagsRequired to:requiredFlag]);
 }
 
 - (BOOL)hidesStatusIndicator
@@ -116,7 +100,7 @@ typedef enum {
 
 - (void)setHidesStatusIndicator:(BOOL)hidesStatusIndicator
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationNodeHidesStatus to:hidesStatusIndicator]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:NavigationNodeHidesStatus to:hidesStatusIndicator]);
 }
 
 - (NSArray *)sortedSubnodes
@@ -230,7 +214,7 @@ typedef enum {
 + (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext
 {
     // select
-    WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Select patient from patient list";
     navigationNode.disabledFlag = @NO;
@@ -243,7 +227,7 @@ typedef enum {
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
     // edit
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Edit current patient";
     navigationNode.disabledFlag = @NO;
@@ -256,7 +240,7 @@ typedef enum {
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
     // add
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Add a new patient";
     navigationNode.disabledFlag = @NO;
@@ -281,7 +265,7 @@ typedef enum {
 + (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext
 {
     // select
-    WMNavigationNode *navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    WMNavigationNode *navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Select wound from identified wounds";
     navigationNode.disabledFlag = @NO;
@@ -294,7 +278,7 @@ typedef enum {
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
     // edit
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Edit current wound";
     navigationNode.disabledFlag = @NO;
@@ -307,7 +291,7 @@ typedef enum {
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
     // add
-    navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
     navigationNode.desc = @"Add a new wound";
     navigationNode.disabledFlag = @NO;
@@ -388,7 +372,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kBrowsePhotosNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Review photos of selected wound.";
         navigationNode.disabledFlag = @NO;
@@ -409,7 +393,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kViewGraphsNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Review graphs of measurements for selected wound.";
         navigationNode.disabledFlag = @NO;
@@ -430,7 +414,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kShareNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Share patient record via email, print, or EMR.";
         navigationNode.disabledFlag = @NO;
@@ -453,7 +437,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kInitialStageNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Initial workup stage for new patient.";
         navigationNode.disabledFlag = @NO;
@@ -474,7 +458,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kFollowupStageNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Follow-up stage for revisiting an existing patient.";
         navigationNode.disabledFlag = @NO;
@@ -495,7 +479,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kDischargeStageNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Discharge stage for an existing patient.";
         navigationNode.disabledFlag = @NO;
@@ -516,7 +500,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d", kCarePlanNode]
                                                                          inContext:managedObjectContext];
     if (nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.activeFlag = @YES;
         navigationNode.desc = @"Care Plan";
         navigationNode.disabledFlag = @NO;
@@ -555,7 +539,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND stage == %@ AND parentNode == %@", title, stage, parentNode]
                                                                          inContext:managedObjectContext];
     if (create && nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.title = title;
         navigationNode.stage = stage;
         navigationNode.parentNode = parentNode;
@@ -575,7 +559,7 @@ typedef enum {
     WMNavigationNode *navigationNode = [WMNavigationNode MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"taskIdentifier == %d AND stage == %@ AND parentNode == %@", taskIdentifier, stage, parentNode]
                                                                          inContext:managedObjectContext];
     if (create && nil == navigationNode) {
-        navigationNode = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
         navigationNode.taskIdentifier = [NSNumber numberWithInteger:taskIdentifier];
         navigationNode.stage = stage;
         navigationNode.parentNode = parentNode;

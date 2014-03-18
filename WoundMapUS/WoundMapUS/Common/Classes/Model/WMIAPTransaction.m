@@ -27,7 +27,7 @@ typedef enum {
 {
     WMIAPTransaction *iapTransaction = nil;
     if (nil != managedObjectContext) {
-        iapTransaction = [[WMIAPTransaction alloc] initWithEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+        iapTransaction = [WMIAPTransaction MR_createInContext:managedObjectContext];
         [iapTransaction setTxnId:[[NSUUID UUID] UUIDString]];
         [iapTransaction setCredits:credits];
         [iapTransaction setFlags:[NSNumber numberWithInteger:0]];
@@ -99,12 +99,7 @@ typedef enum {
 
 +(BOOL) hasStartupCredits:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:[WMIAPTransaction entityName] inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"startupCredits != 0"]];
-    int count = [managedObjectContext countForFetchRequest:request error:NULL];
-    DLog(@"count of startupCredit records is %i", count);
-    return count > 0;
+    return [WMIAPTransaction MR_countOfEntitiesWithContext:managedObjectContext] > 0;
 }
 
 +(WMIAPTransaction *) startupCredits:(NSManagedObjectContext *)managedObjectContext
