@@ -12,17 +12,6 @@
 
 @implementation WMWoundLocationPositionJoin
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundLocationPositionJoin *join = [[WMWoundLocationPositionJoin alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundLocationPositionJoin" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:join toPersistentStore:store];
-	}
-    // get a permanent objectID
-	return join;
-}
-
 + (WMWoundLocationPositionJoin *)joinForLocation:(WMWoundLocation *)location
                                        positions:(NSSet *)positions
                                           create:(BOOL)create

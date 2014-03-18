@@ -1,6 +1,5 @@
 #import "WMWoundOdor.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMWoundOdor ()
 
@@ -11,43 +10,19 @@
 
 @implementation WMWoundOdor
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundOdor *woundOdor = [[WMWoundOdor alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundOdor" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundOdor toPersistentStore:store];
-	}
-    [woundOdor setValue:[woundOdor assignObjectId] forKey:[woundOdor primaryKeyField]];
-	return woundOdor;
-}
-
 + (WMWoundOdor *)woundOdorForTitle:(NSString *)title
                             create:(BOOL)create
               managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                   persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundOdor" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMWoundOdor *woundOdor = [array lastObject];
+    WMWoundOdor *woundOdor = [WMWoundOdor MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == woundOdor) {
-        woundOdor = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        woundOdor = [WMWoundOdor MR_createInContext:managedObjectContext];
         woundOdor.title = title;
     }
     return woundOdor;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundOdor" withExtension:@"plist"];
@@ -65,20 +40,18 @@
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateWoundOdorFromDictionary:dictionary managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateWoundOdorFromDictionary:dictionary managedObjectContext:managedObjectContext];
         }
     }
 }
 
 + (WMWoundOdor *)updateWoundOdorFromDictionary:(NSDictionary *)dictionary
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundOdor *woundOdor = [WMWoundOdor woundOdorForTitle:title
                                                      create:YES
-                                       managedObjectContext:managedObjectContext
-                                            persistentStore:store];
+                                       managedObjectContext:managedObjectContext];
     woundOdor.definition = [dictionary objectForKey:@"definition"];
     woundOdor.label = [dictionary objectForKey:@"label"];
     woundOdor.placeHolder = [dictionary objectForKey:@"placeHolder"];

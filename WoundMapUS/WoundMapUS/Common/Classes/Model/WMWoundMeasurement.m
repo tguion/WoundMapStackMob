@@ -1,7 +1,6 @@
 #import "WMWoundMeasurement.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WoundMeasurementFlagsAllowMultipleChildSelection    = 0,
@@ -29,7 +28,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 
 - (void)setAllowMultipleChildSelection:(BOOL)allowMultipleChildSelection
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundMeasurementFlagsAllowMultipleChildSelection to:allowMultipleChildSelection]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundMeasurementFlagsAllowMultipleChildSelection to:allowMultipleChildSelection]);
 }
 
 - (BOOL)normalizeMeasurements
@@ -39,7 +38,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 
 - (void)setNormalizeMeasurements:(BOOL)normalizeMeasurements
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundMeasurementFlagsNormalizeChildInputs to:normalizeMeasurements]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundMeasurementFlagsNormalizeChildInputs to:normalizeMeasurements]);
 }
 
 - (BOOL)hasChildrenWoundMeasurements
@@ -62,46 +61,14 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
     return NO;
 }
 
-
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
-{
-    WMWoundMeasurement *woundMeasurement = [[WMWoundMeasurement alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundMeasurement" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundMeasurement toPersistentStore:store];
-	}
-    [woundMeasurement setValue:[woundMeasurement assignObjectId] forKey:[woundMeasurement primaryKeyField]];
-	return woundMeasurement;
-}
-
 + (NSArray *)sortedRootWoundMeasurements:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurement" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"parentMeasurement = nil"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundMeasurement MR_findAllSortedBy:WMWoundMeasurementAttributes.sortRank ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"parentMeasurement = nil"] inContext:managedObjectContext];
 }
 
 + (NSArray *)sortedRootGraphableWoundMeasurements:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurement" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"parentMeasurement = nil AND graphableFlag == YES"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundMeasurement MR_findAllSortedBy:WMWoundMeasurementAttributes.sortRank ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"parentMeasurement = nil AND graphableFlag == YES"] inContext:managedObjectContext];
 }
 
 
@@ -109,23 +76,13 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
                       parentWoundMeasurement:(WMWoundMeasurement *)parentWoundMeasurement
                                       create:(BOOL)create
                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                             persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    if (parentWoundMeasurement) {
+        NSParameterAssert([parentWoundMeasurement managedObjectContext] == managedObjectContext);
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurement" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentMeasurement == %@", title, parentWoundMeasurement]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMWoundMeasurement *woundMeasurement = [array lastObject];
+    WMWoundMeasurement *woundMeasurement = [WMWoundMeasurement MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentMeasurement == %@", title, parentWoundMeasurement] inContext:managedObjectContext];
     if (create && nil == woundMeasurement) {
-        woundMeasurement = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        woundMeasurement = [WMWoundMeasurement MR_createInContext:managedObjectContext];
         woundMeasurement.title = title;
         woundMeasurement.parentMeasurement = parentWoundMeasurement;
     }
@@ -133,52 +90,24 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 }
 
 + (WMWoundMeasurement *)dimensionsWoundMeasurement:(NSManagedObjectContext *)managedObjectContext
-                                   persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurement" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %d", kWoundMeasurementTitleDimensions]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMWoundMeasurement MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %d", kWoundMeasurementTitleDimensions] inContext:managedObjectContext];
 }
 
 + (WMWoundMeasurement *)underminingTunnelingWoundMeasurement:(NSManagedObjectContext *)managedObjectContext
-                                             persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurement" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"valueTypeCode == %d", GroupValueTypeCodeUndermineTunnel]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMWoundMeasurement MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"valueTypeCode == %d", GroupValueTypeCodeUndermineTunnel] inContext:managedObjectContext];
 }
 
 + (WMWoundMeasurement *)updateWoundMeasurementFromDictionary:(NSDictionary *)dictionary
                                       parentWoundMeasurement:(WMWoundMeasurement *)parentWoundTreatment
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                             persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundMeasurement *measurement = [self woundMeasureForTitle:title
                                           parentWoundMeasurement:parentWoundTreatment
                                                           create:YES
-                                            managedObjectContext:managedObjectContext
-                                                 persistentStore:store];
+                                            managedObjectContext:managedObjectContext];
     measurement.sortRank = [dictionary objectForKey:@"sortRank"];
     measurement.placeHolder = [dictionary objectForKey:@"placeHolder"];
     measurement.sectionTitle = [dictionary objectForKey:@"sectionTitle"];
@@ -205,8 +134,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
         NSMutableSet *set = [NSMutableSet set];
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
             [set addObjectsFromArray:woundTypes];
         }
         [measurement setWoundTypes:set];
@@ -216,8 +144,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
         for (NSDictionary *d in measurements) {
             [self updateWoundMeasurementFromDictionary:d
                                 parentWoundMeasurement:measurement
-                                  managedObjectContext:managedObjectContext
-                                       persistentStore:store];
+                                  managedObjectContext:managedObjectContext];
         }
     }
     return measurement;
@@ -274,7 +201,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
     return NSRangeFromString(range);
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundMeasurement" withExtension:@"plist"];
@@ -292,7 +219,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateWoundMeasurementFromDictionary:dictionary parentWoundMeasurement:nil managedObjectContext:managedObjectContext persistentStore:store];
+            [self updateWoundMeasurementFromDictionary:dictionary parentWoundMeasurement:nil managedObjectContext:managedObjectContext];
         }
     }
 }

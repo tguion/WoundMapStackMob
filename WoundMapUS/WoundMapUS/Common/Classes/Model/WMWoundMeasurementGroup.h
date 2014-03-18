@@ -1,4 +1,5 @@
 #import "_WMWoundMeasurementGroup.h"
+#import "WMInterventionEventType.h"
 
 extern NSString * const kDimensionsWoundMeasurementTitle;
 extern NSString * const kDimensionWidthWoundMeasurementTitle;
@@ -6,7 +7,7 @@ extern NSString * const kDimensionLengthWoundMeasurementTitle;
 extern NSString * const kDimensionDepthWoundMeasurementTitle;
 extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
-@class WMPatient, WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue;
+@class WMPatient, WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue, WMWoundMeasurementIntEvent, WMParticipant;
 
 @interface WMWoundMeasurementGroup : _WMWoundMeasurementGroup {}
 
@@ -37,11 +38,23 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
 - (void)normalizeInputsForParentWoundMeasurement:(WMWoundMeasurement *)parentWoundMeasurement;
 
+- (WMWoundMeasurementIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                         title:(NSString *)title
+                                                     valueFrom:(id)valueFrom
+                                                       valueTo:(id)valueTo
+                                                          type:(WMInterventionEventType *)type
+                                                   participant:(WMParticipant *)participant
+                                                        create:(BOOL)create
+                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (void)createEditEventsForParticipant:(WMParticipant *)participant;
+
 @property (readonly, nonatomic) BOOL isClosed;
 
 @property (readonly, nonatomic) WMWoundMeasurementValue *measurementValueWidth;
 @property (readonly, nonatomic) WMWoundMeasurementValue *measurementValueLength;
 @property (readonly, nonatomic) WMWoundMeasurementValue *measurementValueDepth;
+
+@property (readonly, nonatomic) BOOL hasInterventionEvents;
 
 @property (readonly, nonatomic) NSDate *lastWoundMeasurementDate;
 @property (readonly, nonatomic) NSDate *dateModifiedExludingMeasurement;

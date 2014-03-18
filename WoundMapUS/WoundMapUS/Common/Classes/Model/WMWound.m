@@ -29,19 +29,9 @@
     return Pressure_Ulcer_TypeCodes;
 }
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store
-{
-    WMWound *wound = [[WMWound alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWound" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:wound toPersistentStore:store];
-	}
-	return wound;
-}
-
 + (instancetype)instanceWithPatient:(WMPatient *)patient
 {
-    WMWound *wound = [self instanceWithManagedObjectContext:[patient managedObjectContext] persistentStore:nil];
+    WMWound *wound = [WMWound MR_createInContext:[patient managedObjectContext]];
     wound.patient = patient;
     return wound;
 }

@@ -2,10 +2,8 @@
 #import "WMWoundPosition.h"
 #import "WMWoundLocationPositionJoin.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 NSString * const kOtherWoundLocationTitle = @"Other";
-
 
 @interface WMWoundLocation ()
 
@@ -26,72 +24,33 @@ NSString * const kOtherWoundLocationTitle = @"Other";
     return [[self.positionJoins allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundLocation *woundLocation = [[WMWoundLocation alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundLocation" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundLocation toPersistentStore:store];
-	}
-    [woundLocation setValue:[woundLocation assignObjectId] forKey:[woundLocation primaryKeyField]];
-	return woundLocation;
-}
-
 + (WMWoundLocation *)woundLocationForTitle:(NSString *)title
                                     create:(BOOL)create
                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                           persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundLocation" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", title]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMWoundLocation *woundLocation = [array lastObject];
+    WMWoundLocation *woundLocation = [WMWoundLocation MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
     if (create && nil == woundLocation) {
-        woundLocation = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        woundLocation = [WMWoundLocation MR_createInContext:managedObjectContext];
         woundLocation.title = title;
     }
     return woundLocation;
 }
 
 + (WMWoundLocation *)otherWoundLocation:(NSManagedObjectContext *)managedObjectContext
-                        persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
-    }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundLocation" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundLocationTitle]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMWoundLocation MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundLocationTitle] inContext:managedObjectContext];
 }
 
 #pragma mark - Seed
 
 + (void)updateWoundLocationsFromArray:(NSArray *)locations
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                      persistentStore:(NSPersistentStore *)store
 {
     for (NSDictionary *dictionary in locations) {
         id title = [dictionary objectForKey:@"title"];
         WMWoundLocation *location = [self woundLocationForTitle:title
                                                          create:YES
-                                           managedObjectContext:managedObjectContext
-                                                persistentStore:store];
+                                           managedObjectContext:managedObjectContext];
         location.definition = [dictionary objectForKey:@"definition"];
         location.loincCode = [dictionary objectForKey:@"LOINC Code"];
         location.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
@@ -109,14 +68,12 @@ NSString * const kOtherWoundLocationTitle = @"Other";
 
 + (void)updateWoundLocationQualifiersFromArray:(NSArray *)qualifiers
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               persistentStore:(NSPersistentStore *)store
 {
     for (NSDictionary *dictionary in qualifiers) {
         id title = [dictionary objectForKey:@"title"];
         WMWoundPosition *position = [WMWoundPosition woundPositionForTitle:title
                                                                     create:YES
-                                                      managedObjectContext:managedObjectContext
-                                                           persistentStore:store];
+                                                      managedObjectContext:managedObjectContext];
         position.commonTitle = [dictionary objectForKey:@"common title"];
         position.prompt = [dictionary objectForKey:@"prompt"];
         position.definition = [dictionary objectForKey:@"definition"];
@@ -130,14 +87,12 @@ NSString * const kOtherWoundLocationTitle = @"Other";
 
 + (void)updateLocationQualifierJoinsFromArray:(NSArray *)joins
                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                              persistentStore:(NSPersistentStore *)store
 {
     for (NSDictionary *dictionary in joins) {
         id locationTitle = [dictionary objectForKey:@"location"];
         WMWoundLocation *location = [self woundLocationForTitle:locationTitle
                                                          create:NO
-                                           managedObjectContext:managedObjectContext
-                                                persistentStore:store];
+                                           managedObjectContext:managedObjectContext];
         NSAssert1(nil != location, @"Location not found for title %@", locationTitle);
         id positionGroups =[[dictionary objectForKey:@"groups"] componentsSeparatedByString:@"|"];
         NSInteger sortRank = 0;
@@ -147,22 +102,20 @@ NSString * const kOtherWoundLocationTitle = @"Other";
             for (NSString *positionTitle in positionTitles) {
                 WMWoundPosition *position = [WMWoundPosition woundPositionForTitle:positionTitle
                                                                             create:NO
-                                                              managedObjectContext:managedObjectContext
-                                                                   persistentStore:store];
+                                                              managedObjectContext:managedObjectContext];
                 NSAssert1(nil != position, @"Position not found for title %@", positionTitle);
                 [positions addObject:position];
             }
             WMWoundLocationPositionJoin *join = [WMWoundLocationPositionJoin joinForLocation:location
                                                                                    positions:positions
                                                                                       create:YES
-                                                                        managedObjectContext:managedObjectContext
-                                                                             persistentStore:store];
-            join.sortRank = [NSNumber numberWithInt:sortRank++];
+                                                                        managedObjectContext:managedObjectContext];
+            join.sortRank = @(sortRank++);
         }
     }
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"AnatomicLocation" withExtension:@"plist"];
@@ -181,13 +134,13 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         NSAssert1([propertyList isKindOfClass:[NSDictionary class]], @"Property list file did not return an NSDictionary, class was %@", NSStringFromClass([propertyList class]));
         id locations = [propertyList objectForKey:@"Location"];
         NSAssert1([locations isKindOfClass:[NSArray class]], @"Location is not an NSArray, class was %@", NSStringFromClass([locations class]));
-        [self updateWoundLocationsFromArray:locations managedObjectContext:managedObjectContext persistentStore:store];
+        [self updateWoundLocationsFromArray:locations managedObjectContext:managedObjectContext];
         id qualifiers = [propertyList objectForKey:@"Qualifier"];
         NSAssert1([qualifiers isKindOfClass:[NSArray class]], @"Qualifier is not an NSArray, class was %@", NSStringFromClass([locations class]));
-        [self updateWoundLocationQualifiersFromArray:qualifiers managedObjectContext:managedObjectContext persistentStore:store];
+        [self updateWoundLocationQualifiersFromArray:qualifiers managedObjectContext:managedObjectContext];
         id joins = [propertyList objectForKey:@"Joins"];
         NSAssert1([joins isKindOfClass:[NSArray class]], @"Joins is not an NSArray, class was %@", NSStringFromClass([locations class]));
-        [self updateLocationQualifierJoinsFromArray:joins managedObjectContext:managedObjectContext persistentStore:store];
+        [self updateLocationQualifierJoinsFromArray:joins managedObjectContext:managedObjectContext];
     }
 }
 

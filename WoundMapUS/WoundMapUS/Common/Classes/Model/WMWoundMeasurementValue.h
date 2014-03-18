@@ -4,6 +4,4 @@
 
 @property (readonly) NSString *displayValue;
 
-+ (instancetype)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store;
 @end

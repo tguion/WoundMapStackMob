@@ -23,16 +23,13 @@ extern NSString *const kWoundMeasurementTitleDimensions;
 + (WMWoundMeasurement *)woundMeasureForTitle:(NSString *)title
                       parentWoundMeasurement:(WMWoundMeasurement *)parentWoundMeasurement
                                       create:(BOOL)create
-                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                             persistentStore:(NSPersistentStore *)store;
+                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-+ (WMWoundMeasurement *)dimensionsWoundMeasurement:(NSManagedObjectContext *)managedObjectContext
-                                   persistentStore:(NSPersistentStore *)store;
++ (WMWoundMeasurement *)dimensionsWoundMeasurement:(NSManagedObjectContext *)managedObjectContext;
 
-+ (WMWoundMeasurement *)underminingTunnelingWoundMeasurement:(NSManagedObjectContext *)managedObjectContext
-                                             persistentStore:(NSPersistentStore *)store;
++ (WMWoundMeasurement *)underminingTunnelingWoundMeasurement:(NSManagedObjectContext *)managedObjectContext;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (NSPredicate *)predicateForParentMeasurement:(WMWoundMeasurement *)parentWoundMeasurement woundType:(WMWoundType *)woundType;
 

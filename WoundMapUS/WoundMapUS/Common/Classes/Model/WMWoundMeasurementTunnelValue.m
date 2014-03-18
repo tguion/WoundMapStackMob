@@ -1,5 +1,4 @@
 #import "WMWoundMeasurementTunnelValue.h"
-#import "StackMob.h"
 
 @interface WMWoundMeasurementTunnelValue ()
 
@@ -29,17 +28,6 @@
 {
     [super awakeFromInsert];
     self.sectionTitle = @"Tunneling";
-}
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundMeasurementTunnelValue *woundMeasurementTunnelValue = [[WMWoundMeasurementTunnelValue alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementTunnelValue" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundMeasurementTunnelValue toPersistentStore:store];
-	}
-    [woundMeasurementTunnelValue setValue:[woundMeasurementTunnelValue assignObjectId] forKey:[woundMeasurementTunnelValue primaryKeyField]];
-	return woundMeasurementTunnelValue;
 }
 
 @end

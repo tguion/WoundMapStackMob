@@ -6,14 +6,12 @@
 @property (readonly, nonatomic) BOOL isOther;
 @property (readonly, nonatomic) NSArray *sortedWoundPositionJoins;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMWoundLocation *)woundLocationForTitle:(NSString *)title
                                     create:(BOOL)create
-                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                           persistentStore:(NSPersistentStore *)store;
+                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-+ (WMWoundLocation *)otherWoundLocation:(NSManagedObjectContext *)managedObjectContext
-                        persistentStore:(NSPersistentStore *)store;
++ (WMWoundLocation *)otherWoundLocation:(NSManagedObjectContext *)managedObjectContext;
 
 @end
