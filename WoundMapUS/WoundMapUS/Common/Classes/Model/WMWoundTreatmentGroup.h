@@ -1,7 +1,8 @@
 #import "_WMWoundTreatmentGroup.h"
 #import "WoundCareProtocols.h"
+#import "WMInterventionEventType.h"
 
-@class WMPatient, WMWound, WMWoundTreatment, WMWoundTreatmentValue;
+@class WMPatient, WMWound, WMWoundTreatment, WMWoundTreatmentValue, WMWoundTreatmentIntEvent, WMParticipant;
 
 @interface WMWoundTreatmentGroup : _WMWoundTreatmentGroup <AssessmentGroup> {}
 
@@ -14,6 +15,7 @@
 - (BOOL)hasWoundTreatmentValuesForWoundTreatmentAndChildren:(WMWoundTreatment *)woundTreatment;
 
 @property (readonly, nonatomic) BOOL isClosed;
+@property (readonly, nonatomic) BOOL hasInterventionEvents;
 
 - (WMWoundTreatmentValue *)woundTreatmentValueForWoundTreatment:(WMWoundTreatment *)woundTreatment
                                                          create:(BOOL)create
@@ -27,7 +29,16 @@
 + (NSDate *)mostRecentDateModified:(WMWound *)wound;
 + (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound;
 
-
 - (NSInteger)valuesCountForWoundTreatment:(WMWoundTreatment *)woundTreatment;
+
+- (WMWoundTreatmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                       title:(NSString *)title
+                                                   valueFrom:(id)valueFrom
+                                                     valueTo:(id)valueTo
+                                                        type:(WMInterventionEventType *)type
+                                                 participant:(WMParticipant *)participant
+                                                      create:(BOOL)create
+                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (void)createEditEventsForParticipant:(WMParticipant *)participant;
 
 @end

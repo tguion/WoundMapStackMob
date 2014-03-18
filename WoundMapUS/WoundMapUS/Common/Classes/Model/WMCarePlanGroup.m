@@ -115,22 +115,21 @@
                                      inContext:[patient managedObjectContext]];
 }
 
-- (WMCarePlanValue *)carePlanValueForPatient:(WMPatient *)patient
-                            carePlanCategory:(WMCarePlanCategory *)carePlanCategory
-                                      create:(BOOL)create
-                                       value:(NSString *)value
+- (WMCarePlanValue *)carePlanValueForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
+                                               create:(BOOL)create
+                                                value:(NSString *)value
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     if (nil != carePlanCategory) {
         NSParameterAssert(managedObjectContext == [carePlanCategory managedObjectContext]);
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group.patient == %@ AND category == %@", patient, carePlanCategory];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND category == %@", self, carePlanCategory];
     if (nil != value) {
         predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];
     }
     WMCarePlanValue *carePlanValue = [WMCarePlanValue MR_findFirstWithPredicate:predicate inContext:managedObjectContext];
     if (create && nil == carePlanValue) {
-        carePlanValue = [WMCarePlanValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        carePlanValue = [WMCarePlanValue MR_createInContext:managedObjectContext];
         carePlanValue.category = carePlanCategory;
         carePlanValue.value = value;
         carePlanValue.title = carePlanCategory.title;

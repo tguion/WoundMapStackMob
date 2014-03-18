@@ -13,7 +13,6 @@
 #import "WMWound.h"
 #import "WMNavigationStage.h"
 #import "CoreDataHelper.h"
-#import "WMPatientManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
@@ -181,7 +180,7 @@ typedef enum {
     }
     // else
     [self.nameContainerView updateContentForPatient];
-    NSInteger patientCount = [[WMPatientManager sharedInstance] patientCount];
+    NSInteger patientCount = [WMPatient patientCount:[self.patient managedObjectContext]];
     WMPatient *patient = self.patient;
     if (0 == patientCount) {
         // controller should not let this happen, or hide self

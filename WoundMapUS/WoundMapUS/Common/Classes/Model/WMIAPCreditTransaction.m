@@ -54,7 +54,7 @@
     return creditTransaction;
 }
 
-- (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store
+- (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext
 {
     WMIAPTransaction *iapTxn = [WMIAPTransaction instanceWithManagedObjectContext:managedObjectContext credits:[self credits]];
     [iapTxn setTxnId: [self txnId]];

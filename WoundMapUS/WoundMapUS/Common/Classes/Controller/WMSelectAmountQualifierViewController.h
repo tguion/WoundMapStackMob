@@ -8,13 +8,13 @@
 
 #import "WMBaseViewController.h"
 
-@class WMSelectAmountQualifierViewController, WCAmountQualifier;
+@class WMSelectAmountQualifierViewController, WMAmountQualifier;
 
 @protocol SelectAmountQualifierViewControllerDelegate <NSObject>
 
-@property (strong, nonatomic) WCAmountQualifier *selectedAmountQualifier;
+@property (strong, nonatomic) WMAmountQualifier *selectedAmountQualifier;
 
-- (void)selectAmountQualifierViewController:(WMSelectAmountQualifierViewController *)viewController didSelectQualifierAmount:(WCAmountQualifier *)amount;
+- (void)selectAmountQualifierViewController:(WMSelectAmountQualifierViewController *)viewController didSelectQualifierAmount:(WMAmountQualifier *)amount;
 - (void)selectAmountQualifierViewControllerDidCancel:(WMSelectAmountQualifierViewController *)viewController;
 
 @end
@@ -22,6 +22,6 @@
 @interface WMSelectAmountQualifierViewController : WMBaseViewController
 
 @property (weak, nonatomic) id<SelectAmountQualifierViewControllerDelegate> delegate;
-@property (strong, nonatomic) WCAmountQualifier *amountQualifier;
+@property (strong, nonatomic) WMAmountQualifier *amountQualifier;
 
 @end

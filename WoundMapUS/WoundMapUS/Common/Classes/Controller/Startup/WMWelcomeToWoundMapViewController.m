@@ -24,7 +24,6 @@
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
 #import "WMUserDefaultsManager.h"
-#import "WMPatientManager.h"
 #import "WMSeedDatabaseManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMUtilities.h"
@@ -290,11 +289,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 #pragma mark - Notification handlers
 
 // network synch with server has finished - subclasses may need to override
-- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+- (void)handleNetworkSynchFinished:(NSNotification *)notification
 {
     // install footer to allow access to WoundMap
     self.tableView.tableFooterView = _footerView;
-    [super handleStackMobNetworkSynchFinished:notification];
+    [super handleNetworkSynchFinished:notification];
     self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
     // seed StackMob
     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
@@ -391,7 +390,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         }
         case 3: {
             // patient
-            NSInteger patientCount = self.patientManager.patientCount;
+            NSInteger patientCount = [WMPatient patientCount:self.managedObjectContext];
             if (0 == patientCount) {
                 [self presentAddPatientViewController];
             } else {

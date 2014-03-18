@@ -17,7 +17,6 @@
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
-#import "WMPatientManager.h"
 #import "WMPhotoManager.h"
 #import "WMPolicyManager.h"
 #import "WMNavigationCoordinator.h"
@@ -548,46 +547,40 @@
 
 - (WMNavigationNode *)addPatientNavigationNode
 {
-    return [WMNavigationNode addPatientNavigationNode:self.managedObjectContext
-                                      persistentStore:nil];
+    return [WMNavigationNode addPatientNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)selectPatientNavigationNode
 {
-    return [WMNavigationNode selectPatientNavigationNode:self.managedObjectContext
-                                         persistentStore:nil];
+    return [WMNavigationNode selectPatientNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)editPatientNavigationNode
 {
-    return [WMNavigationNode editPatientNavigationNode:self.managedObjectContext
-                                       persistentStore:nil];
+    return [WMNavigationNode editPatientNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)addWoundNavigationNode
 {
-    return [WMNavigationNode addWoundNavigationNode:self.managedObjectContext
-                                    persistentStore:nil];
+    return [WMNavigationNode addWoundNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)selectWoundNavigationNode
 {
-    return [WMNavigationNode selectWoundNavigationNode:self.managedObjectContext
-                                       persistentStore:nil];
+    return [WMNavigationNode selectWoundNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)editWoundNavigationNode
 {
-    return [WMNavigationNode editWoundNavigationNode:self.managedObjectContext
-                                     persistentStore:nil];
+    return [WMNavigationNode editWoundNavigationNode:self.managedObjectContext];
 }
 
 #pragma mark - Notification handlers
 
 // network synch with server has finished - subclasses may need to override
-- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+- (void)handleNetworkSynchFinished:(NSNotification *)notification
 {
-    [super handleStackMobNetworkSynchFinished:notification];
+    [super handleNetworkSynchFinished:notification];
     // update UI components
     [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
@@ -615,7 +608,6 @@
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack
 {
     [super handleNavigationTrackChanged:navigationTrack];
-    xxx;
     [self performSelector:@selector(updateToolbar) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }

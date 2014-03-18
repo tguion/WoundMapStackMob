@@ -8,8 +8,8 @@
 
 #import "WMMedicationGroup+CoreText.h"
 #import "WMMedicationGroup.h"
-#import "WCMedicationCategory.h"
-#import "WCMedication.h"
+#import "WMMedicationCategory.h"
+#import "WMMedication.h"
 #import "WCModelTextKitAtrributes.h"
 
 @implementation WMMedicationGroup (CoreText)
@@ -36,10 +36,10 @@
     [mutableAttributedString appendAttributedString:attributedString];
     // now iterate through all medications
     NSMutableDictionary *sectionHeadingAttributes = [modelTextKitAtrributes sectionHeadingAttributesForFontSize:currentFontSize indentLevel:0];
-    WCMedicationCategory *currentMedicationCategory = nil;
+    WMMedicationCategory *currentMedicationCategory = nil;
     NSArray *medications = self.sortedMedications;
     NSMutableDictionary *titleAttributes = [modelTextKitAtrributes valueTitleAttributesForFontSize:currentFontSize indentLevel:1];
-    for (WCMedication *medication in medications) {
+    for (WMMedication *medication in medications) {
         if (![medication.category isEqual:currentMedicationCategory]) {
             // category changed - draw it
             currentMedicationCategory = medication.category;

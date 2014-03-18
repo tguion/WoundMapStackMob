@@ -7,7 +7,7 @@
 //
 
 #import "WMSelectAmountQualifierViewController.h"
-#import "WCAmountQualifier+Custom.h"
+#import "WMAmountQualifier.h"
 
 @interface WMSelectAmountQualifierViewController ()
 
@@ -46,7 +46,7 @@
 
 #pragma mark - Core
 
-- (WCAmountQualifier *)amountQualifier
+- (WMAmountQualifier *)amountQualifier
 {
     if (nil == _amountQualifier) {
         _amountQualifier = self.delegate.selectedAmountQualifier;
@@ -98,7 +98,7 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    WCAmountQualifier *amountQualifier = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    WMAmountQualifier *amountQualifier = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = amountQualifier.title;
     if ([self.amountQualifier isEqual:amountQualifier]) {
         cell.imageView.image = [UIImage imageNamed:@"ui_checkmark.png"];
@@ -111,7 +111,7 @@
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-    return @"WCAmountQualifier";
+    return [WMAmountQualifier entityName];
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate
@@ -121,7 +121,7 @@
 
 - (NSArray *)fetchedResultsControllerSortDescriptors
 {
-    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]];
+    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:WMAmountQualifierAttributes.sortRank ascending:YES]];
 }
 
 @end

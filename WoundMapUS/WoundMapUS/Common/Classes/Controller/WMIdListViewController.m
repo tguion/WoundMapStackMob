@@ -116,7 +116,7 @@
 
 - (IBAction)addAction:(id)sender
 {
-    WMId *anId = [WMId instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
+    WMId *anId = [WMId MR_createInContext:self.managedObjectContext];
     [self navigateToIdEditorForId:anId];
 }
 

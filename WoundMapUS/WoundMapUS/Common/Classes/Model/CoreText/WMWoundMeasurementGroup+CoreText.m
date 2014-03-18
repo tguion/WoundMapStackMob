@@ -9,8 +9,8 @@
 #import "WMWoundMeasurementGroup+CoreText.h"
 #import "WMWound.h"
 #import "WMWoundMeasurementGroup.h"
-#import "WCWoundMeasurement.h"
-#import "WCWoundMeasurementValue.h"
+#import "WMWoundMeasurement.h"
+#import "WMWoundMeasurementValue.h"
 #import "WCModelTextKitAtrributes.h"
 
 @implementation WMWoundMeasurementGroup (CoreText)
@@ -38,8 +38,8 @@
     // get attributes for sections
     NSMutableDictionary *sectionHeadingAttributes = [modelTextKitAtrributes sectionHeadingAttributesForFontSize:currentFontSize indentLevel:0];
     // start with root wound measurements
-    NSArray *woundMeasurements = [WCWoundMeasurement sortedRootWoundMeasurements:managedObjectContext];
-    for (WCWoundMeasurement *woundMeasurement in woundMeasurements) {
+    NSArray *woundMeasurements = [WMWoundMeasurement sortedRootWoundMeasurements:managedObjectContext];
+    for (WMWoundMeasurement *woundMeasurement in woundMeasurements) {
         // get values associated with woundMeasurement OR with children of woundMeasurement
         NSArray *woundMeasurementValues = nil;
         if (woundMeasurement.hasChildrenWoundMeasurements) {
@@ -63,7 +63,7 @@
         NSMutableDictionary *valueAttributes = [modelTextKitAtrributes valueAttributesForFontSize:currentFontSize indentLevel:0];
         // now draw title/label : value (unit)
         NSInteger index = 1;
-        for (WCWoundMeasurementValue *woundMeasurementValue in woundMeasurementValues) {
+        for (WMWoundMeasurementValue *woundMeasurementValue in woundMeasurementValues) {
             NSString *unit = woundMeasurementValue.woundMeasurement.unit;
             NSString *title = nil;
             if ([woundMeasurementValue respondsToSelector:@selector(labelText)]) {

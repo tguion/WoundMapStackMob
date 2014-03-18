@@ -21,7 +21,6 @@
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
-#import "StackMob.h"
 
 @interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate>
 
@@ -325,7 +324,7 @@
 {
     if (nil == _patient) {
         if (_newPatientFlag) {
-            _patient = [WMPatient instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+            _patient = [WMPatient MR_createInContext:self.managedObjectContext];
         } else {
             _patient = super.patient;
         }
@@ -343,7 +342,7 @@
     WMPatient *patient = self.patient;
     WMPerson *person = patient.person;
     if (nil == person) {
-        person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:self.store];
+        person = [WMPerson MR_createInContext:self.managedObjectContext];
         patient.person = person;
     }
     return person;

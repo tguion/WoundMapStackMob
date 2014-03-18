@@ -18,7 +18,6 @@
 #import "WMWound.h"
 #import "WMWoundType.h"
 #import "WMUserDefaultsManager.h"
-#import "WMPatientManager.h"
 #import "WMUtilities.h"
 #import "WMNavigationCoordinator.h"
 #import "WMFatFractalManager.h"
@@ -285,7 +284,7 @@
 #pragma mark - Notification handlers
 
 // network synch with server has finished - subclasses may need to override 
-- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+- (void)handleNetworkSynchFinished:(NSNotification *)notification
 {
     [self.tableView reloadData];
 }
@@ -359,11 +358,6 @@
 - (WMUserDefaultsManager *)userDefaultsManager
 {
     return [WMUserDefaultsManager sharedInstance];
-}
-
-- (WMPatientManager *)patientManager
-{
-    return [WMPatientManager sharedInstance];
 }
 
 - (NSMutableArray *)opaqueNotificationObservers

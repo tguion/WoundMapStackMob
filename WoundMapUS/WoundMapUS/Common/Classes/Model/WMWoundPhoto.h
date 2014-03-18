@@ -27,7 +27,6 @@ typedef enum {
 @property (readonly, nonatomic) WMWoundMeasurementGroup *measurementGroup;  // latest active
 @property (readonly, nonatomic) WMPhoto *photo;
 @property (readonly, nonatomic) NSString *photoLabelText;
-@property (readonly, nonatomic) WMPhoto *trueSeePhoto;
 @property (nonatomic) CGPoint translation;
 @property (nonatomic) CGAffineTransform transform;
 @property (readonly, nonatomic) BOOL hasTransform;

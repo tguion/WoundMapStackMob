@@ -8,7 +8,6 @@
 
 #import "WCAppDelegate.h"
 #import "WMWelcomeToWoundMapViewController.h"
-#import "WMLocalStoreManager.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"

@@ -108,8 +108,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
             }
             WMWoundLocationPositionJoin *join = [WMWoundLocationPositionJoin joinForLocation:location
                                                                                    positions:positions
-                                                                                      create:YES
-                                                                        managedObjectContext:managedObjectContext];
+                                                                                      create:YES];
             join.sortRank = @(sortRank++);
         }
     }

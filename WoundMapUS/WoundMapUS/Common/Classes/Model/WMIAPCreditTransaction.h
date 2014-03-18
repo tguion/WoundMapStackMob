@@ -25,6 +25,6 @@
 
 // makes a core data IAP credit transaction -- could not figure out how to deserialize
 // WMIAPTransaction so using WMIAPCreditTransaction for serialization purposes.
-- (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext store:(NSPersistentStore *)store;
+- (WMIAPTransaction *)makeIapTransaction:(NSManagedObjectContext *)managedObjectContext;
 
 @end

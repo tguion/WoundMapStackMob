@@ -6,6 +6,7 @@
 
 @interface WMCarePlanGroup : _WMCarePlanGroup <AssessmentGroup> {}
 
+@property (readonly, nonatomic) BOOL hasInterventionEvents;
 @property (readonly, nonatomic) NSArray *sortedCarePlanValues;
 @property (readonly, nonatomic) BOOL isClosed;
 
@@ -22,10 +23,9 @@
 
 + (NSArray *)sortedCarePlanGroups:(WMPatient *)patient;
 
-- (WMCarePlanValue *)carePlanValueForPatient:(WMPatient *)patient
-                            carePlanCategory:(WMCarePlanCategory *)carePlanCategory
-                                      create:(BOOL)create
-                                       value:(NSString *)value;
+- (WMCarePlanValue *)carePlanValueForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
+                                               create:(BOOL)create
+                                                value:(NSString *)value;
 
 - (WMCarePlanCategory *)carePlanCategoryForParentCategory:(WMCarePlanCategory *)parentCategory;
 - (BOOL)hasValueForCategoryOrDescendants:(WMCarePlanCategory *)carePlanCategory;

@@ -3,8 +3,9 @@
 #import "WMWoundTreatmentValue.h"
 #import "WMWound.h"
 #import "WMWoundTreatment.h"
+#import "WMWoundTreatmentIntEvent.h"
+#import "WMInterventionStatus.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 @interface WMWoundTreatmentGroup ()
 
@@ -15,20 +16,9 @@
 
 @implementation WMWoundTreatmentGroup
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundTreatmentGroup *woundTreatmentGroup = [[WMWoundTreatmentGroup alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentGroup" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundTreatmentGroup toPersistentStore:store];
-	}
-    [woundTreatmentGroup setValue:[woundTreatmentGroup assignObjectId] forKey:[woundTreatmentGroup primaryKeyField]];
-	return woundTreatmentGroup;
-}
-
 + (WMWoundTreatmentGroup *)woundTreatmentGroupForWound:(WMWound *)wound
 {
-    WMWoundTreatmentGroup *woundTreatmentGroup = [self instanceWithManagedObjectContext:[wound managedObjectContext] persistentStore:nil];
+    WMWoundTreatmentGroup *woundTreatmentGroup = [WMWoundTreatmentGroup MR_createInContext:[wound managedObjectContext]];
     woundTreatmentGroup.wound = wound;
     return woundTreatmentGroup;
 }
@@ -40,20 +30,12 @@
 
 + (NSInteger)woundTreatmentGroupsCount:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
 + (NSInteger)woundTreatmentGroupsInactiveOrClosedCount:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == NO OR closedFlag == YES", patient]];
-    return [managedObjectContext countForFetchRequest:request error:NULL];
+    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == NO OR closedFlag == YES", patient] inContext:[patient managedObjectContext]];
 }
 
 + (NSDate *)mostRecentDateModified:(WMWound *)wound
@@ -68,48 +50,22 @@
     request.predicate = [NSPredicate predicateWithFormat:@"wound == %@", wound];
     request.resultType = NSDictionaryResultType;
     request.propertiesToFetch = @[dateModifiedExpressionDescription];
-    SMRequestOptions *options = [SMRequestOptions optionsWithFetchPolicy:SMFetchPolicyCacheOnly];
-    NSError *error = nil;
-    NSArray *results = [managedObjectContext executeFetchRequestAndWait:request
-                                                 returnManagedObjectIDs:NO
-                                                                options:options
-                                                                  error:&error];
-    if ([results count] == 0)
-        return nil;
-    // else
-    return [results firstObject][@"updatedAt"];
+    NSDictionary *date = (NSDictionary *)[WMWoundTreatmentGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    return date[@"updatedAt"];
 }
 
 + (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound
 {
-    NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND status.activeFlag == YES AND closedFlag == NO", wound]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMWoundTreatmentGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND status.activeFlag == YES AND closedFlag == NO", wound]
+                                                   sortedBy:WMWoundTreatmentGroupAttributes.createdAt
+                                                  ascending:NO
+                                                  inContext:[wound managedObjectContext]];
 }
 
 + (NSInteger)closeWoundTreatmentGroupsCreatedBefore:(NSDate *)date
                                             patient:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentGroup" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-        return 0;
-    }
-	// else
+    NSArray *array = [WMWoundTreatmentGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date] inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }
@@ -127,23 +83,16 @@
                                                           value:(id)value
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSAssert([[woundTreatment managedObjectContext] isEqual:managedObjectContext], @"Invalid mocs");
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatmentValue" inManagedObjectContext:managedObjectContext]];
+    if (woundTreatment) {
+        NSParameterAssert([woundTreatment managedObjectContext] == managedObjectContext);
+    }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND woundTreatment == %@", self, woundTreatment];
     if (nil != value) {
         predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];
     }
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-	// else
-    WMWoundTreatmentValue *woundTreatmentValue = [array lastObject];
+    WMWoundTreatmentValue *woundTreatmentValue = [WMWoundTreatmentValue MR_findFirstWithPredicate:predicate inContext:[self managedObjectContext]];
     if (create && nil == woundTreatmentValue) {
-        woundTreatmentValue = [WMWoundTreatmentValue instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        woundTreatmentValue = [WMWoundTreatmentValue MR_createInContext:managedObjectContext];
         woundTreatmentValue.woundTreatment = woundTreatment;
         woundTreatmentValue.value = value;
         woundTreatmentValue.title = woundTreatment.title;
@@ -175,8 +124,10 @@
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+    // initial status
+    self.status = [WMInterventionStatus initialInterventionStatus:[self managedObjectContext]];
 }
 
 - (BOOL)isClosed
@@ -191,6 +142,91 @@
     NSMutableSet *woundTreatmentsForValues = [[self.values valueForKeyPath:@"woundTreatment"] mutableCopy];
     [woundTreatmentsForValues intersectSet:woundTreatments];
     return [woundTreatmentsForValues count];
+}
+
+#pragma mark - Events
+
+- (WMWoundTreatmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                       title:(NSString *)title
+                                                   valueFrom:(id)valueFrom
+                                                     valueTo:(id)valueTo
+                                                        type:(WMInterventionEventType *)type
+                                                 participant:(WMParticipant *)participant
+                                                      create:(BOOL)create
+                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    WMWoundTreatmentIntEvent *event = [WMWoundTreatmentIntEvent woundTreatmentInterventionEventForWoundTreatmentGroup:self
+                                                                                                           changeType:changeType
+                                                                                                                title:title
+                                                                                                            valueFrom:valueFrom
+                                                                                                              valueTo:valueTo
+                                                                                                                 type:type
+                                                                                                          participant:participant
+                                                                                                               create:create
+                                                                                                 managedObjectContext:managedObjectContext];
+    return event;
+}
+
+- (void)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSSet class]]) {
+        committedValues = [committedValues filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != %@", [NSNull null]]];
+    } else {
+        committedValues = [NSSet set];
+    }
+    NSMutableSet *addedValues = [self.values mutableCopy];
+    [addedValues minusSet:committedValues];
+    NSMutableSet *deletedValues = [committedValues mutableCopy];
+    [deletedValues minusSet:self.values];
+    for (WMWoundTreatmentValue *value in addedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                       title:value.woundTreatment.title
+                                   valueFrom:nil
+                                     valueTo:value.value
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created add event %@", value.woundTreatment.title);
+    }
+    for (WMWoundTreatmentValue *value in deletedValues) {
+        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                       title:value.title
+                                   valueFrom:nil
+                                     valueTo:nil
+                                        type:nil
+                                 participant:participant
+                                      create:YES
+                        managedObjectContext:self.managedObjectContext];
+        DLog(@"Created delete event %@", value.title);
+    }
+    for (WMWoundTreatmentValue *value in [self.managedObjectContext updatedObjects]) {
+        if ([value isKindOfClass:[WMWoundTreatmentValue class]]) {
+            committedValuesMap = [value committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSString *oldValue = [committedValuesMap objectForKey:@"value"];
+            NSString *newValue = value.value;
+            if ([newValue isKindOfClass:[NSString class]] && [newValue isEqualToString:oldValue]) {
+                continue;
+            }
+            // else it changed
+            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                           title:value.woundTreatment.title
+                                       valueFrom:oldValue
+                                         valueTo:newValue
+                                            type:nil
+                                     participant:participant
+                                          create:YES
+                            managedObjectContext:self.managedObjectContext];
+            DLog(@"Created event %@->%@", oldValue, newValue);
+        }
+    }
+}
+
+- (BOOL)hasInterventionEvents
+{
+    return [self.interventionEvents count] > 0;
 }
 
 #pragma mark - AssessmentGroup

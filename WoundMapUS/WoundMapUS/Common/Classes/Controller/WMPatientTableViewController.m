@@ -13,8 +13,8 @@
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
 #import "CoreDataHelper.h"
-#import "WMPatientManager.h"
 #import "WMUtilities.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
 #define kPatientTableViewCellHeight 76.0
@@ -27,7 +27,6 @@
 @property (readonly, nonatomic) BOOL isShowingTeamPatients;
 @property (strong, nonatomic) WMPatient *patientToDelete;
 @property (strong, nonatomic) WMPatient *patientToOpen;
-@property (nonatomic) BOOL waitingForSynchWithServer;
 
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) UIView *searchBarTextField;
@@ -55,10 +54,12 @@
 - (void)deletePatient:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    [managedObjectContext deleteObject:patient];
+    [managedObjectContext MR_deleteObjects:@[patient]];
     __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [weakSelf.tableView reloadData];
     }];
 }
@@ -95,32 +96,25 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    // get all patient and patientConsultant data from server before we display data
-    _waitingForSynchWithServer = YES;
     // show progress
     [self showProgressViewWithMessage:@"Acquiring Patient Records"];
-    [self performSelector:@selector(delayedAcquirePatientRecordsFromNetwork) withObject:nil afterDelay:0.0];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(self) weakSelf = self;
+    [ffm fetchPatients:self.managedObjectContext ff:ff completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf hideProgressView];
+            [weakSelf.tableView reloadData];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)delayedAcquirePatientRecordsFromNetwork
-{
-    __weak __typeof(self) weakSelf = self;
-    [self.patientManager acquirePatientRecordsWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
-        weakSelf.waitingForSynchWithServer = NO;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf hideProgressView];
-            weakSelf.fetchPolicy = SMFetchPolicyCacheOnly;
-            weakSelf.patientToOpen = weakSelf.patient;
-            [weakSelf.tableView reloadData];
-        });
-    }];
 }
 
 #pragma mark - Core
@@ -153,13 +147,11 @@
 #pragma mark - Notification handlers
 
 // network synch with server has finished - subclasses may need to override
-- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification
+- (void)handleNetworkSynchFinished:(NSNotification *)notification
 {
     [self hideProgressView];
-    if (_waitingForSynchWithServer) {
-        [super handleStackMobNetworkSynchFinished:notification];
-        [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
-    }
+    [super handleNetworkSynchFinished:notification];
+    [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
 }
 
 #pragma mark - WMBaseViewController
@@ -176,7 +168,6 @@
     [super clearDataCache];
     _patientToDelete = nil;
     _patientToOpen = nil;
-    _waitingForSynchWithServer = NO;
 }
 
 - (void)fetchedResultsControllerDidFetch
@@ -305,15 +296,6 @@
 
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    if (_waitingForSynchWithServer) {
-        return 0;
-    }
-    // else
-    return [[self.fetchedResultsController sections] count];
-}
-
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -357,10 +339,10 @@
 - (NSString *)fetchedResultsControllerEntityName
 {
     if (self.isShowingTeamPatients) {
-        return @"WMPatient";
+        return [WMPatient entityName];
     }
     // else
-    return @"WMPatientConsultant";
+    return [WMPatientConsultant entityName];
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate
@@ -375,8 +357,6 @@
                                                                            [NSPredicate predicateWithFormat:@"ids.extension CONTAINS[cd] %@", searchText],
                                                                            nil]];
         }
-    } else {
-        predicate = [NSPredicate predicateWithFormat:@"consultant.username != %@", self.appDelegate.stackMobUsername];
     }
     return predicate;
 }

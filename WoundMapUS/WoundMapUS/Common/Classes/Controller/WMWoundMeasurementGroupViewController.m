@@ -324,7 +324,7 @@
 {
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:8];
     if ([WCWoundMeasurementGroup woundMeasurementGroupsHaveHistoryForWound:self.wound]) {
-        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_Notepad.png"]
+        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_Notepad"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(showWoundMeasurementGroupHistoryAction:)]];
@@ -343,7 +343,7 @@
                                                                    target:nil
                                                                    action:nil]];
     if (self.woundMeasurementGroup.hasInterventionEvents) {
-        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_List-bullets.png"]
+        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_List-bullets"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(showWoundMeasurementGroupEventsAction:)]];

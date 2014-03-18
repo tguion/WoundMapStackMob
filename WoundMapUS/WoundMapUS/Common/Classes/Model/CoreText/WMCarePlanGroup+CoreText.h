@@ -9,12 +9,12 @@
 #import "WMCarePlanGroup.h"
 #import "WoundCareProtocols.h"
 
-@class WCCarePlanCategory;
+@class WMCarePlanCategory;
 
 @interface WMCarePlanGroup (CoreText) <WCCoreTextDataSource>
 
 - (void)appendToMutableAttributedString:(NSMutableAttributedString *)mutableAttributedString
-              forParentCarePlanCategory:(WCCarePlanCategory *)parentCarePlanCategory
+              forParentCarePlanCategory:(WMCarePlanCategory *)parentCarePlanCategory
                             indentLevel:(NSUInteger)indentLevel
                        withBaseFontSize:(CGFloat)currentFontSize;
 

@@ -91,12 +91,12 @@
 
 + (UIImage *)unselectedWoundTableCellImage
 {
-    return [UIImage imageNamed:@"ui_circle.png"];
+    return [UIImage imageNamed:@"ui_circle"];
 }
 
 + (UIImage *)selectedWoundTableCellImage
 {
-    return [UIImage imageNamed:@"ui_checkmark.png"];
+    return [UIImage imageNamed:@"ui_checkmark"];
 }
 
 + (void)applyDrowShadowToTableCellImageView:(UIImageView *)imageView

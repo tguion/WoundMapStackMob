@@ -93,9 +93,9 @@
     WMWoundOdor *woundOdor = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = woundOdor.title;
     if ([self.woundOdor isEqual:woundOdor]) {
-        cell.imageView.image = [UIImage imageNamed:@"ui_checkmark.png"];
+        cell.imageView.image = [UIImage imageNamed:@"ui_checkmark"];
     } else {
-        cell.imageView.image = [UIImage imageNamed:@"ui_circle.png"];
+        cell.imageView.image = [UIImage imageNamed:@"ui_circle"];
     }
 }
 

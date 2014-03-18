@@ -8,8 +8,8 @@
 
 #import "WMCarePlanGroup+CoreText.h"
 #import "WMCarePlanGroup.h"
-#import "WCCarePlanCategory.h"
-#import "WCCarePlanValue.h"
+#import "WMCarePlanCategory.h"
+#import "WMCarePlanValue.h"
 #import "WCModelTextKitAtrributes.h"
 
 @implementation WMCarePlanGroup (CoreText)
@@ -36,18 +36,17 @@
     [mutableAttributedString appendAttributedString:attributedString];
     // now iterate through all categories
     NSMutableDictionary *sectionHeadingAttributes = [modelTextKitAtrributes sectionHeadingAttributesForFontSize:currentFontSize indentLevel:0];
-    NSArray *sortedRootCarePlanCategories = [WCCarePlanCategory sortedRootCarePlanCategories:managedObjectContext];
-    for (WCCarePlanCategory *rootCarePlanCategory in sortedRootCarePlanCategories) {
-        if (![self hasValueForCategoryOrDescendantsPlusItems:rootCarePlanCategory]) {
+    NSArray *sortedRootCarePlanCategories = [WMCarePlanCategory sortedRootCarePlanCategories:managedObjectContext];
+    for (WMCarePlanCategory *rootCarePlanCategory in sortedRootCarePlanCategories) {
+        if (![self hasValueForCategoryOrDescendants:rootCarePlanCategory]) {
             continue;
         }
         // else draw title with section attributes
         string = rootCarePlanCategory.title;
         // check for inline replacement
-        WCCarePlanValue *carePlanValue = [self carePlanValueForCarePlanCategory:rootCarePlanCategory
+        WMCarePlanValue *carePlanValue = [self carePlanValueForCarePlanCategory:rootCarePlanCategory
                                                                          create:NO
-                                                                          value:nil
-                                                           managedObjectContext:managedObjectContext];
+                                                                          value:nil];
         if ([carePlanValue.value length] > 0) {
             if (rootCarePlanCategory.combineKeyAndValue) {
                 string = [rootCarePlanCategory combineKeyAndValue:carePlanValue.value];
@@ -72,11 +71,10 @@
 #pragma mark - Core
 
 - (void)appendToMutableAttributedString:(NSMutableAttributedString *)mutableAttributedString
-              forParentCarePlanCategory:(WCCarePlanCategory *)parentCarePlanCategory
+              forParentCarePlanCategory:(WMCarePlanCategory *)parentCarePlanCategory
                             indentLevel:(NSUInteger)indentLevel
                        withBaseFontSize:(CGFloat)currentFontSize
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     WCModelTextKitAtrributes *modelTextKitAtrributes = [WCModelTextKitAtrributes sharedInstance];
     NSString *string = nil;
     NSAttributedString *paragraphAttributedString = [modelTextKitAtrributes paragraphAttributedString];
@@ -88,16 +86,15 @@
         return;
     }
     // else handle headIndent
-    WCCarePlanValue *carePlanValue = nil;
-    for (WCCarePlanCategory *subcategory in sortedSubcategoriesCategories) {
+    WMCarePlanValue *carePlanValue = nil;
+    for (WMCarePlanCategory *subcategory in sortedSubcategoriesCategories) {
         // subcategory or a child of subcategory has a value
         carePlanValue = [self carePlanValueForCarePlanCategory:subcategory
                                                         create:NO
-                                                         value:nil
-                                          managedObjectContext:managedObjectContext];
+                                                         value:nil];
         if (nil == carePlanValue) {
             // check if there is any data down this path
-            if (![self hasValueForCategoryOrDescendantsPlusItems:subcategory]) {
+            if (![self hasValueForCategoryOrDescendants:subcategory]) {
                 // dead end, bail
                 continue;
             }

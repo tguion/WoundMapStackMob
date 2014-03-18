@@ -118,7 +118,7 @@
 
 - (IBAction)addAction:(id)sender
 {
-    WMAddress *address = [WMAddress instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
+    WMAddress *address = [WMAddress MR_createInContext:self.managedObjectContext];
     [self navigateToAddressEditorForAddress:address];
 }
 

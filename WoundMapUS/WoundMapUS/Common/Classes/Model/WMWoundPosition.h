@@ -8,12 +8,10 @@
 
 + (WMWoundPosition *)woundPositionForTitle:(NSString *)title
                                     create:(BOOL)create
-                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                           persistentStore:(NSPersistentStore *)store;
+                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMWoundPosition *)woundPositionForCommonTitle:(NSString *)commonTitle
                                           create:(BOOL)create
-                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                 persistentStore:(NSPersistentStore *)store;
+                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

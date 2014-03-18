@@ -8,9 +8,9 @@
 
 #import "WMSkinAssessmentGroup+CoreText.h"
 #import "WMSkinAssessmentGroup.h"
-#import "WCSkinAssessmentCategory.h"
-#import "WCSkinAssessment.h"
-#import "WCSkinAssessmentValue.h"
+#import "WMSkinAssessmentCategory.h"
+#import "WMSkinAssessment.h"
+#import "WMSkinAssessmentValue.h"
 #import "WCModelTextKitAtrributes.h"
 
 @implementation WMSkinAssessmentGroup (CoreText)
@@ -40,8 +40,8 @@
     // now iterate through all values
     NSMutableDictionary *sectionHeadingAttributes = [modelTextKitAtrributes sectionHeadingAttributesForFontSize:currentFontSize indentLevel:0];
     NSArray *skinAssessmentValues = self.sortedSkinAssessmentValues;
-    WCSkinAssessmentCategory *skinAssessmentCategory = nil;
-    for (WCSkinAssessmentValue *skinAssessmentValue in skinAssessmentValues) {
+    WMSkinAssessmentCategory *skinAssessmentCategory = nil;
+    for (WMSkinAssessmentValue *skinAssessmentValue in skinAssessmentValues) {
         if (![skinAssessmentValue.skinAssessment.category isEqual:skinAssessmentCategory]) {
             skinAssessmentCategory = skinAssessmentValue.skinAssessment.category;
             // new paragraph

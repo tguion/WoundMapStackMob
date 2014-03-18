@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //  NS_DESIGNATED_INITIALIZER
 
-@class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager, WMPatientManager;
+@class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager;
 @class WMPatient, WMWound, WMWoundPhoto, WMNavigationTrack, WMNavigationStage;
 @class WMProgressViewHUD;
 
@@ -20,7 +20,6 @@
 @property (readonly, nonatomic) BOOL isSearchActive;
 
 @property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
-@property (readonly, nonatomic) WMPatientManager *patientManager;
 
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -73,7 +72,7 @@
 - (void)handlePatientChanged:(WMPatient *)patient NS_REQUIRES_SUPER;
 - (void)handleWoundChanged:(WMWound *)wound NS_REQUIRES_SUPER;
 - (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto NS_REQUIRES_SUPER;
-- (void)handleStackMobNetworkSynchFinished:(NSNotification *)notification NS_REQUIRES_SUPER;
+- (void)handleNetworkSynchFinished:(NSNotification *)notification NS_REQUIRES_SUPER;
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack NS_REQUIRES_SUPER;
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 

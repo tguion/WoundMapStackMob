@@ -74,7 +74,7 @@ CGFloat const kInitialBackgroundImageAlpha = 0.15;
 - (UIImageView *)sliderImageView
 {
     if (nil == _sliderImageView) {
-        UIImage *image = [UIImage imageNamed:@"ui_slider_black.png"];
+        UIImage *image = [UIImage imageNamed:@"ui_slider_black"];
         _sliderImageView = [[UIImageView alloc] initWithImage:image];
         _sliderImageView.frame = CGRectMake(0.0, 0.0, image.size.width, image.size.height);
         _sliderImageView.alpha = 0.45;
@@ -147,12 +147,12 @@ CGFloat const kInitialBackgroundImageAlpha = 0.15;
     CGFloat minX = CGRectGetMinX(rect);
     CGFloat minY = CGRectGetMinY(rect);
     // draw dim/bright images
-    UIImage *dimImage = [UIImage imageNamed:@"ui_dim.png"];
+    UIImage *dimImage = [UIImage imageNamed:@"ui_dim"];
     CGFloat imageWidth = dimImage.size.width;
     CGFloat imageHeight = dimImage.size.height;
     CGRect aRect = CGRectMake(minX + 2.0, minY + CGRectGetHeight(rect) - imageHeight - 2.0, imageWidth, imageHeight);
     [dimImage drawInRect:aRect blendMode:kCGBlendModeNormal alpha:0.95];
-    UIImage *brightImage = [UIImage imageNamed:@"ui_bright.png"];
+    UIImage *brightImage = [UIImage imageNamed:@"ui_bright"];
     imageWidth = brightImage.size.width;
     imageHeight = brightImage.size.height;
     aRect = CGRectMake(minX + 2.0, minY + 2.0, imageWidth, imageHeight);

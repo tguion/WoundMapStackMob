@@ -223,7 +223,6 @@
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
-		7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26418AEC6E400C1B698 /* WMPatientManager.m */; };
 		7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26718AFBE6300C1B698 /* WMValue1TableViewCell.m */; };
 		7D9AA26B18AFBF3E00C1B698 /* BoxedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26A18AFBF3E00C1B698 /* BoxedButton.m */; };
 		7D9AA26E18AFD35F00C1B698 /* WMSeedDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26D18AFD35F00C1B698 /* WMSeedDatabaseManager.m */; };
@@ -431,7 +430,6 @@
 		7DF4E99E18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E99D18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m */; };
 		7DF4E9A118C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A018C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m */; };
 		7DF4E9A418C3D168000A3F5B /* WMWoundTreatmentIntEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A318C3D168000A3F5B /* WMWoundTreatmentIntEvent.m */; };
-		7DF4E9A718C4B06D000A3F5B /* WMLocalStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A618C4B06D000A3F5B /* WMLocalStoreManager.m */; };
 		7DF4E9AA18C4B76B000A3F5B /* WMEmailManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */; };
 		7DF4E9AD18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9AC18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m */; };
 		7DF4E9B018C4C7FE000A3F5B /* WMIAPCreditTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9AF18C4C7FE000A3F5B /* WMIAPCreditTransaction.m */; };
@@ -813,8 +811,6 @@
 		7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundType.m; sourceTree = "<group>"; };
 		7D9AA26018AEC0D400C1B698 /* WMNavigationCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationCoordinator.h; sourceTree = "<group>"; };
 		7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationCoordinator.m; sourceTree = "<group>"; };
-		7D9AA26318AEC6E400C1B698 /* WMPatientManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientManager.h; sourceTree = "<group>"; };
-		7D9AA26418AEC6E400C1B698 /* WMPatientManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientManager.m; sourceTree = "<group>"; };
 		7D9AA26618AFBE6300C1B698 /* WMValue1TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMValue1TableViewCell.h; sourceTree = "<group>"; };
 		7D9AA26718AFBE6300C1B698 /* WMValue1TableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMValue1TableViewCell.m; sourceTree = "<group>"; };
 		7D9AA26918AFBF3E00C1B698 /* BoxedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxedButton.h; sourceTree = "<group>"; };
@@ -1204,8 +1200,6 @@
 		7DF4E9A018C3D15B000A3F5B /* _WMWoundTreatmentIntEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundTreatmentIntEvent.m; sourceTree = "<group>"; };
 		7DF4E9A218C3D168000A3F5B /* WMWoundTreatmentIntEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentIntEvent.h; sourceTree = "<group>"; };
 		7DF4E9A318C3D168000A3F5B /* WMWoundTreatmentIntEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentIntEvent.m; sourceTree = "<group>"; };
-		7DF4E9A518C4B06D000A3F5B /* WMLocalStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMLocalStoreManager.h; sourceTree = "<group>"; };
-		7DF4E9A618C4B06D000A3F5B /* WMLocalStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMLocalStoreManager.m; sourceTree = "<group>"; };
 		7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMEmailManager.h; sourceTree = "<group>"; };
 		7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMEmailManager.m; sourceTree = "<group>"; };
 		7DF4E9AB18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPDeviceTransactionAggregate.h; sourceTree = "<group>"; };
@@ -1682,14 +1676,10 @@
 				7DDE754718CE42AA00B15C77 /* WMCorePlotManager.m */,
 				7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */,
 				7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */,
-				7DF4E9A518C4B06D000A3F5B /* WMLocalStoreManager.h */,
-				7DF4E9A618C4B06D000A3F5B /* WMLocalStoreManager.m */,
 				7D9AA26018AEC0D400C1B698 /* WMNavigationCoordinator.h */,
 				7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */,
 				7DD8376618C8B3980028C2D3 /* WMNetworkReachability.h */,
 				7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */,
-				7D9AA26318AEC6E400C1B698 /* WMPatientManager.h */,
-				7D9AA26418AEC6E400C1B698 /* WMPatientManager.m */,
 				7DF4E9B118C4C8EA000A3F5B /* WMPDFPrintManager.h */,
 				7DF4E9B218C4C8EA000A3F5B /* WMPDFPrintManager.m */,
 				7D39DADB18B7D0450054DDC3 /* WMPhotoManager.h */,
@@ -2723,7 +2713,6 @@
 				7D39DBC818BAB5540054DDC3 /* WMUndermineTunnelViewController.m in Sources */,
 				7D13027B18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m in Sources */,
 				7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */,
-				7D9AA26518AEC6E400C1B698 /* WMPatientManager.m in Sources */,
 				7DF4E92A18C22F27000A3F5B /* WMDefinition.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
 				7DDBEDB518BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m in Sources */,
@@ -2840,7 +2829,6 @@
 				7DB206D318A839180004DC32 /* WMId.m in Sources */,
 				7DD8372E18C78A390028C2D3 /* NSNumber+MagicalDataImport.m in Sources */,
 				5F6DE51E18B589B300E87F7E /* WMInstructionTableViewCell.m in Sources */,
-				7DF4E9A718C4B06D000A3F5B /* WMLocalStoreManager.m in Sources */,
 				7D39DAE718B7E5DD0054DDC3 /* WMSelectWoundViewController.m in Sources */,
 				5F67D1C418AC39B800460C37 /* WMParticipantType.m in Sources */,
 				7D9AA27418AFF74C00C1B698 /* WMConsultingGroup.m in Sources */,

@@ -4,7 +4,6 @@
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurementValue.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 #define kTiledImageRowCount 8
 #define kTiledImageColumnCount 8
@@ -32,7 +31,7 @@ typedef enum {
 
 - (void)setLandscapeOrientation:(BOOL)landscapeOrientation
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsDeviceLandscape to:landscapeOrientation]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsDeviceLandscape to:landscapeOrientation]);
 }
 
 - (BOOL)tilesCreatedForOriginalImage
@@ -42,7 +41,7 @@ typedef enum {
 
 - (void)setTilesCreatedForOriginalImage:(BOOL)tilesCreatedForOriginalImage
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsTilesCreatedOriginal to:tilesCreatedForOriginalImage]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsTilesCreatedOriginal to:tilesCreatedForOriginalImage]);
 }
 
 - (BOOL)tilingHasStarted
@@ -52,7 +51,7 @@ typedef enum {
 
 - (void)setTilingHasStarted:(BOOL)tilingHasStarted
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsTilingHasStarted to:tilingHasStarted]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsTilingHasStarted to:tilingHasStarted]);
 }
 
 - (BOOL)waitingForTilingToFinish
@@ -65,39 +64,17 @@ typedef enum {
     return [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundPhoto *woundPhoto = [[WMWoundPhoto alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundPhoto toPersistentStore:store];
-	}
-    [woundPhoto setValue:[woundPhoto assignObjectId] forKey:[woundPhoto primaryKeyField]];
-	return woundPhoto;
-}
-
 + (WMWoundPhoto *)createWoundPhotoForWound:(WMWound *)wound
 {
     NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-    WMWoundPhoto *woundPhoto = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+    WMWoundPhoto *woundPhoto = [WMWoundPhoto MR_createInContext:managedObjectContext];
     woundPhoto.wound = wound;
     return woundPhoto;
 }
 
 + (NSArray *)sortedWoundPhotosForWound:(WMWound *)wound
 {
-    NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", wound]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundPhoto MR_findAllSortedBy:WMWoundPhotoAttributes.createdAt ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"wound == %@", wound] inContext:[wound managedObjectContext]];
 }
 
 + (void)updateFetchRequestForDictionaryType:(NSFetchRequest *)request thumbnailType:(WoundPhotoThumbnailType)woundPhotoThumbnailType
@@ -127,7 +104,7 @@ typedef enum {
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
-    self.dateCreated = [NSDate date];
+    self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
 }
 
@@ -139,7 +116,7 @@ typedef enum {
         case PhotoTypeOriginal: {
             photo = self.photo;
             if (nil == photo) {
-                photo = [WMPhoto instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+                photo = [WMPhoto MR_createInContext:managedObjectContext];
                 photo.originalFlag = [NSNumber numberWithBool:YES];
                 [self addPhotosObject:photo];
             }
@@ -151,25 +128,7 @@ typedef enum {
 
 - (WMPhoto *)photo
 {
-    // look at relationship first
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"originalFlag == YES", self];
-    NSArray *array = [[self.photos allObjects] filteredArrayUsingPredicate:predicate];
-    if ([array count] > 0) {
-        return [array lastObject];
-    }
-    // else search database
-    predicate = [NSPredicate predicateWithFormat:@"woundPhoto == %@ AND originalFlag == YES", self];
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPhoto" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
+    return [WMPhoto MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"woundPhoto == %@ AND originalFlag == YES", self] inContext:[self managedObjectContext]];
 }
 
 - (NSString *)photoLabelText
@@ -188,28 +147,6 @@ typedef enum {
         }
     }
     return text;
-}
-
-- (WMPhoto *)trueSeePhoto
-{
-    // look at relationship first
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"woundPhoto == %@ AND trueSeeFlag == %d", self, YES];
-    NSArray *array = [[self.photos allObjects] filteredArrayUsingPredicate:predicate];
-    if ([array count] > 0) {
-        return [array lastObject];
-    }
-    // else search database
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMPhoto" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:predicate];
-    NSError *error = nil;
-    array = [managedObjectContext executeFetchRequestAndWait:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return [array lastObject];
 }
 
 - (CGPoint)translation

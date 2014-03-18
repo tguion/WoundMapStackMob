@@ -10,7 +10,7 @@
 #import "WMNavigationTrack.h"
 #import "WMNavigationTrackTableViewCell.h"
 #import "CoreDataHelper.h"
-#import "WMPatientManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WMUtilities.h"
 
 @interface WMChooseTrackViewController ()
@@ -70,7 +70,7 @@
 - (WMNavigationTrack *)navigationTrack
 {
     if (nil == _navigationTrack) {
-        _navigationTrack = [self.patientManager navigationTrackForCurrentPatient:self.managedObjectContext persistentStore:self.store];
+        _navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext];
     }
     return _navigationTrack;
 }

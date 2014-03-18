@@ -442,7 +442,7 @@ typedef enum {
         navigationNode.desc = @"Initial workup stage for new patient.";
         navigationNode.disabledFlag = @NO;
         navigationNode.displayTitle = @"Initial";
-        navigationNode.icon = @"ui_graph.png";
+        navigationNode.icon = @"ui_graph";
         navigationNode.patientFlag = @NO;
         navigationNode.woundFlag = @NO;
         navigationNode.sortRank = @0;
@@ -463,7 +463,7 @@ typedef enum {
         navigationNode.desc = @"Follow-up stage for revisiting an existing patient.";
         navigationNode.disabledFlag = @NO;
         navigationNode.displayTitle = @"Follow Up";
-        navigationNode.icon = @"ui_graph.png";
+        navigationNode.icon = @"ui_graph";
         navigationNode.patientFlag = @NO;
         navigationNode.woundFlag = @NO;
         navigationNode.sortRank = @0;

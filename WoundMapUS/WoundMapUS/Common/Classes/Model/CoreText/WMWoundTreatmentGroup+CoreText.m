@@ -65,7 +65,6 @@
                             indentLevel:(NSUInteger)indentLevel
                        withBaseFontSize:(CGFloat)currentFontSize
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     WCModelTextKitAtrributes *modelTextKitAtrributes = [WCModelTextKitAtrributes sharedInstance];
     NSString *string = nil;
     NSAttributedString *paragraphAttributedString = [modelTextKitAtrributes paragraphAttributedString];
@@ -99,8 +98,7 @@
         // else childWoundTreatment or a child of childWoundTreatment has a value
         woundTreatmentValue = [self woundTreatmentValueForWoundTreatment:childWoundTreatment
                                                                   create:NO
-                                                                   value:nil
-                                                    managedObjectContext:managedObjectContext];
+                                                                   value:nil];
         if (nil == woundTreatmentValue) {
             // draw heading
             string = childWoundTreatment.title;

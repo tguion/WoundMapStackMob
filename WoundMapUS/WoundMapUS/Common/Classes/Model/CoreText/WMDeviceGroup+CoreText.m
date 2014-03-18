@@ -8,9 +8,9 @@
 
 #import "WMDeviceGroup+CoreText.h"
 #import "WMDeviceGroup.h"
-#import "WCDeviceCategory.h"
-#import "WCDevice.h"
-#import "WCDeviceValue.h"
+#import "WMDeviceCategory.h"
+#import "WMDevice.h"
+#import "WMDeviceValue.h"
 #import "WCModelTextKitAtrributes.h"
 
 @implementation WMDeviceGroup (CoreText)
@@ -38,8 +38,8 @@
     // now iterate through all devices
     NSMutableDictionary *sectionHeadingAttributes = [modelTextKitAtrributes sectionHeadingAttributesForFontSize:currentFontSize indentLevel:0];
     NSArray *deviceValues = self.sortedDeviceValues;
-    WCDeviceCategory *deviceCategory = nil;
-    for (WCDeviceValue *deviceValue in deviceValues) {
+    WMDeviceCategory *deviceCategory = nil;
+    for (WMDeviceValue *deviceValue in deviceValues) {
         if (![deviceValue.device.category isEqual:deviceCategory]) {
             deviceCategory = deviceValue.device.category;
             // new paragraph

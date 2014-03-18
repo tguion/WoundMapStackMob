@@ -71,7 +71,7 @@
 - (WMPerson *)person
 {
     if (nil == _person) {
-        _person = [WMPerson instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
+        _person = [WMPerson MR_createInContext:self.managedObjectContext];
     }
     return _person;
 }
@@ -311,7 +311,7 @@
         case 4: {
             // addresses
             cell.textLabel.text = @"Addresses";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d addresses", [self.person.addresses count]];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu addresses", (unsigned long)[self.person.addresses count]];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }
@@ -319,7 +319,7 @@
             // telecoms
             cell.textLabel.text = @"Telecoms";
             NSString *addressString = ([self.person.telecoms count] == 1 ? @"address":@"addresses");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [self.person.telecoms count], addressString];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.telecoms count], addressString];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }

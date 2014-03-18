@@ -255,7 +255,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 - (WMWoundMeasurement *)underminingTunnelingWoundMeasurement
 {
-    return [WMWoundMeasurement underminingTunnelingWoundMeasurement:[self.woundPhoto managedObjectContext] persistentStore:nil];
+    return [WMWoundMeasurement underminingTunnelingWoundMeasurement:[self.woundPhoto managedObjectContext]];
 }
 
 #pragma mark - View Controllers

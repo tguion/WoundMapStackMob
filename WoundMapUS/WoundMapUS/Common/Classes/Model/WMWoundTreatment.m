@@ -2,7 +2,6 @@
 #import "WMWoundTreatmentValue.h"
 #import "WMWoundType.h"
 #import "WMUtilities.h"
-#import "StackMob.h"
 
 typedef enum {
     WoundTreatmentFlagsInputValueInline             = 0,
@@ -29,7 +28,7 @@ typedef enum {
 
 - (void)setCombineKeyAndValue:(BOOL)combineKeyAndValue
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsCombineKeyAndValue to:combineKeyAndValue]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsCombineKeyAndValue to:combineKeyAndValue]);
 }
 
 - (BOOL)allowMultipleChildSelection
@@ -39,7 +38,7 @@ typedef enum {
 
 - (void)setAllowMultipleChildSelection:(BOOL)allowMultipleChildrenSelection
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsAllowMultipleChildSelection to:allowMultipleChildrenSelection]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsAllowMultipleChildSelection to:allowMultipleChildrenSelection]);
 }
 
 - (NSArray *)sortedChildrenWoundTreatments
@@ -74,7 +73,7 @@ typedef enum {
 
 - (void)setSkipSelectionIcon:(BOOL)skipSelectionIcon
 {
-    self.flags = [NSNumber numberWithInt:[WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsSkipSelectionIcon to:skipSelectionIcon]];
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsSkipSelectionIcon to:skipSelectionIcon]);
 }
 
 - (NSString *)combineKeyAndValue:(NSString *)value
@@ -91,38 +90,17 @@ typedef enum {
     [set unionSet:self.childrenTreatments];
 }
 
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMWoundTreatment *woundTreatment = [[WMWoundTreatment alloc] initWithEntity:[NSEntityDescription entityForName:@"WMWoundTreatment" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:woundTreatment toPersistentStore:store];
-	}
-    [woundTreatment setValue:[woundTreatment assignObjectId] forKey:[woundTreatment primaryKeyField]];
-	return woundTreatment;
-}
-
 + (WMWoundTreatment *)woundTreatmentForTitle:(NSString *)title
                         parentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment
                                       create:(BOOL)create
                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                             persistentStore:(NSPersistentStore *)store
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    if (nil != store) {
-        [request setAffectedStores:[NSArray arrayWithObject:store]];
+    if (parentWoundTreatment) {
+        NSParameterAssert([parentWoundTreatment managedObjectContext] == managedObjectContext);
     }
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatment" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentTreatment == %@", title, parentWoundTreatment]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    WMWoundTreatment *woundTreatment = [array lastObject];
+    WMWoundTreatment *woundTreatment = [WMWoundTreatment MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentTreatment == %@", title, parentWoundTreatment] inContext:managedObjectContext];
     if (create && nil == woundTreatment) {
-        woundTreatment = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:store];
+        woundTreatment = [WMWoundTreatment MR_createInContext:managedObjectContext];
         woundTreatment.title = title;
         woundTreatment.parentTreatment = parentWoundTreatment;
     }
@@ -131,30 +109,18 @@ typedef enum {
 
 + (NSArray *)sortedRootWoundTreatments:(NSManagedObjectContext *)managedObjectContext
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WMWoundTreatment" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"parentTreatment = nil"]];
-    [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]]];
-    NSError *error = nil;
-    NSArray *array = [managedObjectContext executeFetchRequest:request error:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // else
-    return array;
+    return [WMWoundTreatment MR_findAllSortedBy:WMWoundTreatmentAttributes.sortRank ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"parentTreatment = nil"] inContext:managedObjectContext];
 }
 
 + (WMWoundTreatment *)updateWoundTreatmentFromDictionary:(NSDictionary *)dictionary
                                     parentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment
                                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                         persistentStore:(NSPersistentStore *)store
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundTreatment *treatment = [self woundTreatmentForTitle:title
                                           parentWoundTreatment:parentWoundTreatment
                                                         create:YES
-                                          managedObjectContext:managedObjectContext
-                                               persistentStore:store];
+                                          managedObjectContext:managedObjectContext];
     treatment.sortRank = [dictionary objectForKey:@"sortRank"];
     treatment.placeHolder = [dictionary objectForKey:@"placeHolder"];
     treatment.sectionTitle = [dictionary objectForKey:@"sectionTitle"];
@@ -174,8 +140,7 @@ typedef enum {
         NSMutableSet *set = [NSMutableSet set];
         for (id typeCode in typeCodes) {
             NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext
-                                                          persistentStore:store];
+                                                     managedObjectContext:managedObjectContext];
             [set addObjectsFromArray:woundTypes];
         }
         [treatment setWoundTypes:set];
@@ -185,14 +150,13 @@ typedef enum {
         for (NSDictionary *d in children) {
             [self updateWoundTreatmentFromDictionary:d
                                 parentWoundTreatment:treatment
-                                managedObjectContext:managedObjectContext
-                                     persistentStore:store];
+                                managedObjectContext:managedObjectContext];
         }
     }
     return treatment;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext persistentStore:(NSPersistentStore *)store
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundTreatment" withExtension:@"plist"];
@@ -212,8 +176,7 @@ typedef enum {
         for (NSDictionary *dictionary in propertyList) {
             [self updateWoundTreatmentFromDictionary:dictionary
                                 parentWoundTreatment:nil
-                                managedObjectContext:managedObjectContext
-                                     persistentStore:store];
+                                managedObjectContext:managedObjectContext];
         }
     }
 }
