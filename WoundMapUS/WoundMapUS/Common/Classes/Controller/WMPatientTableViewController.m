@@ -146,14 +146,6 @@
 
 #pragma mark - Notification handlers
 
-// network synch with server has finished - subclasses may need to override
-- (void)handleNetworkSynchFinished:(NSNotification *)notification
-{
-    [self hideProgressView];
-    [super handleNetworkSynchFinished:notification];
-    [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
-}
-
 #pragma mark - WMBaseViewController
 
 - (void)clearViewReferences

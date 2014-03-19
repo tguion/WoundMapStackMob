@@ -12,6 +12,7 @@
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
 #import "WMParticipant.h"
+#import "WMSeedDatabaseManager.h"
 #import "WMUtilities.h"
 
 static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
@@ -111,6 +112,22 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
+}
+
+#pragma mark - Backend
+
+- (void)setParticipant:(WMParticipant *)participant
+{
+    if (_participant == participant) {
+        return;
+    }
+    // else
+    _participant = participant;
+    // now that participant is signed in, we should attempt to populate the store including fetch from back end
+    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+        // ???
+    }];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

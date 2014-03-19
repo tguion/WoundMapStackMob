@@ -577,15 +577,6 @@
 
 #pragma mark - Notification handlers
 
-// network synch with server has finished - subclasses may need to override
-- (void)handleNetworkSynchFinished:(NSNotification *)notification
-{
-    [super handleNetworkSynchFinished:notification];
-    // update UI components
-    [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
-    [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
-}
-
 - (void)handlePatientChanged:(WMPatient *)patient
 {
     [super handlePatientChanged:patient];

@@ -288,24 +288,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - Notification handlers
 
-// network synch with server has finished - subclasses may need to override
-- (void)handleNetworkSynchFinished:(NSNotification *)notification
-{
-    // install footer to allow access to WoundMap
-    self.tableView.tableFooterView = _footerView;
-    [super handleNetworkSynchFinished:notification];
-    self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
-    // seed StackMob
-    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-    __weak __typeof(self) weakSelf = self;
-    [seedDatabaseManager seedTeamDatabaseWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf hideProgressView];
-        });
-    }];
-}
-
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

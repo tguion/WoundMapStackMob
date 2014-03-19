@@ -162,6 +162,8 @@
     WMFatFractalManager *fatFractalManager = [WMFatFractalManager sharedInstance];
     [fatFractalManager fetchCollection:collection
                                  query:query
+                               depthGb:1
+                              depthRef:1
                                     ff:ff
                   managedObjectContext:managedObjectContext
                      completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -282,12 +284,6 @@
 }
 
 #pragma mark - Notification handlers
-
-// network synch with server has finished - subclasses may need to override 
-- (void)handleNetworkSynchFinished:(NSNotification *)notification
-{
-    [self.tableView reloadData];
-}
 
 - (void)handleApplicationWillResignActiveNotification
 {

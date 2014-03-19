@@ -72,7 +72,6 @@
 - (void)handlePatientChanged:(WMPatient *)patient NS_REQUIRES_SUPER;
 - (void)handleWoundChanged:(WMWound *)wound NS_REQUIRES_SUPER;
 - (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto NS_REQUIRES_SUPER;
-- (void)handleNetworkSynchFinished:(NSNotification *)notification NS_REQUIRES_SUPER;
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack NS_REQUIRES_SUPER;
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 

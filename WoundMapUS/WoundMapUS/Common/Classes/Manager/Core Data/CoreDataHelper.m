@@ -140,11 +140,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     }
     
     [MagicalRecord setupCoreDataStackWithStoreNamed:[NSPersistentStore MR_urlForStoreName:storeFilename]];
-    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-        // ???
-    }];
-
 }
 
 - (WMNetworkReachability *)networkReachability

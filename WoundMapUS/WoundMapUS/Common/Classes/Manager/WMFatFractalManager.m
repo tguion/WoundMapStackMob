@@ -160,12 +160,18 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query
+                depthGb:(NSInteger)depthGb
+               depthRef:(NSInteger)depthRef
                      ff:(WMFatFractal *)ff
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
       completionHandler:(FFHttpMethodCompletion)completionHandler
 {
     NSString *queryString = nil;
-    [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=1&depthRef=1", collection, self.lastRefreshTimeMap[collection], query];
+    if (query) {
+        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=%ld&depthRef=%ld", collection, self.lastRefreshTimeMap[collection], query, (long)depthGb, (long)depthRef];
+    } else {
+        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=%ld&depthRef=%ld", collection, self.lastRefreshTimeMap[collection], query, (long)depthGb, (long)depthRef];
+    }
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         if (response.error) {
             [WMUtilities logError:response.error];

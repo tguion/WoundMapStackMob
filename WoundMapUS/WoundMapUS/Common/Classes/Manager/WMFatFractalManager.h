@@ -26,6 +26,8 @@ typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOO
 
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query
+                depthGb:(NSInteger)depthGb
+               depthRef:(NSInteger)depthRef
                      ff:(WMFatFractal *)ff
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
       completionHandler:(FFHttpMethodCompletion)completionHandler;
