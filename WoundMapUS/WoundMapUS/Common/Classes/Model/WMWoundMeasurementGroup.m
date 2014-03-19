@@ -128,7 +128,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 + (NSInteger)closeWoundAssessmentGroupsCreatedBefore:(NSDate *)date
                                              patient:(WMPatient *)patient
 {
-    NSArray *array = [WMWoundMeasurementGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date] inContext:[patient managedObjectContext]];
+    NSArray *array = [WMWoundMeasurementGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND createdAt < %@", patient, date] inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];
 }

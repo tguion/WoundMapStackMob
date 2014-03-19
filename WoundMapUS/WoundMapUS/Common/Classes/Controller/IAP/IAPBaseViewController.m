@@ -9,9 +9,9 @@
 #import "IAPBaseViewController.h"
 #import "IAPManager.h"
 #import "IAPProduct.h"
-#import "IAPProductTextTableViewCell.h"
-#import "InstructionContentViewController.h"
-#import "WCUtilities.h"
+#import "WMIAPProductTextTableViewCell.h"
+#import "WMInstructionContentViewController.h"
+#import "WMUtilities.h"
 
 
 CGFloat const kIAPTextVerticalMargin = 4.0;
@@ -21,7 +21,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 @interface IAPBaseViewController () <UIActionSheetDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *actionContainerView;
-@property (readonly, nonatomic) InstructionContentViewController *instructionContentViewController;
+@property (readonly, nonatomic) WMInstructionContentViewController *instructionContentViewController;
 
 - (void)navigateToFeatureDetail;
 
@@ -34,7 +34,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.title = @"WoundMap Store";
-    [self.tableView registerClass:[IAPProductTextTableViewCell class] forCellReuseIdentifier:@"IAPProductText"];
+    [self.tableView registerClass:[WMIAPProductTextTableViewCell class] forCellReuseIdentifier:@"IAPProductText"];
     self.tableView.tableFooterView = self.actionContainerView;
     self.tableView.separatorInset = UIEdgeInsetsMake(0.0, 15.0, 0.0, 0.0);
     _actionContainerView = nil;
@@ -112,14 +112,14 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     return reuseIdentifier;
 }
 
-- (InstructionContentViewController *)instructionContentViewController
+- (WMInstructionContentViewController *)instructionContentViewController
 {
-    return [[InstructionContentViewController alloc] initWithNibName:@"InstructionContentViewController" bundle:nil];
+    return [[WMInstructionContentViewController alloc] initWithNibName:@"WMInstructionContentViewController" bundle:nil];
 }
 
 - (void)navigateToFeatureDetail
 {
-    InstructionContentViewController *instructionContentViewController = self.instructionContentViewController;
+    WMInstructionContentViewController *instructionContentViewController = self.instructionContentViewController;
     instructionContentViewController.htmlString = self.iapProduct.descHTML;
     instructionContentViewController.title = @"Feature Details";
 
@@ -177,7 +177,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
         // else delete index patient
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [self showProgressView];
-            [self.iapManager buyProduct:self.skProduct];
+            [[IAPManager sharedInstance] buyProduct:self.skProduct];
             return;
         }
     }
@@ -295,8 +295,8 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
         }
     }
     if ([string length] > 0) {
-        if ([cell isKindOfClass:[IAPProductTextTableViewCell class]]) {
-            IAPProductTextTableViewCell *myCell = (IAPProductTextTableViewCell *)cell;
+        if ([cell isKindOfClass:[WMIAPProductTextTableViewCell class]]) {
+            WMIAPProductTextTableViewCell *myCell = (WMIAPProductTextTableViewCell *)cell;
             myCell.textAttributes = self.textAttributes;
             myCell.text = string;
             myCell.verticalMargin = kIAPTextVerticalMargin;
@@ -314,29 +314,28 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 {
     [self showProgressView];
     __weak __typeof(self) weakSelf = self;
-    [self.iapManager productWithProductId:productId
-                      successHandler:^(NSArray *products) {
-                          dispatch_async(dispatch_get_main_queue(), ^{
-                              [weakSelf hideProgressView];
-                              if ([products count] > 0) {
-                                  weakSelf.skProduct = [products objectAtIndex:0];
-                                  [weakSelf.iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
-                                  [WCUtilities saveChanges:weakSelf.iapProduct.managedObjectContext];
-                                  [weakSelf reloadData];
-                              } else {
-                                  NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
-                                  [weakSelf iapFailureAlert:message];
-                              }
-                          });
-                      } failureHandler:^(NSError *error) {
-                          dispatch_async(dispatch_get_main_queue(), ^{
-                              [weakSelf hideProgressView];
-                              NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
-                              [weakSelf iapFailureAlert:message];
-                          });
-                      }
+    [[IAPManager sharedInstance] productWithProductId:productId
+                                       successHandler:^(NSArray *products) {
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               [weakSelf hideProgressView];
+                                               if ([products count] > 0) {
+                                                   weakSelf.skProduct = [products objectAtIndex:0];
+                                                   [weakSelf.iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
+                                                   [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                   [weakSelf reloadData];
+                                               } else {
+                                                   NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
+                                                   [weakSelf iapFailureAlert:message];
+                                               }
+                                           });
+                                       } failureHandler:^(NSError *error) {
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               [weakSelf hideProgressView];
+                                               NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
+                                               [weakSelf iapFailureAlert:message];
+                                           });
+                                       }
      ];
-    
 }
 
 - (void)reloadData
@@ -363,7 +362,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                 id cancelledTxnObj = [notification.userInfo objectForKey:kIAPTxnCancelled];
                 if (nil == errorObj && nil == cancelledTxnObj) {
                     weakSelf.iapProduct.purchasedFlag = @YES;
-                    [WCUtilities saveChanges:weakSelf.iapProduct.managedObjectContext];
+                    [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
                     [weakSelf acceptHandler]();
                     [weakSelf clearAllReferences];
                 } else if (nil != errorObj) {

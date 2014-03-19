@@ -82,7 +82,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
             [objectIDs addObject:[woundType objectID]];
         }
         if (completionHandler) {
-            completionHandler(nil, objectIDs);
+            completionHandler(nil, objectIDs, [WMWoundType entityName]);
         }
     }
 }

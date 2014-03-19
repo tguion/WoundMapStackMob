@@ -72,7 +72,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
     return interventionStatus;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"InterventionStatus" withExtension:@"plist"];
@@ -80,7 +80,11 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
 		DLog(@"InterventionStatus.plist file not found");
 		return;
 	}
-    // else
+    // else count
+    if ([WMInterventionStatus MR_countOfEntitiesWithContext:managedObjectContext] > 0) {
+        return;
+    }
+    // else load
     @autoreleasepool {
         NSError *error = nil;
         NSData *data = [NSData dataWithContentsOfURL:fileURL];
@@ -90,9 +94,16 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSDictionary class]], @"Property list file did not return a dictionary, class was %@", NSStringFromClass([propertyList class]));
         NSArray *array = [propertyList objectForKey:@"Statuses"];
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in array) {
-            [self updateInterventionFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMInterventionStatus *interventionStatus = [self updateInterventionFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            NSAssert(![[interventionStatus objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[interventionStatus objectID]];
         }
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMInterventionStatus entityName]);
+        }
+        [objectIDs removeAllObjects];
         array = [propertyList objectForKey:@"Joins"];
         for (NSDictionary *dictionary in array) {
             NSString *title = [[dictionary allKeys] lastObject];
@@ -106,10 +117,15 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                                                                                            create:NO
                                                                              managedObjectContext:managedObjectContext];
                 NSAssert1(nil != toStatus, @"No WMInterventionStatus for title %@", value);
-                [WMInterventionStatusJoin interventionStatusJoinFromStatus:fromStatus
-                                                                  toStatus:toStatus
-                                                                    create:YES
-                                                      managedObjectContext:managedObjectContext];
+                WMInterventionStatusJoin *interventionStatusJoin = [WMInterventionStatusJoin interventionStatusJoinFromStatus:fromStatus
+                                                                                                                     toStatus:toStatus
+                                                                                                                       create:YES
+                                                                                                         managedObjectContext:managedObjectContext];
+                NSAssert(![[interventionStatusJoin objectID] isTemporaryID], @"Expect a permanent objectID");
+                [objectIDs addObject:[interventionStatusJoin objectID]];
+            }
+            if (completionHandler) {
+                completionHandler(nil, objectIDs, [WMInterventionStatusJoin entityName]);
             }
         }
     }

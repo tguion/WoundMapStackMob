@@ -36,7 +36,7 @@
     return amountQualifier;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"AmountQualifier" withExtension:@"plist"];
@@ -44,6 +44,11 @@
 		DLog(@"AmountQualifier.plist file not found");
 		return;
 	}
+    // else count
+    if ([WMAmountQualifier MR_countOfEntitiesWithContext:managedObjectContext] > 0) {
+        return;
+    }
+    // else load
     @autoreleasepool {
         NSError *error = nil;
         NSData *data = [NSData dataWithContentsOfURL:fileURL];
@@ -52,8 +57,14 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateAmountQualifierFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMAmountQualifier *amountQualifier = [self updateAmountQualifierFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            NSAssert(![[amountQualifier objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[amountQualifier objectID]];
+        }
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMAmountQualifier entityName]);
         }
     }
 }

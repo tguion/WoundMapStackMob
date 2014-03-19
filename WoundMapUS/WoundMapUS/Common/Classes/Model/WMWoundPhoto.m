@@ -98,7 +98,7 @@ typedef enum {
             thumbnailAttributeName = @"thumbnailLarge";
             break;
     }
-    [request setPropertiesToFetch:@[objectIdDesc, @"dateCreated", @"imageWidth", @"imageHeight", thumbnailAttributeName]];
+    [request setPropertiesToFetch:@[objectIdDesc, @"createdAt", @"imageWidth", @"imageHeight", thumbnailAttributeName]];
 }
 
 - (void)awakeFromInsert

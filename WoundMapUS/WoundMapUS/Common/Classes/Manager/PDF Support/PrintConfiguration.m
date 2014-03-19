@@ -23,7 +23,7 @@
         for (NSManagedObjectID *objectID in self.selectedWoundPhotosMap) {
             [array addObject:[self.managedObjectContext objectWithID:objectID]];
         }
-        _sortedWounds = [array sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
+        _sortedWounds = [array sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
     }
     return _sortedWounds;
 }
@@ -31,7 +31,7 @@
 - (NSArray *)sortedWoundPhotosForWound:(WMWound *)wound
 {
     NSArray *woundPhotos = [[self.selectedWoundPhotosMap objectForKey:[wound objectID]] allObjects];
-    return [woundPhotos sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:YES]]];
+    return [woundPhotos sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
 }
 
 @end

@@ -1098,7 +1098,7 @@ NSInteger kXPlotOffset = 0;
     [values addObject:self.patient.lastNameFirstNameOrAnonymous];
     [values addObject:(nil == self.patient.dateOfBirth ? [NSNull null]:[NSDateFormatter localizedStringFromDate:self.patient.dateOfBirth dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle])];
     [values addObject:(nil == self.patient.identifierEMR ? [NSNull null]:self.patient.identifierEMR)];
-    [values addObject:(nil == self.patient.dateCreated ? [NSNull null]:[NSDateFormatter localizedStringFromDate:self.patient.dateCreated dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle])];
+    [values addObject:(nil == self.patient.createdAt ? [NSNull null]:[NSDateFormatter localizedStringFromDate:self.patient.createdAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle])];
     [values addObject:[NSString stringWithFormat:@"%d/%d", self.patient.woundCount, self.patient.photosCount]];
     [values addObject:bradenScaleValue];
     UIView *placeholderView = self.patientDataSummaryView;
@@ -1267,7 +1267,7 @@ NSInteger kXPlotOffset = 0;
     NSString *string = [NSString stringWithFormat:@"Photo %d/%d taken %@",
                         [sortedWoundPhotoIDs indexOfObject:objectID] + 1,
                         [sortedWoundPhotoIDs count],
-                        [NSDateFormatter localizedStringFromDate:woundPhoto.dateCreated dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle]];
+                        [NSDateFormatter localizedStringFromDate:woundPhoto.createdAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle]];
     // draw woundPhoto first
     UIImage *image = woundPhoto.thumbnailLarge;
     CGRect photoFrame = [PDFRenderer aspectFittedRect:CGRectMake(0.0, 0.0, image.size.width, image.size.height) max:aFrame];

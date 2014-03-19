@@ -9,12 +9,12 @@
 #import "WMPsychoSocialGroup.h"
 #import "WoundCareProtocols.h"
 
-@class WCPsychoSocialItem;
+@class WMPsychoSocialItem;
 
 @interface WMPsychoSocialGroup (CoreText) <WCCoreTextDataSource>
 
 - (void)appendToMutableAttributedString:(NSMutableAttributedString *)mutableAttributedString
-              forParentPsychoSocialItem:(WCPsychoSocialItem *)psychoSocialItem
+              forParentPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
                             indentLevel:(NSUInteger)indentLevel
                        withBaseFontSize:(CGFloat)currentFontSize;
 

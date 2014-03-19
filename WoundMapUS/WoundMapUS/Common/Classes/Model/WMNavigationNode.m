@@ -200,7 +200,7 @@ typedef enum {
             [objectIDs addObject:[subnode objectID]];
         }
         if (completionHandler) {
-            completionHandler(nil, objectIDs);
+            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
         }
     }
     return navigationNode;
@@ -260,7 +260,7 @@ typedef enum {
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     if (completionHandler) {
-        completionHandler(nil, objectIDs);
+        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
     }
 }
 
@@ -321,7 +321,7 @@ typedef enum {
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     if (completionHandler) {
-        completionHandler(nil, objectIDs);
+        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
     }
 }
 

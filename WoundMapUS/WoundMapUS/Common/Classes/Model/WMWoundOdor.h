@@ -1,4 +1,5 @@
 #import "_WMWoundOdor.h"
+#import "WoundCareProtocols.h"
 
 @interface WMWoundOdor : _WMWoundOdor {}
 
@@ -6,6 +7,6 @@
                             create:(BOOL)create
               managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
 
 @end

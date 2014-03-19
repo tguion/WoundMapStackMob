@@ -22,7 +22,7 @@
     return woundOdor;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundOdor" withExtension:@"plist"];
@@ -30,7 +30,11 @@
 		DLog(@"WoundOdor.plist file not found");
 		return;
 	}
-    // else
+    // else count
+    if ([WMWoundOdor MR_countOfEntitiesWithContext:managedObjectContext] > 0) {
+        return;
+    }
+    // else load
     @autoreleasepool {
         NSError *error = nil;
         NSData *data = [NSData dataWithContentsOfURL:fileURL];
@@ -39,8 +43,14 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateWoundOdorFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMWoundOdor *woundOdor = [self updateWoundOdorFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            NSAssert(![[woundOdor objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[woundOdor objectID]];
+        }
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMWoundOdor entityName]);
         }
     }
 }

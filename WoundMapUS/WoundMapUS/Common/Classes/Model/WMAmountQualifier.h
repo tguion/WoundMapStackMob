@@ -1,4 +1,5 @@
 #import "_WMAmountQualifier.h"
+#import "WoundCareProtocols.h"
 
 @interface WMAmountQualifier : _WMAmountQualifier {}
 
@@ -6,6 +7,6 @@
                                         create:(BOOL)create
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
 
 @end

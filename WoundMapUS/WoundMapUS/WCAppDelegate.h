@@ -27,6 +27,8 @@
 @property (readonly, strong, nonatomic) WMFatFractal *ff;
 @property (nonatomic, readonly) WMNavigationCoordinator *navigationCoordinator;
 
+@property (nonatomic, readonly) NSURL *applicationDocumentsDirectory;
+
 @property (nonatomic, strong) WMParticipant *participant;           // clinician using the app
 
 @end

@@ -10,7 +10,7 @@
 #import "IAPNonConsumableViewController.h"
 #import "IAPProduct.h"
 #import "IAPProduct.h"
-#import "IAPProductOptionTableViewCell.h"
+#import "WMIAPProductOptionTableViewCell.h"
 #import "IAPManager.h"
 #import "WCUtilities.h"
 
@@ -40,7 +40,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [self.tableView registerClass:[IAPProductOptionTableViewCell class] forCellReuseIdentifier:@"IAPProductOption"];
+    [self.tableView registerClass:[WMIAPProductOptionTableViewCell class] forCellReuseIdentifier:@"IAPProductOption"];
 
 }
 
@@ -113,14 +113,14 @@
 - (NSDictionary *)titleAttributes
 {
     if (nil == _titleAttributes) {
-        _titleAttributes = [IAPProductOptionTableViewCell titleAttributes];
+        _titleAttributes = [WMIAPProductOptionTableViewCell titleAttributes];
     }
     return _titleAttributes;
 }
 - (NSDictionary *)priceAttributes
 {
     if (nil == _priceAttributes) {
-        _priceAttributes = [IAPProductOptionTableViewCell priceAttributes];
+        _priceAttributes = [WMIAPProductOptionTableViewCell priceAttributes];
     }
     return _priceAttributes;
 }
@@ -175,7 +175,7 @@
         }
         case 1: {
             IAPProduct *iapProduct = [self.sortedOptions objectAtIndex:indexPath.row];
-            height = [IAPProductOptionTableViewCell productOptionTitleTextHeight:iapProduct
+            height = [WMIAPProductOptionTableViewCell productOptionTitleTextHeight:iapProduct
                                                                  priceAttributes:self.priceAttributes
                                                                   textAttributes:self.titleAttributes
                                                                        tableView:tableView];
@@ -258,7 +258,7 @@
         }
         case 1: {
             IAPProduct *iapProduct = [self.sortedOptions objectAtIndex:indexPath.row];
-            IAPProductOptionTableViewCell *myCell = (IAPProductOptionTableViewCell *)cell;
+            WMIAPProductOptionTableViewCell *myCell = (WMIAPProductOptionTableViewCell *)cell;
             myCell.iapProduct = iapProduct;
             myCell.textLabel.font = self.textFont;
             myCell.textLabel.numberOfLines = 0;

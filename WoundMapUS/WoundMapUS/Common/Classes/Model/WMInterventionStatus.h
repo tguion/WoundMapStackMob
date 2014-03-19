@@ -1,4 +1,5 @@
 #import "_WMInterventionStatus.h"
+#import "WoundCareProtocols.h"
 
 extern NSString * const kInterventionStatusPlanned;
 extern NSString * const kInterventionStatusInProcess;
@@ -12,7 +13,7 @@ extern NSString * const kInterventionStatusNotAdopted;
 @property (readonly, nonatomic) BOOL isActive;
 @property (readonly, nonatomic) BOOL isInProcess;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
 
 + (WMInterventionStatus *)initialInterventionStatus:(NSManagedObjectContext *)managedObjectContext;
 + (WMInterventionStatus *)completedInterventionStatus:(NSManagedObjectContext *)managedObjectContext;

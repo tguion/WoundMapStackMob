@@ -7,8 +7,12 @@
 //
 
 #import "WMBaseViewController.h"
+#import "WoundCareProtocols.h"
+#import "WMInterventionStatusViewController.h"
+#import "WMInterventionEventViewController.h"
+#import "WMAssessmentTableViewCell.h"
 
-@interface WMBuildGroupViewController : WMBaseViewController
+@interface WMBuildGroupViewController : WMBaseViewController <InterventionStatusViewControllerDelegate, InterventionEventViewControllerDelegate, AssessmentTableViewCellDelegate, UITextFieldDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (nonatomic) NSInteger recentlyClosedCount;
 

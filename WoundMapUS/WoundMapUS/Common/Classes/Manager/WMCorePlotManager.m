@@ -8,6 +8,7 @@
 
 #import "WMCorePlotManager.h"
 #import "CPTGraphHostingView.h"
+#import "WMPatient.h"
 #import "WMWound.h"
 #import "WMBradenScale.h"
 #import "WMWoundMeasurementGroup.h"
@@ -15,8 +16,13 @@
 #import "WMWoundMeasurementValue.h"
 #import "WoundStatusMeasurementRollup.h"
 #import "WoundStatusMeasurementPlotDataSource.h"
+#import "WMNavigationCoordinator.h"
 
 NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
+
+@interface WMCorePlotManager ()
+@property (readonly, nonatomic) WMPatient *patient;
+@end
 
 @interface WMCorePlotManager (PrivateMethods)
 
@@ -30,7 +36,7 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
 - (void)updateRollupForBradenScalesForWountStatusMeasurementTitle2RollupByKeyMapMap:(NSMutableDictionary *)wountStatusMeasurementTitle2RollupByKeyMapMap
                                                                managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    NSArray *bradenScales = [WMBradenScale sortedScoredBradenScales:managedObjectContext];
+    NSArray *bradenScales = [WMBradenScale sortedScoredBradenScales:self.patient];
     WoundStatusMeasurementRollup *rollup = [[WoundStatusMeasurementRollup alloc] init];
     rollup.title = kBradenScaleTitle;
     rollup.key = kBradenScaleTitle;
@@ -38,7 +44,7 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
     NSMutableDictionary *key2Rollup = [[NSMutableDictionary alloc] initWithCapacity:4];
     [key2Rollup setObject:rollup forKey:kBradenScaleTitle];
     for (WMBradenScale *bradenScale in bradenScales) {
-        [rollup addDataForDate:bradenScale.dateCreated value:(NSDecimalNumber *)[NSDecimalNumber numberWithFloat:[bradenScale.score floatValue]] woundMeasurementGroupObjectID:nil];
+        [rollup addDataForDate:bradenScale.createdAt value:(NSDecimalNumber *)[NSDecimalNumber numberWithFloat:[bradenScale.score floatValue]] woundMeasurementGroupObjectID:nil];
     }
     // here we have array of all dates (dates) , and a map of key->rollup array for e.g. Dimensions
     [wountStatusMeasurementTitle2RollupByKeyMapMap setObject:key2Rollup forKey:kBradenScaleTitle];
@@ -61,6 +67,11 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
     return SharedInstance;
 }
 
+- (WMPatient *)patient
+{
+    return [[WMNavigationCoordinator sharedInstance] patient];
+}
+
 #pragma mark - Plot Helper Methods
 
 // map for WMWoundMeasurement.title to map of WMWoundMeasurement.title (measurement child) -> WoundStatusMeasurementRollup instances
@@ -74,7 +85,7 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
         // check for Braden Scale, which is not an WMWoundMeasurement
         if ([title isEqualToString:kBradenScaleTitle]) {
             // delete any incomplete and closed
-            [WMBradenScale deleteIncompleteClosedBradenScales:wound.managedObjectContext];
+            [WMBradenScale deleteIncompleteClosedBradenScales:self.patient];
             // rollup the WMBradenScale instances
             [self updateRollupForBradenScalesForWountStatusMeasurementTitle2RollupByKeyMapMap:(NSMutableDictionary *)wountStatusMeasurementTitle2RollupByKeyMapMap
                                                                          managedObjectContext:[wound managedObjectContext]];
@@ -83,24 +94,22 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
             NSMutableDictionary *key2Rollup = [[NSMutableDictionary alloc] initWithCapacity:32];
             // build dates array
             for (WMWoundMeasurementGroup *woundMeasurementGroup in sortedWoundMeasurementGroups) {
-                [dates addObject:woundMeasurementGroup.dateCreated];
+                [dates addObject:woundMeasurementGroup.createdAt];
             }
             // iterate over all sortedWoundMeasurementGroups and add data for each measurement
             for (WMWoundMeasurementGroup *woundMeasurementGroup in sortedWoundMeasurementGroups) {
                 WMWoundMeasurement *woundMeasurement = [WMWoundMeasurement woundMeasureForTitle:title
                                                                          parentWoundMeasurement:nil
                                                                                          create:NO
-                                                                           managedObjectContext:managedObjectContext
-                                                                                persistentStore:nil];
+                                                                           managedObjectContext:managedObjectContext];
                 NSInteger index = 0;
                 if (woundMeasurement.hasChildrenWoundMeasurements) {
                     for (WMWoundMeasurement *childWoundMeasurement in woundMeasurement.childrenMeasurements) {
-                        NSDate *date = woundMeasurementGroup.dateCreated;
+                        NSDate *date = woundMeasurementGroup.createdAt;
                         NSString *key = childWoundMeasurement.title;
                         WMWoundMeasurementValue *woundMeasurementValue = [woundMeasurementGroup woundMeasurementValueForWoundMeasurement:childWoundMeasurement
                                                                                                                                   create:NO
-                                                                                                                                   value:nil
-                                                                                                                    managedObjectContext:managedObjectContext];
+                                                                                                                                   value:nil];
                         NSDecimalNumber *value = nil;
                         if (nil != woundMeasurementValue && [woundMeasurementValue.value length] > 0) {
                             value = [NSDecimalNumber decimalNumberWithString:woundMeasurementValue.value];
@@ -120,12 +129,11 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
                     }
                 } else {
                     // e.g. wound pain
-                    NSDate *date = woundMeasurementGroup.dateCreated;
+                    NSDate *date = woundMeasurementGroup.createdAt;
                     NSString *key = woundMeasurement.title;
                     WMWoundMeasurementValue *woundMeasurementValue = [woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
                                                                                                                               create:NO
-                                                                                                                               value:nil
-                                                                                                                managedObjectContext:managedObjectContext];
+                                                                                                                               value:nil];
                     NSDecimalNumber *value = nil;
                     if (nil != woundMeasurementValue && [woundMeasurementValue.value length] > 0) {
                         value = [NSDecimalNumber decimalNumberWithString:woundMeasurementValue.value];

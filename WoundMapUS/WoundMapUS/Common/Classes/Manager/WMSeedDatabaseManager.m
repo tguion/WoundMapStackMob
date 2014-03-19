@@ -20,6 +20,9 @@
 #import "WMDefinition.h"
 #import "WMInstruction.h"
 #import "IAPProduct.h"
+#import "WMAmountQualifier.h"
+#import "WMWoundOdor.h"
+#import "WMInterventionStatus.h"
 #import "CoreDataHelper.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
@@ -93,9 +96,36 @@
                    [ffm createArray:objectIDs collection:[WMParticipantType entityName] ff:ff completionHandler:nil];
                }];
            }];
-//        [WCAmountQualifier seedDatabase:managedObjectContext persistentStore:nil];
-//        [WCWoundOdor seedDatabase:managedObjectContext persistentStore:nil];
-//        [WCInterventionStatus seedDatabase:managedObjectContext persistentStore:nil];
+        // first attempt to acquire data from backend
+        [ffm fetchCollection:[WMAmountQualifier entityName]
+                       query:nil
+                     depthGb:1
+                    depthRef:1
+                          ff:ff
+        managedObjectContext:managedObjectContext
+           completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
+               [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+                   // update backend
+                   [ffm createArray:objectIDs collection:[WMAmountQualifier entityName] ff:ff completionHandler:nil];
+               }];
+           }];
+        // first attempt to acquire data from backend
+        [ffm fetchCollection:[WMWoundOdor entityName]
+                       query:nil
+                     depthGb:1
+                    depthRef:1
+                          ff:ff
+        managedObjectContext:managedObjectContext
+           completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
+               [WMWoundOdor seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+                   // update backend
+                   [ffm createArray:objectIDs collection:[WMWoundOdor entityName] ff:ff completionHandler:nil];
+               }];
+           }];
+        [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+            // update backend
+            [ffm createArray:objectIDs collection:[WMInterventionStatus entityName] ff:ff completionHandler:nil];
+        }];
 //        [WCInterventionEventType seedDatabase:managedObjectContext persistentStore:nil];
 //        [WMMedicationCategory seedDatabase:managedObjectContext persistentStore:nil];
 //        [WMDeviceCategory seedDatabase:managedObjectContext persistentStore:nil];
@@ -112,7 +142,7 @@
                           ff:ff
         managedObjectContext:managedObjectContext
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMNavigationTrack seedDatabase:managedObjectContext  completionHandler:^(NSError *error, NSArray *objectIDs) {
+               [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
                    // update backend
                    [ffm createArray:objectIDs collection:[WMNavigationTrack entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                        if ([object isKindOfClass:[WMNavigationNode class]]) {

@@ -66,7 +66,7 @@ NSString *const kDischargeStageTitle = @"Discharge";
             [objectIDs addObject:[navigationNode objectID]];
         }
         if (completionHandler) {
-            completionHandler(nil, objectIDs);
+            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
         }
     }
     return navigationStage;

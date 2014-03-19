@@ -13,7 +13,7 @@
 
 #endif
 
-typedef void (^WMProcessCallback)(NSError *error, NSArray *objectIDs);
+typedef void (^WMProcessCallback)(NSError *error, NSArray *objectIDs, NSString *collection);
 
 @protocol NavigationItemTitleViewSource <NSObject>
 - (UIView *)editorTitleView:(id)object;

@@ -8,12 +8,43 @@
 
 #import "WMPDFPrintManager.h"
 #import "WMPatient.h"
+#import "WMPerson.h"
 #import "PDFRenderer.h"
+#import "PDFRendererTwoColumnsTwoPhotos.h"
+#import "PDFRendererTwoColumnsSOAP.h"
+#import "PrintConfiguration.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 
 @interface WMPDFPrintManager()
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
+
+@end
+
+@interface WMPDFPrintManager (PrivateMethods)
+
+- (PDFRenderer *)rendererForPrintTemplate:(PrintTemplate)printTemplate;
+
+@end
+
+@implementation WMPDFPrintManager (PrivateMethods)
+
+- (PDFRenderer *)rendererForPrintTemplate:(PrintTemplate)printTemplate
+{
+    PDFRenderer *renderer = nil;
+    switch (printTemplate) {
+        case kPrintTemplateTwoColumnsTwoPhotos: {
+            renderer = [[PDFRendererTwoColumnsTwoPhotos alloc] init];
+            break;
+        }
+        case kPrintTemplateTwoColumnsSOAP: {
+            renderer = [[PDFRendererTwoColumnsSOAP alloc] init];
+            break;
+        }
+    }
+    return renderer;
+}
 
 @end
 
@@ -63,14 +94,14 @@
 
 - (NSURL *)pdfURLForPatient:(WMPatient *)patient
 {
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@.%lf", patient.lastName, patient.firstName, [[NSDate date] timeIntervalSince1970]];
+    NSString *fileName = [NSString stringWithFormat:@"%@.%@.%lf", patient.person.nameFamily, patient.person.nameGiven, [[NSDate date] timeIntervalSince1970]];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *pdfDirectory = [self.appDelegate.applicationDocumentsDirectory URLByAppendingPathComponent:@"PDF"];
     if (![fileManager fileExistsAtPath:pdfDirectory.path]) {
         NSError *error = nil;
         BOOL success = [fileManager createDirectoryAtPath:pdfDirectory.path withIntermediateDirectories:YES attributes:nil error:&error];
         if (!success) {
-            [WCUtilities logError:error];
+            [WMUtilities logError:error];
         }
     }
     NSURL *url = [[pdfDirectory URLByAppendingPathComponent:fileName] URLByAppendingPathExtension:@"pdf"];
@@ -91,7 +122,7 @@
     void (^completionHandler)(UIPrintInteractionController *,BOOL, NSError *) = ^(UIPrintInteractionController *print,BOOL completed, NSError *error) {
         onPrintFinish(completed, error);
         if (!completed && error) {
-            [WCUtilities logError:error];
+            [WMUtilities logError:error];
         }
     };
     // same call for both iPhone and IPad

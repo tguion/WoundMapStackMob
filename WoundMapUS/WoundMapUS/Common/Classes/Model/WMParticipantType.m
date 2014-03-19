@@ -75,7 +75,7 @@
             [objectIDs addObject:[participantType objectID]];
         }
         if (completionHandler) {
-            completionHandler(nil, objectIDs);
+            completionHandler(nil, objectIDs, [WMParticipantType entityName]);
         }
     }
 }

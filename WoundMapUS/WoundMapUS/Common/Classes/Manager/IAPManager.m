@@ -99,7 +99,7 @@ NSString* _deviceId;
     _productsRequest = nil;
     
     NSArray * skProducts = response.products;
-    for (SKProduct * skProduct in skProducts) {
+    for (SKProduct *skProduct in skProducts) {
         DLog(@"Found product: %@ %@ %0.2f",
               skProduct.productIdentifier,
               skProduct.localizedTitle,
@@ -243,18 +243,18 @@ NSString* _deviceId;
 
 #pragma mark - IAP Management Methods
 
-- (void) productWithProductId:(NSString*)productId
-               successHandler:(IAPSuccessHandler)successHandler
-               failureHandler:(IAPFailureHandler)failureHandler {
-    NSSet * productIdSet = [NSSet setWithObjects:
-                                  productId,
-                                  nil];
+- (void)productWithProductId:(NSString*)productId
+              successHandler:(IAPSuccessHandler)successHandler
+              failureHandler:(IAPFailureHandler)failureHandler
+{
+    NSSet *productIdSet = [NSSet setWithObjects:productId, nil];
     [self productsWithProductIdSet:productIdSet successHandler:successHandler failureHandler:failureHandler];
 }
 
-- (void) productsWithProductIdSet:(NSSet*)productIdSet
-                   successHandler:(IAPSuccessHandler)successHandler
-                   failureHandler:(IAPFailureHandler)failureHandler {
+- (void)productsWithProductIdSet:(NSSet *)productIdSet
+                  successHandler:(IAPSuccessHandler)successHandler
+                  failureHandler:(IAPFailureHandler)failureHandler
+{
     _successHandler = [successHandler copy];
     _failureHandler = [failureHandler copy];
     SKProductsRequest* request = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdSet];

@@ -51,7 +51,7 @@
 + (NSInteger)closeMedicationGroupsCreatedBefore:(NSDate *)date
                                         patient:(WMPatient *)patient
 {
-    NSArray *array = [WMMedicationGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND dateCreated < %@", patient, date]
+    NSArray *array = [WMMedicationGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND closedFlag == NO AND createdAt < %@", patient, date]
                                                       inContext:[patient managedObjectContext]];
     [array makeObjectsPerformSelector:@selector(setClosedFlag:) withObject:@(1)];
     return [array count];

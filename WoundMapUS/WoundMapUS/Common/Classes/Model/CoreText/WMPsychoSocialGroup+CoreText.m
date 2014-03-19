@@ -8,8 +8,8 @@
 
 #import "WMPsychoSocialGroup+CoreText.h"
 #import "WMPsychoSocialGroup.h"
-#import "WCPsychoSocialItem.h"
-#import "WCPsychoSocialValue.h"
+#import "WMPsychoSocialItem.h"
+#import "WMPsychoSocialValue.h"
 #import "WCModelTextKitAtrributes.h"
 
 @implementation WMPsychoSocialGroup (CoreText)
@@ -37,9 +37,9 @@
     // now iterate through all items
     NSMutableDictionary *subheadingAttributes = [modelTextKitAtrributes subheadingAttributesForFontSize:currentFontSize];
     NSMutableDictionary *sectionHeadingAttributes = [modelTextKitAtrributes sectionHeadingAttributesForFontSize:currentFontSize indentLevel:0];
-    NSArray *psychoSocialItems = [WCPsychoSocialItem sortedPsychoSocialItemsForParentItem:nil managedObjectContext:managedObjectContext persistentStore:nil];
+    NSArray *psychoSocialItems = [WMPsychoSocialItem sortedPsychoSocialItemsForParentItem:nil managedObjectContext:managedObjectContext];
     NSString *sectionTitle = nil;
-    for (WCPsychoSocialItem *psychoSocialItem in psychoSocialItems) {
+    for (WMPsychoSocialItem *psychoSocialItem in psychoSocialItems) {
         if (![psychoSocialItem.sectionTitle isEqual:sectionTitle]) {
             sectionTitle = psychoSocialItem.sectionTitle;
             // new paragraph
@@ -53,8 +53,7 @@
         if (0 == [psychoSocialValues count]) {
             // check if any values down this tree
             if (![WMPsychoSocialGroup hasPsychoSocialValueForChildrenOfParentItem:self
-                                                           parentPsychoSocialItem:psychoSocialItem
-                                                             managedObjectContext:managedObjectContext]) {
+                                                           parentPsychoSocialItem:psychoSocialItem]) {
                 continue;
             }
             // new paragraph
@@ -94,7 +93,7 @@
     NSAttributedString *paragraphAttributedString = [modelTextKitAtrributes paragraphAttributedString];
     NSAttributedString *attributedString = nil;
     NSMutableDictionary *valueAttributes = [modelTextKitAtrributes valueAttributesForFontSize:currentFontSize indentLevel:indentLevel];
-    for (WCPsychoSocialValue *psychoSocialValue in psychoSocialValues) {
+    for (WMPsychoSocialValue *psychoSocialValue in psychoSocialValues) {
         NSString *string = psychoSocialValue.title;
         if ([string isEqualToString:psychoSocialValue.psychoSocialItem.title] && [psychoSocialValue.value length] == 0) {
             // already drawn
@@ -123,7 +122,7 @@
 }
 
 - (void)appendToMutableAttributedString:(NSMutableAttributedString *)mutableAttributedString
-              forParentPsychoSocialItem:(WCPsychoSocialItem *)psychoSocialItem
+              forParentPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
                             indentLevel:(NSUInteger)indentLevel
                        withBaseFontSize:(CGFloat)currentFontSize
 {
@@ -134,16 +133,13 @@
     NSAttributedString *attributedString = nil;
     NSMutableDictionary *valueAttributes = [modelTextKitAtrributes valueAttributesForFontSize:currentFontSize indentLevel:indentLevel];
     // get all values instance for woundTreatment
-    NSArray *subitems = [WCPsychoSocialItem sortedPsychoSocialItemsForParentItem:psychoSocialItem
-                                                                  managedObjectContext:managedObjectContext
-                                                                       persistentStore:nil];
-    for (WCPsychoSocialItem *subitem in subitems) {
+    NSArray *subitems = [WMPsychoSocialItem sortedPsychoSocialItemsForParentItem:psychoSocialItem managedObjectContext:managedObjectContext];
+    for (WMPsychoSocialItem *subitem in subitems) {
         NSArray *psychoSocialValues = [WMPsychoSocialGroup sortedPsychoSocialValuesForGroup:self psychoSocialItem:subitem];
         if (0 == [psychoSocialValues count]) {
             // check if any values down this tree
             if (![WMPsychoSocialGroup hasPsychoSocialValueForChildrenOfParentItem:self
-                                                           parentPsychoSocialItem:subitem
-                                                             managedObjectContext:managedObjectContext]) {
+                                                           parentPsychoSocialItem:subitem]) {
                 continue;
             }
             // new paragraph

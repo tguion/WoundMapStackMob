@@ -21,7 +21,7 @@
 #import "WMAmountQualifier.h"
 #import "WMWoundOdor.h"
 #import "WMInterventionEvent.h"
-#import "WMWoundMeasurementInterventionEvent.h"
+#import "WMWoundMeasurementIntEvent.h"
 #import "WMInterventionEventType.h"
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"
@@ -35,71 +35,71 @@
 
 @interface WMWoundMeasurementGroupViewController () <AdjustAlpaViewDelegate, WoundMeasurementGroupViewControllerDelegate, SelectAmountQualifierViewControllerDelegate, SelectWoundOdorViewControllerDelegate, UndermineTunnelViewControllerDelegate, NoteViewControllerDelegate>
 
-@property (weak, nonatomic) AdjustAlpaView *adjustAlpaView;
+@property (weak, nonatomic) WMAdjustAlpaView *adjustAlpaView;
 @property (strong, nonatomic) IBOutlet UIView *tableFooterView;
 @property (strong, nonatomic) NSManagedObjectID *woundMeasurementGroupObjectID;
 @property (strong, nonatomic) NSManagedObjectID *parentWoundMeasurementObjectID;
 @property (readonly, nonatomic) WMWoundMeasurementGroupViewController *woundMeasurementViewController;
-@property (strong, nonatomic) WCWoundMeasurement *selectedWoundMeasurement;
+@property (strong, nonatomic) WMWoundMeasurement *selectedWoundMeasurement;
 @property (strong, nonatomic) NSManagedObjectID *selectedWoundMeasurementObjectID;
 @property (readonly, nonatomic) WMSelectAmountQualifierViewController *selectAmountQualifierViewController;
 @property (readonly, nonatomic) WMSelectWoundOdorViewController *selectWoundOdorViewController;
-@property (readonly, nonatomic) UndermineTunnelViewController *undermineTunnelViewController;
-@property (readonly, nonatomic) WoundMeasurementSummaryViewController *woundMeasurementSummaryViewController;
-@property (readonly, nonatomic) WoundMeasurementGroupHistoryViewController *woundMeasurementGroupHistoryViewController;
-@property (readonly, nonatomic) NoteViewController *noteViewController;
+@property (readonly, nonatomic) WMUndermineTunnelViewController *undermineTunnelViewController;
+@property (readonly, nonatomic) WMWoundMeasurementSummaryViewController *woundMeasurementSummaryViewController;
+@property (readonly, nonatomic) WMWoundMeasurementGroupHistoryViewController *woundMeasurementGroupHistoryViewController;
+@property (readonly, nonatomic) WMNoteViewController *noteViewController;
 
 - (IBAction)normalizePercentageAction:(id)sender;
 
 @end
 
 @interface WMWoundMeasurementGroupViewController (PrivateMethods)
-- (void)reloadRowsForSelectedWoundMeasurement:(WCWoundMeasurement *)selectedWoundMeasurement previousIndexPath:(NSIndexPath *)previousIndexPath;
-- (void)navigateToChildrenWoundMeasurementsForParentWoundMeasurement:(WCWoundMeasurement *)woundMeasurement;
-- (void)navigateToAmountsForWoundMeasurement:(WCWoundMeasurement *)woundMeasurement;
-- (void)navigateToOdorsForWoundMeasurement:(WCWoundMeasurement *)woundMeasurement;
-- (void)navigateToUndermineTunnelViewController:(WCWoundMeasurement *)woundMeasurement;
-- (void)navigateToNoteViewController:(WCWoundMeasurement *)woundMeasurement;
+- (void)reloadRowsForSelectedWoundMeasurement:(WMWoundMeasurement *)selectedWoundMeasurement previousIndexPath:(NSIndexPath *)previousIndexPath;
+- (void)navigateToChildrenWoundMeasurementsForParentWoundMeasurement:(WMWoundMeasurement *)woundMeasurement;
+- (void)navigateToAmountsForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement;
+- (void)navigateToOdorsForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement;
+- (void)navigateToUndermineTunnelViewController:(WMWoundMeasurement *)woundMeasurement;
+- (void)navigateToNoteViewController:(WMWoundMeasurement *)woundMeasurement;
 @end
 
 @implementation WMWoundMeasurementGroupViewController (PrivateMethods)
 
-- (void)reloadRowsForSelectedWoundMeasurement:(WCWoundMeasurement *)selectedWoundMeasurement previousIndexPath:(NSIndexPath *)previousIndexPath
+- (void)reloadRowsForSelectedWoundMeasurement:(WMWoundMeasurement *)selectedWoundMeasurement previousIndexPath:(NSIndexPath *)previousIndexPath
 {
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:selectedWoundMeasurement];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, previousIndexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
 }
 
-- (void)navigateToChildrenWoundMeasurementsForParentWoundMeasurement:(WCWoundMeasurement *)woundMeasurement
+- (void)navigateToChildrenWoundMeasurementsForParentWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
 {
-    [self.document.managedObjectContext.undoManager beginUndoGrouping];
+    [self.managedObjectContext.undoManager beginUndoGrouping];
     WMWoundMeasurementGroupViewController *woundMeasurementViewController = self.woundMeasurementViewController;
     woundMeasurementViewController.woundMeasurementGroup = self.woundMeasurementGroup;
     woundMeasurementViewController.parentWoundMeasurement = woundMeasurement;
     [self.navigationController pushViewController:woundMeasurementViewController animated:YES];
 }
 
-- (void)navigateToAmountsForWoundMeasurement:(WCWoundMeasurement *)woundMeasurement
+- (void)navigateToAmountsForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
 {
     self.selectedWoundMeasurement = woundMeasurement;
     [self.navigationController pushViewController:self.selectAmountQualifierViewController animated:YES];
 }
 
-- (void)navigateToOdorsForWoundMeasurement:(WCWoundMeasurement *)woundMeasurement
+- (void)navigateToOdorsForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
 {
     self.selectedWoundMeasurement = woundMeasurement;
     [self.navigationController pushViewController:self.selectWoundOdorViewController animated:YES];
 }
 
-- (void)navigateToUndermineTunnelViewController:(WCWoundMeasurement *)woundMeasurement
+- (void)navigateToUndermineTunnelViewController:(WMWoundMeasurement *)woundMeasurement
 {
-    UndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
+    WMUndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
     undermineTunnelViewController.woundMeasurementGroup = self.woundMeasurementGroup;
     undermineTunnelViewController.showCancelButton = YES;
     [self.navigationController pushViewController:undermineTunnelViewController animated:YES];
 }
 
-- (void)navigateToNoteViewController:(WCWoundMeasurement *)woundMeasurement
+- (void)navigateToNoteViewController:(WMWoundMeasurement *)woundMeasurement
 {
     self.selectedWoundMeasurement = woundMeasurement;
     [self.navigationController pushViewController:self.noteViewController animated:YES];
@@ -139,10 +139,10 @@
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.tableView.backgroundView = imageView;
     self.tableView.backgroundView.alpha = kInitialBackgroundImageAlpha;
-    // place AdjustAlpaView
+    // place WMAdjustAlpaView
     if (nil == _adjustAlpaView) {
         CGRect aFrame = CGRectMake(0.0, 106.0, 32.0, CGRectGetHeight(self.view.bounds) - 144.0);
-        AdjustAlpaView *adjustAlpaView = [[AdjustAlpaView alloc] initWithFrame:aFrame delegate:self];
+        WMAdjustAlpaView *adjustAlpaView = [[WMAdjustAlpaView alloc] initWithFrame:aFrame delegate:self];
         adjustAlpaView.contentMode = UIViewContentModeRedraw;
         [self.view addSubview:adjustAlpaView];
         [adjustAlpaView performSelector:@selector(flashViewAlpha) withObject:nil afterDelay:0.0];
@@ -218,16 +218,16 @@
 
 #pragma mark - Core
 
-- (WCWoundMeasurementGroup *)woundMeasurementGroup
+- (WMWoundMeasurementGroup *)woundMeasurementGroup
 {
     if (nil == _woundMeasurementGroup) {
-        WCWoundMeasurementGroup *woundMeasurementGroup = nil;
+        WMWoundMeasurementGroup *woundMeasurementGroup = nil;
         if (nil == _woundMeasurementGroupObjectID) {
             if (nil != self.woundPhoto) {
-                woundMeasurementGroup = [WCWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:self.woundPhoto];
+                woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:self.woundPhoto];
             }
             if (nil == woundMeasurementGroup) {
-                woundMeasurementGroup = [WCWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:self.woundPhoto];
+                woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:self.woundPhoto];
                 WCInterventionEvent *event = [woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                              title:nil
                                                                                          valueFrom:nil
@@ -243,19 +243,19 @@
                 DLog(@"Created event %@", event.eventType.title);
             }
         } else {
-            woundMeasurementGroup = (WCWoundMeasurementGroup *)[self.managedObjectContext objectWithID:_woundMeasurementGroupObjectID];
+            woundMeasurementGroup = (WMWoundMeasurementGroup *)[self.managedObjectContext objectWithID:_woundMeasurementGroupObjectID];
         }
         self.didCreateGroup = [[woundMeasurementGroup objectID] isTemporaryID];
         _woundMeasurementGroup = woundMeasurementGroup;
     }
-    NSAssert(nil != _woundMeasurementGroup, @"Unable to instanciate a WCWoundMeasurementGroup");
+    NSAssert(nil != _woundMeasurementGroup, @"Unable to instanciate a WMWoundMeasurementGroup");
     return _woundMeasurementGroup;
 }
 
-- (WCWoundMeasurement *)parentWoundMeasurement
+- (WMWoundMeasurement *)parentWoundMeasurement
 {
     if (nil == _parentWoundMeasurement && nil != _parentWoundMeasurementObjectID) {
-        _parentWoundMeasurement = (WCWoundMeasurement *)[[self managedObjectContext] objectWithID:_parentWoundMeasurementObjectID];
+        _parentWoundMeasurement = (WMWoundMeasurement *)[[self managedObjectContext] objectWithID:_parentWoundMeasurementObjectID];
     }
     return _parentWoundMeasurement;
 }
@@ -267,10 +267,10 @@
     return woundMeasurementViewController;
 }
 
-- (WCWoundMeasurement *)selectedWoundMeasurement
+- (WMWoundMeasurement *)selectedWoundMeasurement
 {
     if (nil == _selectedWoundMeasurement && nil != _selectedWoundMeasurementObjectID) {
-        _selectedWoundMeasurement = (WCWoundMeasurement *)[self.managedObjectContext objectWithID:_selectedWoundMeasurementObjectID];
+        _selectedWoundMeasurement = (WMWoundMeasurement *)[self.managedObjectContext objectWithID:_selectedWoundMeasurementObjectID];
     }
     return _selectedWoundMeasurement;
 }
@@ -289,26 +289,26 @@
     return selectWoundOdorViewController;
 }
 
-- (UndermineTunnelViewController *)undermineTunnelViewController
+- (WMUndermineTunnelViewController *)undermineTunnelViewController
 {
-    UndermineTunnelViewController *undermineTunnelViewController = [[UndermineTunnelViewController alloc] initWithNibName:@"UndermineTunnelViewController" bundle:nil];
+    WMUndermineTunnelViewController *undermineTunnelViewController = [[WMUndermineTunnelViewController alloc] initWithNibName:@"WMUndermineTunnelViewController" bundle:nil];
     undermineTunnelViewController.delegate = self;
     return undermineTunnelViewController;
 }
 
-- (WoundMeasurementSummaryViewController *)woundMeasurementSummaryViewController
+- (WMWoundMeasurementSummaryViewController *)woundMeasurementSummaryViewController
 {
-    return [[WoundMeasurementSummaryViewController alloc] initWithNibName:@"WoundMeasurementSummaryViewController" bundle:nil];
+    return [[WMWoundMeasurementSummaryViewController alloc] initWithNibName:@"WMWoundMeasurementSummaryViewController" bundle:nil];
 }
 
-- (WoundMeasurementGroupHistoryViewController *)woundMeasurementGroupHistoryViewController
+- (WMWoundMeasurementGroupHistoryViewController *)woundMeasurementGroupHistoryViewController
 {
-    return [[WoundMeasurementGroupHistoryViewController alloc] initWithNibName:@"WoundMeasurementGroupHistoryViewController" bundle:nil];
+    return [[WMWoundMeasurementGroupHistoryViewController alloc] initWithNibName:@"WMWoundMeasurementGroupHistoryViewController" bundle:nil];
 }
 
-- (NoteViewController *)noteViewController
+- (WMNoteViewController *)noteViewController
 {
-    NoteViewController *noteViewController = [[NoteViewController alloc] initWithNibName:@"NoteViewController" bundle:nil];
+    WMNoteViewController *noteViewController = [[WMNoteViewController alloc] initWithNibName:@"WMNoteViewController" bundle:nil];
     noteViewController.delegate = self;
     return noteViewController;
 }
@@ -323,7 +323,7 @@
 - (void)updateToolbarItems
 {
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:8];
-    if ([WCWoundMeasurementGroup woundMeasurementGroupsHaveHistoryForWound:self.wound]) {
+    if ([WMWoundMeasurementGroup woundMeasurementGroupsHaveHistoryForWound:self.wound]) {
         [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_Notepad"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
@@ -370,7 +370,7 @@
 
 - (id)valueForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
-    WCWoundMeasurement *woundMeasurement = (WCWoundMeasurement *)assessmentGroup;
+    WMWoundMeasurement *woundMeasurement = (WMWoundMeasurement *)assessmentGroup;
     WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
                                                                                                    create:NO
                                                                                                     value:nil
@@ -401,8 +401,8 @@
 
 - (void)updateAssessmentGroup:(id<AssessmentGroup>)assessmentGroup withValue:(id)value
 {
-    WCWoundMeasurement *woundMeasurement = (WCWoundMeasurement *)assessmentGroup;
-    WCWoundMeasurement *parentWoundMeasurement = woundMeasurement.parentMeasurement;
+    WMWoundMeasurement *woundMeasurement = (WMWoundMeasurement *)assessmentGroup;
+    WMWoundMeasurement *parentWoundMeasurement = woundMeasurement.parentMeasurement;
     BOOL createValue = (nil != value);
     if ([value isKindOfClass:[NSString class]]) {
         createValue = [value length] > 0;
@@ -433,7 +433,7 @@
 
 - (UIKeyboardType)keyboardTypeForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
-    WCWoundMeasurement *woundMeasurement = (WCWoundMeasurement *)assessmentGroup;
+    WMWoundMeasurement *woundMeasurement = (WMWoundMeasurement *)assessmentGroup;
     UIKeyboardType keyboardType = [woundMeasurement.keyboardType intValue];
     if (self.isIPadIdiom && keyboardType == UIKeyboardTypeDecimalPad) {
         keyboardType = UIKeyboardTypeNumberPad;
@@ -497,7 +497,7 @@
     return  kInitialBackgroundImageAlpha;
 }
 
-- (void)adjustAlpaView:(AdjustAlpaView *)adjustAlpaView didUpdateAlpha:(CGFloat)alpha
+- (void)adjustAlpaView:(WMAdjustAlpaView *)adjustAlpaView didUpdateAlpha:(CGFloat)alpha
 {
     self.tableView.backgroundView.alpha = alpha;
 }
@@ -511,17 +511,17 @@
 
 - (UIViewController *)summaryViewController
 {
-    WoundMeasurementSummaryViewController *woundMeasurementSummaryViewController = self.woundMeasurementSummaryViewController;
+    WMWoundMeasurementSummaryViewController *woundMeasurementSummaryViewController = self.woundMeasurementSummaryViewController;
     woundMeasurementSummaryViewController.woundMeasurementGroup = self.woundMeasurementGroup;
     return woundMeasurementSummaryViewController;
 }
 
-- (WCInterventionStatus *)selectedInterventionStatus
+- (WMInterventionStatus *)selectedInterventionStatus
 {
     return self.woundMeasurementGroup.status;
 }
 
-- (void)interventionStatusViewController:(InterventionStatusViewController *)viewController didSelectInterventionStatus:(WCInterventionStatus *)interventionStatus
+- (void)interventionStatusViewController:(WMInterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
 {
     self.woundMeasurementGroup.status = interventionStatus;
     WCInterventionEvent *event = [self.woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
@@ -535,7 +535,7 @@
                                                                                      create:YES
                                                                        managedObjectContext:self.managedObjectContext
                                                                             persistentStore:nil];
-    DLog(@"Created WCWoundMeasurementInterventionEvent %@ for WCInterventionStatus %@", event.eventType.title, interventionStatus.title);
+    DLog(@"Created WCWoundMeasurementInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
 }
@@ -550,7 +550,7 @@
 #pragma mark - UndermineTunnelViewControllerDelegate
 
 // TODO - move to area view controller
-- (void)undermineTunnelViewControllerDidDone:(UndermineTunnelViewController *)viewController
+- (void)undermineTunnelViewControllerDidDone:(WMUndermineTunnelViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     // clear - dont' allow refech data
@@ -558,7 +558,7 @@
     [viewController clearAllReferences];
 }
 
-- (void)undermineTunnelViewControllerDidCancel:(UndermineTunnelViewController *)viewController
+- (void)undermineTunnelViewControllerDidCancel:(WMUndermineTunnelViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     // clear - dont' allow refech data
@@ -568,7 +568,7 @@
 
 #pragma mark - SelectAmountQualifierViewControllerDelegate
 
-- (WCAmountQualifier *)selectedAmountQualifier
+- (WMAmountQualifier *)selectedAmountQualifier
 {
     WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:NO
@@ -577,7 +577,7 @@
     return value.amountQualifier;
 }
 
-- (void)selectAmountQualifierViewController:(WMSelectAmountQualifierViewController *)viewController didSelectQualifierAmount:(WCAmountQualifier *)amount
+- (void)selectAmountQualifierViewController:(WMSelectAmountQualifierViewController *)viewController didSelectQualifierAmount:(WMAmountQualifier *)amount
 {
     WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:YES
@@ -676,7 +676,7 @@
     return self.selectedWoundMeasurement.placeHolder;
 }
 
-- (void)noteViewController:(NoteViewController *)viewController didUpdateNote:(NSString *)note
+- (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note
 {
     WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:YES
@@ -690,7 +690,7 @@
     [viewController clearAllReferences];
 }
 
-- (void)noteViewControllerDidCancel:(NoteViewController *)viewController withNote:(NSString *)note
+- (void)noteViewControllerDidCancel:(WMNoteViewController *)viewController withNote:(NSString *)note
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
@@ -707,7 +707,7 @@
     // else
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     // determine if we are selecting a child measurement, or navigating to amount or odor
-    WCWoundMeasurement *woundMeasurement = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    WMWoundMeasurement *woundMeasurement = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (woundMeasurement.hasChildrenWoundMeasurements) {
         // navigate to children
         [self navigateToChildrenWoundMeasurementsForParentWoundMeasurement:woundMeasurement];
@@ -761,7 +761,7 @@
 //- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 //{
 //    [super configureCell:cell atIndexPath:indexPath];
-//    WCWoundMeasurement *woundMeasurement = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    WMWoundMeasurement *woundMeasurement = [self.fetchedResultsController objectAtIndexPath:indexPath];
 //    if ([self shouldShowSelectionImageForAssessmentGroup:woundMeasurement]) {
 //        if ([self.woundMeasurementGroup hasWoundMeasurementValuesForWoundMeasurementAndChildren:woundMeasurement]) {
 //            cell.imageView.image = [DesignUtilities selectedWoundTableCellImage];
@@ -774,7 +774,7 @@
 - (NSInteger)selectionCountForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
     NSInteger count = 0;
-    WCWoundMeasurement *woundMeasurement = (WCWoundMeasurement *)assessmentGroup;
+    WMWoundMeasurement *woundMeasurement = (WMWoundMeasurement *)assessmentGroup;
     if ([self shouldShowSelectionImageForAssessmentGroup:woundMeasurement]) {
         if ([self.woundMeasurementGroup hasWoundMeasurementValuesForWoundMeasurementAndChildren:woundMeasurement]) {
             count = 1;
@@ -789,7 +789,7 @@
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-    return (self.isSearchActive ? @"WCDefinition":@"WCWoundMeasurement");
+    return (self.isSearchActive ? @"WCDefinition":@"WMWoundMeasurement");
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate
@@ -804,7 +804,7 @@
             }
         }
     } else {
-        predicate = [WCWoundMeasurement predicateForParentMeasurement:self.parentWoundMeasurement woundType:self.wound.woundType];
+        predicate = [WMWoundMeasurement predicateForParentMeasurement:self.parentWoundMeasurement woundType:self.wound.woundType];
     }
     return predicate;
 }

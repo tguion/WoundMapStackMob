@@ -115,6 +115,9 @@ typedef enum {
         // create patient and wound nodes
         [WMNavigationNode seedPatientNodes:managedObjectContext completionHandler:completionHandler];
         [WMNavigationNode seedWoundNodes:managedObjectContext completionHandler:completionHandler];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMNavigationTrack entityName]);
+        }
     }
 }
 
@@ -149,7 +152,7 @@ typedef enum {
             [objectIDs addObject:[navigationStage objectID]];
         }
         if (completionHandler) {
-            completionHandler(nil, objectIDs);
+            completionHandler(nil, objectIDs, [WMNavigationStage entityName]);
         }
     }
     return navigationTrack;
