@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class SMCoreDataStore;
+@class WMTeam;
 
 @interface WMSeedDatabaseManager : NSObject
 
 + (WMSeedDatabaseManager *)sharedInstance;
 
-- (void)seedTeamDatabaseWithCompletionHandler:(void (^)(NSError *))handler;
+- (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler;
+- (void)seedTeamDatabase:(WMTeam *)team completionHandler:(void (^)(NSError *))handler;
 
 @end

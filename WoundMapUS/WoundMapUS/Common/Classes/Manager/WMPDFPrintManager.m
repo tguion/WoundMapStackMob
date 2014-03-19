@@ -8,6 +8,7 @@
 
 #import "WMPDFPrintManager.h"
 #import "WMPatient.h"
+#import "PDFRenderer.h"
 #import "WCAppDelegate.h"
 
 @interface WMPDFPrintManager()

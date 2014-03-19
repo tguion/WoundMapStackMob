@@ -8,15 +8,10 @@
 
 #import "CoreDataHelper.h"
 #import "Faulter.h"
-#import "WMPatient.h"
-#import "WMBradenCare.h"
-#import "WMWoundType.h"
-#import "WMDefinition.h"
-#import "WMInstruction.h"
-#import "IAPProduct.h"
 #import "WMUtilities.h"
 #import "WMNetworkReachability.h"
 #import "WMUserDefaultsManager.h"
+#import "WMSeedDatabaseManager.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
@@ -27,8 +22,6 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
 - (void)alertUserNetworkReachabilityChanged:(WMNetworkStatus)status;
-
-- (void)seedLocalDatabase;
 
 @end
 
@@ -147,8 +140,10 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     }
     
     [MagicalRecord setupCoreDataStackWithStoreNamed:[NSPersistentStore MR_urlForStoreName:storeFilename]];
-    _localStore = [self.coordinator MR_addSqliteStoreNamed:[NSPersistentStore MR_urlForStoreName:localStoreFilename] withOptions:nil configuration:@"Local"];
-    [self seedLocalDatabase];
+    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+        // ???
+    }];
 
 }
 
@@ -296,21 +291,5 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 #pragma mark – DATA IMPORT
 
-- (void)seedLocalDatabase
-{
-    NSManagedObjectContext *managedObjectContext = self.parentContext;
-    [managedObjectContext performBlock:^{
-        [WMBradenCare seedDatabase:managedObjectContext];
-        [WMDefinition seedDatabase:managedObjectContext];
-        [WMWoundType seedDatabase:managedObjectContext];
-        [IAPProduct seedDatabase:managedObjectContext];
-        [WMInstruction seedDatabase:managedObjectContext];
-        [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            if (nil != error) {
-                [WMUtilities logError:error];
-            }
-        }];
-    }];
-}
 
 @end

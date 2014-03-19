@@ -38,6 +38,7 @@ NSString *const kDischargeStageTitle = @"Discharge";
 + (WMNavigationStage *)updateStageFromDictionary:(NSDictionary *)dictionary
                                            track:(WMNavigationTrack *)navigationTrack
                                           create:(BOOL)create
+                               completionHandler:(WMProcessCallback)completionHandler
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationStage *navigationStage = [WMNavigationStage stageForTitle:title
@@ -52,23 +53,22 @@ NSString *const kDischargeStageTitle = @"Discharge";
     navigationStage.icon = [dictionary objectForKey:@"icon"];
     navigationStage.sortRank = [dictionary objectForKey:@"sortRank"];
     navigationStage.desc = [dictionary objectForKey:@"desc"];
-    // save stage before attempting to form relationship with node
-    NSManagedObjectContext *managedObjectContext = [navigationTrack managedObjectContext];
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            id nodes = [dictionary objectForKey:@"nodes"];
-            if ([nodes isKindOfClass:[NSArray class]]) {
-                for (NSDictionary *d in nodes) {
-                    [WMNavigationNode updateNodeFromDictionary:d
-                                                         stage:navigationStage
-                                                    parentNode:nil
-                                                        create:create];
-                }
-            }
+    id nodes = [dictionary objectForKey:@"nodes"];
+    if ([nodes isKindOfClass:[NSArray class]]) {
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        for (NSDictionary *d in nodes) {
+            WMNavigationNode *navigationNode = [WMNavigationNode updateNodeFromDictionary:d
+                                                                                    stage:navigationStage
+                                                                               parentNode:nil
+                                                                                   create:create
+                                                                        completionHandler:completionHandler];
+            NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[navigationNode objectID]];
         }
-    }];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs);
+        }
+    }
     return navigationStage;
 }
 

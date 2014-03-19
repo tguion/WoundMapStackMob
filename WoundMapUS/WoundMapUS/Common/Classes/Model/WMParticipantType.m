@@ -47,7 +47,7 @@
     return participantType;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"RoleType" withExtension:@"plist"];
@@ -68,8 +68,14 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateParticipantTypeFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMParticipantType *participantType = [self updateParticipantTypeFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            NSAssert(![[participantType objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[participantType objectID]];
+        }
+        if (completionHandler) {
+            completionHandler(nil, objectIDs);
         }
     }
 }

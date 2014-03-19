@@ -1,4 +1,5 @@
 #import "_WMNavigationTrack.h"
+#import "WoundCareProtocols.h"
 
 @class WMNavigationStage;
 
@@ -13,7 +14,7 @@
 
 + (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
 
 + (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext;
 

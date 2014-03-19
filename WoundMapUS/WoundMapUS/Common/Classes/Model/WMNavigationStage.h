@@ -1,4 +1,5 @@
 #import "_WMNavigationStage.h"
+#import "WoundCareProtocols.h"
 
 @class WMNavigationTrack;
 
@@ -11,7 +12,8 @@
 
 + (WMNavigationStage *)updateStageFromDictionary:(NSDictionary *)dictionary
                                            track:(WMNavigationTrack *)navigationTrack
-                                          create:(BOOL)create;
+                                          create:(BOOL)create
+                               completionHandler:(WMProcessCallback)completionHandler;
 
 + (WMNavigationStage *)initialStageForTrack:(WMNavigationTrack *)navigationTrack;
 

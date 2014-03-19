@@ -189,6 +189,12 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [_operationQueue addOperation:operation];
 }
 
+- (void)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection ff:ff completionHandler:completionHandler];
+    [_operationQueue addOperation:operation];
+}
+
 #pragma mark - Updates
 
 - (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
@@ -647,6 +653,47 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                 completionHandler(error, object, signInRequired);
             }
         }];
+    }];
+    return operation;
+}
+
+- (NSBlockOperation *)createArrayOperation:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+{
+    NSParameterAssert([collection length] == 0);
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        for (NSManagedObjectID *objectID in objectIDs) {
+            id object = [managedObjectContext objectWithID:objectID];
+            [ff createObj:object atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                BOOL signInRequired = NO;
+                if (error) {
+                    if (response.statusCode == 401) {
+                        signInRequired = YES;
+                    }
+                    [WMUtilities logError:error];
+                } else if ([object isKindOfClass:[NSManagedObject class]]) {
+                    object = [object MR_inContext:managedObjectContext];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+                if (completionHandler) {
+                    completionHandler(error, object, signInRequired);
+                }
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                BOOL signInRequired = NO;
+                if (error) {
+                    if (response.statusCode == 401) {
+                        signInRequired = YES;
+                    }
+                    [WMUtilities logError:error];
+                } else {
+                    [ff queueCreateObj:object atUri:ffUrl];
+                }
+                if (completionHandler) {
+                    completionHandler(error, object, signInRequired);
+                }
+            }];
+        }
     }];
     return operation;
 }

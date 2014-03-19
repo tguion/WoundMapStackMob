@@ -85,7 +85,7 @@ typedef enum {
 }
 
 // first attempt to find WMNavigationTrack data in index store
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
@@ -106,20 +106,22 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
-        [managedObjectContext performBlockAndWait:^{
-            for (NSDictionary *dictionary in propertyList) {
-                [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
-            }
-            // create patient and wound nodes
-            [WMNavigationNode seedPatientNodes:managedObjectContext];
-            [WMNavigationNode seedWoundNodes:managedObjectContext];
-        }];
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        for (NSDictionary *dictionary in propertyList) {
+            WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext completionHandler:completionHandler];
+            NSAssert(![[navigationTrack objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[navigationTrack objectID]];
+        }
+        // create patient and wound nodes
+        [WMNavigationNode seedPatientNodes:managedObjectContext completionHandler:completionHandler];
+        [WMNavigationNode seedWoundNodes:managedObjectContext completionHandler:completionHandler];
     }
 }
 
 + (WMNavigationTrack *)updateTrackFromDictionary:(NSDictionary *)dictionary
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                               completionHandler:(WMProcessCallback)completionHandler
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationTrack *navigationTrack = [WMNavigationTrack trackForTitle:title
@@ -135,21 +137,21 @@ typedef enum {
     navigationTrack.limitToSinglePatientFlag = [[dictionary objectForKey:@"limitToSinglePatientFlag"] boolValue];
     navigationTrack.skipCarePlanFlag = [[dictionary objectForKey:@"skipCarePlanFlag"] boolValue];
     navigationTrack.skipPolicyEditor = [[dictionary objectForKey:@"skipPolicyEditor"] boolValue];
-    // save track before attempting to form relationship with stage
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            id stages = [dictionary objectForKey:@"stages"];
-            if ([stages isKindOfClass:[NSArray class]]) {
-                for (NSDictionary *d in stages) {
-                    [WMNavigationStage updateStageFromDictionary:d
-                                                           track:navigationTrack
-                                                          create:create];
-                }
-            }
+    id stages = [dictionary objectForKey:@"stages"];
+    if ([stages isKindOfClass:[NSArray class]]) {
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        for (NSDictionary *d in stages) {
+            WMNavigationStage *navigationStage = [WMNavigationStage updateStageFromDictionary:d
+                                                                                        track:navigationTrack
+                                                                                       create:create
+                                                                            completionHandler:completionHandler];
+            NSAssert(![[navigationStage objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[navigationStage objectID]];
         }
-    }];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs);
+        }
+    }
     return navigationTrack;
 }
 
