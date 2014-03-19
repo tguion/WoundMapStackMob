@@ -7,7 +7,7 @@
 //
 
 #import "WMDisclosureImageView.h"
-#import "DesignUtilities.h"
+#import "WMDesignUtilities.h"
 
 @interface WMDisclosureImageView ()
 @property (readonly, nonatomic) UIImage *imageForSelectionCount;
@@ -42,16 +42,16 @@
             break;
         }
         case 0: {
-            image = [DesignUtilities unselectedWoundTableCellImage];
+            image = [WMDesignUtilities unselectedWoundTableCellImage];
             break;
         }
         case 1: {
-            image = [DesignUtilities selectedWoundTableCellImage];
+            image = [WMDesignUtilities selectedWoundTableCellImage];
             break;
         }
         default: {
             selectionCount = MIN(selectionCount, 10);
-            image = [UIImage imageNamed:[NSString stringWithFormat:@"btn_%d.png", selectionCount]];
+            image = [UIImage imageNamed:[NSString stringWithFormat:@"btn_%ld.png", (long)selectionCount]];
             break;
         }
     }

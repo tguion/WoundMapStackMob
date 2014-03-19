@@ -26,4 +26,6 @@ extern CGFloat const kInitialBackgroundImageAlpha;
 - (id)initWithFrame:(CGRect)frame delegate:(id<AdjustAlpaViewDelegate>)delegate;
 - (void)reset;
 
+- (void)flashViewAlpha;
+
 @end

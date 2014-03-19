@@ -102,7 +102,7 @@
     if (nil == _telecoms) {
         _telecoms = [[self.delegate.source.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     }
-    return _addresses[index];
+    return _telecoms[index];
 }
 
 #pragma mark - WMBaseViewController
@@ -110,15 +110,15 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _addresses = nil;
+    _telecoms = nil;
 }
 
 #pragma mark - Actions
 
 - (IBAction)addAction:(id)sender
 {
-    WMAddress *address = [WMAddress instanceWithManagedObjectContext:self.managedObjectContext persistentStore:nil];
-    [self navigateToAddressEditorForAddress:address];
+    WMTelecom *telecom = [WMTelecom MR_createInContext:self.managedObjectContext];
+    [self navigateToTelecomEditorForTelecom:telecom];
 }
 
 - (IBAction)doneAction:(id)sender
@@ -129,7 +129,7 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
-    [self.delegate addressListViewControllerDidFinish:self];
+    [self.delegate telecomListViewControllerDidFinish:self];
 }
 
 - (IBAction)cancelAction:(id)sender
@@ -144,23 +144,23 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
-    [self.delegate addressListViewControllerDidCancel:self];
+    [self.delegate telecomListViewControllerDidCancel:self];
 }
 
 #pragma mark - WMBaseViewController
 
-#pragma mark - AddressEditorViewControllerDelegate
+#pragma mark - TelecomEditorViewControllerDelegate
 
-- (void)addressEditorViewController:(WMAddressEditorViewController *)viewController didEditAddress:(WMAddress *)address
+- (void)telecomEditorViewController:(WMTelecomEditorViewController *)viewController didEditTelecom:(WMTelecom *)telecom
 {
-    [self.delegate.source addAddressesObject:address];
+    [self.delegate.source addTelecomsObject:telecom];
     [self.navigationController popViewControllerAnimated:YES];
-    _addresses = nil;
+    _telecoms = nil;
     [self.tableView reloadData];
     [viewController clearAllReferences];
 }
 
-- (void)addressEditorViewControllerDidCancel:(WMAddressEditorViewController *)viewController
+- (void)telecomEditorViewControllerDidCancel:(WMTelecomEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
@@ -172,8 +172,8 @@
 {
     CGFloat height = 44.0;
     if (![self isAddIndexPath:indexPath]) {
-        WMAddress *address = [self addressForIndex:indexPath.row];
-        NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
+        WMTelecom *telecom = [self telecomForIndex:indexPath.row];
+        NSAttributedString *attributedString = [telecom descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
         CGSize aSize = CGSizeMake(CGRectGetWidth(self.tableView.bounds) - self.tableView.separatorInset.left - self.tableView.separatorInset.right, CGFLOAT_MAX);
         height = ceilf([attributedString boundingRectWithSize:aSize
                                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
@@ -199,11 +199,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([self isAddIndexPath:indexPath]) {
-        // add address
+        // add telecom
         [self addAction:nil];
     } else {
         // edit address
-        [self navigateToAddressEditorForAddress:[self addressForIndex:indexPath.row]];
+        [self navigateToTelecomEditorForTelecom:[self telecomForIndex:indexPath.row]];
     }
 }
 
@@ -216,7 +216,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.delegate.source.addresses count] + 1;
+    return [self.delegate.source.telecoms count] + 1;
 }
 
 // Customize the appearance of table view cells.
@@ -234,8 +234,8 @@
         cell.textLabel.font = [UIFont systemFontOfSize:15.0];
         cell.textLabel.text = @"Add Address";
     } else {
-        WMAddress *address = [self addressForIndex:indexPath.row];
-        NSAttributedString *attributedString = [address descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
+        WMTelecom *telecom = [self telecomForIndex:indexPath.row];
+        NSAttributedString *attributedString = [telecom descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.attributedText = attributedString;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -246,9 +246,9 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        WMAddress *address = [self addressForIndex:indexPath.row];
-        [self.delegate.source removeAddressesObject:address];
-        _addresses = nil;
+        WMTelecom *telecom = [self telecomForIndex:indexPath.row];
+        [self.delegate.source removeTelecomsObject:telecom];
+        _telecoms = nil;
         [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
         [self.tableView endUpdates];

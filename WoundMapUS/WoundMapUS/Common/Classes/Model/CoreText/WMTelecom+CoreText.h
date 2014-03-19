@@ -7,7 +7,8 @@
 //
 
 #import "WMTelecom.h"
+#import "WoundCareProtocols.h"
 
-@interface WMTelecom (CoreText)
+@interface WMTelecom (CoreText) <WCCoreTextDataSource>
 
 @end

@@ -138,6 +138,10 @@
 		7D10CDDE18DA3E7800AD43E3 /* WMEventTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDDD18DA3E7800AD43E3 /* WMEventTableViewCell.m */; };
 		7D10CDE118DA3F5C00AD43E3 /* WMAssessmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDE018DA3F5C00AD43E3 /* WMAssessmentTableViewCell.m */; };
 		7D10CDE418DA3FC300AD43E3 /* WMDisclosureImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDE318DA3FC300AD43E3 /* WMDisclosureImageView.m */; };
+		7D10CDE718DA431200AD43E3 /* WMDefinitionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDE618DA431200AD43E3 /* WMDefinitionTableViewCell.m */; };
+		7D10CDEB18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */; };
+		7D10CDEC18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */; };
+		7D10CDEF18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -692,6 +696,13 @@
 		7D10CDE018DA3F5C00AD43E3 /* WMAssessmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMAssessmentTableViewCell.m; sourceTree = "<group>"; };
 		7D10CDE218DA3FC300AD43E3 /* WMDisclosureImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDisclosureImageView.h; sourceTree = "<group>"; };
 		7D10CDE318DA3FC300AD43E3 /* WMDisclosureImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDisclosureImageView.m; sourceTree = "<group>"; };
+		7D10CDE518DA431200AD43E3 /* WMDefinitionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDefinitionTableViewCell.h; sourceTree = "<group>"; };
+		7D10CDE618DA431200AD43E3 /* WMDefinitionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDefinitionTableViewCell.m; sourceTree = "<group>"; };
+		7D10CDE818DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentGroupHistoryViewController.h; sourceTree = "<group>"; };
+		7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentGroupHistoryViewController.m; sourceTree = "<group>"; };
+		7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundTreatmentGroupHistoryViewController.xib; sourceTree = "<group>"; };
+		7D10CDED18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentGroupTableViewCell.h; sourceTree = "<group>"; };
+		7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentGroupTableViewCell.m; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -1686,18 +1697,9 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7D10CDD718DA3DB800AD43E3 /* WMInterventionEventViewController.h */,
-				7D10CDD818DA3DB800AD43E3 /* WMInterventionEventViewController.m */,
-				7D10CDD918DA3DB800AD43E3 /* WMInterventionEventViewController.xib */,
-				7D10CDD218DA3B5300AD43E3 /* WMInterventionStatusViewController.h */,
-				7D10CDD318DA3B5300AD43E3 /* WMInterventionStatusViewController.m */,
-				7D10CDD418DA3B5300AD43E3 /* WMInterventionStatusViewController.xib */,
-				7D10CDCA18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.h */,
-				7D10CDCB18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.m */,
-				7D10CDCC18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.xib */,
-				7D10CDA018DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.h */,
-				7D10CDA118DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.m */,
-				7D10CDA218DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.xib */,
+				7D10CDE818DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.h */,
+				7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */,
+				7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				7D39DBA318BA97A70054DDC3 /* IAP */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
@@ -1743,6 +1745,12 @@
 				5F6DE50D18B586F600E87F7E /* WMInstructionsViewController.h */,
 				5F6DE50E18B586F600E87F7E /* WMInstructionsViewController.m */,
 				5F6DE50F18B586F600E87F7E /* WMInstructionsViewController.xib */,
+				7D10CDD718DA3DB800AD43E3 /* WMInterventionEventViewController.h */,
+				7D10CDD818DA3DB800AD43E3 /* WMInterventionEventViewController.m */,
+				7D10CDD918DA3DB800AD43E3 /* WMInterventionEventViewController.xib */,
+				7D10CDD218DA3B5300AD43E3 /* WMInterventionStatusViewController.h */,
+				7D10CDD318DA3B5300AD43E3 /* WMInterventionStatusViewController.m */,
+				7D10CDD418DA3B5300AD43E3 /* WMInterventionStatusViewController.xib */,
 				7D39DB2F18B823A30054DDC3 /* WMMedicationGroupViewController.h */,
 				7D39DB3018B823A30054DDC3 /* WMMedicationGroupViewController.m */,
 				7D39DB3118B823A30054DDC3 /* WMMedicationGroupViewController.xib */,
@@ -1830,9 +1838,15 @@
 				7D39DAE918B7E5F80054DDC3 /* WMWoundDetailViewController.h */,
 				7D39DAEA18B7E5F80054DDC3 /* WMWoundDetailViewController.m */,
 				7D39DAEB18B7E5F80054DDC3 /* WMWoundDetailViewController.xib */,
+				7D10CDCA18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.h */,
+				7D10CDCB18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.m */,
+				7D10CDCC18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.xib */,
 				7D10CD8518D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.h */,
 				7D10CD8618D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.m */,
 				7D10CD8718D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib */,
+				7D10CDA018DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.h */,
+				7D10CDA118DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.m */,
+				7D10CDA218DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.xib */,
 				7D39DAF318B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.h */,
 				7D39DAF418B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m */,
 				7D39DAF518B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib */,
@@ -2058,12 +2072,8 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7D10CDE218DA3FC300AD43E3 /* WMDisclosureImageView.h */,
-				7D10CDE318DA3FC300AD43E3 /* WMDisclosureImageView.m */,
-				7D10CDDF18DA3F5C00AD43E3 /* WMAssessmentTableViewCell.h */,
-				7D10CDE018DA3F5C00AD43E3 /* WMAssessmentTableViewCell.m */,
-				7D10CDDC18DA3E7800AD43E3 /* WMEventTableViewCell.h */,
-				7D10CDDD18DA3E7800AD43E3 /* WMEventTableViewCell.m */,
+				7D10CDED18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.h */,
+				7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */,
 				5F6DE4F518AEE08D00E87F7E /* APTableViewCell.h */,
 				5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */,
 				7DB2074518ABAB8E0004DC32 /* AsyncImageView.h */,
@@ -2076,8 +2086,16 @@
 				7DB2074918ABAD800004DC32 /* WCPatientPhotoImageView.m */,
 				7D39DBCA18BAB5EA0054DDC3 /* WMAdjustAlpaView.h */,
 				7D39DBCB18BAB5EA0054DDC3 /* WMAdjustAlpaView.m */,
+				7D10CDDF18DA3F5C00AD43E3 /* WMAssessmentTableViewCell.h */,
+				7D10CDE018DA3F5C00AD43E3 /* WMAssessmentTableViewCell.m */,
 				7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */,
 				7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */,
+				7D10CDE518DA431200AD43E3 /* WMDefinitionTableViewCell.h */,
+				7D10CDE618DA431200AD43E3 /* WMDefinitionTableViewCell.m */,
+				7D10CDE218DA3FC300AD43E3 /* WMDisclosureImageView.h */,
+				7D10CDE318DA3FC300AD43E3 /* WMDisclosureImageView.m */,
+				7D10CDDC18DA3E7800AD43E3 /* WMEventTableViewCell.h */,
+				7D10CDDD18DA3E7800AD43E3 /* WMEventTableViewCell.m */,
 				5F6DE51C18B589B300E87F7E /* WMInstructionTableViewCell.h */,
 				5F6DE51D18B589B300E87F7E /* WMInstructionTableViewCell.m */,
 				5F6DE4F218AEE00D00E87F7E /* WMNavigationTrackTableViewCell.h */,
@@ -2792,6 +2810,7 @@
 				7D10CDD618DA3B5300AD43E3 /* WMInterventionStatusViewController.xib in Resources */,
 				7D39DB3818B824060054DDC3 /* WMDevicesViewController.xib in Resources */,
 				5F67D20418AC3BE000460C37 /* WoundMeasurementDefinitions.plist in Resources */,
+				7D10CDEC18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib in Resources */,
 				5F67D20618AC3BE000460C37 /* WoundOdor.plist in Resources */,
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
 				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,
@@ -3049,6 +3068,7 @@
 				7D10CDE418DA3FC300AD43E3 /* WMDisclosureImageView.m in Sources */,
 				5F67D1C418AC39B800460C37 /* WMParticipantType.m in Sources */,
 				7D9AA27418AFF74C00C1B698 /* WMConsultingGroup.m in Sources */,
+				7D10CDE718DA431200AD43E3 /* WMDefinitionTableViewCell.m in Sources */,
 				7D10CD5C18D2146000AD43E3 /* ImageToDataTransformer.m in Sources */,
 				7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */,
 				7DF4E97318C29A07000A3F5B /* WMInterventionEvent.m in Sources */,
@@ -3076,6 +3096,7 @@
 				5F6DE52718B58A8300E87F7E /* _WMInstruction.m in Sources */,
 				5F67D1C918AC39C600460C37 /* _WMParticipant.m in Sources */,
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
+				7D10CDEB18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7D13026A18D0873500AE33B2 /* PDFRenderer.m in Sources */,
@@ -3096,6 +3117,7 @@
 				7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */,
 				7DF4E9C018C4CAAE000A3F5B /* PDFRenderer.m in Sources */,
 				7DF4E97518C29A07000A3F5B /* WMInterventionStatus.m in Sources */,
+				7D10CDEF18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m in Sources */,
 				7DF4E9C318C4CAAE000A3F5B /* PrintConfiguration.m in Sources */,
 				7DD8373F18C78A3A0028C2D3 /* MagicalRecord+ErrorHandling.m in Sources */,
 				7DF4E97218C29A07000A3F5B /* WMDeviceInterventionEvent.m in Sources */,

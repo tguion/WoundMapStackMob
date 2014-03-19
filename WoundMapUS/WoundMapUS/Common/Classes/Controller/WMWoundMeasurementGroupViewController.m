@@ -32,6 +32,7 @@
 #import "WMDesignUtilities.h"
 #import "UIView+Custom.h"
 #import "WMUtilities.h"
+#import "WCAppDelegate.h"
 
 @interface WMWoundMeasurementGroupViewController () <AdjustAlpaViewDelegate, WoundMeasurementGroupViewControllerDelegate, SelectAmountQualifierViewControllerDelegate, SelectWoundOdorViewControllerDelegate, UndermineTunnelViewControllerDelegate, NoteViewControllerDelegate>
 
@@ -150,7 +151,7 @@
     }
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
-                                                            message:[NSString stringWithFormat:@"Your Policy has closed %d open Wound Assessment records. A new Wound Assessment has been created for you.", self.recentlyClosedCount]
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Wound Assessment records. A new Wound Assessment has been created for you.", (long)self.recentlyClosedCount]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
@@ -228,18 +229,16 @@
             }
             if (nil == woundMeasurementGroup) {
                 woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:self.woundPhoto];
-                WCInterventionEvent *event = [woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                WMInterventionEvent *event = [woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                              title:nil
                                                                                          valueFrom:nil
                                                                                            valueTo:nil
-                                                                                              type:[WCInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                              type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
                                                                                                                                                    create:YES
-                                                                                                                                     managedObjectContext:self.managedObjectContext
-                                                                                                                                          persistentStore:nil]
-                                                                                              user:[self.appDelegate signedInUserForDocument:self.document]
+                                                                                                                                     managedObjectContext:self.managedObjectContext]
+                                                                                       participant:self.appDelegate.participant
                                                                                             create:YES
-                                                                              managedObjectContext:self.managedObjectContext
-                                                                                   persistentStore:nil];
+                                                                              managedObjectContext:self.managedObjectContext];
                 DLog(@"Created event %@", event.eventType.title);
             }
         } else {
@@ -371,10 +370,9 @@
 - (id)valueForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
     WMWoundMeasurement *woundMeasurement = (WMWoundMeasurement *)assessmentGroup;
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
                                                                                                    create:NO
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     if (nil == value && !woundMeasurement.hasChildrenWoundMeasurements) {
         return nil;
     }
@@ -413,10 +411,9 @@
         [self.woundMeasurementGroup removeWoundMeasurementValuesForParentWoundMeasurement:parentWoundMeasurement];
         reloadSection = YES;
     }
-    WCWoundMeasurementValue *woundMeasurementValue = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
+    WMWoundMeasurementValue *woundMeasurementValue = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:woundMeasurement
                                                                                                                    create:createValue
-                                                                                                                    value:nil
-                                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                                    value:nil];
     if (createValue && [value isKindOfClass:[NSString class]]) {
         woundMeasurementValue.value = value;
     } else if (!createValue && nil != woundMeasurementValue) {
@@ -473,7 +470,7 @@
     }
     [super saveAction:sender];
     // create intervention events before super
-    [self.woundMeasurementGroup createEditEventsForUser:[self.appDelegate signedInUserForDocument:self.document]];
+    [self.woundMeasurementGroup createEditEventsForParticipant:self.appDelegate.participant];
     // allow delegate to dismiss
     [self.delegate woundMeasurementGroupViewControllerDidFinish:self];
 }
@@ -524,17 +521,15 @@
 - (void)interventionStatusViewController:(WMInterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
 {
     self.woundMeasurementGroup.status = interventionStatus;
-    WCInterventionEvent *event = [self.woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+    WMInterventionEvent *event = [self.woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                       title:nil
                                                                                   valueFrom:nil
                                                                                     valueTo:nil
-                                                                                       type:[WCInterventionEventType interventionEventTypeForStatusTitle:interventionStatus.title
-                                                                                                                                    managedObjectContext:self.managedObjectContext
-                                                                                                                                         persistentStore:nil]
-                                                                                       user:[self.appDelegate signedInUserForDocument:self.document]
+                                                                                       type:[WMInterventionEventType interventionEventTypeForStatusTitle:interventionStatus.title
+                                                                                                                                    managedObjectContext:self.managedObjectContext]
+                                                                                participant:self.appDelegate.participant
                                                                                      create:YES
-                                                                       managedObjectContext:self.managedObjectContext
-                                                                            persistentStore:nil];
+                                                                       managedObjectContext:self.managedObjectContext];
     DLog(@"Created WCWoundMeasurementInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
@@ -570,19 +565,17 @@
 
 - (WMAmountQualifier *)selectedAmountQualifier
 {
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:NO
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     return value.amountQualifier;
 }
 
 - (void)selectAmountQualifierViewController:(WMSelectAmountQualifierViewController *)viewController didSelectQualifierAmount:(WMAmountQualifier *)amount
 {
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:YES
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     value.amountQualifier = amount;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
@@ -602,21 +595,19 @@
 
 #pragma mark - SelectWoundOdorViewControllerDelegate
 
-- (WCWoundOdor *)selectedWoundOdor
+- (WMWoundOdor *)selectedWoundOdor
 {
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:NO
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     return value.odor;
 }
 
-- (void)selectWoundOdorViewController:(WMSelectWoundOdorViewController *)viewController didSelectWoundOdor:(WCWoundOdor *)woundOdor
+- (void)selectWoundOdorViewController:(WMSelectWoundOdorViewController *)viewController didSelectWoundOdor:(WMWoundOdor *)woundOdor
 {
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:YES
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     value.odor = woundOdor;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
@@ -641,7 +632,7 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
-    [WCUtilities saveChanges:self.managedObjectContext];
+    [self.managedObjectContext MR_saveOnlySelfAndWait];
     [self.navigationController popViewControllerAnimated:YES];
     // clear
     [viewController clearAllReferences];
@@ -664,10 +655,9 @@
 
 - (NSString *)note
 {
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:NO
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     return value.value;
 }
 
@@ -678,22 +668,19 @@
 
 - (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note
 {
-    WCWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
+    WMWoundMeasurementValue *value = [self.woundMeasurementGroup woundMeasurementValueForWoundMeasurement:self.selectedWoundMeasurement
                                                                                                    create:YES
-                                                                                                    value:nil
-                                                                                     managedObjectContext:self.managedObjectContext];
+                                                                                                    value:nil];
     value.value = note;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationFade];
     self.selectedWoundMeasurement = nil;
-    [viewController clearAllReferences];
 }
 
 - (void)noteViewControllerDidCancel:(WMNoteViewController *)viewController withNote:(NSString *)note
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate
@@ -789,7 +776,7 @@
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-    return (self.isSearchActive ? @"WCDefinition":@"WMWoundMeasurement");
+    return (self.isSearchActive ? @"WMDefinition":@"WMWoundMeasurement");
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate
@@ -798,9 +785,9 @@
     if (self.isSearchActive) {
         if ([self.searchDisplayController.searchBar.text length] > 0) {
             if (self.searchDisplayController.searchBar.selectedScopeButtonIndex == 0) {
-                predicate = [WCDefinition predicateForSearchInput:self.searchDisplayController.searchBar.text section:WoundPUMPScopeWoundAssessment];
+                predicate = [WMDefinition predicateForSearchInput:self.searchDisplayController.searchBar.text section:WoundPUMPScopeWoundAssessment];
             } else {
-                predicate = [WCDefinition predicateForSearchInput:self.searchDisplayController.searchBar.text];
+                predicate = [WMDefinition predicateForSearchInput:self.searchDisplayController.searchBar.text];
             }
         }
     } else {
