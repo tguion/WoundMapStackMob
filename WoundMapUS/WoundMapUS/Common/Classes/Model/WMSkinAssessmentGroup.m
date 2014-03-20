@@ -78,6 +78,11 @@
     return self.closedFlagValue;
 }
 
+- (BOOL)hasInterventionEvents
+{
+    return [self.interventionEvents count] > 0;
+}
+
 - (WMSkinAssessmentValue *)skinAssessmentValueForSkinAssessment:(WMSkinAssessment *)skinAssessment
                                                          create:(BOOL)create
                                                           value:(id)value

@@ -28,9 +28,11 @@
 #import "WMNavigationNode.h"
 #import "WMMedicationGroup.h"
 #import "WMDeviceGroup.h"
+#import "WMPsychoSocialGroup.h"
 #import "WMPhotoManager.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
+#import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 
 @interface WMHomeBaseViewController_iPhone ()
@@ -196,7 +198,7 @@
 {
     WMMedicationGroupViewController *medicationsViewController = self.medicationsViewController;
     medicationsViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
-    medicationsViewController.medicationGroup = [WMMedicationGroup activeMedicationGroup:self.managedObjectContext];
+    medicationsViewController.medicationGroup = [WMMedicationGroup activeMedicationGroup:self.patient];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:medicationsViewController];
     navigationController.delegate = self.appDelegate;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
@@ -207,10 +209,9 @@
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMDevicesViewController *devicesViewController = self.devicesViewController;
-    devicesViewController.deviceGroup = [WMDeviceGroup activeDeviceGroup:self.managedObjectContext];
+    devicesViewController.deviceGroup = [WMDeviceGroup activeDeviceGroup:self.patient];
     devicesViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
-    devicesViewController.medicationGroup = [WMMedicationGroup activeMedicationGroup:self.managedObjectContext];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:medicationsViewController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:devicesViewController];
     navigationController.delegate = self.appDelegate;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
         // nothing
@@ -220,7 +221,7 @@
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMPsychoSocialGroupViewController *viewController = self.psychoSocialGroupViewController;
-    viewController.psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:self.managedObjectContext];
+    viewController.psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:self.patient];
     viewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     navigationController.delegate = self.appDelegate;
@@ -353,40 +354,28 @@
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];
-    CoreDataHelper *coreDataHelper = self.coreDataHelper;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    NSPersistentStore *store = self.store;
+    NSManagedObjectContext *managedObjectContext = patient.managedObjectContext;
     // make sure the track/stage is set
     if (nil == patient.stage) {
         // set stage to initial for default clinical setting
-        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
+        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext];
         WMNavigationStage *navigationStage = navigationTrack.initialStage;
         patient.stage = navigationStage;
     }
     [self showProgressViewWithMessage:@"Saving patient record"];
+    NSArray *insertedObjectIDs = [managedObjectContext.insertedObjects valueForKeyPath:@"objectID"];
+    NSArray *updatedObjectIDs = [managedObjectContext.updatedObjects valueForKeyPath:@"objectID"];
     __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
-        // make sure the user (sm_owner) has access via the consultants relationship
-        User *user = nil;
-        if([coreDataHelper.stackMobClient isLoggedIn]) {
-            user = [User userForUsername:weakSelf.appDelegate.stackMobUsername
-                    managedObjectContext:managedObjectContext persistentStore:store];
-            WMParticipant *participant = weakSelf.appDelegate.participant;
-            WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
-                                                                                           consultant:user
-                                                                                          participant:participant
-                                                                                               create:YES
-                                                                                 managedObjectContext:managedObjectContext
-                                                                                      persistentStore:store];
-            patientConsultant.acquiredFlagValue = NO;
-        }
-        [weakSelf.tableView reloadData];
-        // save again
-        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
             [WMUtilities logError:error];
+        } else {
             [weakSelf hideProgressView];
-        }];
+            // update backend
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm updatePatient:patient insertedObjectIDs:insertedObjectIDs updatedObjectIDs:updatedObjectIDs ff:ff];
+        }
     }];
 }
 

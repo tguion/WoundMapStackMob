@@ -7,6 +7,7 @@
 @interface WMSkinAssessmentGroup : _WMSkinAssessmentGroup <AssessmentGroup> {}
 
 @property (readonly, nonatomic) BOOL isClosed;
+@property (readonly, nonatomic) BOOL hasInterventionEvents;
 @property (readonly, nonatomic) NSArray *sortedSkinAssessmentValues;
 @property (readonly, nonatomic) BOOL hasValues;
 

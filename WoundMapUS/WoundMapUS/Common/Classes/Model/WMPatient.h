@@ -6,6 +6,8 @@
 
 @interface WMPatient : _WMPatient <idSource> {}
 
++ (NSArray *)toManyRelationshipNames;
+
 @property (strong, nonatomic) FFUserGroup *participantGroup;
 @property (strong, nonatomic) FFUserGroup *consultantGroup;
 

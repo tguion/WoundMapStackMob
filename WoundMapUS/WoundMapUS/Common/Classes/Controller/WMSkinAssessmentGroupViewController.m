@@ -20,6 +20,7 @@
 #import "WMWoundType.h"
 #import "WMDesignUtilities.h"
 #import "WMUtilities.h"
+#import "WCAppDelegate.h"
 
 @interface WMSkinAssessmentGroupViewController ()
 
@@ -123,8 +124,7 @@
     WMSkinAssessment *skinAssessment = (WMSkinAssessment *)assessmentGroup;
     WMSkinAssessmentValue *skinAssessmentValue = [self.skinAssessmentGroup skinAssessmentValueForSkinAssessment:skinAssessment
                                                                                                          create:NO
-                                                                                                          value:nil
-                                                                                           managedObjectContext:self.managedObjectContext];
+                                                                                                          value:nil];
     if (nil == skinAssessmentValue) {
         return nil;
     }
@@ -149,8 +149,7 @@
     }
     WMSkinAssessmentValue *skinAssessmentValue = [self.skinAssessmentGroup skinAssessmentValueForSkinAssessment:skinAssessment
                                                                                                          create:createSkinAssessmentValue
-                                                                                                          value:nil
-                                                                                           managedObjectContext:self.managedObjectContext];
+                                                                                                          value:nil];
     if (createSkinAssessmentValue) {
         skinAssessmentValue.value = value;
     } else if (nil != skinAssessmentValue) {
@@ -176,29 +175,21 @@
 - (WMSkinAssessmentGroup *)skinAssessmentGroup
 {
     if (nil == _skinAssessmentGroup) {
-        WMSkinAssessmentGroup *skinAssessmentGroup = nil;
-        if (nil == _skinAssessmentGroupObjectID) {
-            skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroupWithNavigationNode:self.navigationNode];
-            if (nil == skinAssessmentGroup) {
-                // TODO: determine if we should revise an inactive group and replace the nil below if so
-                skinAssessmentGroup = [WMSkinAssessmentGroup skinAssessmentGroupByRevising:nil managedObjectContext:self.managedObjectContext];
-                self.didCreateGroup = YES;
-                WMInterventionEvent *event = [skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                           title:nil
-                                                                                       valueFrom:nil
-                                                                                         valueTo:nil
-                                                                                            type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                                 create:YES
-                                                                                                                                   managedObjectContext:self.managedObjectContext
-                                                                                                                                        persistentStore:nil]
-                                                                                            user:[self.appDelegate signedInUserForDocument:self.document]
-                                                                                          create:YES
-                                                                            managedObjectContext:self.managedObjectContext
-                                                                                 persistentStore:nil];
-                DLog(@"Created event %@", event.eventType.title);
-            }
-        } else {
-            skinAssessmentGroup = (WMSkinAssessmentGroup *)[self.managedObjectContext objectWithID:_skinAssessmentGroupObjectID];
+        WMSkinAssessmentGroup *skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroup:self.patient];
+        if (nil == skinAssessmentGroup) {
+            skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:self.managedObjectContext];
+            self.didCreateGroup = YES;
+            WMInterventionEvent *event = [skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                       title:nil
+                                                                                   valueFrom:nil
+                                                                                     valueTo:nil
+                                                                                        type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                             create:YES
+                                                                                                                               managedObjectContext:self.managedObjectContext]
+                                                                                 participant:self.appDelegate.participant
+                                                                                      create:YES
+                                                                        managedObjectContext:self.managedObjectContext];
+            DLog(@"Created event %@", event.eventType.title);
         }
         self.skinAssessmentGroup = skinAssessmentGroup;
     }
@@ -245,7 +236,7 @@
     }
     [super saveAction:sender];
     // create intervention events before super
-    [self.skinAssessmentGroup createEditEventsForUser:[self.appDelegate signedInUserForDocument:self.document]];
+    [self.skinAssessmentGroup createEditEventsForParticipant:self.appDelegate.participant];
     [self.delegate skinAssessmentGroupViewControllerDidSave:self];
 }
 
@@ -268,7 +259,7 @@
     return self.skinAssessmentGroup.status;
 }
 
-- (void)interventionStatusViewController:(InterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
+- (void)interventionStatusViewController:(WMInterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
 {
     self.skinAssessmentGroup.status = interventionStatus;
     WMInterventionEvent *event = [self.skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
@@ -276,12 +267,10 @@
                                                                                 valueFrom:nil
                                                                                   valueTo:nil
                                                                                      type:[WMInterventionEventType interventionEventTypeForStatusTitle:interventionStatus.title
-                                                                                                                                  managedObjectContext:self.managedObjectContext
-                                                                                                                                       persistentStore:nil]
-                                                                                     user:[self.appDelegate signedInUserForDocument:self.document]
+                                                                                                                                  managedObjectContext:self.managedObjectContext]
+                                                                              participant:self.appDelegate.participant
                                                                                    create:YES
-                                                                     managedObjectContext:self.managedObjectContext
-                                                                          persistentStore:nil];
+                                                                     managedObjectContext:self.managedObjectContext];
     DLog(@"Created WMSkinAssessmentInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
@@ -294,7 +283,7 @@
     return self.skinAssessmentGroup;
 }
 
-- (void)interventionEventViewControllerDidCancel:(InterventionEventViewController *)viewController
+- (void)interventionEventViewControllerDidCancel:(WMInterventionEventViewController *)viewController
 {
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
@@ -323,8 +312,7 @@
     WMSkinAssessment *skinAssessment = [self.fetchedResultsController objectAtIndexPath:indexPath];
     WMSkinAssessmentValue *skinAssessmentValue = [self.skinAssessmentGroup skinAssessmentValueForSkinAssessment:skinAssessment
                                                                                                          create:NO
-                                                                                                          value:nil
-                                                                                           managedObjectContext:self.managedObjectContext];
+                                                                                                          value:nil];
     BOOL reloadSection = YES;
     if (nil == skinAssessmentValue) {
         // no skinAssessmentValue for this skinAssessment - add one or make control first responder
@@ -336,8 +324,7 @@
             // go ahead and select
             [self.skinAssessmentGroup skinAssessmentValueForSkinAssessment:skinAssessment
                                                                     create:YES
-                                                                     value:nil
-                                                      managedObjectContext:self.managedObjectContext];
+                                                                     value:nil];
         } else {
             self.indexPathForDelayedFirstResponder = indexPath;
             [responder performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
@@ -367,8 +354,7 @@
 	id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
 	id sortRank = sectionInfo.name;
     return [[WMSkinAssessmentCategory skinAssessmentCategoryForSortRank:sortRank
-                                                   managedObjectContext:self.managedObjectContext
-                                                        persistentStore:nil] title];
+                                                   managedObjectContext:self.managedObjectContext] title];
 }
 
 #pragma mark - NSFetchedResultsController

@@ -355,9 +355,8 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [_operationCache addObject:teamOperation];
 }
 
-- (void)createPatient:(WMPatient *)patient
+- (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     NSBlockOperation *patientOperation = [weakSelf createOperation:patient collection:[WMPatient entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
         WMPatient *patient = (WMPatient *)object;
@@ -621,6 +620,42 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             }
         }
     }
+}
+
+- (void)updatePatient:(WMPatient *)patient insertedObjectIDs:(NSArray *)insertedObjectIDs updatedObjectIDs:(NSArray *)updatedObjectIDs ff:(WMFatFractal *)ff
+{
+    NSParameterAssert([patient.ffUrl length] > 0);
+    // experimental
+    NSEntityDescription *entityDescription = [patient entity];
+    NSDictionary *relationshipsByName = [entityDescription relationshipsByName];
+    for (NSString *relationshipName in relationshipsByName) {
+        NSArray *objects = [patient valueForKey:relationshipName];
+        NSMutableSet *objectIDs = [[NSSet setWithArray:[objects valueForKey:@"objectID"]] mutableCopy];
+        [objectIDs intersectSet:[NSSet setWithArray:insertedObjectIDs]];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        for (NSManagedObjectID *objectID in objectIDs) {
+            NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
+            NSBlockOperation *operation = [self createOperation:managedObject
+                                                     collection:[[managedObject entity] name]
+                                                             ff:ff
+                                              completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                                                  xxxx;
+                                              }];
+
+        }
+    }
+    // inserts for to-one relationships - nothing
+    
+    // inserts for to-many relationships
+    NSArray *toManyRelationshipNames = [WMPatient toManyRelationshipNames];
+    for (NSString *toManyRelationshipName in toManyRelationshipNames) {
+        NSSet *objects = [patient valueForKey:toManyRelationshipName];
+        NSMutableSet *objectIDs = [[NSSet setWithArray:[objects valueForKey:@"objectID"]] mutableCopy];
+        [objectIDs intersectSet:[NSSet setWithArray:insertedObjectIDs]];
+
+    }
+    NSArray *toManyRelationships = [WMPatient MR_propertiesNamed:toManyRelationshipNames];
+    
 }
 
 #pragma mark - Operations

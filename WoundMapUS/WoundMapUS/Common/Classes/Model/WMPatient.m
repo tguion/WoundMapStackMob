@@ -24,6 +24,11 @@ typedef enum {
 @synthesize participantGroup=_participantGroup, consultantGroup=_consultantGroup;
 @dynamic managedObjectContext, objectID;
 
++ (NSArray *)toManyRelationshipNames
+{
+    return @[WMPatientRelationships.bradenScales, WMPatientRelationships.carePlanGroups, WMPatientRelationships.deviceGroups, WMPatientRelationships.ids, WMPatientRelationships.medicationGroups, WMPatientRelationships.patientConsultants, WMPatientRelationships.psychosocialGroups, WMPatientRelationships.skinAssessmentGroups, WMPatientRelationships.wounds];
+}
+
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMPatient MR_countOfEntitiesWithContext:managedObjectContext];
