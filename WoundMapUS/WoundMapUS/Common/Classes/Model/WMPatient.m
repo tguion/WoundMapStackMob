@@ -2,8 +2,15 @@
 #import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMId.h"
+#import "WMWound.h"
+#import "WMWoundPhoto.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
+
+typedef enum {
+    PatientFlagsFaceDetectionFailed         = 0,
+    
+} PatientFlags;
 
 @interface WMPatient ()
 
@@ -140,6 +147,21 @@
     return [array componentsJoinedByString:@", "];
 }
 
+- (NSString *)lastNameFirstNameOrAnonymous
+{
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];
+    if ([self.person.nameFamily length] > 0) {
+        [array addObject:self.person.nameFamily];
+    }
+    if ([self.person.nameGiven length] > 0) {
+        [array addObject:self.person.nameGiven];
+    }
+    if ([array count] == 0) {
+        [array addObject:@"Anonymous"];
+    }
+    return [array componentsJoinedByString:@", "];
+}
+
 - (NSInteger)genderIndex
 {
     NSInteger genderIndex = UISegmentedControlNoSegment;
@@ -172,6 +194,39 @@
 - (NSArray *)sortedWounds
 {
     return [[self.wounds allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
+}
+
+- (NSInteger)woundCount
+{
+    return [WMWound MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", self] inContext:[self managedObjectContext]];
+}
+
+- (BOOL)hasMultipleWounds
+{
+    return [self.wounds count] > 1;
+}
+
+- (NSInteger)photosCount
+{
+    return [WMWoundPhoto MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound.patient == %@", self] inContext:[self managedObjectContext]];
+}
+
+- (BOOL)faceDetectionFailed
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:PatientFlagsFaceDetectionFailed];
+}
+
+- (void)setFaceDetectionFailed:(BOOL)faceDetectionFailed
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:PatientFlagsFaceDetectionFailed to:faceDetectionFailed]);
+}
+
+- (BOOL)dayOrMoreSinceCreated
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    [components setDay:1];
+    return [[NSDate date] compare:[calendar dateByAddingComponents:components toDate:self.createdAt options:0]] == NSOrderedDescending;
 }
 
 @end

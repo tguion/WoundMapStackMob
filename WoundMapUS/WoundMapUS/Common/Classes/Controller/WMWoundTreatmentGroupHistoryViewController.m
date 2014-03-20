@@ -18,12 +18,12 @@
 @end
 
 @interface WMWoundTreatmentGroupHistoryViewController (PrivateMethods)
-- (void)navigateToWoundTreatmentGroup:(WCWoundTreatmentGroup *)woundTreatmentGroup;
+- (void)navigateToWoundTreatmentGroup:(WMWoundTreatmentGroup *)woundTreatmentGroup;
 @end
 
 @implementation WMWoundTreatmentGroupHistoryViewController (PrivateMethods)
 
-- (void)navigateToWoundTreatmentGroup:(WCWoundTreatmentGroup *)woundTreatmentGroup
+- (void)navigateToWoundTreatmentGroup:(WMWoundTreatmentGroup *)woundTreatmentGroup
 {
     WMWoundTreatmentSummaryViewController *woundTreatmentSummaryViewController = self.woundTreatmentSummaryViewController;
     woundTreatmentSummaryViewController.woundTreatmentGroup = woundTreatmentGroup;
@@ -81,7 +81,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    WCWoundTreatmentGroup *woundTreatmentGroup = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    WMWoundTreatmentGroup *woundTreatmentGroup = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self navigateToWoundTreatmentGroup:woundTreatmentGroup];
 }
 
@@ -98,7 +98,7 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    WCWoundTreatmentGroup *woundTreatmentGroup = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    WMWoundTreatmentGroup *woundTreatmentGroup = [self.fetchedResultsController objectAtIndexPath:indexPath];
     WMWoundTreatmentGroupTableViewCell *myCell = (WMWoundTreatmentGroupTableViewCell *)cell;
     myCell.woundTreatmentGroup = woundTreatmentGroup;
     myCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -108,7 +108,7 @@
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-	return @"WCWoundTreatmentGroup";
+	return @"WMWoundTreatmentGroup";
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate

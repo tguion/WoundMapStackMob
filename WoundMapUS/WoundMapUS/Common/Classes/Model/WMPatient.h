@@ -20,8 +20,15 @@
 + (UIImage *)missingThumbnailImage;
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
+@property (readonly, nonatomic) NSString *lastNameFirstNameOrAnonymous;
+@property (nonatomic) BOOL faceDetectionFailed;
 @property (readonly, nonatomic) NSInteger genderIndex;
 @property (readonly, nonatomic) WMWound *lastActiveWound;
+@property (readonly, nonatomic) BOOL hasMultipleWounds;
+@property (readonly, nonatomic) NSArray *sortedWounds;
+@property (readonly, nonatomic) NSInteger woundCount;
+@property (readonly, nonatomic) NSInteger photosCount;
+@property (readonly, nonatomic) BOOL dayOrMoreSinceCreated;
 
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

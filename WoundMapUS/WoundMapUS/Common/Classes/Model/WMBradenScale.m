@@ -179,9 +179,7 @@ NSInteger const kBradenSectionCount = 6;
 	NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
     @autoreleasepool {
         for (NSDictionary *dictionary in propertyList) {
-            WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:self
-                                                                 managedObjectContext:[self managedObjectContext]
-                                                                      persistentStore:nil];
+            WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:self];
             bradenSection.sortRank = [dictionary objectForKey:@"sortRank"];
             bradenSection.bradenScale = self;
             bradenSection.title = [dictionary objectForKey:@"title"];

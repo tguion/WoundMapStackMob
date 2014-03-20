@@ -26,7 +26,6 @@
 
 @interface IAPNonConsumableViewController : IAPBaseViewController
 
-@property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIButton *purchaseButton;
 @property (weak, nonatomic) id<IAPNonConsumableViewControllerDelegate> delegate;
 

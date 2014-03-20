@@ -746,14 +746,18 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     [WMUtilities logError:error];
                 }
             }
-            completionHandler(error, object, signInRequired);
+            if (completionHandler) {
+                completionHandler(error, object, signInRequired);
+            }
         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             } else {
                 [ff queueDeleteObj:object];
             }
-            completionHandler(error, object, NO);
+            if (completionHandler) {
+                completionHandler(error, object, NO);
+            }
         }];
     }];
     return operation;

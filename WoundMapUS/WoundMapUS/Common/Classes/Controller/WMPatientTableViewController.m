@@ -22,6 +22,7 @@
 #define kDeletePatientConfirmAlertTag 2004
 
 @interface WMPatientTableViewController () <UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+
 @property (strong, nonatomic) IBOutlet UIView *patientTypeContainerView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *patientTypeSegmentedControl;
 @property (readonly, nonatomic) BOOL isShowingTeamPatients;
@@ -55,12 +56,16 @@
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     [managedObjectContext MR_deleteObjects:@[patient]];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm deleteObject:patient ff:ff completionHandler:nil];
     __weak __typeof(self) weakSelf = self;
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             [WMUtilities logError:error];
+        } else {
+            [weakSelf.tableView reloadData];
         }
-        [weakSelf.tableView reloadData];
     }];
 }
 
@@ -128,14 +133,7 @@
 
 - (IBAction)doneAction:(id)sender
 {
-    // mark that we are waiting for synch to complete
-    _waitingForSynchWithServer = YES;
-    // reconnect to network
-    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    // show progress
-    [self showProgressViewWithMessage:@"Updating Patient Record"];
-    // synchronize with StackMob and wait for callback
-    [self.coreDataHelper.stackMobStore syncWithServer];
+    [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
 }
 
 // WMPatientConsultant is fetched from server, but properties are not populated

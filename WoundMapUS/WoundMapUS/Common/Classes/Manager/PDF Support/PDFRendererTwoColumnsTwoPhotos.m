@@ -12,13 +12,12 @@
 #import "WMWoundPhoto.h"
 #import "WMPhoto.h"
 #import "WMBradenScale.h"
-#import "WCBradenSection.h"
-#import "WCBradenCell.h"
+#import "WMBradenSection.h"
+#import "WMBradenCell.h"
 #import "WMWoundTreatmentGroup.h"
 #import "WMWoundTreatment.h"
 #import "WMWoundTreatmentValue.h"
 #import "PrintConfiguration.h"
-#import "LocalStoreManager.h"
 
 @interface PDFRendererTwoColumnsTwoPhotos ()
 

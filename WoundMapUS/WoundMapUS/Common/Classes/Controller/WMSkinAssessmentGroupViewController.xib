@@ -1,21 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4469" systemVersion="13A476u" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3694"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMSkinAssessmentGroupViewController">
             <connections>
-                <outlet property="view" destination="1" id="3"/>
+                <outlet property="inputAccessoryToolbar" destination="0Hy-SZ-D5w" id="4EO-yH-HlE"/>
+                <outlet property="previousNextSegmentedControl" destination="fNr-6y-hJP" id="BpN-Wk-NAL"/>
+                <outlet property="searchBar" destination="25m-M1-pIq" id="cCd-bN-XuZ"/>
+                <outlet property="searchDisplayController" destination="HhI-dG-i4p" id="Cde-9l-WRv"/>
+                <outlet property="view" destination="0fT-HJ-9kU" id="rrj-wJ-IaO"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="1">
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0fT-HJ-9kU">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-        </view>
+            <searchBar key="tableHeaderView" contentMode="redraw" id="25m-M1-pIq">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                <textInputTraits key="textInputTraits"/>
+                <connections>
+                    <outlet property="delegate" destination="-1" id="Yar-tW-opS"/>
+                </connections>
+            </searchBar>
+        </tableView>
+        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="0Hy-SZ-D5w">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+            <items>
+                <barButtonItem style="plain" id="Rvh-OM-Jfj">
+                    <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" momentary="YES" id="fNr-6y-hJP">
+                        <rect key="frame" x="16" y="7" width="160" height="30"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <segments>
+                            <segment title="Previous"/>
+                            <segment title="Next"/>
+                        </segments>
+                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <action selector="previousNextAction:" destination="-1" eventType="valueChanged" id="LoN-qz-frV"/>
+                        </connections>
+                    </segmentedControl>
+                </barButtonItem>
+                <barButtonItem style="plain" systemItem="flexibleSpace" id="bFT-cR-EAe"/>
+                <barButtonItem title="Dismiss" id="7zD-Yx-Kx8">
+                    <connections>
+                        <action selector="dismissInputViewAction:" destination="-1" id="dkg-2c-hij"/>
+                    </connections>
+                </barButtonItem>
+            </items>
+        </toolbar>
+        <searchDisplayController id="HhI-dG-i4p">
+            <connections>
+                <outlet property="delegate" destination="-1" id="Dmc-yi-JcA"/>
+                <outlet property="searchBar" destination="25m-M1-pIq" id="KXk-fO-Ybc"/>
+                <outlet property="searchContentsController" destination="-1" id="IHK-PE-c11"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="y8K-Sy-NxH"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="2CJ-YS-gGW"/>
+            </connections>
+        </searchDisplayController>
     </objects>
 </document>

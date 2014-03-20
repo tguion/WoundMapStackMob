@@ -21,7 +21,7 @@
 #import "WMPatientSummaryContainerViewController.h"
 #import "WMNavigationNodeButton.h"
 #import "WMNavigationCoordinator.h"
-#import "User.h"
+#import "WMParticipant.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
 #import "WMNavigationTrack.h"

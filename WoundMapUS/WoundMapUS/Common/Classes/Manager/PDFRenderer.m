@@ -41,12 +41,10 @@
 #import "WoundStatusMeasurementRollup.h"
 #import "WoundStatusMeasurementPlotDataSource.h"
 #import "PrintConfiguration.h"
-#import "CorePlotManager.h"
-#import "LocalStoreManager.h"
-#import "UserDefaultsManager.h"
-#import "DocumentManager.h"
+#import "WMCorePlotManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
-#import "WCUtilities.h"
+#import "WMUtilities.h"
 
 NSInteger kXPlotOffset = 0;
 
@@ -330,7 +328,7 @@ NSInteger kXPlotOffset = 0;
 	for (NSInteger j = minorIncrement; j <= yMaximum; j += minorIncrement) {
 		NSUInteger mod = j % majorIncrement;
 		if (mod == 0) {
-			CPTAxisLabel *label = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"%i", j] textStyle:y.labelTextStyle];
+			CPTAxisLabel *label = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"%li", (long)j] textStyle:y.labelTextStyle];
 			NSDecimal location = CPTDecimalFromInteger(j);
 			label.tickLocation = location;
 			label.offset = -y.majorTickLength - y.labelOffset;
@@ -556,7 +554,7 @@ NSInteger kXPlotOffset = 0;
 	for (NSInteger j = minorIncrement; j <= yMaximum; j += minorIncrement) {
 		NSUInteger mod = j % majorIncrement;
 		if (mod == 0) {
-			CPTAxisLabel *label = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"%i", j] textStyle:y.labelTextStyle];
+			CPTAxisLabel *label = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"%li", (long)j] textStyle:y.labelTextStyle];
 			NSDecimal location = CPTDecimalFromInteger(j);
 			label.tickLocation = location;
 			label.offset = -y.majorTickLength - y.labelOffset;
@@ -596,21 +594,6 @@ NSInteger kXPlotOffset = 0;
 @synthesize patientDataSummaryView=_patientDataSummaryView, patientHeaderView=_patientHeaderView, bradenScaleGraphView=_bradenScaleGraphView;
 @dynamic graphableMeasurementTitlesWithSufficientData;
 
-- (id)init
-{
-    self = [super init];
-    if (nil != self) {
-        // handle document closing
-        [[NSNotificationCenter defaultCenter] addObserverForName:kDocumentClosedNotification
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification *notification) {
-                                                          [self handleDocumentClosed:[notification object]];
-                                                      }];
-    }
-    return self;
-}
-
 - (NSMutableDictionary *)objectID2AttributedStringMap
 {
     if (nil == _objectID2AttributedStringMap) {
@@ -622,11 +605,6 @@ NSInteger kXPlotOffset = 0;
 - (void)clearDataCache
 {
     _objectID2AttributedStringMap = nil;
-}
-
-- (void)handleDocumentClosed:(NSString *)documentName
-{
-    [self clearDataCache];
 }
 
 - (CGFloat)defaultFontSize
@@ -825,9 +803,9 @@ NSInteger kXPlotOffset = 0;
     return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (UserDefaultsManager *)userDefaultsManager
+- (WMUserDefaultsManager *)userDefaultsManager
 {
-    return self.appDelegate.userDefaultsManager;
+    return [WMUserDefaultsManager sharedInstance];
 }
 
 #pragma mark - Data management
@@ -859,8 +837,9 @@ NSInteger kXPlotOffset = 0;
 - (NSMutableDictionary *)wountStatusMeasurementTitle2RollupByKeyMapMap
 {
     if (nil == _wountStatusMeasurementTitle2RollupByKeyMapMap) {
-        _wountStatusMeasurementTitle2RollupByKeyMapMap = [self.appDelegate.plotManager wountStatusMeasurementTitle2RollupByKeyMapMapForWound:self.wound
-                                                                                                                  graphableMeasurementTitles:self.graphableMeasurementTitles];
+        WMCorePlotManager *plotManager = [WMCorePlotManager sharedInstance];
+        _wountStatusMeasurementTitle2RollupByKeyMapMap = [plotManager wountStatusMeasurementTitle2RollupByKeyMapMapForWound:self.wound
+                                                                                                 graphableMeasurementTitles:self.graphableMeasurementTitles];
     }
     return _wountStatusMeasurementTitle2RollupByKeyMapMap;
 }
@@ -1089,7 +1068,7 @@ NSInteger kXPlotOffset = 0;
                          @"Initiated:",
                          @"Wounds/Photos:",
                          @"Braden Scale:", nil];
-    WMBradenScale *bradenScale = [WMBradenScale latestBradenScale:self.patient.managedObjectContext create:NO];
+    WMBradenScale *bradenScale = [WMBradenScale latestBradenScale:self.patient create:NO];
     NSString *bradenScaleValue = @"Missing";
     if (nil != bradenScale) {
         bradenScaleValue = bradenScale.isScored ? [bradenScale.score stringValue]:@"Incomplete";

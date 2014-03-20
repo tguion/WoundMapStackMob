@@ -13,10 +13,8 @@
 @implementation WMBradenSection
 
 + (id)instanceWithBradenScale:(WMBradenScale *)bradenScale
-		 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    NSParameterAssert([bradenScale managedObjectContext] == managedObjectContext);
-    WMBradenSection *bradenSection = [WMBradenSection MR_createInContext:managedObjectContext];
+    WMBradenSection *bradenSection = [WMBradenSection MR_createInContext:[bradenScale managedObjectContext]];
 	bradenSection.bradenScale = bradenScale;
 	return bradenSection;
 }

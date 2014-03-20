@@ -41,8 +41,8 @@ extern CGFloat const kIAPTextVerticalMargin;
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)purchaseAction:(id)sender;
 
-- (void) iapFailureAlert:(NSString*)message;
-- (void) reloadData;
+- (void)iapFailureAlert:(NSString*)message;
+- (void)reloadData;
 - (void)skProductforProductId:(NSString *)productId;
 
 - (void)setSelectedIapProduct:(IAPProduct *)selectedIapProduct;

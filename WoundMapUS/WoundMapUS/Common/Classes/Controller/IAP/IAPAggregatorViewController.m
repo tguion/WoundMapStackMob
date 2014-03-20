@@ -9,10 +9,9 @@
 #import "IAPAggregatorViewController.h"
 #import "IAPNonConsumableViewController.h"
 #import "IAPProduct.h"
-#import "IAPProduct.h"
 #import "WMIAPProductOptionTableViewCell.h"
 #import "IAPManager.h"
-#import "WCUtilities.h"
+#import "WMUtilities.h"
 
 @interface IAPAggregatorViewController ()
 
@@ -61,28 +60,27 @@
 {
     [self showProgressView];
     __weak __typeof(self) weakSelf = self;
-    [self.iapManager productsWithProductIdSet:productIdSet
-                      successHandler:^(NSArray *skProductList) {
-                          [weakSelf hideProgressView];
-                          if ([skProductList count] > 0) {
-                              [skProductList enumerateObjectsUsingBlock:^(id skProduct, NSUInteger idx, BOOL *stop) {
-                                  IAPProduct *iapProduct = [weakSelf.productHash objectForKey:[skProduct productIdentifier]];
-                                  [iapProduct updateIAProductWithSkProduct:skProduct];
-                                  [WCUtilities saveChanges:iapProduct.managedObjectContext];
-                                  [weakSelf.skProductHash setObject:skProduct forKey:[skProduct productIdentifier]];
-                              }];
-                              [weakSelf reloadData];
-                          } else {
-                              NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
-                              [weakSelf iapFailureAlert:message];
-                          }
-                      } failureHandler:^(NSError *error) {
-                          [weakSelf hideProgressView];
-                          NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
-                          [weakSelf iapFailureAlert:message];
-                      }
+    [[IAPManager sharedInstance] productsWithProductIdSet:productIdSet
+                                           successHandler:^(NSArray *skProductList) {
+                                               [weakSelf hideProgressView];
+                                               if ([skProductList count] > 0) {
+                                                   [skProductList enumerateObjectsUsingBlock:^(id skProduct, NSUInteger idx, BOOL *stop) {
+                                                       IAPProduct *iapProduct = [weakSelf.productHash objectForKey:[skProduct productIdentifier]];
+                                                       [iapProduct updateIAProductWithSkProduct:skProduct];
+                                                       [[iapProduct managedObjectContext] MR_saveToPersistentStoreAndWait];
+                                                       [weakSelf.skProductHash setObject:skProduct forKey:[skProduct productIdentifier]];
+                                                   }];
+                                                   [weakSelf reloadData];
+                                               } else {
+                                                   NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
+                                                   [weakSelf iapFailureAlert:message];
+                                               }
+                                           } failureHandler:^(NSError *error) {
+                                               [weakSelf hideProgressView];
+                                               NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
+                                               [weakSelf iapFailureAlert:message];
+                                           }
      ];
-    
 }
 
 - (void)didReceiveMemoryWarning

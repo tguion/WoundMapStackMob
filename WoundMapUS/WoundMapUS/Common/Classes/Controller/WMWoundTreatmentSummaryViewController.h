@@ -6,8 +6,11 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
+@class WMWound, WMWoundTreatmentGroup;
 
-@interface WMWoundTreatmentSummaryViewController : WMBaseViewController
+@interface WMWoundTreatmentSummaryViewController : UIViewController
+
+@property (strong, nonatomic) WMWoundTreatmentGroup *woundTreatmentGroup;
+@property (strong, nonatomic) WMWound *selectedWound;
 
 @end

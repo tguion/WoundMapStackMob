@@ -1,38 +1,39 @@
 //
-//  WMWoundTreatmentSummaryViewController.m
-//  WoundMapUS
+//  WMSkinAssessmentSummaryViewController.m
+//  WoundPUMP
 //
-//  Created by Todd Guion on 2/23/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Created by Todd Guion on 5/5/13.
+//  Copyright (c) 2013 etreasure consulting LLC. All rights reserved.
 //
 
-#import "WMWoundTreatmentSummaryViewController.h"
-#import "WMWound.h"
-#import "WMWoundTreatmentGroup.h"
-#import "WMWoundTreatmentGroup+CoreText.h"
-#import "WMWound.h"
+#import "WMSkinAssessmentSummaryViewController.h"
+#import "WMSkinAssessmentGroup.h"
+#import "WMSkinAssessmentGroup+CoreText.h"
 #import "ConstraintPack.h"
+#import "WMNavigationCoordinator.h"
+#import "WCAppDelegate.h"
 
-#define kWoundTreatmentGroupMaximumRecords 3
+#define kSkinAssessentGroupMaximumRecords 3
 
-@interface WMWoundTreatmentSummaryViewController ()
+@interface WMSkinAssessmentSummaryViewController ()
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UITextView *textView;
 @end
 
-@interface WMWoundTreatmentSummaryViewController ()
+@implementation WMSkinAssessmentSummaryViewController
 
-@end
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
 
-@implementation WMWoundTreatmentSummaryViewController
-
-@synthesize woundTreatmentGroup=_woundTreatmentGroup, selectedWound=_selectedWound;
+@synthesize skinAssessmentGroup=_skinAssessmentGroup;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Treatment Summary";
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.title = @"Assessment Summary";
     // load text view
     UITextView* tv = [[UITextView alloc] initWithFrame:self.view.bounds];
     tv.editable = NO;
@@ -55,20 +56,19 @@
     [super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:YES animated:YES];
     NSMutableAttributedString *descriptionAsMutableAttributedStringWithBaseFontSize = [[NSMutableAttributedString alloc] init];
-    BOOL drawFullHistory = (nil != self.selectedWound);
-    if (drawFullHistory) {
-        NSArray *woundTreatmentGroups = [self.selectedWound sortedWoundTreatmentsAscending:NO];
+    if (_drawFullHistory) {
+        NSArray *skinAssessmentGroups = [WMSkinAssessmentGroup sortedSkinAssessmentGroups:self.appDelegate.navigationCoordinator.patient];
         NSInteger index = 0;
-        for (WMWoundTreatmentGroup *woundTreatmentGroup in woundTreatmentGroups) {
-            [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[woundTreatmentGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
-            if (++index == kWoundTreatmentGroupMaximumRecords) {
+        for (WMSkinAssessmentGroup *skinAssessmentGroup in skinAssessmentGroups) {
+            [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[skinAssessmentGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
+            if (++index == kSkinAssessentGroupMaximumRecords) {
                 break;
             }
             // else
             [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
         }
     } else {
-        [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[self.woundTreatmentGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
+        [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[self.skinAssessmentGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
     }
     self.textView.attributedText = descriptionAsMutableAttributedStringWithBaseFontSize;
 }
@@ -83,8 +83,7 @@
 
 - (void)clearDataCache
 {
-    _selectedWound = nil;
-    _woundTreatmentGroup = nil;
+    _skinAssessmentGroup = nil;
 }
 
 @end

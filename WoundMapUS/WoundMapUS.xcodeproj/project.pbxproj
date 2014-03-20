@@ -142,6 +142,11 @@
 		7D10CDEB18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */; };
 		7D10CDEC18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */; };
 		7D10CDEF18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */; };
+		7D10CDF318DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDF118DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.m */; };
+		7D10CDF418DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CDF218DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib */; };
+		7D10CDF818DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDF618DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m */; };
+		7D10CDF918DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D10CDF718DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib */; };
+		7D10CDFC18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CDFB18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.m */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -703,6 +708,14 @@
 		7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundTreatmentGroupHistoryViewController.xib; sourceTree = "<group>"; };
 		7D10CDED18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundTreatmentGroupTableViewCell.h; sourceTree = "<group>"; };
 		7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundTreatmentGroupTableViewCell.m; sourceTree = "<group>"; };
+		7D10CDF018DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSkinAssessmentSummaryViewController.h; sourceTree = "<group>"; };
+		7D10CDF118DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSkinAssessmentSummaryViewController.m; sourceTree = "<group>"; };
+		7D10CDF218DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMSkinAssessmentSummaryViewController.xib; sourceTree = "<group>"; };
+		7D10CDF518DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSkinAssessmentGroupHistoryViewController.h; sourceTree = "<group>"; };
+		7D10CDF618DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSkinAssessmentGroupHistoryViewController.m; sourceTree = "<group>"; };
+		7D10CDF718DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMSkinAssessmentGroupHistoryViewController.xib; sourceTree = "<group>"; };
+		7D10CDFA18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSkinAssessmentGroupTableViewCell.h; sourceTree = "<group>"; };
+		7D10CDFB18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSkinAssessmentGroupTableViewCell.m; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -1697,9 +1710,6 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7D10CDE818DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.h */,
-				7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */,
-				7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				7D39DBA318BA97A70054DDC3 /* IAP */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
@@ -1817,9 +1827,15 @@
 				5F67D21418AC4ACF00460C37 /* WMSimpleTableViewController.h */,
 				5F67D21518AC4ACF00460C37 /* WMSimpleTableViewController.m */,
 				5F67D21618AC4ACF00460C37 /* WMSimpleTableViewController.xib */,
+				7D10CDF518DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.h */,
+				7D10CDF618DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m */,
+				7D10CDF718DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib */,
 				7D39DB3C18B825750054DDC3 /* WMSkinAssessmentGroupViewController.h */,
 				7D39DB3D18B825750054DDC3 /* WMSkinAssessmentGroupViewController.m */,
 				7D39DB3E18B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib */,
+				7D10CDF018DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.h */,
+				7D10CDF118DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.m */,
+				7D10CDF218DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib */,
 				7D39DB4C18B827AB0054DDC3 /* WMTakePatientPhotoViewController.h */,
 				7D39DB4D18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m */,
 				7D39DB4E18B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib */,
@@ -1847,6 +1863,9 @@
 				7D10CDA018DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.h */,
 				7D10CDA118DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.m */,
 				7D10CDA218DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.xib */,
+				7D10CDE818DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.h */,
+				7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */,
+				7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */,
 				7D39DAF318B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.h */,
 				7D39DAF418B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.m */,
 				7D39DAF518B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib */,
@@ -2072,8 +2091,6 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7D10CDED18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.h */,
-				7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */,
 				5F6DE4F518AEE08D00E87F7E /* APTableViewCell.h */,
 				5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */,
 				7DB2074518ABAB8E0004DC32 /* AsyncImageView.h */,
@@ -2106,6 +2123,8 @@
 				5F6DE4F918AEE58900E87F7E /* WMProgressViewHUD.m */,
 				5F6DE54218B6D44400E87F7E /* WMSegmentControlTableViewCell.h */,
 				5F6DE54318B6D44400E87F7E /* WMSegmentControlTableViewCell.m */,
+				7D10CDFA18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.h */,
+				7D10CDFB18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.m */,
 				5F6DE50518B2D37000E87F7E /* WMTextFieldTableViewCell.h */,
 				5F6DE50618B2D37000E87F7E /* WMTextFieldTableViewCell.m */,
 				7D10CD6118D24D5000AD43E3 /* WMUnderlayNavigationBar.h */,
@@ -2116,6 +2135,8 @@
 				7D9AA26718AFBE6300C1B698 /* WMValue1TableViewCell.m */,
 				7D10CDCF18DA37DB00AD43E3 /* WMWoundMeasurementGroupTableViewCell.h */,
 				7D10CDD018DA37DB00AD43E3 /* WMWoundMeasurementGroupTableViewCell.m */,
+				7D10CDED18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.h */,
+				7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2805,6 +2826,7 @@
 				7D39DB9D18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib in Resources */,
 				5F67D20A18AC3BE000460C37 /* WoundType.plist in Resources */,
 				7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */,
+				7D10CDF418DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
 				7D39DBC418BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib in Resources */,
 				7D10CDD618DA3B5300AD43E3 /* WMInterventionStatusViewController.xib in Resources */,
@@ -2815,6 +2837,7 @@
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
 				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
+				7D10CDF918DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib in Resources */,
 				5F67D1F418AC3BE000460C37 /* Devices.plist in Resources */,
 				7D39DB0618B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib in Resources */,
 				7D39DB4518B826620054DDC3 /* WMCarePlanGroupViewController.xib in Resources */,
@@ -2904,6 +2927,7 @@
 				7DF4E95918C299DC000A3F5B /* _WMMedicationInterventionEvent.m in Sources */,
 				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
 				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
+				7D10CDF818DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m in Sources */,
 				7DDBEDCD18BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m in Sources */,
 				7D10CDC618DA352800AD43E3 /* NSObject-Description.m in Sources */,
 				7DD8373E18C78A3A0028C2D3 /* MagicalRecord+Actions.m in Sources */,
@@ -3039,6 +3063,7 @@
 				7DF4E92718C22F27000A3F5B /* WMCarePlanGroup.m in Sources */,
 				7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */,
 				7DF4E95618C299DC000A3F5B /* _WMInterventionEventType.m in Sources */,
+				7D10CDFC18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.m in Sources */,
 				7D39DAFB18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.m in Sources */,
 				7DF4E8EE18C22EEC000A3F5B /* _WMSkinAssessment.m in Sources */,
 				5F6DE4F418AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m in Sources */,
@@ -3190,6 +3215,7 @@
 				7DDE755018CE456800B15C77 /* WoundAreaPlotDataSource.m in Sources */,
 				7DD8373D18C78A3A0028C2D3 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */,
+				7D10CDF318DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.m in Sources */,
 				7DF4E98918C3C017000A3F5B /* _WMPsychoSocialIntEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
