@@ -622,40 +622,56 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
 }
 
+/**
+ Assumption here is that operations have been added to _operationCache for any model change deeper that 1. So for example, patient has to-many
+ relationship wounds, and wound has to-many relationship measurementGroups. It is assumed that any measurement groups associated with the wound
+ have operations in the cache, and we only need to handle the patient >> wounds model change here.
+ */
 - (void)updatePatient:(WMPatient *)patient insertedObjectIDs:(NSArray *)insertedObjectIDs updatedObjectIDs:(NSArray *)updatedObjectIDs ff:(WMFatFractal *)ff
 {
     NSParameterAssert([patient.ffUrl length] > 0);
-    // experimental
+    // inserts for to-many relationships - depth 1 only
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSEntityDescription *entityDescription = [patient entity];
     NSDictionary *relationshipsByName = [entityDescription relationshipsByName];
     for (NSString *relationshipName in relationshipsByName) {
         NSArray *objects = [patient valueForKey:relationshipName];
         NSMutableSet *objectIDs = [[NSSet setWithArray:[objects valueForKey:@"objectID"]] mutableCopy];
         [objectIDs intersectSet:[NSSet setWithArray:insertedObjectIDs]];
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
         for (NSManagedObjectID *objectID in objectIDs) {
             NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
+            NSAssert(nil == [managedObject valueForKey:@"ffUrl"], @"expected an inserted object to not have ffUrl");
             NSBlockOperation *operation = [self createOperation:managedObject
                                                      collection:[[managedObject entity] name]
                                                              ff:ff
                                               completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                                                  xxxx;
+                                                  NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                                                  object = [managedObjectContext objectWithID:objectID];
+                                                  [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                  [ff queueGrabBagAddItemAtUri:[object valueForKey:@"ffUrl"] toObjAtUri:patient.ffUrl grabBagName:relationshipName];
                                               }];
-
+            [_operationCache addObject:operation];
         }
     }
     // inserts for to-one relationships - nothing
-    
-    // inserts for to-many relationships
-    NSArray *toManyRelationshipNames = [WMPatient toManyRelationshipNames];
-    for (NSString *toManyRelationshipName in toManyRelationshipNames) {
-        NSSet *objects = [patient valueForKey:toManyRelationshipName];
-        NSMutableSet *objectIDs = [[NSSet setWithArray:[objects valueForKey:@"objectID"]] mutableCopy];
-        [objectIDs intersectSet:[NSSet setWithArray:insertedObjectIDs]];
-
+    // updates
+    for (NSManagedObjectID *objectID in updatedObjectIDs) {
+        NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
+        NSAssert([managedObject valueForKey:@"ffUrl"], @"expected an updated object to have ffUrl");
+        NSBlockOperation *operation = [self updateOperation:managedObject ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }];
+        [_operationCache addObject:operation];
     }
-    NSArray *toManyRelationships = [WMPatient MR_propertiesNamed:toManyRelationshipNames];
-    
+    // update patient
+    NSBlockOperation *operation = [self updateOperation:patient ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    }];
+    [_operationCache addObject:operation];
+    // submit operations
+    [self submitOperationsToQueue];
 }
 
 #pragma mark - Operations

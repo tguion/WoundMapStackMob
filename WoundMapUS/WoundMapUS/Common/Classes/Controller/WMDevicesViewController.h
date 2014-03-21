@@ -21,5 +21,6 @@
 @interface WMDevicesViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<DevicesViewControllerDelegate> delegate;
+@property (strong, nonatomic) WMDeviceGroup *deviceGroup;
 
 @end

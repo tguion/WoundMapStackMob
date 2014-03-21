@@ -108,6 +108,11 @@
     self.status = [WMInterventionStatus initialInterventionStatus:[self managedObjectContext]];
 }
 
+- (BOOL)hasInterventionEvents
+{
+    return [self.interventionEvents count] > 0;
+}
+
 - (WMDeviceValue *)deviceValueForDevice:(WMDevice *)device
                                  create:(BOOL)create
                                   value:(NSString *)value

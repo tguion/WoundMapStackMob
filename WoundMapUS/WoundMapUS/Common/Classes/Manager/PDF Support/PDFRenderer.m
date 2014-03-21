@@ -42,11 +42,9 @@
 #import "WoundStatusMeasurementPlotDataSource.h"
 #import "PrintConfiguration.h"
 #import "WMCorePlotManager.h"
-#import "LocalStoreManager.h"
-#import "UserDefaultsManager.h"
-#import "DocumentManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
-#import "WCUtilities.h"
+#import "WMUtilities.h"
 
 NSInteger kXPlotOffset = 0;
 

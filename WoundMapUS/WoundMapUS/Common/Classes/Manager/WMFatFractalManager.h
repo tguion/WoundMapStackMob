@@ -41,7 +41,7 @@ typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOO
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
 - (void)updatePatient:(WMPatient *)patient insertedObjectIDs:(NSArray *)insertedObjectIDs updatedObjectIDs:(NSArray *)updatedObjectIDs ff:(WMFatFractal *)ff;
 
-- (void)createObject:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)createObject:(id)object ffUrl:(NSString *)ffUrl ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 - (void)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 - (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 - (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;

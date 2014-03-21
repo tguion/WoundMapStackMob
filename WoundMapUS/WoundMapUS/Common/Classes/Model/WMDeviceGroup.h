@@ -7,6 +7,7 @@
 @interface WMDeviceGroup : _WMDeviceGroup <AssessmentGroup> {}
 
 @property (readonly, nonatomic) NSArray *devices;
+@property (readonly, nonatomic) BOOL hasInterventionEvents;
 @property (readonly, nonatomic) NSArray *sortedDeviceValues;
 @property (readonly, nonatomic) BOOL isClosed;
 
