@@ -167,61 +167,80 @@
     return event;
 }
 
-- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)woundTreatmentValuesAdded
 {
-    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
-    if ([committedValues isKindOfClass:[NSSet class]]) {
-        committedValues = [committedValues filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != %@", [NSNull null]]];
-    } else {
-        committedValues = [NSSet set];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
     }
+    // else
     NSMutableSet *addedValues = [self.values mutableCopy];
     [addedValues minusSet:committedValues];
+    return [addedValues allObjects];
+}
+
+- (NSArray *)woundTreatmentValuesRemoved
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
+    }
+    // else
     NSMutableSet *deletedValues = [committedValues mutableCopy];
     [deletedValues minusSet:self.values];
+    return [deletedValues allObjects];
+}
+
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSArray *addedValues = self.woundTreatmentValuesAdded;
+    NSArray *deletedValues = self.woundTreatmentValuesRemoved;
+    NSMutableArray *events = [NSMutableArray array];
     for (WMWoundTreatmentValue *value in addedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
-                                       title:value.woundTreatment.title
-                                   valueFrom:nil
-                                     valueTo:value.value
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                                         title:value.woundTreatment.title
+                                                     valueFrom:nil
+                                                       valueTo:value.value
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", value.woundTreatment.title);
     }
     for (WMWoundTreatmentValue *value in deletedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
-                                       title:value.title
-                                   valueFrom:nil
-                                     valueTo:nil
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                                         title:value.title
+                                                     valueFrom:nil
+                                                       valueTo:nil
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", value.title);
     }
     for (WMWoundTreatmentValue *value in [self.managedObjectContext updatedObjects]) {
         if ([value isKindOfClass:[WMWoundTreatmentValue class]]) {
-            committedValuesMap = [value committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = value.value;
             if ([newValue isKindOfClass:[NSString class]] && [newValue isEqualToString:oldValue]) {
                 continue;
             }
             // else it changed
-            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
-                                           title:value.woundTreatment.title
-                                       valueFrom:oldValue
-                                         valueTo:newValue
-                                            type:nil
-                                     participant:participant
-                                          create:YES
-                            managedObjectContext:self.managedObjectContext];
+            [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                                             title:value.woundTreatment.title
+                                                         valueFrom:oldValue
+                                                           valueTo:newValue
+                                                              type:nil
+                                                       participant:participant
+                                                            create:YES
+                                              managedObjectContext:self.managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
+    return events;
 }
 
 - (BOOL)hasInterventionEvents

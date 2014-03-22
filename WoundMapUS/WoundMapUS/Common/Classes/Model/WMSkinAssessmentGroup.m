@@ -146,60 +146,81 @@
     return event;
 }
 
-- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)skinAssessmentValuesAdded
 {
-    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
     if ([committedValues isKindOfClass:[NSNull class]]) {
-        return;
+        return @[];
     }
     // else
     NSMutableSet *addedValues = [self.values mutableCopy];
     [addedValues minusSet:committedValues];
+    return [addedValues allObjects];
+}
+
+- (NSArray *)skinAssessmentValuesRemoved
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
+    }
+    // else
     NSMutableSet *deletedValues = [committedValues mutableCopy];
     [deletedValues minusSet:self.values];
+    return [deletedValues allObjects];
+}
+
+
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSArray *addedValues = self.skinAssessmentValuesAdded;
+    NSArray *deletedValues = self.skinAssessmentValuesRemoved;
+    NSMutableArray *events = [NSMutableArray array];
     for (WMSkinAssessmentValue *skinAssessmentValue in addedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
                                        title:skinAssessmentValue.skinAssessment.title
                                    valueFrom:nil
                                      valueTo:skinAssessmentValue.value
                                         type:nil
                                  participant:participant
                                       create:YES
-                        managedObjectContext:self.managedObjectContext];
+                        managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", skinAssessmentValue.skinAssessment.title);
     }
     for (WMSkinAssessmentValue *skinAssessmentValue in deletedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeDelete
                                        title:skinAssessmentValue.title
                                    valueFrom:nil
                                      valueTo:nil
                                         type:nil
                                  participant:participant
                                       create:YES
-                        managedObjectContext:self.managedObjectContext];
+                        managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", skinAssessmentValue.title);
     }
     for (WMSkinAssessmentValue *skinAssessmentValue in [self.managedObjectContext updatedObjects]) {
         if ([skinAssessmentValue isKindOfClass:[WMSkinAssessmentValue class]]) {
-            committedValuesMap = [skinAssessmentValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSDictionary *committedValuesMap = [skinAssessmentValue committedValuesForKeys:@[@"values"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = skinAssessmentValue.value;
             if ([oldValue isEqualToString:newValue]) {
                 continue;
             }
             // else it changed
-            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
-                                           title:skinAssessmentValue.skinAssessment.title
-                                       valueFrom:oldValue
-                                         valueTo:newValue
-                                            type:nil
-                                     participant:participant
-                                          create:YES
-                            managedObjectContext:self.managedObjectContext];
+            [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                                             title:skinAssessmentValue.skinAssessment.title
+                                                         valueFrom:oldValue
+                                                           valueTo:newValue
+                                                              type:nil
+                                                       participant:participant
+                                                            create:YES
+                                              managedObjectContext:self.managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
+    return events;
 }
 
 // TODO: consider creating an event to record who/when

@@ -242,21 +242,40 @@
     return event;
 }
 
-- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)psychoSocialValuesAdded
 {
-    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
     if ([committedValues isKindOfClass:[NSNull class]]) {
-        return;
+        return @[];
     }
     // else
     NSMutableSet *addedValues = [self.values mutableCopy];
     [addedValues minusSet:committedValues];
+    return [addedValues allObjects];
+}
+
+- (NSArray *)psychoSocialValuesRemoved
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
+    }
+    // else
     NSMutableSet *deletedValues = [committedValues mutableCopy];
     [deletedValues minusSet:self.values];
+    return [deletedValues allObjects];
+}
+
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSArray *addedValues = self.psychoSocialValuesAdded;
+    NSArray *deletedValues = self.psychoSocialValuesRemoved;
+    NSMutableArray *events = [NSMutableArray array];
     for (WMPsychoSocialValue *psychoSocialValue in addedValues) {
         NSString *title = psychoSocialValue.psychoSocialItem.title;
-        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
                                         path:psychoSocialValue.pathToValue
                                        title:title
                                    valueFrom:nil
@@ -264,11 +283,11 @@
                                         type:nil
                                  participant:participant
                                       create:YES
-                        managedObjectContext:self.managedObjectContext];
+                        managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", title);
     }
     for (WMPsychoSocialValue *psychoSocialValue in deletedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeDelete
                                         path:psychoSocialValue.pathToValue
                                        title:psychoSocialValue.title
                                    valueFrom:nil
@@ -276,12 +295,12 @@
                                         type:nil
                                  participant:participant
                                       create:YES
-                        managedObjectContext:self.managedObjectContext];
+                        managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", psychoSocialValue.title);
     }
     for (WMPsychoSocialValue *psychoSocialValue in [self.managedObjectContext updatedObjects]) {
         if ([psychoSocialValue isKindOfClass:[WMPsychoSocialValue class]]) {
-            committedValuesMap = [psychoSocialValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSDictionary *committedValuesMap = [psychoSocialValue committedValuesForKeys:@[@"values"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = psychoSocialValue.value;
             if ([oldValue isEqualToString:newValue]) {
@@ -289,7 +308,7 @@
             }
             // else it changed
             NSString *title = psychoSocialValue.psychoSocialItem.title;
-            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+            [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
                                             path:psychoSocialValue.pathToValue
                                            title:title
                                        valueFrom:oldValue
@@ -297,10 +316,11 @@
                                             type:nil
                                      participant:participant
                                           create:YES
-                            managedObjectContext:self.managedObjectContext];
+                            managedObjectContext:self.managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
+    return events;
 }
 
 #pragma mark - AssessmentGroup

@@ -8,8 +8,6 @@
 
 #import "WMPhotoManager.h"
 
-extern NSString *const kTaskDidCompleteNotification;
-
 @implementation WMPhotoManager
 
 + (WMPhotoManager *)sharedInstance

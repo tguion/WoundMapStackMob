@@ -421,38 +421,57 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     return event;
 }
 
-- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)woundMeasurementValuesAdded
 {
-    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
     if ([committedValues isKindOfClass:[NSNull class]]) {
-        return;
+        return @[];
     }
     // else
     NSMutableSet *addedValues = [self.values mutableCopy];
     [addedValues minusSet:committedValues];
+    return [addedValues allObjects];
+}
+
+- (NSArray *)woundMeasurementValuesRemoved
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
+    }
+    // else
     NSMutableSet *deletedValues = [committedValues mutableCopy];
     [deletedValues minusSet:self.values];
+    return [deletedValues allObjects];
+}
+
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSArray *addedValues = self.woundMeasurementValuesAdded;
+    NSArray *deletedValues = self.woundMeasurementValuesRemoved;
+    NSMutableArray *events = [NSMutableArray array];
     for (WMWoundMeasurementValue *value in addedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
-                                       title:value.woundMeasurement.title
-                                   valueFrom:nil
-                                     valueTo:(value.value == nil ? value.title:value.value)
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                                         title:value.woundMeasurement.title
+                                                     valueFrom:nil
+                                                       valueTo:(value.value == nil ? value.title:value.value)
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", value.woundMeasurement.title);
     }
     for (WMWoundMeasurementValue *value in deletedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
-                                       title:value.title
-                                   valueFrom:nil
-                                     valueTo:nil
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                                         title:value.title
+                                                     valueFrom:nil
+                                                       valueTo:nil
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", value.title);
     }
     for (WMWoundMeasurementValue *value in [self.managedObjectContext updatedObjects]) {
@@ -461,15 +480,15 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
             NSString *newValue = nil;
             WMWoundMeasurementValue *woundMeasurementValue = (WMWoundMeasurementValue *)value;
             if (nil != woundMeasurementValue.amountQualifier) {
-                committedValuesMap = [value committedValuesForKeys:[NSArray arrayWithObjects:@"amountQualifier", nil]];
+                NSDictionary *committedValuesMap = [value committedValuesForKeys:@[@"amountQualifier"]];
                 oldValue = [[committedValuesMap objectForKey:@"amountQualifier"] valueForKey:@"title"];
                 newValue = value.amountQualifier.title;
             } else if (nil != woundMeasurementValue.odor) {
-                committedValuesMap = [value committedValuesForKeys:[NSArray arrayWithObjects:@"odor", nil]];
+                NSDictionary *committedValuesMap = [value committedValuesForKeys:@[@"odor"]];
                 oldValue = [[committedValuesMap objectForKey:@"odor"] valueForKey:@"title"];
                 newValue = value.odor.title;
             } else {
-                committedValuesMap = [value committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+                NSDictionary *committedValuesMap = [value committedValuesForKeys:@[@"value"]];
                 oldValue = [committedValuesMap objectForKey:@"value"];
                 newValue = value.value;
             }
@@ -477,17 +496,18 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                 continue;
             }
             // else it changed
-            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
-                                           title:value.woundMeasurement.title
-                                       valueFrom:oldValue
-                                         valueTo:newValue
-                                            type:nil
-                                     participant:participant
-                                          create:YES
-                            managedObjectContext:self.managedObjectContext];
+            [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                                             title:value.woundMeasurement.title
+                                                         valueFrom:oldValue
+                                                           valueTo:newValue
+                                                              type:nil
+                                                       participant:participant
+                                                            create:YES
+                                              managedObjectContext:self.managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
+    return events;
 }
 
 #pragma mark - Normalization

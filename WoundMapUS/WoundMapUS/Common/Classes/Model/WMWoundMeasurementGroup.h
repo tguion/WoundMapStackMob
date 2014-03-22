@@ -56,6 +56,9 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
 @property (readonly, nonatomic) BOOL hasInterventionEvents;
 
+@property (readonly, nonatomic) NSArray *woundMeasurementValuesAdded;
+@property (readonly, nonatomic) NSArray *woundMeasurementValuesRemoved;
+
 @property (readonly, nonatomic) NSDate *lastWoundMeasurementDate;
 @property (readonly, nonatomic) NSDate *dateModifiedExludingMeasurement;
 @property (readonly, nonatomic) NSInteger tunnelingValueCount;

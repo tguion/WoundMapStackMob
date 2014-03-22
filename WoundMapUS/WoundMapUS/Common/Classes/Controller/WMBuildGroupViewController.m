@@ -11,6 +11,7 @@
 #import "WMDefinition.h"
 #import "PDFRenderer.h"
 #import "WMDesignUtilities.h"
+#import "UIView+Custom.h"
 #import "WMUtilities.h"
 
 NSString *const kGroupOpenClosedKey = @"GroupOpenClosedKey";
@@ -67,7 +68,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 - (void)viewWillDisappear:(BOOL)animated
 {
     // update model before save in super.viewWillDissappear:
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
     [super viewWillDisappear:animated];
     // reset state
     self.didCreateGroup = NO;
@@ -119,7 +120,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     UITableViewCell *cell = [self cellForView:segmentedControl];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     id<AssessmentGroup> assessmentGroup = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    id value = (UISegmentedControlNoSegment == segmentedControl.selectedSegmentIndex ? nil:[NSString stringWithFormat:@"%d", segmentedControl.selectedSegmentIndex]);
+    id value = (UISegmentedControlNoSegment == segmentedControl.selectedSegmentIndex ? nil:[NSString stringWithFormat:@"%ld", (long)segmentedControl.selectedSegmentIndex]);
     [self updateAssessmentGroup:assessmentGroup withValue:value];
     [self performSelector:@selector(updateUIForDataChange) withObject:nil afterDelay:0.0];
     [self.tableView beginUpdates];
@@ -133,7 +134,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     UITableViewCell *cell = [self cellForView:segmentedControl];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     id<AssessmentGroup> assessmentGroup = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    id value = (UISegmentedControlNoSegment == segmentedControl.selectedSegmentIndex ? nil:[NSString stringWithFormat:@"%d", segmentedControl.selectedSegmentIndex]);
+    id value = (UISegmentedControlNoSegment == segmentedControl.selectedSegmentIndex ? nil:[NSString stringWithFormat:@"%ld", (long)segmentedControl.selectedSegmentIndex]);
     [self updateAssessmentGroup:assessmentGroup withValue:value];
     [self performSelector:@selector(updateUIForDataChange) withObject:nil afterDelay:0.0];
     //    [self.tableView beginUpdates];
@@ -147,7 +148,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     UITableViewCell *cell = [self cellForView:slider];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     NSInteger value = slider.value;
-    NSString *valueString = [NSString stringWithFormat:@"%d", value];
+    NSString *valueString = [NSString stringWithFormat:@"%ld", (long)value];
     // update UI
     UILabel *label = [self valueLabelForTableViewCell:cell];
     label.text = valueString;
@@ -167,7 +168,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     }
     // else
     NSInteger value = slider.value;
-    NSString *valueString = [NSString stringWithFormat:@"%d", value];
+    NSString *valueString = [NSString stringWithFormat:@"%ld", (long)value];
     // update UI
     UITextField *textField = [self textFieldForTableViewCell:cell];
     textField.text = valueString;

@@ -28,6 +28,8 @@
 
 @interface WMMedicationGroupViewController ()
 
+@property (strong, nonatomic) NSBlockOperation *insertMedicationGroupOperation;
+
 @property (readonly, nonatomic) WMMedicationSummaryViewController *medicationSummaryViewController;
 @property (readonly, nonatomic) WMMedicationGroupHistoryViewController *medicationGroupHistoryViewController;
 @property (nonatomic) BOOL didCancel;
@@ -70,6 +72,7 @@
 {
     [super clearDataCache];
     _medicationGroup = nil;
+    _insertMedicationGroupOperation = nil;
 }
 
 #pragma mark - BuildGroupViewController
@@ -153,6 +156,17 @@
         if (nil == medicationGroup) {
             medicationGroup = [WMMedicationGroup medicationGroupForPatient:self.patient];
             self.didCreateGroup = YES;
+            // update back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            NSBlockOperation *insertMedicationGroupOperation = [ffm createObject:medicationGroup
+                                                                           ffUrl:[WMMedicationGroup entityName]
+                                                                              ff:ff
+                                                                      addToQueue:NO
+                                                               completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                                                                   NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                                                                   [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                               }];
             WMInterventionEvent *event = [medicationGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                    title:nil
                                                                                valueFrom:nil
@@ -163,6 +177,23 @@
                                                                              participant:self.appDelegate.participant
                                                                                   create:YES
                                                                     managedObjectContext:self.managedObjectContext];
+            NSManagedObjectID *medicationGroupObjectID = [_medicationGroup objectID];
+            NSManagedObjectID *eventObjectID = [event objectID];
+            NSBlockOperation *eventOperation = [ffm createObject:event
+                                                           ffUrl:[WMInterventionEvent entityName]
+                                                              ff:ff
+                                                      addToQueue:NO
+                                               completionHandler:^(NSError *error, id object, BOOL signInRequired) {
+                                                   NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                                                   WMMedicationGroup *medicationGroup = (WMMedicationGroup *)[managedObjectContext objectWithID:medicationGroupObjectID];
+                                                   WMInterventionEvent *event = (WMInterventionEvent *)[managedObjectContext objectWithID:eventObjectID];
+                                                   NSString *medicationGroupFFURL = medicationGroup.ffUrl;
+                                                   NSString *eventFFURL = event.ffUrl;
+                                                   NSAssert([medicationGroupFFURL length] > 0, @"WMMedicationGroup.ffUrl should not be nil");
+                                                   NSAssert([eventFFURL length] > 0, @"WMInterventionEvent.ffUrl should not be nil");
+                                                   [ff queueGrabBagAddItemAtUri:eventFFURL toObjAtUri:medicationGroupFFURL grabBagName:WMMedicationGroupRelationships.interventionEvents];
+                                               }];
+            [eventOperation addDependency:insertMedicationGroupOperation];
             DLog(@"Created event %@", event.eventType.title);
         }
         self.medicationGroup = medicationGroup;
@@ -242,7 +273,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        [ffm createArray:[events valueForKey:@"objectID"] collection:[WMInterventionEvent entityName] ff:ff addToQueue:NO completionHandler:^(NSError *error, id object, BOOL signInRequired) {
+        NSBlockOperation *operation = [ffm createArray:[events valueForKey:@"objectID"] collection:[WMInterventionEvent entityName] ff:ff addToQueue:NO completionHandler:^(NSError *error, id object, BOOL signInRequired) {
             NSParameterAssert([object isKindOfClass:[NSManagedObjectID class]]);
             NSManagedObjectID *objectID = (NSManagedObjectID *)object;
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -254,19 +285,28 @@
             NSAssert([eventFFURL length] > 0, @"WMInterventionEvent.ffUrl should not be nil");
             [ff queueGrabBagAddItemAtUri:eventFFURL toObjAtUri:medicationGroupFFURL grabBagName:WMMedicationGroupRelationships.interventionEvents];
         }];
+        if (_insertMedicationGroupOperation) {
+            [operation addDependency:_insertMedicationGroupOperation];
+        }
         for (WMMedication *medication in medicationsAdded) {
-            [ffm grabBagAdd:[medication objectID]
-                         to:medicationGroupObjectID
-                grabBagName:WMMedicationGroupRelationships.medications
-                         ff:ff
-                 addToQueue:NO];
+            NSBlockOperation *operation = [ffm grabBagAdd:[medication objectID]
+                                                       to:medicationGroupObjectID
+                                              grabBagName:WMMedicationGroupRelationships.medications
+                                                       ff:ff
+                                               addToQueue:NO];
+            if (_insertMedicationGroupOperation) {
+                [operation addDependency:_insertMedicationGroupOperation];
+            }
         }
         for (WMMedication *medication in medicationsRemoved) {
-            [ffm grabBagRemove:[medication objectID]
-                            to:medicationGroupObjectID
-                   grabBagName:WMMedicationGroupRelationships.medications
-                            ff:ff
-                    addToQueue:NO];
+            NSBlockOperation *operation = [ffm grabBagRemove:[medication objectID]
+                                                          to:medicationGroupObjectID
+                                                 grabBagName:WMMedicationGroupRelationships.medications
+                                                          ff:ff
+                                                  addToQueue:NO];
+            if (_insertMedicationGroupOperation) {
+                [operation addDependency:_insertMedicationGroupOperation];
+            }
         }
         // submit to back end
         [ffm submitOperationsToQueue];
@@ -293,7 +333,7 @@
     return self.medicationGroup.status;
 }
 
-- (void)interventionStatusViewController:(InterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
+- (void)interventionStatusViewController:(WMInterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
 {
     self.medicationGroup.status = interventionStatus;
     WMInterventionEvent *event = [self.medicationGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
@@ -301,15 +341,27 @@
                                                                             valueFrom:nil
                                                                               valueTo:nil
                                                                                  type:[WMInterventionEventType interventionEventTypeForStatusTitle:interventionStatus.title
-                                                                                                                              managedObjectContext:self.managedObjectContext
-                                                                                                                                   persistentStore:nil]
-                                                                                 user:[self.appDelegate signedInUserForDocument:self.document]
+                                                                                                                              managedObjectContext:self.managedObjectContext]
+                                                                          participant:self.appDelegate.participant
                                                                                create:YES
-                                                                 managedObjectContext:self.managedObjectContext
-                                                                      persistentStore:nil];
+                                                                 managedObjectContext:self.managedObjectContext];
     DLog(@"Created WMMedicationInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
+    // update back end
+    NSManagedObjectID *medicationGroupObjectID = [_medicationGroup objectID];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm createObject:event ffUrl:[WMInterventionEvent entityName] ff:ff addToQueue:NO completionHandler:^(NSError *error, id object, BOOL signInRequired) {
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMMedicationGroup *medicationGroup = (WMMedicationGroup *)[managedObjectContext objectWithID:medicationGroupObjectID];
+        WMInterventionEvent *event = (WMInterventionEvent *)object;
+        NSString *medicationGroupFFURL = medicationGroup.ffUrl;
+        NSString *eventFFURL = event.ffUrl;
+        NSAssert([medicationGroupFFURL length] > 0, @"WMMedicationGroup.ffUrl should not be nil");
+        NSAssert([eventFFURL length] > 0, @"WMInterventionEvent.ffUrl should not be nil");
+        [ff queueGrabBagAddItemAtUri:eventFFURL toObjAtUri:medicationGroupFFURL grabBagName:WMMedicationGroupRelationships.interventionEvents];
+    }];
 }
 
 #pragma mark - InterventionEventViewControllerDelegate
@@ -319,7 +371,7 @@
     return self.medicationGroup;
 }
 
-- (void)interventionEventViewControllerDidCancel:(InterventionEventViewController *)viewController
+- (void)interventionEventViewControllerDidCancel:(WMInterventionEventViewController *)viewController
 {
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
@@ -347,10 +399,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     WMMedication *medication = [self.fetchedResultsController objectAtIndexPath:indexPath];
     // IAP: check if category requires IAP
+    IAPManager *iapManager = [IAPManager sharedInstance];
     if (nil != medication.category.iapIdentifier) {
         // check if user has purchased IAP
-        IAPProduct *iapProduct = [self.localStoreManager iapProductForIdentifier:medication.category.iapIdentifier];
-        if (![self.iapManager isProductPurchased:iapProduct]) {
+        IAPProduct *iapProduct = [IAPProduct productForIdentifier:medication.category.iapIdentifier create:NO managedObjectContext:self.managedObjectContext];
+        if (![iapManager isProductPurchased:iapProduct]) {
             // IAP: this is an example of requiring an IAP for a medication category - present IAP view controller with success and failure block
             
             return;
@@ -374,8 +427,7 @@
     if (self.didCreateGroup) {
         self.medicationGroup.status = [WMInterventionStatus interventionStatusForTitle:kInterventionStatusInProcess
                                                                                 create:NO
-                                                                  managedObjectContext:self.managedObjectContext
-                                                                       persistentStore:nil];
+                                                                  managedObjectContext:self.managedObjectContext];
     }
     if (refreshTableView) {
         [tableView reloadData];
@@ -395,7 +447,7 @@
     // else
 	id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
 	id sortRank = sectionInfo.name;
-    return [[WMMedicationCategory medicationCategoryForSortRank:sortRank managedObjectContext:self.managedObjectContext persistentStore:nil] title];
+    return [[WMMedicationCategory medicationCategoryForSortRank:sortRank managedObjectContext:self.managedObjectContext] title];
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath

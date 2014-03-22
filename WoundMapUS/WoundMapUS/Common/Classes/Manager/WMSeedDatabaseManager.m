@@ -69,14 +69,15 @@
                           ff:ff
         managedObjectContext:managedObjectContext
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+               [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMWoundType entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                   [ffm createArray:objectIDs collection:[WMWoundType entityName] ff:ff addToQueue:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                        // handle children to-many relationship
                        WMWoundType *woundType = (WMWoundType *)object;
                        NSAssert([woundType isKindOfClass:[WMWoundType class]], @"Expected WMWoundType, but received %@", woundType);
                        if ([woundType.children count]) {
                            for (WMWoundType *child in woundType.children) {
+                               NSAssert([child.ffUrl length] > 0, @"Expected ffUrl");
                                [ff queueGrabBagAddItemAtUri:child.ffUrl toObjAtUri:woundType.ffUrl grabBagName:WMWoundTypeRelationships.children];
                            }
                        }
@@ -91,9 +92,9 @@
                           ff:ff
         managedObjectContext:managedObjectContext
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMParticipantType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+               [WMParticipantType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMParticipantType entityName] ff:ff completionHandler:nil];
+                   [ffm createArray:objectIDs collection:[WMParticipantType entityName] ff:ff addToQueue:YES completionHandler:nil];
                }];
            }];
         // first attempt to acquire data from backend
@@ -104,9 +105,9 @@
                           ff:ff
         managedObjectContext:managedObjectContext
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+               [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMAmountQualifier entityName] ff:ff completionHandler:nil];
+                   [ffm createArray:objectIDs collection:[WMAmountQualifier entityName] ff:ff addToQueue:YES completionHandler:nil];
                }];
            }];
         // first attempt to acquire data from backend
@@ -117,14 +118,14 @@
                           ff:ff
         managedObjectContext:managedObjectContext
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMWoundOdor seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+               [WMWoundOdor seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMWoundOdor entityName] ff:ff completionHandler:nil];
+                   [ffm createArray:objectIDs collection:[WMWoundOdor entityName] ff:ff addToQueue:YES completionHandler:nil];
                }];
            }];
-        [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+        [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
             // update backend
-            [ffm createArray:objectIDs collection:[WMInterventionStatus entityName] ff:ff completionHandler:nil];
+            [ffm createArray:objectIDs collection:[WMInterventionStatus entityName] ff:ff addToQueue:YES completionHandler:nil];
         }];
 //        [WCInterventionEventType seedDatabase:managedObjectContext persistentStore:nil];
 //        [WMMedicationCategory seedDatabase:managedObjectContext persistentStore:nil];
@@ -142,9 +143,9 @@
                           ff:ff
         managedObjectContext:managedObjectContext
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs) {
+               [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMNavigationTrack entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                   [ffm createArray:objectIDs collection:[WMNavigationTrack entityName] ff:ff addToQueue:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
                        if ([object isKindOfClass:[WMNavigationNode class]]) {
                            // handle subnodes to-many relationship
                            WMNavigationNode *navigationNode = (WMNavigationNode *)object;

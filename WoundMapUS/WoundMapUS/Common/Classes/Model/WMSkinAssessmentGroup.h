@@ -11,6 +11,9 @@
 @property (readonly, nonatomic) NSArray *sortedSkinAssessmentValues;
 @property (readonly, nonatomic) BOOL hasValues;
 
+@property (readonly, nonatomic) NSArray *skinAssessmentValuesAdded;
+@property (readonly, nonatomic) NSArray *skinAssessmentValuesRemoved;
+
 + (WMSkinAssessmentGroup *)activeSkinAssessmentGroup:(WMPatient *)patient;
 + (WMSkinAssessmentGroup *)mostRecentOrActiveSkinAssessmentGroup:(WMPatient *)patient;
 + (NSDate *)mostRecentOrActiveSkinAssessmentGroupDateModified:(WMPatient *)patient;

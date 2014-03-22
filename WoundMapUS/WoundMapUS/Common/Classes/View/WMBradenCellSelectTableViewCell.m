@@ -8,25 +8,15 @@
 
 #import "WMBradenCellSelectTableViewCell.h"
 #import "WMBradenCellTableViewCell.h"
-#import "WCBradenCell+Custom.h"
-#import "DocumentManager.h"
+#import "WMBradenCell.h"
 
 @interface WMBradenCellSelectTableViewCell()
 
 @property (readonly, nonatomic) BOOL isHighlightedOrSelected;
-@property (strong, nonatomic) NSManagedObjectID *bradenCellObjectID;
-@property (weak, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSMutableArray *opaqueNotificationObservers;
-
-- (void)handleMemoryWarning;
-- (void)handleDocumentClosed;
 
 @end
 
 @implementation WMBradenCellSelectTableViewCell
-
-@synthesize bradenCell=_bradenCell, bradenCellObjectID=_bradenCellObjectID, managedObjectContext=_managedObjectContext;
-@synthesize opaqueNotificationObservers=_opaqueNotificationObservers;
 
 - (BOOL)isHighlightedOrSelected
 {
@@ -101,7 +91,7 @@
     return DefinitionDescSelectedAttributes;
 }
 
-+ (CGFloat)recommendedHeightForBradenCell:(WCBradenCell *)bradenCell forWidth:(CGFloat)width
++ (CGFloat)recommendedHeightForBradenCell:(WMBradenCell *)bradenCell forWidth:(CGFloat)width
 {
     CGFloat height = 0.0;
 	// draw title
@@ -123,92 +113,22 @@
     return height;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        __weak __typeof(self) weakSelf = self;
-        // listen for low memory
-        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification
-                                                                        object:nil
-                                                                         queue:[NSOperationQueue mainQueue]
-                                                                    usingBlock:^(NSNotification *notification) {
-                                                                        [weakSelf handleMemoryWarning];
-                                                                    }];
-        [self.opaqueNotificationObservers addObject:observer];
-        // listen for document closure and delete
-        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kDocumentDeletedNotification
-                                                                     object:nil
-                                                                      queue:[NSOperationQueue mainQueue]
-                                                                 usingBlock:^(NSNotification *notification) {
-                                                                     [weakSelf handleDocumentClosed];
-                                                                 }];
-        [self.opaqueNotificationObservers addObject:observer];
-        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kDocumentClosedNotification
-                                                                     object:nil
-                                                                      queue:[NSOperationQueue mainQueue]
-                                                                 usingBlock:^(NSNotification *notification) {
-                                                                     [weakSelf handleDocumentClosed];
-                                                                 }];
-        [self.opaqueNotificationObservers addObject:observer];
-    }
-    return self;
-}
-
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
     [super willMoveToSuperview:newSuperview];
     if (nil == newSuperview) {
         _bradenCell = nil;
-        _bradenCellObjectID = nil;
-        // stop listening
-        for (id observer in _opaqueNotificationObservers) {
-            [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        }
-        _opaqueNotificationObservers = nil;;
     }
 }
 
-- (NSMutableArray *)opaqueNotificationObservers
-{
-    if (nil == _opaqueNotificationObservers) {
-        _opaqueNotificationObservers = [[NSMutableArray alloc] initWithCapacity:16];
-    }
-    return _opaqueNotificationObservers;
-}
-
-- (WCBradenCell *)bradenCell
-{
-    if (nil == _bradenCell && nil != _bradenCellObjectID) {
-        _bradenCell = (WCBradenCell *)[_managedObjectContext objectWithID:_bradenCellObjectID];
-    }
-    return _bradenCell;
-}
-
-- (void)setBradenCell:(WCBradenCell *)bradenCell
+- (void)setBradenCell:(WMBradenCell *)bradenCell
 {
 	if (_bradenCell == bradenCell) {
 		return;
 	}
 	// else
-	[self willChangeValueForKey:@"bradenCell"];
 	_bradenCell = bradenCell;
-	[self didChangeValueForKey:@"bradenCell"];
-    _bradenCellObjectID = [bradenCell objectID];
-    _managedObjectContext = [bradenCell managedObjectContext];
 	[self setNeedsDisplay];
-}
-
-- (void)handleMemoryWarning
-{
-    _bradenCell = nil;
-}
-
-- (void)handleDocumentClosed
-{
-    _bradenCell = nil;
-    _bradenCellObjectID = nil;
-    _managedObjectContext = nil;
 }
 
 - (void)drawContentView:(CGRect)rect

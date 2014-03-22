@@ -7,7 +7,7 @@
 //
 
 #import "WMIAPProductOptionTableViewCell.h"
-#import "IAPProduct+Custom.h"
+#import "IAPProduct.h"
 #import "IAPBaseViewController.h"
 
 @interface WMIAPProductOptionTableViewCell ()

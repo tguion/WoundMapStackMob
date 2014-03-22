@@ -17,9 +17,9 @@
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"
 #import "WMWound.h"
-#import "UIView+Custom.h"
 #import "WMDesignUtilities.h"
 #import "WMUtilities.h"
+#import "WCAppDelegate.h"
 
 @interface WMDevicesViewController ()
 
@@ -77,7 +77,7 @@
 {
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:8];
     if ([WMDeviceGroup deviceGroupsHaveHistory:self.patient]) {
-        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_Notepad.png"]
+        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_Notepad"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(showDeviceGroupHistoryAction:)]];
@@ -96,7 +96,7 @@
                                                                    target:nil
                                                                    action:nil]];
     if (self.deviceGroup.hasInterventionEvents) {
-        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_List-bullets.png"]
+        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_List-bullets"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(showDeviceGroupEventsAction:)]];
@@ -122,8 +122,7 @@
     WMDevice *device = (WMDevice *)assessmentGroup;
     WMDeviceValue *deviceValue = [self.deviceGroup deviceValueForDevice:device
                                                                  create:NO
-                                                                  value:nil
-                                                   managedObjectContext:self.managedObjectContext];
+                                                                  value:nil];
     if (nil == deviceValue) {
         return nil;
     }
@@ -143,8 +142,7 @@
     }
     WMDeviceValue *deviceValue = [self.deviceGroup deviceValueForDevice:assessmentGroup
                                                                  create:createDeviceValue
-                                                                  value:nil
-                                                   managedObjectContext:self.managedObjectContext];
+                                                                  value:nil];
     if (createDeviceValue) {
         deviceValue.value = value;
         [self.deviceGroup addValuesObject:deviceValue];
@@ -159,26 +157,19 @@
 - (WMDeviceGroup *)deviceGroup
 {
     if (nil == _deviceGroup) {
-        WMDeviceGroup *deviceGroup = nil;
-        if (nil == _deviceGroupObjectID) {
-            deviceGroup = [WMDeviceGroup deviceGroupByRevising:nil managedObjectContext:self.managedObjectContext];
-            self.didCreateGroup = YES;
-            WMInterventionEvent *event = [deviceGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                               title:nil
-                                                                           valueFrom:nil
-                                                                             valueTo:nil
-                                                                                type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                     create:YES
-                                                                                                                       managedObjectContext:self.managedObjectContext
-                                                                                                                            persistentStore:nil]
-                                                                                user:[self.appDelegate signedInUserForDocument:self.document]
-                                                                              create:YES
-                                                                managedObjectContext:self.managedObjectContext
-                                                                     persistentStore:nil];
-            DLog(@"Created event %@", event.eventType.title);
-        } else {
-            deviceGroup = (WMDeviceGroup *)[self.managedObjectContext objectWithID:_deviceGroupObjectID];
-        }
+        WMDeviceGroup *deviceGroup = [WMDeviceGroup deviceGroupForPatient:self.patient];
+        self.didCreateGroup = YES;
+        WMInterventionEvent *event = [deviceGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                           title:nil
+                                                                       valueFrom:nil
+                                                                         valueTo:nil
+                                                                            type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                 create:YES
+                                                                                                                   managedObjectContext:self.managedObjectContext]
+                                                                     participant:self.appDelegate.participant
+                                                                          create:YES
+                                                            managedObjectContext:self.managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
         self.deviceGroup = deviceGroup;
     }
     return _deviceGroup;
@@ -192,18 +183,6 @@
 - (WMDevicesSummaryViewController *)devicesSummaryViewController
 {
     return [[WMDevicesSummaryViewController alloc] initWithNibName:@"WMDevicesSummaryViewController" bundle:nil];
-}
-
-#pragma mark - BaseViewController
-
-#pragma mark - iCloud
-
-// called when self.document content changes
-- (void)handleDocumentContentsUpdated:(UIManagedDocument *)document
-{
-    // refresh relationships for fetched data
-    [DocumentManager faultObjectWithID:[self.deviceGroup objectID] inContext:self.managedObjectContext];
-    [super handleDocumentContentsUpdated:document];
 }
 
 #pragma mark - Actions
@@ -236,7 +215,7 @@
     if (self.didCreateGroup) {
         [self.managedObjectContext deleteObject:self.deviceGroup];
     }
-    [self.documentManager saveDocument:self.document];
+    // TODO finish
     [self.delegate devicesViewControllerDidCancel:self];
 }
 
@@ -247,7 +226,8 @@
     }
     [super saveAction:sender];
     // create intervention events before super
-    [self.deviceGroup createEditEventsForUser:[self.appDelegate signedInUserForDocument:self.document]];
+    [self.deviceGroup createEditEventsForParticipant:self.appDelegate.participant];
+    // TODO finish
     [self.delegate devicesViewControllerDidSave:self];
 }
 
@@ -270,7 +250,7 @@
     return self.deviceGroup.status;
 }
 
-- (void)interventionStatusViewController:(InterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
+- (void)interventionStatusViewController:(WMInterventionStatusViewController *)viewController didSelectInterventionStatus:(WMInterventionStatus *)interventionStatus
 {
     self.deviceGroup.status = interventionStatus;
     WMInterventionEvent *event = [self.deviceGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
@@ -278,12 +258,10 @@
                                                                         valueFrom:nil
                                                                           valueTo:nil
                                                                              type:[WMInterventionEventType interventionEventTypeForStatusTitle:interventionStatus.title
-                                                                                                                          managedObjectContext:self.managedObjectContext
-                                                                                                                               persistentStore:nil]
-                                                                             user:[self.appDelegate signedInUserForDocument:self.document]
+                                                                                                                          managedObjectContext:self.managedObjectContext]
+                                                                      participant:self.appDelegate.participant
                                                                            create:YES
-                                                             managedObjectContext:self.managedObjectContext
-                                                                  persistentStore:nil];
+                                                             managedObjectContext:self.managedObjectContext];
     DLog(@"Created WMDeviceInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
@@ -296,7 +274,7 @@
     return self.deviceGroup;
 }
 
-- (void)interventionEventViewControllerDidCancel:(InterventionEventViewController *)viewController
+- (void)interventionEventViewControllerDidCancel:(WMInterventionEventViewController *)viewController
 {
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
@@ -330,7 +308,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     UIResponder *responder = [self possibleFirstResponderInCell:cell];
     if (nil == responder) {
-        [[self.view findFirstResponder] resignFirstResponder];
+        [self.view endEditing:YES];
         // check for a control
         UIControl *control = [self controlInCell:cell];
         if (nil != control) {
@@ -349,8 +327,7 @@
         WMDevice *device = [self.fetchedResultsController objectAtIndexPath:indexPath];
         WMDeviceValue *deviceValue = [self.deviceGroup deviceValueForDevice:device
                                                                      create:NO
-                                                                      value:nil
-                                                       managedObjectContext:self.managedObjectContext];
+                                                                      value:nil];
         if (nil == deviceValue) {
             // check if this is a none type exludesOtherValues
             if (device.exludesOtherValues) {
@@ -366,8 +343,7 @@
             // else go ahead and select
             deviceValue = [self.deviceGroup deviceValueForDevice:device
                                                           create:YES
-                                                           value:nil
-                                            managedObjectContext:self.managedObjectContext];
+                                                           value:nil];
             [self.deviceGroup addValuesObject:deviceValue];
         } else {
             // unselect - remove
@@ -394,7 +370,7 @@
     // else
 	id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
 	id sortRank = sectionInfo.name;
-    return [[WMDeviceCategory deviceCategoryForSortRank:sortRank managedObjectContext:self.managedObjectContext persistentStore:nil] title];
+    return [[WMDeviceCategory deviceCategoryForSortRank:sortRank managedObjectContext:self.managedObjectContext] title];
 }
 
 #pragma mark - NSFetchedResultsController

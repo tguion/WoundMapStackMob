@@ -15,29 +15,6 @@
 
 @implementation WMCarePlanGroup
 
-- (NSArray *)sortedCarePlanValues
-{
-    return [[self.values allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObjects:
-                                                                  [NSSortDescriptor sortDescriptorWithKey:@"item.category.sortRank" ascending:YES],
-                                                                  [NSSortDescriptor sortDescriptorWithKey:@"item.sortRank" ascending:YES],
-                                                                  nil]];
-}
-
-- (BOOL)isClosed
-{
-    return self.closedFlagValue;
-}
-
-+ (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                       persistentStore:(NSPersistentStore *)store
-{
-    WMCarePlanGroup *carePlanGroup = [[WMCarePlanGroup alloc] initWithEntity:[NSEntityDescription entityForName:@"WMCarePlanGroup" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-	if (store) {
-		[managedObjectContext assignObject:carePlanGroup toPersistentStore:store];
-	}
-	return carePlanGroup;
-}
-
 + (WMCarePlanGroup *)activeCarePlanGroup:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
@@ -100,6 +77,14 @@
     return [WMCarePlanGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
 }
 
++ (NSArray *)sortedCarePlanGroups:(WMPatient *)patient
+{
+    return [WMCarePlanGroup MR_findAllSortedBy:@"createdAt"
+                                     ascending:NO
+                                 withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                     inContext:[patient managedObjectContext]];
+}
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
@@ -107,12 +92,22 @@
     self.updatedAt = [NSDate date];
 }
 
-+ (NSArray *)sortedCarePlanGroups:(WMPatient *)patient
+- (NSArray *)sortedCarePlanValues
 {
-    return [WMCarePlanGroup MR_findAllSortedBy:@"createdAt"
-                                     ascending:NO
-                                 withPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
-                                     inContext:[patient managedObjectContext]];
+    return [[self.values allObjects] sortedArrayUsingDescriptors:[NSArray arrayWithObjects:
+                                                                  [NSSortDescriptor sortDescriptorWithKey:@"item.category.sortRank" ascending:YES],
+                                                                  [NSSortDescriptor sortDescriptorWithKey:@"item.sortRank" ascending:YES],
+                                                                  nil]];
+}
+
+- (BOOL)isClosed
+{
+    return self.closedFlagValue;
+}
+
+- (BOOL)hasInterventionEvents
+{
+    return [self.interventionEvents count] > 0;
 }
 
 - (WMCarePlanValue *)carePlanValueForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
@@ -214,46 +209,65 @@
     return event;
 }
 
-- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)carePlanValuesAdded
 {
-    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
     if ([committedValues isKindOfClass:[NSNull class]]) {
-        return;
+        return @[];
     }
     // else
     NSMutableSet *addedValues = [self.values mutableCopy];
     [addedValues minusSet:committedValues];
+    return [addedValues allObjects];
+}
+
+- (NSArray *)carePlanValuesRemoved
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
+    }
+    // else
     NSMutableSet *deletedValues = [committedValues mutableCopy];
     [deletedValues minusSet:self.values];
+    return [deletedValues allObjects];
+}
+
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSArray *addedValues = self.carePlanValuesAdded;
+    NSArray *deletedValues = self.carePlanValuesRemoved;
+    NSMutableArray *events = [NSMutableArray array];
     for (WMCarePlanValue *carePlanValue in addedValues) {
         NSString *title = carePlanValue.category.title;
-        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
-                                        path:carePlanValue.pathToValue
-                                       title:title
-                                   valueFrom:nil
-                                     valueTo:carePlanValue.value
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                                          path:carePlanValue.pathToValue
+                                                         title:title
+                                                     valueFrom:nil
+                                                       valueTo:carePlanValue.value
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", title);
     }
     for (WMCarePlanValue *carePlanValue in deletedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
-                                        path:carePlanValue.pathToValue
-                                       title:carePlanValue.title
-                                   valueFrom:nil
-                                     valueTo:nil
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                                          path:carePlanValue.pathToValue
+                                                         title:carePlanValue.title
+                                                     valueFrom:nil
+                                                       valueTo:nil
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", carePlanValue.title);
     }
     for (WMCarePlanValue *carePlanValue in [self.managedObjectContext updatedObjects]) {
         if ([carePlanValue isKindOfClass:[WMCarePlanValue class]]) {
-            committedValuesMap = [carePlanValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSDictionary *committedValuesMap = [carePlanValue committedValuesForKeys:@[@"value"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = carePlanValue.value;
             if ([oldValue isEqualToString:newValue]) {
@@ -261,18 +275,19 @@
             }
             // else it changed
             NSString *title = carePlanValue.category.title;
-            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
-                                            path:carePlanValue.pathToValue
-                                           title:title
-                                       valueFrom:oldValue
-                                         valueTo:newValue
-                                            type:nil
-                                     participant:participant
-                                          create:YES
-                            managedObjectContext:self.managedObjectContext];
+            [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                                              path:carePlanValue.pathToValue
+                                                             title:title
+                                                         valueFrom:oldValue
+                                                           valueTo:newValue
+                                                              type:nil
+                                                       participant:participant
+                                                            create:YES
+                                              managedObjectContext:self.managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
+    return events;
 }
 
 - (void)incrementContinueCount

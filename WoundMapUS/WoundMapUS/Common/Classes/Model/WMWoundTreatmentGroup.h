@@ -17,6 +17,9 @@
 @property (readonly, nonatomic) BOOL isClosed;
 @property (readonly, nonatomic) BOOL hasInterventionEvents;
 
+@property (readonly, nonatomic) NSArray *woundTreatmentValuesAdded;
+@property (readonly, nonatomic) NSArray *woundTreatmentValuesRemoved;
+
 - (WMWoundTreatmentValue *)woundTreatmentValueForWoundTreatment:(WMWoundTreatment *)woundTreatment
                                                          create:(BOOL)create
                                                           value:(id)value;

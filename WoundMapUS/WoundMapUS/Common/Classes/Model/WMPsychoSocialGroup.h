@@ -8,6 +8,9 @@
 
 @property (readonly, nonatomic) BOOL hasInterventionEvents;
 
+@property (readonly, nonatomic) NSArray *psychoSocialValuesAdded;
+@property (readonly, nonatomic) NSArray *psychoSocialValuesRemoved;
+
 + (BOOL)psychoSocialGroupsHaveHistory:(WMPatient *)patient;
 + (NSInteger)psychoSocialGroupsCount:(WMPatient *)patient;
 + (NSSet *)psychoSocialValuesForPsychoSocialGroup:(WMPsychoSocialGroup *)psychoSocialGroup;

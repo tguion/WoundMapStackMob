@@ -70,6 +70,13 @@
     return [array count];
 }
 
++ (WMDeviceGroup *)deviceGroupForPatient:(WMPatient *)patient
+{
+    WMDeviceGroup *deviceGroup = [WMDeviceGroup MR_createInContext:[patient managedObjectContext]];
+    deviceGroup.patient = patient;
+    return deviceGroup;
+}
+
 + (WMDeviceGroup *)mostRecentOrActiveDeviceGroup:(WMPatient *)patient
 {
     WMDeviceGroup *deviceGroup = [self activeDeviceGroup:patient];
@@ -153,60 +160,80 @@
     return event;
 }
 
-- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)deviceValuesAdded
 {
-    NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
     if ([committedValues isKindOfClass:[NSNull class]]) {
-        return;
+        return @[];
     }
     // else
     NSMutableSet *addedValues = [self.values mutableCopy];
     [addedValues minusSet:committedValues];
+    return [addedValues allObjects];
+}
+
+- (NSArray *)deviceValuesRemoved
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[@"values"]];
+    NSSet *committedValues = [committedValuesMap objectForKey:@"values"];
+    if ([committedValues isKindOfClass:[NSNull class]]) {
+        return @[];
+    }
+    // else
     NSMutableSet *deletedValues = [committedValues mutableCopy];
     [deletedValues minusSet:self.values];
+    return [deletedValues allObjects];
+}
+
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
+{
+    NSArray *addedValues = self.deviceValuesAdded;
+    NSArray *deletedValues = self.deviceValuesRemoved;
+    NSMutableArray *events = [NSMutableArray array];
     for (WMDeviceValue *deviceValue in addedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeAdd
-                                       title:deviceValue.title
-                                   valueFrom:nil
-                                     valueTo:deviceValue.value
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
+                                                         title:deviceValue.title
+                                                     valueFrom:nil
+                                                       valueTo:deviceValue.value
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", deviceValue.title);
     }
     for (WMDeviceValue *deviceValue in deletedValues) {
-        [self interventionEventForChangeType:InterventionEventChangeTypeDelete
-                                       title:deviceValue.title
-                                   valueFrom:nil
-                                     valueTo:nil
-                                        type:nil
-                                 participant:participant
-                                      create:YES
-                        managedObjectContext:self.managedObjectContext];
+        [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeDelete
+                                                         title:deviceValue.title
+                                                     valueFrom:nil
+                                                       valueTo:nil
+                                                          type:nil
+                                                   participant:participant
+                                                        create:YES
+                                          managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", deviceValue.title);
     }
     for (WMDeviceValue *deviceValue in [self.managedObjectContext updatedObjects]) {
         if ([deviceValue isKindOfClass:[WMDeviceValue class]]) {
-            committedValuesMap = [deviceValue committedValuesForKeys:[NSArray arrayWithObjects:@"value", nil]];
+            NSDictionary *committedValuesMap = [deviceValue committedValuesForKeys:@[@"values"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = deviceValue.value;
             if ([oldValue isEqualToString:newValue]) {
                 continue;
             }
             // else it changed
-            [self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
-                                           title:deviceValue.device.title
-                                       valueFrom:oldValue
-                                         valueTo:newValue
-                                            type:nil
-                                     participant:participant
-                                          create:YES
-                            managedObjectContext:self.managedObjectContext];
+            [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeUpdateValue
+                                                             title:deviceValue.device.title
+                                                         valueFrom:oldValue
+                                                           valueTo:newValue
+                                                              type:nil
+                                                       participant:participant
+                                                            create:YES
+                                              managedObjectContext:self.managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
+    return events;
 }
 
 - (void)incrementContinueCount

@@ -1284,109 +1284,109 @@
 
 - (void)devicesViewControllerDidSave:(WMDevicesViewController *)viewController
 {
-    BOOL hasChanges = self.managedObjectContext.hasChanges;
-    BOOL hasValues = [viewController.deviceGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.deviceGroup];
-        hasChanges = YES;
-    }
-    [viewController clearAllReferences];
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    if (hasChanges) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-    }
+//    BOOL hasChanges = self.managedObjectContext.hasChanges;
+//    BOOL hasValues = [viewController.deviceGroup.values count] > 0;
+//    if (!hasValues) {
+//        [self.managedObjectContext deleteObject:viewController.deviceGroup];
+//        hasChanges = YES;
+//    }
+//    [viewController clearAllReferences];
+//    // save in order to update updatedAt
+//    NSError *error = nil;
+//    [self.managedObjectContext saveAndWait:&error];
+//    if (nil != error) {
+//        [WMUtilities logError:error];
+//    }
+//    if (hasChanges) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
+//    }
 }
 
 - (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
 {
-    BOOL hasValues = [viewController.deviceGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.deviceGroup];
-        NSError *error = nil;
-        [self.managedObjectContext saveAndWait:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-    }
-    [viewController clearAllReferences];
+//    BOOL hasValues = [viewController.deviceGroup.values count] > 0;
+//    if (!hasValues) {
+//        [self.managedObjectContext deleteObject:viewController.deviceGroup];
+//        NSError *error = nil;
+//        [self.managedObjectContext saveAndWait:&error];
+//        if (nil != error) {
+//            [WMUtilities logError:error];
+//        }
+//    }
+//    [viewController clearAllReferences];
 }
 
 #pragma mark - PsychoSocialGroupViewControllerDelegate
 
 - (void)psychoSocialGroupViewControllerDidFinish:(WMPsychoSocialGroupViewController *)viewController
 {
-    BOOL hasChanges = self.managedObjectContext.hasChanges;
-    BOOL hasValues = [viewController.psychoSocialGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
-        hasChanges = YES;
-    }
-    [viewController clearAllReferences];
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    if (hasChanges) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kPsycoSocialNode]];
-    }
+//    BOOL hasChanges = self.managedObjectContext.hasChanges;
+//    BOOL hasValues = [viewController.psychoSocialGroup.values count] > 0;
+//    if (!hasValues) {
+//        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
+//        hasChanges = YES;
+//    }
+//    [viewController clearAllReferences];
+//    // save in order to update updatedAt
+//    NSError *error = nil;
+//    [self.managedObjectContext saveAndWait:&error];
+//    if (nil != error) {
+//        [WMUtilities logError:error];
+//    }
+//    if (hasChanges) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kPsycoSocialNode]];
+//    }
 }
 
 - (void)psychoSocialGroupViewControllerDidCancel:(WMPsychoSocialGroupViewController *)viewController
 {
-    BOOL hasValues = [viewController.psychoSocialGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
-        NSError *error = nil;
-        [self.managedObjectContext saveAndWait:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-    }
-    [viewController clearAllReferences];
+//    BOOL hasValues = [viewController.psychoSocialGroup.values count] > 0;
+//    if (!hasValues) {
+//        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
+//        NSError *error = nil;
+//        [self.managedObjectContext saveAndWait:&error];
+//        if (nil != error) {
+//            [WMUtilities logError:error];
+//        }
+//    }
+//    [viewController clearAllReferences];
 }
 
 #pragma mark - SkinAssessmentGroupViewControllerDelegate
 
 - (void)skinAssessmentGroupViewControllerDidSave:(WMSkinAssessmentGroupViewController *)viewController
 {
-    BOOL hasChanges = self.managedObjectContext.hasChanges;
-    BOOL hasValues = [viewController.skinAssessmentGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
-        hasChanges = YES;
-    }
-    [viewController clearAllReferences];
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    if (hasChanges) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kSkinAssessmentNode]];
-    }
+//    BOOL hasChanges = self.managedObjectContext.hasChanges;
+//    BOOL hasValues = [viewController.skinAssessmentGroup.values count] > 0;
+//    if (!hasValues) {
+//        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
+//        hasChanges = YES;
+//    }
+//    [viewController clearAllReferences];
+//    // save in order to update updatedAt
+//    NSError *error = nil;
+//    [self.managedObjectContext saveAndWait:&error];
+//    if (nil != error) {
+//        [WMUtilities logError:error];
+//    }
+//    if (hasChanges) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kSkinAssessmentNode]];
+//    }
 }
 
 - (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
 {
-    BOOL hasValues = [viewController.skinAssessmentGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
-        NSError *error = nil;
-        [self.managedObjectContext saveAndWait:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-    }
-    [viewController clearAllReferences];
+//    BOOL hasValues = [viewController.skinAssessmentGroup.values count] > 0;
+//    if (!hasValues) {
+//        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
+//        NSError *error = nil;
+//        [self.managedObjectContext saveAndWait:&error];
+//        if (nil != error) {
+//            [WMUtilities logError:error];
+//        }
+//    }
+//    [viewController clearAllReferences];
 }
 
 #pragma mark - TakePatientPhotoDelegate
@@ -1403,69 +1403,69 @@
 
 - (void)photoManager:(WMPhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata
 {
-    switch (self.photoAcquisitionState) {
-        case PhotoAcquisitionStateNone: {
-            NSAssert(NO, @"acquire photo in invalid state");
-            break;
-        }
-        case PhotoAcquisitionStateAcquireWoundPhoto: {
-            [self showProgressViewWithMessage:@"Processing Photo"];
-            // have photoManager start the process
-            WMWoundPhoto *woundPhoto = [photoManager processNewImage:image
-                                                            metadata:metadata
-                                                               wound:self.wound];
-            // save the photo
-            [self.managedObjectContext saveOnSuccess:^{
-                [self hideProgressView];
-                // save the photo now and wait for save to complete
-                self.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
-                [self updateToolbar];
-                // notify interface of completed task
-                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
-            } onFailure:^(NSError *error) {
-                [self hideProgressView];
-                if (nil != error) {
-                    [WMUtilities logError:error];
-                }
-                // TODO show alert on fail
-            }];
-            self.photoAcquisitionState = PhotoAcquisitionStateNone;
-            self.savingWoundPhotoFlag = NO;
-            break;
-        }
-        case PhotoAcquisitionStateAcquirePatientPhoto: {
-            [self showProgressViewWithMessage:@"Processing Photo"];
-            // process image in background using self.photoManager scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect
-            __weak __typeof(self) weakSelf = self;
-            [self.compassView updateForPatientPhotoProcessing];
-            NSData *theData = UIImagePNGRepresentation(image);
-            NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:[NSString stringWithFormat:@"%@.raw", self.patient.wmpatient_id] contentType:@"image/png"];
-            patient.thumbnail = picData;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                BOOL success = NO;
-                UIImage *face = [photoManager scaleAndCenterPatientPhoto:image rect:CGRectMake(0.0, 0.0, 256.0, 256.0) success:&success];
-                NSManagedObjectContext *managedObjectContext = [weakSelf.coreDataHelper.stackMobStore contextForCurrentThread];
-                WMPatient *patient = (WMPatient *)[managedObjectContext objectWithID:[weakSelf.patient objectID]];
-                if (success) {
-                    patient.faceDetectionFailed = NO;
-                    NSData *theData = UIImagePNGRepresentation(face);
-                    NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:[NSString stringWithFormat:@"%@.face", patient.wmpatient_id] contentType:@"image/png"];
-                    patient.thumbnail = picData;
-                } else {
-                    patient.faceDetectionFailed = YES;
-                }
-                [managedObjectContext saveOnSuccess:^{
-                    [self hideProgressView];
-                    [weakSelf.compassView updateForPatientPhotoProcessed];
-                    [weakSelf.compassView updateForPatient:weakSelf.patient];
-                } onFailure:^(NSError *){
-                    [self hideProgressView];
-                }];
-            });
-            self.photoAcquisitionState = PhotoAcquisitionStateNone;
-            break;
-        }
-    }
+//    switch (self.photoAcquisitionState) {
+//        case PhotoAcquisitionStateNone: {
+//            NSAssert(NO, @"acquire photo in invalid state");
+//            break;
+//        }
+//        case PhotoAcquisitionStateAcquireWoundPhoto: {
+//            [self showProgressViewWithMessage:@"Processing Photo"];
+//            // have photoManager start the process
+//            WMWoundPhoto *woundPhoto = [photoManager processNewImage:image
+//                                                            metadata:metadata
+//                                                               wound:self.wound];
+//            // save the photo
+//            [self.managedObjectContext saveOnSuccess:^{
+//                [self hideProgressView];
+//                // save the photo now and wait for save to complete
+//                self.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
+//                [self updateToolbar];
+//                // notify interface of completed task
+//                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
+//            } onFailure:^(NSError *error) {
+//                [self hideProgressView];
+//                if (nil != error) {
+//                    [WMUtilities logError:error];
+//                }
+//                // TODO show alert on fail
+//            }];
+//            self.photoAcquisitionState = PhotoAcquisitionStateNone;
+//            self.savingWoundPhotoFlag = NO;
+//            break;
+//        }
+//        case PhotoAcquisitionStateAcquirePatientPhoto: {
+//            [self showProgressViewWithMessage:@"Processing Photo"];
+//            // process image in background using self.photoManager scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect
+//            __weak __typeof(self) weakSelf = self;
+//            [self.compassView updateForPatientPhotoProcessing];
+//            NSData *theData = UIImagePNGRepresentation(image);
+//            NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:[NSString stringWithFormat:@"%@.raw", self.patient.wmpatient_id] contentType:@"image/png"];
+//            patient.thumbnail = picData;
+//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                BOOL success = NO;
+//                UIImage *face = [photoManager scaleAndCenterPatientPhoto:image rect:CGRectMake(0.0, 0.0, 256.0, 256.0) success:&success];
+//                NSManagedObjectContext *managedObjectContext = [weakSelf.coreDataHelper.stackMobStore contextForCurrentThread];
+//                WMPatient *patient = (WMPatient *)[managedObjectContext objectWithID:[weakSelf.patient objectID]];
+//                if (success) {
+//                    patient.faceDetectionFailed = NO;
+//                    NSData *theData = UIImagePNGRepresentation(face);
+//                    NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:[NSString stringWithFormat:@"%@.face", patient.wmpatient_id] contentType:@"image/png"];
+//                    patient.thumbnail = picData;
+//                } else {
+//                    patient.faceDetectionFailed = YES;
+//                }
+//                [managedObjectContext saveOnSuccess:^{
+//                    [self hideProgressView];
+//                    [weakSelf.compassView updateForPatientPhotoProcessed];
+//                    [weakSelf.compassView updateForPatient:weakSelf.patient];
+//                } onFailure:^(NSError *){
+//                    [self hideProgressView];
+//                }];
+//            });
+//            self.photoAcquisitionState = PhotoAcquisitionStateNone;
+//            break;
+//        }
+//    }
 }
 
 - (void)photoManagerDidCancelCaptureImage:(WMPhotoManager *)photoManager
@@ -1477,20 +1477,20 @@
 
 - (void)carePlanGroupViewControllerDidSave:(WMCarePlanGroupViewController *)viewController
 {
-    BOOL hasChanges = self.managedObjectContext.hasChanges;
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    [viewController clearAllReferences];
-    [self dismissViewControllerAnimated:YES completion:^{
-        // post notification if some values were added
-        if (hasChanges) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
-        }
-    }];
+//    BOOL hasChanges = self.managedObjectContext.hasChanges;
+//    // save in order to update updatedAt
+//    NSError *error = nil;
+//    [self.managedObjectContext saveAndWait:&error];
+//    if (nil != error) {
+//        [WMUtilities logError:error];
+//    }
+//    [viewController clearAllReferences];
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        // post notification if some values were added
+//        if (hasChanges) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
+//        }
+//    }];
 }
 
 - (void)carePlanGroupViewControllerDidCancel:(WMCarePlanGroupViewController *)viewController
@@ -1505,14 +1505,14 @@
 
 - (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
 {
-    [viewController clearAllReferences];
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
+//    [viewController clearAllReferences];
+//    // save in order to update updatedAt
+//    NSError *error = nil;
+//    [self.managedObjectContext saveAndWait:&error];
+//    if (nil != error) {
+//        [WMUtilities logError:error];
+//    }
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
 }
 
 - (void)woundTreatmentGroupsViewControllerDidCancel:(WMWoundTreatmentGroupsViewController *)viewController
@@ -1524,15 +1524,15 @@
 
 - (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
 {
-    [viewController clearAllReferences];
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    // notify interface of completed task
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundAssessmentNode)];
+//    [viewController clearAllReferences];
+//    // save in order to update updatedAt
+//    NSError *error = nil;
+//    [self.managedObjectContext saveAndWait:&error];
+//    if (nil != error) {
+//        [WMUtilities logError:error];
+//    }
+//    // notify interface of completed task
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundAssessmentNode)];
 }
 
 - (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController
@@ -1569,17 +1569,17 @@
 #pragma mark - UIAlertViewDelegate
 
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    // if we are to try again, check the status of our document
-    if (alertView.tag == kFailedToCreateAndSaveDocumentAlertTag) {
-        if (alertView.cancelButtonIndex == buttonIndex) {
-            return;
-        }
-        // else let's try to create/open a new document again
-        [self addPatientAction:nil];
-    }
-}
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    // if we are to try again, check the status of our document
+//    if (alertView.tag == kFailedToCreateAndSaveDocumentAlertTag) {
+//        if (alertView.cancelButtonIndex == buttonIndex) {
+//            return;
+//        }
+//        // else let's try to create/open a new document again
+//        [self addPatientAction:nil];
+//    }
+//}
 
 #pragma mark - UITableViewDelegate
 
@@ -1635,7 +1635,7 @@
     if (_removingTrackAndOrStageCells) {
         _removingTrackAndOrStageCells = NO;
         // we removed Track/Stage
-        [self performSelector:delayedScrollTrackAndScopeOffTop withObject:nil afterDelay:0.0];
+        [self delayedScrollTrackAndScopeOffTop];
     }
 }
 

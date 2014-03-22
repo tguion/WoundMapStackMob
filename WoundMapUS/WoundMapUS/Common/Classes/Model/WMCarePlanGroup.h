@@ -10,6 +10,9 @@
 @property (readonly, nonatomic) NSArray *sortedCarePlanValues;
 @property (readonly, nonatomic) BOOL isClosed;
 
+@property (readonly, nonatomic) NSArray *carePlanValuesAdded;
+@property (readonly, nonatomic) NSArray *carePlanValuesRemoved;
+
 + (WMCarePlanGroup *)activeCarePlanGroup:(WMPatient *)patient;
 + (WMCarePlanGroup *)mostRecentOrActiveCarePlanGroup:(WMPatient *)patient;
 + (NSDate *)mostRecentOrActiveCarePlanGroupDateModified:(WMPatient *)patient;

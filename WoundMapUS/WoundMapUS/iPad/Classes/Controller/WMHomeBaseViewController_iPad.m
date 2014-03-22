@@ -19,7 +19,6 @@
 #import "WMNavigationNodeButton.h"
 #import "WMUnderlayNavigationBar.h"
 #import "WMUnderlayToolbar.h"
-#import "User.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
 #import "WMNavigationTrack.h"
@@ -236,48 +235,48 @@
 
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
-    __block WMPatient *patient = viewController.patient;
-    // clear memory
-    [viewController clearAllReferences];
-    // update our reference to current patient
-    self.appDelegate.navigationCoordinator.patient = patient;
-    [_navigationNodePopoverController dismissPopoverAnimated:YES];
-    _navigationNodePopoverController = nil;
-    CoreDataHelper *coreDataHelper = self.coreDataHelper;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    NSPersistentStore *store = self.store;
-    // make sure the track/stage is set
-    if (nil == patient.stage) {
-        // set stage to initial for default clinical setting
-        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
-        WMNavigationStage *navigationStage = navigationTrack.initialStage;
-        patient.stage = navigationStage;
-    }
-    [self showProgressViewWithMessage:@"Saving patient record"];
-    __weak __typeof(self) weakSelf = self;
-    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-        [WMUtilities logError:error];
-        // make sure the user (sm_owner) has access via the consultants relationship
-        User *user = nil;
-        if([coreDataHelper.stackMobClient isLoggedIn]) {
-            user = [User userForUsername:weakSelf.appDelegate.stackMobUsername
-                    managedObjectContext:managedObjectContext persistentStore:store];
-            WMParticipant *participant = weakSelf.appDelegate.participant;
-            WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
-                                                                                           consultant:user
-                                                                                          participant:participant
-                                                                                               create:YES
-                                                                                 managedObjectContext:managedObjectContext
-                                                                                      persistentStore:store];
-            patientConsultant.acquiredFlagValue = NO;
-        }
-        [weakSelf.tableView reloadData];
-        // save again
-        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-            [WMUtilities logError:error];
-            [weakSelf hideProgressView];
-        }];
-    }];
+//    __block WMPatient *patient = viewController.patient;
+//    // clear memory
+//    [viewController clearAllReferences];
+//    // update our reference to current patient
+//    self.appDelegate.navigationCoordinator.patient = patient;
+//    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+//    _navigationNodePopoverController = nil;
+//    CoreDataHelper *coreDataHelper = self.coreDataHelper;
+//    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+//    NSPersistentStore *store = self.store;
+//    // make sure the track/stage is set
+//    if (nil == patient.stage) {
+//        // set stage to initial for default clinical setting
+//        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
+//        WMNavigationStage *navigationStage = navigationTrack.initialStage;
+//        patient.stage = navigationStage;
+//    }
+//    [self showProgressViewWithMessage:@"Saving patient record"];
+//    __weak __typeof(self) weakSelf = self;
+//    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+//        [WMUtilities logError:error];
+//        // make sure the user (sm_owner) has access via the consultants relationship
+//        User *user = nil;
+//        if([coreDataHelper.stackMobClient isLoggedIn]) {
+//            user = [User userForUsername:weakSelf.appDelegate.stackMobUsername
+//                    managedObjectContext:managedObjectContext persistentStore:store];
+//            WMParticipant *participant = weakSelf.appDelegate.participant;
+//            WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
+//                                                                                           consultant:user
+//                                                                                          participant:participant
+//                                                                                               create:YES
+//                                                                                 managedObjectContext:managedObjectContext
+//                                                                                      persistentStore:store];
+//            patientConsultant.acquiredFlagValue = NO;
+//        }
+//        [weakSelf.tableView reloadData];
+//        // save again
+//        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
+//            [WMUtilities logError:error];
+//            [weakSelf hideProgressView];
+//        }];
+//    }];
 }
 
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController

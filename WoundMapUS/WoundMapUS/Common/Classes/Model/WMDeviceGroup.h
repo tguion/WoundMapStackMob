@@ -11,9 +11,13 @@
 @property (readonly, nonatomic) NSArray *sortedDeviceValues;
 @property (readonly, nonatomic) BOOL isClosed;
 
+@property (readonly, nonatomic) NSArray *deviceValuesAdded;
+@property (readonly, nonatomic) NSArray *deviceValuesRemoved;
+
 + (BOOL)deviceGroupsHaveHistory:(WMPatient *)patient;
 + (NSInteger)deviceGroupsCount:(WMPatient *)patient;
 
++ (WMDeviceGroup *)deviceGroupForPatient:(WMPatient *)patient;
 + (WMDeviceGroup *)activeDeviceGroup:(WMPatient *)patient;
 + (WMDeviceGroup *)mostRecentOrActiveDeviceGroup:(WMPatient *)patient;
 + (NSDate *)mostRecentOrActiveDeviceGroupDateModified:(WMPatient *)patient;
