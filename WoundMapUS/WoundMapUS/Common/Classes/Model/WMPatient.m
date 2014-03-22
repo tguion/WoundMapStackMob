@@ -167,6 +167,11 @@ typedef enum {
     return [array componentsJoinedByString:@", "];
 }
 
+- (NSString *)identifierEMR
+{
+    return [[[self valueForKeyPath:@"ids.extension"] allObjects] componentsJoinedByString:@","];
+}
+
 - (NSInteger)genderIndex
 {
     NSInteger genderIndex = UISegmentedControlNoSegment;

@@ -7,7 +7,7 @@
 //
 
 #import "WMUnderlayNavigationBar.h"
-#import "DesignUtilities.h"
+#import "WMDesignUtilities.h"
 
 @interface WMUnderlayNavigationBar ()
 {
@@ -41,7 +41,7 @@
         
 		_underlayView = [[UIView alloc] initWithFrame:CGRectMake(0, -statusBarHeight, selfSize.width, selfSize.height + statusBarHeight)];
 		[_underlayView setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
-		[_underlayView setBackgroundColor:[DesignUtilities tintColorForBarInPopoverPUMP]];
+		[_underlayView setBackgroundColor:[WMDesignUtilities tintColorForBarInPopoverPUMP]];
 		[_underlayView setAlpha:0.36f];
 		[_underlayView setUserInteractionEnabled:NO];
 	}

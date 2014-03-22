@@ -8,7 +8,6 @@
 
 #import "WMBuildGroupViewController.h"
 #import "WMDefinitionTableViewCell.h"
-#import "UIView+Custom.h"
 #import "WMDefinition.h"
 #import "PDFRenderer.h"
 #import "WMDesignUtilities.h"
@@ -215,7 +214,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 - (IBAction)dismissInputViewAction:(id)sender
 {
     self.indexPathForDelayedFirstResponder = nil;
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
 }
 
 - (IBAction)initiateSearchAction:(id)sender
@@ -233,7 +232,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 - (IBAction)cancelAction:(id)sender
 {
     self.willCancelFlag = YES;
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
     // do not managedObjectContext rollback - we may have a wound that will be deleted
 }
 
@@ -242,7 +241,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 {
     self.willCancelFlag = NO;
     // get any values in text fields
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
 }
 
 #pragma mark - Open/Closed Cell

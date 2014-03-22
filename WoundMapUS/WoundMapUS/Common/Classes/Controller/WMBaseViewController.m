@@ -285,6 +285,12 @@
 
 #pragma mark - Notification handlers
 
+- (void)handleParticipantLoggedOut
+{
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm showLoginWithTitle:@"Sign In" andMessage:@"Your session has expired. You must sign in again to continue."];
+}
+
 - (void)handleApplicationWillResignActiveNotification
 {
     __block UIViewController *viewController = self.appDelegate.window.rootViewController.presentedViewController;

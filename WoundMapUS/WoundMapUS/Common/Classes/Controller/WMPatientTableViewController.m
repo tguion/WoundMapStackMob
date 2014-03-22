@@ -58,7 +58,7 @@
     [managedObjectContext MR_deleteObjects:@[patient]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [ffm deleteObject:patient ff:ff completionHandler:nil];
+    [ffm deleteObject:patient ff:ff addToQueue:YES completionHandler:nil];
     __weak __typeof(self) weakSelf = self;
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {

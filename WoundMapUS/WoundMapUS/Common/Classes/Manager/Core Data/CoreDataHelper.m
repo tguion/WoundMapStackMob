@@ -150,43 +150,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     return _networkMonitor;
 }
 
-#pragma mark - Save
-
-- (BOOL)saveContext:(NSManagedObjectContext *)managedObjectContext
-{
-    NSSet *updatedObjects = [managedObjectContext updatedObjects];
-    NSSet *deletedObjects = [managedObjectContext deletedObjects];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffManager = [WMFatFractalManager sharedInstance];
-    BOOL operationCacheIsEmpty = ffManager.isCacheEmpty;
-    __block BOOL _signInRequired = NO;
-    // now update backend - deletes
-    for (NSManagedObject *deletedObject in deletedObjects) {
-        if ([deletedObject valueForKey:@"ffUrl"]) {
-            [ffManager deleteObject:deletedObject ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                _signInRequired = signInRequired;
-            }];
-        }
-    }
-    // now save local
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        // now update backend - inserts need to be handled separately
-        // now update backend - updates
-        for (NSManagedObject *updatedObject in updatedObjects) {
-            [ffManager updateObject:updatedObject ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                _signInRequired = signInRequired;
-            }];
-        }
-    }];
-    if (operationCacheIsEmpty && !_signInRequired) {
-        [ffManager submitOperationsToQueue];
-    }
-    return _signInRequired;
-}
-
 #pragma mark - VALIDATION ERROR HANDLING
 
 - (void)showValidationError:(NSError *)anError

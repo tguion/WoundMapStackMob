@@ -12,7 +12,7 @@
 #import "WMWoundPhoto.h"
 #import "WMPhoto.h"
 #import "WMBradenScale.h"
-#import "WCBradenSection.h"
+#import "WMBradenSection.h"
 #import "WCBradenCell.h"
 #import "WMWoundTreatmentGroup.h"
 #import "WMWoundTreatment.h"

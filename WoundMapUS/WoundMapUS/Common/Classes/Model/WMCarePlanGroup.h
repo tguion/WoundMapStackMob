@@ -40,7 +40,7 @@
                                                     participant:(WMParticipant *)participant
                                                          create:(BOOL)create
                                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
-- (void)createEditEventsForParticipant:(WMParticipant *)participant;
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 - (void)incrementContinueCount;
 
 - (NSInteger)valuesCountForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory;

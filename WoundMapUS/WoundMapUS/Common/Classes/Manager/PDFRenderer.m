@@ -1078,7 +1078,7 @@ NSInteger kXPlotOffset = 0;
     [values addObject:(nil == self.patient.dateOfBirth ? [NSNull null]:[NSDateFormatter localizedStringFromDate:self.patient.dateOfBirth dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle])];
     [values addObject:(nil == self.patient.identifierEMR ? [NSNull null]:self.patient.identifierEMR)];
     [values addObject:(nil == self.patient.createdAt ? [NSNull null]:[NSDateFormatter localizedStringFromDate:self.patient.createdAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle])];
-    [values addObject:[NSString stringWithFormat:@"%d/%d", self.patient.woundCount, self.patient.photosCount]];
+    [values addObject:[NSString stringWithFormat:@"%ld/%ld", (long)self.patient.woundCount, (long)self.patient.photosCount]];
     [values addObject:bradenScaleValue];
     UIView *placeholderView = self.patientDataSummaryView;
     CGRect aFrame = [self.rootView convertRect:placeholderView.frame fromView:placeholderView.superview];
@@ -1117,7 +1117,7 @@ NSInteger kXPlotOffset = 0;
         y += boundingRect.size.height;
     }
     // draw Braden Scale graph
-    NSArray *bradenScales = [WMBradenScale sortedScoredBradenScales:self.patient.managedObjectContext];
+    NSArray *bradenScales = [WMBradenScale sortedScoredBradenScales:self.patient];
     aFrame = [self.rootView convertRect:self.bradenScaleGraphView.frame fromView:self.patientHeaderView];
     CGFloat width = CGRectGetWidth(aFrame);
     CGFloat height = CGRectGetHeight(aFrame);
@@ -1159,7 +1159,7 @@ NSInteger kXPlotOffset = 0;
                         nil == self.patient.identifierEMR ? @" ":self.patient.identifierEMR],
                        wound.shortName,
                        (nil == wound.woundType ? @"Unspecified":[wound.woundTypeForDisplay componentsJoinedByString:@", "]),
-                       (nil == wound.location ? @"Unspecified":wound.woundLocationAndPositionForDisplay),  nil];
+                       (nil == wound.locationValue ? @"Unspecified":wound.woundLocationAndPositionForDisplay),  nil];
     CGFloat valueX = 0.0;
     CGSize aSize= CGSizeZero;
     for (NSString *string in headings) {
@@ -1209,7 +1209,7 @@ NSInteger kXPlotOffset = 0;
     NSArray *values = [NSArray arrayWithObjects:
                        wound.shortName,
                        (nil == wound.woundType ? @"Unspecified":[wound.woundTypeForDisplay componentsJoinedByString:@", "]),
-                       (nil == wound.location ? @"Unspecified":wound.woundLocationAndPositionForDisplay),  nil];
+                       (nil == wound.locationValue ? @"Unspecified":wound.woundLocationAndPositionForDisplay),  nil];
     CGFloat valueX = 0.0;
     for (NSString *string in headings) {
         CGSize aSize = [string sizeWithAttributes:self.boldSmallAttributes];
@@ -1243,9 +1243,9 @@ NSInteger kXPlotOffset = 0;
 {
     NSManagedObjectID *objectID = [woundPhoto objectID];
     NSArray *sortedWoundPhotoIDs = woundPhoto.wound.sortedWoundPhotoIDs;
-    NSString *string = [NSString stringWithFormat:@"Photo %d/%d taken %@",
+    NSString *string = [NSString stringWithFormat:@"Photo %lu/%lu taken %@",
                         [sortedWoundPhotoIDs indexOfObject:objectID] + 1,
-                        [sortedWoundPhotoIDs count],
+                        (unsigned long)[sortedWoundPhotoIDs count],
                         [NSDateFormatter localizedStringFromDate:woundPhoto.createdAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle]];
     // draw woundPhoto first
     UIImage *image = woundPhoto.thumbnailLarge;
@@ -1396,8 +1396,9 @@ NSInteger kXPlotOffset = 0;
 - (void)drawPageHeader:(NSInteger)pageNumber
 {
     NSString *pdfHeaderPrefix = @"WoundMap Report";
-    if ([self.userDefaultsManager.pdfHeaderPrefix length] > 0) {
-        pdfHeaderPrefix = self.userDefaultsManager.pdfHeaderPrefix;
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    if ([userDefaultsManager.pdfHeaderPrefix length] > 0) {
+        pdfHeaderPrefix = userDefaultsManager.pdfHeaderPrefix;
     }
     NSString *headerString = [NSString stringWithFormat:@"%@ - %@", pdfHeaderPrefix, self.patient.lastNameFirstNameOrAnonymous];
     CGSize aSize = [headerString sizeWithAttributes:self.normalAttributes];
@@ -1407,7 +1408,7 @@ NSInteger kXPlotOffset = 0;
 
 - (void)drawPageFooter:(NSInteger)pageNumber
 {
-    NSString *footerString = [NSString stringWithFormat:@"Page %d (printed by WoundMap\u24C7 %@)", pageNumber, [NSDateFormatter localizedStringFromDate:[NSDate date] dateStyle:NSDateFormatterFullStyle timeStyle:NSDateFormatterFullStyle]];
+    NSString *footerString = [NSString stringWithFormat:@"Page %ld (printed by WoundMap\u24C7 %@)", (long)pageNumber, [NSDateFormatter localizedStringFromDate:[NSDate date] dateStyle:NSDateFormatterFullStyle timeStyle:NSDateFormatterFullStyle]];
     CGSize aSize = [footerString sizeWithAttributes:self.smallCenteredAttributes];
     CGRect aRect = CGRectInset(self.pageFooterView.frame, 0.0, roundf((CGRectGetHeight(self.pageFooterView.frame) - aSize.height)/2.0));
     [footerString drawInRect:aRect withAttributes:self.smallCenteredAttributes];

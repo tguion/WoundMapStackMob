@@ -214,7 +214,7 @@
     return event;
 }
 
-- (void)createEditEventsForParticipant:(WMParticipant *)participant
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
 {
     NSDictionary *committedValuesMap = [self committedValuesForKeys:[NSArray arrayWithObjects:@"values", nil]];
     NSSet *committedValues = [committedValuesMap objectForKey:@"values"];

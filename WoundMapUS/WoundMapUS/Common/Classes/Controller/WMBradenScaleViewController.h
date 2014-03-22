@@ -9,11 +9,18 @@
 #import "WMBaseViewController.h"
 
 @class WMBradenScale;
-@class WMBradenScaleViewController;
+@class WMBradenScaleViewController, WMBradenScaleInputViewController;
 
 @protocol BradenScaleDelegate <NSObject>
 
 - (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController;
+
+@end
+
+@protocol BradenScaleInputDelegate <NSObject>
+
+- (void)bradenScaleInputController:(WMBradenScaleInputViewController *)viewController didFinishWithBradenScale:(WMBradenScale *)bradenScale;
+- (void)bradenScaleInputControllerDidCancel:(WMBradenScaleInputViewController *)viewController;
 
 @end
 

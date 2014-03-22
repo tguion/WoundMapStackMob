@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <FFEF/FatFractal.h>
 
-typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOOL signInRequired);
+typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequired);
 
 @class WMFatFractal;
 @class WMParticipant, WMPatient;
@@ -41,11 +41,32 @@ typedef void (^WMOperationCallback)(NSError *error, NSManagedObject *object, BOO
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
 - (void)updatePatient:(WMPatient *)patient insertedObjectIDs:(NSArray *)insertedObjectIDs updatedObjectIDs:(NSArray *)updatedObjectIDs ff:(WMFatFractal *)ff;
 
-- (void)createObject:(id)object ffUrl:(NSString *)ffUrl ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
-- (void)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
-- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
-- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
-- (void)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)createObject:(id)object
+                             ffUrl:(NSString *)ffUrl
+                                ff:(WMFatFractal *)ff
+                        addToQueue:(BOOL)addToQueue
+                 completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)createObject:(id)object
+                             ffUrl:(NSString *)ffUrl
+                                ff:(WMFatFractal *)ff
+                        addToQueue:(BOOL)addToQueue
+                      insertAtHead:(BOOL)insertAtHead
+                 completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+
+- (NSBlockOperation *)grabBagAdd:(NSManagedObjectID *)itemObjectID
+                              to:(NSManagedObjectID *)objectObjectID
+                     grabBagName:(NSString *)name
+                              ff:(WMFatFractal *)ff
+                      addToQueue:(BOOL)addToQueue;
+- (NSBlockOperation *)grabBagRemove:(NSManagedObjectID *)itemObjectID
+                                 to:(NSManagedObjectID *)objectObjectID
+                        grabBagName:(NSString *)name
+                                 ff:(WMFatFractal *)ff
+                         addToQueue:(BOOL)addToQueue;
 
 @property (readonly, nonatomic) BOOL isCacheEmpty;
 - (void)clearOperationCache;

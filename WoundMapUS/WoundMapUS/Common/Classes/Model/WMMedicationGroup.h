@@ -6,10 +6,15 @@
 
 @interface WMMedicationGroup : _WMMedicationGroup  <AssessmentGroup> {}
 
+@property (readonly, nonatomic) BOOL hasInterventionEvents;
 @property (readonly, nonatomic) NSArray *sortedMedications;
 @property (readonly, nonatomic) NSArray *medicationsInGroup;
 @property (readonly, nonatomic) BOOL isClosed;
 
+@property (readonly, nonatomic) NSArray *medicationsAdded;
+@property (readonly, nonatomic) NSArray *medicationsRemoved;
+
++ (WMMedicationGroup *)medicationGroupForPatient:(WMPatient *)patient;
 + (WMMedicationGroup *)activeMedicationGroup:(WMPatient *)patient;
 + (WMMedicationGroup *)mostRecentOrActiveMedicationGroup:(WMPatient *)patient;
 + (NSDate *)mostRecentOrActiveMedicationGroupDateModified:(WMPatient *)patient;
@@ -31,7 +36,7 @@
                                                       participant:(WMParticipant *)participant
                                                            create:(BOOL)create
                                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
-- (void)createEditEventsForParticipant:(WMParticipant *)participant;
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 - (void)incrementContinueCount;
 
 @end

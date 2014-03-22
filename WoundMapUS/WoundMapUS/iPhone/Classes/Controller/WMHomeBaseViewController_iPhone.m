@@ -198,7 +198,6 @@
 {
     WMMedicationGroupViewController *medicationsViewController = self.medicationsViewController;
     medicationsViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
-    medicationsViewController.medicationGroup = [WMMedicationGroup activeMedicationGroup:self.patient];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:medicationsViewController];
     navigationController.delegate = self.appDelegate;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{

@@ -7,6 +7,8 @@
 //
 
 #import "WMBaseViewController.h"
+#import "WMBradenScaleViewController.h"
+#import "WMBradenSectionSelectCellViewController.h"
 
 @class WMBradenScale, WMBradenSection;
 
@@ -18,7 +20,7 @@
 
 @interface WMBradenScaleInputViewController : WMBaseViewController
 
-@property (weak, nonatomic) id<BradenSectionCellDelegate> delegate;
+@property (weak, nonatomic) id<BradenScaleInputDelegate> delegate;
 
 @property (strong, nonatomic) WMBradenScale *bradenScale;
 

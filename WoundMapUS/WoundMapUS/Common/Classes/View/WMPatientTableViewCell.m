@@ -279,7 +279,7 @@
     } else {
         textAttributes = self.identifierAttributes;
     }
-    string = [[[_patient valueForKeyPath:@"ids.extension"] allObjects] componentsJoinedByString:@","];
+    string = _patient.identifierEMR;
     if ([string length] > 0) {
         [string drawInRect:textRect withAttributes:textAttributes];
         textRect.origin.y += CGRectGetHeight(textRect);

@@ -47,6 +47,6 @@
                                                participant:(WMParticipant *)participant
                                                     create:(BOOL)create
                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
-- (void)createEditEventsForParticipant:(WMParticipant *)participant;
+- (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 
 @end

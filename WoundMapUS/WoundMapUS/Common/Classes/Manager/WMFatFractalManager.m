@@ -189,40 +189,84 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 
 #pragma mark - Create
 
-- (void)createObject:(id)object ffUrl:(NSString *)ffUrl ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)createObject:(id)object
+                             ffUrl:(NSString *)ffUrl
+                                ff:(WMFatFractal *)ff
+                        addToQueue:(BOOL)addToQueue
+                 completionHandler:(WMOperationCallback)completionHandler
 {
-    NSBlockOperation *operation = [self createOperation:object collection:ffUrl ff:ff completionHandler:completionHandler];
-    [_operationQueue addOperation:operation];
+    return [self createObject:object
+                        ffUrl:ffUrl
+                           ff:ff
+                   addToQueue:addToQueue
+                 insertAtHead:NO
+            completionHandler:completionHandler];
 }
 
-- (void)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)createObject:(id)object
+                             ffUrl:(NSString *)ffUrl
+                                ff:(WMFatFractal *)ff
+                        addToQueue:(BOOL)addToQueue
+                      insertAtHead:(BOOL)insertAtHead
+                 completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *operation = [self createOperation:object collection:ffUrl ff:ff completionHandler:completionHandler];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        if (insertAtHead) {
+            [_operationCache insertObject:operation atIndex:0];
+        } else {
+            [_operationCache addObject:operation];
+        }
+    }
+    return operation;
+}
+
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue  completionHandler:(WMOperationCallback)completionHandler
 {
     NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection ff:ff completionHandler:completionHandler];
-    [_operationQueue addOperation:operation];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        [_operationCache addObject:operation];
+    }
+    return operation;
 }
 
 #pragma mark - Updates
 
-- (void)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler
 {
     NSBlockOperation *operation = [self updateOperation:object ff:ff completionHandler:completionHandler];
-    [_operationQueue addOperation:operation];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        [_operationCache addObject:operation];
+    }
+    return operation;
 }
 
 #pragma mark - Deletes
 
-- (void)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler
 {
     NSBlockOperation *operation = [self deleteOperation:object ff:ff completionHandler:completionHandler];
-    [_operationQueue addOperation:operation];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        [_operationCache addObject:operation];
+    }
+    return operation;
 }
 
 #pragma mark - Load Blobs
 
-- (void)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
 {
     NSBlockOperation *operation = [self loadBlobsOperation:object ff:ff completionHandler:completionHandler];
     [_operationQueue addOperation:operation];
+    return operation;
 }
 
 #pragma mark - Operations Cache
@@ -729,12 +773,12 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                         signInRequired = YES;
                     }
                     [WMUtilities logError:error];
-                } else if ([object isKindOfClass:[NSManagedObject class]]) {
+                } else {
                     object = [object MR_inContext:managedObjectContext];
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }
                 if (completionHandler) {
-                    completionHandler(error, object, signInRequired);
+                    completionHandler(error, objectID, signInRequired);
                 }
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 BOOL signInRequired = NO;
@@ -747,7 +791,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     [ff queueCreateObj:object atUri:ffUrl];
                 }
                 if (completionHandler) {
-                    completionHandler(error, object, signInRequired);
+                    completionHandler(error, objectID, signInRequired);
                 }
             }];
         }
@@ -832,6 +876,81 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             completionHandler(error, object, signInRequired);
         }];
     }];
+    return operation;
+}
+
+#pragma mark - Grab bags
+
+- (NSBlockOperation *)grabBagAdd:(NSManagedObjectID *)itemObjectID
+                              to:(NSManagedObjectID *)objectObjectID
+                     grabBagName:(NSString *)name
+                              ff:(WMFatFractal *)ff
+                      addToQueue:(BOOL)addToQueue
+{
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        id item = [managedObjectContext objectWithID:itemObjectID];
+        id object = [managedObjectContext objectWithID:objectObjectID];
+        NSString *itemFFURL = [item valueForKey:@"ffUrl"];
+        NSString *objectFFURL = [object valueForKey:@"ffUrl"];
+        NSParameterAssert([itemFFURL length] > 0);
+        NSParameterAssert([objectFFURL length] > 0);
+        [ff queueGrabBagAddItemAtUri:itemFFURL toObjAtUri:objectFFURL grabBagName:name];
+    }];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        [_operationCache addObject:operation];
+    }
+    return operation;
+}
+
+- (NSBlockOperation *)grabBagRemove:(NSManagedObjectID *)itemObjectID
+                                 to:(NSManagedObjectID *)objectObjectID
+                        grabBagName:(NSString *)name
+                                 ff:(WMFatFractal *)ff
+                         addToQueue:(BOOL)addToQueue
+{
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        id item = [managedObjectContext objectWithID:itemObjectID];
+        id object = [managedObjectContext objectWithID:objectObjectID];
+        NSString *itemFFURL = [item valueForKey:@"ffUrl"];
+        NSString *objectFFURL = [object valueForKey:@"ffUrl"];
+        NSParameterAssert([itemFFURL length] > 0);
+        NSParameterAssert([objectFFURL length] > 0);
+        [ff queueGrabBagRemoveItemAtUri:itemFFURL fromObjAtUri:objectFFURL grabBagName:name];
+    }];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        [_operationCache addObject:operation];
+    }
+    return operation;
+}
+
+- (NSBlockOperation *)grabBagAddItemAtUri:(NSString *)itemUri
+                               toObjAtUri:(NSString *)objUri
+                              grabBagName:(NSString *)gbName
+                                       ff:(WMFatFractal *)ff
+                               addToQueue:(BOOL)addToQueue
+                        completionHandler:(WMOperationCallback)completionHandler
+{
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        [ff grabBagAddItemAtFfUrl:itemUri
+                     toObjAtFfUrl:objUri
+                      grabBagName:gbName
+                       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                           if (completionHandler) {
+                               completionHandler(error, object, NO);
+                           }
+                       }];
+    }];
+    if (addToQueue) {
+        [_operationQueue addOperation:operation];
+    } else {
+        [_operationCache addObject:operation];
+    }
     return operation;
 }
 

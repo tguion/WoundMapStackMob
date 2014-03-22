@@ -23,6 +23,7 @@
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (readonly, nonatomic) NSString *lastNameFirstNameOrAnonymous;
+@property (readonly, nonatomic) NSString *identifierEMR;
 @property (nonatomic) BOOL faceDetectionFailed;
 @property (readonly, nonatomic) NSInteger genderIndex;
 @property (readonly, nonatomic) WMWound *lastActiveWound;

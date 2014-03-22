@@ -12,6 +12,8 @@
 #import "WMNavigationNodeButton.h"
 #import "WMNavigationPatientPhotoButton.h"
 #import "WMPatient.h"
+#import "WMBradenScale.h"
+#import "WMMedicationGroup.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMNavigationTrack.h"
@@ -21,6 +23,7 @@
 #import "WMPolicyManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMUserDefaultsManager.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import <objc/runtime.h>
@@ -68,9 +71,6 @@
     self.navigationItem.rightBarButtonItem = barButtonItem;
     // show table view separators all the way across
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    // do all work locally
-    self.fetchPolicy = SMFetchPolicyTryNetworkElseCache;
-    self.savePolicy = SMSavePolicyNetworkThenCache;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -193,20 +193,17 @@
 
 - (WMNavigationNode *)initialStageNavigationNode
 {
-    return [WMNavigationNode initialStageNavigationNode:self.managedObjectContext
-                                        persistentStore:self.store];
+    return [WMNavigationNode initialStageNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)followupStageNavigationNode
 {
-    return [WMNavigationNode followupStageNavigationNode:self.managedObjectContext
-                                         persistentStore:self.store];
+    return [WMNavigationNode followupStageNavigationNode:self.managedObjectContext];
 }
 
 - (WMNavigationNode *)dischargeStageNavigationNode
 {
-    return [WMNavigationNode dischargeStageNavigationNode:self.managedObjectContext
-                                          persistentStore:self.store];
+    return [WMNavigationNode dischargeStageNavigationNode:self.managedObjectContext];
 }
 
 #pragma mark - Toolbar
@@ -214,7 +211,7 @@
 - (void)updateToolbar
 {
     [self setToolbarItems:self.toolbarItems];
-    self.reviewPhotosBarButtonItem.enabled = (self.wound.woundPhotosCount > 0 ? YES:NO);
+    self.reviewPhotosBarButtonItem.enabled = ([WMWound woundPhotoCountForWound:self.wound] > 0 ? YES:NO);
 }
 
 - (NSArray *)toolbarItems
@@ -448,7 +445,7 @@
 - (void)updatePatientNodeControls
 {
     WMPatient *patient = self.patient;
-    NSInteger patientCount = self.patientManager.patientCount;
+    NSInteger patientCount = [WMPatient patientCount:self.managedObjectContext];
     // select
     if (0 == patientCount) {
         // no patients (documents)
@@ -665,6 +662,24 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
+    // create new wound
+    NSParameterAssert(nil != self.patient);
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSAssert(ffm.isCacheEmpty, @"Expected ffm cache to be empty");
+    NSString *patientFFURL = self.patient.ffUrl;
+    NSAssert([patientFFURL length] > 0, @"Expected patient.ffUrl");
+    WMWound *wound = [WMWound instanceWithPatient:self.patient];
+    [ffm createObject:wound ffUrl:[WMWound entityName] ff:ff addToQueue:NO completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMWound *wound = (WMWound *)object;
+        NSString *woundFFURL = wound.ffUrl;
+        NSAssert([woundFFURL length] > 0, @"Expected wound.ffUrl");
+        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            [ff queueGrabBagAddItemAtUri:woundFFURL toObjAtUri:patientFFURL grabBagName:WMPatientRelationships.wounds];
+        }];
+    }];
+    self.appDelegate.navigationCoordinator.wound = wound;
     [self navigateToWoundDetailViewControllerForNewWound:navigationNodeButton];
 }
 
@@ -684,27 +699,20 @@
 {
     UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
     WMNavigationTrack *navigationTrack = self.appDelegate.navigationCoordinator.navigationTrack;
-    NSManagedObjectContext *managedObjectContext = [navigationTrack managedObjectContext];
     switch (segmentedControl.selectedSegmentIndex) {
         case 0: {
             // initial (admit)
-            self.appDelegate.navigationCoordinator.navigationStage = [WMNavigationStage initialStageForTrack:navigationTrack
-                                                                                        managedObjectContext:managedObjectContext
-                                                                                             persistentStore:nil];
+            self.appDelegate.navigationCoordinator.navigationStage = [WMNavigationStage initialStageForTrack:navigationTrack];
             break;
         }
         case 1: {
             // follow-up
-            self.appDelegate.navigationCoordinator.navigationStage = [WMNavigationStage followupStageForTrack:navigationTrack
-                                                                                         managedObjectContext:managedObjectContext
-                                                                                              persistentStore:nil];
+            self.appDelegate.navigationCoordinator.navigationStage = [WMNavigationStage followupStageForTrack:navigationTrack];
             break;
         }
         case 2: {
             // discharge
-            self.appDelegate.navigationCoordinator.navigationStage = [WMNavigationStage dischargeStageForTrack:navigationTrack
-                                                                                          managedObjectContext:managedObjectContext
-                                                                                               persistentStore:nil];
+            self.appDelegate.navigationCoordinator.navigationStage = [WMNavigationStage dischargeStageForTrack:navigationTrack];
             break;
         }
     }
@@ -938,7 +946,7 @@
 - (void)navigateToCarePlan
 {
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
-    WMNavigationNode *navigationNode = [WMNavigationNode carePlanNavigationNode:self.managedObjectContext persistentStore:nil];
+    WMNavigationNode *navigationNode = [WMNavigationNode carePlanNavigationNode:self.managedObjectContext];
     NSInteger count = [policyManager closeExpiredRecords:navigationNode];
     WMCarePlanGroupViewController *carePlanGroupViewController = self.carePlanGroupViewController;
     carePlanGroupViewController.recentlyClosedCount = count;
@@ -1190,15 +1198,21 @@
 - (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController
 {
     // save
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            // commit to back end
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm submitOperationsToQueue];
+        } else {
+            [WMUtilities logError:error];
+        }
+    }];
     // clear memory
     [viewController clearAllReferences];
-    // update UI
-    [self.navigationPatientWoundContainerView updateContentForPatient];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // update UI
+        [self.navigationPatientWoundContainerView updateContentForPatient];
+    }];
 }
 
 - (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController
@@ -1206,19 +1220,31 @@
     if (viewController.isNewWound) {
         [self.appDelegate.navigationCoordinator deleteWound:viewController.wound];
     }
-    // clear memory
-    [viewController clearAllReferences];
+    // abort back end
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm clearOperationCache];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // update UI
+        [self.navigationPatientWoundContainerView updateContentForPatient];
+    }];
 }
 
 - (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
 {
+    NSString *patientFFURL = wound.patient.ffUrl;
+    NSString *woundFFURL = wound.ffUrl;
+    NSParameterAssert([patientFFURL length] > 0);
+    NSParameterAssert([woundFFURL length] > 0);
     [self.appDelegate.navigationCoordinator deleteWound:wound];
     // save
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        // commit to back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        [ffm deleteObject:wound ff:ff addToQueue:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            [ff queueGrabBagRemoveItemAtUri:woundFFURL fromObjAtUri:patientFFURL grabBagName:WMPatientRelationships.wounds];
+        }];
+    }];
     // clear memory
     [viewController clearAllReferences];
 }
@@ -1227,54 +1253,31 @@
 
 - (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController
 {
-    BOOL hasScore = viewController.bradenScale.scoreValue > 0;
-    if (!hasScore) {
-        [self.managedObjectContext deleteObject:viewController.bradenScale];
-    }
     [viewController clearAllReferences];
     // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
+        } else {
+            [WMUtilities logError:error];
+        }
+    }];
 }
 
 #pragma mark - MedicationGroupViewControllerDelegate
 
 - (void)medicationGroupViewControllerDidSave:(WMMedicationGroupViewController *)viewController
 {
-    BOOL hasChanges = self.managedObjectContext.hasChanges;
-    BOOL hasValues = [[viewController.medicationGroup medications] count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.medicationGroup];
-        hasChanges = YES;
-    }
-    [viewController clearAllReferences];
-    // save in order to update updatedAt
-    NSError *error = nil;
-    [self.managedObjectContext saveAndWait:&error];
-    if (nil != error) {
-        [WMUtilities logError:error];
-    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
 
 - (void)medicationGroupViewControllerDidCancel:(WMMedicationGroupViewController *)viewController
 {
-    BOOL hasValues = [viewController.medicationGroup.values count] > 0;
-    if (!hasValues) {
-        [self.managedObjectContext deleteObject:viewController.medicationGroup];
-        NSError *error = nil;
-        [self.managedObjectContext saveAndWait:&error];
-        if (nil != error) {
-            [WMUtilities logError:error];
-        }
-    }
-    [viewController clearAllReferences];
+    // may have removed all medications for group, and then deleted the group, so update interface
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kMedicationsNode]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
 
 #pragma mark - DevicesViewControllerDelegate

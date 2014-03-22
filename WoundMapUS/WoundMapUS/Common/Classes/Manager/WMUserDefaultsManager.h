@@ -24,6 +24,7 @@
 @property (strong, nonatomic) NSArray *emailPDFbccRecipients;
 @property (strong, nonatomic) NSString *pdfHeaderPrefix;
 @property (nonatomic) NSDictionary *lastRefreshTimeMap;
+@property (nonatomic) NSString *woundPositionTermKey;           // key used to display wound position (Left, Right, etc)
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext;
 

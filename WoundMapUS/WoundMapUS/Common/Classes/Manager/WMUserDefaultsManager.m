@@ -109,6 +109,23 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSString *)woundPositionTermKey
+{
+    NSString *string = [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.woundPositionTermKey"];
+    if (nil == string) {
+        string = @"title";
+        self.woundPositionTermKey = string;
+    }
+    return string;
+}
+
+- (void)setWoundPositionTermKey:(NSString *)woundPositionTermKey
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:woundPositionTermKey forKey:@"com.mobilehealthware.woundmap.woundPositionTermKey"];
+    [userDefaults synchronize];
+}
+
 #pragma mark - FF
 
 - (NSDictionary *)lastRefreshTimeMap
