@@ -10,14 +10,19 @@
 #import "WMTextFieldTableViewCell.h"
 #import "WMParticipant.h"
 #import "WMFatFractalManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
+#import "NSObject+performBlockAfterDelay.h"
 
 @interface WMSignInViewController () <UITextFieldDelegate>
 
 @property (strong, nonatomic) NSString *userNameTextInput;
 @property (strong, nonatomic) NSString *passwordTextInput;
 @property (strong, nonatomic) IBOutlet UIView *signInButtonContainerView;
+@property (strong, nonatomic) IBOutlet UIButton *signInButton;
+
+@property (readonly, nonatomic) BOOL hasSufficientInput;
 
 @end
 
@@ -53,6 +58,16 @@
 
 #pragma mark - Core
 
+- (BOOL)hasSufficientInput
+{
+    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3);
+}
+
+- (void)updateSignInButton
+{
+    _signInButton.enabled = self.hasSufficientInput;
+}
+
 #pragma mark - Actions
 
 - (IBAction)cancelAction:(id)sender
@@ -69,9 +84,9 @@
 - (void)delayedSignInAction
 {
     NSString *message = nil;
-    if ([self.userNameTextInput length] == 0) {
+    if ([self.userNameTextInput length] < 3) {
         message = @"Please enter a valid username";
-    } else if ([self.passwordTextInput length] == 0) {
+    } else if ([self.passwordTextInput length] < 3) {
         message = @"Please enter a valid password";
     }
     if ([message length] > 0) {
@@ -108,28 +123,46 @@
 
 #pragma mark - UITextFieldDelegate
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    __weak __typeof(&*self)weakSelf = self;
+    [self performBlock:^{
+        switch (textField.tag) {
+            case 1000: {
+                weakSelf.userNameTextInput = textField.text;
+                break;
+            }
+            case 1001: {
+                weakSelf.passwordTextInput = textField.text;
+                break;
+            }
+        }
+        [weakSelf updateSignInButton];
+    } afterDelay:0.1];
+    return YES;
+}
+
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    UITableViewCell *cell = [self cellForView:textField];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    switch (indexPath.section) {
-        case 0: {
-            switch (indexPath.row) {
-                case 0: {
-                    // userName
-                    self.userNameTextInput = textField.text;
-                    break;
-                }
-                case 1: {
-                    // password
-                    self.passwordTextInput = textField.text;
-                    break;
-                }
-            }
+    switch (textField.tag) {
+        case 1000: {
+            // userName
+            self.userNameTextInput = textField.text;
+            break;
+        }
+        case 1001: {
+            // password
+            self.passwordTextInput = textField.text;
             break;
         }
     }
+}
+
+// called when 'return' key pressed. return NO to ignore.
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    return self.hasSufficientInput;
 }
 
 #pragma mark - UITableViewDelegate
@@ -137,6 +170,11 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     return _signInButtonContainerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 44.0;
 }
 
 #pragma mark - UITableViewDataSource
@@ -163,15 +201,23 @@
 {
     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
     UITextField *textField = myCell.textField;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.delegate = self;
     switch (indexPath.row) {
         case 0: {
-            textField.delegate = self;
-            textField.placeholder = @"Enter user name";
+            textField.tag = 1000;
+            WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+            [myCell updateWithLabelText:@"User Name" valueText:userDefaultsManager.lastUserName valuePrompt:@"Enter user name"];
             break;
         }
         case 1: {
+            textField.tag = 1001;
             textField.delegate = self;
             textField.secureTextEntry = YES;
+            [myCell updateWithLabelText:@"Password" valueText:@"" valuePrompt:@"Enter password"];
             break;
         }
     }

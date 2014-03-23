@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMSignInViewController">
             <connections>
+                <outlet property="signInButton" destination="13" id="1pU-dB-eag"/>
                 <outlet property="signInButtonContainerView" destination="12" id="L6Q-Oi-5dd"/>
                 <outlet property="view" destination="4" id="Fc6-qM-HyP"/>
             </connections>
@@ -25,10 +26,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13">
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="8Vk-Wi-Xuf"/>
                         <constraint firstAttribute="height" constant="44" id="yE2-Uq-BSb"/>
                     </constraints>
                     <state key="normal" title="Sign In">
@@ -41,9 +43,10 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="13" firstAttribute="top" secondItem="12" secondAttribute="top" id="X7B-Xk-MVy"/>
-                <constraint firstItem="13" firstAttribute="leading" secondItem="12" secondAttribute="leading" id="r0v-TT-ETb"/>
-                <constraint firstAttribute="trailing" secondItem="13" secondAttribute="trailing" id="zo9-Iz-UzY"/>
+                <constraint firstAttribute="trailing" secondItem="13" secondAttribute="trailing" id="3sw-Hc-4uU"/>
+                <constraint firstItem="13" firstAttribute="leading" secondItem="12" secondAttribute="leading" id="H8b-pE-2PI"/>
+                <constraint firstAttribute="bottom" secondItem="13" secondAttribute="bottom" id="Pzy-V5-2ir"/>
+                <constraint firstItem="13" firstAttribute="top" secondItem="12" secondAttribute="top" id="hco-7C-yvy"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>

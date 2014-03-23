@@ -36,6 +36,20 @@ NSDateFormatter * DOB_Formatter;
 {
 }
 
+#pragma mark - Pariticipant
+
+- (NSString *)lastUserName
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.lastUserName"];
+}
+
+- (void)setLastUserName:(NSString *)lastUserName
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastUserName forKey:@"com.mobilehealthware.woundmap.lastUserName"];
+    [userDefaults synchronize];
+}
+
 #pragma mark - Patient
 
 - (NSString *)lastTeamName

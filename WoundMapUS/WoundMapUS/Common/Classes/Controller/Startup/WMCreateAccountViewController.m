@@ -17,6 +17,7 @@
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
+#import "NSObject+performBlockAfterDelay.h"
 
 #define kMinimumUserNameLength 3
 
@@ -34,6 +35,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 @property (strong, nonatomic) NSString *passwordTextInput;
 @property (strong, nonatomic) NSString *passwordConfirmTextInput;
 @property (strong, nonatomic) IBOutlet UIView *signInButtonContainerView;
+@property (strong, nonatomic) IBOutlet UIButton *signInButton;
+
+@property (readonly, nonatomic) BOOL hasSufficientCreateAccountInput;
 
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
@@ -59,7 +63,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                           target:self
                                                                                           action:@selector(doneAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
@@ -113,6 +117,16 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         }
     }
     return cellReuseIdentifier;
+}
+
+- (BOOL)hasSufficientCreateAccountInput
+{
+    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput]);
+}
+
+- (void)updateSignInButton
+{
+    _signInButton.enabled = self.hasSufficientCreateAccountInput;
 }
 
 - (BOOL)checkForValidUserName
@@ -245,42 +259,69 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    UITableViewCell *cell = [self cellForView:textField];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    NSIndexPath *indexPathPassword = [NSIndexPath indexPathForRow:1 inSection:0];
-    NSIndexPath *indexPathPasswordConfirm = [NSIndexPath indexPathForRow:2 inSection:0];
-    if ([indexPath isEqual:indexPathPassword]) {
-        self.passwordConfirmTextInput = nil;
-        WMTextFieldTableViewCell *cell = (WMTextFieldTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathPasswordConfirm];
-        cell.textField.text = nil;
+    switch (textField.tag) {
+        case 1000: {
+            // user name
+            
+            break;
+        }
+        case 1001: {
+            // password
+            self.passwordConfirmTextInput = nil;
+            NSIndexPath *indexPathPasswordConfirm = [NSIndexPath indexPathForRow:2 inSection:0];
+            WMTextFieldTableViewCell *cell = (WMTextFieldTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPathPasswordConfirm];
+            cell.textField.text = nil;
+            break;
+        }
+        case 1002: {
+            // password confirm
+            
+            break;
+        }
     }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    __weak __typeof(&*self)weakSelf = self;
+    [self performBlock:^{
+        switch (textField.tag) {
+            case 1000: {
+                weakSelf.userNameTextInput = textField.text;
+                break;
+            }
+            case 1001: {
+                weakSelf.passwordTextInput = textField.text;
+                break;
+            }
+            case 1002: {
+                weakSelf.passwordConfirmTextInput = textField.text;
+                break;
+            }
+        }
+        [weakSelf updateSignInButton];
+    } afterDelay:0.1];
+    return YES;
 }
 
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    UITableViewCell *cell = [self cellForView:textField];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    switch (indexPath.section) {
-        case 0: {
-            switch (indexPath.row) {
-                case 0: {
-                    // userName
-                    self.userNameTextInput = textField.text;
-                    break;
-                }
-                case 1: {
-                    // password
-                    self.passwordTextInput = textField.text;
-                    break;
-                }
-                case 2: {
-                    // password
-                    self.passwordConfirmTextInput = textField.text;
-                    [self checkForMatchingPasswords];
-                    break;
-                }
-            }
+    switch (textField.tag) {
+        case 1000: {
+            // userName
+            self.userNameTextInput = textField.text;
+            break;
+        }
+        case 1001: {
+            // password
+            self.passwordTextInput = textField.text;
+            break;
+        }
+        case 1002: {
+            // password
+            self.passwordConfirmTextInput = textField.text;
+            [self checkForMatchingPasswords];
             break;
         }
     }
@@ -360,6 +401,11 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return nil;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return  44.0;
+}
+
 // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -430,11 +476,21 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     switch (indexPath.section) {
         case 0: {
+            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            UITextField *textField = nil;
+            if (self.state == CreateAccountInitial) {
+                textField = myCell.textField;
+                textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                textField.returnKeyType = UIReturnKeyDone;
+                textField.delegate = self;
+            }
             switch (indexPath.row) {
                 case 0: {
                     if (self.state == CreateAccountInitial) {
-                        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-                        [myCell updateWithLabelText:@"User name" valueText:self.participant.userName valuePrompt:@"Unique username"];
+                        myCell.textField.tag = 1000;
+                        [myCell updateWithLabelText:@"User name" valueText:_userNameTextInput valuePrompt:@"Unique username"];
                     } else {
                         cell.textLabel.text = @"User Name";
                         cell.detailTextLabel.text = self.userNameTextInput;
@@ -442,15 +498,15 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     break;
                 }
                 case 1: {
-                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    myCell.textField.tag = 1001;
                     myCell.textField.secureTextEntry = YES;
-                    [myCell updateWithLabelText:@"Password" valueText:self.passwordTextInput valuePrompt:@"Enter a password"];
+                    [myCell updateWithLabelText:@"Password" valueText:_passwordTextInput valuePrompt:@"Enter a password"];
                     break;
                 }
                 case 2: {
-                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    myCell.textField.tag = 1002;
                     myCell.textField.secureTextEntry = YES;
-                    [myCell updateWithLabelText:@"Password Confirm" valueText:self.passwordConfirmTextInput valuePrompt:@"Confirm password"];
+                    [myCell updateWithLabelText:@"Password Confirm" valueText:_passwordConfirmTextInput valuePrompt:@"Confirm password"];
                     break;
                 }
             }

@@ -14,6 +14,7 @@
 
 + (WMUserDefaultsManager *)sharedInstance;
 
+@property (nonatomic) NSString *lastUserName;
 @property (nonatomic) NSString *lastTeamName;
 @property (nonatomic) NSString *lastPatientId;
 @property (nonatomic) NSDate *lastDateOfBirth;
