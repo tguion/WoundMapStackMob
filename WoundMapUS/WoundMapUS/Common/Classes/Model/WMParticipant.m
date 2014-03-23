@@ -50,6 +50,19 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     return participant;
 }
 
++ (WMParticipant *)participantForUserName:(NSString *)userName
+                                   create:(BOOL)create
+                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    WMParticipant *participant = [WMParticipant MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"userName == %@", userName]
+                                                                inContext:managedObjectContext];
+    if (create && nil == participant) {
+        participant = [self instanceWithManagedObjectContext:managedObjectContext persistentStore:nil];
+        participant.userName = userName;
+    }
+    return participant;
+}
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];

@@ -14,8 +14,12 @@
 #import "WMParticipant.h"
 #import "WMSeedDatabaseManager.h"
 #import "WMUtilities.h"
+#import "KeychainItemWrapper.h"
 
-static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
+static NSString *baseUrl = @"http://localhost:8080/woundmapus";
+static NSString *sslUrl = @"https://localhost:8443/woundmapus";
+//static NSString *baseUrl = @"http://mobilehealthware/fatfractal.com/woundmapus";
+//static NSString *sslUrl = @"https://mobilehealthware/fatfractal.com/woundmapus";
 
 @implementation WMFatFractal
 
@@ -24,7 +28,8 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
     static WMFatFractal *SharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl];
+        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
+        SharedInstance.debug = YES;
         SharedInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
         // Then just make sure and let the SDK know you want to use this class instead of FFUser
         [SharedInstance registerClass:[WMParticipant class] forClazz:@"FFUser"];
@@ -79,6 +84,11 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
 
 @end
 
+// Instantiating KeychainItemWrapper class as a singleton through AppDelegate
+static KeychainItemWrapper *_keychainItem;
+// Keychain Identifier
+static NSString *keychainIdentifier = @"WoundMapUSKeychain";
+
 @interface WCAppDelegate ()
 
 @property (nonatomic, strong, readwrite) CoreDataHelper *coreDataHelper;
@@ -90,6 +100,11 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
 @implementation WCAppDelegate
 
 #define debug 1
+
++ (KeychainItemWrapper *)keychainItem
+{
+    return _keychainItem;
+}
 
 - (CoreDataHelper *)coreDataHelper
 {
@@ -130,10 +145,67 @@ static NSString *baseUrl = @"https://localhost:8443/WoundMapUS";
     }];
 }
 
++ (BOOL)checkForAuthentication
+{
+    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    if ([ff loggedIn] || ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""])) {
+        NSLog(@"checkForAuthentication: FFUser logged in.");
+        // authenticated - look up participant
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMParticipant *participant = (WMParticipant *)[ff loggedInUser];
+        if (participant) {
+            appDelegate.participant = participant;
+        } else {
+            // keychain says is logged in
+            KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
+            id object = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+            if ([object isKindOfClass:[NSString class]]) {
+                NSString *userName = (NSString *)object;
+                NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                participant = [WMParticipant participantForUserName:userName create:NO managedObjectContext:managedObjectContext];
+                appDelegate.participant = participant;
+            }
+        }
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        userDefaultsManager.lastUserName = participant.userName;
+        return YES;
+    }
+    // else
+    NSLog(@"checkForAuthentication: No user logged in.");
+    return NO;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+    }
+    // initialize Core Data
+    [self.coreDataHelper setupCoreData];
+    // create the KeychainItem singleton
+    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
+    // If Keychain Item exists, attempt login
+    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
+        NSLog(@"_keychainItem username exists, attempting login in background.");
+        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
+        // Login with FatFractal by initiating connection with server - Step 1
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+            // Step 2
+            if (theErr) {
+                NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
+                // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
+                // Better error handling can be done in a production application.
+                [_keychainItem resetKeychainItem];
+                return ;
+            }
+            // Step 3
+            if (theObj) {
+                NSLog(@"Login from AppDelegate using keychain successful!");
+            }
+        }];
     }
     // initialize UI
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

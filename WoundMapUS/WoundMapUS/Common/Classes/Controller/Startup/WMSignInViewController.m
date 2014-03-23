@@ -204,7 +204,7 @@
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
     textField.spellCheckingType = UITextSpellCheckingTypeNo;
-    textField.returnKeyType = UIReturnKeyDone;
+    textField.returnKeyType = UIReturnKeyDefault;
     textField.delegate = self;
     switch (indexPath.row) {
         case 0: {

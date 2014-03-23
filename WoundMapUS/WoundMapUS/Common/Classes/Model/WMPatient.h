@@ -1,6 +1,5 @@
 #import "_WMPatient.h"
 #import "WoundCareProtocols.h"
-#import <FFEF/FatFractal.h>
 
 @class FFUserGroup;
 

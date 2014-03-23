@@ -14,6 +14,8 @@
 #import "WMParticipant.h"
 #import "WMParticipantType.h"
 #import "WMPerson.h"
+#import "MBProgressHUD.h"
+#import "KeychainItemWrapper.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
@@ -66,6 +68,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                           target:self
                                                                                           action:@selector(doneAction:)];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
 }
@@ -99,6 +102,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         NSParameterAssert([self checkForValidUserName]);
         NSParameterAssert([self checkForMatchingPasswords]);
         _participant = [WMParticipant MR_createInContext:self.managedObjectContext];
+        _participant.userName = _userNameTextInput;
     }
     return _participant;
 }
@@ -181,29 +185,45 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return YES;
 }
 
+-(void)saveUserCredentialsInKeychain
+{
+    KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
+    [keychainItem setObject:_userNameTextInput forKey:(__bridge id)(kSecAttrAccount)];
+    [keychainItem setObject:_passwordTextInput forKey:(__bridge id)(kSecValueData)];
+    NSLog(@"Successfully saved user %@ to keychain after signup in SignupViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
+    
+}
+
+- (void)updateNavigationState
+{
+    self.navigationItem.rightBarButtonItem.enabled = self.hasSufficientCreateAccountInput;
+}
+
 #pragma mark - Actions
 
 - (IBAction)createAccountAction:(id)sender
 {
     [self.view endEditing:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self performSelector:@selector(delayedCreateAccountAction) withObject:nil afterDelay:0.0];
 }
 
 - (IBAction)delayedCreateAccountAction
 {
     if (![self checkForMatchingPasswords]) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
     if (![self checkForValidUserName]) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
     // else
-    [self showProgressViewWithMessage:@"Creating account..."];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [ffm registerParticipant:self.participant password:self.passwordTextInput completionHandler:^(NSError *error) {
         WM_ASSERT_MAIN_THREAD;
-        [weakSelf hideProgressView];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (error) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
                                                                 message:[NSString stringWithFormat:@"Unable to create an account: %@", error.localizedDescription]
@@ -214,6 +234,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         } else {
             weakSelf.state = CreateAccountAccountCreated;
             [weakSelf.tableView reloadData];
+            [weakSelf saveUserCredentialsInKeychain];
         }
     }];
 }
@@ -325,6 +346,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             break;
         }
     }
+    [self updateNavigationState];
 }
 
 #pragma mark - SimpleTableViewControllerDelegate
@@ -483,7 +505,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 textField.spellCheckingType = UITextSpellCheckingTypeNo;
-                textField.returnKeyType = UIReturnKeyDone;
+                textField.returnKeyType = UIReturnKeyDefault;
                 textField.delegate = self;
             }
             switch (indexPath.row) {
@@ -500,7 +522,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 case 1: {
                     myCell.textField.tag = 1001;
                     myCell.textField.secureTextEntry = YES;
-                    [myCell updateWithLabelText:@"Password" valueText:_passwordTextInput valuePrompt:@"Enter a password"];
+                    [myCell updateWithLabelText:@"Password" valueText:_passwordTextInput valuePrompt:@"Enter password"];
                     break;
                 }
                 case 2: {

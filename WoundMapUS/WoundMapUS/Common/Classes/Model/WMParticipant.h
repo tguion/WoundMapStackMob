@@ -1,5 +1,4 @@
 #import "_WMParticipant.h"
-#import <FFEF/FatFractal.h>
 
 @interface WMParticipant : _WMParticipant <FFUserProtocol> {}
 
@@ -10,6 +9,10 @@
 + (WMParticipant *)participantForName:(NSString *)name
                                create:(BOOL)create
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
++ (WMParticipant *)participantForUserName:(NSString *)userName
+                                   create:(BOOL)create
+                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (nonatomic) BOOL isTeamLeader;

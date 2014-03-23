@@ -26,10 +26,10 @@
 #import "WMUserDefaultsManager.h"
 #import "WMSeedDatabaseManager.h"
 #import "WMNavigationCoordinator.h"
+#import "KeychainItemWrapper.h"
 #import "WMUtilities.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
-#import <FFEF/FatFractal.h>
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateInitial,          // Sign In, Create Account
@@ -76,6 +76,27 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"DeferCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView registerClass:[WMButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
+    // attempt to resolve the last participant
+    if ([WCAppDelegate checkForAuthentication]) {
+        // authenticated - look up participant
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMParticipant *participant = (WMParticipant *)[ff loggedInUser];
+        if (participant) {
+            self.appDelegate.participant = participant;
+        } else {
+            // keychain says is logged in
+            KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
+            id object = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+            if ([object isKindOfClass:[NSString class]]) {
+                NSString *userName = (NSString *)object;
+                participant = [WMParticipant participantForUserName:userName create:NO managedObjectContext:self.managedObjectContext];
+                self.appDelegate.participant = participant;
+            }
+        }
+        if (participant) {
+            self.welcomeState = (nil == participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

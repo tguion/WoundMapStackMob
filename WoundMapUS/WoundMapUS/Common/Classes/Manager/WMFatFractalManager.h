@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FFEF/FatFractal.h>
 
 typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequired);
 

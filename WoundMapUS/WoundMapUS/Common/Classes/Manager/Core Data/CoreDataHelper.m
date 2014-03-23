@@ -122,16 +122,6 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     return self;
 }
 
-- (NSManagedObjectModel *)model
-{
-    return [NSManagedObjectModel defaultManagedObjectModel];
-}
-
-- (NSPersistentStoreCoordinator *)coordinator
-{
-    return [NSPersistentStoreCoordinator defaultStoreCoordinator];
-}
-
 - (void)setupCoreData
 {
     if (debug==1) {
@@ -147,6 +137,28 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         _networkMonitor = [[WMNetworkReachability alloc] init];
     }
     return _networkMonitor;
+}
+
+#pragma mark - Accessors
+
+- (NSManagedObjectContext *)context
+{
+    return [NSManagedObjectContext MR_defaultContext];
+}
+
+- (NSManagedObjectContext *)parentContext
+{
+    return [NSManagedObjectContext MR_rootSavingContext];
+}
+
+- (NSManagedObjectModel *)model
+{
+    return [NSManagedObjectModel defaultManagedObjectModel];
+}
+
+- (NSPersistentStoreCoordinator *)coordinator
+{
+    return [NSPersistentStoreCoordinator defaultStoreCoordinator];
 }
 
 #pragma mark - VALIDATION ERROR HANDLING

@@ -24,7 +24,6 @@ extern NSString *localStoreFilename;
 @property (nonatomic, readonly) NSManagedObjectModel *model;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;      // coordinator for stores
 @property (nonatomic, readonly) NSPersistentStore *store;                       // MagicalRecord default store
-@property (nonatomic, readonly) NSPersistentStore *localStore;                  // local store - use for instructions and such
 
 - (void)setupCoreData;
 

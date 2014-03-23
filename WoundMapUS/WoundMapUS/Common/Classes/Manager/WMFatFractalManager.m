@@ -296,8 +296,13 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [ff registerUser:participant password:password onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
+            completionHandler(error);
+        } else {
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                completionHandler(error);
+            }];
         }
-        completionHandler(error);
     }];
 }
 

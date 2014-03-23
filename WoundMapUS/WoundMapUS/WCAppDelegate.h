@@ -7,8 +7,8 @@
 //
 
 #import "CoreDataHelper.h"
-#import <FFEF/FatFractal.h>
 
+@class KeychainItemWrapper;
 @class WMFatFractal;
 @class WMNavigationCoordinator;
 @class WMParticipant, WMNavigationTrack;
@@ -20,6 +20,9 @@
 @end
 
 @interface WCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
+
++ (KeychainItemWrapper *)keychainItem;
++ (BOOL)checkForAuthentication;
 
 @property (strong, nonatomic) UIWindow *window;
 

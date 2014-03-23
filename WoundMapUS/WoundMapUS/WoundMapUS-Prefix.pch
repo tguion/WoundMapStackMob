@@ -18,4 +18,5 @@
     #import <MobileCoreServices/MobileCoreServices.h>
     #define MR_SHORTHAND
     #import "CoreData+MagicalRecord.h"
+    #import <FFEF/FatFractal.h>
 #endif

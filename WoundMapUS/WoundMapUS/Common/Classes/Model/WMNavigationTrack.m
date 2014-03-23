@@ -3,7 +3,6 @@
 #import "WMNavigationNode.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
-#import <FFEF/FatFractal.h>
 #import "NSObject+performBlockAfterDelay.h"
 
 typedef enum {
