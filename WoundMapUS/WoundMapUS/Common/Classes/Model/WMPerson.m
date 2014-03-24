@@ -33,4 +33,20 @@
     return [array componentsJoinedByString:@", "];
 }
 
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([propertyName isEqualToString:@"lastNameFirstName"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"objectID"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"managedObjectContext"]) {
+        return NO;
+    }
+    
+    // else
+    return YES;
+}
+
 @end

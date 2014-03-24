@@ -96,4 +96,26 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader to:isTeamLeader]);
 }
 
+#pragma mar - FatFractal
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([propertyName isEqualToString:@"lastNameFirstName"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"isTeamLeader"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"flagsValue"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"permissionsValue"]) {
+        return NO;
+    }
+    
+    // else
+    return YES;
+}
+
+
 @end
