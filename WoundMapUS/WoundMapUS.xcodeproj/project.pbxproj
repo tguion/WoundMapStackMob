@@ -166,6 +166,7 @@
 		7D10CE2C18DDF47F00AD43E3 /* WMMedicationGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CE2B18DDF47F00AD43E3 /* WMMedicationGroupTableViewCell.m */; };
 		7D10CE2F18DF5EB700AD43E3 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CE2E18DF5EB700AD43E3 /* KeychainItemWrapper.m */; };
 		7D10CE3218DF5ED100AD43E3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CE3118DF5ED100AD43E3 /* MBProgressHUD.m */; };
+		7D10CE3418E0CFBD00AD43E3 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */; };
 		7D13025D18CF7EC600AE33B2 /* _WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */; };
 		7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13025F18CF7EE200AE33B2 /* WMFFMetadata.m */; };
 		7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13026218CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m */; };
@@ -762,6 +763,7 @@
 		7D10CE2E18DF5EB700AD43E3 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		7D10CE3018DF5ED100AD43E3 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		7D10CE3118DF5ED100AD43E3 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FFEF.framework; sourceTree = "<group>"; };
 		7D13025B18CF7EC600AE33B2 /* _WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMFFMetadata.h; sourceTree = "<group>"; };
 		7D13025C18CF7EC600AE33B2 /* _WMFFMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMFFMetadata.m; sourceTree = "<group>"; };
 		7D13025E18CF7EE200AE33B2 /* WMFFMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFFMetadata.h; sourceTree = "<group>"; };
@@ -1353,6 +1355,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D10CE3418E0CFBD00AD43E3 /* FFEF.framework in Frameworks */,
 				7DF4E9D918C4CF58000A3F5B /* libCorePlot-CocoaTouch.a in Frameworks */,
 				7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */,
 				7DB2068918A7D4320004DC32 /* MobileCoreServices.framework in Frameworks */,
@@ -1655,6 +1658,7 @@
 		7DB2060718A7D3400004DC32 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */,
 				7DB2068418A7D4320004DC32 /* CoreLocation.framework */,
 				7DB2068518A7D4320004DC32 /* MobileCoreServices.framework */,
 				7DB2068618A7D4320004DC32 /* Security.framework */,
@@ -3414,6 +3418,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					.,
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
@@ -3445,6 +3450,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					.,
 					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
