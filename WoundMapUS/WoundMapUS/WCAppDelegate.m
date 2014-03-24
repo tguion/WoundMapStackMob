@@ -16,8 +16,8 @@
 #import "WMUtilities.h"
 #import "KeychainItemWrapper.h"
 
-static NSString *baseUrl = @"http://localhost:8080/woundmapus";
-static NSString *sslUrl = @"https://localhost:8443/woundmapus";
+static NSString *baseUrl = @"http://localhost:8080/WoundMapUS";
+static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
 //static NSString *baseUrl = @"http://mobilehealthware/fatfractal.com/woundmapus";
 //static NSString *sslUrl = @"https://mobilehealthware/fatfractal.com/woundmapus";
 

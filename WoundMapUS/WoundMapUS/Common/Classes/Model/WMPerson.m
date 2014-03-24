@@ -11,6 +11,13 @@
 
 @dynamic managedObjectContext, objectID;
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (NSString *)lastNameFirstName
 {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:2];

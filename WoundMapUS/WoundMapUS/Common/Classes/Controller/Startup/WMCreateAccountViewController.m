@@ -218,7 +218,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
-    // else
+    // else first save to object permenant objectID
+    [[self.participant managedObjectContext] MR_saveOnlySelfAndWait];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [ffm registerParticipant:self.participant password:self.passwordTextInput completionHandler:^(NSError *error) {
@@ -242,7 +243,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (IBAction)cancelAction:(id)sender
 {
     if (_participant) {
-        [_participant MR_deleteEntity];
+        [[_participant managedObjectContext] rollback];
     }
     [self.delegate createAccountViewControllerDidCancel:self];
 }
