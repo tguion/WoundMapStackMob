@@ -262,12 +262,13 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     self.participant.email = _emailTextInput;
     // else first save to object permenant objectID
     [[self.participant managedObjectContext] MR_saveOnlySelfAndWait];
-    __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     _ffUser = [[FFUser alloc] initWithFF:ff];
+    _ffUser.userName = _userNameTextInput;
     _ffUser.email = _emailTextInput;
     _ffUser.firstName = _firstNameTextInput;
     _ffUser.lastName = _lastNameTextInput;
+    __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         // NOTE: this returns on main thread
         if (error) {
@@ -586,18 +587,21 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     switch (indexPath.section) {
         case 0: {
             cell.accessoryType = UITableViewCellAccessoryNone;
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            UITextField *textField = nil;
-            textField = myCell.textField;
-            textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            textField.autocorrectionType = UITextAutocorrectionTypeNo;
-            textField.spellCheckingType = UITextSpellCheckingTypeNo;
-            textField.returnKeyType = UIReturnKeyDefault;
-            textField.delegate = self;
+            if (self.state == CreateAccountInitial) {
+                WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                UITextField *textField = nil;
+                textField = myCell.textField;
+                textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                textField.returnKeyType = UIReturnKeyDefault;
+                textField.delegate = self;
+            }
             switch (indexPath.row) {
                 case 0: {
                     // user name
                     if (self.state == CreateAccountInitial) {
+                        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
                         myCell.textField.tag = 1000;
                         [myCell updateWithLabelText:@"User name" valueText:_userNameTextInput valuePrompt:@"Unique username"];
                     } else {
@@ -608,6 +612,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 }
                 case 1: {
                     // password
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
                     myCell.textField.tag = 1001;
                     myCell.textField.secureTextEntry = YES;
                     [myCell updateWithLabelText:@"Password" valueText:_passwordTextInput valuePrompt:@"Enter password"];
@@ -615,6 +620,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 }
                 case 2: {
                     // password confirm
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
                     myCell.textField.tag = 1002;
                     myCell.textField.secureTextEntry = YES;
                     [myCell updateWithLabelText:@"Password Confirm" valueText:_passwordConfirmTextInput valuePrompt:@"Confirm password"];

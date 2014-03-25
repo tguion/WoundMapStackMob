@@ -78,24 +78,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.tableView registerClass:[WMButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
     // attempt to resolve the last participant
     if ([WCAppDelegate checkForAuthentication]) {
-        // authenticated - look up participant
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMParticipant *participant = (WMParticipant *)[ff loggedInUser];
-        if (participant) {
-            self.appDelegate.participant = participant;
-        } else {
-            // keychain says is logged in
-            KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
-            id object = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-            if ([object isKindOfClass:[NSString class]]) {
-                NSString *userName = (NSString *)object;
-                participant = [WMParticipant participantForUserName:userName create:NO managedObjectContext:self.managedObjectContext];
-                self.appDelegate.participant = participant;
-            }
-        }
-        if (participant) {
-            self.welcomeState = (nil == participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
-        }
+        self.welcomeState = (nil == self.appDelegate.participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
     }
 }
 

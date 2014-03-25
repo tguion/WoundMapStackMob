@@ -151,23 +151,24 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         NSLog(@"checkForAuthentication: FFUser logged in.");
         // authenticated - look up participant
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMParticipant *participant = (WMParticipant *)[ff loggedInUser];
-        if (participant) {
-            appDelegate.participant = participant;
+        FFUser *ffUser = (FFUser *)[ff loggedInUser];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        WMParticipant *participant = nil;
+        if (ffUser) {
+            participant = [WMParticipant participantForUserName:ffUser.userName create:NO managedObjectContext:managedObjectContext];
         } else {
             // keychain says is logged in
             KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
             id object = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
             if ([object isKindOfClass:[NSString class]]) {
                 NSString *userName = (NSString *)object;
-                NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
                 participant = [WMParticipant participantForUserName:userName create:NO managedObjectContext:managedObjectContext];
-                appDelegate.participant = participant;
             }
         }
+        appDelegate.participant = participant;
         WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
         userDefaultsManager.lastUserName = participant.userName;
-        return YES;
+        return (nil != participant);
     }
     // else
     NSLog(@"checkForAuthentication: No user logged in.");
@@ -203,15 +204,23 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
             if (theObj) {
                 NSLog(@"Login from AppDelegate using keychain successful!");
             }
+            // initialize UI
+            [self initializeInterface];
         }];
+    } else {
+        // initialize UI
+        [self initializeInterface];
     }
-    // initialize UI
+    return YES;
+}
+
+- (void)initializeInterface
+{
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]];
     navigationController.delegate = self;
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
-    return YES;
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
