@@ -1,5 +1,8 @@
 #import "_WMTelecom.h"
 
 @interface WMTelecom : _WMTelecom {}
-// Custom logic goes here.
+
+@property (readonly, nonatomic) BOOL isEmail;
+@property (readonly, nonatomic) NSString *stringValue;
+
 @end

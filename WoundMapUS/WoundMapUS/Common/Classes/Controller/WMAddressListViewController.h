@@ -13,8 +13,8 @@
 
 @protocol AddressListViewControllerDelegate <NSObject>
 
-@property (readonly, nonatomic) id<AddressSource> source;
-@property (readonly, nonatomic) NSString *relationshipKey;                      // person, organization, ..
+@property (readonly, nonatomic) id<AddressSource> addressSource;
+@property (readonly, nonatomic) NSString *addressRelationshipKey;                      // person, organization, ..
 
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 

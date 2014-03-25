@@ -5,6 +5,8 @@
 
 
 extern const struct WMParticipantAttributes {
+	__unsafe_unretained NSString *active;
+	__unsafe_unretained NSString *authDomain;
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *dateLastSignin;
 	__unsafe_unretained NSString *email;
@@ -13,6 +15,7 @@ extern const struct WMParticipantAttributes {
 	__unsafe_unretained NSString *guid;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *permissions;
+	__unsafe_unretained NSString *scriptAuthService;
 	__unsafe_unretained NSString *thumbnail;
 	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *userName;
@@ -47,6 +50,9 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+
+
+
 @class NSObject;
 
 
@@ -59,6 +65,30 @@ extern const struct WMParticipantFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (WMParticipantID*)objectID;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* active;
+
+
+
+@property BOOL activeValue;
+- (BOOL)activeValue;
+- (void)setActiveValue:(BOOL)value_;
+
+//- (BOOL)validateActive:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* authDomain;
+
+
+
+//- (BOOL)validateAuthDomain:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -147,6 +177,16 @@ extern const struct WMParticipantFetchedProperties {
 - (void)setPermissionsValue:(int32_t)value_;
 
 //- (BOOL)validatePermissions:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* scriptAuthService;
+
+
+
+//- (BOOL)validateScriptAuthService:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -256,6 +296,21 @@ extern const struct WMParticipantFetchedProperties {
 @interface _WMParticipant (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSNumber*)primitiveActive;
+- (void)setPrimitiveActive:(NSNumber*)value;
+
+- (BOOL)primitiveActiveValue;
+- (void)setPrimitiveActiveValue:(BOOL)value_;
+
+
+
+
+- (NSString*)primitiveAuthDomain;
+- (void)setPrimitiveAuthDomain:(NSString*)value;
+
+
+
+
 - (NSDate*)primitiveCreatedAt;
 - (void)setPrimitiveCreatedAt:(NSDate*)value;
 
@@ -306,6 +361,12 @@ extern const struct WMParticipantFetchedProperties {
 
 - (int32_t)primitivePermissionsValue;
 - (void)setPrimitivePermissionsValue:(int32_t)value_;
+
+
+
+
+- (NSString*)primitiveScriptAuthService;
+- (void)setPrimitiveScriptAuthService:(NSString*)value;
 
 
 

@@ -8,6 +8,7 @@
 
 #import "WMPersonEditorViewController.h"
 #import "WMAddressListViewController.h"
+#import "WMTelecomListViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMPerson.h"
@@ -18,6 +19,7 @@
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
+@property (readonly, nonatomic) WMTelecomListViewController *telecomListViewController;
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
 
@@ -81,6 +83,13 @@
     WMAddressListViewController *addressListViewController = [[WMAddressListViewController alloc] initWithNibName:@"WMAddressListViewController" bundle:nil];
     addressListViewController.delegate = self;
     return addressListViewController;
+}
+
+- (WMTelecomListViewController *)telecomListViewController
+{
+    WMTelecomListViewController *telecomListViewController = [[WMTelecomListViewController alloc] initWithNibName:@"WMTelecomListViewController" bundle:nil];
+    telecomListViewController.delegate = self;
+    return telecomListViewController;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
@@ -188,12 +197,12 @@
 
 #pragma mark - AddressListViewControllerDelegate
 
-- (id<AddressSource>)source
+- (id<AddressSource>)addressSource
 {
     return _person;
 }
 
-- (NSString *)relationshipKey
+- (NSString *)addressRelationshipKey
 {
     return @"person";
 }
@@ -207,6 +216,31 @@
 }
 
 - (void)addressListViewControllerDidCancel:(WMAddressListViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - TelecomListViewControllerDelegate
+
+- (id<TelecomSource>)telecomSource
+{
+    return _person;
+}
+
+- (NSString *)telecomRelationshipKey
+{
+    return @"person";
+}
+
+- (void)telecomListViewControllerDidFinish:(WMTelecomListViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:5 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+}
+
+- (void)telecomListViewControllerDidCancel:(WMTelecomListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -253,6 +287,7 @@
         [self.navigationController pushViewController:self.addressListViewController animated:YES];
     } else if (indexPath.row == 5) {
         // telecom
+        [self.navigationController pushViewController:self.telecomListViewController animated:YES];
     }
 }
 
@@ -311,15 +346,16 @@
         case 4: {
             // addresses
             cell.textLabel.text = @"Addresses";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu addresses", (unsigned long)[self.person.addresses count]];
+            NSString *addressString = ([self.person.telecoms count] == 1 ? @"address":@"addresses");
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.addresses count], addressString];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }
         case 5: {
             // telecoms
             cell.textLabel.text = @"Telecoms";
-            NSString *addressString = ([self.person.telecoms count] == 1 ? @"address":@"addresses");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.telecoms count], addressString];
+            NSString *telecomString = ([self.person.telecoms count] == 1 ? @"telecom":@"telecoms");
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.telecoms count], telecomString];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }

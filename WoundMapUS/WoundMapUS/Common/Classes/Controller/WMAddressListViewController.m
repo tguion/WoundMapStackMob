@@ -81,7 +81,7 @@
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row == [self.delegate.source.addresses count];
+    return indexPath.row == [self.delegate.addressSource.addresses count];
 }
 
 - (WMAddressEditorViewController *)addressEditorViewController
@@ -101,7 +101,7 @@
 - (WMAddress *)addressForIndex:(NSInteger)index
 {
     if (nil == _addresses) {
-        _addresses = [[self.delegate.source.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+        _addresses = [[self.delegate.addressSource.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     }
     return _addresses[index];
 }
@@ -154,7 +154,7 @@
 
 - (void)addressEditorViewController:(WMAddressEditorViewController *)viewController didEditAddress:(WMAddress *)address
 {
-    [self.delegate.source addAddressesObject:address];
+    [self.delegate.addressSource addAddressesObject:address];
     [self.navigationController popViewControllerAnimated:YES];
     _addresses = nil;
     [self.tableView reloadData];
@@ -217,7 +217,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.delegate.source.addresses count] + 1;
+    return [self.delegate.addressSource.addresses count] + 1;
 }
 
 // Customize the appearance of table view cells.
@@ -248,7 +248,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         WMAddress *address = [self addressForIndex:indexPath.row];
-        [self.delegate.source removeAddressesObject:address];
+        [self.delegate.addressSource removeAddressesObject:address];
         _addresses = nil;
         [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];

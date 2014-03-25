@@ -13,8 +13,8 @@
 
 @protocol TelecomListViewControllerDelegate <NSObject>
 
-@property (readonly, nonatomic) id<TelecomSource> source;
-@property (readonly, nonatomic) NSString *relationshipKey;                      // person, organization, ..
+@property (readonly, nonatomic) id<TelecomSource> telecomSource;
+@property (readonly, nonatomic) NSString *telecomRelationshipKey;                      // person, organization, ..
 
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 

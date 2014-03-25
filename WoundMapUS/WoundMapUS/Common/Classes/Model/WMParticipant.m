@@ -17,6 +17,8 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
 
 @implementation WMParticipant
 
+@dynamic firstName, lastName;
+
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                        persistentStore:(NSPersistentStore *)store
 {
@@ -68,7 +70,26 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     [super awakeFromInsert];
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
-    self.person = [WMPerson MR_createInContext:[self managedObjectContext]];
+}
+
+- (NSString *)firstName
+{
+    return self.person.nameGiven;
+}
+
+- (void)setFirstName:(NSString *)firstName
+{
+    self.person.nameGiven =firstName;
+}
+
+- (NSString *)lastName
+{
+    return self.person.nameFamily;
+}
+
+- (void)setLastName:(NSString *)lastName
+{
+    self.person.nameFamily = lastName;
 }
 
 - (NSString *)lastNameFirstName

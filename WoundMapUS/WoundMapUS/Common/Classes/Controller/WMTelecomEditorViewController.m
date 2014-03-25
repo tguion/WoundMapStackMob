@@ -7,18 +7,21 @@
 //
 
 #import "WMTelecomEditorViewController.h"
+#import "WMSimpleTableViewController.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
+#import "MBProgressHUD.h"
 #import "WMTelecom.h"
 #import "WMTelecomType.h"
 #import "WCAppDelegate.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 
-@interface WMTelecomEditorViewController () <UITextFieldDelegate>
+@interface WMTelecomEditorViewController () <SimpleTableViewControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (strong, nonatomic) WMTelecomType *telecomType;
+@property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
 
 @end
 
@@ -112,30 +115,37 @@
     return YES;
 }
 
+- (WMSimpleTableViewController *)simpleTableViewController
+{
+    WMSimpleTableViewController *simpleTableViewController = [[WMSimpleTableViewController alloc] initWithNibName:@"WMSimpleTableViewController" bundle:nil];
+    simpleTableViewController.delegate = self;
+    simpleTableViewController.allowMultipleSelection = NO;
+    return simpleTableViewController;
+}
+
 - (void)navigateToTelecomType
 {
-    // make sure we have data
-    if ([WMTelecomType MR_countOfEntitiesWithContext:self.managedObjectContext]) {
-        // ok to navigate
-    }
-    // else backend may not have data or device has not fetched
-    [self showProgressViewWithMessage:@"Updating telecom data"];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    // backend may not have data or device has not fetched
+    MBProgressHUD *progressView = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    progressView.labelText = @"Updating telecom data";
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMTelecomType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         if (error) {
             [WMUtilities logError:error];
-            [weakSelf hideProgressView];
         } else {
             WM_ASSERT_MAIN_THREAD;
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    // ok to navigate
-                }
-            }];
+            // make sure we have data
+            if ([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
+                // load data
+                [WMTelecomType seedDatabase:managedObjectContext];
+            }
+            WMSimpleTableViewController *simpleTableViewController = weakSelf.simpleTableViewController;
+            [weakSelf.navigationController pushViewController:simpleTableViewController animated:YES];
+            simpleTableViewController.title = @"Select Telecom Type";
         }
     }];
 }
@@ -187,6 +197,48 @@
     _telecomType = nil;
 }
 
+#pragma mark - SimpleTableViewControllerDelegate
+
+- (NSString *)navigationTitle
+{
+    return @"Select Telecom Type";
+}
+
+- (NSArray *)valuesForDisplay
+{
+    return [[WMTelecomType sortedTelecomTypes:self.managedObjectContext] valueForKey:@"title"];
+}
+
+- (NSArray *)selectedValuesForDisplay
+{
+    if (nil == _telecomType) {
+        return [NSArray array];
+    }
+    // else
+    return [NSArray arrayWithObject:_telecomType.title];
+}
+
+- (void)simpleTableViewController:(WMSimpleTableViewController *)viewController didSelectValues:(NSArray *)selectedValues
+{
+    NSString *title = [selectedValues lastObject];
+    if ([title length] > 0) {
+        _telecomType = [WMTelecomType telecomTypeForTitle:title
+                                                   create:NO
+                                     managedObjectContext:self.managedObjectContext];
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+}
+
+- (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
 #pragma mark - UITextFieldDelegate
 
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
@@ -195,7 +247,7 @@
     UITableViewCell *cell = [self cellForView:textField];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     switch (indexPath.row) {
-        case 1: {
+        case 0: {
             // use
             self.telecom.use = textField.text;
             break;
@@ -214,7 +266,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 2) {
+    if (indexPath.row == 1) {
         [self navigateToTelecomType];
     }
 }
@@ -248,21 +300,24 @@
 {
     switch (indexPath.row) {
         case 0: {
-            // type
-            cell.textLabel.text = @"Type";
-            cell.detailTextLabel.text = self.telecomType.title;
+            // use
+            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            [myCell updateWithLabelText:@"Use" valueText:self.telecom.use valuePrompt:@"DIR"];
+            myCell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
         case 1: {
-            // use
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Use" valueText:self.telecom.value valuePrompt:@"DIR"];
+            // type
+            cell.textLabel.text = @"Type";
+            cell.detailTextLabel.text = self.telecomType.title;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }
         case 2: {
-            // city
+            // value
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
             [myCell updateWithLabelText:@"Value" valueText:self.telecom.value valuePrompt:@"you@host.org"]; // TODO adjust value and use using type
+            myCell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
     }

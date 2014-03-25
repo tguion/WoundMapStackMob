@@ -1,4 +1,6 @@
 #import "WMPerson.h"
+#import "WMTelecom.h"
+#import "WMTelecomType.h"
 
 @interface WMPerson ()
 
@@ -33,8 +35,19 @@
     return [array componentsJoinedByString:@", "];
 }
 
+- (WMTelecom *)defaultEmailTelecom
+{
+    return [WMTelecom MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"telecomType.title == %@", kTelecomTypeEmailTitle]
+                                       sortedBy:WMTelecomAttributes.createdAt
+                                      ascending:YES
+                                      inContext:[self managedObjectContext]];
+}
+
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
+    if ([propertyName isEqualToString:@"patient"]) {
+        return NO;
+    }
     if ([propertyName isEqualToString:@"lastNameFirstName"]) {
         return NO;
     }
@@ -42,6 +55,9 @@
         return NO;
     }
     if ([propertyName isEqualToString:@"managedObjectContext"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"defaultEmailTelecom"]) {
         return NO;
     }
     

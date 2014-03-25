@@ -1,6 +1,6 @@
 #import "_WMParticipant.h"
 
-@interface WMParticipant : _WMParticipant <FFUserProtocol> {}
+@interface WMParticipant : _WMParticipant {}
 
 + (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext;
 
@@ -13,6 +13,9 @@
 + (WMParticipant *)participantForUserName:(NSString *)userName
                                    create:(BOOL)create
                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
+@property (nonatomic) NSString *firstName;
+@property (nonatomic) NSString *lastName;
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (nonatomic) BOOL isTeamLeader;

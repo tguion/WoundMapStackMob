@@ -38,4 +38,25 @@
     return [array0 componentsJoinedByString:@"\r"];
 }
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
+#pragma mar - FatFractal
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([propertyName isEqualToString:@"stringValue"]) {
+        return NO;
+    }
+    if ([propertyName isEqualToString:@"objectID"]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
 @end

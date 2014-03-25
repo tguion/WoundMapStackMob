@@ -289,25 +289,8 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 
 #pragma mark - Backend Updates
 
-- (void)registerParticipant:(WMParticipant *)participant password:(NSString *)password completionHandler:(void (^)(NSError *))completionHandler
-{
-    NSParameterAssert(nil == participant.ffUrl);
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff registerUser:participant password:password onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-            completionHandler(error);
-        } else {
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                completionHandler(error);
-            }];
-        }
-    }];
-}
-
 // create participant, with reference objects person and team
-- (void)createParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
+- (void)updateParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 {
     __block NSError *localError = nil;
     NSString *participantFFURL = participant.ffUrl;
@@ -342,20 +325,38 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [participantOperation addDependency:personOperation];
     [_operationCache addObject:personOperation];
     for (WMAddress *address in person.addresses) {
-        NSBlockOperation *addressOperation = [self createOperation:address collection:[WMAddress entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            if (error) {
-                localError = error;
-            }
-        }];
+        NSBlockOperation *addressOperation = nil;
+        if (address.ffUrl) {
+            addressOperation = [self updateObject:address ff:ff addToQueue:NO completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                if (error) {
+                    localError = error;
+                }
+            }];
+        } else {
+            addressOperation = [self createOperation:address collection:[WMAddress entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                if (error) {
+                    localError = error;
+                }
+            }];
+        }
         [personOperation addDependency:addressOperation];
         [_operationCache addObject:addressOperation];
     }
     for (WMTelecom *telecom in person.telecoms) {
-        NSBlockOperation *telecomOperation = [self createOperation:telecom collection:[WMTelecom entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            if (error) {
-                localError = error;
-            }
-        }];
+        NSBlockOperation *telecomOperation = nil;
+        if (telecom.ffUrl) {
+            telecomOperation = [self updateObject:telecom ff:ff addToQueue:NO completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                if (error) {
+                    localError = error;
+                }
+            }];
+        } else {
+            telecomOperation = [self createOperation:telecom collection:[WMTelecom entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                if (error) {
+                    localError = error;
+                }
+            }];
+        }
         [personOperation addDependency:telecomOperation];
         [_operationCache addObject:telecomOperation];
     }

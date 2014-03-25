@@ -4,6 +4,8 @@
 #import "_WMParticipant.h"
 
 const struct WMParticipantAttributes WMParticipantAttributes = {
+	.active = @"active",
+	.authDomain = @"authDomain",
 	.createdAt = @"createdAt",
 	.dateLastSignin = @"dateLastSignin",
 	.email = @"email",
@@ -12,6 +14,7 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 	.guid = @"guid",
 	.name = @"name",
 	.permissions = @"permissions",
+	.scriptAuthService = @"scriptAuthService",
 	.thumbnail = @"thumbnail",
 	.updatedAt = @"updatedAt",
 	.userName = @"userName",
@@ -56,6 +59,11 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"activeValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"active"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"flagsValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"flags"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -69,6 +77,39 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic active;
+
+
+
+- (BOOL)activeValue {
+	NSNumber *result = [self active];
+	return [result boolValue];
+}
+
+- (void)setActiveValue:(BOOL)value_ {
+	[self setActive:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveActiveValue {
+	NSNumber *result = [self primitiveActive];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveActiveValue:(BOOL)value_ {
+	[self setPrimitiveActive:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+@dynamic authDomain;
+
+
 
 
 
@@ -162,6 +203,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 - (void)setPrimitivePermissionsValue:(int32_t)value_ {
 	[self setPrimitivePermissions:[NSNumber numberWithInt:value_]];
 }
+
+
+
+
+
+@dynamic scriptAuthService;
+
 
 
 

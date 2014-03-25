@@ -80,7 +80,7 @@
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row == [self.delegate.source.telecoms count];
+    return indexPath.row == [self.delegate.telecomSource.telecoms count];
 }
 
 - (WMTelecomEditorViewController *)telecomEditorViewController
@@ -100,7 +100,7 @@
 - (WMTelecom *)telecomForIndex:(NSInteger)index
 {
     if (nil == _telecoms) {
-        _telecoms = [[self.delegate.source.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+        _telecoms = [[self.delegate.telecomSource.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     }
     return _telecoms[index];
 }
@@ -153,7 +153,7 @@
 
 - (void)telecomEditorViewController:(WMTelecomEditorViewController *)viewController didEditTelecom:(WMTelecom *)telecom
 {
-    [self.delegate.source addTelecomsObject:telecom];
+    [self.delegate.telecomSource addTelecomsObject:telecom];
     [self.navigationController popViewControllerAnimated:YES];
     _telecoms = nil;
     [self.tableView reloadData];
@@ -216,7 +216,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.delegate.source.telecoms count] + 1;
+    return [self.delegate.telecomSource.telecoms count] + 1;
 }
 
 // Customize the appearance of table view cells.
@@ -232,7 +232,7 @@
 {
     if ([self isAddIndexPath:indexPath]) {
         cell.textLabel.font = [UIFont systemFontOfSize:15.0];
-        cell.textLabel.text = @"Add Address";
+        cell.textLabel.text = @"Add Telecom";
     } else {
         WMTelecom *telecom = [self telecomForIndex:indexPath.row];
         NSAttributedString *attributedString = [telecom descriptionAsMutableAttributedStringWithBaseFontSize:15.0];
@@ -247,7 +247,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         WMTelecom *telecom = [self telecomForIndex:indexPath.row];
-        [self.delegate.source removeTelecomsObject:telecom];
+        [self.delegate.telecomSource removeTelecomsObject:telecom];
         _telecoms = nil;
         [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
