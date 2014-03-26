@@ -50,6 +50,7 @@ typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequir
                         addToQueue:(BOOL)addToQueue
                       insertAtHead:(BOOL)insertAtHead
                  completionHandler:(WMOperationCallback)completionHandler;
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue reverseEnumerate:(BOOL)reverseEnumerate completionHandler:(WMOperationCallback)completionHandler;
 - (NSBlockOperation *)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
 - (NSBlockOperation *)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
 - (NSBlockOperation *)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;

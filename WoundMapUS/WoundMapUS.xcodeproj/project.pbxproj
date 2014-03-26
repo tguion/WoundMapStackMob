@@ -398,6 +398,7 @@
 		7DDBEDEE18BEA96C00FEF3FA /* WMBradenCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDE818BEA96C00FEF3FA /* WMBradenCell.m */; };
 		7DDBEDEF18BEA96C00FEF3FA /* WMBradenScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDEA18BEA96C00FEF3FA /* WMBradenScale.m */; };
 		7DDBEDF018BEA96C00FEF3FA /* WMBradenSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDEC18BEA96C00FEF3FA /* WMBradenSection.m */; };
+		7DDE525818E36AC100AB2D31 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */; };
 		7DDE754818CE42AA00B15C77 /* WMCorePlotManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754718CE42AA00B15C77 /* WMCorePlotManager.m */; };
 		7DDE755018CE456800B15C77 /* WoundAreaPlotDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754B18CE456800B15C77 /* WoundAreaPlotDataSource.m */; };
 		7DDE755118CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754D18CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m */; };
@@ -1372,6 +1373,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DDE525818E36AC100AB2D31 /* FFEF.framework in Frameworks */,
 				7DB2063318A7D3400004DC32 /* XCTest.framework in Frameworks */,
 				7DB2063618A7D3400004DC32 /* CoreData.framework in Frameworks */,
 				7DB2063518A7D3400004DC32 /* UIKit.framework in Frameworks */,
@@ -3482,6 +3484,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";
@@ -3505,6 +3508,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WoundMapUS/WoundMapUS-Prefix.pch";

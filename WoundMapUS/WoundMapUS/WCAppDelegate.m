@@ -13,6 +13,8 @@
 #import "WMNavigationCoordinator_iPad.h"
 #import "WMParticipant.h"
 #import "WMSeedDatabaseManager.h"
+#import "WMFatFractalManager.h"
+#import "WMWoundType.h"
 #import "WMUtilities.h"
 #import "KeychainItemWrapper.h"
 
@@ -129,20 +131,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 #pragma mark - Backend
 
-- (void)setParticipant:(WMParticipant *)participant
-{
-    if (_participant == participant) {
-        return;
-    }
-    // else
-    _participant = participant;
-    // now that participant is signed in, we should attempt to populate the store including fetch from back end
-    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-        // ???
-    }];
-}
-
 + (BOOL)checkForAuthentication
 {
     WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -222,8 +210,41 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     navigationController.delegate = self;
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
+    [self testWoundTypeSeedBackend];
 }
-							
+
+- (void)testWoundTypeSeedBackend
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSString *uri = [NSString stringWithFormat:@"/%@", [WMWoundType entityName]];
+    NSArray *woundTypes = [ff getArrayFromUri:uri];
+    for (WMWoundType *woundType in woundTypes) {
+        [ff deleteObj:woundType];
+    }
+    id<FFUserProtocol> user = [ff loginWithUserName:@"todd" andPassword:@"todd"];
+    if (nil == user) {
+        NSLog(@"failed");
+    }
+    // first attempt to acquire data from backend
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
+        // update backend
+        [ffm createArray:objectIDs collection:[WMWoundType entityName] ff:ff addToQueue:YES reverseEnumerate:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+            // nothing more to do for children
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                NSArray *rootWoundTypes = [ff getArrayFromUri:@"/WMWoundType/parent = null?depthGB=20"];
+                if ([rootWoundTypes count] == 0) {
+                    NSLog(@"failed");
+                }
+            }
+        }];
+    }];
+
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     if (debug==1) {

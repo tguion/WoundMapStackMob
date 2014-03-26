@@ -167,10 +167,14 @@ static const NSInteger WMMaxQueueConcurrency = 24;
       completionHandler:(FFHttpMethodCompletion)completionHandler
 {
     NSString *queryString = nil;
+    id lastRefreshTime = self.lastRefreshTimeMap[collection];
+    if (nil == lastRefreshTime) {
+        lastRefreshTime = @(0);
+    }
     if (query) {
-        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=%ld&depthRef=%ld", collection, self.lastRefreshTimeMap[collection], query, (long)depthGb, (long)depthRef];
+        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=%ld&depthRef=%ld", collection, lastRefreshTime, query, (long)depthGb, (long)depthRef];
     } else {
-        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=%ld&depthRef=%ld", collection, self.lastRefreshTimeMap[collection], query, (long)depthGb, (long)depthRef];
+        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@)?depthGb=%ld&depthRef=%ld", collection, lastRefreshTime, (long)depthGb, (long)depthRef];
     }
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         if (response.error) {
@@ -223,15 +227,25 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     return operation;
 }
 
-- (NSBlockOperation *)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue  completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs
+                       collection:(NSString *)collection
+                               ff:(WMFatFractal *)ff
+                       addToQueue:(BOOL)addToQueue
+                 reverseEnumerate:(BOOL)reverseEnumerate
+                completionHandler:(WMOperationCallback)completionHandler
 {
-    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection ff:ff completionHandler:completionHandler];
+    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection reverseEnumerate:reverseEnumerate ff:ff completionHandler:completionHandler];
     if (addToQueue) {
         [_operationQueue addOperation:operation];
     } else {
         [_operationCache addObject:operation];
     }
     return operation;
+}
+
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue  completionHandler:(WMOperationCallback)completionHandler
+{
+    return [self createArray:objectIDs collection:collection ff:ff addToQueue:addToQueue reverseEnumerate:NO completionHandler:completionHandler];
 }
 
 #pragma mark - Updates
@@ -764,14 +778,20 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     return operation;
 }
 
-- (NSBlockOperation *)createArrayOperation:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)createArrayOperation:(NSArray *)objectIDs
+                                collection:(NSString *)collection
+                          reverseEnumerate:(BOOL)reverseEnumerate
+                                        ff:(WMFatFractal *)ff
+                         completionHandler:(WMOperationCallback)completionHandler
 {
-    NSParameterAssert([collection length] == 0);
+    NSParameterAssert([collection length]);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
         NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        for (NSManagedObjectID *objectID in objectIDs) {
+        NSUInteger enumerationOptions = (reverseEnumerate ? NSEnumerationReverse:0);
+        [objectIDs enumerateObjectsWithOptions:enumerationOptions usingBlock:^(id objectID, NSUInteger index, BOOL *stop) {
             id object = [managedObjectContext objectWithID:objectID];
+            NSLog(@"Will create object backend: %@", object);
             [ff createObj:object atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 BOOL signInRequired = NO;
                 if (error) {
@@ -800,7 +820,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                     completionHandler(error, objectID, signInRequired);
                 }
             }];
-        }
+        }];
     }];
     return operation;
 }

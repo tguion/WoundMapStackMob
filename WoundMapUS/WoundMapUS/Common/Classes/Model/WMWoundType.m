@@ -12,6 +12,13 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 
 @implementation WMWoundType
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)isOther
 {
     return [kOtherWoundTypeTitle isEqualToString:self.title];
@@ -142,6 +149,36 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 + (WMWoundType *)otherWoundType:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMWoundType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundTypeTitle] inContext:managedObjectContext];
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)propertyNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMWoundTypeRelationships.carePlanCategories,
+                                        WMWoundTypeRelationships.children,
+                                        WMWoundTypeRelationships.deviceCategories,
+                                        WMWoundTypeRelationships.iapProducts,
+                                        WMWoundTypeRelationships.medicationCategories,
+                                        WMWoundTypeRelationships.psychosocialItems,
+                                        WMWoundTypeRelationships.skinAssessmentCategories,
+                                        WMWoundTypeRelationships.woundMeasurements,
+                                        WMWoundTypeRelationships.wounds,
+                                        WMWoundTypeRelationships.woundTreatments];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL) ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundType propertyNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

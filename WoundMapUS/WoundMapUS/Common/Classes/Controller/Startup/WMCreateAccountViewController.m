@@ -18,6 +18,7 @@
 #import "MBProgressHUD.h"
 #import "KeychainItemWrapper.h"
 #import "WMFatFractalManager.h"
+#import "WMSeedDatabaseManager.h"   // DEBUG
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -271,7 +272,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         // NOTE: this returns on main thread
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         FFUser *ffUser = (FFUser *)object;
         if (error) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
@@ -286,6 +287,17 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [weakSelf saveUserCredentialsInKeychain];
             // update participant
             weakSelf.participant.guid = ffUser.guid;
+            // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
+            MBProgressHUD *progressView = [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
+            progressView.labelText = @"Seeding databases";
+            WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+            [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            }];
+
         }
     }];
 }
