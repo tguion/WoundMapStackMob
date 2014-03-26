@@ -196,6 +196,7 @@ typedef enum {
                                                                         parentNode:navigationNode
                                                                             create:YES
                                                                  completionHandler:completionHandler];
+            [[navigationNode managedObjectContext] MR_saveOnlySelfAndWait];
             NSAssert(![[subnode objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[subnode objectID]];
         }
@@ -227,6 +228,7 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
+    [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     // edit
@@ -242,6 +244,7 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
+    [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     // add
@@ -257,6 +260,7 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
+    [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     if (completionHandler) {
@@ -288,6 +292,7 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
+    [managedObjectContext saveOnlySelfAndWait];
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     // edit
@@ -303,6 +308,7 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
+    [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     // add
@@ -318,6 +324,7 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
+    [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[navigationNode objectID]];
     if (completionHandler) {

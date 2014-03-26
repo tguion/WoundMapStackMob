@@ -97,6 +97,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in array) {
             WMInterventionStatus *interventionStatus = [self updateInterventionFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[interventionStatus objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[interventionStatus objectID]];
         }
@@ -121,6 +122,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                                                                                                                      toStatus:toStatus
                                                                                                                        create:YES
                                                                                                          managedObjectContext:managedObjectContext];
+                [managedObjectContext MR_saveOnlySelfAndWait];
                 NSAssert(![[interventionStatusJoin objectID] isTemporaryID], @"Expect a permanent objectID");
                 [objectIDs addObject:[interventionStatusJoin objectID]];
             }

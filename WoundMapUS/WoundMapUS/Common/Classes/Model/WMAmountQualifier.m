@@ -60,6 +60,7 @@
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMAmountQualifier *amountQualifier = [self updateAmountQualifierFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[amountQualifier objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[amountQualifier objectID]];
         }

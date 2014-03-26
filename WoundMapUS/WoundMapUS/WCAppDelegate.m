@@ -182,35 +182,36 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // initialize Core Data
     [self.coreDataHelper setupCoreData];
-    // create the KeychainItem singleton
-    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
-    // If Keychain Item exists, attempt login
-    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
-        NSLog(@"_keychainItem username exists, attempting login in background.");
-        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-        NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
-        // Login with FatFractal by initiating connection with server - Step 1
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
-            // Step 2
-            if (theErr) {
-                NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
-                // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
-                // Better error handling can be done in a production application.
-                [_keychainItem resetKeychainItem];
-                return ;
-            }
-            // Step 3
-            if (theObj) {
-                NSLog(@"Login from AppDelegate using keychain successful!");
-            }
-            // initialize UI
-            [self initializeInterface];
-        }];
-    } else {
-        // initialize UI
-        [self initializeInterface];
-    }
+//    // create the KeychainItem singleton
+//    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
+//    // if Keychain Item exists, attempt login
+//    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
+//        NSLog(@"_keychainItem username exists, attempting login in background.");
+//        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+//        NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
+//        // Login with FatFractal by initiating connection with server - Step 1
+//        WMFatFractal *ff = [WMFatFractal sharedInstance];
+//        [ff loginWithUserName:username andPassword:password onComplete:^(NSError *theErr, id theObj, NSHTTPURLResponse *theResponse) {
+//            // Step 2
+//            if (theErr) {
+//                NSLog(@"Error trying to log in from AppDelegate: %@", [theErr localizedDescription]);
+//                // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
+//                // Better error handling can be done in a production application.
+//                [_keychainItem resetKeychainItem];
+//                return ;
+//            }
+//            // Step 3
+//            if (theObj) {
+//                NSLog(@"Login from AppDelegate using keychain successful!");
+//            }
+//            // initialize UI
+//            [self initializeInterface];
+//        }];
+//    } else {
+//        // initialize UI
+//        [self initializeInterface];
+//    }
+    [self initializeInterface];
     return YES;
 }
 

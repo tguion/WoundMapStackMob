@@ -24,7 +24,6 @@
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
 #import "WMUserDefaultsManager.h"
-#import "WMSeedDatabaseManager.h"
 #import "WMNavigationCoordinator.h"
 #import "KeychainItemWrapper.h"
 #import "WMUtilities.h"
@@ -76,10 +75,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"DeferCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView registerClass:[WMButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
-    // attempt to resolve the last participant
-    if ([WCAppDelegate checkForAuthentication]) {
-        self.welcomeState = (nil == self.appDelegate.participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
-    }
+//    // attempt to resolve the last participant
+//    if ([WCAppDelegate checkForAuthentication]) {
+//        self.welcomeState = (nil == self.appDelegate.participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

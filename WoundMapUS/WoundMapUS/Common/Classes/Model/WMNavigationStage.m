@@ -62,6 +62,7 @@ NSString *const kDischargeStageTitle = @"Discharge";
                                                                                parentNode:nil
                                                                                    create:create
                                                                         completionHandler:completionHandler];
+            [[navigationStage managedObjectContext] MR_saveOnlySelfAndWait];
             NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[navigationNode objectID]];
         }

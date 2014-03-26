@@ -78,6 +78,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMWoundType *woundType = [self updateWoundTypeFromDictionary:dictionary managedObjectContext:managedObjectContext objectIDs:objectIDs];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[woundType objectID]];
         }
@@ -111,10 +112,10 @@ NSString * const kOtherWoundTypeTitle = @"Other";
         for (NSDictionary *d in children) {
             WMWoundType *woundType = [self updateWoundTypeFromDictionary:d managedObjectContext:managedObjectContext objectIDs:objectIDs];
             [woundType addChildrenObject:woundType];
-            NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[woundType objectID]];
         }
     }
+    [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[woundType objectID]];
     return woundType;

@@ -108,6 +108,7 @@ typedef enum {
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext completionHandler:completionHandler];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[navigationTrack objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[navigationTrack objectID]];
         }
@@ -147,6 +148,7 @@ typedef enum {
                                                                                         track:navigationTrack
                                                                                        create:create
                                                                             completionHandler:completionHandler];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[navigationStage objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[navigationStage objectID]];
         }

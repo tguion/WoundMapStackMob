@@ -199,7 +199,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (BOOL)dataInputIsComplete
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([_emailTextInput length] == 0) {// TODO check for valid email
+    if ([_emailTextInput length] == 0 || ![WMUtilities NSStringIsValidEmail:_emailTextInput]) {
         [messages addObject:@"Please enter a valid email address"];
     }
     if ([_firstNameTextInput length] == 0) {
@@ -271,6 +271,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         // NOTE: this returns on main thread
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        FFUser *ffUser = (FFUser *)object;
         if (error) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
                                                                 message:[NSString stringWithFormat:@"Unable to create an account: %@", error.localizedDescription]
@@ -283,7 +285,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [weakSelf.tableView reloadData];
             [weakSelf saveUserCredentialsInKeychain];
             // update participant
-            weakSelf.participant.guid = _ffUser.guid;
+            weakSelf.participant.guid = ffUser.guid;
         }
     }];
 }
@@ -623,7 +625,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
                     myCell.textField.tag = 1002;
                     myCell.textField.secureTextEntry = YES;
-                    [myCell updateWithLabelText:@"Password Confirm" valueText:_passwordConfirmTextInput valuePrompt:@"Confirm password"];
+                    [myCell updateWithLabelText:@"Password Confirm" valueText:_passwordConfirmTextInput valuePrompt:@""];
                     break;
                 }
             }
@@ -644,12 +646,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     // first name
                     myCell.textField.tag = 2000;
                     myCell.textField.secureTextEntry = NO;
+                    myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
                     [myCell updateWithLabelText:@"First Name" valueText:_firstNameTextInput valuePrompt:@""];
                     break;
                 }
                 case 1: {
                     // last name
                     myCell.textField.tag = 2001;
+                    myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
                     myCell.textField.secureTextEntry = NO;
                     [myCell updateWithLabelText:@"Last Name" valueText:_passwordTextInput valuePrompt:@""];
                     break;

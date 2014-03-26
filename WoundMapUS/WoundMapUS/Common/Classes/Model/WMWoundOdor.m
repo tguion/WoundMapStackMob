@@ -46,6 +46,7 @@
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMWoundOdor *woundOdor = [self updateWoundOdorFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[woundOdor objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[woundOdor objectID]];
         }

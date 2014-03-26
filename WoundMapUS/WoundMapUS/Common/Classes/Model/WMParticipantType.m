@@ -71,6 +71,7 @@
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMParticipantType *participantType = [self updateParticipantTypeFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[participantType objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[participantType objectID]];
         }
