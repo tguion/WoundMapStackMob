@@ -215,6 +215,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 - (void)testWoundTypeSeedBackend
 {
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSString *uri = [NSString stringWithFormat:@"/%@", [WMWoundType entityName]];
@@ -222,12 +223,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     for (WMWoundType *woundType in woundTypes) {
         [ff deleteObj:woundType];
     }
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
     id<FFUserProtocol> user = [ff loginWithUserName:@"todd" andPassword:@"todd"];
     if (nil == user) {
         NSLog(@"failed");
     }
     // first attempt to acquire data from backend
-    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
     [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
         // update backend
         [ffm createArray:objectIDs
