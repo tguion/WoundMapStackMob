@@ -53,6 +53,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 @property (nonatomic) NSNumber *lastRefreshTime;
 @property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
+@property (strong, nonatomic) NSOperationQueue *serialQueue;
 @property (strong, nonatomic) NSMutableArray *operationCache;
 
 @end
@@ -81,6 +82,10 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     _operationQueue.name = @"FatFractal Queue";
     _operationQueue.maxConcurrentOperationCount = WMMaxQueueConcurrency;
     
+    _serialQueue = [[NSOperationQueue alloc] init];
+    _serialQueue.name = @"Serial Queue";
+    _serialQueue.maxConcurrentOperationCount = 1;
+
     _operationCache = [[NSMutableArray alloc] init];
     
     return self;
@@ -231,12 +236,17 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                        collection:(NSString *)collection
                                ff:(WMFatFractal *)ff
                        addToQueue:(BOOL)addToQueue
+                           serial:(BOOL)serial
                  reverseEnumerate:(BOOL)reverseEnumerate
                 completionHandler:(WMOperationCallback)completionHandler
 {
     NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection reverseEnumerate:reverseEnumerate ff:ff completionHandler:completionHandler];
     if (addToQueue) {
-        [_operationQueue addOperation:operation];
+        if (serial) {
+            [_serialQueue addOperation:operation];
+        } else {
+            [_operationQueue addOperation:operation];
+        }
     } else {
         [_operationCache addObject:operation];
     }
@@ -245,7 +255,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
 
 - (NSBlockOperation *)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue  completionHandler:(WMOperationCallback)completionHandler
 {
-    return [self createArray:objectIDs collection:collection ff:ff addToQueue:addToQueue reverseEnumerate:NO completionHandler:completionHandler];
+    return [self createArray:objectIDs collection:collection ff:ff addToQueue:addToQueue serial:NO reverseEnumerate:NO completionHandler:completionHandler];
 }
 
 #pragma mark - Updates
@@ -791,36 +801,13 @@ static const NSInteger WMMaxQueueConcurrency = 24;
         NSUInteger enumerationOptions = (reverseEnumerate ? NSEnumerationReverse:0);
         [objectIDs enumerateObjectsWithOptions:enumerationOptions usingBlock:^(id objectID, NSUInteger index, BOOL *stop) {
             id object = [managedObjectContext objectWithID:objectID];
-            NSLog(@"Will create object backend: %@", object);
-            [ff createObj:object atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                BOOL signInRequired = NO;
-                if (error) {
-                    if (response.statusCode == 401) {
-                        signInRequired = YES;
-                    }
-                    [WMUtilities logError:error];
-                } else {
-                    object = [object MR_inContext:managedObjectContext];
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                }
-                if (completionHandler) {
-                    completionHandler(error, objectID, signInRequired);
-                }
-            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                BOOL signInRequired = NO;
-                if (error) {
-                    if (response.statusCode == 401) {
-                        signInRequired = YES;
-                    }
-                    [WMUtilities logError:error];
-                } else {
-                    [ff queueCreateObj:object atUri:ffUrl];
-                }
-                if (completionHandler) {
-                    completionHandler(error, objectID, signInRequired);
-                }
-            }];
+            NSLog(@"*** WoundMap: Will create object backend: %@", object);
+            [ff createObj:object atUri:ffUrl];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
         }];
+        if (completionHandler) {
+            completionHandler(nil, nil, NO);
+        }
     }];
     return operation;
 }

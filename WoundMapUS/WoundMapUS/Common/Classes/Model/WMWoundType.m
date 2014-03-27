@@ -153,7 +153,29 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 
 #pragma mark - FatFractal
 
-+ (NSArray *)propertyNamesNotToSerialize
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"childrenHaveSectionTitles",
+                                        @"flagsValue",
+                                        @"hasChildrenWoundTypes",
+                                        @"isOther",
+                                        @"optionsArray",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"titleForDisplay",
+                                        @"valueTypeCodeValue",
+                                        @"woundTypeCodeValue",
+                                        @"secondaryOptionsArray",
+                                        @"optionsArray",
+                                        @"groupValueTypeCode"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
 {
     static NSArray *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
@@ -172,9 +194,17 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     return PropertyNamesNotToSerialize;
 }
 
-- (BOOL) ff_shouldSerialize:(NSString *)propertyName
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundType propertyNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundType attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundType relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

@@ -52,7 +52,7 @@ static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
         [request setAffectedStores:@[store]];
     }
     [request setPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl]];
-    return [NSManagedObject MR_findFirstInContext:managedObjectContext];
+    return [NSManagedObject MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
 }
 
 /**
@@ -230,8 +230,18 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
     [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
         // update backend
-        [ffm createArray:objectIDs collection:[WMWoundType entityName] ff:ff addToQueue:YES reverseEnumerate:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            // nothing more to do for children
+        [ffm createArray:objectIDs
+              collection:[WMWoundType entityName]
+                      ff:ff
+              addToQueue:YES
+                  serial:YES
+        reverseEnumerate:YES
+       completionHandler:^(NSError *error, id object, BOOL signInRequired) {
+            // object is objectID
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            NSParameterAssert([object isKindOfClass:[NSManagedObjectID class]]);
+            WMWoundType *woundType = (WMWoundType *)[managedObjectContext objectWithID:object];
+            NSLog(@"WMWoundType after ff: %@", woundType);
             if (error) {
                 [WMUtilities logError:error];
             } else {

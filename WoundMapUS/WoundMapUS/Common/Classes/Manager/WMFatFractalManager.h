@@ -44,14 +44,28 @@ typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequir
                                 ff:(WMFatFractal *)ff
                         addToQueue:(BOOL)addToQueue
                  completionHandler:(WMOperationCallback)completionHandler;
+
 - (NSBlockOperation *)createObject:(id)object
                              ffUrl:(NSString *)ffUrl
                                 ff:(WMFatFractal *)ff
                         addToQueue:(BOOL)addToQueue
                       insertAtHead:(BOOL)insertAtHead
                  completionHandler:(WMOperationCallback)completionHandler;
-- (NSBlockOperation *)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue reverseEnumerate:(BOOL)reverseEnumerate completionHandler:(WMOperationCallback)completionHandler;
-- (NSBlockOperation *)createArray:(NSArray *)objectIDs collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
+
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs
+                       collection:(NSString *)collection
+                               ff:(WMFatFractal *)ff
+                       addToQueue:(BOOL)addToQueue
+                           serial:(BOOL)serial
+                 reverseEnumerate:(BOOL)reverseEnumerate
+                completionHandler:(WMOperationCallback)completionHandler;
+
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs
+                       collection:(NSString *)collection
+                               ff:(WMFatFractal *)ff
+                       addToQueue:(BOOL)addToQueue
+                completionHandler:(WMOperationCallback)completionHandler;
+
 - (NSBlockOperation *)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
 - (NSBlockOperation *)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
 - (NSBlockOperation *)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;

@@ -273,7 +273,11 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        NSBlockOperation *operation = [ffm createArray:[events valueForKey:@"objectID"] collection:[WMInterventionEvent entityName] ff:ff addToQueue:NO completionHandler:^(NSError *error, id object, BOOL signInRequired) {
+        NSBlockOperation *operation = [ffm createArray:[events valueForKey:@"objectID"]
+                                            collection:[WMInterventionEvent entityName]
+                                                    ff:ff
+                                            addToQueue:NO
+                                     completionHandler:^(NSError *error, id object, BOOL signInRequired) {
             NSParameterAssert([object isKindOfClass:[NSManagedObjectID class]]);
             NSManagedObjectID *objectID = (NSManagedObjectID *)object;
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
