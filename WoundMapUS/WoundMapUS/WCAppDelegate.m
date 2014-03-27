@@ -223,6 +223,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     for (WMWoundType *woundType in woundTypes) {
         [ff deleteObj:woundType];
     }
+    [managedObjectContext MR_deleteObjects:woundTypes];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     id<FFUserProtocol> user = [ff loginWithUserName:@"todd" andPassword:@"todd"];
     if (nil == user) {
@@ -235,22 +236,9 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
               collection:[WMWoundType entityName]
                       ff:ff
               addToQueue:YES
-                  serial:YES
         reverseEnumerate:YES
        completionHandler:^(NSError *error, id object, BOOL signInRequired) {
-            // object is objectID
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            NSParameterAssert([object isKindOfClass:[NSManagedObjectID class]]);
-            WMWoundType *woundType = (WMWoundType *)[managedObjectContext objectWithID:object];
-            NSLog(@"WMWoundType after ff: %@", woundType);
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                NSArray *rootWoundTypes = [ff getArrayFromUri:@"/WMWoundType/parent = null?depthGB=20"];
-                if ([rootWoundTypes count] == 0) {
-                    NSLog(@"failed");
-                }
-            }
+            // nothing here
         }];
     }];
 

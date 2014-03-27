@@ -56,7 +56,6 @@ typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequir
                        collection:(NSString *)collection
                                ff:(WMFatFractal *)ff
                        addToQueue:(BOOL)addToQueue
-                           serial:(BOOL)serial
                  reverseEnumerate:(BOOL)reverseEnumerate
                 completionHandler:(WMOperationCallback)completionHandler;
 

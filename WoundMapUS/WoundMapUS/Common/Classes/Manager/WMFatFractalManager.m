@@ -236,26 +236,24 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                        collection:(NSString *)collection
                                ff:(WMFatFractal *)ff
                        addToQueue:(BOOL)addToQueue
-                           serial:(BOOL)serial
                  reverseEnumerate:(BOOL)reverseEnumerate
-                completionHandler:(WMOperationCallback)completionHandler
 {
-    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection reverseEnumerate:reverseEnumerate ff:ff completionHandler:completionHandler];
+    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection reverseEnumerate:reverseEnumerate ff:ff];
     if (addToQueue) {
-        if (serial) {
-            [_serialQueue addOperation:operation];
-        } else {
-            [_operationQueue addOperation:operation];
-        }
+        [_operationQueue addOperation:operation];
     } else {
         [_operationCache addObject:operation];
     }
     return operation;
 }
 
-- (NSBlockOperation *)createArray:(NSArray *)objectIDs  collection:(NSString *)collection ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue  completionHandler:(WMOperationCallback)completionHandler
+- (NSBlockOperation *)createArray:(NSArray *)objectIDs
+                       collection:(NSString *)collection
+                               ff:(WMFatFractal *)ff
+                       addToQueue:(BOOL)addToQueue
+                completionHandler:(WMOperationCallback)completionHandler
 {
-    return [self createArray:objectIDs collection:collection ff:ff addToQueue:addToQueue serial:NO reverseEnumerate:NO completionHandler:completionHandler];
+    return [self createArray:objectIDs collection:collection ff:ff addToQueue:addToQueue reverseEnumerate:NO completionHandler:completionHandler];
 }
 
 #pragma mark - Updates
@@ -792,7 +790,6 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                                 collection:(NSString *)collection
                           reverseEnumerate:(BOOL)reverseEnumerate
                                         ff:(WMFatFractal *)ff
-                         completionHandler:(WMOperationCallback)completionHandler
 {
     NSParameterAssert([collection length]);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -805,9 +802,6 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             [ff createObj:object atUri:ffUrl];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }];
-        if (completionHandler) {
-            completionHandler(nil, nil, NO);
-        }
     }];
     return operation;
 }
