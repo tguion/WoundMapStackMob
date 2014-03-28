@@ -8,6 +8,7 @@
 
 #import "WMSignInViewController.h"
 #import "WMTextFieldTableViewCell.h"
+#import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMFatFractalManager.h"
 #import "WMUserDefaultsManager.h"
@@ -113,9 +114,26 @@
                                                       otherButtonTitles:nil];
             [alertView show];
         } else {
-            WMParticipant *participant = (WMParticipant *)object;
-            NSAssert(nil != participant, @"loginWithUserName:password success but returned object is nil");
-            NSAssert([participant isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but received %@", object);
+            FFUser *user = (FFUser *)object;
+            NSAssert(nil != user, @"loginWithUserName:password success but returned object is nil");
+            NSParameterAssert([user.userName length] > 0);
+            NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
+            // fetch participant
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
+                                                                                create:NO
+                                                                  managedObjectContext:managedObjectContext];
+            if (nil == participant) {
+                // fetch from back end
+                [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
+                [ff getObjFromUri:[NSString stringWithFormat:@"/WMParticipant/(userName eq '%@')", user.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    WM_ASSERT_MAIN_THREAD;
+                    NSParameterAssert(nil != object);
+                    NSParameterAssert([object isKindOfClass:[WMParticipant class]]);
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    participant = (WMParticipant *)object;
+                }];
+            }
             [self.delegate signInViewController:self didSignInParticipant:participant];
         }
     }];

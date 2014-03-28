@@ -11,6 +11,13 @@
 
 @implementation WMInterventionStatusJoin
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMInterventionStatusJoin *)interventionStatusJoinFromStatus:(WMInterventionStatus *)fromStatus
                                                       toStatus:(WMInterventionStatus *)toStatus
                                                         create:(BOOL)create

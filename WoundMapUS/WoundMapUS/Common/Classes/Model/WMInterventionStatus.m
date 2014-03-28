@@ -19,6 +19,13 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
 
 @implementation WMInterventionStatus
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)isActive
 {
     return [self.activeFlag boolValue];
@@ -101,10 +108,11 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
             NSAssert(![[interventionStatus objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[interventionStatus objectID]];
         }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
             completionHandler(nil, objectIDs, [WMInterventionStatus entityName]);
         }
-        [objectIDs removeAllObjects];
+        objectIDs = [[NSMutableArray alloc] init];
         array = [propertyList objectForKey:@"Joins"];
         for (NSDictionary *dictionary in array) {
             NSString *title = [[dictionary allKeys] lastObject];
@@ -126,6 +134,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                 NSAssert(![[interventionStatusJoin objectID] isTemporaryID], @"Expect a permanent objectID");
                 [objectIDs addObject:[interventionStatusJoin objectID]];
             }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             if (completionHandler) {
                 completionHandler(nil, objectIDs, [WMInterventionStatusJoin entityName]);
             }
@@ -143,7 +152,9 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
         PropertyNamesNotToSerialize = @[@"activeFlagValue",
                                         @"flagsValue",
                                         @"snomedCIDValue",
-                                        @"sortRankValue"];
+                                        @"sortRankValue",
+                                        @"isActive",
+                                        @"isInProcess"];
     });
     return PropertyNamesNotToSerialize;
 }

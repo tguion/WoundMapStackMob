@@ -75,6 +75,7 @@
             NSAssert(![[participantType objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[participantType objectID]];
         }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
             completionHandler(nil, objectIDs, [WMParticipantType entityName]);
         }

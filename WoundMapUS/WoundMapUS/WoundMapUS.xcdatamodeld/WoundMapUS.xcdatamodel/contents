@@ -803,6 +803,7 @@
     <entity name="WMWoundLocationPositionJoin" representedClassName="WMWoundLocationPositionJoin" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="location" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundLocation" inverseName="positionJoins" inverseEntity="WMWoundLocation" syncable="YES"/>
@@ -811,6 +812,7 @@
     <entity name="WMWoundLocationValue" representedClassName="WMWoundLocationValue" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundLocation" inverseName="values" inverseEntity="WMWoundLocation" syncable="YES"/>
@@ -1185,8 +1187,8 @@
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMWound" positionX="0" positionY="0" width="128" height="285"/>
         <element name="WMWoundLocation" positionX="0" positionY="0" width="128" height="270"/>
-        <element name="WMWoundLocationPositionJoin" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="WMWoundLocationValue" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="WMWoundLocationPositionJoin" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="WMWoundLocationValue" positionX="0" positionY="0" width="128" height="150"/>
         <element name="WMWoundMeasurement" positionX="0" positionY="0" width="128" height="405"/>
         <element name="WMWoundMeasurementGroup" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMWoundMeasurementIntEvent" positionX="0" positionY="0" width="128" height="75"/>

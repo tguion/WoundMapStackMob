@@ -432,12 +432,6 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     }
 }
 
-- (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
-{
-    NSBlockOperation *teamOperation = [self addParticipantToTeamOperation:participant ff:ff completionHandler:completionHandler];
-    [_operationCache addObject:teamOperation];
-}
-
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff
 {
     __weak __typeof(&*self)weakSelf = self;
@@ -973,29 +967,6 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     } else {
         [_operationCache addObject:operation];
     }
-    return operation;
-}
-
-- (NSBlockOperation *)addParticipantToTeamOperation:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
-{
-    NSParameterAssert([participant.ffUrl length] > 0);
-    NSParameterAssert(nil != participant.team);
-    NSParameterAssert([participant.team.ffUrl length] > 0);
-    NSManagedObjectID *objectID = [participant objectID];
-    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        WMParticipant *participant = (WMParticipant *)[managedObjectContext objectWithID:objectID];
-        WMTeam *team = participant.team;
-        // update participant
-        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:team.ffUrl grabBagName:@"participants"];
-            NSError *userGroupError = nil;
-            [team.participantGroup addUser:participant error:&userGroupError];
-            if (userGroupError) {
-                [WMUtilities logError:userGroupError];
-            }
-        }];
-    }];
     return operation;
 }
 

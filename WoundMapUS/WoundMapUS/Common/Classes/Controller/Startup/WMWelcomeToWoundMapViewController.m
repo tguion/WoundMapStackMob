@@ -653,6 +653,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [weakSelf hideProgressView];
         weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
         [weakSelf.tableView reloadData];
+        // update back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        [ffm updateObject:participant ff:ff addToQueue:YES completionHandler:nil];
     }];
 }
 

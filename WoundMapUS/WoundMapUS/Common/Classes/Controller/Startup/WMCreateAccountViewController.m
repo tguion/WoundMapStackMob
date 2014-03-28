@@ -227,7 +227,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
     [keychainItem setObject:_userNameTextInput forKey:(__bridge id)(kSecAttrAccount)];
     [keychainItem setObject:_passwordTextInput forKey:(__bridge id)(kSecValueData)];
-    NSLog(@"Successfully saved user %@ to keychain after signup in SignupViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
+    NSLog(@"Successfully saved user %@ to keychain after signup in WMCreateAccountViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
     
 }
 
@@ -288,14 +288,11 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             // update participant
             weakSelf.participant.guid = ffUser.guid;
             // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
-            MBProgressHUD *progressView = [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
-            progressView.labelText = @"Seeding databases";
             WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
             [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
             }];
 
         }

@@ -10,6 +10,13 @@
 
 @implementation WMWoundOdor
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMWoundOdor *)woundOdorForTitle:(NSString *)title
                             create:(BOOL)create
               managedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -50,6 +57,7 @@
             NSAssert(![[woundOdor objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[woundOdor objectID]];
         }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
             completionHandler(nil, objectIDs, [WMWoundOdor entityName]);
         }

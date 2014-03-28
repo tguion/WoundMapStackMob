@@ -210,7 +210,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     navigationController.delegate = self;
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
-    [self testWoundTypeSeedBackend];
+//    [self testWoundTypeSeedBackend];
 }
 
 - (void)testWoundTypeSeedBackend

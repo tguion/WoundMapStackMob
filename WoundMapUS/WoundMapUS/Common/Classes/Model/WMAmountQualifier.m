@@ -10,6 +10,13 @@
 
 @implementation WMAmountQualifier
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMAmountQualifier *)amountQualifierForTitle:(NSString *)title
                                         create:(BOOL)create
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -64,6 +71,7 @@
             NSAssert(![[amountQualifier objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[amountQualifier objectID]];
         }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
             completionHandler(nil, objectIDs, [WMAmountQualifier entityName]);
         }
