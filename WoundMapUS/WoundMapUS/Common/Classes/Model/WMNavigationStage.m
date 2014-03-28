@@ -38,7 +38,6 @@ NSString *const kDischargeStageTitle = @"Discharge";
 + (WMNavigationStage *)updateStageFromDictionary:(NSDictionary *)dictionary
                                            track:(WMNavigationTrack *)navigationTrack
                                           create:(BOOL)create
-                               completionHandler:(WMProcessCallback)completionHandler
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationStage *navigationStage = [WMNavigationStage stageForTitle:title
@@ -55,19 +54,11 @@ NSString *const kDischargeStageTitle = @"Discharge";
     navigationStage.desc = [dictionary objectForKey:@"desc"];
     id nodes = [dictionary objectForKey:@"nodes"];
     if ([nodes isKindOfClass:[NSArray class]]) {
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *d in nodes) {
-            WMNavigationNode *navigationNode = [WMNavigationNode updateNodeFromDictionary:d
-                                                                                    stage:navigationStage
-                                                                               parentNode:nil
-                                                                                   create:create
-                                                                        completionHandler:completionHandler];
-            [[navigationStage managedObjectContext] MR_saveOnlySelfAndWait];
-            NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-            [objectIDs addObject:[navigationNode objectID]];
-        }
-        if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+            [WMNavigationNode updateNodeFromDictionary:d
+                                                 stage:navigationStage
+                                            parentNode:nil
+                                                create:create];
         }
     }
     return navigationStage;
@@ -109,6 +100,48 @@ NSString *const kDischargeStageTitle = @"Discharge";
         navigationStage.track = navigationTrack;
     }
     return navigationStage;
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"disabledFlagValue",
+                                        @"flagsValue",
+                                        @"sortRankValue"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMNavigationStageRelationships.nodes,
+                                        WMNavigationStageRelationships.patients];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMNavigationStage attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMNavigationStage relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end

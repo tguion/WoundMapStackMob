@@ -20,12 +20,14 @@ extern const struct WMNavigationTrackAttributes {
 
 extern const struct WMNavigationTrackRelationships {
 	__unsafe_unretained NSString *stages;
+	__unsafe_unretained NSString *team;
 } WMNavigationTrackRelationships;
 
 extern const struct WMNavigationTrackFetchedProperties {
 } WMNavigationTrackFetchedProperties;
 
 @class WMNavigationStage;
+@class WMTeam;
 
 
 
@@ -185,6 +187,13 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMTeam *team;
+
+//- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -281,6 +290,11 @@ extern const struct WMNavigationTrackFetchedProperties {
 
 - (NSMutableSet*)primitiveStages;
 - (void)setPrimitiveStages:(NSMutableSet*)value;
+
+
+
+- (WMTeam*)primitiveTeam;
+- (void)setPrimitiveTeam:(WMTeam*)value;
 
 
 @end

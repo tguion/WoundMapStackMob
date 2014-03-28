@@ -454,6 +454,7 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="stages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationStage" inverseName="track" inverseEntity="WMNavigationStage" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="navigationTracks" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
     <entity name="WMOrganization" representedClassName="WMOrganization" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -716,6 +717,7 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="team" inverseEntity="WMConsultingGroup" syncable="YES"/>
         <relationship name="invitations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTeamInvitation" inverseName="team" inverseEntity="WMTeamInvitation" syncable="YES"/>
+        <relationship name="navigationTracks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationTrack" inverseName="team" inverseEntity="WMNavigationTrack" syncable="YES"/>
         <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="team" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatient" inverseName="team" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
@@ -1160,7 +1162,7 @@
         <element name="WMMedicationInterventionEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="450"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
-        <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="135"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="315"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
@@ -1177,7 +1179,7 @@
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMSkinAssessmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="178"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="195"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="163"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>

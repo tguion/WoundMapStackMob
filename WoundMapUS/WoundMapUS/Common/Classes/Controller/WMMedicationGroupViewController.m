@@ -269,26 +269,27 @@
     NSArray *medicationsAdded = _medicationGroup.medicationsAdded;
     NSArray *medicationsRemoved = _medicationGroup.medicationsRemoved;
     // update back end - need to handle medications added/removed, interventionEvents added
-    NSManagedObjectID *medicationGroupObjectID = [_medicationGroup objectID];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        NSBlockOperation *operation = [ffm createArray:[events valueForKey:@"objectID"]
+        NSManagedObjectID *medicationGroupObjectID = [_medicationGroup objectID];
+        NSArray *eventObjectIDs = [events valueForKey:@"objectID"];
+        NSBlockOperation *operation = [ffm createArray:eventObjectIDs
                                             collection:[WMInterventionEvent entityName]
                                                     ff:ff
                                             addToQueue:NO
-                                     completionHandler:^(NSError *error, id object, BOOL signInRequired) {
-            NSParameterAssert([object isKindOfClass:[NSManagedObjectID class]]);
-            NSManagedObjectID *objectID = (NSManagedObjectID *)object;
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            WMMedicationGroup *medicationGroup = (WMMedicationGroup *)[managedObjectContext objectWithID:medicationGroupObjectID];
-            WMInterventionEvent *event = (WMInterventionEvent *)[managedObjectContext objectWithID:objectID];
-            NSString *medicationGroupFFURL = medicationGroup.ffUrl;
-            NSString *eventFFURL = event.ffUrl;
-            NSAssert([medicationGroupFFURL length] > 0, @"WMMedicationGroup.ffUrl should not be nil");
-            NSAssert([eventFFURL length] > 0, @"WMInterventionEvent.ffUrl should not be nil");
-            [ff queueGrabBagAddItemAtUri:eventFFURL toObjAtUri:medicationGroupFFURL grabBagName:WMMedicationGroupRelationships.interventionEvents];
-        }];
+                                     completionHandler:^(NSError *error) {
+                                         NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                                         WMMedicationGroup *medicationGroup = (WMMedicationGroup *)[managedObjectContext objectWithID:medicationGroupObjectID];
+                                         for (NSManagedObjectID *objectID in eventObjectIDs) {
+                                             WMInterventionEvent *event = (WMInterventionEvent *)[managedObjectContext objectWithID:objectID];
+                                             NSString *medicationGroupFFURL = medicationGroup.ffUrl;
+                                             NSString *eventFFURL = event.ffUrl;
+                                             NSAssert([medicationGroupFFURL length] > 0, @"WMMedicationGroup.ffUrl should not be nil");
+                                             NSAssert([eventFFURL length] > 0, @"WMInterventionEvent.ffUrl should not be nil");
+                                             [ff queueGrabBagAddItemAtUri:eventFFURL toObjAtUri:medicationGroupFFURL grabBagName:WMMedicationGroupRelationships.interventionEvents];
+                                         }
+                                     }];
         if (_insertMedicationGroupOperation) {
             [operation addDependency:_insertMedicationGroupOperation];
         }

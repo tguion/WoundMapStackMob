@@ -27,11 +27,10 @@ typedef NS_ENUM(int16_t, NavigationNodeFrequencyUnit) {
 + (WMNavigationNode *)updateNodeFromDictionary:(NSDictionary *)dictionary
                                          stage:(WMNavigationStage *)stage
                                     parentNode:(WMNavigationNode *)parentNode
-                                        create:(BOOL)create
-                             completionHandler:(WMProcessCallback)completionHandler;
+                                        create:(BOOL)create;
 
-+ (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
-+ (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext;
++ (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext;
 + (NSArray *)patientNodes:(NSManagedObjectContext *)managedObjectContext;
 + (NSArray *)woundNodes:(NSManagedObjectContext *)managedObjectContext;
 

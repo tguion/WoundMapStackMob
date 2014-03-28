@@ -237,8 +237,9 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                                ff:(WMFatFractal *)ff
                        addToQueue:(BOOL)addToQueue
                  reverseEnumerate:(BOOL)reverseEnumerate
+                completionHandler:(void (^)(NSError *))completionHandler;
 {
-    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection reverseEnumerate:reverseEnumerate ff:ff];
+    NSBlockOperation *operation = [self createArrayOperation:objectIDs collection:collection reverseEnumerate:reverseEnumerate ff:ff completionHandler:completionHandler];
     if (addToQueue) {
         [_operationQueue addOperation:operation];
     } else {
@@ -251,7 +252,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                        collection:(NSString *)collection
                                ff:(WMFatFractal *)ff
                        addToQueue:(BOOL)addToQueue
-                completionHandler:(WMOperationCallback)completionHandler
+                completionHandler:(void (^)(NSError *))completionHandler;
 {
     return [self createArray:objectIDs collection:collection ff:ff addToQueue:addToQueue reverseEnumerate:NO completionHandler:completionHandler];
 }
@@ -397,28 +398,38 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     [_operationCache addObject:teamInvitationOperation];
 }
 
-- (void)createTeamWithParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)createTeamWithParticipant:(WMParticipant *)participant user:(FFUser *)user ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
 {
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     NSParameterAssert([participant.ffUrl length] > 0);
-    NSParameterAssert(nil != participant.team);
-    NSParameterAssert([participant.team.ffUrl length] > 0);
     NSParameterAssert(participant.isTeamLeader);
     WMTeam *team = participant.team;
-    FFUserGroup *participantGroup = [[FFUserGroup alloc] initWithFF:ff];
-    [participantGroup setGroupName:@"participantGroup"];
-    team.participantGroup = participantGroup;
-    NSBlockOperation *userGroupOperation = [self createOperation:participantGroup collection:@"/FFUserGroup" ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        if (!error) {
-            NSError *userGroupError = nil;
-            [team.participantGroup addUser:participant error:&userGroupError];
-            if (userGroupError) {
-                [WMUtilities logError:userGroupError];
-                error = userGroupError;
-            }
-        }
-        completionHandler(error, object, signInRequired);
-    }];
-    [_operationCache addObject:userGroupOperation];
+    if (nil == team) {
+        team = [WMTeam MR_createInContext:managedObjectContext];
+        participant.team = team;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        NSError *error = nil;
+        [team.participantGroup addUser:user error:&error];
+        NSAssert(nil == error, @"Error adding user %@ to group %@", user, team.participantGroup);
+        NSBlockOperation *createUserGroupOperation = [self createOperation:team.participantGroup
+                                                                collection:@"FFUserGroup"
+                                                                        ff:ff
+                                                         completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
+                                                             // nothing
+                                                         }];
+        [_operationCache addObject:createUserGroupOperation];
+        NSBlockOperation *createTeamOperation = [self createOperation:team
+                                                           collection:[WMTeam entityName]
+                                                                   ff:ff
+                                                    completionHandler:completionHandler];
+        [_operationCache addObject:createTeamOperation];
+        [createTeamOperation addDependency:createUserGroupOperation];
+    } else {
+        NSError *error = nil;
+        [team.participantGroup addUser:user error:&error];
+        NSBlockOperation *updateOperation = [self updateOperation:team.participantGroup ff:ff completionHandler:completionHandler];
+        [_operationCache addObject:updateOperation];
+    }
 }
 
 - (void)addParticipantToTeam:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler
@@ -790,6 +801,7 @@ static const NSInteger WMMaxQueueConcurrency = 24;
                                 collection:(NSString *)collection
                           reverseEnumerate:(BOOL)reverseEnumerate
                                         ff:(WMFatFractal *)ff
+                         completionHandler:(void (^)(NSError *))completionHandler
 {
     NSParameterAssert([collection length]);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
@@ -802,6 +814,9 @@ static const NSInteger WMMaxQueueConcurrency = 24;
             [ff createObj:object atUri:ffUrl];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }];
+        if (completionHandler) {
+            completionHandler(nil);
+        }
     }];
     return operation;
 }

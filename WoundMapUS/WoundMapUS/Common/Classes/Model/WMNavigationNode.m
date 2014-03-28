@@ -123,7 +123,6 @@ typedef enum {
                                          stage:(WMNavigationStage *)stage
                                     parentNode:(WMNavigationNode *)parentNode
                                         create:(BOOL)create
-                             completionHandler:(WMProcessCallback)completionHandler
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationNode *navigationNode = [WMNavigationNode nodeForTitle:title
@@ -189,19 +188,11 @@ typedef enum {
     }
     id subnodes = [dictionary objectForKey:@"subnodes"];
     if ([subnodes isKindOfClass:[NSArray class]]) {
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *d in subnodes) {
-            WMNavigationNode *subnode = [WMNavigationNode updateNodeFromDictionary:d
-                                                                             stage:stage
-                                                                        parentNode:navigationNode
-                                                                            create:YES
-                                                                 completionHandler:completionHandler];
-            [[navigationNode managedObjectContext] MR_saveOnlySelfAndWait];
-            NSAssert(![[subnode objectID] isTemporaryID], @"Expect a permanent objectID");
-            [objectIDs addObject:[subnode objectID]];
-        }
-        if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+            [WMNavigationNode updateNodeFromDictionary:d
+                                                 stage:stage
+                                            parentNode:navigationNode
+                                                create:YES];
         }
     }
     return navigationNode;
@@ -212,9 +203,8 @@ typedef enum {
     return [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"patientFlag == YES"] inContext:managedObjectContext];
 }
 
-+ (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedPatientNodes:(NSManagedObjectContext *)managedObjectContext
 {
-    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
     // select
     WMNavigationNode *navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
@@ -228,9 +218,6 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[navigationNode objectID]];
     // edit
     navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
@@ -244,9 +231,6 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[navigationNode objectID]];
     // add
     navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
@@ -260,12 +244,6 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @NO;
     navigationNode.hidesStatusIndicator = YES;
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[navigationNode objectID]];
-    if (completionHandler) {
-        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
-    }
 }
 
 + (NSArray *)woundNodes:(NSManagedObjectContext *)managedObjectContext
@@ -276,9 +254,8 @@ typedef enum {
                                       inContext:managedObjectContext];
 }
 
-+ (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedWoundNodes:(NSManagedObjectContext *)managedObjectContext
 {
-    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
     // select
     WMNavigationNode *navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
@@ -292,9 +269,6 @@ typedef enum {
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
-    [managedObjectContext saveOnlySelfAndWait];
-    NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[navigationNode objectID]];
     // edit
     navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
@@ -308,9 +282,6 @@ typedef enum {
     navigationNode.title = @"Edit";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[navigationNode objectID]];
     // add
     navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
@@ -324,12 +295,6 @@ typedef enum {
     navigationNode.title = @"Add";
     navigationNode.woundFlag = @YES;
     navigationNode.hidesStatusIndicator = YES;
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[navigationNode objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[navigationNode objectID]];
-    if (completionHandler) {
-        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
-    }
 }
 
 + (WMNavigationNode *)navigationNodeForTaskIdentifier:(NSInteger)navigationNodeIdentifier
@@ -592,6 +557,59 @@ typedef enum {
         navigationNode.parentNode = parentNode;
     }
     return navigationNode;
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"activeFlagValue",
+                                        @"closeUnitValue",
+                                        @"closeValueValue",
+                                        @"disabledFlagValue",
+                                        @"flagsValue",
+                                        @"frequencyUnitValue",
+                                        @"frequencyValueValue",
+                                        @"patientFlagValue",
+                                        @"requiresPatientFlagValue",
+                                        @"requiresWoundFlagValue",
+                                        @"requiresWoundPhotoFlagValue",
+                                        @"sortRankValue",
+                                        @"taskIdentifierValue",
+                                        @"userSortRankValue",
+                                        @"woundFlagValue"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMNavigationNodeRelationships.subnodes];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMNavigationNode attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMNavigationNode relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end

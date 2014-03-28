@@ -133,4 +133,52 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
     }
 }
 
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"activeFlagValue",
+                                        @"flagsValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMInterventionStatusRelationships.carePlanGroups,
+                                        WMInterventionStatusRelationships.deviceGroups,
+                                        WMInterventionStatusRelationships.measurementGroups,
+                                        WMInterventionStatusRelationships.medicationGroups,
+                                        WMInterventionStatusRelationships.psychoSocialGroups,
+                                        WMInterventionStatusRelationships.skinAssessmentGroups,
+                                        WMInterventionStatusRelationships.treatmentGroups];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMInterventionStatus attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMInterventionStatus relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
 @end

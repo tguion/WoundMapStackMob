@@ -15,6 +15,7 @@
 + (NSInteger)navigationTrackCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallback)completionHandler;
 
 + (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext;
 

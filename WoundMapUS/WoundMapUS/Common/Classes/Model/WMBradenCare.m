@@ -33,14 +33,18 @@
 		DLog(@"BradenCare.plist not found");
 		return;
 	}
-	NSError *error = nil;
-	NSData *data = [NSData dataWithContentsOfURL:fileURL];
-	id propertyList = [NSPropertyListSerialization propertyListWithData:data
-																options:NSPropertyListImmutable
-																 format:NULL
-																  error:&error];
-	NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-    [managedObjectContext performBlockAndWait:^{
+    if ([WMBradenCare MR_countOfEntitiesWithContext:managedObjectContext]) {
+        return;
+    }
+    // else
+    @autoreleasepool {
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        id propertyList = [NSPropertyListSerialization propertyListWithData:data
+                                                                    options:NSPropertyListImmutable
+                                                                     format:NULL
+                                                                      error:&error];
+        NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
             // attempt to fetch existing instance
             NSString *sectionTitle = [dictionary objectForKey:@"sectionTitle"];
@@ -51,7 +55,8 @@
             }
             [bradenCare setValuesForKeysWithDictionary:dictionary];
         }
-    }];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    }
 }
 
 

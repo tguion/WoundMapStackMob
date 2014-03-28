@@ -15,6 +15,7 @@ extern const struct WMTeamAttributes {
 extern const struct WMTeamRelationships {
 	__unsafe_unretained NSString *consultingGroup;
 	__unsafe_unretained NSString *invitations;
+	__unsafe_unretained NSString *navigationTracks;
 	__unsafe_unretained NSString *participants;
 	__unsafe_unretained NSString *patients;
 } WMTeamRelationships;
@@ -24,6 +25,7 @@ extern const struct WMTeamFetchedProperties {
 
 @class WMConsultingGroup;
 @class WMTeamInvitation;
+@class WMNavigationTrack;
 @class WMParticipant;
 @class WMPatient;
 
@@ -114,6 +116,13 @@ extern const struct WMTeamFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *navigationTracks;
+
+- (NSMutableSet*)navigationTracksSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *participants;
 
 - (NSMutableSet*)participantsSet;
@@ -137,6 +146,11 @@ extern const struct WMTeamFetchedProperties {
 - (void)removeInvitations:(NSSet*)value_;
 - (void)addInvitationsObject:(WMTeamInvitation*)value_;
 - (void)removeInvitationsObject:(WMTeamInvitation*)value_;
+
+- (void)addNavigationTracks:(NSSet*)value_;
+- (void)removeNavigationTracks:(NSSet*)value_;
+- (void)addNavigationTracksObject:(WMNavigationTrack*)value_;
+- (void)removeNavigationTracksObject:(WMNavigationTrack*)value_;
 
 - (void)addParticipants:(NSSet*)value_;
 - (void)removeParticipants:(NSSet*)value_;
@@ -194,6 +208,11 @@ extern const struct WMTeamFetchedProperties {
 
 - (NSMutableSet*)primitiveInvitations;
 - (void)setPrimitiveInvitations:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveNavigationTracks;
+- (void)setPrimitiveNavigationTracks:(NSMutableSet*)value;
 
 
 

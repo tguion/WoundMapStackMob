@@ -19,6 +19,7 @@ const struct WMNavigationTrackAttributes WMNavigationTrackAttributes = {
 
 const struct WMNavigationTrackRelationships WMNavigationTrackRelationships = {
 	.stages = @"stages",
+	.team = @"team",
 };
 
 const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperties = {
@@ -241,6 +242,10 @@ const struct WMNavigationTrackFetchedProperties WMNavigationTrackFetchedProperti
 	[self didAccessValueForKey:@"stages"];
 	return result;
 }
+	
+
+@dynamic team;
+
 	
 
 

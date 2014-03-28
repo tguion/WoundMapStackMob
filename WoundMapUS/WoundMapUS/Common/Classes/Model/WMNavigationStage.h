@@ -12,8 +12,7 @@
 
 + (WMNavigationStage *)updateStageFromDictionary:(NSDictionary *)dictionary
                                            track:(WMNavigationTrack *)navigationTrack
-                                          create:(BOOL)create
-                               completionHandler:(WMProcessCallback)completionHandler;
+                                          create:(BOOL)create;
 
 + (WMNavigationStage *)initialStageForTrack:(WMNavigationTrack *)navigationTrack;
 

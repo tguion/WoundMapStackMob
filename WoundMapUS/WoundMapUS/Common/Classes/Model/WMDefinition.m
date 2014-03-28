@@ -176,18 +176,17 @@ static NSMutableCharacterSet *keywordDelimiters;
                                                                              format:NULL
                                                                               error:&error];
                 NSAssert1([propertyList isKindOfClass:[NSDictionary class]], @"Property list file did not return a dictionary, class was %@", NSStringFromClass([propertyList class]));
-                [managedObjectContext performBlockAndWait:^{
-                    NSInteger sortRank = 0;
-                    for (NSString *term in propertyList) {
-                        WMDefinition *definition = [WMDefinition definitionForTerm:term
-                                                                        definition:[propertyList objectForKey:term]
-                                                                             scope:[key intValue]
-                                                                            create:YES
-                                                              managedObjectContext:managedObjectContext];
-                        definition.sortRank = @(sortRank++);
-                    }
-                }];
+                NSInteger sortRank = 0;
+                for (NSString *term in propertyList) {
+                    WMDefinition *definition = [WMDefinition definitionForTerm:term
+                                                                    definition:[propertyList objectForKey:term]
+                                                                         scope:[key intValue]
+                                                                        create:YES
+                                                          managedObjectContext:managedObjectContext];
+                    definition.sortRank = @(sortRank++);
+                }
             }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
         }
     }
 }

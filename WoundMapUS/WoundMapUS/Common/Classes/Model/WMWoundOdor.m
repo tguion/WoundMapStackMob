@@ -75,4 +75,46 @@
     return woundOdor;
 }
 
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"valueTypeCodeValue"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMWoundOdorRelationships.measurementValues];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundOdor attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundOdor relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
 @end

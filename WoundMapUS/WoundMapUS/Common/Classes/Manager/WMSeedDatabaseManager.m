@@ -23,6 +23,7 @@
 #import "WMAmountQualifier.h"
 #import "WMWoundOdor.h"
 #import "WMInterventionStatus.h"
+#import "WMTeam.h"
 #import "CoreDataHelper.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
@@ -71,17 +72,12 @@
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
                [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMWoundType entityName] ff:ff addToQueue:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                       // handle children to-many relationship
-                       WMWoundType *woundType = (WMWoundType *)object;
-                       NSAssert([woundType isKindOfClass:[WMWoundType class]], @"Expected WMWoundType, but received %@", woundType);
-                       if ([woundType.children count]) {
-                           for (WMWoundType *child in woundType.children) {
-                               NSAssert([child.ffUrl length] > 0, @"Expected ffUrl");
-                               [ff queueGrabBagAddItemAtUri:child.ffUrl toObjAtUri:woundType.ffUrl grabBagName:WMWoundTypeRelationships.children];
-                           }
-                       }
-                   }];
+                   [ffm createArray:objectIDs
+                         collection:collection
+                                 ff:ff
+                         addToQueue:YES
+                   reverseEnumerate:YES
+                  completionHandler:nil];
                }];
            }];
         // first attempt to acquire data from backend
@@ -94,7 +90,11 @@
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
                [WMParticipantType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMParticipantType entityName] ff:ff addToQueue:YES completionHandler:nil];
+                   [ffm createArray:objectIDs
+                         collection:collection
+                                 ff:ff
+                         addToQueue:YES
+                  completionHandler:nil];
                }];
            }];
         // first attempt to acquire data from backend
@@ -107,7 +107,11 @@
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
                [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMAmountQualifier entityName] ff:ff addToQueue:YES completionHandler:nil];
+                   [ffm createArray:objectIDs
+                         collection:collection
+                                 ff:ff
+                         addToQueue:YES
+                  completionHandler:nil];
                }];
            }];
         // first attempt to acquire data from backend
@@ -120,12 +124,20 @@
            completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
                [WMWoundOdor seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                    // update backend
-                   [ffm createArray:objectIDs collection:[WMWoundOdor entityName] ff:ff addToQueue:YES completionHandler:nil];
+                   [ffm createArray:objectIDs
+                         collection:collection
+                                 ff:ff
+                         addToQueue:YES
+                  completionHandler:nil];
                }];
            }];
         [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
             // update backend
-            [ffm createArray:objectIDs collection:[WMInterventionStatus entityName] ff:ff addToQueue:YES completionHandler:nil];
+            [ffm createArray:objectIDs
+                  collection:collection
+                          ff:ff
+                  addToQueue:YES
+           completionHandler:nil];
         }];
 //        [WCInterventionEventType seedDatabase:managedObjectContext persistentStore:nil];
 //        [WMMedicationCategory seedDatabase:managedObjectContext persistentStore:nil];
@@ -135,45 +147,6 @@
 //        [WCWoundLocation seedDatabase:managedObjectContext persistentStore:nil];
 //        [WMWoundTreatment seedDatabase:managedObjectContext persistentStore:nil];
 //        [WMWoundMeasurement seedDatabase:managedObjectContext persistentStore:nil];
-        // first attempt to acquire data from backend
-        [ffm fetchCollection:[WMNavigationTrack entityName]
-                       query:nil
-                     depthGb:4
-                    depthRef:1
-                          ff:ff
-        managedObjectContext:managedObjectContext
-           completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
-                   // update backend
-                   [ffm createArray:objectIDs collection:[WMNavigationTrack entityName] ff:ff addToQueue:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                       if ([object isKindOfClass:[WMNavigationNode class]]) {
-                           // handle subnodes to-many relationship
-                           WMNavigationNode *navigationNode = (WMNavigationNode *)object;
-                           if ([navigationNode.subnodes count]) {
-                               for (WMNavigationNode *subnode in navigationNode.subnodes) {
-                                   [ff queueGrabBagAddItemAtUri:subnode.ffUrl toObjAtUri:navigationNode.ffUrl grabBagName:WMNavigationNodeRelationships.subnodes];
-                               }
-                           }
-                       } else if ([object isKindOfClass:[WMNavigationStage class]]) {
-                           // handle nodes to-many relationship
-                           WMNavigationStage *navigationStage = (WMNavigationStage *)object;
-                           if ([navigationStage.nodes count]) {
-                               for (WMNavigationNode *node in navigationStage.nodes) {
-                                   [ff queueGrabBagAddItemAtUri:node.ffUrl toObjAtUri:navigationStage.ffUrl grabBagName:WMNavigationStageRelationships.nodes];
-                               }
-                           }
-                       } else if ([object isKindOfClass:[WMNavigationTrack class]]) {
-                           // handle stages to-many relationship
-                           WMNavigationTrack *navigationTrack = (WMNavigationTrack *)object;
-                           if ([navigationTrack.stages count]) {
-                               for (WMNavigationStage *stage in navigationTrack.stages) {
-                                   [ff queueGrabBagAddItemAtUri:stage.ffUrl toObjAtUri:navigationTrack.ffUrl grabBagName:WMNavigationTrackRelationships.stages];
-                               }
-                           }
-                       }
-                   }];
-               }];
-           }];
 //        [WMPsychoSocialItem seedDatabase:stackMobContext persistentStore:nil];
         DLog(@"reading plists and seeding database finished");
     });
@@ -181,7 +154,23 @@
 
 - (void)seedTeamDatabase:(WMTeam *)team completionHandler:(void (^)(NSError *))handler
 {
-    
+    NSParameterAssert([team.ffUrl length] > 0);
+    if ([team.navigationTracks count]) {
+        return;
+    }
+    // else
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
+            // update backend
+            [ffm createArray:objectIDs
+                  collection:collection
+                          ff:ff
+                  addToQueue:YES
+           completionHandler:nil];
+        }];
+    });
 }
 
 @end

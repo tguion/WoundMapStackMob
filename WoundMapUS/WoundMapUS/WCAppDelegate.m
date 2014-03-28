@@ -237,9 +237,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                       ff:ff
               addToQueue:YES
         reverseEnumerate:YES
-       completionHandler:^(NSError *error, id object, BOOL signInRequired) {
-            // nothing here
-        }];
+       completionHandler:nil];
     }];
 
 }

@@ -18,6 +18,11 @@
         DLog(@"Instructions.plist file not found");
         return;
     }
+    // check if already seeded
+    NSInteger count = [WMInstruction instructionCount:managedObjectContext];
+    if (count > 0 && count != NSNotFound) {
+        return;
+    }
     // else
     @autoreleasepool {
         NSError *error = nil;
@@ -27,18 +32,10 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
-        __weak __typeof(self) weakSelf = self;
-        [managedObjectContext performBlockAndWait:^{
-            // check if already seeded
-            NSInteger count = [WMInstruction instructionCount:managedObjectContext];
-            if (count > 0 && count != NSNotFound) {
-                return;
-            }
-            // else
-            for (NSDictionary *dictionary in propertyList) {
-                [weakSelf updateInstructionFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
-            }
-        }];
+        for (NSDictionary *dictionary in propertyList) {
+            [self updateInstructionFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
     }
 }
 

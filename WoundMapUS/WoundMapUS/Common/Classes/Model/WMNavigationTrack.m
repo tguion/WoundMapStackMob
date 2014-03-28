@@ -1,6 +1,7 @@
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
+#import "WMTeam.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -105,18 +106,86 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext completionHandler:completionHandler];
-            [managedObjectContext MR_saveOnlySelfAndWait];
-            NSAssert(![[navigationTrack objectID] isTemporaryID], @"Expect a permanent objectID");
-            [objectIDs addObject:[navigationTrack objectID]];
+            [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
         }
         // create patient and wound nodes
-        [WMNavigationNode seedPatientNodes:managedObjectContext completionHandler:completionHandler];
-        [WMNavigationNode seedWoundNodes:managedObjectContext completionHandler:completionHandler];
-        if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMNavigationTrack entityName]);
+        [WMNavigationNode seedPatientNodes:managedObjectContext];
+        [WMNavigationNode seedWoundNodes:managedObjectContext];
+        if (!completionHandler) {
+            return;
+        }
+        // else now gather the objectIDs
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        NSArray *objects = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+        NSArray *objectIDs = [objects valueForKeyPath:@"objectID"];
+        completionHandler(nil, objectIDs, [WMNavigationTrack entityName]);
+        objects = [WMNavigationStage MR_findAllInContext:managedObjectContext];
+        objectIDs = [objects valueForKeyPath:@"objectID"];
+        completionHandler(nil, objectIDs, [WMNavigationStage entityName]);
+        objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
+        objectIDs = [objects valueForKeyPath:@"objectID"];
+        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+        while (YES) {
+            objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", objects] inContext:managedObjectContext];
+            if ([objects count] == 0) {
+                break;
+            }
+            // else
+            objectIDs = [objects valueForKeyPath:@"objectID"];
+            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+        }
+    }
+}
+
++ (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallback)completionHandler
+{
+    // read the plist
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
+    if (nil == fileURL) {
+        DLog(@"NavigationTracks.plist file not found");
+        return;
+    }
+    // else check if already loaded
+    NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
+    if ([WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext] > 0) {
+        return;
+    }
+    // else
+    @autoreleasepool {
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        id propertyList = [NSPropertyListSerialization propertyListWithData:data
+                                                                    options:NSPropertyListImmutable
+                                                                     format:NULL
+                                                                      error:&error];
+        NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
+        for (NSDictionary *dictionary in propertyList) {
+            WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
+            navigationTrack.team = team;
+        }
+        if (!completionHandler) {
+            return;
+        }
+        // else now gather the objectIDs
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        NSArray *objects = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
+        NSArray *objectIDs = [objects valueForKeyPath:@"objectID"];
+        completionHandler(nil, objectIDs, [WMNavigationTrack entityName]);
+        objects = [WMNavigationStage MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"track IN (%@)", objects] inContext:managedObjectContext];
+        objectIDs = [objects valueForKeyPath:@"objectID"];
+        completionHandler(nil, objectIDs, [WMNavigationStage entityName]);
+        objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil AND stage IN (%@)", objects] inContext:managedObjectContext];
+        objectIDs = [objects valueForKeyPath:@"objectID"];
+        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+        while (YES) {
+            objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", objects] inContext:managedObjectContext];
+            if ([objects count] == 0) {
+                break;
+            }
+            // else
+            objectIDs = [objects valueForKeyPath:@"objectID"];
+            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
         }
     }
 }
@@ -124,7 +193,6 @@ typedef enum {
 + (WMNavigationTrack *)updateTrackFromDictionary:(NSDictionary *)dictionary
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                               completionHandler:(WMProcessCallback)completionHandler
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationTrack *navigationTrack = [WMNavigationTrack trackForTitle:title
@@ -140,20 +208,16 @@ typedef enum {
     navigationTrack.limitToSinglePatientFlag = [[dictionary objectForKey:@"limitToSinglePatientFlag"] boolValue];
     navigationTrack.skipCarePlanFlag = [[dictionary objectForKey:@"skipCarePlanFlag"] boolValue];
     navigationTrack.skipPolicyEditor = [[dictionary objectForKey:@"skipPolicyEditor"] boolValue];
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    NSAssert(![[navigationTrack objectID] isTemporaryID], @"Expect a permanent objectID");
+    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+    [objectIDs addObject:[navigationTrack objectID]];
     id stages = [dictionary objectForKey:@"stages"];
     if ([stages isKindOfClass:[NSArray class]]) {
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *d in stages) {
-            WMNavigationStage *navigationStage = [WMNavigationStage updateStageFromDictionary:d
-                                                                                        track:navigationTrack
-                                                                                       create:create
-                                                                            completionHandler:completionHandler];
-            [managedObjectContext MR_saveOnlySelfAndWait];
-            NSAssert(![[navigationStage objectID] isTemporaryID], @"Expect a permanent objectID");
-            [objectIDs addObject:[navigationStage objectID]];
-        }
-        if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMNavigationStage entityName]);
+            [WMNavigationStage updateStageFromDictionary:d
+                                                   track:navigationTrack
+                                                  create:create];
         }
     }
     return navigationTrack;
@@ -180,6 +244,48 @@ typedef enum {
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl] inContext:managedObjectContext];
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"activeFlagValue",
+                                        @"disabledFlagValue",
+                                        @"flagsValue",
+                                        @"sortRankValue"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMNavigationTrackRelationships.stages];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMNavigationTrack attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMNavigationTrack relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end
