@@ -12,6 +12,13 @@
 
 #pragma mark - FatFractal
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (NSArray *)attributeNamesNotToSerialize
 {
     static NSArray *PropertyNamesNotToSerialize = nil;

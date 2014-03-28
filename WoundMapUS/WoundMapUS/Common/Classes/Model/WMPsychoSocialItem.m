@@ -15,6 +15,13 @@ typedef enum {
 
 @implementation WMPsychoSocialItem
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (NSInteger)updatedScore
 {
     return 0;//TODO finish
@@ -68,6 +75,8 @@ typedef enum {
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"title == %@ AND parentItem == %@", title, parentItem];
+    NSAssert([WMPsychoSocialItem MR_countOfEntitiesWithPredicate:predicate inContext:managedObjectContext] < 2, @"Bad data");
     WMPsychoSocialItem *psychoSocialItem = [WMPsychoSocialItem MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND parentItem == %@", title, parentItem] inContext:managedObjectContext];
     if (create && nil == psychoSocialItem) {
         psychoSocialItem = [WMPsychoSocialItem MR_createInContext:managedObjectContext];
@@ -82,6 +91,7 @@ typedef enum {
 + (WMPsychoSocialItem *)updatePsychoSocialItemFromDictionary:(NSDictionary *)dictionary
                                                   parentItem:(WMPsychoSocialItem *)parentItem
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                                   objectIDs:(NSMutableArray *)objectIDs
 {
     id title = [dictionary objectForKey:@"title"];
     WMPsychoSocialItem *psychoSocialItem = [self psychoSocialItemForTitle:title
@@ -118,17 +128,21 @@ typedef enum {
         }
         [psychoSocialItem setWoundTypes:set];
     }
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    NSAssert(![[psychoSocialItem objectID] isTemporaryID], @"Expect a permanent objectID");
+    [objectIDs addObject:[psychoSocialItem objectID]];
     // subitems
     id subitems = [dictionary objectForKey:@"subitems"];
     for (NSDictionary *d in subitems) {
         [self updatePsychoSocialItemFromDictionary:d
                                         parentItem:psychoSocialItem
-                              managedObjectContext:managedObjectContext];
+                              managedObjectContext:managedObjectContext
+                                         objectIDs:objectIDs];
     }
     return psychoSocialItem;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"PsychoSocial" withExtension:@"plist"];
@@ -145,14 +159,71 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-        [managedObjectContext performBlockAndWait:^{
-            for (NSDictionary *dictionary in propertyList) {
-                [self updatePsychoSocialItemFromDictionary:dictionary
-                                                parentItem:nil
-                                      managedObjectContext:managedObjectContext];
-            }
-        }];
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        for (NSDictionary *dictionary in propertyList) {
+            [self updatePsychoSocialItemFromDictionary:dictionary
+                                            parentItem:nil
+                                  managedObjectContext:managedObjectContext
+                                             objectIDs:objectIDs];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMPsychoSocialItem entityName]);
+        }
     }
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"scoreValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"valueTypeCodeValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"hasSubItems",
+                                        @"allowMultipleChildSelection",
+                                        @"updatedScore"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMPsychoSocialItemRelationships.subitems,
+                                        WMPsychoSocialItemRelationships.values];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMPsychoSocialItem attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMPsychoSocialItem relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

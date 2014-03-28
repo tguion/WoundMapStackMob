@@ -18,6 +18,13 @@ typedef enum {
 
 @implementation WMNavigationNode
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (NSInteger)navigationNodeCount:(NSManagedObjectContext *)managedObjectContext
 {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];

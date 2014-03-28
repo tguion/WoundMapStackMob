@@ -17,6 +17,13 @@ NSString *const kDischargeStageTitle = @"Discharge";
 
 @implementation WMNavigationStage
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (NSInteger)navigationStageCount:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMNavigationStage countOfEntitiesWithContext:managedObjectContext];

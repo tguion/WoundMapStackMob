@@ -13,6 +13,13 @@
 
 @synthesize participantGroup=_participantGroup;
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (FFUserGroup *)participantGroup
 {
     if (_participantGroup == nil) {

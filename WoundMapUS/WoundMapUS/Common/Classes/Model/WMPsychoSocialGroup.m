@@ -331,7 +331,16 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = @[@"closedFlagValue",
-                                        @"flagsValue"];
+                                        @"flagsValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"hasInterventionEvents",
+                                        @"psychoSocialValuesAdded",
+                                        @"psychoSocialValuesRemoved"];
     });
     return PropertyNamesNotToSerialize;
 }

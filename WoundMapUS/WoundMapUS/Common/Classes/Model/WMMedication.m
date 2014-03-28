@@ -15,6 +15,13 @@ typedef enum {
 
 @implementation WMMedication
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)exludesOtherValues
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:WMMedicationExludeOtherValues];
@@ -60,6 +67,56 @@ typedef enum {
     }
     // else
     return [NSPredicate predicateWithFormat:@"category.woundTypes.@count == 0 OR ANY category.woundTypes == %@", woundType];
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"devices",
+                                        @"hasInterventionEvents",
+                                        @"exludesOtherValues"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMMedicationRelationships.groups];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMMedication attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMMedication relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

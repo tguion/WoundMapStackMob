@@ -164,10 +164,12 @@ NSString * const kOtherWoundTypeTitle = @"Other";
                                         @"sortRankValue",
                                         @"titleForDisplay",
                                         @"valueTypeCodeValue",
-                                        @"woundTypeCodeValue",
-                                        @"secondaryOptionsArray",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
                                         @"optionsArray",
-                                        @"groupValueTypeCode"];
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents"];
     });
     return PropertyNamesNotToSerialize;
 }

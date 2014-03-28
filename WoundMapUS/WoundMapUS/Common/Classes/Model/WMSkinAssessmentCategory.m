@@ -12,6 +12,13 @@
 
 @implementation WMSkinAssessmentCategory
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMSkinAssessmentCategory *)skinAssessmentCategoryForTitle:(NSString *)title
                                                       create:(BOOL)create
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -65,7 +72,7 @@
     return skinInspectionCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"SkinAssessment" withExtension:@"plist"];
@@ -82,8 +89,16 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateSkinAssessmentCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMSkinAssessmentCategory *skinInspectionCategory = [self updateSkinAssessmentCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            NSAssert(![[skinInspectionCategory objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[skinInspectionCategory objectID]];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMSkinAssessmentCategory entityName]);
         }
     }
 }

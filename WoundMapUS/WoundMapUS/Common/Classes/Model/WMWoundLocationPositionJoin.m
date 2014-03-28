@@ -52,7 +52,13 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"sortedPositions"];
+                                        @"sortedPositions",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents"];
     });
     return PropertyNamesNotToSerialize;
 }

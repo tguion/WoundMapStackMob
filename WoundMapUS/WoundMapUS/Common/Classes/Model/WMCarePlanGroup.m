@@ -4,6 +4,7 @@
 #import "WMCarePlanCategory.h"
 #import "WMCarePlanValue.h"
 #import "WMCarePlanInterventionEvent.h"
+#import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
 @interface WMCarePlanGroup ()
@@ -90,6 +91,8 @@
     [super awakeFromInsert];
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+    // initial status
+    self.status = [WMInterventionStatus initialInterventionStatus:[self managedObjectContext]];
 }
 
 - (NSArray *)sortedCarePlanValues
@@ -293,6 +296,59 @@
 - (void)incrementContinueCount
 {
     self.continueCount = @([self.continueCount intValue] + 1);
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"closedFlagValue",
+                                        @"continueCountValue",
+                                        @"flagsValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"hasInterventionEvents",
+                                        @"sortedCarePlanValues",
+                                        @"isClosed",
+                                        @"carePlanValuesAdded",
+                                        @"carePlanValuesRemoved"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMCarePlanGroupRelationships.interventionEvents,
+                                        WMCarePlanGroupRelationships.values];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMCarePlanGroup attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMCarePlanGroup relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

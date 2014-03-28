@@ -215,7 +215,19 @@
         PropertyNamesNotToSerialize = @[@"closedFlagValue",
                                         @"continueCountValue",
                                         @"flagsValue",
-                                        @"snomedCIDValue"];
+                                        @"snomedCIDValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"hasInterventionEvents",
+                                        @"sortedMedications",
+                                        @"medicationsInGroup",
+                                        @"isClosed",
+                                        @"medicationsAdded",
+                                        @"medicationsRemoved"];
     });
     return PropertyNamesNotToSerialize;
 }

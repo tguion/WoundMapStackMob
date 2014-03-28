@@ -21,6 +21,13 @@ typedef enum {
 
 @implementation WMWoundTreatment
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)combineKeyAndValue
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsCombineKeyAndValue];
@@ -115,6 +122,7 @@ typedef enum {
 + (WMWoundTreatment *)updateWoundTreatmentFromDictionary:(NSDictionary *)dictionary
                                     parentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment
                                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                               objectIDs:(NSMutableArray *)objectIDs
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundTreatment *treatment = [self woundTreatmentForTitle:title
@@ -145,18 +153,22 @@ typedef enum {
         }
         [treatment setWoundTypes:set];
     }
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    NSAssert(![[treatment objectID] isTemporaryID], @"Expect a permanent objectID");
+    [objectIDs addObject:[treatment objectID]];
     id children = [dictionary valueForKey:@"children"];
     if ([children isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in children) {
             [self updateWoundTreatmentFromDictionary:d
                                 parentWoundTreatment:treatment
-                                managedObjectContext:managedObjectContext];
+                                managedObjectContext:managedObjectContext
+                                           objectIDs:objectIDs];
         }
     }
     return treatment;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundTreatment" withExtension:@"plist"];
@@ -173,10 +185,16 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             [self updateWoundTreatmentFromDictionary:dictionary
                                 parentWoundTreatment:nil
-                                managedObjectContext:managedObjectContext];
+                                managedObjectContext:managedObjectContext
+                                           objectIDs:objectIDs];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMWoundTreatment entityName]);
         }
     }
 }
@@ -188,6 +206,62 @@ typedef enum {
     }
     // else
     return [NSPredicate predicateWithFormat:@"parentTreatment == %@ AND (woundTypes.@count == 0 OR ANY woundTypes == %@)", parentWoundTreatment, woundType];
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"keyboardTypeValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"valueTypeCodeValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"combineKeyAndValue",
+                                        @"allowMultipleChildSelection",
+                                        @"hasChildrenWoundTreatments",
+                                        @"sortedChildrenWoundTreatments",
+                                        @"childrenHaveSectionTitles",
+                                        @"skipSelectionIcon"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMWoundTreatmentRelationships.childrenTreatments,
+                                        WMWoundTreatmentRelationships.values];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundTreatment attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundTreatment relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

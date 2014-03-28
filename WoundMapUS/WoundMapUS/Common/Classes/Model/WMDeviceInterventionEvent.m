@@ -12,6 +12,13 @@
 
 @implementation WMDeviceInterventionEvent
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMDeviceInterventionEvent *)deviceInterventionEventForDeviceGroup:(WMDeviceGroup *)deviceGroup
                                                           changeType:(InterventionEventChangeType)changeType
                                                                title:(NSString *)title

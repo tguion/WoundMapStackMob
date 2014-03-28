@@ -18,6 +18,13 @@ typedef enum {
 
 @implementation WMCarePlanCategory
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)combineKeyAndValue
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:WMCarePlanCategoryFlagsCombineKeyAndValue];
@@ -162,7 +169,7 @@ typedef enum {
     return [NSSet setWithArray:[WMCarePlanCategory MR_findAllInContext:managedObjectContext]];
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"CarePlan" withExtension:@"plist"];
@@ -178,8 +185,16 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateCarePlanCategoryFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext];
+            WMCarePlanCategory *carePlanCategory = [self updateCarePlanCategoryFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            NSAssert(![[carePlanCategory objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[carePlanCategory objectID]];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMCarePlanCategory entityName]);
         }
     }
 }
@@ -191,6 +206,62 @@ typedef enum {
     }
     // else
     return [NSPredicate predicateWithFormat:@"parent == %@ AND (woundTypes.@count == 0 OR ANY woundTypes == %@)", parent, woundType];
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"keyboardTypeValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"valueTypeCodeValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"combineKeyAndValue",
+                                        @"inputValueInline",
+                                        @"allowMultipleChildSelection",
+                                        @"skipSelectionIcon",
+                                        @"hasSubcategories",
+                                        @"sortedChildernCarePlanCategories"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMCarePlanCategoryRelationships.subcategories,
+                                        WMCarePlanCategoryRelationships.values];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMCarePlanCategory attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMCarePlanCategory relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

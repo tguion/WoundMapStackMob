@@ -23,6 +23,13 @@ typedef enum {
 
 @implementation WMNavigationTrack
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)ignoresStagesFlag
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:NavigationTrackFlagsIgnoreStages];

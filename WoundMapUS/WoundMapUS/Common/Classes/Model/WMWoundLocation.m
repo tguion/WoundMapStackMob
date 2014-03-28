@@ -52,6 +52,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
 
 + (void)updateWoundLocationsFromArray:(NSArray *)locations
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                            objectIDs:(NSMutableArray *)objectIDs
 {
     for (NSDictionary *dictionary in locations) {
         id title = [dictionary objectForKey:@"title"];
@@ -70,11 +71,15 @@ NSString * const kOtherWoundLocationTitle = @"Other";
             title = @"Other Locations";
         }
         location.sectionTitle = title;
+        [managedObjectContext MR_saveOnlySelfAndWait];
+        NSAssert(![[location objectID] isTemporaryID], @"Expect a permanent objectID");
+        [objectIDs addObject:[location objectID]];
     }
 }
 
 + (void)updateWoundLocationQualifiersFromArray:(NSArray *)qualifiers
                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                     objectIDs:(NSMutableArray *)objectIDs
 {
     for (NSDictionary *dictionary in qualifiers) {
         id title = [dictionary objectForKey:@"title"];
@@ -89,11 +94,15 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         position.snomedFSN = [dictionary objectForKey:@"SNOMED CT FSN"];
         position.sortRank = [dictionary objectForKey:@"sortRank"];
         position.valueTypeCode = [dictionary objectForKey:@"inputTypeCode"];
+        [managedObjectContext MR_saveOnlySelfAndWait];
+        NSAssert(![[position objectID] isTemporaryID], @"Expect a permanent objectID");
+        [objectIDs addObject:[position objectID]];
     }
 }
 
 + (void)updateLocationQualifierJoinsFromArray:(NSArray *)joins
                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                    objectIDs:(NSMutableArray *)objectIDs
 {
     for (NSDictionary *dictionary in joins) {
         id locationTitle = [dictionary objectForKey:@"location"];
@@ -117,11 +126,14 @@ NSString * const kOtherWoundLocationTitle = @"Other";
                                                                                    positions:positions
                                                                                       create:YES];
             join.sortRank = @(sortRank++);
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            NSAssert(![[join objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[join objectID]];
         }
     }
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"AnatomicLocation" withExtension:@"plist"];
@@ -140,13 +152,28 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         NSAssert1([propertyList isKindOfClass:[NSDictionary class]], @"Property list file did not return an NSDictionary, class was %@", NSStringFromClass([propertyList class]));
         id locations = [propertyList objectForKey:@"Location"];
         NSAssert1([locations isKindOfClass:[NSArray class]], @"Location is not an NSArray, class was %@", NSStringFromClass([locations class]));
-        [self updateWoundLocationsFromArray:locations managedObjectContext:managedObjectContext];
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        [self updateWoundLocationsFromArray:locations managedObjectContext:managedObjectContext objectIDs:objectIDs];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMWoundLocation entityName]);
+        }
         id qualifiers = [propertyList objectForKey:@"Qualifier"];
         NSAssert1([qualifiers isKindOfClass:[NSArray class]], @"Qualifier is not an NSArray, class was %@", NSStringFromClass([locations class]));
-        [self updateWoundLocationQualifiersFromArray:qualifiers managedObjectContext:managedObjectContext];
+        objectIDs = [[NSMutableArray alloc] init];
+        [self updateWoundLocationQualifiersFromArray:qualifiers managedObjectContext:managedObjectContext objectIDs:objectIDs];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMWoundPosition entityName]);
+        }
         id joins = [propertyList objectForKey:@"Joins"];
         NSAssert1([joins isKindOfClass:[NSArray class]], @"Joins is not an NSArray, class was %@", NSStringFromClass([locations class]));
-        [self updateLocationQualifierJoinsFromArray:joins managedObjectContext:managedObjectContext];
+        objectIDs = [[NSMutableArray alloc] init];
+        [self updateLocationQualifierJoinsFromArray:joins managedObjectContext:managedObjectContext objectIDs:objectIDs];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMWoundLocationPositionJoin entityName]);
+        }
     }
 }
 
@@ -160,6 +187,12 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         PropertyNamesNotToSerialize = @[@"flagsValue",
                                         @"snomedCIDValue",
                                         @"sortRankValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
                                         @"isOther",
                                         @"sortedWoundPositionJoins"];
     });

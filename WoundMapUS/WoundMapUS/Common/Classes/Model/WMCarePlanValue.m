@@ -10,6 +10,13 @@
 
 @implementation WMCarePlanValue
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (NSArray *)categoryPathToValue
 {
     NSMutableArray *path = [[NSMutableArray alloc] initWithCapacity:16];

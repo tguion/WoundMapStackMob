@@ -21,6 +21,13 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 
 @implementation WMWoundMeasurement
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 - (BOOL)allowMultipleChildSelection
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:WoundMeasurementFlagsAllowMultipleChildSelection];
@@ -102,6 +109,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 + (WMWoundMeasurement *)updateWoundMeasurementFromDictionary:(NSDictionary *)dictionary
                                       parentWoundMeasurement:(WMWoundMeasurement *)parentWoundTreatment
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                                   objectIDs:(NSMutableArray *)objectIDs
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundMeasurement *measurement = [self woundMeasureForTitle:title
@@ -139,12 +147,16 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
         }
         [measurement setWoundTypes:set];
     }
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    NSAssert(![[measurement objectID] isTemporaryID], @"Expect a permanent objectID");
+    [objectIDs addObject:[measurement objectID]];
     id measurements = [dictionary valueForKey:@"measurements"];
     if ([measurements isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in measurements) {
             [self updateWoundMeasurementFromDictionary:d
                                 parentWoundMeasurement:measurement
-                                  managedObjectContext:managedObjectContext];
+                                  managedObjectContext:managedObjectContext
+                                             objectIDs:objectIDs];
         }
     }
     return measurement;
@@ -201,7 +213,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
     return NSRangeFromString(range);
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundMeasurement" withExtension:@"plist"];
@@ -218,8 +230,16 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateWoundMeasurementFromDictionary:dictionary parentWoundMeasurement:nil managedObjectContext:managedObjectContext];
+            [self updateWoundMeasurementFromDictionary:dictionary
+                                parentWoundMeasurement:nil
+                                  managedObjectContext:managedObjectContext
+                                             objectIDs:objectIDs];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMWoundMeasurement entityName]);
         }
     }
 }
@@ -240,6 +260,61 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
         [woundMeasurement aggregateWoundMeasurements:set];
     }
     [set unionSet:self.childrenMeasurements];
+}
+
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"graphableFlagValue",
+                                        @"keyboardTypeValue",
+                                        @"snomedCIDValue",
+                                        @"sortRankValue",
+                                        @"valueTypeCodeValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"allowMultipleChildSelection",
+                                        @"normalizeMeasurements",
+                                        @"hasChildrenWoundMeasurements",
+                                        @"childrenHaveSectionTitles"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMWoundMeasurementRelationships.childrenMeasurements,
+                                        WMWoundMeasurementRelationships.values];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundMeasurement attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundMeasurement relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 #pragma mark - AssessmentGroup

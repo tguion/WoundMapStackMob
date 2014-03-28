@@ -12,6 +12,13 @@
 
 @implementation WMPatientConsultant
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMPatientConsultant *)patientConsultantForPatient:(WMPatient *)patient
                                           consultant:(WMParticipant *)consultant
                                               create:(BOOL)create

@@ -10,6 +10,13 @@
 
 @implementation WMTeamInvitation
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMTeamInvitation *)createInvitationForParticipant:(WMParticipant *)participant passcode:(NSInteger)passcode
 {
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];

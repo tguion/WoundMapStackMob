@@ -12,6 +12,13 @@
 
 @implementation WMDeviceCategory
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMDeviceCategory *)deviceCategoryForTitle:(NSString *)title
                                       create:(BOOL)create
                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -74,7 +81,7 @@
     return deviceCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Devices" withExtension:@"plist"];
@@ -91,12 +98,17 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-        __weak __typeof(self) weakSelf = self;
-        [managedObjectContext performBlockAndWait:^{
-            for (NSDictionary *dictionary in propertyList) {
-                [weakSelf updateDeviceCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
-            }
-        }];
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        for (NSDictionary *dictionary in propertyList) {
+            WMDeviceCategory *deviceCategory = [self updateDeviceCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            NSAssert(![[deviceCategory objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[deviceCategory objectID]];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMDeviceCategory entityName]);
+        }
     }
 }
 

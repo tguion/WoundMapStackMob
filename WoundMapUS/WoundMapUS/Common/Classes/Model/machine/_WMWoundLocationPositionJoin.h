@@ -7,6 +7,7 @@
 extern const struct WMWoundLocationPositionJoinAttributes {
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *ffUrl;
+	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *updatedAt;
 } WMWoundLocationPositionJoinAttributes;
@@ -21,6 +22,7 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 
 @class WMWoundLocation;
 @class WMWoundPosition;
+
 
 
 
@@ -55,6 +57,20 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 
 
 //- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* flags;
+
+
+
+@property int32_t flagsValue;
+- (int32_t)flagsValue;
+- (void)setFlagsValue:(int32_t)value_;
+
+//- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -121,6 +137,15 @@ extern const struct WMWoundLocationPositionJoinFetchedProperties {
 
 - (NSString*)primitiveFfUrl;
 - (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveFlags;
+- (void)setPrimitiveFlags:(NSNumber*)value;
+
+- (int32_t)primitiveFlagsValue;
+- (void)setPrimitiveFlagsValue:(int32_t)value_;
 
 
 

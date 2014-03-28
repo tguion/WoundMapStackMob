@@ -46,7 +46,7 @@
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
-static const NSInteger WMMaxQueueConcurrency = 24;
+static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 @interface WMFatFractalManager ()
 
@@ -758,35 +758,12 @@ static const NSInteger WMMaxQueueConcurrency = 24;
     NSParameterAssert([[object valueForKey:@"ffUrl"] length] == 0);
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
-        [ff createObj:object atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            BOOL signInRequired = NO;
-            if (error) {
-                if (response.statusCode == 401) {
-                    signInRequired = YES;
-                }
-                [WMUtilities logError:error];
-            } else if ([object isKindOfClass:[NSManagedObject class]]) {
-                NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                object = [object MR_inContext:managedObjectContext];
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-            }
-            if (completionHandler) {
-                completionHandler(error, object, signInRequired);
-            }
-        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            BOOL signInRequired = NO;
-            if (error) {
-                if (response.statusCode == 401) {
-                    signInRequired = YES;
-                }
-                [WMUtilities logError:error];
-            } else {
-                [ff queueCreateObj:object atUri:ffUrl];
-            }
-            if (completionHandler) {
-                completionHandler(error, object, signInRequired);
-            }
-        }];
+        [ff createObj:object atUri:ffUrl];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, object, NO);
+        }
     }];
     return operation;
 }

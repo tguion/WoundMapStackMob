@@ -229,6 +229,60 @@
     self.continueCount = [NSNumber numberWithInt:([self.continueCount intValue] + 1)];
 }
 
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"closedFlagValue",
+                                        @"continueCountValue",
+                                        @"flagsValue",
+                                        @"groupValueTypeCode",
+                                        @"unit",
+                                        @"value",
+                                        @"optionsArray",
+                                        @"secondaryOptionsArray",
+                                        @"interventionEvents",
+                                        @"isClosed",
+                                        @"hasInterventionEvents",
+                                        @"sortedSkinAssessmentValues",
+                                        @"hasValues",
+                                        @"skinAssessmentValuesAdded",
+                                        @"skinAssessmentValuesRemoved"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMSkinAssessmentGroupRelationships.interventionEvents,
+                                        WMSkinAssessmentGroupRelationships.values];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMSkinAssessmentGroup attributeNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMSkinAssessmentGroup relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
 #pragma mark - AssessmentGroup
 
 - (GroupValueTypeCode)groupValueTypeCode

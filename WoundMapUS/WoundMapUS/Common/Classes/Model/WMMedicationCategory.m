@@ -13,6 +13,13 @@
 
 @implementation WMMedicationCategory
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (WMMedicationCategory *)medicationCategoryForTitle:(NSString *)title
                                               create:(BOOL)create
                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -69,7 +76,7 @@
     return medicationCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Medications" withExtension:@"plist"];
@@ -86,8 +93,16 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            [self updateMedicationCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMMedicationCategory *medicationCategory = [self updateMedicationCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            NSAssert(![[medicationCategory objectID] isTemporaryID], @"Expect a permanent objectID");
+            [objectIDs addObject:[medicationCategory objectID]];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(nil, objectIDs, [WMMedicationCategory entityName]);
         }
     }
 }

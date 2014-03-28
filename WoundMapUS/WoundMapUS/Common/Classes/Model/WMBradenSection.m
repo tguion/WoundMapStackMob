@@ -12,6 +12,13 @@
 
 @implementation WMBradenSection
 
+- (void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    self.createdAt = [NSDate date];
+    self.updatedAt = [NSDate date];
+}
+
 + (id)instanceWithBradenScale:(WMBradenScale *)bradenScale
 {
     WMBradenSection *bradenSection = [WMBradenSection MR_createInContext:[bradenScale managedObjectContext]];
