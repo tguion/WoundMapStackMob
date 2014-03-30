@@ -1,4 +1,5 @@
 #import "_WMTelecomType.h"
+#import "WoundCareProtocols.h"
 
 extern NSString * const kTelecomTypeEmailTitle;
 
@@ -6,7 +7,7 @@ extern NSString * const kTelecomTypeEmailTitle;
 
 @property (readonly, nonatomic) BOOL isEmail;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
 
 + (NSArray *)sortedTelecomTypes:(NSManagedObjectContext *)managedObjectContext;
 

@@ -11,13 +11,16 @@ NSString * const kTelecomTypeEmailTitle = @"email";
 
 @implementation WMTelecomType
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     NSParameterAssert([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0);
     WMTelecomType *telecomType = [WMTelecomType MR_createInContext:managedObjectContext];
     telecomType.sortRankValue = 0;
     telecomType.title = kTelecomTypeEmailTitle;
     [managedObjectContext MR_saveToPersistentStoreAndWait];
+    if (completionHandler) {
+        completionHandler(nil, @[[telecomType objectID]], [WMTelecomType entityName]);
+    }
 }
 
 + (NSArray *)sortedTelecomTypes:(NSManagedObjectContext *)managedObjectContext

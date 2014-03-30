@@ -469,6 +469,7 @@
             </userInfo>
         </relationship>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="organization" inverseEntity="WMId" syncable="YES"/>
+        <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="organization" inverseEntity="WMParticipant" syncable="YES"/>
         <userInfo>
             <entry key="determinerCode" value="INSTANCE"/>
         </userInfo>
@@ -489,6 +490,7 @@
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="consultant" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="participant" inverseEntity="WMInterventionEvent" syncable="YES"/>
+        <relationship name="organization" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMOrganization" inverseName="participants" inverseEntity="WMOrganization" syncable="YES"/>
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="participant" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="participant" inverseEntity="WMPerson" syncable="YES"/>
@@ -1165,8 +1167,8 @@
         <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="450"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
-        <element name="WMOrganization" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="315"/>
+        <element name="WMOrganization" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="328"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="403"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>

@@ -20,6 +20,7 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 const struct WMParticipantRelationships WMParticipantRelationships = {
 	.acquiredConsults = @"acquiredConsults",
 	.interventionEvents = @"interventionEvents",
+	.organization = @"organization",
 	.participantType = @"participantType",
 	.patients = @"patients",
 	.person = @"person",
@@ -212,6 +213,10 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 	[self didAccessValueForKey:@"interventionEvents"];
 	return result;
 }
+	
+
+@dynamic organization;
+
 	
 
 @dynamic participantType;

@@ -13,6 +13,7 @@ const struct WMOrganizationAttributes WMOrganizationAttributes = {
 const struct WMOrganizationRelationships WMOrganizationRelationships = {
 	.addresses = @"addresses",
 	.ids = @"ids",
+	.participants = @"participants",
 };
 
 const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
@@ -101,6 +102,19 @@ const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"ids"];
   
 	[self didAccessValueForKey:@"ids"];
+	return result;
+}
+	
+
+@dynamic participants;
+
+	
+- (NSMutableSet*)participantsSet {
+	[self willAccessValueForKey:@"participants"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"participants"];
+  
+	[self didAccessValueForKey:@"participants"];
 	return result;
 }
 	

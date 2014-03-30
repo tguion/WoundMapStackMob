@@ -785,6 +785,7 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             [ff createObj:object atUri:ffUrl];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }];
+        [NSManagedObjectContext MR_clearContextForCurrentThread];
         if (completionHandler) {
             completionHandler(nil);
         }

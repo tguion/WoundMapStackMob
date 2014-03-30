@@ -14,6 +14,7 @@ extern const struct WMOrganizationAttributes {
 extern const struct WMOrganizationRelationships {
 	__unsafe_unretained NSString *addresses;
 	__unsafe_unretained NSString *ids;
+	__unsafe_unretained NSString *participants;
 } WMOrganizationRelationships;
 
 extern const struct WMOrganizationFetchedProperties {
@@ -21,6 +22,7 @@ extern const struct WMOrganizationFetchedProperties {
 
 @class WMAddress;
 @class WMId;
+@class WMParticipant;
 
 
 
@@ -94,6 +96,13 @@ extern const struct WMOrganizationFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *participants;
+
+- (NSMutableSet*)participantsSet;
+
+
+
+
 
 @end
 
@@ -108,6 +117,11 @@ extern const struct WMOrganizationFetchedProperties {
 - (void)removeIds:(NSSet*)value_;
 - (void)addIdsObject:(WMId*)value_;
 - (void)removeIdsObject:(WMId*)value_;
+
+- (void)addParticipants:(NSSet*)value_;
+- (void)removeParticipants:(NSSet*)value_;
+- (void)addParticipantsObject:(WMParticipant*)value_;
+- (void)removeParticipantsObject:(WMParticipant*)value_;
 
 @end
 
@@ -146,6 +160,11 @@ extern const struct WMOrganizationFetchedProperties {
 
 - (NSMutableSet*)primitiveIds;
 - (void)setPrimitiveIds:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveParticipants;
+- (void)setPrimitiveParticipants:(NSMutableSet*)value;
 
 
 @end

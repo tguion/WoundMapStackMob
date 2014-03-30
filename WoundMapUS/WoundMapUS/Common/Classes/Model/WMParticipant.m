@@ -117,23 +117,47 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader to:isTeamLeader]);
 }
 
-#pragma mar - FatFractal
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"permissionsValue",
+                                        @"firstName",
+                                        @"lastName",
+                                        @"lastNameFirstName",
+                                        @"isTeamLeader"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMParticipantRelationships.acquiredConsults,
+                                        WMParticipantRelationships.interventionEvents];
+    });
+    return PropertyNamesNotToSerialize;
+}
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([propertyName isEqualToString:@"lastNameFirstName"]) {
+    if ([[WMParticipant attributeNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
-    if ([propertyName isEqualToString:@"isTeamLeader"]) {
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMParticipant relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
-    if ([propertyName isEqualToString:@"flagsValue"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"permissionsValue"]) {
-        return NO;
-    }
-    
     // else
     return YES;
 }

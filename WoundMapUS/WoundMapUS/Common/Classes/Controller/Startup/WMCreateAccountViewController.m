@@ -15,6 +15,7 @@
 #import "WMParticipantType.h"
 #import "WMPerson.h"
 #import "WMTelecom.h"
+#import "WMOrganization.h"
 #import "MBProgressHUD.h"
 #import "KeychainItemWrapper.h"
 #import "WMFatFractalManager.h"
@@ -140,10 +141,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return cellReuseIdentifier;
 }
 
-// TODO validate userName, password, email
+- (BOOL)isEmailInputValid
+{
+    return [WMUtilities NSStringIsValidEmail:_emailTextInput];
+}
+
 - (BOOL)hasSufficientCreateAccountInput
 {
-    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput] && [_firstNameTextInput length] > 0 && [_lastNameTextInput length] > 0 && [_emailTextInput length] > 3);
+    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput] && [_firstNameTextInput length] > 0 && [_lastNameTextInput length] > 0 && self.isEmailInputValid);
 }
 
 - (void)updateSignInButton
@@ -534,8 +539,16 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     switch (indexPath.row) {
         case 0: {
             // contact details
+            WMPerson *person = self.person;
             WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
-            personEditorViewController.person = self.person;
+            personEditorViewController.person = person;
+            // update person
+            if ([person.nameFamily length] == 0) {
+                person.nameFamily = _lastNameTextInput;
+            }
+            if ([person.nameGiven length] == 0) {
+                person.nameFamily = _firstNameTextInput;
+            }
             [self.navigationController pushViewController:personEditorViewController animated:YES];
             break;
         }
@@ -664,14 +677,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     myCell.textField.tag = 2001;
                     myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
                     myCell.textField.secureTextEntry = NO;
-                    [myCell updateWithLabelText:@"Last Name" valueText:_passwordTextInput valuePrompt:@""];
+                    [myCell updateWithLabelText:@"Last Name" valueText:_lastNameTextInput valuePrompt:@""];
                     break;
                 }
                 case 2: {
                     // email
                     myCell.textField.tag = 2002;
                     myCell.textField.secureTextEntry = NO;
-                    [myCell updateWithLabelText:@"Email" valueText:_passwordConfirmTextInput valuePrompt:@"you@host.com"];
+                    [myCell updateWithLabelText:@"Email" valueText:_emailTextInput valuePrompt:@"you@host.com"];
                     break;
                 }
             }
@@ -682,17 +695,17 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = @"Contact Details";
-                    cell.detailTextLabel.text = @"...";
+                    cell.detailTextLabel.text = self.person.lastNameFirstName;
                     break;
                 }
                 case 1: {
                     cell.textLabel.text = @"Clinical Role";
-                    cell.detailTextLabel.text = @"...";
+                    cell.detailTextLabel.text = self.participant.participantType.title;
                     break;
                 }
                 case 2: {
                     cell.textLabel.text = @"Organization";
-                    cell.detailTextLabel.text = @"...";
+                    cell.detailTextLabel.text = self.participant.organization.name;
                     break;
                 }
             }

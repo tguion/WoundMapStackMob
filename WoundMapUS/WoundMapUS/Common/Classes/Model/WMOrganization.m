@@ -10,7 +10,6 @@
 
 @implementation WMOrganization
 
-#pragma mark - FatFractal
 
 - (void)awakeFromInsert
 {
@@ -18,6 +17,8 @@
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
 }
+
+#pragma mark - FatFractal
 
 + (NSArray *)attributeNamesNotToSerialize
 {
@@ -35,7 +36,8 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = @[WMOrganizationRelationships.addresses,
-                                        WMOrganizationRelationships.ids];
+                                        WMOrganizationRelationships.ids,
+                                        WMOrganizationRelationships.participants];
     });
     return PropertyNamesNotToSerialize;
 }

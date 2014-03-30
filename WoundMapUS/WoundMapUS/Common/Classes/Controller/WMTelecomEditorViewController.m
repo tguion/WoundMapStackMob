@@ -125,29 +125,9 @@
 
 - (void)navigateToTelecomType
 {
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    // backend may not have data or device has not fetched
-    MBProgressHUD *progressView = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    progressView.labelText = @"Updating telecom data";
-    __weak __typeof(&*self)weakSelf = self;
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMTelecomType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        WM_ASSERT_MAIN_THREAD;
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            WM_ASSERT_MAIN_THREAD;
-            // make sure we have data
-            if ([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
-                // load data
-                [WMTelecomType seedDatabase:managedObjectContext];
-            }
-            WMSimpleTableViewController *simpleTableViewController = weakSelf.simpleTableViewController;
-            [weakSelf.navigationController pushViewController:simpleTableViewController animated:YES];
-            simpleTableViewController.title = @"Select Telecom Type";
-        }
-    }];
+    WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
+    [self.navigationController pushViewController:simpleTableViewController animated:YES];
+    simpleTableViewController.title = @"Select Telecom Type";
 }
 
 #pragma mark - Actions

@@ -66,10 +66,8 @@ static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
 - (id)createInstanceOfClass:(Class)clazz forObjectWithMetaData:(FFMetaData *)objMetaData
 {
     if ([clazz isSubclassOfClass:[NSManagedObject class]]) {
-        WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
         NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        NSPersistentStore *store = appDelegate.coreDataHelper.store;
-        id obj = [self findExistingObjectWithClass:clazz ffUrl:objMetaData.ffUrl managedObjectContext:managedObjectContext persistentStore:store];
+        id obj = [self findExistingObjectWithClass:clazz ffUrl:objMetaData.ffUrl managedObjectContext:managedObjectContext persistentStore:nil];
         if (obj) {
             DLog(@"Found existing %@ object with ffUrl %@ in managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
             return obj;

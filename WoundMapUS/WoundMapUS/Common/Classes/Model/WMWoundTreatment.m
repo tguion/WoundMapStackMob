@@ -122,7 +122,6 @@ typedef enum {
 + (WMWoundTreatment *)updateWoundTreatmentFromDictionary:(NSDictionary *)dictionary
                                     parentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment
                                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                                               objectIDs:(NSMutableArray *)objectIDs
 {
     id title = [dictionary objectForKey:@"title"];
     WMWoundTreatment *treatment = [self woundTreatmentForTitle:title
@@ -153,16 +152,12 @@ typedef enum {
         }
         [treatment setWoundTypes:set];
     }
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[treatment objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[treatment objectID]];
     id children = [dictionary valueForKey:@"children"];
     if ([children isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in children) {
             [self updateWoundTreatmentFromDictionary:d
                                 parentWoundTreatment:treatment
-                                managedObjectContext:managedObjectContext
-                                           objectIDs:objectIDs];
+                                managedObjectContext:managedObjectContext];
         }
     }
     return treatment;
@@ -185,17 +180,30 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             [self updateWoundTreatmentFromDictionary:dictionary
                                 parentWoundTreatment:nil
-                                managedObjectContext:managedObjectContext
-                                           objectIDs:objectIDs];
+                                managedObjectContext:managedObjectContext];
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundTreatment entityName]);
+        if (!completionHandler) {
+            return;
         }
+        // else collect objectIDs
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"parentTreatment = nil"];
+        NSArray *objects = [WMWoundTreatment MR_findAllWithPredicate:predicate inContext:managedObjectContext];
+        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        [objectIDs addObjectsFromArray:[objects valueForKeyPath:@"objectID"]];
+        while (YES) {
+            predicate = [NSPredicate predicateWithFormat:@"parentTreatment IN (%@)", objects];
+            objects = [WMWoundTreatment MR_findAllWithPredicate:predicate inContext:managedObjectContext];
+            if ([objects count] == 0) {
+                break;
+            }
+            // else
+            [objectIDs addObjectsFromArray:[objects valueForKeyPath:@"objectID"]];
+        }
+        completionHandler(nil, objectIDs, [WMWoundTreatment entityName]);
     }
 }
 
@@ -221,7 +229,6 @@ typedef enum {
                                         @"sortRankValue",
                                         @"valueTypeCodeValue",
                                         @"groupValueTypeCode",
-                                        @"unit",
                                         @"value",
                                         @"optionsArray",
                                         @"secondaryOptionsArray",
