@@ -52,17 +52,41 @@ NSString * const kTelecomTypeEmailTitle = @"email";
     return [self.title isEqualToString:kTelecomTypeEmailTitle];
 }
 
-#pragma mar - FatFractal
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"sortRankValue",
+                                        @"isEmail"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMTelecomTypeRelationships.telecoms];
+    });
+    return PropertyNamesNotToSerialize;
+}
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([propertyName isEqualToString:@"telecoms"]) {
+    if ([[WMTelecomType attributeNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
-    if ([propertyName isEqualToString:@"sortRankValue"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"flagsValue"]) {
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMTelecomType relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

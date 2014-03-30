@@ -16,6 +16,7 @@
 - (void)aggregateWoundTreatments:(NSMutableSet *)set;
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)reportWoundTreatments:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMWoundTreatment *)woundTreatmentForTitle:(NSString *)title
                         parentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment

@@ -112,6 +112,9 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     woundType.snomedFSN = [dictionary objectForKey:@"SNOMED CT FSN"];
     woundType.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
     woundType.loincCode = [dictionary objectForKey:@"LOINC Code"];
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
+    [objectIDs addObject:[woundType objectID]];
     id children = [dictionary objectForKey:@"children"];
     if ([children isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in children) {
@@ -119,9 +122,6 @@ NSString * const kOtherWoundTypeTitle = @"Other";
             childWoundType.parent = woundType;
         }
     }
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[woundType objectID] isTemporaryID], @"Expect a permanent objectID");
-    [objectIDs addObject:[woundType objectID]];
     return woundType;
 }
 
@@ -164,6 +164,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
                                         @"sortRankValue",
                                         @"titleForDisplay",
                                         @"valueTypeCodeValue",
+                                        @"woundTypeCodeValue",
                                         @"groupValueTypeCode",
                                         @"unit",
                                         @"value",

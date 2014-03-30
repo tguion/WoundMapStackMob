@@ -67,7 +67,7 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    return self.delegate.addressSource.managedObjectContext;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath

@@ -15,7 +15,7 @@
 
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-@property (readonly, nonatomic) id<idSource> source;
+@property (readonly, nonatomic) id<idSource> idSource;
 
 - (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController;
 - (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController;

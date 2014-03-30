@@ -52,8 +52,10 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"sortRankValue",
                                         @"sortedPositions",
                                         @"groupValueTypeCode",
+                                        @"title",
                                         @"unit",
                                         @"value",
                                         @"optionsArray",

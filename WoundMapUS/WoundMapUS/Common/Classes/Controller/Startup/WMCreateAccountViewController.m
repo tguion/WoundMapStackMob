@@ -9,6 +9,7 @@
 #import "WMCreateAccountViewController.h"
 #import "WMSimpleTableViewController.h"
 #import "WMPersonEditorViewController.h"
+#import "WMOrganizationEditorViewController.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
 #import "WMParticipant.h"
@@ -31,13 +32,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     CreateAccountAccountCreated,    // account created, value | Contact Details, Role, Organization
 };
 
-@interface WMCreateAccountViewController () <UITextFieldDelegate, SimpleTableViewControllerDelegate, PersonEditorViewControllerDelegate>
+@interface WMCreateAccountViewController () <UITextFieldDelegate, SimpleTableViewControllerDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate>
 
 @property (nonatomic) WMCreateAccountState state;
 @property (strong, nonatomic) FFUser *ffUser;
 @property (strong, nonatomic) WMParticipant *participant;
 @property (strong, nonatomic) WMPerson *person;
 @property (strong, nonatomic) WMParticipantType *selectedParticipantType;
+@property (strong, nonatomic) WMOrganization *organization;
 @property (strong, nonatomic) NSString *userNameTextInput;
 @property (strong, nonatomic) NSString *passwordTextInput;
 @property (strong, nonatomic) NSString *passwordConfirmTextInput;
@@ -51,6 +53,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
+@property (readonly, nonatomic) WMOrganizationEditorViewController *organizationEditorViewController;
 
 @end
 
@@ -104,6 +107,13 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return personEditorViewController;
 }
 
+- (WMOrganizationEditorViewController *)organizationEditorViewController
+{
+    WMOrganizationEditorViewController *organizationEditorViewController = [[WMOrganizationEditorViewController alloc] initWithNibName:@"WMOrganizationEditorViewController" bundle:nil];
+    organizationEditorViewController.delegate = self;
+    return organizationEditorViewController;
+}
+
 - (WMParticipant *)participant
 {
     if (nil == _participant) {
@@ -117,6 +127,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     if (nil == _person) {
         _person = [WMPerson MR_createInContext:self.managedObjectContext];
+        _person.nameFamily = _lastNameTextInput;
+        _person.nameGiven = _firstNameTextInput;
+        // TODO update email
     }
     return _person;
 }
@@ -213,6 +226,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     }
     if ([_lastNameTextInput length] == 0) {
         [messages addObject:@"Please complete your last name"];
+    }
+    if (nil == _selectedParticipantType) {
+        [messages addObject:@"Please select a role"];
     }
     if ([messages count]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Information"
@@ -318,6 +334,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     if ([self dataInputIsComplete]) {
         NSParameterAssert(_person);
         self.participant.person = _person;
+        self.participant.participantType = _selectedParticipantType;
+        self.participant.organization = _organization;
         __weak __typeof(&*self)weakSelf = self;
         [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             // participant has logged in as new user - now push data to backend
@@ -341,6 +359,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     [super clearDataCache];
     _participant = nil;
+    _person = nil;
+    _selectedParticipantType = nil;
+    _organization = nil;
 }
 
 #pragma mark - UITextFieldDelegate
@@ -477,6 +498,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     }
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:2]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 - (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController
@@ -502,6 +526,24 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
+#pragma mark - OrganizationEditorViewControllerDelegate
+
+- (void)organizationEditorViewController:(WMOrganizationEditorViewController *)viewController didEditOrganization:(WMOrganization *)organization
+{
+    _organization = organization;
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:2]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+}
+
+- (void)organizationEditorViewControllerDidCancel:(WMOrganizationEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
@@ -542,13 +584,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             WMPerson *person = self.person;
             WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
             personEditorViewController.person = person;
-            // update person
-            if ([person.nameFamily length] == 0) {
-                person.nameFamily = _lastNameTextInput;
-            }
-            if ([person.nameGiven length] == 0) {
-                person.nameFamily = _firstNameTextInput;
-            }
             [self.navigationController pushViewController:personEditorViewController animated:YES];
             break;
         }
@@ -561,7 +596,10 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         }
         case 2: {
             // organization
-            
+            WMOrganization *organization = self.participant.organization;
+            WMOrganizationEditorViewController *organizationEditorViewController = self.organizationEditorViewController;
+            organizationEditorViewController.organization = organization;
+            [self.navigationController pushViewController:organizationEditorViewController animated:YES];
             break;
         }
     }
@@ -700,12 +738,12 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 }
                 case 1: {
                     cell.textLabel.text = @"Clinical Role";
-                    cell.detailTextLabel.text = self.participant.participantType.title;
+                    cell.detailTextLabel.text = _selectedParticipantType.title;
                     break;
                 }
                 case 2: {
                     cell.textLabel.text = @"Organization";
-                    cell.detailTextLabel.text = self.participant.organization.name;
+                    cell.detailTextLabel.text = _organization.name;
                     break;
                 }
             }

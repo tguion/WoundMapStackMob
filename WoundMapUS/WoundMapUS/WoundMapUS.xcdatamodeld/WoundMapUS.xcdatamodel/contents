@@ -555,6 +555,7 @@
     <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="nameFamily" optional="YES" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="attributeName" value="family"/>
@@ -1172,7 +1173,7 @@
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="403"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
-        <element name="WMPerson" positionX="0" positionY="0" width="128" height="210"/>
+        <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="128" height="195"/>
         <element name="WMPsychoSocialIntEvent" positionX="0" positionY="0" width="128" height="75"/>

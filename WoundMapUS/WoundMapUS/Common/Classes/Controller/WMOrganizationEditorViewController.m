@@ -1,31 +1,29 @@
 //
-//  WMPersonEditorViewController.m
+//  WMOrganizationEditorViewController.m
 //  WoundMapUS
 //
-//  Created by etreasure consulting LLC on 2/17/14.
+//  Created by Todd Guion on 3/30/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMPersonEditorViewController.h"
+#import "WMOrganizationEditorViewController.h"
 #import "WMAddressListViewController.h"
-#import "WMTelecomListViewController.h"
+#import "WMIdListViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
-#import "WMPerson.h"
-#import "CoreDataHelper.h"
-#import "WMUtilities.h"
+#import "WMOrganization.h"
 
-@interface WMPersonEditorViewController () <UITextFieldDelegate, AddressListViewControllerDelegate, TelecomListViewControllerDelegate>
+@interface WMOrganizationEditorViewController ()  <UITextFieldDelegate, AddressListViewControllerDelegate, IdListViewControllerDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
-@property (readonly, nonatomic) WMTelecomListViewController *telecomListViewController;
+@property (readonly, nonatomic) WMIdListViewController *idListViewController;
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath;
 
 @end
 
-@implementation WMPersonEditorViewController
+@implementation WMOrganizationEditorViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,13 +38,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Contact Details";
+    self.title = @"Organization";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                           target:self
-                                                                                           action:@selector(cancelAction:)];
+                                                                                          target:self
+                                                                                          action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     // we want to support cancel, so make sure we have an undoManager
@@ -70,12 +68,12 @@
     return self.delegate.managedObjectContext;
 }
 
-- (WMPerson *)person
+- (WMOrganization *)organization
 {
-    if (nil == _person) {
-        _person = [WMPerson MR_createInContext:self.managedObjectContext];
+    if (nil == _organization) {
+        _organization = [WMOrganization MR_createInContext:self.managedObjectContext];
     }
-    return _person;
+    return _organization;
 }
 
 - (WMAddressListViewController *)addressListViewController
@@ -85,13 +83,12 @@
     return addressListViewController;
 }
 
-- (WMTelecomListViewController *)telecomListViewController
+- (WMIdListViewController *)idListViewController
 {
-    WMTelecomListViewController *telecomListViewController = [[WMTelecomListViewController alloc] initWithNibName:@"WMTelecomListViewController" bundle:nil];
-    telecomListViewController.delegate = self;
-    return telecomListViewController;
+    WMIdListViewController *idListViewController = [[WMIdListViewController alloc] initWithNibName:@"WMIdListViewController" bundle:nil];
+    idListViewController.delegate = self;
+    return idListViewController;
 }
-
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
 {
     NSString *cellReuseIdentifier = nil;
@@ -102,27 +99,12 @@
             break;
         }
         case 1: {
-            // given name
-            cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 2: {
-            // family name
-            cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 3: {
-            // suffix
-            cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 4: {
             // addresses
             cellReuseIdentifier = @"ValueCell";
             break;
         }
-        case 5: {
-            // telecoms
+        case 2: {
+            // ids
             cellReuseIdentifier = @"ValueCell";
             break;
         }
@@ -133,10 +115,12 @@
 - (BOOL)validateInput
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([self.person.telecoms count] == 0) {
-        [messages addObject:@"Please add at least one email address"];
+    if ([self.organization.addresses count] == 0) {
+        [messages addObject:@"Please add at least one address"];
     }
-    
+    if ([self.organization.ids count] == 0) {
+        [messages addObject:@"Please add at least one id"];
+    }
     if ([messages count]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Information"
                                                             message:[messages componentsJoinedByString:@"\r"]
@@ -167,7 +151,7 @@
         if (_removeUndoManagerWhenDone) {
             self.managedObjectContext.undoManager = nil;
         }
-        [self.delegate personEditorViewController:self didEditPerson:_person];
+        [self.delegate organizationEditorViewController:self didEditOrganization:_organization];
     }
 }
 
@@ -184,7 +168,7 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
-    [self.delegate personEditorViewControllerDidCancel:self];
+    [self.delegate organizationEditorViewControllerDidCancel:self];
 }
 
 #pragma mark - WMBaseViewController
@@ -192,21 +176,21 @@
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _person = nil;
+    _organization = nil;
 }
 
 #pragma mark - AddressListViewControllerDelegate
 
 - (id<AddressSource>)addressSource
 {
-    return _person;
+    return self.organization;
 }
 
 - (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
@@ -215,27 +199,22 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-#pragma mark - TelecomListViewControllerDelegate
+#pragma mark - IdListViewControllerDelegate
 
-- (id<TelecomSource>)telecomSource
+- (id<idSource>)idSource
 {
-    return _person;
+    return self.organization;
 }
 
-- (NSString *)telecomRelationshipKey
-{
-    return @"person";
-}
-
-- (void)telecomListViewControllerDidFinish:(WMTelecomListViewController *)viewController
+- (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:5 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
-- (void)telecomListViewControllerDidCancel:(WMTelecomListViewController *)viewController
+- (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -249,23 +228,8 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     switch (indexPath.row) {
         case 0: {
-            // prefix
-            self.person.namePrefix = textField.text;
-            break;
-        }
-        case 1: {
-            // given name
-            self.person.nameGiven = textField.text;
-            break;
-        }
-        case 2: {
-            // family name
-            self.person.nameFamily = textField.text;
-            break;
-        }
-        case 3: {
-            // suffix
-            self.person.nameSuffix = textField.text;
+            // name
+            self.organization.name = textField.text;
             break;
         }
     }
@@ -277,12 +241,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 4) {
-        // address
-        [self.navigationController pushViewController:self.addressListViewController animated:YES];
-    } else if (indexPath.row == 5) {
-        // telecom
-        [self.navigationController pushViewController:self.telecomListViewController animated:YES];
+    switch (indexPath.row) {
+        case 1: {
+            [self.navigationController pushViewController:self.addressListViewController animated:YES];
+            break;
+        }
+        case 2: {
+            [self.navigationController pushViewController:self.idListViewController animated:YES];
+            break;
+        }
     }
 }
 
@@ -295,7 +262,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 6;
+    return 3;
 }
 
 // Customize the appearance of table view cells.
@@ -315,42 +282,24 @@
 {
     switch (indexPath.row) {
         case 0: {
-            // prefix
+            // name
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Prefix" valueText:self.person.namePrefix valuePrompt:@"Dr, Mr, Ms, etc"];
+            [myCell updateWithLabelText:@"Name" valueText:self.organization.name valuePrompt:@"organization name"];
             break;
         }
         case 1: {
-            // given name
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Given Name" valueText:self.person.nameGiven valuePrompt:@"Given or First Name"];
-            break;
-        }
-        case 2: {
-            // family name
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Family Name" valueText:self.person.nameFamily valuePrompt:@"Family or Last Name"];
-            break;
-        }
-        case 3: {
-            // suffix
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Suffix" valueText:self.person.nameSuffix valuePrompt:@"III, Esquire, etc"];
-            break;
-        }
-        case 4: {
             // addresses
             cell.textLabel.text = @"Addresses";
-            NSString *addressString = ([self.person.addresses count] == 1 ? @"address":@"addresses");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.addresses count], addressString];
+            NSString *addressString = ([self.organization.addresses count] == 1 ? @"address":@"addresses");
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.organization.addresses count], addressString];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }
-        case 5: {
-            // telecoms
-            cell.textLabel.text = @"Telecoms";
-            NSString *telecomString = ([self.person.telecoms count] == 1 ? @"telecom":@"telecoms");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.telecoms count], telecomString];
+        case 2: {
+            // ids
+            cell.textLabel.text = @"Ids";
+            NSString *idString = ([self.organization.ids count] == 1 ? @"id":@"ids");
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.organization.ids count], idString];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }

@@ -147,7 +147,7 @@
         if ([objects count] == 0) {
             [WMWoundLocation seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
-        // *** WMWoundTreatment *** first attempt to acquire data from backend
+        // *** WMWoundTreatment *** first attempt to acquire data from backend GARY: this is the section that is crashing
         objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatment entityName]]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if ([objects count] == 0) {
@@ -159,18 +159,21 @@
         if ([objects count] == 0) {
             [WMWoundMeasurement seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
-        // *** WMPsychoSocialItem *** first attempt to acquire data from backend
+        // *** WMPsychoSocialItem *** first attempt to acquire data from backend GARY: this is the section that is crashing
+        /*
         objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialItem entityName]]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if ([objects count] == 0) {
             [WMPsychoSocialItem seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
+         */
         objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMTelecomType entityName]]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if ([objects count] == 0) {
             [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
         DLog(@"reading plists and seeding database finished");
+        [managedObjectContext reset];
         [NSManagedObjectContext MR_clearContextForCurrentThread];
         if (handler) {
             handler(nil);

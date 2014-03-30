@@ -187,6 +187,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         PropertyNamesNotToSerialize = @[@"flagsValue",
                                         @"snomedCIDValue",
                                         @"sortRankValue",
+                                        @"valueTypeCodeValue",
                                         @"groupValueTypeCode",
                                         @"unit",
                                         @"value",
@@ -204,7 +205,8 @@ NSString * const kOtherWoundLocationTitle = @"Other";
     static NSArray *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMWoundLocationRelationships.values];
+        PropertyNamesNotToSerialize = @[WMWoundLocationRelationships.values,
+                                        WMWoundLocationRelationships.positionJoins];
     });
     return PropertyNamesNotToSerialize;
 }

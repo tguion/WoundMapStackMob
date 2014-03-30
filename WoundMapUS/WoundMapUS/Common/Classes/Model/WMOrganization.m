@@ -10,6 +10,7 @@
 
 @implementation WMOrganization
 
+@dynamic managedObjectContext, objectID;
 
 - (void)awakeFromInsert
 {

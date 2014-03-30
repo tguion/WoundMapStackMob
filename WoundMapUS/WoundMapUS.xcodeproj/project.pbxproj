@@ -268,6 +268,10 @@
 		7D39DBC818BAB5540054DDC3 /* WMUndermineTunnelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBC618BAB5530054DDC3 /* WMUndermineTunnelViewController.m */; };
 		7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DBC718BAB5530054DDC3 /* WMUndermineTunnelViewController.xib */; };
 		7D39DBCC18BAB5EA0054DDC3 /* WMAdjustAlpaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBCB18BAB5EA0054DDC3 /* WMAdjustAlpaView.m */; };
+		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
+		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
+		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
+		7D9A94D618E892F600D92E95 /* WMOrganizationEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -938,6 +942,12 @@
 		7D39DBC718BAB5530054DDC3 /* WMUndermineTunnelViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMUndermineTunnelViewController.xib; sourceTree = "<group>"; };
 		7D39DBCA18BAB5EA0054DDC3 /* WMAdjustAlpaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAdjustAlpaView.h; sourceTree = "<group>"; };
 		7D39DBCB18BAB5EA0054DDC3 /* WMAdjustAlpaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMAdjustAlpaView.m; sourceTree = "<group>"; };
+		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
+		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
+		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
+		7D9A94D218E892F600D92E95 /* WMOrganizationEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationEditorViewController.h; sourceTree = "<group>"; };
+		7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationEditorViewController.m; sourceTree = "<group>"; };
+		7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationEditorViewController.xib; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -1931,6 +1941,12 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
+				7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */,
+				7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */,
+				7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */,
+				7D9A94D218E892F600D92E95 /* WMOrganizationEditorViewController.h */,
+				7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */,
+				7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2891,6 +2907,7 @@
 				5F67D1F618AC3BE000460C37 /* InterventionStatus.plist in Resources */,
 				7D39DB9D18BA2A560054DDC3 /* WMWoundTreatmentSummaryViewController.xib in Resources */,
 				5F67D20A18AC3BE000460C37 /* WoundType.plist in Resources */,
+				7D9A94D618E892F600D92E95 /* WMOrganizationEditorViewController.xib in Resources */,
 				7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */,
 				7D10CDF418DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
@@ -2913,6 +2930,7 @@
 				7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */,
 				7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */,
 				7D39DB0E18B7FA080054DDC3 /* WMSelectWoundTypeViewController.xib in Resources */,
+				7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */,
 				7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */,
 				5F67D1F218AC3BE000460C37 /* CarePlan.plist in Resources */,
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
@@ -3015,6 +3033,7 @@
 				7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */,
 				7DD8373618C78A3A0028C2D3 /* NSManagedObject+MagicalRequests.m in Sources */,
 				7DDBEDEE18BEA96C00FEF3FA /* WMBradenCell.m in Sources */,
+				7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */,
 				7DDBEDD018BC0DED00FEF3FA /* WMWoundOdor.m in Sources */,
 				7D39DB9718B94FFD0054DDC3 /* WMDeviceGroup.m in Sources */,
 				7D39DB6718B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.m in Sources */,
@@ -3183,6 +3202,7 @@
 				5F67D21718AC4ACF00460C37 /* WMSimpleTableViewController.m in Sources */,
 				7DDBEDB718BC0DD300FEF3FA /* _WMWoundMeasurementValue.m in Sources */,
 				7DD8372C18C78A390028C2D3 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
+				7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */,
 				7DF4E92D18C22F27000A3F5B /* WMPsychoSocialGroup.m in Sources */,
 				7D10CD7018D4EA9E00AD43E3 /* WMCreateAccountViewController.m in Sources */,
 				7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */,

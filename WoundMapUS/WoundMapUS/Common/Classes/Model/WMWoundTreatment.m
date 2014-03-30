@@ -189,7 +189,7 @@ typedef enum {
         if (!completionHandler) {
             return;
         }
-        // else collect objectIDs
+        // else collect objectIDs in order consistent with ff
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"parentTreatment = nil"];
         NSArray *objects = [WMWoundTreatment MR_findAllWithPredicate:predicate inContext:managedObjectContext];
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
@@ -203,7 +203,59 @@ typedef enum {
             // else
             [objectIDs addObjectsFromArray:[objects valueForKeyPath:@"objectID"]];
         }
+        [self reportWoundTreatments:managedObjectContext];
+        NSLog(@"*** WMWoundTreatment Hierarchy Report by objectID Begin ***");
+        for (NSManagedObjectID *objectID in objectIDs) {
+            WMWoundTreatment *woundTreatment = (WMWoundTreatment *)[managedObjectContext objectWithID:objectID];
+            [self reportWoundTreatmentHierarchy:woundTreatment indent:0 recurs:NO];
+        }
+        NSLog(@"*** WMWoundTreatment Hierarchy Report by objectID End ***");
         completionHandler(nil, objectIDs, [WMWoundTreatment entityName]);
+    }
+}
+
++ (void)reportWoundTreatments:(NSManagedObjectContext *)managedObjectContext
+{
+    NSLog(@"*** WMWoundTreatment Hierarchy Report Begin ***");
+    NSArray *rootWoundTreatments = [self sortedRootWoundTreatments:managedObjectContext];
+    for (WMWoundTreatment *woundTreatment in rootWoundTreatments) {
+        [self reportWoundTreatmentHierarchy:woundTreatment indent:0 recurs:YES];
+    }
+    NSLog(@"*** WMWoundTreatment Hierarchy Report End ***");
+}
+
++ (void)reportWoundTreatmentHierarchy:(WMWoundTreatment *)woundTreatment indent:(NSInteger)indent recurs:(BOOL)recurs
+{
+    NSString *indentString = @"";
+    for (int i=0; i<indent; ++i) {
+        indentString = [indentString stringByAppendingString:@"\t"];
+    }
+    BOOL cyclicCheckFailed = NO;
+    WMWoundTreatment *parentTreatment = woundTreatment.parentTreatment;
+    while (parentTreatment) {
+        if (woundTreatment.parentTreatment == woundTreatment) {
+            cyclicCheckFailed = YES;
+            break;
+        }
+        // else
+        parentTreatment = parentTreatment.parentTreatment;
+    }
+    NSArray *childrenTreatments = [woundTreatment.childrenTreatments allObjects];
+    NSMutableSet *set = [NSMutableSet set];
+    for (WMWoundTreatment *childTreatment in childrenTreatments) {
+        [childTreatment aggregateWoundTreatments:set];
+        if ([set containsObject:woundTreatment]) {
+            cyclicCheckFailed = YES;
+            break;
+        }
+    }
+    NSString *hasParent = (nil == woundTreatment.parentTreatment ? @"NO":@"YES");
+    NSInteger childrenCount = [woundTreatment.childrenTreatments count];
+    NSLog(@"%@WMWoundTreatment: %@ cyclic check failed: %@ has parent: %@ children count: %ld", indentString, woundTreatment.title, (cyclicCheckFailed ? @"YES":@"NO"), hasParent, (long)childrenCount);
+    if (recurs) {
+        for (WMWoundTreatment *childWoundTreatment in woundTreatment.childrenTreatments) {
+            [self reportWoundTreatmentHierarchy:childWoundTreatment indent:(indent + 1) recurs:YES];
+        }
     }
 }
 

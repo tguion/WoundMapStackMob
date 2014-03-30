@@ -43,24 +43,44 @@
                                       inContext:[self managedObjectContext]];
 }
 
+#pragma mark - FatFractal
+
++ (NSArray *)attributeNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[@"flagsValue",
+                                        @"lastNameFirstName",
+                                        @"defaultEmailTelecom"];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSArray *)relationshipNamesNotToSerialize
+{
+    static NSArray *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = @[WMPersonRelationships.addresses,
+                                        WMPersonRelationships.telecoms];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([propertyName isEqualToString:@"patient"]) {
+    if ([[WMPerson attributeNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
-    if ([propertyName isEqualToString:@"lastNameFirstName"]) {
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMPerson relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
-    if ([propertyName isEqualToString:@"objectID"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"managedObjectContext"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"defaultEmailTelecom"]) {
-        return NO;
-    }
-    
     // else
     return YES;
 }

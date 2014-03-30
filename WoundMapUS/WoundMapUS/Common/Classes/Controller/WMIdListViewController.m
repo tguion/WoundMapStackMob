@@ -79,13 +79,13 @@
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row == [self.delegate.source.ids count];
+    return indexPath.row == [self.delegate.idSource.ids count];
 }
 
 - (WMId *)idForIndex:(NSInteger)index
 {
     if (nil == _ids) {
-        _ids = [[self.delegate.source.ids allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+        _ids = [[self.delegate.idSource.ids allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
     }
     return _ids[index];
 }
@@ -152,7 +152,7 @@
 
 - (void)idEditorViewController:(WMIdEditorViewController *)viewController didEditId:(WMId *)anId
 {
-    [self.delegate.source addIdsObject:anId];
+    [self.delegate.idSource addIdsObject:anId];
     [self.navigationController popViewControllerAnimated:YES];
     _ids = nil;
     [self.tableView reloadData];
@@ -201,7 +201,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.delegate.source.ids count] + 1;
+    return [self.delegate.idSource.ids count] + 1;
 }
 
 // Customize the appearance of table view cells.
@@ -231,7 +231,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         WMId *anId = [self idForIndex:indexPath.row];
-        [self.delegate.source removeIdsObject:anId];
+        [self.delegate.idSource removeIdsObject:anId];
         _ids = nil;
         [self.tableView beginUpdates];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
