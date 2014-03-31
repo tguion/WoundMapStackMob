@@ -180,6 +180,11 @@ typedef enum {
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        // check if we have the data
+        if ([WMWoundTreatment countOfEntitiesWithContext:managedObjectContext]) {
+            return;
+        }
+        // else
         for (NSDictionary *dictionary in propertyList) {
             [self updateWoundTreatmentFromDictionary:dictionary
                                 parentWoundTreatment:nil
