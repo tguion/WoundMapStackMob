@@ -639,25 +639,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)signInViewController:(WMSignInViewController *)viewController didSignInParticipant:(WMParticipant *)participant
 {
+    WM_ASSERT_MAIN_THREAD;
     participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
-    [self showProgressViewWithMessage:@"Updating Participant account"];
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    __weak __typeof(self) weakSelf = self;
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        [weakSelf hideProgressView];
-        weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-        [weakSelf.tableView reloadData];
-        // update back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        [ffm updateObject:participant ff:ff addToQueue:YES completionHandler:nil];
-    }];
+    self.welcomeState = (nil == self.appDelegate.participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
+    [self.tableView reloadData];
 }
 
 - (void)signInViewControllerDidCancel:(WMSignInViewController *)viewController
@@ -672,7 +660,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
-    [self showProgressViewWithMessage:@"Updating Participant account"];
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
 }

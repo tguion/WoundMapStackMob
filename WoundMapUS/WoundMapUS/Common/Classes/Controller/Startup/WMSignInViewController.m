@@ -132,9 +132,21 @@
                     NSParameterAssert([object isKindOfClass:[WMParticipant class]]);
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
                     participant = (WMParticipant *)object;
+                    [self.delegate signInViewController:self didSignInParticipant:participant];
+                }];
+            } else {
+                WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+                [ffm fetchParticipant:participant ff:ff completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    WM_ASSERT_MAIN_THREAD;
+                    object = [object lastObject];
+                    NSParameterAssert(nil != object);
+                    NSParameterAssert([object isKindOfClass:[WMParticipant class]]);
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    participant = (WMParticipant *)object;
+                    [managedObjectContext saveToPersistentStoreAndWait];
+                    [self.delegate signInViewController:self didSignInParticipant:participant];
                 }];
             }
-            [self.delegate signInViewController:self didSignInParticipant:participant];
         }
     }];
 }

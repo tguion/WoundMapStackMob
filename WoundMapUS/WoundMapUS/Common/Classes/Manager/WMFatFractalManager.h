@@ -21,6 +21,7 @@ typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequir
 // simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
 
+- (void)fetchParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler;
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler;
 
 - (void)fetchCollection:(NSString *)collection

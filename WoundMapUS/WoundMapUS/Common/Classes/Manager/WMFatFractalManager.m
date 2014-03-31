@@ -140,6 +140,13 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 #pragma mark - Fetch
 
+- (void)fetchParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler
+{
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+    [ff getArrayFromUri:queryString onComplete:completionHandler];
+    self.lastRefreshTimeMap[[WMParticipant entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
+}
+
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler
 {
     NSArray *patientsExisting = [WMPatient MR_findAllInContext:managedObjectContext];
@@ -427,6 +434,7 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
         }
     });
 }
+
 - (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
 {
     

@@ -360,12 +360,13 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             [ffm updateParticipant:[weakSelf.participant objectID] ff:ff completionHandler:^(NSError *error) {
-                if (error) {
-                    [ffm clearOperationCache];
-                } else {
-                    [ffm submitOperationsToQueue];
-                    [weakSelf.delegate createAccountViewController:self didCreateParticipant:self.participant];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        [weakSelf.delegate createAccountViewController:self didCreateParticipant:self.participant];
+                    }
+                });
             }];
         }];
     }
