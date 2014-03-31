@@ -272,6 +272,23 @@
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
 		7D9A94D618E892F600D92E95 /* WMOrganizationEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */; };
+		7D9A94F318E9A7BE00D92E95 /* application.ffdl in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94D918E9A7BE00D92E95 /* application.ffdl */; };
+		7D9A94F418E9A7BE00D92E95 /* application.ffdl1395690607968 in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94DA18E9A7BE00D92E95 /* application.ffdl1395690607968 */; };
+		7D9A94F518E9A7BE00D92E95 /* application.ffdl1395690875566 in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94DB18E9A7BE00D92E95 /* application.ffdl1395690875566 */; };
+		7D9A94F618E9A7BE00D92E95 /* context.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94DC18E9A7BE00D92E95 /* context.xml */; };
+		7D9A94F718E9A7BE00D92E95 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94DF18E9A7BE00D92E95 /* index.html */; };
+		7D9A94F818E9A7BE00D92E95 /* application.ffdl in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94E318E9A7BE00D92E95 /* application.ffdl */; };
+		7D9A94F918E9A7BE00D92E95 /* application.ffdl1395690607968 in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94E418E9A7BE00D92E95 /* application.ffdl1395690607968 */; };
+		7D9A94FA18E9A7BE00D92E95 /* application.ffdl1395690875566 in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94E518E9A7BE00D92E95 /* application.ffdl1395690875566 */; };
+		7D9A94FB18E9A7BE00D92E95 /* context.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94E618E9A7BE00D92E95 /* context.xml */; };
+		7D9A94FC18E9A7BE00D92E95 /* Auth.js in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94E818E9A7BE00D92E95 /* Auth.js */; };
+		7D9A94FD18E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94E918E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE */; };
+		7D9A94FE18E9A7BE00D92E95 /* context.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94EA18E9A7BE00D92E95 /* context.xml */; };
+		7D9A94FF18E9A7BE00D92E95 /* fatfractal.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94EB18E9A7BE00D92E95 /* fatfractal.xml */; };
+		7D9A950018E9A7BE00D92E95 /* ff-noserver-app-mobilehealthware-WoundMapUS.war in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D9A94ED18E9A7BE00D92E95 /* ff-noserver-app-mobilehealthware-WoundMapUS.war */; };
+		7D9A950118E9A7BE00D92E95 /* Auth.js in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94EF18E9A7BE00D92E95 /* Auth.js */; };
+		7D9A950218E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94F018E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE */; };
+		7D9A950318E9A7BE00D92E95 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94F218E9A7BE00D92E95 /* index.html */; };
 		7D9AA25C18AE67A300C1B698 /* _WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */; };
 		7D9AA25F18AE67AD00C1B698 /* WMWoundType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA25E18AE67AD00C1B698 /* WMWoundType.m */; };
 		7D9AA26218AEC0D400C1B698 /* WMNavigationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */; };
@@ -948,6 +965,23 @@
 		7D9A94D218E892F600D92E95 /* WMOrganizationEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationEditorViewController.h; sourceTree = "<group>"; };
 		7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationEditorViewController.m; sourceTree = "<group>"; };
 		7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationEditorViewController.xib; sourceTree = "<group>"; };
+		7D9A94D918E9A7BE00D92E95 /* application.ffdl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = application.ffdl; sourceTree = "<group>"; };
+		7D9A94DA18E9A7BE00D92E95 /* application.ffdl1395690607968 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = application.ffdl1395690607968; sourceTree = "<group>"; };
+		7D9A94DB18E9A7BE00D92E95 /* application.ffdl1395690875566 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = application.ffdl1395690875566; sourceTree = "<group>"; };
+		7D9A94DC18E9A7BE00D92E95 /* context.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = context.xml; sourceTree = "<group>"; };
+		7D9A94DF18E9A7BE00D92E95 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		7D9A94E318E9A7BE00D92E95 /* application.ffdl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = application.ffdl; sourceTree = "<group>"; };
+		7D9A94E418E9A7BE00D92E95 /* application.ffdl1395690607968 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = application.ffdl1395690607968; sourceTree = "<group>"; };
+		7D9A94E518E9A7BE00D92E95 /* application.ffdl1395690875566 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = application.ffdl1395690875566; sourceTree = "<group>"; };
+		7D9A94E618E9A7BE00D92E95 /* context.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = context.xml; sourceTree = "<group>"; };
+		7D9A94E818E9A7BE00D92E95 /* Auth.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Auth.js; sourceTree = "<group>"; };
+		7D9A94E918E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PUT_YOUR_JAVASCRIPT_FILES_HERE; sourceTree = "<group>"; };
+		7D9A94EA18E9A7BE00D92E95 /* context.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = context.xml; sourceTree = "<group>"; };
+		7D9A94EB18E9A7BE00D92E95 /* fatfractal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fatfractal.xml; sourceTree = "<group>"; };
+		7D9A94ED18E9A7BE00D92E95 /* ff-noserver-app-mobilehealthware-WoundMapUS.war */ = {isa = PBXFileReference; lastKnownFileType = archive.war; path = "ff-noserver-app-mobilehealthware-WoundMapUS.war"; sourceTree = "<group>"; };
+		7D9A94EF18E9A7BE00D92E95 /* Auth.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Auth.js; sourceTree = "<group>"; };
+		7D9A94F018E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PUT_YOUR_JAVASCRIPT_FILES_HERE; sourceTree = "<group>"; };
+		7D9A94F218E9A7BE00D92E95 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		7D9AA25918AE549300C1B698 /* WoundCareProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundCareProtocols.h; sourceTree = "<group>"; };
 		7D9AA25A18AE67A300C1B698 /* _WMWoundType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundType.h; sourceTree = "<group>"; };
 		7D9AA25B18AE67A300C1B698 /* _WMWoundType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundType.m; sourceTree = "<group>"; };
@@ -1366,6 +1400,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D9A950018E9A7BE00D92E95 /* ff-noserver-app-mobilehealthware-WoundMapUS.war in Frameworks */,
 				7D10CE3418E0CFBD00AD43E3 /* FFEF.framework in Frameworks */,
 				7DF4E9D918C4CF58000A3F5B /* libCorePlot-CocoaTouch.a in Frameworks */,
 				7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */,
@@ -1628,6 +1663,110 @@
 				7D39DBAB18BA97A70054DDC3 /* IAPNonConsumableViewController.xib */,
 			);
 			path = IAP;
+			sourceTree = "<group>";
+		};
+		7D9A94D718E9A7BE00D92E95 /* FF */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94D818E9A7BE00D92E95 /* ff-config */,
+				7D9A94DD18E9A7BE00D92E95 /* ff-generated */,
+				7D9A94EE18E9A7BE00D92E95 /* ff-scripts */,
+				7D9A94F118E9A7BE00D92E95 /* webapp */,
+			);
+			path = FF;
+			sourceTree = "<group>";
+		};
+		7D9A94D818E9A7BE00D92E95 /* ff-config */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94D918E9A7BE00D92E95 /* application.ffdl */,
+				7D9A94DA18E9A7BE00D92E95 /* application.ffdl1395690607968 */,
+				7D9A94DB18E9A7BE00D92E95 /* application.ffdl1395690875566 */,
+				7D9A94DC18E9A7BE00D92E95 /* context.xml */,
+			);
+			path = "ff-config";
+			sourceTree = "<group>";
+		};
+		7D9A94DD18E9A7BE00D92E95 /* ff-generated */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94DE18E9A7BE00D92E95 /* exploded */,
+				7D9A94ED18E9A7BE00D92E95 /* ff-noserver-app-mobilehealthware-WoundMapUS.war */,
+			);
+			path = "ff-generated";
+			sourceTree = "<group>";
+		};
+		7D9A94DE18E9A7BE00D92E95 /* exploded */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94DF18E9A7BE00D92E95 /* index.html */,
+				7D9A94E018E9A7BE00D92E95 /* WEB-INF */,
+			);
+			path = exploded;
+			sourceTree = "<group>";
+		};
+		7D9A94E018E9A7BE00D92E95 /* WEB-INF */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94E118E9A7BE00D92E95 /* classes */,
+				7D9A94EA18E9A7BE00D92E95 /* context.xml */,
+				7D9A94EB18E9A7BE00D92E95 /* fatfractal.xml */,
+				7D9A94EC18E9A7BE00D92E95 /* lib */,
+			);
+			path = "WEB-INF";
+			sourceTree = "<group>";
+		};
+		7D9A94E118E9A7BE00D92E95 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94E218E9A7BE00D92E95 /* resources */,
+				7D9A94E718E9A7BE00D92E95 /* scripts */,
+			);
+			path = classes;
+			sourceTree = "<group>";
+		};
+		7D9A94E218E9A7BE00D92E95 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94E318E9A7BE00D92E95 /* application.ffdl */,
+				7D9A94E418E9A7BE00D92E95 /* application.ffdl1395690607968 */,
+				7D9A94E518E9A7BE00D92E95 /* application.ffdl1395690875566 */,
+				7D9A94E618E9A7BE00D92E95 /* context.xml */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		7D9A94E718E9A7BE00D92E95 /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94E818E9A7BE00D92E95 /* Auth.js */,
+				7D9A94E918E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
+		7D9A94EC18E9A7BE00D92E95 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		7D9A94EE18E9A7BE00D92E95 /* ff-scripts */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94EF18E9A7BE00D92E95 /* Auth.js */,
+				7D9A94F018E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE */,
+			);
+			path = "ff-scripts";
+			sourceTree = "<group>";
+		};
+		7D9A94F118E9A7BE00D92E95 /* webapp */ = {
+			isa = PBXGroup;
+			children = (
+				7D9A94F218E9A7BE00D92E95 /* index.html */,
+			);
+			path = webapp;
 			sourceTree = "<group>";
 		};
 		7D9AA25818AE549300C1B698 /* Protocols */ = {
@@ -2224,6 +2363,7 @@
 		7DB2069F18A7D6950004DC32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7D9A94D718E9A7BE00D92E95 /* FF */,
 				5F6DE52B18B58BB000E87F7E /* Instructions */,
 				7DDAFAED18B4E9F700A05F5D /* IAP */,
 				7D9AA27518B003D600C1B698 /* Policy */,
@@ -2832,14 +2972,17 @@
 				7D39DB6818B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib in Resources */,
 				7D10CE1118DCE01900AD43E3 /* WMBradenSectionSelectCellViewController.xib in Resources */,
 				7D10CDDB18DA3DB800AD43E3 /* WMInterventionEventViewController.xib in Resources */,
+				7D9A94F618E9A7BE00D92E95 /* context.xml in Resources */,
 				5F6DE54918B6FA4E00E87F7E /* WMIdListViewController.xib in Resources */,
 				7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */,
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
+				7D9A94FD18E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE in Resources */,
 				5F67D1FF18AC3BE000460C37 /* SkinIntervention.plist in Resources */,
 				5F67D20718AC3BE000460C37 /* WoundPositionDefinitions.plist in Resources */,
 				7D39DBAD18BA97A70054DDC3 /* IAPAggregatorViewController.xib in Resources */,
 				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
+				7D9A94FB18E9A7BE00D92E95 /* context.xml in Resources */,
 				5F67D20518AC3BE000460C37 /* WoundMeasurementTemplate.plist in Resources */,
 				7D10CE1F18DDEB7B00AD43E3 /* WMSelectWoundPositionViewController.xib in Resources */,
 				5F67D1F918AC3BE000460C37 /* ProfessionalTitle.plist in Resources */,
@@ -2857,6 +3000,7 @@
 				7D39DB5518B828000054DDC3 /* WMPatientSummaryContainerViewController.xib in Resources */,
 				5F6DE53E18B58BB000E87F7E /* InstructionsSecurity.html in Resources */,
 				5F67D1EF18AC3BE000460C37 /* AnatomicLocation.plist in Resources */,
+				7D9A94F918E9A7BE00D92E95 /* application.ffdl1395690607968 in Resources */,
 				5F67D20118AC3BE000460C37 /* WoundAssessmentDefinitions.plist in Resources */,
 				5F6DE53B18B58BB000E87F7E /* InstructionsPhotoAndMeasurement.html in Resources */,
 				5F67D1F318AC3BE000460C37 /* DeviceDefinitions.plist in Resources */,
@@ -2864,6 +3008,7 @@
 				7D10CD9318D775E100AD43E3 /* WMSelectWoundOdorViewController.xib in Resources */,
 				5F6DE53718B58BB000E87F7E /* Instructions.plist in Resources */,
 				5F6DE53F18B58BB000E87F7E /* InstructionsSkinAssessment.html in Resources */,
+				7D9A94F818E9A7BE00D92E95 /* application.ffdl in Resources */,
 				5F6DE53918B58BB000E87F7E /* InstructionsIntroduction.html in Resources */,
 				7D10CD9818DA301100AD43E3 /* WMNoteViewController.xib in Resources */,
 				7D10CDA418DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.xib in Resources */,
@@ -2873,24 +3018,30 @@
 				5F6DE53D18B58BB000E87F7E /* InstructionsPolicyCompassNavigation.html in Resources */,
 				7D10CE0418DC634800AD43E3 /* WMDevicesGroupHistoryViewContoller.xib in Resources */,
 				7D39DAF718B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib in Resources */,
+				7D9A950218E9A7BE00D92E95 /* PUT_YOUR_JAVASCRIPT_FILES_HERE in Resources */,
 				7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */,
 				7D10CE2418DDF26300AD43E3 /* WMMedicationSummaryViewController.xib in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
 				7D10CD7C18D63B1600AD43E3 /* WMTelecomListViewController.xib in Resources */,
 				7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */,
+				7D9A94FF18E9A7BE00D92E95 /* fatfractal.xml in Resources */,
+				7D9A94F718E9A7BE00D92E95 /* index.html in Resources */,
 				7DDBEDD818BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib in Resources */,
 				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
 				7D39DBB518BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib in Resources */,
+				7D9A94F518E9A7BE00D92E95 /* application.ffdl1395690875566 in Resources */,
 				7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */,
 				5F67D1FD18AC3BE000460C37 /* SkinAssessment.plist in Resources */,
 				5F6DE51B18B5885E00E87F7E /* WMInstructionContentViewController.xib in Resources */,
 				5F6DE4FF18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib in Resources */,
+				7D9A94FA18E9A7BE00D92E95 /* application.ffdl1395690875566 in Resources */,
 				7D39DB0118B7E6560054DDC3 /* WMShareViewController.xib in Resources */,
 				5F67D1FE18AC3BE000460C37 /* SkinAssessmentDefinitions.plist in Resources */,
 				5F67D1F518AC3BE000460C37 /* IAPProducts.plist in Resources */,
 				5F6DE54118B58BB000E87F7E /* InstructionsWoundTreatment.html in Resources */,
 				7D39DAF218B7E6130054DDC3 /* WMChooseStageViewController.xib in Resources */,
 				7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */,
+				7D9A94FE18E9A7BE00D92E95 /* context.xml in Resources */,
 				5F6DE53818B58BB000E87F7E /* InstructionsAuditTrail.html in Resources */,
 				5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
@@ -2898,6 +3049,7 @@
 				7DB2062C18A7D3400004DC32 /* Images.xcassets in Resources */,
 				7D39DAE818B7E5DD0054DDC3 /* WMSelectWoundViewController.xib in Resources */,
 				5F67D20818AC3BE000460C37 /* WoundTreatment.plist in Resources */,
+				7D9A94F418E9A7BE00D92E95 /* application.ffdl1395690607968 in Resources */,
 				5F67D1F718AC3BE000460C37 /* Medications.plist in Resources */,
 				7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
@@ -2920,11 +3072,13 @@
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
 				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
+				7D9A94F318E9A7BE00D92E95 /* application.ffdl in Resources */,
 				7D10CDF918DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib in Resources */,
 				5F67D1F418AC3BE000460C37 /* Devices.plist in Resources */,
 				7D39DB0618B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib in Resources */,
 				7D39DB4518B826620054DDC3 /* WMCarePlanGroupViewController.xib in Resources */,
 				7DDFD68618B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib in Resources */,
+				7D9A950318E9A7BE00D92E95 /* index.html in Resources */,
 				5F6DE51118B586F600E87F7E /* WMInstructionsViewController.xib in Resources */,
 				7DDFD68B18B7C0B900041927 /* WMHomeBaseViewController_iPad.xib in Resources */,
 				7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */,
@@ -3273,6 +3427,7 @@
 				7DDBEDC918BC0DED00FEF3FA /* IAPProduct.m in Sources */,
 				5F67D22518AD8DE200460C37 /* _WMNavigationTrack.m in Sources */,
 				7D10CDA318DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.m in Sources */,
+				7D9A94FC18E9A7BE00D92E95 /* Auth.js in Sources */,
 				7D39DB8B18B94FEB0054DDC3 /* _WMDeviceGroup.m in Sources */,
 				7D10CE1418DCE0D300AD43E3 /* WMBradenCellSelectTableViewCell.m in Sources */,
 				7DB206F018A839240004DC32 /* _WMTelecomType.m in Sources */,
@@ -3294,6 +3449,7 @@
 				7DF4E92918C22F27000A3F5B /* WMCarePlanValue.m in Sources */,
 				7DF4E8ED18C22EEC000A3F5B /* _WMPsychoSocialValue.m in Sources */,
 				7D39DB6218B921EE0054DDC3 /* WMPhotosContainerViewController.m in Sources */,
+				7D9A950118E9A7BE00D92E95 /* Auth.js in Sources */,
 				7DD8372F18C78A390028C2D3 /* NSObject+MagicalDataImport.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				7DF4E93A18C22F27000A3F5B /* WMWoundTreatmentGroup.m in Sources */,

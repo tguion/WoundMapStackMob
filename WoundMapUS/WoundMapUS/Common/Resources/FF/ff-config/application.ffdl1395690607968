@@ -1,0 +1,68 @@
+#
+# Application configuration
+#
+SET ActivateUsersOnReg          true
+SET AllowAutoRegistration       false
+SET AllowNewCollections         true
+SET AllowNewObjectTypes         true
+SET AllowNewMembers             true
+SET AllowSystemUserToLogin      true
+SET AndroidPushAuthToken        YOUR_ANDROID_AUTH_TOKEN_GOES_HERE
+SET ApplePushKeystorePassword   YOUR_KEYSTORE_PASSWORD_GOES_HERE
+SET ApplePushUsingProduction    false
+SET LogLevel                    INFO
+SET PushIsInactive              true
+SET ETaggingEnabled             true
+# Remove the following CORS setting if you don't wish to be able to use the data browser from the FatFractal Console
+SET CORS https://system.fatfractal.com
+
+#
+# Object Types
+#
+CREATE OBJECTTYPE FFUser (userName STRING, firstName STRING, lastName STRING, email STRING, active BOOLEAN, authDomain STRING, scriptAuthService STRING, groups GRABBAG /FFUserGroup, notif_ids GRABBAG /FFNotificationID, createdAt DATE, dateLastSignin DATE, ffUrl STRING, flags NUMERIC, guid STRING, name STRING, permissions NUMERIC, thumbnail BYTEARRAY, updatedAt DATE, participantType REFERENCE /WMParticipantType, person REFERENCE /WMPerson, team REFERENCE /WMTeam, patients GRABBAG /WMPatient, permissions NUMERIC, acquiredConsults GRABBAG /WMPatientConsult, flags NUMERIC, interventionEvents GRABBAG /WMInterventionEvent)
+
+CREATE ALIAS ON OBJECTTYPE FFUser GRABBAG BackReferences.FFUserGroup.users AS memberOfGroups
+CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
+CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
+
+CREATE OBJECTTYPE WMTelecomType (flags NUMERIC, telecoms GRABBAG /WMTelecom)
+CREATE OBJECTTYPE WMTelecom (flags NUMERIC, person REFERENCE /WMPerson, telecomType REFERENCE /WMTelecomType);
+CREATE OBJECTTYPE WMAddress (city STRING, country STRING, createdAt DATE, ffUrl STRING, postalCode STRING, state STRING, streetAddressLine STRING, streetAddressLine1 STRING, updatedAt DATE, organization REFERENCE /WMOrganization, person REFERENCE /WMPerson)
+CREATE OBJECTTYPE WMPerson (createAt DATE, ffUrl STRING, nameFamily STRING, nameGiven STRING, namePrefix STRING, nameSuffix STRING, updatedAt DATE, addresses GRABBAG /WMAddress, participant REFERENCE /WMParticipant, patients REFERENCE /WMPatient, telecoms GRABBAG /WMTelecom)
+CREATE OBJECTTYPE WMTeam (createdAt DATE, ffUrl STRING, name STRING, updatedAt DATE, consultingGroup REFERENCE /WMConsultingGroup, participants GRABBAG /WMParticipant)
+CREATE OBJECTTYPE WMTeamInvitation (acceptedFlag BOOLEAN, createdAt DATE, ffUrl STRING, flags NUMERIC, passcode NUMERIC, updatedAt DATE, invitee REFERENCE /WMParticipant, team REFERENCE /WMTeam)
+CREATE OBJECTTYPE WMPatient (acquiredByConsultant BOOLEAN, archivedFlag BOOLEAN, createdAt DATE, updatedAt DATE, dateOfBirth DATE, flags NUMERIC, gender STRING, patientStatusMessages STRING, ssn STRING, thumbnail BYTEARRAY, bradenScales GRABBAG /WMBradenScale, carePlanGroups GRABBAG /WMCarePlanGroup, deviceGroups GRABBAG /WMDeviceGroup, ids GRABBAG /WMid, medicationGroups GRABBAG /WMMedicationGroup, person REFERENCE /WMPerson, participant REFERENCE /WMParticipant, team REFERENCE /WMTeam, psychosocialGroups GRABBAG /WMPsychoSocialGroup, stage REFERENCE /WMNavigationStage, wounds GRABBAG /WMWound, consultantGroup REFERENCE /FFUserGroup)
+CREATE ALIAS ON OBJECTTYPE WMPatient GRABBAG BackReferences.FFUserGroup.users AS participants
+CREATE OBJECTTYPE WMBradenScale (closedFlag BOOLEAN, patient REFERENCE /WMPatient)
+
+#
+# Collection Resources
+#
+CREATE COLLECTION /FFUser OBJECTTYPE FFUser
+CREATE COLLECTION /FFUserGroup OBJECTTYPE FFUserGroup
+CREATE COLLECTION /FFNotificationID OBJECTTYPE FFNotificationID
+
+CREATE COLLECTION /WMTelecomType OBJECTTYPE WMTelecomType
+CREATE COLLECTION /WMTelecom OBJECTTYPE WMTelecom
+CREATE COLLECTION /WMAddress OBJECTTYPE WMAddress
+CREATE COLLECTION /WMPerson OBJECTTYPE WMPerson
+CREATE COLLECTION /WMParticipant OBJECTTYPE WMParticipant
+CREATE COLLECTION /WMPatient OBJECTTYPE WMPatient
+CREATE COLLECTION /WMBradenScale OBJECTTYPE WMBradenScale
+CREATE COLLECTION /WMTeamInvitation OBJECTTYPE WMTeamInvitation
+
+#
+# Permits
+#
+PERMIT read:object.invitee write:none ON /WMTeamInvitation
+PERMIT read:object.team.participantGroup,object.consultantGroup write:object.team.participantGroup,object.consultantGroup ON /WMPatient
+PERMIT read:object.team.participantGroup write:object.team.participantGroup ON /WMParticipant
+PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMBradenScale
+
+#
+# Event Handlers
+#
+
+#
+# Extension Resources
+#
