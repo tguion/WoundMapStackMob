@@ -27,30 +27,30 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"sortRankValue"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                        @"sortRankValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundLocationValue attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundLocationValue attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundLocationValue relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

@@ -74,35 +74,35 @@ typedef enum {
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue",
-                                        @"valueTypeCodeValue",
-                                        @"optionsInline",
-                                        @"allowMultipleSelection",
-                                        @"hasTitle"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue",
+                                                            @"valueTypeCodeValue",
+                                                            @"optionsInline",
+                                                            @"allowMultipleSelection",
+                                                            @"hasTitle"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMWoundPositionRelationships.positionValues];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundPositionRelationships.positionValues]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundPosition attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundPosition attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundPosition relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

@@ -6,6 +6,7 @@
 const struct WMOrganizationAttributes WMOrganizationAttributes = {
 	.createdAt = @"createdAt",
 	.ffUrl = @"ffUrl",
+	.flags = @"flags",
 	.name = @"name",
 	.updatedAt = @"updatedAt",
 };
@@ -45,6 +46,11 @@ const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"flagsValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"flags"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -61,6 +67,32 @@ const struct WMOrganizationFetchedProperties WMOrganizationFetchedProperties = {
 
 @dynamic ffUrl;
 
+
+
+
+
+
+@dynamic flags;
+
+
+
+- (int32_t)flagsValue {
+	NSNumber *result = [self flags];
+	return [result intValue];
+}
+
+- (void)setFlagsValue:(int32_t)value_ {
+	[self setFlags:[NSNumber numberWithInt:value_]];
+}
+
+- (int32_t)primitiveFlagsValue {
+	NSNumber *result = [self primitiveFlags];
+	return [result intValue];
+}
+
+- (void)setPrimitiveFlagsValue:(int32_t)value_ {
+	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
+}
 
 
 

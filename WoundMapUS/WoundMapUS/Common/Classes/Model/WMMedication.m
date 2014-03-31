@@ -71,40 +71,40 @@ typedef enum {
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue",
-                                        @"groupValueTypeCode",
-                                        @"unit",
-                                        @"value",
-                                        @"optionsArray",
-                                        @"secondaryOptionsArray",
-                                        @"interventionEvents",
-                                        @"devices",
-                                        @"hasInterventionEvents",
-                                        @"exludesOtherValues"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue",
+                                                            @"groupValueTypeCode",
+                                                            @"unit",
+                                                            @"value",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"interventionEvents",
+                                                            @"devices",
+                                                            @"hasInterventionEvents",
+                                                            @"exludesOtherValues"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMMedicationRelationships.groups];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMMedicationRelationships.groups]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMMedication attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMMedication attributeNamesNotToSerialize] containsObject:propertyName] || [[WMMedication relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

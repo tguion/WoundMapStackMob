@@ -119,35 +119,35 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"permissionsValue",
-                                        @"firstName",
-                                        @"lastName",
-                                        @"lastNameFirstName",
-                                        @"isTeamLeader"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"permissionsValue",
+                                                            @"firstName",
+                                                            @"lastName",
+                                                            @"lastNameFirstName",
+                                                            @"isTeamLeader"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMParticipantRelationships.acquiredConsults,
-                                        WMParticipantRelationships.interventionEvents];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMParticipantRelationships.acquiredConsults,
+                                                            WMParticipantRelationships.interventionEvents]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMParticipant attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMParticipant attributeNamesNotToSerialize] containsObject:propertyName] || [[WMParticipant relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

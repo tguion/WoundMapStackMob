@@ -129,6 +129,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     }
     
     [MagicalRecord setupCoreDataStackWithStoreNamed:[NSPersistentStore MR_urlForStoreName:storeFilename]];
+//    [[NSManagedObjectContext MR_defaultContext] MR_observeContext:[NSManagedObjectContext MR_rootSavingContext]];
 }
 
 - (WMNetworkReachability *)networkReachability

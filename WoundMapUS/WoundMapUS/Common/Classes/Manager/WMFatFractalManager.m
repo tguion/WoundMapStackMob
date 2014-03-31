@@ -9,6 +9,7 @@
 #import "WMFatFractalManager.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
+#import "WMOrganization.h"
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
 #import "WMAddress.h"
@@ -56,6 +57,9 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 @property (strong, nonatomic) NSOperationQueue *serialQueue;
 @property (strong, nonatomic) NSMutableArray *operationCache;
 
+@property (strong, nonatomic) NSMutableSet *updatedObjectIDs;
+@property (strong, nonatomic) NSMutableSet *deletedObjectIDs;
+
 @end
 
 @implementation WMFatFractalManager
@@ -88,7 +92,26 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
     _operationCache = [[NSMutableArray alloc] init];
     
+    _updatedObjectIDs = [[NSMutableSet alloc] init];
+    _deletedObjectIDs = [[NSMutableSet alloc] init];
+    
+    __weak __typeof(&*self)weakSelf = self;
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification
+                                                      object:[NSManagedObjectContext MR_defaultContext]
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *notification) {
+                                                      [weakSelf handleDefaultManagedObjectContextDidSave:notification];
+                                                  }];
+    
     return self;
+}
+
+- (void)handleDefaultManagedObjectContextDidSave:(NSNotification *)notification
+{
+    NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
+    [_updatedObjectIDs addObjectsFromArray:[updatedObjects valueForKeyPath:@"objectID"]];
+    NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
+    [_deletedObjectIDs addObjectsFromArray:[deletedObjects valueForKeyPath:@"objectID"]];
 }
 
 #pragma mark - Sign In
@@ -313,77 +336,100 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 #pragma mark - Backend Updates
 
 // create participant, with reference objects person and team
-- (void)updateParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
+- (void)updateParticipant:(NSManagedObjectID *)participantObjectID ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
 {
-    __block NSError *localError = nil;
-    NSString *participantFFURL = participant.ffUrl;
-    NSBlockOperation *participantOperation = nil;
-    WMOperationCallback participantBlock = ^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        if (error) {
-            localError = error;
-        }
-    };
-    if (participantFFURL) {
-        participantOperation = [self updateOperation:participant ff:ff completionHandler:participantBlock];
-    } else {
-        participantOperation = [self createOperation:participant collection:[WMParticipant entityName] ff:ff completionHandler:participantBlock];
-    }
-    [_operationCache addObject:participantOperation];
-    WMPerson *person = participant.person;
-    WMOperationCallback personBlock = ^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        if (error) {
-            [WMUtilities logError:error];
-            localError = error;
-        } else {
-            WMPerson *person = (WMPerson *)object;
-            for (WMAddress *address in person.addresses) {
-                [ff queueGrabBagAddItemAtUri:address.ffUrl toObjAtUri:person.ffUrl grabBagName:@"addresses"];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMParticipant *participant = (WMParticipant *)[managedObjectContext objectWithID:participantObjectID];
+        WMOrganization *organization = participant.organization;
+        if (organization) {
+            if (organization.ffUrl && [_updatedObjectIDs containsObject:[organization objectID]]) {
+                [_updatedObjectIDs removeObject:[organization objectID]];// TODO finish this will other updates
+                [ff updateObj:organization];
+            } else {
+                [ff createObj:organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]]];
             }
-            for (WMTelecom *telecom in person.telecoms) {
-                [ff queueGrabBagAddItemAtUri:telecom.ffUrl toObjAtUri:person.ffUrl grabBagName:@"telecoms"];
+            for (WMAddress *address in organization.addresses) {
+                if (address.ffUrl && [_updatedObjectIDs containsObject:[address objectID]]) {
+                    [_updatedObjectIDs removeObject:[address objectID]];
+                    [ff updateObj:address];
+                } else {
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]]];
+                }
+            }
+            for (WMId *anId in organization.ids) {
+                if (anId.ffUrl && [_updatedObjectIDs containsObject:[anId objectID]]) {
+                    [_updatedObjectIDs removeObject:[anId objectID]];
+                    [ff updateObj:anId];
+                } else {
+                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]]];
+                }
+            }
+            [managedObjectContext MR_saveOnlySelfAndWait];
+        }
+        WMPerson *person = participant.person;
+        participant.person = nil;
+        NSAssert(person.participant == nil, @"expected participant to be nil");
+        if (person.ffUrl && [_updatedObjectIDs containsObject:[person objectID]]) {
+            [_updatedObjectIDs removeObject:[person objectID]];
+            [ff updateObj:person];
+        } else {
+            [ff createObj:person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]]];
+        }
+        for (WMAddress *address in person.addresses) {
+            if (address.ffUrl && [_updatedObjectIDs containsObject:[address objectID]]) {
+                [_updatedObjectIDs removeObject:[address objectID]];
+                [ff updateObj:address];
+            } else {
+                [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]]];
             }
         }
-    };
-    NSBlockOperation *personOperation = [self createOperation:person collection:[WMPerson entityName] ff:ff completionHandler:personBlock];
-    [participantOperation addDependency:personOperation];
-    [_operationCache addObject:personOperation];
-    for (WMAddress *address in person.addresses) {
-        NSBlockOperation *addressOperation = nil;
-        if (address.ffUrl) {
-            addressOperation = [self updateObject:address ff:ff addToQueue:NO completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                if (error) {
-                    localError = error;
-                }
-            }];
-        } else {
-            addressOperation = [self createOperation:address collection:[WMAddress entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                if (error) {
-                    localError = error;
-                }
-            }];
+        for (WMTelecom *telecom in person.telecoms) {
+            if (telecom.ffUrl && [_updatedObjectIDs containsObject:[telecom objectID]]) {
+                [_updatedObjectIDs removeObject:[telecom objectID]];
+                [ff updateObj:telecom];
+            } else {
+                [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]]];
+            }
         }
-        [personOperation addDependency:addressOperation];
-        [_operationCache addObject:addressOperation];
-    }
-    for (WMTelecom *telecom in person.telecoms) {
-        NSBlockOperation *telecomOperation = nil;
-        if (telecom.ffUrl) {
-            telecomOperation = [self updateObject:telecom ff:ff addToQueue:NO completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                if (error) {
-                    localError = error;
-                }
-            }];
+        participant.person = person;
+        if (participant.ffUrl && [_updatedObjectIDs containsObject:[participant objectID]]) {
+            [_updatedObjectIDs removeObject:[participant objectID]];
+            [ff updateObj:participant];
         } else {
-            telecomOperation = [self createOperation:telecom collection:[WMTelecom entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                if (error) {
-                    localError = error;
-                }
-            }];
+            [ff createObj:participant atUri:[NSString stringWithFormat:@"/%@", [WMParticipant entityName]]];
         }
-        [personOperation addDependency:telecomOperation];
-        [_operationCache addObject:telecomOperation];
-    }
-    completionHandler(localError);
+        // acquiredConsultants
+        for (WMPatientConsultant *patientConsultant in participant.acquiredConsults) {
+            if (patientConsultant.ffUrl && [_updatedObjectIDs containsObject:[patientConsultant objectID]]) {
+                [_updatedObjectIDs removeObject:[patientConsultant objectID]];
+                [ff updateObj:patientConsultant];
+            } else {
+                [ff createObj:patientConsultant atUri:[NSString stringWithFormat:@"/%@",[WMPatientConsultant entityName]]];
+            }
+        }
+        // interventionEvents
+        for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
+            if (interventionEvent.ffUrl && [_updatedObjectIDs containsObject:[interventionEvent objectID]]) {
+                [_updatedObjectIDs removeObject:[interventionEvent objectID]];
+                [ff updateObj:interventionEvent];
+            } else {
+                [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@",[WMInterventionEvent entityName]]];
+            }
+        }
+        // team
+        [self updateTeam:participant.team ff:ff completionHandler:nil];
+        // teamInvitations
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [NSManagedObjectContext MR_clearContextForCurrentThread];
+        if (completionHandler) {
+            completionHandler(nil);
+        }
+    });
+}
+- (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    
 }
 
 - (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler

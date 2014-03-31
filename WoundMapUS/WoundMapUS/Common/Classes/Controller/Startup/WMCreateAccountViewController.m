@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 @property (strong, nonatomic) NSString *emailTextInput;
 @property (strong, nonatomic) IBOutlet UIView *signInButtonContainerView;
 @property (strong, nonatomic) IBOutlet UIButton *signInButton;
+@property (strong, nonatomic) IBOutlet UIView *participantDetailsContainerview;
 
 @property (readonly, nonatomic) BOOL hasSufficientCreateAccountInput;
 
@@ -76,12 +77,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                          target:self
-                                                                                          action:@selector(doneAction:)];
-    self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    [self updateNavigationState];
 }
 
 - (void)didReceiveMemoryWarning
@@ -143,11 +141,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             break;
         }
         case 1: {
-            cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 2: {
-            cellReuseIdentifier = @"ValueCell";
+            switch (self.state) {
+                case CreateAccountInitial:
+                    cellReuseIdentifier = @"TextCell";
+                    break;
+                case CreateAccountAccountCreated:
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+            }
             break;
         }
     }
@@ -254,7 +255,23 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (void)updateNavigationState
 {
-    self.navigationItem.rightBarButtonItem.enabled = self.hasSufficientCreateAccountInput;
+    switch (self.state) {
+        case CreateAccountInitial: {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Sign In"
+                                                                                      style:UIBarButtonItemStyleBordered
+                                                                                     target:self
+                                                                                     action:@selector(createAccountAction:)];
+            self.navigationItem.rightBarButtonItem.enabled = self.hasSufficientCreateAccountInput;
+            break;
+        }
+        case CreateAccountAccountCreated: {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                                   target:self
+                                                                                                   action:@selector(doneAction:)];
+            self.navigationItem.rightBarButtonItem.enabled = self.hasSufficientCreateAccountInput;
+            break;
+        }
+    }
 }
 
 #pragma mark - Actions
@@ -304,6 +321,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [alertView show];
         } else {
             weakSelf.state = CreateAccountAccountCreated;
+            [weakSelf updateNavigationState];
             [weakSelf.tableView reloadData];
             [weakSelf saveUserCredentialsInKeychain];
             // update participant
@@ -341,7 +359,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             // participant has logged in as new user - now push data to backend
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updateParticipant:weakSelf.participant ff:ff completionHandler:^(NSError *error) {
+            [ffm updateParticipant:[weakSelf.participant objectID] ff:ff completionHandler:^(NSError *error) {
                 if (error) {
                     [ffm clearOperationCache];
                 } else {
@@ -424,6 +442,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             }
         }
         [weakSelf updateSignInButton];
+        [weakSelf updateNavigationState];
     } afterDelay:0.1];
     return YES;
 }
@@ -499,7 +518,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:2]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
@@ -516,7 +535,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
     // update email
     WMTelecom *telecom = person.defaultEmailTelecom;
@@ -539,7 +558,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:2]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
@@ -553,13 +572,17 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.section > 1);
+    if (indexPath.section == 0 || self.state == CreateAccountInitial) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    if (self.state == CreateAccountInitial && section == 1) {
-        return _signInButtonContainerView;
+    if (section == 1) {
+        return (self.state == CreateAccountInitial ? _signInButtonContainerView:_participantDetailsContainerview);
     }
     // else
     return nil;
@@ -567,14 +590,18 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return  44.0;
+    if (section == 1) {
+        return (self.state == CreateAccountInitial ? 44.0:88.0);
+    }
+    // else
+    return 0.0;
 }
 
 // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0 || indexPath.section == 1) {
+    if (indexPath.section == 0 || self.state == CreateAccountInitial) {
         return;
     }
     // else
@@ -609,7 +636,16 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return (self.state == CreateAccountInitial ? 2:3);
+    NSInteger count = 0;
+    switch (self.state) {
+        case CreateAccountInitial:
+            count = 2;
+            break;
+        case CreateAccountAccountCreated:
+            count = 2;
+            break;
+    }
+    return count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -621,11 +657,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             break;
         }
         case 1: {
-            count = 3;
-            break;
-        }
-        case 2: {
-            count = 3;
+            switch (self.state) {
+                case CreateAccountInitial:
+                    count = 3;
+                    break;
+                case CreateAccountAccountCreated:
+                    count = 3;
+                    break;
+            }
             break;
         }
     }
@@ -692,58 +731,63 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             break;
         }
         case 1: {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            UITextField *textField = nil;
-            textField = myCell.textField;
-            textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            textField.autocorrectionType = UITextAutocorrectionTypeNo;
-            textField.spellCheckingType = UITextSpellCheckingTypeNo;
-            textField.returnKeyType = UIReturnKeyDefault;
-            textField.delegate = self;
-            switch (indexPath.row) {
-                case 0: {
-                    // first name
-                    myCell.textField.tag = 2000;
-                    myCell.textField.secureTextEntry = NO;
-                    myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
-                    [myCell updateWithLabelText:@"First Name" valueText:_firstNameTextInput valuePrompt:@""];
+            switch (self.state) {
+                case CreateAccountInitial: {
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = nil;
+                    textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
+                    switch (indexPath.row) {
+                        case 0: {
+                            // first name
+                            myCell.textField.tag = 2000;
+                            myCell.textField.secureTextEntry = NO;
+                            myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
+                            [myCell updateWithLabelText:@"First Name" valueText:_firstNameTextInput valuePrompt:@""];
+                            break;
+                        }
+                        case 1: {
+                            // last name
+                            myCell.textField.tag = 2001;
+                            myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
+                            myCell.textField.secureTextEntry = NO;
+                            [myCell updateWithLabelText:@"Last Name" valueText:_lastNameTextInput valuePrompt:@""];
+                            break;
+                        }
+                        case 2: {
+                            // email
+                            myCell.textField.tag = 2002;
+                            myCell.textField.secureTextEntry = NO;
+                            [myCell updateWithLabelText:@"Email" valueText:_emailTextInput valuePrompt:@"you@host.com"];
+                            break;
+                        }
+                    }
                     break;
                 }
-                case 1: {
-                    // last name
-                    myCell.textField.tag = 2001;
-                    myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
-                    myCell.textField.secureTextEntry = NO;
-                    [myCell updateWithLabelText:@"Last Name" valueText:_lastNameTextInput valuePrompt:@""];
-                    break;
-                }
-                case 2: {
-                    // email
-                    myCell.textField.tag = 2002;
-                    myCell.textField.secureTextEntry = NO;
-                    [myCell updateWithLabelText:@"Email" valueText:_emailTextInput valuePrompt:@"you@host.com"];
-                    break;
-                }
-            }
-            break;
-        }
-        case 2: {
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            switch (indexPath.row) {
-                case 0: {
-                    cell.textLabel.text = @"Contact Details";
-                    cell.detailTextLabel.text = self.person.lastNameFirstName;
-                    break;
-                }
-                case 1: {
-                    cell.textLabel.text = @"Clinical Role";
-                    cell.detailTextLabel.text = _selectedParticipantType.title;
-                    break;
-                }
-                case 2: {
-                    cell.textLabel.text = @"Organization";
-                    cell.detailTextLabel.text = _organization.name;
+                case CreateAccountAccountCreated: {
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    switch (indexPath.row) {
+                        case 0: {
+                            cell.textLabel.text = @"Contact Details";
+                            cell.detailTextLabel.text = self.person.lastNameFirstName;
+                            break;
+                        }
+                        case 1: {
+                            cell.textLabel.text = @"Clinical Role";
+                            cell.detailTextLabel.text = _selectedParticipantType.title;
+                            break;
+                        }
+                        case 2: {
+                            cell.textLabel.text = @"Organization";
+                            cell.detailTextLabel.text = _organization.name;
+                            break;
+                        }
+                    }
                     break;
                 }
             }

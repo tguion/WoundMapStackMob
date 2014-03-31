@@ -46,12 +46,12 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                         @"sortRankValue",
                                         @"sortedPositions",
                                         @"groupValueTypeCode",
@@ -60,24 +60,24 @@
                                         @"value",
                                         @"optionsArray",
                                         @"secondaryOptionsArray",
-                                        @"interventionEvents"];
+                                        @"interventionEvents"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundLocationPositionJoin attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundLocationPositionJoin attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundLocationPositionJoin relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

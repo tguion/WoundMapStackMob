@@ -22,6 +22,7 @@
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (strong, nonatomic) WMTelecomType *telecomType;
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
+@property (readonly, nonatomic) NSString *valuePlaceHolder;
 
 @end
 
@@ -128,6 +129,15 @@
     WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
     [self.navigationController pushViewController:simpleTableViewController animated:YES];
     simpleTableViewController.title = @"Select Telecom Type";
+}
+
+- (NSString *)valuePlaceHolder
+{
+    NSString *string = @"(888)555-1212";
+    if (_telecomType.isEmail) {
+        string = @"you@host.com";
+    }
+    return string;
 }
 
 #pragma mark - Actions
@@ -296,7 +306,8 @@
         case 2: {
             // value
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            [myCell updateWithLabelText:@"Value" valueText:self.telecom.value valuePrompt:@"you@host.org"]; // TODO adjust value and use using type
+            myCell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            [myCell updateWithLabelText:@"Value" valueText:self.telecom.value valuePrompt:self.valuePlaceHolder];
             myCell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }

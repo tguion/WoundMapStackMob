@@ -150,53 +150,53 @@ NSString * const kOtherWoundTypeTitle = @"Other";
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"childrenHaveSectionTitles",
-                                        @"flagsValue",
-                                        @"hasChildrenWoundTypes",
-                                        @"isOther",
-                                        @"optionsArray",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue",
-                                        @"titleForDisplay",
-                                        @"valueTypeCodeValue",
-                                        @"woundTypeCodeValue",
-                                        @"groupValueTypeCode",
-                                        @"unit",
-                                        @"value",
-                                        @"optionsArray",
-                                        @"secondaryOptionsArray",
-                                        @"interventionEvents"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"childrenHaveSectionTitles",
+                                                            @"flagsValue",
+                                                            @"hasChildrenWoundTypes",
+                                                            @"isOther",
+                                                            @"optionsArray",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue",
+                                                            @"titleForDisplay",
+                                                            @"valueTypeCodeValue",
+                                                            @"woundTypeCodeValue",
+                                                            @"groupValueTypeCode",
+                                                            @"unit",
+                                                            @"value",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"interventionEvents"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMWoundTypeRelationships.carePlanCategories,
-                                        WMWoundTypeRelationships.children,
-                                        WMWoundTypeRelationships.deviceCategories,
-                                        WMWoundTypeRelationships.iapProducts,
-                                        WMWoundTypeRelationships.medicationCategories,
-                                        WMWoundTypeRelationships.psychosocialItems,
-                                        WMWoundTypeRelationships.skinAssessmentCategories,
-                                        WMWoundTypeRelationships.woundMeasurements,
-                                        WMWoundTypeRelationships.wounds,
-                                        WMWoundTypeRelationships.woundTreatments];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundTypeRelationships.carePlanCategories,
+                                                            WMWoundTypeRelationships.children,
+                                                            WMWoundTypeRelationships.deviceCategories,
+                                                            WMWoundTypeRelationships.iapProducts,
+                                                            WMWoundTypeRelationships.medicationCategories,
+                                                            WMWoundTypeRelationships.psychosocialItems,
+                                                            WMWoundTypeRelationships.skinAssessmentCategories,
+                                                            WMWoundTypeRelationships.woundMeasurements,
+                                                            WMWoundTypeRelationships.wounds,
+                                                            WMWoundTypeRelationships.woundTreatments]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundType attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundType attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundType relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

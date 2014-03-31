@@ -45,32 +45,34 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"lastNameFirstName",
-                                        @"defaultEmailTelecom"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"lastNameFirstName",
+                                                            @"defaultEmailTelecom",
+                                                            @"managedObjectContext",
+                                                            @"objectID"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMPersonRelationships.addresses,
-                                        WMPersonRelationships.telecoms];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMPersonRelationships.addresses,
+                                                            WMPersonRelationships.telecoms]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMPerson attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMPerson attributeNamesNotToSerialize] containsObject:propertyName] || [[WMPerson relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

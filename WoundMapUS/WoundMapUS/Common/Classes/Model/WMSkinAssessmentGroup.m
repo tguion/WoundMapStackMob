@@ -231,44 +231,44 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"closedFlagValue",
-                                        @"continueCountValue",
-                                        @"flagsValue",
-                                        @"groupValueTypeCode",
-                                        @"unit",
-                                        @"value",
-                                        @"optionsArray",
-                                        @"secondaryOptionsArray",
-                                        @"interventionEvents",
-                                        @"isClosed",
-                                        @"hasInterventionEvents",
-                                        @"sortedSkinAssessmentValues",
-                                        @"hasValues",
-                                        @"skinAssessmentValuesAdded",
-                                        @"skinAssessmentValuesRemoved"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"closedFlagValue",
+                                                            @"continueCountValue",
+                                                            @"flagsValue",
+                                                            @"groupValueTypeCode",
+                                                            @"unit",
+                                                            @"value",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"interventionEvents",
+                                                            @"isClosed",
+                                                            @"hasInterventionEvents",
+                                                            @"sortedSkinAssessmentValues",
+                                                            @"hasValues",
+                                                            @"skinAssessmentValuesAdded",
+                                                            @"skinAssessmentValuesRemoved"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMSkinAssessmentGroupRelationships.interventionEvents,
-                                        WMSkinAssessmentGroupRelationships.values];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMSkinAssessmentGroupRelationships.interventionEvents,
+                                                            WMSkinAssessmentGroupRelationships.values]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMSkinAssessmentGroup attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMSkinAssessmentGroup attributeNamesNotToSerialize] containsObject:propertyName] || [[WMSkinAssessmentGroup relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

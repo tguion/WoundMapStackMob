@@ -85,32 +85,32 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue",
-                                        @"valueTypeCodeValue"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue",
+                                                            @"valueTypeCodeValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMWoundOdorRelationships.measurementValues];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundOdorRelationships.measurementValues]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundOdor attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundOdor attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundOdor relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

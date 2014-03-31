@@ -114,31 +114,31 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMDeviceCategoryRelationships.devices];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMDeviceCategoryRelationships.devices]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMDeviceCategory attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMDeviceCategory attributeNamesNotToSerialize] containsObject:propertyName] || [[WMDeviceCategory relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

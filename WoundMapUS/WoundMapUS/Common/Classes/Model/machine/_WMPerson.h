@@ -7,6 +7,7 @@
 extern const struct WMPersonAttributes {
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *ffUrl;
+	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *nameFamily;
 	__unsafe_unretained NSString *nameGiven;
 	__unsafe_unretained NSString *namePrefix;
@@ -28,6 +29,7 @@ extern const struct WMPersonFetchedProperties {
 @class WMParticipant;
 @class WMPatient;
 @class WMTelecom;
+
 
 
 
@@ -65,6 +67,20 @@ extern const struct WMPersonFetchedProperties {
 
 
 //- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* flags;
+
+
+
+@property int32_t flagsValue;
+- (int32_t)flagsValue;
+- (void)setFlagsValue:(int32_t)value_;
+
+//- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,6 +192,15 @@ extern const struct WMPersonFetchedProperties {
 
 - (NSString*)primitiveFfUrl;
 - (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveFlags;
+- (void)setPrimitiveFlags:(NSNumber*)value;
+
+- (int32_t)primitiveFlagsValue;
+- (void)setPrimitiveFlagsValue:(int32_t)value_;
 
 
 

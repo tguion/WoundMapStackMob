@@ -459,6 +459,7 @@
     <entity name="WMOrganization" representedClassName="WMOrganization" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="addresses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMAddress" inverseName="organization" inverseEntity="WMAddress" syncable="YES">
@@ -744,7 +745,7 @@
         </attribute>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <attribute name="use" optional="YES" attributeType="String" defaultValueString="DIR" syncable="YES"/>
-        <attribute name="value" optional="YES" attributeType="String" defaultValueString="tel:(888)555-1212" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="telecoms" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="telecomType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTelecomType" inverseName="telecoms" inverseEntity="WMTelecomType" syncable="YES">
             <userInfo>
@@ -1168,7 +1169,7 @@
         <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="450"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
-        <element name="WMOrganization" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="328"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="403"/>

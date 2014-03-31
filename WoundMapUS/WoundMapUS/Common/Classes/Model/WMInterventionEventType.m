@@ -138,31 +138,31 @@ NSString * const kInterventionEventTypeRevise = @"Revise";
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMInterventionEventTypeRelationships.interventionEvents];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMInterventionEventTypeRelationships.interventionEvents]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMInterventionEventType attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMInterventionEventType attributeNamesNotToSerialize] containsObject:propertyName] || [[WMInterventionEventType relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

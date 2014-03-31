@@ -29,6 +29,7 @@
         _textField = textField;
         textField.translatesAutoresizingMaskIntoConstraints = NO;
         textField.textAlignment = NSTextAlignmentRight;
+        textField.clearButtonMode = UITextFieldViewModeAlways;
         
         UILabel *textLabel = self.textLabel;
         textLabel.translatesAutoresizingMaskIntoConstraints = NO;

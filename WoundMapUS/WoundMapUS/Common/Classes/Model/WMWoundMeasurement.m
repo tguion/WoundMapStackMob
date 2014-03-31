@@ -264,45 +264,45 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"graphableFlagValue",
-                                        @"keyboardTypeValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue",
-                                        @"valueTypeCodeValue",
-                                        @"groupValueTypeCode",
-                                        @"unit",
-                                        @"value",
-                                        @"optionsArray",
-                                        @"secondaryOptionsArray",
-                                        @"interventionEvents",
-                                        @"allowMultipleChildSelection",
-                                        @"normalizeMeasurements",
-                                        @"hasChildrenWoundMeasurements",
-                                        @"childrenHaveSectionTitles"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"graphableFlagValue",
+                                                            @"keyboardTypeValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue",
+                                                            @"valueTypeCodeValue",
+                                                            @"groupValueTypeCode",
+                                                            @"unit",
+                                                            @"value",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"interventionEvents",
+                                                            @"allowMultipleChildSelection",
+                                                            @"normalizeMeasurements",
+                                                            @"hasChildrenWoundMeasurements",
+                                                            @"childrenHaveSectionTitles"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMWoundMeasurementRelationships.childrenMeasurements,
-                                        WMWoundMeasurementRelationships.values];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundMeasurementRelationships.childrenMeasurements,
+                                                            WMWoundMeasurementRelationships.values]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWoundMeasurement attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWoundMeasurement attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundMeasurement relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

@@ -255,32 +255,32 @@ typedef enum {
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"activeFlagValue",
-                                        @"disabledFlagValue",
-                                        @"flagsValue",
-                                        @"sortRankValue"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"activeFlagValue",
+                                                            @"disabledFlagValue",
+                                                            @"flagsValue",
+                                                            @"sortRankValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMNavigationTrackRelationships.stages];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationTrackRelationships.stages]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMNavigationTrack attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMNavigationTrack attributeNamesNotToSerialize] containsObject:propertyName] || [[WMNavigationTrack relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

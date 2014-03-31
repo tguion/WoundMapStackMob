@@ -1,5 +1,5 @@
 #import "WMOrganization.h"
-
+#import "WMUtilities.h"
 
 @interface WMOrganization ()
 
@@ -21,31 +21,33 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"managedObjectContext",
+                                                            @"objectID"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMOrganizationRelationships.addresses,
-                                        WMOrganizationRelationships.ids,
-                                        WMOrganizationRelationships.participants];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMOrganizationRelationships.addresses,
+                                                            WMOrganizationRelationships.ids,
+                                                            WMOrganizationRelationships.participants]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMOrganization attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMOrganization attributeNamesNotToSerialize] containsObject:propertyName] || [[WMOrganization relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

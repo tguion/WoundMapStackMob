@@ -32,32 +32,32 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMTeamRelationships.invitations,
-                                        WMTeamRelationships.navigationTracks,
-                                        WMTeamRelationships.participants,
-                                        WMTeamRelationships.patients];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMTeamRelationships.invitations,
+                                                            WMTeamRelationships.navigationTracks,
+                                                            WMTeamRelationships.participants,
+                                                            WMTeamRelationships.patients]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMTeam attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMTeam attributeNamesNotToSerialize] containsObject:propertyName] || [[WMTeam relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

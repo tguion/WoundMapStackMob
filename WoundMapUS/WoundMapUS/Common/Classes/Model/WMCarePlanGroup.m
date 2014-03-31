@@ -300,43 +300,43 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"closedFlagValue",
-                                        @"continueCountValue",
-                                        @"flagsValue",
-                                        @"groupValueTypeCode",
-                                        @"unit",
-                                        @"value",
-                                        @"optionsArray",
-                                        @"secondaryOptionsArray",
-                                        @"interventionEvents",
-                                        @"hasInterventionEvents",
-                                        @"sortedCarePlanValues",
-                                        @"isClosed",
-                                        @"carePlanValuesAdded",
-                                        @"carePlanValuesRemoved"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"closedFlagValue",
+                                                            @"continueCountValue",
+                                                            @"flagsValue",
+                                                            @"groupValueTypeCode",
+                                                            @"unit",
+                                                            @"value",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"interventionEvents",
+                                                            @"hasInterventionEvents",
+                                                            @"sortedCarePlanValues",
+                                                            @"isClosed",
+                                                            @"carePlanValuesAdded",
+                                                            @"carePlanValuesRemoved"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMCarePlanGroupRelationships.interventionEvents,
-                                        WMCarePlanGroupRelationships.values];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMCarePlanGroupRelationships.interventionEvents,
+                                                            WMCarePlanGroupRelationships.values]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMCarePlanGroup attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMCarePlanGroup attributeNamesNotToSerialize] containsObject:propertyName] || [[WMCarePlanGroup relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

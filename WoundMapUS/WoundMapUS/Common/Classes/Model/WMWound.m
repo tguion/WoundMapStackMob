@@ -376,49 +376,48 @@
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"sortRankValue",
-                                        @"shortName",
-                                        @"lastWoundPhoto",
-                                        @"woundPhotosCount",
-                                        @"minimumAndMaximumWoundPhotoDates",
-                                        @"sortedWoundPhotos",
-                                        @"sortedWoundPhotoIDs",
-                                        @"sortedWoundMeasurements",
-                                        @"sortedWoundTreatments",
-                                        @"woundTypeForDisplay",
-                                        @"woundPositionCount",
-                                        @"sortedPositionValues",
-                                        @"positionValuesForDisplay",
-                                        @"woundLocationAndPositionForDisplay",
-                                        @"lastWoundTreatmentGroup",
-                                        @"woundTreatmentGroupCount",
-                                        ];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"sortRankValue",
+                                                            @"shortName",
+                                                            @"lastWoundPhoto",
+                                                            @"woundPhotosCount",
+                                                            @"minimumAndMaximumWoundPhotoDates",
+                                                            @"sortedWoundPhotos",
+                                                            @"sortedWoundPhotoIDs",
+                                                            @"sortedWoundMeasurements",
+                                                            @"sortedWoundTreatments",
+                                                            @"woundTypeForDisplay",
+                                                            @"woundPositionCount",
+                                                            @"sortedPositionValues",
+                                                            @"positionValuesForDisplay",
+                                                            @"woundLocationAndPositionForDisplay",
+                                                            @"lastWoundTreatmentGroup",
+                                                            @"woundTreatmentGroupCount"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMWoundRelationships.measurementGroups,
-                                        WMWoundRelationships.photos,
-                                        WMWoundRelationships.positionValues,
-                                        WMWoundRelationships.treatmentGroups];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundRelationships.measurementGroups,
+                                                            WMWoundRelationships.photos,
+                                                            WMWoundRelationships.positionValues,
+                                                            WMWoundRelationships.treatmentGroups]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMWound attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMWound attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWound relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

@@ -210,46 +210,46 @@ typedef enum {
 
 #pragma mark - FatFractal
 
-+ (NSArray *)attributeNamesNotToSerialize
++ (NSSet *)attributeNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[@"flagsValue",
-                                        @"keyboardTypeValue",
-                                        @"snomedCIDValue",
-                                        @"sortRankValue",
-                                        @"valueTypeCodeValue",
-                                        @"groupValueTypeCode",
-                                        @"unit",
-                                        @"value",
-                                        @"optionsArray",
-                                        @"secondaryOptionsArray",
-                                        @"interventionEvents",
-                                        @"combineKeyAndValue",
-                                        @"inputValueInline",
-                                        @"allowMultipleChildSelection",
-                                        @"skipSelectionIcon",
-                                        @"hasSubcategories",
-                                        @"sortedChildernCarePlanCategories"];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"keyboardTypeValue",
+                                                            @"snomedCIDValue",
+                                                            @"sortRankValue",
+                                                            @"valueTypeCodeValue",
+                                                            @"groupValueTypeCode",
+                                                            @"unit",
+                                                            @"value",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"interventionEvents",
+                                                            @"combineKeyAndValue",
+                                                            @"inputValueInline",
+                                                            @"allowMultipleChildSelection",
+                                                            @"skipSelectionIcon",
+                                                            @"hasSubcategories",
+                                                            @"sortedChildernCarePlanCategories"]];
     });
     return PropertyNamesNotToSerialize;
 }
 
-+ (NSArray *)relationshipNamesNotToSerialize
++ (NSSet *)relationshipNamesNotToSerialize
 {
-    static NSArray *PropertyNamesNotToSerialize = nil;
+    static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = @[WMCarePlanCategoryRelationships.subcategories,
-                                        WMCarePlanCategoryRelationships.values];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMCarePlanCategoryRelationships.subcategories,
+                                                            WMCarePlanCategoryRelationships.values]];
     });
     return PropertyNamesNotToSerialize;
 }
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([[WMCarePlanCategory attributeNamesNotToSerialize] containsObject:propertyName]) {
+    if ([[WMCarePlanCategory attributeNamesNotToSerialize] containsObject:propertyName] || [[WMCarePlanCategory relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else
