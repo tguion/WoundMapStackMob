@@ -472,38 +472,50 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
     [_operationCache addObject:teamInvitationOperation];
 }
 
-- (void)createTeamWithParticipant:(WMParticipant *)participant user:(FFUser *)user ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)createTeamWithParticipant:(WMParticipant *)participant user:(FFUser *)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 {
-    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     NSParameterAssert([participant.ffUrl length] > 0);
     NSParameterAssert(participant.isTeamLeader);
-    WMTeam *team = participant.team;
-    if (nil == team) {
-        team = [WMTeam MR_createInContext:managedObjectContext];
-        participant.team = team;
+    NSParameterAssert(completionHandler);
+    NSManagedObjectID *participantObjectID = [participant objectID];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMParticipant *participant = (WMParticipant *)[managedObjectContext objectWithID:participantObjectID];
+        WMTeam *team = participant.team;
+        NSParameterAssert(team != nil && [team.ffUrl length] == 0);
+        NSError *error = nil;
+        FFUserGroup *participantGroup = team.participantGroup;
+        id object = [ff createObj:participantGroup atUri:@"/FFUserGroup" error:&error];
+        NSAssert([object isKindOfClass:[FFUserGroup class]], @"Expected FFUserGroup but got %@", object);
+        if (error) {
+            completionHandler(error);
+        }
+        object = [ff createObj:team atUri:[NSString stringWithFormat:@"/%@", [WMTeam entityName]] error:&error];
+        NSAssert([object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
+        if (error) {
+            completionHandler(error);
+        }
+        object = [ff updateObj:participant error:&error];
+        NSAssert([object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
+        if (error) {
+            completionHandler(error);
+        }
+        // add participant (user) to FFUserGroup
+        [team.participantGroup addUser:user error:&error];
+        if (error) {
+            completionHandler(error);
+        }
+        // add invitations
+        for (WMTeamInvitation *invitation in team.invitations) {
+            object = [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] error:&error];
+            NSAssert([object isKindOfClass:[WMTeamInvitation class]], @"Expected WMTeamInvitation but got %@", object);
+            if (error) {
+                completionHandler(error);
+            }
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        NSError *error = nil;
-        [team.participantGroup addUser:user error:&error];
-        NSAssert(nil == error, @"Error adding user %@ to group %@", user, team.participantGroup);
-        NSBlockOperation *createUserGroupOperation = [self createOperation:team.participantGroup
-                                                                collection:@"FFUserGroup"
-                                                                        ff:ff
-                                                         completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-                                                             // nothing
-                                                         }];
-        [_operationCache addObject:createUserGroupOperation];
-        NSBlockOperation *createTeamOperation = [self createOperation:team
-                                                           collection:[WMTeam entityName]
-                                                                   ff:ff
-                                                    completionHandler:completionHandler];
-        [_operationCache addObject:createTeamOperation];
-        [createTeamOperation addDependency:createUserGroupOperation];
-    } else {
-        NSError *error = nil;
-        [team.participantGroup addUser:user error:&error];
-        NSBlockOperation *updateOperation = [self updateOperation:team.participantGroup ff:ff completionHandler:completionHandler];
-        [_operationCache addObject:updateOperation];
-    }
+        completionHandler(nil);
+    });
 }
 
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff

@@ -11,6 +11,7 @@
 #import "WMCreateAccountViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
+#import "WMCreateTeamViewController.h"
 #import "WMIAPCreateConsultantViewController.h"
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
@@ -18,6 +19,7 @@
 #import "WMInstructionsViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMButtonCell.h"
+#import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "WMConsultingGroup.h"
@@ -37,7 +39,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -45,6 +47,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMCreateAccountViewController *createAccountViewController;
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
+@property (readonly, nonatomic) WMCreateTeamViewController *createTeamViewController;
 
 @property (readonly, nonatomic) WMParticipant *participant;
 
@@ -194,6 +197,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMIAPCreateTeamViewController *iapCreateTeamViewController = [[WMIAPCreateTeamViewController alloc] initWithNibName:@"WMIAPCreateTeamViewController" bundle:nil];
     iapCreateTeamViewController.delegate = self;
     return iapCreateTeamViewController;
+}
+
+- (WMCreateTeamViewController *)createTeamViewController
+{
+    WMCreateTeamViewController *createTeamViewController = [[WMCreateTeamViewController alloc] initWithNibName:@"WMCreateTeamViewController" bundle:nil];
+    createTeamViewController.delegate = self;
+    return createTeamViewController;
 }
 
 - (WMIAPCreateConsultantViewController *)iapCreateConsultantViewController
@@ -736,7 +746,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)iapCreateTeamViewControllerDidPurchase:(WMIAPCreateTeamViewController *)viewController
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        // TODO navigate to create team
+        [self.navigationController pushViewController:self.createTeamViewController animated:YES];
     }];
 }
 
@@ -745,6 +755,37 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];
+}
+
+#pragma mark - CreateTeamViewControllerDelegate
+
+- (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
+{
+    self.participant.isTeamLeader = YES;
+    self.participant.team = team;
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm createTeamWithParticipant:self.participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+                [weakSelf.tableView reloadData];
+            }
+        });
+    }];
+}
+
+- (void)createTeamViewControllerDidCancel:(WMCreateTeamViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
 }
 
 #pragma mark - IAPCreateConsultantViewControllerDelegate

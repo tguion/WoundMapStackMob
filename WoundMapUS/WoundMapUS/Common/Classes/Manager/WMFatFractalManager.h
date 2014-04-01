@@ -35,7 +35,7 @@ typedef void (^WMErrorCallback)(NSError *error);
 
 - (void)updateParticipant:(NSManagedObjectID *)participantObjectID ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 - (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
-- (void)createTeamWithParticipant:(WMParticipant *)participant user:(FFUser *)user ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
+- (void)createTeamWithParticipant:(WMParticipant *)participant user:(FFUser *)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
 - (void)updatePatient:(WMPatient *)patient insertedObjectIDs:(NSArray *)insertedObjectIDs updatedObjectIDs:(NSArray *)updatedObjectIDs ff:(WMFatFractal *)ff;

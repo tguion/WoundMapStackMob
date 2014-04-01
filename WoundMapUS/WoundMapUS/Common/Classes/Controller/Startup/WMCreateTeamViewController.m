@@ -256,7 +256,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
                 [self.tableView endUpdates];
                 // update back end
-                xxx;
+
             }
             break;
         }
@@ -270,7 +270,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
                 [self.tableView endUpdates];
                 // update back end
-                xxx;
+
             }
             break;
         }
@@ -310,6 +310,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.view endEditing:YES];
     switch (indexPath.section) {
         case 0: {
             // nothing
@@ -338,10 +339,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSInteger count = 1;
-    if ([self.team.invitations count]) {
-        ++count;
-    }
+    NSInteger count = 2;
     if ([self.teamMembers count]) {
         ++count;
     }
@@ -383,7 +381,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             // team name
             cell.accessoryType = UITableViewCellAccessoryNone;
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            UITextField *textField = nil;
+            UITextField *textField = myCell.textField;
             textField = myCell.textField;
             textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -391,6 +389,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             textField.returnKeyType = UIReturnKeyDefault;
             textField.delegate = self;
             textField.tag = 1000;
+            [myCell updateWithLabelText:@"Team Name" valueText:self.team.name valuePrompt:@"Enter Team Name"];
             break;
         }
         case 1: {
