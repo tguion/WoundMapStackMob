@@ -151,6 +151,9 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             completionHandler(error);
         } else {
             // make sure we fetch the ALIAS defined on WMParticipant - I'm not sure we have to do this since depthGb=1 in fetch above
+            // NOTE: we could also fetch as so: see bottom of http://fatfractal.com/docs/data-modeling/#grab-bags
+            // NSString *query = [NSString stringWithFormat:@"/%@/%@/%@", [WMParticipant entityName], [participant.ffUrl lastPathComponent], WMParticipantRelationships.patients];
+            // NSArray *participantPatients = [ff getArrayFromUri:query error:&error];
             [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.acquiredConsults error:&error];
             [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.interventionEvents error:&error];
             [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.patients error:&error];
