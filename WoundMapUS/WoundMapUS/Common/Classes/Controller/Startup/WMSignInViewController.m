@@ -123,30 +123,13 @@
             __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
                                                                                 create:NO
                                                                   managedObjectContext:managedObjectContext];
-            if (nil == participant) {
-                // fetch from back end
-                [MBProgressHUD showHUDAddedTo:weakSelf.view animated:YES];
-                [ff getObjFromUri:[NSString stringWithFormat:@"/WMParticipant/(userName eq '%@')", user.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    WM_ASSERT_MAIN_THREAD;
-                    NSParameterAssert(nil != object);
-                    NSParameterAssert([object isKindOfClass:[WMParticipant class]]);
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm updateFromCloudParticipant:participant ff:ff completionHandler:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                    participant = (WMParticipant *)object;
                     [self.delegate signInViewController:self didSignInParticipant:participant];
-                }];
-            } else {
-                WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-                [ffm fetchParticipant:participant ff:ff completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    WM_ASSERT_MAIN_THREAD;
-                    object = [object lastObject];
-                    NSParameterAssert(nil != object);
-                    NSParameterAssert([object isKindOfClass:[WMParticipant class]]);
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                    participant = (WMParticipant *)object;
-                    [managedObjectContext saveToPersistentStoreAndWait];
-                    [self.delegate signInViewController:self didSignInParticipant:participant];
-                }];
-            }
+                });
+            }];
         }
     }];
 }

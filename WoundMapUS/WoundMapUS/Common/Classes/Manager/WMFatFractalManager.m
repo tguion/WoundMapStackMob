@@ -140,10 +140,27 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 #pragma mark - Fetch
 
-- (void)fetchParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler
+- (void)updateFromCloudParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
-    [ff getArrayFromUri:queryString onComplete:completionHandler];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = nil;
+        WMParticipant *participant = [ff getObjFromUri:queryString error:&error];
+        NSAssert(nil != participant && [participant isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", participant);
+        if (error && completionHandler) {
+            completionHandler(error);
+        } else {
+            // make sure we fetch the ALIAS defined on WMParticipant - I'm not sure we have to do this since depthGb=1 in fetch above
+            [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.acquiredConsults error:&error];
+            [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.interventionEvents error:&error];
+            [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.patients error:&error];
+            NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            if (completionHandler) {
+                completionHandler(error);
+            }
+        }
+    });
     self.lastRefreshTimeMap[[WMParticipant entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
 }
 

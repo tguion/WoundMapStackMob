@@ -46,6 +46,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 
+@property (readonly, nonatomic) WMParticipant *participant;
+
 @property (strong, nonatomic) IBOutlet UIView *footerView;
 @property (weak, nonatomic) IBOutlet UIButton *enterWoundMapButton;
 
@@ -95,9 +97,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - Core
 
+- (WMParticipant *)participant
+{
+    return self.appDelegate.participant;
+}
+
 - (BOOL)connectedTeamIsConsultingGroup
 {
-    return nil != self.appDelegate.participant.team.consultingGroup;
+    return nil != self.participant.team.consultingGroup;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
@@ -150,7 +157,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (BOOL)setupConfigurationComplete
 {
-    if (nil == self.appDelegate.participant) {
+    if (nil == self.participant) {
         return NO;
     }
     // else
@@ -210,12 +217,22 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentJoinTeamViewController
 {
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
-    [self presentViewController:navigationController
-                       animated:YES
-                     completion:^{
-                         // nothing
-                     }];
+    // must have an invitation
+    if (self.participant.teamInvitation) {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
+        [self presentViewController:navigationController
+                           animated:YES
+                         completion:^{
+                             // nothing
+                         }];
+    } else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Invitation"
+                                                            message:@"A team leader must create an invitation to join a team. Please ask the team leader to create an invitation."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 - (void)presentCreateTeamViewController
@@ -226,6 +243,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                      completion:^{
                          // nothing
                      }];
+}
+
+- (void)presentTeamInvitationController
+{
+    // TODO finish presentTeamInvitationController
 }
 
 - (void)presentChooseNavigationTrack
@@ -357,8 +379,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    // create team
-                    [self presentCreateTeamViewController];
+                    if (self.participant.isTeamLeader) {
+                        // invite
+                        [self presentTeamInvitationController];
+                    } else {
+                        // create team
+                        [self presentCreateTeamViewController];
+                    }
                     break;
                 }
                 case 2: {
@@ -458,7 +485,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             break;
         }
         case WMWelcomeStateTeamSelected: {
-            count = 1;
+            switch (section) {
+                case 0: {
+                    count = 1;
+                    break;
+                }
+                case 1: {
+                    count = (self.participant.isTeamLeader ? 2:1);
+                    break;
+                }
+            }
             break;
         }
         case WMWelcomeStateDeferTeam: {
@@ -517,7 +553,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             switch (indexPath.section) {
                 case 0: {
                     title = @"Sign Out";
-                    value = self.appDelegate.participant.userName;
+                    value = self.participant.userName;
                     break;
                 }
                 case 1: {
@@ -553,12 +589,21 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             switch (indexPath.section) {
                 case 0: {
                     title = @"Sign Out";
-                    value = self.appDelegate.participant.userName;
+                    value = self.participant.userName;
                     break;
                 }
                 case 1: {
-                    title = @"Team";
-                    value = self.appDelegate.participant.team.name;
+                    switch (indexPath.row) {
+                        case 0: {
+                            title = @"Team";
+                            value = self.participant.team.name;
+                            break;
+                        }
+                        case 1: {
+                            title = @"Invite a Participant";
+                            break;
+                        }
+                    }
                     break;
                 }
                 case 2: {
@@ -581,7 +626,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             switch (indexPath.section) {
                 case 0: {
                     title = @"Sign Out";
-                    value = self.appDelegate.participant.userName;
+                    value = self.participant.userName;
                     break;
                 }
                 case 1: {
@@ -644,7 +689,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.appDelegate.participant = participant;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    self.welcomeState = (nil == self.appDelegate.participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
+    self.welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
     [self.tableView reloadData];
 }
 

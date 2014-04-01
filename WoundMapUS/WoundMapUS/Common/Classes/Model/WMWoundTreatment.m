@@ -280,6 +280,8 @@ typedef enum {
                                                             @"snomedCIDValue",
                                                             @"sortRankValue",
                                                             @"valueTypeCodeValue",
+                                                            @"valueMinimumValue",
+                                                            @"valueMaximumValue",
                                                             @"groupValueTypeCode",
                                                             @"value",
                                                             @"optionsArray",
