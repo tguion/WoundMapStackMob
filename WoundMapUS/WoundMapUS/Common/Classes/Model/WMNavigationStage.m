@@ -31,9 +31,9 @@ NSString *const kDischargeStageTitle = @"Discharge";
 
 - (NSArray *)rootNavigationNodes
 {
-    return [WMNavigationStage MR_findAllSortedBy:@"sortRank"
+    return [WMNavigationNode MR_findAllSortedBy:@"sortRank"
                                        ascending:YES
-                                   withPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"]
+                                   withPredicate:[NSPredicate predicateWithFormat:@"stage == %@ AND parentNode = nil", self]
                                        inContext:[self managedObjectContext]];
 }
 
@@ -118,7 +118,9 @@ NSString *const kDischargeStageTitle = @"Discharge";
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"disabledFlagValue",
                                                             @"flagsValue",
-                                                            @"sortRankValue"]];
+                                                            @"sortRankValue",
+                                                            @"rootNavigationNodes",
+                                                            @"isInitialStage"]];
     });
     return PropertyNamesNotToSerialize;
 }

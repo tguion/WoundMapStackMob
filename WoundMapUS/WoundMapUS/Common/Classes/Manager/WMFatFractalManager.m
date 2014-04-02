@@ -110,9 +110,9 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 - (void)handleDefaultManagedObjectContextDidSave:(NSNotification *)notification
 {
     NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
-    [_updatedObjectIDs addObjectsFromArray:[updatedObjects valueForKeyPath:@"objectID"]];
+    [_updatedObjectIDs addObjectsFromArray:[[updatedObjects allObjects] valueForKeyPath:@"objectID"]];
     NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
-    [_deletedObjectIDs addObjectsFromArray:[deletedObjects valueForKeyPath:@"objectID"]];
+    [_deletedObjectIDs addObjectsFromArray:[[deletedObjects allObjects] valueForKeyPath:@"objectID"]];
 }
 
 #pragma mark - Sign In

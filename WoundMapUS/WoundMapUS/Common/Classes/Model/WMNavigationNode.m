@@ -587,7 +587,15 @@ typedef enum {
                                                             @"sortRankValue",
                                                             @"taskIdentifierValue",
                                                             @"userSortRankValue",
-                                                            @"woundFlagValue"]];
+                                                            @"woundFlagValue",
+                                                            @"sortedSubnodes",
+                                                            @"navigationNodeIdentifier",
+                                                            @"frequencyUnitValue",
+                                                            @"frequencyUnitForDisplay",
+                                                            @"closeUnitValue",
+                                                            @"closeUnitForDisplay",
+                                                            @"requiredFlag",
+                                                            @"hidesStatusIndicator"]];
     });
     return PropertyNamesNotToSerialize;
 }

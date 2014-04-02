@@ -263,7 +263,13 @@ typedef enum {
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"activeFlagValue",
                                                             @"disabledFlagValue",
                                                             @"flagsValue",
-                                                            @"sortRankValue"]];
+                                                            @"sortRankValue",
+                                                            @"ignoresStagesFlag",
+                                                            @"ignoresSignInFlag",
+                                                            @"limitToSinglePatientFlag",
+                                                            @"skipCarePlanFlag",
+                                                            @"skipPolicyEditor",
+                                                            @"initialStage"]];
     });
     return PropertyNamesNotToSerialize;
 }

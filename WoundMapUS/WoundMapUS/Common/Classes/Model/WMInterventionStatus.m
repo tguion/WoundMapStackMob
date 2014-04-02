@@ -101,18 +101,17 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSDictionary class]], @"Property list file did not return a dictionary, class was %@", NSStringFromClass([propertyList class]));
         NSArray *array = [propertyList objectForKey:@"Statuses"];
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        NSMutableSet *objectIDs = [[NSMutableSet alloc] init];
         for (NSDictionary *dictionary in array) {
             WMInterventionStatus *interventionStatus = [self updateInterventionFromDictionary:dictionary managedObjectContext:managedObjectContext];
             [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[interventionStatus objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[interventionStatus objectID]];
         }
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMInterventionStatus entityName]);
+            completionHandler(nil, [objectIDs allObjects], [WMInterventionStatus entityName]);
         }
-        objectIDs = [[NSMutableArray alloc] init];
+        objectIDs = [[NSMutableSet alloc] init];
         array = [propertyList objectForKey:@"Joins"];
         for (NSDictionary *dictionary in array) {
             NSString *title = [[dictionary allKeys] lastObject];
@@ -134,9 +133,8 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                 NSAssert(![[interventionStatusJoin objectID] isTemporaryID], @"Expect a permanent objectID");
                 [objectIDs addObject:[interventionStatusJoin objectID]];
             }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
             if (completionHandler) {
-                completionHandler(nil, objectIDs, [WMInterventionStatusJoin entityName]);
+                completionHandler(nil, [objectIDs allObjects], [WMInterventionStatusJoin entityName]);
             }
         }
     }

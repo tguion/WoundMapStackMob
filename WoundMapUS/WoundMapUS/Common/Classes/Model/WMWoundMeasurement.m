@@ -274,6 +274,8 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
                                                             @"keyboardTypeValue",
                                                             @"snomedCIDValue",
                                                             @"sortRankValue",
+                                                            @"valueMaximumValue",
+                                                            @"valueMinimumValue",
                                                             @"valueTypeCodeValue",
                                                             @"groupValueTypeCode",
                                                             @"unit",

@@ -115,10 +115,10 @@
 - (BOOL)validateInput
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([self.organization.addresses count] == 0) {
+    if ([_organization.addresses count] == 0) {
         [messages addObject:@"Please add at least one address"];
     }
-    if ([self.organization.ids count] == 0) {
+    if ([_organization.ids count] == 0) {
         [messages addObject:@"Please add at least one id"];
     }
     if ([messages count]) {
@@ -151,6 +151,7 @@
         if (_removeUndoManagerWhenDone) {
             self.managedObjectContext.undoManager = nil;
         }
+        [self.managedObjectContext MR_saveOnlySelfAndWait];
         [self.delegate organizationEditorViewController:self didEditOrganization:_organization];
     }
 }
@@ -183,7 +184,7 @@
 
 - (id<AddressSource>)addressSource
 {
-    return self.organization;
+    return _organization;
 }
 
 - (void)addressListViewControllerDidFinish:(WMAddressListViewController *)viewController
@@ -203,7 +204,7 @@
 
 - (id<idSource>)idSource
 {
-    return self.organization;
+    return _organization;
 }
 
 - (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController
@@ -229,7 +230,7 @@
     switch (indexPath.row) {
         case 0: {
             // name
-            self.organization.name = textField.text;
+            _organization.name = textField.text;
             break;
         }
     }
@@ -270,10 +271,6 @@
 {
     NSString *cellIdentifier = [self cellReuseIdentifier:indexPath];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if ([cell isKindOfClass:[WMTextFieldTableViewCell class]]) {
-        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-        myCell.textField.delegate = self;
-    }
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
@@ -284,6 +281,13 @@
         case 0: {
             // name
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            UITextField *textField = myCell.textField;
+            textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+            textField.autocorrectionType = UITextAutocorrectionTypeNo;
+            textField.spellCheckingType = UITextSpellCheckingTypeNo;
+            textField.returnKeyType = UIReturnKeyDefault;
+            textField.delegate = self;
+            myCell.textField.tag = 1000;
             [myCell updateWithLabelText:@"Name" valueText:self.organization.name valuePrompt:@"organization name"];
             break;
         }

@@ -82,10 +82,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"DeferCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView registerClass:[WMButtonCell class] forCellReuseIdentifier:@"ButtonCell"];
-//    // attempt to resolve the last participant
-//    if ([WCAppDelegate checkForAuthentication]) {
-//        self.welcomeState = (nil == self.appDelegate.participant.team ? WMWelcomeStateTeamSelected:WMWelcomeStateSignedInNoTeam);
-//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -756,6 +752,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [viewController clearAllReferences];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     userDefaultsManager.lastUserName = participant.userName;
+    self.welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
+    [self.tableView reloadData];
 }
 
 - (void)createAccountViewControllerDidCancel:(WMCreateAccountViewController *)viewController
@@ -803,7 +801,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.participant.isTeamLeader = YES;
     self.participant.team = team;
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];

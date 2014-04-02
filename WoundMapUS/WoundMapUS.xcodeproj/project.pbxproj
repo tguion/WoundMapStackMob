@@ -1846,6 +1846,12 @@
 				7D10CD9418DA301100AD43E3 /* WMNoteViewController.h */,
 				7D10CD9518DA301100AD43E3 /* WMNoteViewController.m */,
 				7D10CD9618DA301100AD43E3 /* WMNoteViewController.xib */,
+				7D9A94D218E892F600D92E95 /* WMOrganizationEditorViewController.h */,
+				7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */,
+				7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */,
+				7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */,
+				7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */,
+				7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */,
 				5F67D22F18AD901600460C37 /* WMPatientDetailViewController.h */,
 				5F67D23018AD901600460C37 /* WMPatientDetailViewController.m */,
 				5F67D23118AD901600460C37 /* WMPatientDetailViewController.xib */,
@@ -1957,12 +1963,6 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
-				7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */,
-				7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */,
-				7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */,
-				7D9A94D218E892F600D92E95 /* WMOrganizationEditorViewController.h */,
-				7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */,
-				7D9A94D418E892F600D92E95 /* WMOrganizationEditorViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

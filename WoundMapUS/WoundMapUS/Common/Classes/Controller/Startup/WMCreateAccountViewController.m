@@ -351,20 +351,21 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     // make sure all necessary data has been entered
     if ([self dataInputIsComplete]) {
         NSParameterAssert(_person);
-        self.participant.person = _person;
-        self.participant.participantType = _selectedParticipantType;
-        self.participant.organization = _organization;
+        WMParticipant *participant = self.participant;
+        participant.person = _person;
+        participant.participantType = _selectedParticipantType;
+        participant.organization = _organization;
         __weak __typeof(&*self)weakSelf = self;
         [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             // participant has logged in as new user - now push data to backend
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updateParticipant:[weakSelf.participant objectID] ff:ff completionHandler:^(NSError *error) {
+            [ffm updateParticipant:[participant objectID] ff:ff completionHandler:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error) {
                         [WMUtilities logError:error];
                     } else {
-                        [weakSelf.delegate createAccountViewController:self didCreateParticipant:self.participant];
+                        [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
                     }
                 });
             }];
@@ -557,7 +558,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     _organization = organization;
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
@@ -566,7 +566,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (void)organizationEditorViewControllerDidCancel:(WMOrganizationEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate
@@ -691,8 +690,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             cell.accessoryType = UITableViewCellAccessoryNone;
             if (self.state == CreateAccountInitial) {
                 WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-                UITextField *textField = nil;
-                textField = myCell.textField;
+                UITextField *textField = myCell.textField;
                 textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 textField.spellCheckingType = UITextSpellCheckingTypeNo;

@@ -20,6 +20,8 @@
 
 @interface WMCreateTeamInvitationViewController () <UITextFieldDelegate>
 
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
 @property (strong, nonatomic) IBOutlet UIView *instructionsSectionHeaderContainerView;
 @property (strong, nonatomic) IBOutlet UIView *passcodeSectionFooterContainerView;
 
@@ -54,6 +56,12 @@
                                                                                           target:self
                                                                                           action:@selector(doneAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
+    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)didReceiveMemoryWarning
@@ -136,7 +144,17 @@
 
 - (IBAction)cancelAction:(id)sender
 {
-    [self.managedObjectContext rollback];
+    [self.view endEditing:YES];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+        if (self.managedObjectContext.undoManager.canUndo) {
+            // this should undo the insert of new person
+            [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate createTeamInvitationViewControllerDidCancel:self];
 }
 
@@ -145,7 +163,7 @@
     if (![self validateInput]) {
         return;
     }
-    // else see if we can confirm user name
+    // see if we can confirm user name
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
@@ -164,7 +182,14 @@
             _teamInvitation.team = weakSelf.participant.team;
             _teamInvitation.invitee = _invitee;
             _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
-            [weakSelf.managedObjectContext MR_saveOnlySelfAndWait];
+            // else handle undo
+            if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+                [self.managedObjectContext.undoManager endUndoGrouping];
+            }
+            if (_removeUndoManagerWhenDone) {
+                self.managedObjectContext.undoManager = nil;
+            }
+            [self.managedObjectContext MR_saveOnlySelfAndWait];
             [weakSelf.delegate createTeamInvitationViewController:weakSelf didCreateInvitation:_teamInvitation];
         }
     }];
