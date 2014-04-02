@@ -94,6 +94,26 @@
         return NO;
     }
     // else
+    if ([_userNameTextInput isEqualToString:self.participant.userName]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"
+                                                            message:@"You can't invite yourself. You are the team leader."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return NO;
+    }
+    // else
+    if ([[self.participant.team.invitations valueForKeyPath:@"invitee.userName"] containsObject:_userNameTextInput]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"
+                                                            message:@"An invitation for this participant has already been created."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return NO;
+    }
+    // else
     return YES;
 }
 
@@ -128,8 +148,9 @@
     // else see if we can confirm user name
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@'", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@')", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
         if (nil == object) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"
                                                                 message:[NSString stringWithFormat:@"Unable to resolve a participant with user name %@", _userNameTextInput]
@@ -139,11 +160,12 @@
             [alertView show];
         } else {
             _invitee = object;
-            _teamInvitation = [WMTeamInvitation MR_createInContext:self.managedObjectContext];
-            _teamInvitation.team = self.participant.team;
+            _teamInvitation = [WMTeamInvitation MR_createInContext:weakSelf.managedObjectContext];
+            _teamInvitation.team = weakSelf.participant.team;
             _teamInvitation.invitee = _invitee;
             _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
-            [self.delegate createTeamInvitationViewController:self didCreateInvitation:_teamInvitation];
+            [weakSelf.managedObjectContext MR_saveOnlySelfAndWait];
+            [weakSelf.delegate createTeamInvitationViewController:weakSelf didCreateInvitation:_teamInvitation];
         }
     }];
 }

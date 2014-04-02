@@ -87,6 +87,12 @@
         if ([objects count] == 0) {
             [WMWoundType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
+        // *** WMNavigationTrack *** first attempt to acquire data from backend
+        objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMParticipantType entityName]]];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if ([objects count] == 0) {
+            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
+        }
         // *** WMParticipantType *** first attempt to acquire data from backend
         objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMParticipantType entityName]]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];

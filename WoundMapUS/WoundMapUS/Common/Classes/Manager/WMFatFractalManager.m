@@ -7,6 +7,7 @@
 //
 
 #import "WMFatFractalManager.h"
+#import "WMNavigationTrack.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMOrganization.h"
@@ -460,16 +461,23 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
     
 }
 
-- (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSParameterAssert([teamInvitation.ffUrl length] == 0);
     NSParameterAssert(nil != teamInvitation.team);
     NSParameterAssert([teamInvitation.team.ffUrl length] > 0);
     NSParameterAssert(nil != teamInvitation.invitee);
-    NSBlockOperation *teamInvitationOperation = [self createOperation:teamInvitation collection:[WMTeamInvitation entityName] ff:ff completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        completionHandler(error);
-    }];
-    [_operationCache addObject:teamInvitationOperation];
+    NSParameterAssert([teamInvitation.invitee.ffUrl length] > 0);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        id object = (WMTeamInvitation *)[teamInvitation MR_inContext:managedObjectContext];
+        NSError *error = nil;
+        [ff createObj:object atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] error:&error];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(error);
+        }
+    });
 }
 
 - (void)createTeamWithParticipant:(WMParticipant *)participant user:(FFUser *)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
@@ -513,7 +521,19 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
                 completionHandler(error);
             }
         }
+        // seed team with navigation track, stage, node
+        [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
+            // update backend
+            NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+            for (NSManagedObjectID *objectID in objectIDs) {
+                NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+                NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+                [ff createObj:object atUri:ffUrl];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [NSManagedObjectContext MR_clearContextForCurrentThread];
         completionHandler(nil);
     });
 }

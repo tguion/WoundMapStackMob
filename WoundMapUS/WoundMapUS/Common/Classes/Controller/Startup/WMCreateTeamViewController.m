@@ -7,12 +7,16 @@
 //
 
 #import "WMCreateTeamViewController.h"
+#import "WMCreateTeamInvitationViewController.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
+#import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMTeamInvitation.h"
 #import "WMTeam.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
 
 typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
@@ -20,7 +24,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRemoveParticipantActionSheetTag,
 };
 
-@interface WMCreateTeamViewController () <UITextFieldDelegate, UIActionSheetDelegate>
+@interface WMCreateTeamViewController () <UITextFieldDelegate, UIActionSheetDelegate, CreateTeamInvitationViewControllerDelegate>
 
 @property (readonly, nonatomic) WMParticipant *participant;
 @property (strong, nonatomic) NSArray *teamInvitations;
@@ -30,6 +34,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 @property (strong, nonatomic) WMTeamInvitation *teamInvitationToDelete;
 @property (strong, nonatomic) WMParticipant *teamMemberToDelete;
+
+@property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
 - (IBAction)createInvitationAction:(id)sender;
 
@@ -161,11 +167,18 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [actionSheet showInView:self.view];
 }
 
+- (WMCreateTeamInvitationViewController *)createTeamInvitationViewController
+{
+    WMCreateTeamInvitationViewController *createTeamInvitationViewController = [[WMCreateTeamInvitationViewController alloc] initWithNibName:@"WMCreateTeamInvitationViewController" bundle:nil];
+    createTeamInvitationViewController.delegate = self;
+    return createTeamInvitationViewController;
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToCreateInvitationViewController
 {
-    
+    [self.navigationController pushViewController:self.createTeamInvitationViewController animated:YES];
 }
 
 #pragma mark - Actions
@@ -203,6 +216,34 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [super clearDataCache];
     _teamInvitations = nil;
     _teamMembers = nil;
+}
+
+#pragma mark - CreateTeamInvitationViewControllerDelegate
+
+- (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+    // add to back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [weakSelf.tableView reloadData];
+        });
+    }];
+}
+
+- (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -313,11 +354,13 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [self.view endEditing:YES];
     switch (indexPath.section) {
         case 0: {
-            // nothing
+            // team name - nothing
             break;
         }
         case 1: {
+            // invitations
             if ([self indexPathIsAddInvitation:indexPath]) {
+                // create a new invitation
                 [self createInvitationAction:nil];
             } else {
                 // revoke invitation

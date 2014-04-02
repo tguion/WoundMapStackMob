@@ -9,6 +9,7 @@
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMSignInViewController.h"
 #import "WMCreateAccountViewController.h"
+#import "WMCreateTeamInvitationViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
 #import "WMCreateTeamViewController.h"
@@ -39,7 +40,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, CreateTeamInvitationViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -48,6 +49,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 @property (readonly, nonatomic) WMCreateTeamViewController *createTeamViewController;
+@property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
 @property (readonly, nonatomic) WMParticipant *participant;
 
@@ -206,6 +208,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return createTeamViewController;
 }
 
+- (WMCreateTeamInvitationViewController *)createTeamInvitationViewController
+{
+    WMCreateTeamInvitationViewController *createTeamInvitationViewController = [[WMCreateTeamInvitationViewController alloc] initWithNibName:@"WMCreateTeamInvitationViewController" bundle:nil];
+    createTeamInvitationViewController.delegate = self;
+    return createTeamInvitationViewController;
+}
+
 - (WMIAPCreateConsultantViewController *)iapCreateConsultantViewController
 {
     WMIAPCreateConsultantViewController *iapCreateConsultantViewController = [[WMIAPCreateConsultantViewController alloc] initWithNibName:@"WMIAPCreateConsultantViewController" bundle:nil];
@@ -257,7 +266,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentTeamInvitationController
 {
-    // TODO finish presentTeamInvitationController
+    [self.navigationController pushViewController:self.createTeamInvitationViewController animated:YES];
 }
 
 - (void)presentChooseNavigationTrack
@@ -706,8 +715,29 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.appDelegate.participant = participant;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    self.welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
-    [self.tableView reloadData];
+    // if participant has changed, we need to purge the local cache
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    NSString *lastUserName = userDefaultsManager.lastUserName;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        weakSelf.welcomeState = (nil == weakSelf.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
+        [weakSelf.tableView reloadData];
+        userDefaultsManager.lastUserName = participant.userName;
+    };
+    if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            [WMPatient MR_truncateAllInContext:managedObjectContext];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [NSManagedObjectContext MR_clearContextForCurrentThread];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                block();
+            });
+        });
+    } else {
+        block();
+    }
 }
 
 - (void)signInViewControllerDidCancel:(WMSignInViewController *)viewController
@@ -724,6 +754,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.appDelegate.participant = participant;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    userDefaultsManager.lastUserName = participant.userName;
 }
 
 - (void)createAccountViewControllerDidCancel:(WMCreateAccountViewController *)viewController
@@ -790,6 +822,34 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 }
 
 - (void)createTeamViewControllerDidCancel:(WMCreateTeamViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+}
+
+#pragma mark - CreateTeamInvitationViewControllerDelegate
+
+- (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [viewController clearAllReferences];
+    // add to back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [weakSelf.tableView reloadData];
+        });
+    }];
+}
+
+- (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];

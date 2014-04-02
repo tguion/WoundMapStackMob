@@ -148,6 +148,7 @@
 	return @"WMNavigationTrack";
 }
 
+// TODO: scope the tracks to participant.team
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
     return nil;
