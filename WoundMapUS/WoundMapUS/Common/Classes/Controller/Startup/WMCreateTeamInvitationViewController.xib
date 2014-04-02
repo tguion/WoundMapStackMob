@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMCreateTeamInvitationViewController">
+            <connections>
+                <outlet property="instructionsSectionHeaderContainerView" destination="6tT-mc-6mV" id="xmW-86-hq8"/>
+                <outlet property="passcodeSectionFooterContainerView" destination="Qcr-49-GGL" id="beg-0o-KuK"/>
+                <outlet property="view" destination="Z84-H9-nJo" id="H3l-1b-DEj"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Z84-H9-nJo">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </tableView>
+        <view contentMode="scaleToFill" id="6tT-mc-6mV">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter the participant's user name and enter a passcode that the participant will use to confirm." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Kiv-hf-2Tb">
+                    <rect key="frame" x="20" y="20" width="280" height="60"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Kiv-hf-2Tb" secondAttribute="trailing" constant="20" symbolic="YES" id="4ER-4f-bfT"/>
+                <constraint firstItem="Kiv-hf-2Tb" firstAttribute="leading" secondItem="6tT-mc-6mV" secondAttribute="leading" constant="20" symbolic="YES" id="LCh-45-i9p"/>
+                <constraint firstItem="Kiv-hf-2Tb" firstAttribute="top" secondItem="6tT-mc-6mV" secondAttribute="top" constant="20" id="TIX-yq-HOk"/>
+                <constraint firstAttribute="bottom" secondItem="Kiv-hf-2Tb" secondAttribute="bottom" constant="20" id="eWD-P4-G8L"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <view contentMode="scaleToFill" id="Qcr-49-GGL">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You will need to remember the passcode and pass it to the invitee over another communication channel." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="RbU-Kf-W0c">
+                    <rect key="frame" x="20" y="20" width="280" height="60"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="RbU-Kf-W0c" secondAttribute="bottom" constant="20" id="4dx-TU-ZLy"/>
+                <constraint firstAttribute="trailing" secondItem="RbU-Kf-W0c" secondAttribute="trailing" constant="20" symbolic="YES" id="lps-QD-DDK"/>
+                <constraint firstItem="RbU-Kf-W0c" firstAttribute="leading" secondItem="Qcr-49-GGL" secondAttribute="leading" constant="20" symbolic="YES" id="owi-O8-U1r"/>
+                <constraint firstItem="RbU-Kf-W0c" firstAttribute="top" secondItem="Qcr-49-GGL" secondAttribute="top" constant="20" id="zZb-AI-eEc"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>

@@ -504,6 +504,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     count = (self.participant.isTeamLeader ? 2:1);
                     break;
                 }
+                case 2:
+                case 3: {
+                    count = 1;
+                    break;
+                }
             }
             break;
         }
@@ -607,10 +612,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         case 0: {
                             title = @"Team";
                             value = self.participant.team.name;
+                            accessoryType = UITableViewCellAccessoryNone;
                             break;
                         }
                         case 1: {
                             title = @"Invite a Participant";
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
                         }
                     }
