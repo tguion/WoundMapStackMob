@@ -124,11 +124,24 @@
                                                                                 create:NO
                                                                   managedObjectContext:managedObjectContext];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updateFromCloudParticipant:participant ff:ff completionHandler:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^(void) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                    [self.delegate signInViewController:self didSignInParticipant:participant];
-                });
+            dispatch_block_t block = ^{
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                [self.delegate signInViewController:self didSignInParticipant:participant];
+            };
+            [ffm updateParticipant:participant ff:ff completionHandler:^(NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else if (participant.team) {
+                    [ffm updateTeam:participant.team ff:ff completionHandler:^(NSError *error) {
+                        dispatch_async(dispatch_get_main_queue(), ^(void) {
+                            block();
+                        });
+                    }];
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                        block();
+                    });
+                }
             }];
         }
     }];

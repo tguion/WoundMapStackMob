@@ -580,6 +580,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     switch (indexPath.row) {
                         case 0: {
                             title = @"Join Team";
+                            if (self.participant.teamInvitation) {
+                                value = @"invitation";// TODO show icon
+                            }
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
                         }

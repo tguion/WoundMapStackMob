@@ -40,6 +40,13 @@ NSString * const kTelecomTypeEmailTitle = @"email";
     return telecomType;
 }
 
++ (WMTelecomType *)emailTelecomType:(NSManagedObjectContext *)managedObjectContext
+{
+    return [WMTelecomType telecomTypeForTitle:kTelecomTypeEmailTitle
+                                       create:NO
+                         managedObjectContext:managedObjectContext];
+}
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];

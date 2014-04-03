@@ -16,6 +16,7 @@
 #import "WMParticipantType.h"
 #import "WMPerson.h"
 #import "WMTelecom.h"
+#import "WMTelecomType.h"
 #import "WMOrganization.h"
 #import "MBProgressHUD.h"
 #import "KeychainItemWrapper.h"
@@ -46,7 +47,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 @property (strong, nonatomic) NSString *firstNameTextInput;
 @property (strong, nonatomic) NSString *lastNameTextInput;
 @property (strong, nonatomic) NSString *emailTextInput;
-@property (strong, nonatomic) IBOutlet UIView *signInButtonContainerView;
 @property (strong, nonatomic) IBOutlet UIButton *signInButton;
 @property (strong, nonatomic) IBOutlet UIView *participantDetailsContainerview;
 
@@ -162,12 +162,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (BOOL)hasSufficientCreateAccountInput
 {
-    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput] && [_firstNameTextInput length] > 0 && [_lastNameTextInput length] > 0 && self.isEmailInputValid);
-}
-
-- (void)updateSignInButton
-{
-    _signInButton.enabled = self.hasSufficientCreateAccountInput;
+    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput] && [_firstNameTextInput length] > 0 && [_lastNameTextInput length] > 0 && [_emailTextInput length] > 0);
 }
 
 // TODO impose validation on userName and password
@@ -203,7 +198,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (BOOL)checkForValidEmail
 {
-    if (![WMUtilities NSStringIsValidEmail:_emailTextInput]) {
+    if (!self.isEmailInputValid) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid email"
                                                             message:@"Your email does not appear to be valid."
                                                            delegate:nil
@@ -219,7 +214,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (BOOL)dataInputIsComplete
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([_emailTextInput length] == 0 || ![WMUtilities NSStringIsValidEmail:_emailTextInput]) {
+    if ([_emailTextInput length] == 0 || !self.isEmailInputValid) {
         [messages addObject:@"Please enter a valid email address"];
     }
     if ([_firstNameTextInput length] == 0) {
@@ -360,7 +355,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             // participant has logged in as new user - now push data to backend
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updateParticipant:[participant objectID] ff:ff completionHandler:^(NSError *error) {
+            [ffm createParticipant:[participant objectID] ff:ff completionHandler:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error) {
                         [WMUtilities logError:error];
@@ -443,7 +438,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 break;
             }
         }
-        [weakSelf updateSignInButton];
         [weakSelf updateNavigationState];
     } afterDelay:0.1];
     return YES;
@@ -536,14 +530,20 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
     // update email
     WMTelecom *telecom = person.defaultEmailTelecom;
     if (telecom && !self.participant.email) {
         self.participant.email = telecom.value;
     }
+    // update name
+    if (![person.nameFamily isEqualToString:_lastNameTextInput]) {
+        _lastNameTextInput = person.nameFamily;
+    }
+    if (![person.nameGiven isEqualToString:_firstNameTextInput]) {
+        _firstNameTextInput = person.nameGiven;
+    }
+    [self updateNavigationState];
+    [self.tableView reloadData];
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
@@ -579,15 +579,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return YES;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    if (section == 1) {
-        return (self.state == CreateAccountInitial ? _signInButtonContainerView:_participantDetailsContainerview);
-    }
-    // else
-    return nil;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     if (section == 1) {
@@ -609,6 +600,13 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         case 0: {
             // contact details
             WMPerson *person = self.person;
+            NSManagedObjectContext *managedObjectContext = [person managedObjectContext];
+            if (self.isEmailInputValid && [person.telecoms count] == 0) {
+                WMTelecom *telecom = [WMTelecom MR_createInContext:managedObjectContext];
+                telecom.telecomType = [WMTelecomType emailTelecomType:managedObjectContext];
+                telecom.value = _emailTextInput;
+                telecom.person = person;
+            }
             WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
             personEditorViewController.person = person;
             [self.navigationController pushViewController:personEditorViewController animated:YES];

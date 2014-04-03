@@ -7,8 +7,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMCreateAccountViewController">
             <connections>
                 <outlet property="participantDetailsContainerview" destination="GnD-fk-9mS" id="QEL-Vt-LtV"/>
-                <outlet property="signInButton" destination="fUi-Dm-Wu7" id="vtB-Oe-1g2"/>
-                <outlet property="signInButtonContainerView" destination="j0y-7h-Fgx" id="W9C-YI-e7t"/>
                 <outlet property="view" destination="jTK-hE-2la" id="iHr-2p-JEY"/>
             </connections>
         </placeholder>
@@ -21,37 +19,11 @@
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </tableView>
-        <view clipsSubviews="YES" contentMode="scaleToFill" id="j0y-7h-Fgx">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-            <subviews>
-                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fUi-Dm-Wu7">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="44" id="RcE-uJ-G7w"/>
-                    </constraints>
-                    <state key="normal" title="Sign In">
-                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="createAccountAction:" destination="-1" eventType="touchUpInside" id="o9x-gB-mSX"/>
-                    </connections>
-                </button>
-            </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-            <constraints>
-                <constraint firstItem="fUi-Dm-Wu7" firstAttribute="top" secondItem="j0y-7h-Fgx" secondAttribute="top" id="H8k-N9-uZ8"/>
-                <constraint firstItem="fUi-Dm-Wu7" firstAttribute="leading" secondItem="j0y-7h-Fgx" secondAttribute="leading" id="kO0-gj-r4f"/>
-                <constraint firstAttribute="trailing" secondItem="fUi-Dm-Wu7" secondAttribute="trailing" id="ytl-l6-XWJ"/>
-            </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-        </view>
         <view contentMode="scaleToFill" id="GnD-fk-9mS">
             <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Additional information may be needed for EHR transfer or billing." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="NIc-dg-X9z">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Additional information may be needed for EHR and billing features." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="NIc-dg-X9z">
                     <rect key="frame" x="20" y="20" width="280" height="48"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>

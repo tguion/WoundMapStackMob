@@ -15,4 +15,6 @@ extern NSString * const kTelecomTypeEmailTitle;
                                 create:(BOOL)create
                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
++ (WMTelecomType *)emailTelecomType:(NSManagedObjectContext *)managedObjectContext;
+
 @end
