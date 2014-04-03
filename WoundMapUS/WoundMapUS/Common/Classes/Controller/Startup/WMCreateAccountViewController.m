@@ -292,6 +292,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
+    self.participant.name = [NSString stringWithFormat:@"%@ %@", _firstNameTextInput, _lastNameTextInput];
     self.participant.userName = _userNameTextInput;
     self.participant.email = _emailTextInput;
     // else first save to object permenant objectID
@@ -579,10 +580,19 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return YES;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return (self.state == CreateAccountInitial ? nil:_participantDetailsContainerview);
+    }
+    // else
+    return nil;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     if (section == 1) {
-        return (self.state == CreateAccountInitial ? 44.0:88.0);
+        return (self.state == CreateAccountInitial ? 0.0:88.0);
     }
     // else
     return 0.0;

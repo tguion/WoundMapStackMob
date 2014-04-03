@@ -729,7 +729,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
             [WMPatient MR_truncateAllInContext:managedObjectContext];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [NSManagedObjectContext MR_clearContextForCurrentThread];
             dispatch_async(dispatch_get_main_queue(), ^{
                 block();
             });
@@ -802,23 +801,31 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
 {
-    self.participant.isTeamLeader = YES;
-    self.participant.team = team;
+    NSParameterAssert(nil != team);
+    WMParticipant *participant = self.participant;
+    participant.isTeamLeader = YES;
+    participant.team = team;
     [self.navigationController popViewControllerAnimated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
-    [ffm createTeamWithParticipant:self.participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-                [weakSelf.tableView reloadData];
-            }
-        });
+    [self.managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+                        [weakSelf.tableView reloadData];
+                    }
+                });
+            }];
+        }
     }];
 }
 

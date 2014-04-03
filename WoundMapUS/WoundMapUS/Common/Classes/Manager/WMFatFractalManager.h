@@ -10,6 +10,7 @@
 
 typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequired);
 typedef void (^WMErrorCallback)(NSError *error);
+typedef void (^WMObjectCallback)(NSError *error, id object);
 
 @class WMFatFractal;
 @class WMParticipant, WMPatient;
@@ -22,9 +23,11 @@ typedef void (^WMErrorCallback)(NSError *error);
 // simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
 
-- (void)updateParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
+- (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler;
+- (void)acquireParticipantForUser:(FFUser *)user  completionHandler:(WMObjectCallback)completionHandler;
 - (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler;
+- (void)acquireGrabBagsForObjects:(NSArray *)objects aliases:(NSSet *)aliases ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query

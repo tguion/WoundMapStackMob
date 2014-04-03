@@ -141,42 +141,81 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 #pragma mark - Fetch
 
-- (void)updateParticipant:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+- (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
-    NSParameterAssert(participant.ffUrl);
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError *error = nil;
-        WMParticipant *participant = [ff getObjFromUri:queryString error:&error];
-        NSAssert(nil != participant && [participant isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", participant);
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WM_ASSERT_MAIN_THREAD;
+        NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
         if (error && completionHandler) {
             completionHandler(error);
         } else {
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            NSAssert(managedObjectContext == [participant managedObjectContext], @"Expected participant to be correct moc: %@ != %@", [participant managedObjectContext], managedObjectContext);
             // make sure we fetch the ALIAS defined on WMParticipant - I'm not sure we have to do this since depthGb=1 in fetch above
             // NOTE: we could also fetch as so: see bottom of http://fatfractal.com/docs/data-modeling/#grab-bags
             // NSString *query = [NSString stringWithFormat:@"/%@/%@/%@", [WMParticipant entityName], [participant.ffUrl lastPathComponent], WMParticipantRelationships.patients];
             // NSArray *participantPatients = [ff getArrayFromUri:query error:&error];
-            [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.acquiredConsults error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
+            for (NSString *alias in [WMParticipant relationshipNamesNotToSerialize]) {
+                [ff grabBagGetAllForObj:object
+                            grabBagName:alias
+                             onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                 if (error && completionHandler) {
+                                     completionHandler(error);
+                                 }
+                             }];
             }
-            [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.interventionEvents error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
+            // update team
+            WMTeam *team = participant.team;
+            if (team) {
+                NSParameterAssert(team.ffUrl);
+                NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    WM_ASSERT_MAIN_THREAD;
+                    NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
+                    for (NSString *alias in [WMTeam relationshipNamesNotToSerialize]) {
+                        [ff grabBagGetAllForObj:object
+                                    grabBagName:alias
+                                     onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                         if (error && completionHandler) {
+                                             completionHandler(error);
+                                         }
+                                     }];
+                    }
+                }];
             }
-            [ff grabBagGetAllForObj:participant grabBagName:WMParticipantRelationships.patients error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
-            }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [[participant managedObjectContext] MR_saveToPersistentStoreAndWait];
             if (completionHandler) {
                 completionHandler(error);
             }
         }
-    });
+    }];
     self.lastRefreshTimeMap[[WMParticipant entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
+}
+
+- (void)acquireParticipantForUser:(FFUser *)user completionHandler:(WMObjectCallback)completionHandler
+{
+    WM_ASSERT_MAIN_THREAD;
+    WMFatFractal *ff = [WMFatFractal instance];
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
+    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WM_ASSERT_MAIN_THREAD;
+        NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
+        [managedObjectContext saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(error, object);
+        }
+        for (NSString *alias in [WMParticipant relationshipNamesNotToSerialize]) {
+            [ff grabBagGetAllForObj:object
+                        grabBagName:alias
+                         onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                             WM_ASSERT_MAIN_THREAD;
+                             [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                                 // nothing more to do
+                             }];
+                         }];
+        }
+    }];
 }
 
 - (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
@@ -191,7 +230,7 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             completionHandler(error);
         } else {
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            NSAssert(managedObjectContext == [team managedObjectContext], @"Expected team to be correct moc: %@ != %@", [team managedObjectContext], managedObjectContext);
+            team = [team MR_inContext:managedObjectContext];
             // make sure we fetch the ALIAS defined on WMParticipant - I'm not sure we have to do this since depthGb=1 in fetch above
             // NOTE: we could also fetch as so: see bottom of http://fatfractal.com/docs/data-modeling/#grab-bags
             // NSString *query = [NSString stringWithFormat:@"/%@/%@/%@", [WMParticipant entityName], [participant.ffUrl lastPathComponent], WMParticipantRelationships.patients];
@@ -219,6 +258,24 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
         }
     });
     self.lastRefreshTimeMap[[WMParticipant entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
+}
+
+- (void)acquireGrabBagsForObjects:(NSArray *)objects aliases:(NSSet *)aliases ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    id object = [objects firstObject];
+    if (nil == object) {
+        return;
+    }
+    // else
+    NSError *error = nil;
+    for (object in aliases) {
+        for (NSString *alias in aliases) {
+            [ff grabBagGetAllForObj:object grabBagName:alias error:&error];
+            if (error && completionHandler) {
+                completionHandler(error);
+            }
+        }
+    }
 }
 
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler
@@ -509,7 +566,6 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
         }
         // teamInvitations
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        [NSManagedObjectContext MR_clearContextForCurrentThread];
         if (completionHandler) {
             completionHandler(nil);
         }
@@ -569,7 +625,6 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        [NSManagedObjectContext MR_clearContextForCurrentThread];
         completionHandler(nil);
     });
 }
@@ -946,7 +1001,6 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             [ff createObj:object atUri:ffUrl];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }];
-        [NSManagedObjectContext MR_clearContextForCurrentThread];
         if (completionHandler) {
             completionHandler(nil);
         }

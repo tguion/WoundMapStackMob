@@ -16,6 +16,7 @@
 @interface WMFatFractal : FatFractal
 
 + (WMFatFractal *)sharedInstance;
++ (WMFatFractal *)instance;
 
 @end
 

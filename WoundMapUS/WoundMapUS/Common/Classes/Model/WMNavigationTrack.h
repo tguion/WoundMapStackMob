@@ -5,6 +5,9 @@
 
 @interface WMNavigationTrack : _WMNavigationTrack {}
 
++ (NSSet *)attributeNamesNotToSerialize;
++ (NSSet *)relationshipNamesNotToSerialize;
+
 @property (nonatomic) BOOL ignoresStagesFlag;
 @property (nonatomic) BOOL ignoresSignInFlag;
 @property (nonatomic) BOOL limitToSinglePatientFlag;

@@ -2,6 +2,8 @@
 
 @interface WMParticipant : _WMParticipant {}
 
++ (NSSet *)relationshipNamesNotToSerialize;
+
 + (NSInteger)participantCount:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMParticipant *)bestMatchingParticipantForUserName:(NSString *)name managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

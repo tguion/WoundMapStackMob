@@ -88,7 +88,7 @@
             [WMWoundType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
         // *** WMNavigationTrack *** first attempt to acquire data from backend
-        objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMParticipantType entityName]]];
+        objects = [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if ([objects count] == 0) {
             [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
@@ -177,7 +177,6 @@
             [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
         DLog(@"reading plists and seeding database finished");
-        [NSManagedObjectContext MR_clearContextForCurrentThread];
         if (handler) {
             handler(nil);
         }

@@ -155,7 +155,7 @@ typedef enum {
     }
     // else check if already loaded
     NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
-    if ([WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext] > 0) {
+    if ([[WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext] count] > 0) {
         return;
     }
     // else

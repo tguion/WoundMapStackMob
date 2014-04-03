@@ -2,6 +2,8 @@
 #import "WMParticipant.h"
 #import "WCAppDelegate.h"
 
+NSString * const kParticipantGroupName = @"participantGroup";
+
 @interface WMTeam ()
 
 // Private interface goes here.
@@ -25,7 +27,7 @@
     if (_participantGroup == nil) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         _participantGroup = [[FFUserGroup alloc] initWithFF:ff];
-        [_participantGroup setGroupName:@"participantGroup"];
+        [_participantGroup setGroupName:kParticipantGroupName];
     }
     return _participantGroup;
 }

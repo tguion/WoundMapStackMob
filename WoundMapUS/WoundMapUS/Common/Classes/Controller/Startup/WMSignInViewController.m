@@ -12,6 +12,7 @@
 #import "WMParticipant.h"
 #import "WMFatFractalManager.h"
 #import "WMUserDefaultsManager.h"
+#import "WMSeedDatabaseManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -100,12 +101,11 @@
         return;
     }
     // else
-    [self showProgressViewWithMessage:@"Signing in..."];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff loginWithUserName:self.userNameTextInput andPassword:self.passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
-        [weakSelf hideProgressView];
         if (error) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to Sign in"
                                                                 message:[error localizedDescription]
@@ -118,29 +118,48 @@
             NSAssert(nil != user, @"loginWithUserName:password success but returned object is nil");
             NSParameterAssert([user.userName length] > 0);
             NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
-            // fetch participant
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
-                                                                                create:NO
-                                                                  managedObjectContext:managedObjectContext];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            dispatch_block_t block = ^{
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                [self.delegate signInViewController:self didSignInParticipant:participant];
-            };
-            [ffm updateParticipant:participant ff:ff completionHandler:^(NSError *error) {
+            // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
+            WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+            [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
                 if (error) {
                     [WMUtilities logError:error];
-                } else if (participant.team) {
-                    [ffm updateTeam:participant.team ff:ff completionHandler:^(NSError *error) {
-                        dispatch_async(dispatch_get_main_queue(), ^(void) {
-                            block();
-                        });
-                    }];
                 } else {
-                    dispatch_async(dispatch_get_main_queue(), ^(void) {
-                        block();
-                    });
+                    // fetch participant
+                    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                    __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
+                                                                                        create:NO
+                                                                          managedObjectContext:managedObjectContext];
+                    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+                    dispatch_block_t block = ^{
+                        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                        participant = [participant MR_inContext:weakSelf.managedObjectContext];
+                        [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
+                    };
+                    if (nil == participant) {
+                        // must be on back end
+                        dispatch_async(dispatch_get_main_queue(), ^(void) {
+                            [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                                if (error) {
+                                    [WMUtilities logError:error];
+                                } else {
+                                    participant = object;
+                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                        block();
+                                    });
+                                }
+                            }];
+                        });
+                    } else {
+                        [ffm updateParticipant:participant completionHandler:^(NSError *error) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            } else {
+                                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                    block();
+                                });
+                            }
+                        }];
+                    }
                 }
             }];
         }

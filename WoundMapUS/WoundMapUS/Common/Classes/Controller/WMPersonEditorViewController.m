@@ -172,6 +172,7 @@
         if (_removeUndoManagerWhenDone) {
             self.managedObjectContext.undoManager = nil;
         }
+        [self.managedObjectContext MR_saveOnlySelfAndWait];
         [self.delegate personEditorViewController:self didEditPerson:_person];
     }
 }

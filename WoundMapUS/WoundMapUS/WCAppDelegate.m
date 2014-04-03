@@ -31,13 +31,25 @@ static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
-        SharedInstance.debug = YES;
-        SharedInstance.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
-        // must load blobs explicitely
-        SharedInstance.autoLoadBlobs = NO;
-        SharedInstance.autoLoadRefs = YES;
+        [self initializeFatFractalInstance:SharedInstance];
     });
     return SharedInstance;
+}
+
++ (WMFatFractal *)instance
+{
+    WMFatFractal *instance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
+    [self initializeFatFractalInstance:instance];
+    return instance;
+}
+
++ (void)initializeFatFractalInstance:(WMFatFractal *)ff
+{
+    ff.debug = YES;
+    ff.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
+    // must load blobs explicitely
+    ff.autoLoadBlobs = NO;
+    ff.autoLoadRefs = YES;
 }
 
 - (id)findExistingObjectWithClass:(Class)clazz
