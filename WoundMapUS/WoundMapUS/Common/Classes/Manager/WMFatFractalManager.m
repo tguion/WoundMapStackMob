@@ -52,7 +52,6 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 @interface WMFatFractalManager ()
 
-@property (nonatomic) NSNumber *lastRefreshTime;
 @property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 @property (strong, nonatomic) NSOperationQueue *serialQueue;
@@ -64,8 +63,6 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 @end
 
 @implementation WMFatFractalManager
-
-@synthesize lastRefreshTime=_lastRefreshTime;
 
 + (WMFatFractalManager *)sharedInstance
 {
@@ -205,16 +202,11 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             if (completionHandler) {
                 completionHandler(error, object);
             }
-            for (NSString *alias in [WMParticipant relationshipNamesNotToSerialize]) {
-                [ff grabBagGetAllForObj:object
-                            grabBagName:alias
-                             onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                 WM_ASSERT_MAIN_THREAD;
-                                 [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                                     // nothing more to do
-                                 }];
-                             }];
-            }
+            [self acquireGrabBagsForObjects:@[object] aliases:[WMParticipant relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }];
         }];
     });
 }
@@ -231,16 +223,11 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
             if (completionHandler) {
                 completionHandler(error, object);
             }
-            for (NSString *alias in [WMTeam relationshipNamesNotToSerialize]) {
-                [ff grabBagGetAllForObj:object
-                            grabBagName:alias
-                             onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                 WM_ASSERT_MAIN_THREAD;
-                                 [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                                     // nothing more to do
-                                 }];
-                             }];
-            }
+            [self acquireGrabBagsForObjects:@[object] aliases:[WMTeam relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }];
         }];
     });
     self.lastRefreshTimeMap[[WMTeam entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
@@ -248,64 +235,52 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 - (void)acquireGrabBagsForObjects:(NSArray *)objects aliases:(NSSet *)aliases ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
+    WM_ASSERT_MAIN_THREAD;
     id object = [objects firstObject];
     if (nil == object) {
         return;
     }
     // else
-    NSError *error = nil;
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     for (object in aliases) {
         for (NSString *alias in aliases) {
-            [ff grabBagGetAllForObj:object grabBagName:alias error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
-            }
+            [ff grabBagGetAllForObj:object
+                        grabBagName:alias
+                         onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                             WM_ASSERT_MAIN_THREAD;
+                             if (error) {
+                                 completionHandler(error);
+                             } else {
+                                 [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                                     completionHandler(error);
+                                 }];
+                             }
+                         }];
         }
     }
 }
 
-- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(FFHttpMethodCompletion)completionHandler
+- (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
-    NSArray *patientsExisting = [WMPatient MR_findAllInContext:managedObjectContext];
+    WM_ASSERT_MAIN_THREAD;
+    NSParameterAssert(completionHandler);
     // Fetch any events that have been updated on the backend
     // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
-    NSString *queryString = [NSString stringWithFormat:@"/WMPatient/(updatedAt gt %@)?depthGb=1&depthRef=1", self.lastRefreshTime];
+    NSString *collection = [WMPatient entityName];
+    id lastRefreshTime = self.lastRefreshTimeMap[collection];
+    if (nil == lastRefreshTime) {
+        lastRefreshTime = @(0);
+    }
+    NSString *queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@)?depthGb=1&depthRef=1", collection, lastRefreshTime];
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
-        NSArray *patientsRetrieved = response.objs;
-        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-        }];
-        NSMutableArray *patientObjectIDs = [[NSMutableArray alloc] init];
         if (response.error) {
-            [WMUtilities logError:response.error];
+            completionHandler(response.error);
         } else {
-            self.lastRefreshTime = [FFUtils unixTimeStampFromDate:[NSDate date]];
-            BOOL newAdditions = NO;
-            for (WMPatient *patientRetrieved in patientsRetrieved) {
-                BOOL foundLocally = NO;
-                for (WMPatient *patientExisting in patientsExisting) {
-                    if ([patientExisting.ffUrl isEqualToString:patientRetrieved.ffUrl]) {
-                        foundLocally = YES;
-                        break;
-                    } else {
-                        [patientObjectIDs addObject:[patientRetrieved objectID]];
-                    }
-                }
-                if (foundLocally) {
-                    DLog(@"   WMPatient with ffUrl %@ from backend found locally", patientRetrieved.ffUrl);
-                } else {
-                    DLog(@"   Adding new WMPatient with ffUrl %@ from backend", patientRetrieved.ffUrl);
-                    newAdditions = YES;
-                }
-            }
-            if (newAdditions) {
-                DLog(@"   Got new stuff from backend; reloading data");
-            }
-            completionHandler(response.error, patientObjectIDs, nil);
+            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                completionHandler(error);
+            }];
         }
     }];
 }

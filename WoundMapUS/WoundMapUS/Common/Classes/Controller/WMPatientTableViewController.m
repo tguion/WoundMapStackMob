@@ -106,11 +106,11 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(self) weakSelf = self;
-    [ffm fetchPatients:self.managedObjectContext ff:ff completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [ffm fetchPatients:self.managedObjectContext ff:ff completionHandler:^(NSError *error) {
+        [weakSelf hideProgressView];
         if (error) {
             [WMUtilities logError:error];
         } else {
-            [weakSelf hideProgressView];
             [weakSelf.tableView reloadData];
         }
     }];
