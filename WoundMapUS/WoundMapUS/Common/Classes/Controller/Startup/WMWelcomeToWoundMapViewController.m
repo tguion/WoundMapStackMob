@@ -722,6 +722,17 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         weakSelf.welcomeState = (nil == weakSelf.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
+        // acquire team from back end
+        WMTeam *team = participant.team;
+        if (team) {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm updateTeam:team ff:ff completionHandler:^(NSError *error, id object) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }];
+        }
     };
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];

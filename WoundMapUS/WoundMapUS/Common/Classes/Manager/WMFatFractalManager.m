@@ -194,70 +194,56 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
 
 - (void)acquireParticipantForUser:(FFUser *)user completionHandler:(WMObjectCallback)completionHandler
 {
-    WM_ASSERT_MAIN_THREAD;
-    WMFatFractal *ff = [WMFatFractal instance];
-    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
-    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        WM_ASSERT_MAIN_THREAD;
-        NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
-        [managedObjectContext saveToPersistentStoreAndWait];
-        if (completionHandler) {
-            completionHandler(error, object);
-        }
-        for (NSString *alias in [WMParticipant relationshipNamesNotToSerialize]) {
-            [ff grabBagGetAllForObj:object
-                        grabBagName:alias
-                         onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                             WM_ASSERT_MAIN_THREAD;
-                             [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                                 // nothing more to do
+    dispatch_async(dispatch_get_main_queue(), ^{
+        WMFatFractal *ff = [WMFatFractal instance];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
+        [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            WM_ASSERT_MAIN_THREAD;
+            NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
+            [managedObjectContext saveToPersistentStoreAndWait];
+            if (completionHandler) {
+                completionHandler(error, object);
+            }
+            for (NSString *alias in [WMParticipant relationshipNamesNotToSerialize]) {
+                [ff grabBagGetAllForObj:object
+                            grabBagName:alias
+                             onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                 WM_ASSERT_MAIN_THREAD;
+                                 [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                                     // nothing more to do
+                                 }];
                              }];
-                         }];
-        }
-    }];
+            }
+        }];
+    });
 }
 
-- (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+- (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler
 {
     NSParameterAssert(team.ffUrl);
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSError *error = nil;
-        WMTeam *team = [ff getObjFromUri:queryString error:&error];
-        NSAssert(nil != team && [team isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", team);
-        if (error && completionHandler) {
-            completionHandler(error);
-        } else {
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            team = [team MR_inContext:managedObjectContext];
-            // make sure we fetch the ALIAS defined on WMParticipant - I'm not sure we have to do this since depthGb=1 in fetch above
-            // NOTE: we could also fetch as so: see bottom of http://fatfractal.com/docs/data-modeling/#grab-bags
-            // NSString *query = [NSString stringWithFormat:@"/%@/%@/%@", [WMParticipant entityName], [participant.ffUrl lastPathComponent], WMParticipantRelationships.patients];
-            // NSArray *participantPatients = [ff getArrayFromUri:query error:&error];
-            [ff grabBagGetAllForObj:team grabBagName:WMTeamRelationships.invitations error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
-            }
-            [ff grabBagGetAllForObj:team grabBagName:WMTeamRelationships.navigationTracks error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
-            }
-            [ff grabBagGetAllForObj:team grabBagName:WMTeamRelationships.participants error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
-            }
-            [ff grabBagGetAllForObj:team grabBagName:WMTeamRelationships.patients error:&error];
-            if (error && completionHandler) {
-                completionHandler(error);
-            }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+        [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
+            [managedObjectContext saveToPersistentStoreAndWait];
             if (completionHandler) {
-                completionHandler(error);
+                completionHandler(error, object);
             }
-        }
+            for (NSString *alias in [WMTeam relationshipNamesNotToSerialize]) {
+                [ff grabBagGetAllForObj:object
+                            grabBagName:alias
+                             onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                 WM_ASSERT_MAIN_THREAD;
+                                 [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                                     // nothing more to do
+                                 }];
+                             }];
+            }
+        }];
     });
-    self.lastRefreshTimeMap[[WMParticipant entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
+    self.lastRefreshTimeMap[[WMTeam entityName]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
 }
 
 - (void)acquireGrabBagsForObjects:(NSArray *)objects aliases:(NSSet *)aliases ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler

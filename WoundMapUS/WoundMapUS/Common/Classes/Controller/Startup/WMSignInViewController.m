@@ -137,18 +137,16 @@
                     };
                     if (nil == participant) {
                         // must be on back end
-                        dispatch_async(dispatch_get_main_queue(), ^(void) {
-                            [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
-                                if (error) {
-                                    [WMUtilities logError:error];
-                                } else {
-                                    participant = object;
-                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                        block();
-                                    });
-                                }
-                            }];
-                        });
+                        [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            } else {
+                                participant = object;
+                                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                    block();
+                                });
+                            }
+                        }];
                     } else {
                         [ffm updateParticipant:participant completionHandler:^(NSError *error) {
                             if (error) {
