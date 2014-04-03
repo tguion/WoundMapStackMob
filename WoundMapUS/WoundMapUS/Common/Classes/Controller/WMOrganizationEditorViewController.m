@@ -15,6 +15,8 @@
 
 @interface WMOrganizationEditorViewController ()  <UITextFieldDelegate, AddressListViewControllerDelegate, IdListViewControllerDelegate>
 
+@property (weak, nonatomic) NSManagedObjectContext *moc;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
 @property (readonly, nonatomic) WMIdListViewController *idListViewController;
@@ -65,7 +67,10 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    if (nil == _moc) {
+        _moc = self.delegate.managedObjectContext;
+    }
+    return _moc;
 }
 
 - (WMOrganization *)organization

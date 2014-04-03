@@ -19,6 +19,8 @@
 
 @interface WMTelecomEditorViewController () <SimpleTableViewControllerDelegate, UITextFieldDelegate>
 
+@property (weak, nonatomic) NSManagedObjectContext *moc;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (strong, nonatomic) WMTelecomType *telecomType;
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
@@ -68,7 +70,10 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    if (nil == _moc) {
+        _moc = self.delegate.managedObjectContext;
+    }
+    return _moc;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath

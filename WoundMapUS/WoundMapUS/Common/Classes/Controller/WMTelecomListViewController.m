@@ -14,6 +14,8 @@
 
 @interface WMTelecomListViewController () <TelecomEditorViewControllerDelegate>
 
+@property (weak, nonatomic) NSManagedObjectContext *moc;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMTelecomEditorViewController *telecomEditorViewController;
 @property (strong, nonatomic) NSArray *telecoms;
@@ -66,7 +68,10 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    if (nil == _moc) {
+        _moc = self.delegate.managedObjectContext;
+    }
+    return _moc;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath

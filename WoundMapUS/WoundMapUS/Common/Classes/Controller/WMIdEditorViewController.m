@@ -15,6 +15,7 @@
 
 @interface WMIdEditorViewController () <UITextFieldDelegate>
 
+@property (weak, nonatomic) NSManagedObjectContext *moc;
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @end
@@ -61,7 +62,10 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    if (nil == _moc) {
+        _moc = self.delegate.managedObjectContext;
+    }
+    return _moc;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath

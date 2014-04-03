@@ -747,6 +747,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)createAccountViewController:(WMCreateAccountViewController *)viewController didCreateParticipant:(WMParticipant *)participant
 {
     participant.dateLastSignin = [NSDate date];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     self.appDelegate.participant = participant;
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];

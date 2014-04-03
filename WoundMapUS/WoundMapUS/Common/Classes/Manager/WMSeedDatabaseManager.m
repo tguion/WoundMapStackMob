@@ -177,7 +177,6 @@
             [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
         DLog(@"reading plists and seeding database finished");
-        [managedObjectContext reset];
         [NSManagedObjectContext MR_clearContextForCurrentThread];
         if (handler) {
             handler(nil);

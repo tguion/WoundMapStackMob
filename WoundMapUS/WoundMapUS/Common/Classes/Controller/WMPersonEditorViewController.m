@@ -17,6 +17,8 @@
 
 @interface WMPersonEditorViewController () <UITextFieldDelegate, AddressListViewControllerDelegate, TelecomListViewControllerDelegate>
 
+@property (weak, nonatomic) NSManagedObjectContext *moc;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
 @property (readonly, nonatomic) WMTelecomListViewController *telecomListViewController;
@@ -67,7 +69,10 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    if (nil == _moc) {
+        _moc = self.delegate.managedObjectContext;
+    }
+    return _moc;
 }
 
 - (WMPerson *)person

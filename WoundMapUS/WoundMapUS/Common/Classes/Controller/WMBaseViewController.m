@@ -349,7 +349,7 @@
 - (NSManagedObjectContext *)managedObjectContext
 {
     WM_ASSERT_MAIN_THREAD;
-    return self.appDelegate.coreDataHelper.context;
+    return [NSManagedObjectContext MR_defaultContext];
 }
 
 - (NSPersistentStore *)store

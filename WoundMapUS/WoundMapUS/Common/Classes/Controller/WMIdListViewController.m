@@ -13,6 +13,8 @@
 
 @interface WMIdListViewController () <idEditorViewControllerDelegate>
 
+@property (weak, nonatomic) NSManagedObjectContext *moc;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMIdEditorViewController *idEditorViewController;
 @property (strong, nonatomic) NSArray *ids;
@@ -65,7 +67,10 @@
 
 - (NSManagedObjectContext *)managedObjectContext
 {
-    return self.delegate.managedObjectContext;
+    if (nil == _moc) {
+        _moc = self.delegate.managedObjectContext;
+    }
+    return _moc;
 }
 
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
