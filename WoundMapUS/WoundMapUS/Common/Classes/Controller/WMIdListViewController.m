@@ -161,7 +161,6 @@
     [self.navigationController popViewControllerAnimated:YES];
     _ids = nil;
     [self.tableView reloadData];
-    [viewController clearAllReferences];
 }
 
 - (void)idEditorViewControllerDidCancel:(WMIdEditorViewController *)viewController

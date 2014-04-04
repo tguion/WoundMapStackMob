@@ -760,10 +760,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)createAccountViewController:(WMCreateAccountViewController *)viewController didCreateParticipant:(WMParticipant *)participant
 {
     participant.dateLastSignin = [NSDate date];
+    [self.navigationController popViewControllerAnimated:YES];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     self.appDelegate.participant = participant;
-    [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     userDefaultsManager.lastUserName = participant.userName;
     self.welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
@@ -896,14 +895,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     [self.tableView reloadData];
 }
 
 - (void)chooseTrackViewControllerDidCancel:(WMChooseTrackViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - PatientDetailViewControllerDelegate

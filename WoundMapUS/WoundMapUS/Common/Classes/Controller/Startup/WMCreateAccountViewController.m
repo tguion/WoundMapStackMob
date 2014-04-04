@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         _person = [WMPerson MR_createInContext:self.managedObjectContext];
         _person.nameFamily = _lastNameTextInput;
         _person.nameGiven = _firstNameTextInput;
-        // TODO update email
+        _participant.person = _person;
     }
     return _person;
 }
@@ -329,7 +329,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     [WMUtilities logError:error];
                 }
             }];
-
         }
     }];
 }
@@ -530,7 +529,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     // update email
     WMTelecom *telecom = person.defaultEmailTelecom;
     if (telecom && !self.participant.email) {

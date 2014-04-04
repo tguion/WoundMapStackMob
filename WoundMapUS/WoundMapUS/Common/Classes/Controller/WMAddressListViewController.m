@@ -158,7 +158,6 @@
     [self.navigationController popViewControllerAnimated:YES];
     _addresses = nil;
     [self.tableView reloadData];
-    [viewController clearAllReferences];
 }
 
 - (void)addressEditorViewControllerDidCancel:(WMAddressEditorViewController *)viewController

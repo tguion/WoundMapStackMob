@@ -93,9 +93,10 @@
 // clear any strong references to views
 - (void)clearViewReferences
 {
-    self.tableView.delegate = nil;
-    self.tableView.dataSource = nil;
-    self.tableView = nil;
+    UITableView *tableView = self.tableView;
+    tableView.delegate = nil;
+    tableView.dataSource = nil;
+    self.view = nil;
     [self hideProgressView];
 }
 

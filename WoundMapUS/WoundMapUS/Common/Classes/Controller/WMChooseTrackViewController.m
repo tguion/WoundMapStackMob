@@ -46,14 +46,6 @@
     [self.navigationController setToolbarHidden:YES animated:YES];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    if (nil == self.navigationController) {
-        [self clearAllReferences];
-    }
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
