@@ -114,7 +114,7 @@ typedef enum {
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
+            [self updateTrackFromDictionary:dictionary team:nil create:YES managedObjectContext:managedObjectContext];
         }
         // create patient and wound nodes
         [WMNavigationNode seedPatientNodes:managedObjectContext];
@@ -168,8 +168,7 @@ typedef enum {
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary create:YES managedObjectContext:managedObjectContext];
-            navigationTrack.team = team;
+            WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary team:team create:YES managedObjectContext:managedObjectContext];
         }
         if (!completionHandler) {
             return;
@@ -198,11 +197,13 @@ typedef enum {
 }
 
 + (WMNavigationTrack *)updateTrackFromDictionary:(NSDictionary *)dictionary
+                                            team:(WMTeam *)team
                                           create:(BOOL)create
                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     id title = [dictionary objectForKey:@"title"];
     WMNavigationTrack *navigationTrack = [WMNavigationTrack trackForTitle:title
+                                                                     team:team
                                                                    create:create
                                                      managedObjectContext:managedObjectContext];
     navigationTrack.displayTitle = [dictionary objectForKey:@"displayTitle"];
@@ -215,6 +216,7 @@ typedef enum {
     navigationTrack.limitToSinglePatientFlag = [[dictionary objectForKey:@"limitToSinglePatientFlag"] boolValue];
     navigationTrack.skipCarePlanFlag = [[dictionary objectForKey:@"skipCarePlanFlag"] boolValue];
     navigationTrack.skipPolicyEditor = [[dictionary objectForKey:@"skipPolicyEditor"] boolValue];
+    navigationTrack.team = team;
     [managedObjectContext MR_saveOnlySelfAndWait];
     NSAssert(![[navigationTrack objectID] isTemporaryID], @"Expect a permanent objectID");
     NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
@@ -232,17 +234,24 @@ typedef enum {
 
 + (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext
 {
-    return [WMNavigationTrack MR_findAllSortedBy:@"sortRank" ascending:YES];
+    return [WMNavigationTrack MR_findAllSortedBy:WMNavigationNodeAttributes.sortRank ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"team == nil"] inContext:managedObjectContext];
+}
+
++ (NSArray *)sortedTracksForTeam:(WMTeam *)team
+{
+    return [WMNavigationTrack MR_findAllSortedBy:WMNavigationNodeAttributes.sortRank ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:[team managedObjectContext]];
 }
 
 + (WMNavigationTrack *)trackForTitle:(NSString *)title
+                                team:(WMTeam *)team
                               create:(BOOL)create
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMNavigationTrack *navigationTrack = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
+    WMNavigationTrack *navigationTrack = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@ AND team == %@", title, team] inContext:managedObjectContext];
     if (create && nil == navigationTrack) {
         navigationTrack = [WMNavigationTrack MR_createInContext:managedObjectContext];
         navigationTrack.title = title;
+        navigationTrack.team = team;
     }
     return navigationTrack;
 }

@@ -152,6 +152,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             }
             break;
         }
+        case 2: {
+            cellReuseIdentifier = @"ValueCell";
+            break;
+        }
+        case 3: {
+            cellReuseIdentifier = @"ValueCell";
+            break;
+        }
     }
     return cellReuseIdentifier;
 }
@@ -713,7 +721,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     // if participant has changed, we need to purge the local cache
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     NSString *lastUserName = userDefaultsManager.lastUserName;
@@ -890,6 +897,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 }
 
 #pragma mark - ChooseTrackDelegate
+
+- (NSPredicate *)navigationTrackPredicate
+{
+    return [NSPredicate predicateWithFormat:@"team == %@", self.participant.team];
+}
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {

@@ -143,7 +143,7 @@
 // TODO: scope the tracks to participant.team
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return nil;
+    return self.delegate.navigationTrackPredicate;
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

@@ -512,7 +512,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                                                          managedObjectContext:self.managedObjectContext];
     }
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];

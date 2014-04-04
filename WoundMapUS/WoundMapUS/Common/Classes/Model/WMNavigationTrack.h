@@ -21,8 +21,10 @@
 + (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallback)completionHandler;
 
 + (NSArray *)sortedTracks:(NSManagedObjectContext *)managedObjectContext;
++ (NSArray *)sortedTracksForTeam:(WMTeam *)team;
 
 + (WMNavigationTrack *)trackForTitle:(NSString *)title
+                                team:(WMTeam *)team
                               create:(BOOL)create
                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 

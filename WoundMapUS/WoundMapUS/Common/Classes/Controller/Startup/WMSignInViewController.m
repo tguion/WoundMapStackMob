@@ -48,6 +48,8 @@
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    _userNameTextInput = userDefaultsManager.lastUserName;
 }
 
 - (void)didReceiveMemoryWarning
@@ -252,15 +254,14 @@
     switch (indexPath.row) {
         case 0: {
             textField.tag = 1000;
-            WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-            [myCell updateWithLabelText:@"User Name" valueText:userDefaultsManager.lastUserName valuePrompt:@"Enter user name"];
+            [myCell updateWithLabelText:@"User Name" valueText:_userNameTextInput valuePrompt:@"Enter user name"];
             break;
         }
         case 1: {
             textField.tag = 1001;
             textField.delegate = self;
             textField.secureTextEntry = YES;
-            [myCell updateWithLabelText:@"Password" valueText:@"" valuePrompt:@"Enter password"];
+            [myCell updateWithLabelText:@"Password" valueText:_passwordTextInput valuePrompt:@"Enter password"];
             break;
         }
     }
