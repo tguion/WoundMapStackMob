@@ -1,6 +1,8 @@
 #import "WMPerson.h"
 #import "WMTelecom.h"
 #import "WMTelecomType.h"
+#import "WMUtilities.h"
+#import "WMFatFractal.h"
 
 @interface WMPerson ()
 
@@ -41,6 +43,44 @@
                                        sortedBy:WMTelecomAttributes.createdAt
                                       ascending:YES
                                       inContext:[self managedObjectContext]];
+}
+
+#pragma mark - AddressSource
+
+- (NSSet *)addressesWithRefreshHandler:(dispatch_block_t)handler
+{
+    WM_ASSERT_MAIN_THREAD;
+    // update from back end
+    if (self.ffUrl) {
+        [[WMFatFractal instance] grabBagGetAllForObj:self
+                    grabBagName:WMPersonRelationships.addresses
+                     onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                         WM_ASSERT_MAIN_THREAD;
+                         handler();
+                     }];
+    } else {
+        handler();
+    }
+    return self.addresses;
+}
+
+#pragma mark - TelecomSource
+
+- (NSSet *)telecomsWithRefreshHandler:(dispatch_block_t)handler
+{
+    WM_ASSERT_MAIN_THREAD;
+    // update from back end
+    if (self.ffUrl) {
+        [[WMFatFractal instance] grabBagGetAllForObj:self
+                                               grabBagName:WMPersonRelationships.telecoms
+                                                onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                    WM_ASSERT_MAIN_THREAD;
+                                                    handler();
+                                                }];
+    } else {
+        handler();
+    }
+    return self.telecoms;
 }
 
 #pragma mark - FatFractal

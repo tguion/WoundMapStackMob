@@ -23,5 +23,6 @@
 @interface WMAddressListViewController : WMBaseViewController
 
 @property (weak, nonatomic) id<AddressListViewControllerDelegate> delegate;
+@property (nonatomic) BOOL attemptAcquireFromBackEnd;
 
 @end

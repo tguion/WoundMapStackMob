@@ -20,6 +20,7 @@
 #import "WMOrganization.h"
 #import "MBProgressHUD.h"
 #import "KeychainItemWrapper.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMSeedDatabaseManager.h"   // DEBUG
 #import "WCAppDelegate.h"
@@ -305,7 +306,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     _ffUser.lastName = _lastNameTextInput;
     __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        // NOTE: this returns on main thread
+        WM_ASSERT_MAIN_THREAD;
         [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         FFUser *ffUser = (FFUser *)object;
         if (error) {
@@ -547,7 +548,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - OrganizationEditorViewControllerDelegate

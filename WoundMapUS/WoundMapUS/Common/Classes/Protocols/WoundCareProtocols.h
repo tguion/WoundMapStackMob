@@ -102,6 +102,8 @@ typedef enum {
 @property (readonly, nonatomic) NSManagedObjectID *objectID;
 @property (readonly, nonatomic) NSSet *addresses;
 
+- (NSSet *)addressesWithRefreshHandler:(dispatch_block_t)handler;
+
 - (void)addAddresses:(NSSet*)value_;
 - (void)removeAddresses:(NSSet*)value_;
 - (void)addAddressesObject:(WMAddress*)value_;
@@ -116,6 +118,8 @@ typedef enum {
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSManagedObjectID *objectID;
 @property (readonly, nonatomic) NSSet *telecoms;
+
+- (NSSet *)telecomsWithRefreshHandler:(dispatch_block_t)handler;
 
 - (void)addTelecoms:(NSSet*)value_;
 - (void)removeTelecoms:(NSSet*)value_;

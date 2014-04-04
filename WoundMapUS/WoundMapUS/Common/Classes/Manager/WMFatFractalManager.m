@@ -45,6 +45,7 @@
 #import "WMInterventionEvent.h"
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
@@ -95,7 +96,7 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
     
     __weak __typeof(&*self)weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification
-                                                      object:[NSManagedObjectContext MR_defaultContext]
+                                                      object:[NSManagedObjectContext MR_rootSavingContext]
                                                        queue:[NSOperationQueue mainQueue]
                                                   usingBlock:^(NSNotification *notification) {
                                                       [weakSelf handleDefaultManagedObjectContextDidSave:notification];
@@ -136,6 +137,41 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
     }
 }
 
+#pragma mark - Updates and Deletes
+
+- (void)processUpdatesAndDeletes
+{
+    NSArray *updatedObjectIDs = [_updatedObjectIDs allObjects];
+    [_updatedObjectIDs removeAllObjects];
+    NSArray *deletedObjectIDs = [_deletedObjectIDs allObjects];
+    [_deletedObjectIDs removeAllObjects];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        WMFatFractal *ff = [WMFatFractal instance];
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        NSError *error = nil;
+        for (NSManagedObjectID *objectID in updatedObjectIDs) {
+            NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
+            BOOL canUpdate = [[managedObject valueForKey:@"ffUrl"] length] > 0;
+            if (canUpdate) {
+                [ff updateObj:managedObject error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+        }
+        for (NSManagedObjectID *objectID in deletedObjectIDs) {
+            NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
+            BOOL canDelete = [[managedObject valueForKey:@"ffUrl"] length] > 0;
+            if (canDelete) {
+                [ff deleteObj:managedObject error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+        }
+    });
+}
+
 #pragma mark - Fetch
 
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
@@ -156,15 +192,11 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
                 // NOTE: we could also fetch as so: see bottom of http://fatfractal.com/docs/data-modeling/#grab-bags
                 // NSString *query = [NSString stringWithFormat:@"/%@/%@/%@", [WMParticipant entityName], [participant.ffUrl lastPathComponent], WMParticipantRelationships.patients];
                 // NSArray *participantPatients = [ff getArrayFromUri:query error:&error];
-                for (NSString *alias in [WMParticipant relationshipNamesNotToSerialize]) {
-                    [ff grabBagGetAllForObj:object
-                                grabBagName:alias
-                                 onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                     if (error && completionHandler) {
-                                         completionHandler(error);
-                                     }
-                                 }];
-                }
+                [self acquireGrabBagsForObjects:@[object] aliases:[WMParticipant relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                }];
                 // update team
                 WMTeam *team = participant.team;
                 if (team) {
@@ -173,15 +205,11 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
                     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         WM_ASSERT_MAIN_THREAD;
                         NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
-                        for (NSString *alias in [WMTeam relationshipNamesNotToSerialize]) {
-                            [ff grabBagGetAllForObj:object
-                                        grabBagName:alias
-                                         onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                             if (error && completionHandler) {
-                                                 completionHandler(error);
-                                             }
-                                         }];
-                        }
+                        [self acquireGrabBagsForObjects:@[object] aliases:[WMTeam relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
+                        }];
                     }];
                 }
                 [[participant managedObjectContext] MR_saveToPersistentStoreAndWait];
@@ -604,16 +632,14 @@ static const NSInteger WMMaxQueueConcurrency = 1;//24;
     NSParameterAssert([teamInvitation.team.ffUrl length] > 0);
     NSParameterAssert(nil != teamInvitation.invitee);
     NSParameterAssert([teamInvitation.invitee.ffUrl length] > 0);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        id object = (WMTeamInvitation *)[teamInvitation MR_inContext:managedObjectContext];
-        NSError *error = nil;
-        [ff createObj:object atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] error:&error];
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    [ff createObj:teamInvitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WM_ASSERT_MAIN_THREAD;
+        NSAssert([object isKindOfClass:[WMTeamInvitation class]], @"Expected WMTeamInvitation but got %@", object);
+        [[teamInvitation managedObjectContext] MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
             completionHandler(error);
         }
-    });
+    }];
 }
 
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff

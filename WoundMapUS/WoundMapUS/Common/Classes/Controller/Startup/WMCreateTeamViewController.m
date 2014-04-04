@@ -14,6 +14,7 @@
 #import "WMParticipant.h"
 #import "WMTeamInvitation.h"
 #import "WMTeam.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"

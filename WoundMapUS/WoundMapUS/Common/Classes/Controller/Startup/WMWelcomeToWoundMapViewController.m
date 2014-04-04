@@ -9,6 +9,7 @@
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMSignInViewController.h"
 #import "WMCreateAccountViewController.h"
+#import "WMPersonEditorViewController.h"
 #import "WMCreateTeamInvitationViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
@@ -22,6 +23,8 @@
 #import "WMButtonCell.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
+#import "WMPerson.h"
+#import "WMTelecom.h"
 #import "WMTeam.h"
 #import "WMConsultingGroup.h"
 #import "WMNavigationTrack.h"
@@ -30,6 +33,7 @@
 #import "WMNavigationCoordinator.h"
 #import "KeychainItemWrapper.h"
 #import "WMUtilities.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
@@ -40,7 +44,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, CreateTeamInvitationViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, CreateTeamInvitationViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -50,6 +54,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 @property (readonly, nonatomic) WMCreateTeamViewController *createTeamViewController;
 @property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
+@property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 
 @property (readonly, nonatomic) WMParticipant *participant;
 
@@ -219,6 +224,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return createTeamInvitationViewController;
 }
 
+- (WMPersonEditorViewController *)personEditorViewController
+{
+    WMPersonEditorViewController *personEditorViewController = [[WMPersonEditorViewController alloc] initWithNibName:@"WMPersonEditorViewController" bundle:nil];
+    personEditorViewController.delegate = self;
+    return personEditorViewController;
+}
+
 - (WMIAPCreateConsultantViewController *)iapCreateConsultantViewController
 {
     WMIAPCreateConsultantViewController *iapCreateConsultantViewController = [[WMIAPCreateConsultantViewController alloc] initWithNibName:@"WMIAPCreateConsultantViewController" bundle:nil];
@@ -366,8 +378,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    // create account
-                    [self.navigationController pushViewController:self.createAccountViewController animated:YES];
+                    if (_welcomeState == WMWelcomeStateInitial) {
+                        // create account
+                        [self.navigationController pushViewController:self.createAccountViewController animated:YES];
+                    } else {
+                        // contact details
+                        WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
+                        personEditorViewController.person = self.participant.person;
+                        [self.navigationController pushViewController:personEditorViewController animated:YES];
+                    }
                     break;
                 }
                 case 2: {
@@ -497,7 +516,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateSignedInNoTeam: {
             switch (section) {
                 case 0: {
-                    count = 1;
+                    count = 2;
                     break;
                 }
                 case 1: {
@@ -510,7 +529,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateTeamSelected: {
             switch (section) {
                 case 0: {
-                    count = 1;
+                    count = 2;
                     break;
                 }
                 case 1: {
@@ -528,7 +547,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateDeferTeam: {
             switch (section) {
                 case 0: {
-                    count = 1;
+                    count = 2;
                     break;
                 }
                 case 1: {
@@ -580,8 +599,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateSignedInNoTeam: {
             switch (indexPath.section) {
                 case 0: {
-                    title = @"Sign Out";
-                    value = self.participant.userName;
+                    switch (indexPath.row) {
+                        case 0: {
+                            title = @"Sign Out";
+                            value = self.participant.userName;
+                            break;
+                        }
+                        case 1: {
+                            title = @"Contact Details";
+                            value = self.participant.lastNameFirstName;
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                    }
                     break;
                 }
                 case 1: {
@@ -619,8 +649,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateTeamSelected: {
             switch (indexPath.section) {
                 case 0: {
-                    title = @"Sign Out";
-                    value = self.participant.userName;
+                    switch (indexPath.row) {
+                        case 0: {
+                            title = @"Sign Out";
+                            value = self.participant.userName;
+                            break;
+                        }
+                        case 1: {
+                            title = @"Contact Details";
+                            value = self.participant.lastNameFirstName;
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                    }
                     break;
                 }
                 case 1: {
@@ -658,8 +699,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateDeferTeam: {
             switch (indexPath.section) {
                 case 0: {
-                    title = @"Sign Out";
-                    value = self.participant.userName;
+                    switch (indexPath.row) {
+                        case 0: {
+                            title = @"Sign Out";
+                            value = self.participant.userName;
+                            break;
+                        }
+                        case 1: {
+                            title = @"Contact Details";
+                            value = self.participant.lastNameFirstName;
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                    }
                     break;
                 }
                 case 1: {
@@ -729,17 +781,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         weakSelf.welcomeState = (nil == weakSelf.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
-        // acquire team from back end
-        WMTeam *team = participant.team;
-        if (team) {
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updateTeam:team ff:ff completionHandler:^(NSError *error, id object) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            }];
-        }
     };
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -780,6 +821,36 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
+}
+
+#pragma mark - PersonEditorViewControllerDelegate
+
+- (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    WMParticipant *participant = self.participant;
+    // update email
+    WMTelecom *telecom = person.defaultEmailTelecom;
+    if (telecom && !self.participant.email) {
+        participant.email = telecom.value;
+    }
+    // update name
+    if (![person.nameFamily isEqualToString:participant.lastName]) {
+        participant.lastName = person.nameFamily;
+    }
+    if (![person.nameGiven isEqualToString:participant.firstName]) {
+        participant.firstName = person.nameGiven;
+    }
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [self.tableView reloadData];
+    // update backend
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm processUpdatesAndDeletes];
+}
+
+- (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - WMIAPJoinTeamViewControllerDelegate
@@ -832,15 +903,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             [WMUtilities logError:error];
         } else {
             [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                    if (error) {
-                        [WMUtilities logError:error];
-                    } else {
-                        weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-                        [weakSelf.tableView reloadData];
-                    }
-                });
+                WM_ASSERT_MAIN_THREAD;
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+                    [weakSelf.tableView reloadData];
+                }
             }];
         }
     }];
@@ -857,11 +927,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     // add to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     __weak __typeof(&*self)weakSelf = self;
     [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
         if (error) {

@@ -26,5 +26,6 @@
 @interface WMTelecomListViewController : WMBaseViewController
 
 @property (weak, nonatomic) id<TelecomListViewControllerDelegate> delegate;
+@property (nonatomic) BOOL attemptAcquireFromBackEnd;
 
 @end

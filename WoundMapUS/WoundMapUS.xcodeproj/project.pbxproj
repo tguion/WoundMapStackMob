@@ -95,6 +95,7 @@
 		7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0150FE18EB5BA400D5C0A9 /* WMCreateTeamViewController.xib */; };
 		7D01510618EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D01510418EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m */; };
 		7D01510718EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */; };
+		7D01510A18EEEF7500D5C0A9 /* WMFatFractal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */; };
 		7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */; };
 		7D10CD5C18D2146000AD43E3 /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5B18D2146000AD43E3 /* ImageToDataTransformer.m */; };
 		7D10CD5F18D217D500AD43E3 /* APLImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5E18D217D500AD43E3 /* APLImageToDataTransformer.m */; };
@@ -644,6 +645,8 @@
 		7D01510318EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCreateTeamInvitationViewController.h; sourceTree = "<group>"; };
 		7D01510418EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCreateTeamInvitationViewController.m; sourceTree = "<group>"; };
 		7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCreateTeamInvitationViewController.xib; sourceTree = "<group>"; };
+		7D01510818EEEF7500D5C0A9 /* WMFatFractal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFatFractal.h; sourceTree = "<group>"; };
+		7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFatFractal.m; sourceTree = "<group>"; };
 		7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFatFractalManager.h; sourceTree = "<group>"; };
 		7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFatFractalManager.m; sourceTree = "<group>"; };
 		7D10CD5A18D2146000AD43E3 /* ImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageToDataTransformer.h; sourceTree = "<group>"; };
@@ -1996,6 +1999,8 @@
 				5F67D20D18AC447400460C37 /* WMUserDefaultsManager.m */,
 				7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */,
 				7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */,
+				7D01510818EEEF7500D5C0A9 /* WMFatFractal.h */,
+				7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -3322,6 +3327,7 @@
 				7D39DB7718B947250054DDC3 /* _WMMedicationGroup.m in Sources */,
 				7DB206D418A839180004DC32 /* WMOrganization.m in Sources */,
 				7DDFD68A18B7C0B900041927 /* WMHomeBaseViewController_iPad.m in Sources */,
+				7D01510A18EEEF7500D5C0A9 /* WMFatFractal.m in Sources */,
 				7DF4E99518C3CC29000A3F5B /* _WMWoundMeasurementIntEvent.m in Sources */,
 				7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */,
 				7D10CE2F18DF5EB700AD43E3 /* KeychainItemWrapper.m in Sources */,

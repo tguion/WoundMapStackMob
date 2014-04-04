@@ -35,6 +35,7 @@
 #import "WMPsychoSocialItem.h"
 #import "WMTelecomType.h"
 #import "CoreDataHelper.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"

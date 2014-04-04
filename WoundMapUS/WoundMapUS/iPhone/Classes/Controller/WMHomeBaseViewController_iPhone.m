@@ -32,6 +32,7 @@
 #import "WMPhotoManager.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 

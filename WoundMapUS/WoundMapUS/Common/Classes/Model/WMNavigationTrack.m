@@ -168,7 +168,7 @@ typedef enum {
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
         for (NSDictionary *dictionary in propertyList) {
-            WMNavigationTrack *navigationTrack = [self updateTrackFromDictionary:dictionary team:team create:YES managedObjectContext:managedObjectContext];
+            [self updateTrackFromDictionary:dictionary team:team create:YES managedObjectContext:managedObjectContext];
         }
         if (!completionHandler) {
             return;

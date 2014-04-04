@@ -8,6 +8,7 @@
 
 #import "WMTelecomListViewController.h"
 #import "WMTelecomEditorViewController.h"
+#import "MBProgressHUD.h"
 #import "WMTelecom.h"
 #import "WMTelecom+CoreText.h"
 #import "WMUtilities.h"
@@ -81,6 +82,24 @@
         cellReuseIdentifier = @"AddCell";
     }
     return cellReuseIdentifier;
+}
+
+- (NSArray *)telecoms
+{
+    if (nil == _telecoms) {
+        _telecoms = [[self.delegate.telecomSource.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+        if (_attemptAcquireFromBackEnd) {
+            __weak __typeof(&*self)weakSelf = self;
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [self.delegate.telecomSource telecomsWithRefreshHandler:^{
+                WM_ASSERT_MAIN_THREAD;
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                weakSelf.telecoms = [[weakSelf.delegate.telecomSource.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+                [weakSelf.tableView reloadData];
+            }];
+        }
+    }
+    return _telecoms;
 }
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath

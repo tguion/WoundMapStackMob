@@ -9,6 +9,7 @@
 
 #import "WMAddressListViewController.h"
 #import "WMAddressEditorViewController.h"
+#import "MBProgressHUD.h"
 #import "WMAddress.h"
 #import "WMAddress+CoreText.h"
 #import "WMUtilities.h"
@@ -81,7 +82,7 @@
 
 - (BOOL)isAddIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.row == [self.delegate.addressSource.addresses count];
+    return indexPath.row == [self.addresses count];
 }
 
 - (WMAddressEditorViewController *)addressEditorViewController
@@ -98,12 +99,27 @@
     [self.navigationController pushViewController:addressEditorViewController animated:YES];
 }
 
-- (WMAddress *)addressForIndex:(NSInteger)index
+- (NSArray *)addresses
 {
     if (nil == _addresses) {
         _addresses = [[self.delegate.addressSource.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+        if (_attemptAcquireFromBackEnd) {
+            __weak __typeof(&*self)weakSelf = self;
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [self.delegate.addressSource addressesWithRefreshHandler:^{
+                WM_ASSERT_MAIN_THREAD;
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                weakSelf.addresses = [[weakSelf.delegate.addressSource.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
+                [weakSelf.tableView reloadData];
+            }];
+        }
     }
-    return _addresses[index];
+    return _addresses;
+}
+
+- (WMAddress *)addressForIndex:(NSInteger)index
+{
+    return self.addresses[index];
 }
 
 #pragma mark - WMBaseViewController
@@ -216,7 +232,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.delegate.addressSource.addresses count] + 1;
+    return [self.addresses count] + 1;
 }
 
 // Customize the appearance of table view cells.

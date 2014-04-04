@@ -13,6 +13,7 @@
 #import "WMWoundType.h"
 #import "WMWoundLocation.h"
 #import "WMWoundLocationValue.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"

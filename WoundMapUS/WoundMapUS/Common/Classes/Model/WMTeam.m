@@ -1,6 +1,6 @@
 #import "WMTeam.h"
 #import "WMParticipant.h"
-#import "WCAppDelegate.h"
+#import "WMFatFractal.h"
 
 NSString * const kParticipantGroupName = @"participantGroup";
 
@@ -49,10 +49,11 @@ NSString * const kParticipantGroupName = @"participantGroup";
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMTeamRelationships.invitations,
-                                                            WMTeamRelationships.navigationTracks,
-                                                            WMTeamRelationships.participants,
-                                                            WMTeamRelationships.patients]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+//        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMTeamRelationships.invitations,
+//                                                            WMTeamRelationships.navigationTracks,
+//                                                            WMTeamRelationships.participants,
+//                                                            WMTeamRelationships.patients]];
     });
     return PropertyNamesNotToSerialize;
 }

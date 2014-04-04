@@ -10,6 +10,7 @@
 #import "WMTextFieldTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUserDefaultsManager.h"
 #import "WMSeedDatabaseManager.h"
@@ -121,47 +122,84 @@
             NSParameterAssert([user.userName length] > 0);
             NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
             // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
-            WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-            [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
+            if (YES) {
+                // fetch participant
+                NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
+                                                                                    create:NO
+                                                                      managedObjectContext:managedObjectContext];
+                WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+                dispatch_block_t block = ^{
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    participant = [participant MR_inContext:weakSelf.managedObjectContext];
+                    [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
+                };
+                if (nil == participant) {
+                    // must be on back end
+                    [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        } else {
+                            participant = object;
+                            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                block();
+                            });
+                        }
+                    }];
                 } else {
-                    // fetch participant
-                    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                    __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
-                                                                                        create:NO
-                                                                          managedObjectContext:managedObjectContext];
-                    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-                    dispatch_block_t block = ^{
-                        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                        participant = [participant MR_inContext:weakSelf.managedObjectContext];
-                        [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
-                    };
-                    if (nil == participant) {
-                        // must be on back end
-                        [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            } else {
-                                participant = object;
-                                dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                    block();
-                                });
-                            }
-                        }];
-                    } else {
-                        [ffm updateParticipant:participant completionHandler:^(NSError *error) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            } else {
-                                dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                    block();
-                                });
-                            }
-                        }];
-                    }
+                    [ffm updateParticipant:participant completionHandler:^(NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        } else {
+                            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                block();
+                            });
+                        }
+                    }];
                 }
-            }];
+            } else {
+                WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+                [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        // fetch participant
+                        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                        __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
+                                                                                            create:NO
+                                                                              managedObjectContext:managedObjectContext];
+                        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+                        dispatch_block_t block = ^{
+                            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                            participant = [participant MR_inContext:weakSelf.managedObjectContext];
+                            [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
+                        };
+                        if (nil == participant) {
+                            // must be on back end
+                            [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                                if (error) {
+                                    [WMUtilities logError:error];
+                                } else {
+                                    participant = object;
+                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                        block();
+                                    });
+                                }
+                            }];
+                        } else {
+                            [ffm updateParticipant:participant completionHandler:^(NSError *error) {
+                                if (error) {
+                                    [WMUtilities logError:error];
+                                } else {
+                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                        block();
+                                    });
+                                }
+                            }];
+                        }
+                    }
+                }];
+            }
         }
     }];
 }

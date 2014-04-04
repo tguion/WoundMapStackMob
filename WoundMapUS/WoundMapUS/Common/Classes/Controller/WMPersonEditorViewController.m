@@ -20,6 +20,9 @@
 @property (weak, nonatomic) NSManagedObjectContext *moc;
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
+@property (nonatomic) BOOL acquiringAddresses;
+@property (nonatomic) BOOL acquiringTelecoms;
+
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
 @property (readonly, nonatomic) WMTelecomListViewController *telecomListViewController;
 
@@ -57,6 +60,24 @@
         _removeUndoManagerWhenDone = YES;
     }
     [self.managedObjectContext.undoManager beginUndoGrouping];
+    if (self.person.ffUrl) {
+        // update from back end
+        __weak __typeof(&*self)weakSelf = self;
+        _acquiringAddresses = YES;
+        [self.person addressesWithRefreshHandler:^{
+            weakSelf.acquiringAddresses = NO;
+            [weakSelf.tableView beginUpdates];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:4 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [weakSelf.tableView endUpdates];
+        }];
+        _acquiringTelecoms = YES;
+        [self.person telecomsWithRefreshHandler:^{
+            weakSelf.acquiringTelecoms = NO;
+            [weakSelf.tableView beginUpdates];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:5 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [weakSelf.tableView endUpdates];
+        }];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -175,7 +196,6 @@
         if (_removeUndoManagerWhenDone) {
             self.managedObjectContext.undoManager = nil;
         }
-        [self.managedObjectContext MR_saveOnlySelfAndWait];
         [self.delegate personEditorViewController:self didEditPerson:_person];
     }
 }
@@ -350,17 +370,33 @@
         case 4: {
             // addresses
             cell.textLabel.text = @"Addresses";
-            NSString *addressString = ([self.person.addresses count] == 1 ? @"address":@"addresses");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.addresses count], addressString];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if (_acquiringAddresses) {
+                if (nil == cell.accessoryView) {
+                    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                    cell.accessoryView = activityIndicatorView;
+                    [activityIndicatorView startAnimating];
+                }
+            } else {
+                NSString *addressString = ([self.person.addresses count] == 1 ? @"address":@"addresses");
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.addresses count], addressString];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
             break;
         }
         case 5: {
             // telecoms
             cell.textLabel.text = @"Telecoms";
-            NSString *telecomString = ([self.person.telecoms count] == 1 ? @"telecom":@"telecoms");
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.telecoms count], telecomString];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if (_acquiringTelecoms) {
+                if (nil == cell.accessoryView) {
+                    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                    cell.accessoryView = activityIndicatorView;
+                    [activityIndicatorView startAnimating];
+                }
+            } else {
+                NSString *telecomString = ([self.person.telecoms count] == 1 ? @"telecom":@"telecoms");
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[self.person.telecoms count], telecomString];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
             break;
         }
     }

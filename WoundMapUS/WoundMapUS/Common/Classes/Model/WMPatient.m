@@ -5,7 +5,7 @@
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMUtilities.h"
-#import "WCAppDelegate.h"
+#import "WMFatFractal.h"
 
 typedef enum {
     PatientFlagsFaceDetectionFailed         = 0,

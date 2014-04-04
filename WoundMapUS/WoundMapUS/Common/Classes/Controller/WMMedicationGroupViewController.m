@@ -23,6 +23,7 @@
 #import "IAPManager.h"
 #import "WMDesignUtilities.h"
 #import "WMUtilities.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 

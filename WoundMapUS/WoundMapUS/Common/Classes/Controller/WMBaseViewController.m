@@ -20,6 +20,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMUtilities.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "IAPManager.h"
 #import "WCAppDelegate.h"

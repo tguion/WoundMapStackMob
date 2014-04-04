@@ -10,6 +10,7 @@
 #import "WMBradenScaleInputViewController.h"
 #import "WMPatient.h"
 #import "WMBradenScale.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 #import "WMDesignUtilities.h"

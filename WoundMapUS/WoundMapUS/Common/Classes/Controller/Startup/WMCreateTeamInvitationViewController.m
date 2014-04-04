@@ -12,6 +12,7 @@
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "NSObject+performBlockAfterDelay.h"
 
@@ -183,13 +184,12 @@
             _teamInvitation.invitee = _invitee;
             _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
             // else handle undo
-            if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-                [self.managedObjectContext.undoManager endUndoGrouping];
+            if (weakSelf.managedObjectContext.undoManager.groupingLevel > 0) {
+                [weakSelf.managedObjectContext.undoManager endUndoGrouping];
             }
             if (_removeUndoManagerWhenDone) {
-                self.managedObjectContext.undoManager = nil;
+                weakSelf.managedObjectContext.undoManager = nil;
             }
-            [self.managedObjectContext MR_saveOnlySelfAndWait];
             [weakSelf.delegate createTeamInvitationViewController:weakSelf didCreateInvitation:_teamInvitation];
         }
     }];

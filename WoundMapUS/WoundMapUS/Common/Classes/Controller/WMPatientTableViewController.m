@@ -14,6 +14,7 @@
 #import "WMPatientConsultant.h"
 #import "CoreDataHelper.h"
 #import "WMUtilities.h"
+#import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 

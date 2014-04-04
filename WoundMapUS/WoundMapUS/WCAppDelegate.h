@@ -13,13 +13,6 @@
 @class WMNavigationCoordinator;
 @class WMParticipant, WMNavigationTrack;
 
-@interface WMFatFractal : FatFractal
-
-+ (WMFatFractal *)sharedInstance;
-+ (WMFatFractal *)instance;
-
-@end
-
 @interface WCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 
 + (KeychainItemWrapper *)keychainItem;
