@@ -15,6 +15,5 @@
 + (WMSeedDatabaseManager *)sharedInstance;
 
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler;
-- (void)seedTeamDatabase:(WMTeam *)team completionHandler:(void (^)(NSError *))handler;
 
 @end

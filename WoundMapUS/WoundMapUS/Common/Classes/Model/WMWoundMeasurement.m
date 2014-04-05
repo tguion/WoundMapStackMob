@@ -147,7 +147,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
         }
         [measurement setWoundTypes:set];
     }
-    [managedObjectContext MR_saveOnlySelfAndWait];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
     NSAssert(![[measurement objectID] isTemporaryID], @"Expect a permanent objectID");
     [objectIDs addObject:[measurement objectID]];
     id measurements = [dictionary valueForKey:@"measurements"];

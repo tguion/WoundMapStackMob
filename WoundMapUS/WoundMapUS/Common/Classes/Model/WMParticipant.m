@@ -17,6 +17,7 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
 
 @implementation WMParticipant
 
+@synthesize user=_user;
 @dynamic firstName, lastName;
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext

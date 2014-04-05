@@ -363,8 +363,6 @@
         patient.stage = navigationStage;
     }
     [self showProgressViewWithMessage:@"Saving patient record"];
-    NSArray *insertedObjectIDs = [managedObjectContext.insertedObjects valueForKeyPath:@"objectID"];
-    NSArray *updatedObjectIDs = [managedObjectContext.updatedObjects valueForKeyPath:@"objectID"];
     __weak __typeof(self) weakSelf = self;
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
@@ -372,9 +370,7 @@
         } else {
             [weakSelf hideProgressView];
             // update backend
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updatePatient:patient insertedObjectIDs:insertedObjectIDs updatedObjectIDs:updatedObjectIDs ff:ff];
+
         }
     }];
 }

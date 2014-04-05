@@ -16,7 +16,7 @@ typedef void (^WMObjectCallback)(NSError *error, id object);
 @class WMParticipant, WMPatient;
 @class WMTeamInvitation, WMTeam;
 
-@interface WMFatFractalManager : NSObject
+@interface WMFatFractalManager : NSObject <FFQueueDelegate>
 
 + (WMFatFractalManager *)sharedInstance;
 
@@ -42,53 +42,5 @@ typedef void (^WMObjectCallback)(NSError *error, id object);
 - (void)createParticipant:(NSManagedObjectID *)participantObjectID ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 - (void)createTeamWithParticipant:(WMParticipant *)participant user:(id<FFUserProtocol>)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
-
-- (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
-- (void)updatePatient:(WMPatient *)patient insertedObjectIDs:(NSArray *)insertedObjectIDs updatedObjectIDs:(NSArray *)updatedObjectIDs ff:(WMFatFractal *)ff;
-
-- (NSBlockOperation *)createObject:(id)object
-                             ffUrl:(NSString *)ffUrl
-                                ff:(WMFatFractal *)ff
-                        addToQueue:(BOOL)addToQueue
-                 completionHandler:(WMOperationCallback)completionHandler;
-
-- (NSBlockOperation *)createObject:(id)object
-                             ffUrl:(NSString *)ffUrl
-                                ff:(WMFatFractal *)ff
-                        addToQueue:(BOOL)addToQueue
-                      insertAtHead:(BOOL)insertAtHead
-                 completionHandler:(WMOperationCallback)completionHandler;
-
-- (NSBlockOperation *)createArray:(NSArray *)objectIDs
-                       collection:(NSString *)collection
-                               ff:(WMFatFractal *)ff
-                       addToQueue:(BOOL)addToQueue
-                 reverseEnumerate:(BOOL)reverseEnumerate
-                completionHandler:(void (^)(NSError *))completionHandler;
-
-- (NSBlockOperation *)createArray:(NSArray *)objectIDs
-                       collection:(NSString *)collection
-                               ff:(WMFatFractal *)ff
-                       addToQueue:(BOOL)addToQueue
-                completionHandler:(void (^)(NSError *))completionHandler;
-
-- (NSBlockOperation *)updateObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
-- (NSBlockOperation *)deleteObject:(NSManagedObject *)object ff:(WMFatFractal *)ff addToQueue:(BOOL)addToQueue completionHandler:(WMOperationCallback)completionHandler;
-- (NSBlockOperation *)loadBlobs:(id)object ff:(WMFatFractal *)ff completionHandler:(WMOperationCallback)completionHandler;
-
-- (NSBlockOperation *)grabBagAdd:(NSManagedObjectID *)itemObjectID
-                              to:(NSManagedObjectID *)objectObjectID
-                     grabBagName:(NSString *)name
-                              ff:(WMFatFractal *)ff
-                      addToQueue:(BOOL)addToQueue;
-- (NSBlockOperation *)grabBagRemove:(NSManagedObjectID *)itemObjectID
-                                 to:(NSManagedObjectID *)objectObjectID
-                        grabBagName:(NSString *)name
-                                 ff:(WMFatFractal *)ff
-                         addToQueue:(BOOL)addToQueue;
-
-@property (readonly, nonatomic) BOOL isCacheEmpty;
-- (void)clearOperationCache;
-- (void)submitOperationsToQueue;
 
 @end

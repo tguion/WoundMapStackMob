@@ -146,36 +146,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     navigationController.delegate = self;
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
-//    [self testWoundTypeSeedBackend];
-}
-
-- (void)testWoundTypeSeedBackend
-{
-    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    NSString *uri = [NSString stringWithFormat:@"/%@", [WMWoundType entityName]];
-    NSArray *woundTypes = [ff getArrayFromUri:uri];
-    for (WMWoundType *woundType in woundTypes) {
-        [ff deleteObj:woundType];
-    }
-    [managedObjectContext MR_deleteObjects:woundTypes];
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
-    id<FFUserProtocol> user = [ff loginWithUserName:@"todd" andPassword:@"todd"];
-    if (nil == user) {
-        NSLog(@"failed");
-    }
-    // first attempt to acquire data from backend
-    [WMWoundType seedDatabase:managedObjectContext completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
-        // update backend
-        [ffm createArray:objectIDs
-              collection:[WMWoundType entityName]
-                      ff:ff
-              addToQueue:YES
-        reverseEnumerate:YES
-       completionHandler:nil];
-    }];
-
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

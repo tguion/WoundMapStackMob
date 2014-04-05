@@ -781,6 +781,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         weakSelf.welcomeState = (nil == weakSelf.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
     };
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -903,14 +904,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             [WMUtilities logError:error];
         } else {
             [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
-                WM_ASSERT_MAIN_THREAD;
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-                    [weakSelf.tableView reloadData];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+                        [weakSelf.tableView reloadData];
+                    }
+                });
             }];
         }
     }];

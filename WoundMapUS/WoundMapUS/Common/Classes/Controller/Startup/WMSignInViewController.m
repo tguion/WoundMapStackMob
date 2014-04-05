@@ -122,7 +122,7 @@
             NSParameterAssert([user.userName length] > 0);
             NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
             // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
-            if (YES) {
+            if (NO) {
                 // fetch participant
                 NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
                 __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
@@ -141,9 +141,7 @@
                             [WMUtilities logError:error];
                         } else {
                             participant = object;
-                            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                block();
-                            });
+                            block();
                         }
                     }];
                 } else {
@@ -151,9 +149,7 @@
                         if (error) {
                             [WMUtilities logError:error];
                         } else {
-                            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                block();
-                            });
+                            block();
                         }
                     }];
                 }
@@ -181,9 +177,7 @@
                                     [WMUtilities logError:error];
                                 } else {
                                     participant = object;
-                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                        block();
-                                    });
+                                    block();
                                 }
                             }];
                         } else {
@@ -191,9 +185,7 @@
                                 if (error) {
                                     [WMUtilities logError:error];
                                 } else {
-                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                        block();
-                                    });
+                                    block();
                                 }
                             }];
                         }

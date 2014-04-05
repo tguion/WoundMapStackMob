@@ -16,6 +16,8 @@
                                    create:(BOOL)create
                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
+@property (strong, nonatomic) FFUser *user;
+
 @property (nonatomic) NSString *firstName;
 @property (nonatomic) NSString *lastName;
 

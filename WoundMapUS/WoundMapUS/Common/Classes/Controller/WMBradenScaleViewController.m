@@ -84,27 +84,9 @@
 
 - (IBAction)addBradenScaleAction:(id)sender
 {
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSAssert([self.patient.ffUrl length] > 0, @"Expected patient to be persisted to backend");
-    NSAssert(ffm.isCacheEmpty, @"Expected ffm cache to be empty");
 	self.bradenScale = [WMBradenScale createNewBradenScaleForPatient:self.patient];
     // prepare to create backend
-    __weak __typeof(&*self)weakSelf = self;
-    [ffm createObject:self.bradenScale
-                ffUrl:[WMBradenScale entityName]
-                   ff:ff
-           addToQueue:NO
-    completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        WMBradenScale *bradenScale = (WMBradenScale *)object;
-        [[bradenScale managedObjectContext] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                [[WMFatFractal sharedInstance] queueGrabBagAddItemAtUri:bradenScale.ffUrl toObjAtUri:weakSelf.patient.ffUrl grabBagName:WMPatientRelationships.bradenScales];
-            }
-        }];
-    }];
+    
     self.didCreateBradenScale = YES;
     [self navigateToBradenScaleEditor:YES];
 }
@@ -137,8 +119,7 @@
         if (error) {
             [WMUtilities logError:error];
         } else {
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm submitOperationsToQueue];
+
             [self.navigationController popViewControllerAnimated:YES];
             self.didCreateBradenScale = NO;
         }
@@ -153,8 +134,7 @@
         _bradenScale = nil;
         [self.managedObjectContext MR_saveOnlySelfAndWait];
     }
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [ffm clearOperationCache];
+
     [self.navigationController popViewControllerAnimated:YES];
     [self refetchDataForTableView];
     self.didCreateBradenScale = NO;
@@ -234,9 +214,7 @@
 	self.bradenScale = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (!self.bradenScale.isClosed) {
         // prepare back end
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ffm updateObject:self.bradenScale ff:ff addToQueue:NO completionHandler:nil];
+
         [self navigateToBradenScaleEditor:YES];
     }
 }
@@ -253,8 +231,7 @@
         WMBradenScale *bradenScale = [self.fetchedResultsController objectAtIndexPath:indexPath];
         NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
         [managedObjectContext deleteObject:bradenScale];
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        [ffm deleteObject:bradenScale ff:[WMFatFractal sharedInstance] addToQueue:YES completionHandler:nil];
+
         [managedObjectContext MR_saveOnlySelfAndWait];
         self.fetchedResultsController = nil;
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];

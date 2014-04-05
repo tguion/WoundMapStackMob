@@ -293,11 +293,12 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
-    self.participant.name = [NSString stringWithFormat:@"%@ %@", _firstNameTextInput, _lastNameTextInput];
-    self.participant.userName = _userNameTextInput;
-    self.participant.email = _emailTextInput;
+    WMParticipant *participant = self.participant;
+    participant.name = [NSString stringWithFormat:@"%@ %@", _firstNameTextInput, _lastNameTextInput];
+    participant.userName = _userNameTextInput;
+    participant.email = _emailTextInput;
     // else first save to object permenant objectID
-    [[self.participant managedObjectContext] MR_saveOnlySelfAndWait];
+    [[participant managedObjectContext] MR_saveOnlySelfAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     _ffUser = [[FFUser alloc] initWithFF:ff];
     _ffUser.userName = _userNameTextInput;
@@ -307,9 +308,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         FFUser *ffUser = (FFUser *)object;
         if (error) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
                                                                 message:[NSString stringWithFormat:@"Unable to create an account: %@", error.localizedDescription]
                                                                delegate:nil
@@ -322,13 +323,15 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [weakSelf.tableView reloadData];
             [weakSelf saveUserCredentialsInKeychain];
             // update participant
-            weakSelf.participant.guid = ffUser.guid;
+            participant.user = ffUser;
+            participant.guid = ffUser.guid;
             // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
             WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
             [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
             }];
         }
     }];

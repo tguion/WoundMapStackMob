@@ -210,16 +210,7 @@
     WMWoundLocationValue *woundLocationValue = [WMWoundLocationValue woundLocationValueForWound:self.wound];
     self.wound.locationValue = woundLocationValue;
     // update back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [ffm createObject:woundLocationValue
-                ffUrl:[WMWoundLocationValue entityName]
-                   ff:ff addToQueue:NO
-         insertAtHead:YES
-    completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        NSManagedObjectContext *managedObjectContext = [object managedObjectContext];
-        [managedObjectContext MR_saveToPersistentStoreWithCompletion:nil];
-    }];
+
     [self.navigationController popViewControllerAnimated:YES];
     // clear
     [viewController clearAllReferences];

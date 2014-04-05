@@ -665,21 +665,9 @@
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // create new wound
     NSParameterAssert(nil != self.patient);
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    NSAssert(ffm.isCacheEmpty, @"Expected ffm cache to be empty");
-    NSString *patientFFURL = self.patient.ffUrl;
-    NSAssert([patientFFURL length] > 0, @"Expected patient.ffUrl");
+
     WMWound *wound = [WMWound instanceWithPatient:self.patient];
-    [ffm createObject:wound ffUrl:[WMWound entityName] ff:ff addToQueue:NO completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        WMWound *wound = (WMWound *)object;
-        NSString *woundFFURL = wound.ffUrl;
-        NSAssert([woundFFURL length] > 0, @"Expected wound.ffUrl");
-        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            [ff queueGrabBagAddItemAtUri:woundFFURL toObjAtUri:patientFFURL grabBagName:WMPatientRelationships.wounds];
-        }];
-    }];
+
     self.appDelegate.navigationCoordinator.wound = wound;
     [self navigateToWoundDetailViewControllerForNewWound:navigationNodeButton];
 }
@@ -1202,8 +1190,7 @@
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
             // commit to back end
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm submitOperationsToQueue];
+
         } else {
             [WMUtilities logError:error];
         }
@@ -1222,8 +1209,7 @@
         [self.appDelegate.navigationCoordinator deleteWound:viewController.wound];
     }
     // abort back end
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [ffm clearOperationCache];
+
     [self dismissViewControllerAnimated:YES completion:^{
         // update UI
         [self.navigationPatientWoundContainerView updateContentForPatient];
@@ -1240,11 +1226,7 @@
     // save
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         // commit to back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        [ffm deleteObject:wound ff:ff addToQueue:YES completionHandler:^(NSError *error, NSManagedObject *object, BOOL signInRequired) {
-            [ff queueGrabBagRemoveItemAtUri:woundFFURL fromObjAtUri:patientFFURL grabBagName:WMPatientRelationships.wounds];
-        }];
+
     }];
     // clear memory
     [viewController clearAllReferences];
