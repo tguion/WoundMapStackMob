@@ -7,5 +7,6 @@ extern NSString * const kParticipantGroupName;
 + (NSSet *)relationshipNamesNotToSerialize;
 
 @property (strong, nonatomic) FFUserGroup *participantGroup;
+@property (readonly, nonatomic) WMParticipant *teamLeader;
 
 @end

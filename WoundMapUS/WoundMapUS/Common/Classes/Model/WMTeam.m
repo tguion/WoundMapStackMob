@@ -32,6 +32,11 @@ NSString * const kParticipantGroupName = @"participantGroup";
     return _participantGroup;
 }
 
+- (WMParticipant *)teamLeader
+{
+    return [[[self.participants allObjects] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isTeamLeader == YES"]] lastObject];
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -39,7 +44,8 @@ NSString * const kParticipantGroupName = @"participantGroup";
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue"]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"teamLeader"]];
     });
     return PropertyNamesNotToSerialize;
 }
@@ -50,10 +56,6 @@ NSString * const kParticipantGroupName = @"participantGroup";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
-//        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMTeamRelationships.invitations,
-//                                                            WMTeamRelationships.navigationTracks,
-//                                                            WMTeamRelationships.participants,
-//                                                            WMTeamRelationships.patients]];
     });
     return PropertyNamesNotToSerialize;
 }

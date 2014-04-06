@@ -170,6 +170,7 @@
 
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -199,10 +200,11 @@
                         if (error) {
                             [WMUtilities logError:error];
                         }
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
                     }];
                 }];
             }
-            [[participant managedObjectContext] MR_saveToPersistentStoreAndWait];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             if (completionHandler) {
                 completionHandler(error);
             }
@@ -462,6 +464,58 @@
             completionHandler(error);
         }
     }];
+}
+
+- (void)revokeTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    NSParameterAssert([teamInvitation.ffUrl length]);
+    [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        completionHandler(error);
+    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        completionHandler(error);
+    }];
+}
+
+- (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
+    NSParameterAssert([teamInvitation.ffUrl length]);
+    WMParticipant *invitee = teamInvitation.invitee;
+    FFUser *user = teamInvitation.invitee.user;
+    BOOL canUpdateInvitee = (nil != user);
+    if (nil == user) {
+        NSParameterAssert(invitee.guid);
+        NSString *ffUrl = [NSString stringWithFormat:@"/FFUser/%@", invitee.guid];
+        user = [ff getObjFromUri:ffUrl];
+    }
+    NSParameterAssert([user isKindOfClass:[FFUser class]]);
+    if (canUpdateInvitee) {
+        // only invitee (WMParticipant) can do this
+        invitee.team = teamInvitation.team;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            completionHandler(error);
+        }];
+    } else {
+        // only team leader can do this
+        FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
+        NSParameterAssert(participantGroup);
+        NSError *error = nil;
+        [participantGroup addUser:user error:&error];
+    }
+}
+
+- (void)removeParticipantFromTeam:(WMParticipant *)teamMember ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    NSParameterAssert([teamMember.ffUrl length]);
+    FFUser *user = teamMember.user;
+    NSParameterAssert(user);
+    FFUserGroup *participantGroup = teamMember.team.participantGroup;
+    NSParameterAssert(participantGroup);
+    NSError *error = nil;
+    [participantGroup removeUser:user error:&error];
+    completionHandler(error);
 }
 
 #pragma mark - Refresh

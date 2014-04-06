@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, ManageTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -220,9 +220,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (WMManageTeamViewController *)manageTeamViewController
 {
-    WMManageTeamViewController *manageTeamViewController = [[WMManageTeamViewController alloc] initWithNibName:@"WMManageTeamViewController" bundle:nil];
-    manageTeamViewController.delegate = self;
-    return manageTeamViewController;
+    return [[WMManageTeamViewController alloc] initWithNibName:@"WMManageTeamViewController" bundle:nil];
 }
 
 - (WMPersonEditorViewController *)personEditorViewController
@@ -255,12 +253,21 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     // must have an invitation
     if (self.participant.teamInvitation) {
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
-        [self presentViewController:navigationController
-                           animated:YES
-                         completion:^{
-                             // nothing
-                         }];
+        if (self.participant.teamInvitation.isAccepted) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invitation Accepted"
+                                                                message:@"You have already accepted the invitation. The team leader has been notified and must complete the transaction."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        } else {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
+            [self presentViewController:navigationController
+                               animated:YES
+                             completion:^{
+                                 // nothing
+                             }];
+        }
     } else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Invitation"
                                                             message:@"A team leader must create an invitation to join a team. Please ask the team leader to create an invitation."
@@ -516,7 +523,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    count = 3;
+                    count = (self.participant.teamInvitation.acceptedFlagValue ? 1:3);
                     break;
                 }
             }
@@ -776,6 +783,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
     };
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -855,9 +863,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // update table view
-        [weakSelf.tableView beginUpdates];
-        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
-        [weakSelf.tableView endUpdates];
+        [weakSelf.tableView reloadData];
     }];
 }
 
@@ -920,18 +926,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     [self.navigationController popViewControllerAnimated:YES];
     [viewController clearAllReferences];
-}
-
-#pragma mark - ManageTeamViewControllerDelegate
-
-- (void)manageTeamViewControllerDidFinish:(WMManageTeamViewController *)viewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)manageTeamViewControllerDidCancel:(WMManageTeamViewController *)viewController
-{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - IAPCreateConsultantViewControllerDelegate

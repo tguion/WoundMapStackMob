@@ -10,15 +10,6 @@
 
 @class WMManageTeamViewController;
 
-@protocol ManageTeamViewControllerDelegate <NSObject>
-
-- (void)manageTeamViewControllerDidFinish:(WMManageTeamViewController *)viewController;
-- (void)manageTeamViewControllerDidCancel:(WMManageTeamViewController *)viewController;
-
-@end
-
 @interface WMManageTeamViewController : WMBaseViewController
-
-@property (weak, nonatomic) id<ManageTeamViewControllerDelegate> delegate;
 
 @end

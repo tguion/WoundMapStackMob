@@ -11,7 +11,9 @@
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
 #import "WMFatFractal.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
 
 @interface WMIAPJoinTeamViewController () <UITextFieldDelegate>
@@ -44,8 +46,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Team Invitation";
-    
-    self.messageLabel.text = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", self.participant.name, self.team.name, self.participant.name];
+    WMParticipant *teamLeader = self.team.teamLeader;
+    self.messageLabel.text = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", teamLeader.name, self.team.name, teamLeader.name];
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,7 +70,7 @@
 
 - (WMTeam *)team
 {
-    return self.participant.team;
+    return self.teamInvitation.team;
 }
 
 - (WMTeamInvitation *)teamInvitation
@@ -78,10 +80,16 @@
 
 #pragma mark - Actions
 
-- (IBAction)purchaseAction:(id)sender
+- (IBAction)acceptAction:(id)sender
+{
+    [self.view endEditing:YES];
+    [self performSelector:@selector(delayedAcceptAction:) withObject:nil afterDelay:0.0];
+}
+
+- (IBAction)delayedAcceptAction:(id)sender
 {
     // check pincode
-    if ([_pincodeTextInput integerValue] == self.teamInvitation.passcodeValue) {
+    if ([_pincodeTextInput integerValue] != self.teamInvitation.passcodeValue) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incorrect Pincode"
                                                             message:@"The pincode that you entered does not match the invitation pincode"
                                                            delegate:nil
@@ -96,13 +104,25 @@
     teamInvitation.acceptedFlagValue = YES;
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        [ffm addParticipantToTeamFromTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
+            }
+        }];
+    };
     [ff updateObj:teamInvitation
        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
            [managedObjectContext MR_saveToPersistentStoreAndWait];
+           block();
        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-//           FFQueuedOperation *operation = (FFQueuedOperation *)object;
+           //           FFQueuedOperation *operation = (FFQueuedOperation *)object;
+           block();
        }];
-    [self.delegate iapJoinTeamViewControllerDidPurchase:self];
 }
 
 - (IBAction)declineAction:(id)sender

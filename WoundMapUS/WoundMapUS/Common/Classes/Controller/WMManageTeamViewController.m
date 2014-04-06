@@ -20,6 +20,7 @@
 
 typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRevokeInvitationActionSheetTag,
+    kConfirmInvitationActionSheetTag,
     kRemoveParticipantActionSheetTag,
 };
 
@@ -33,7 +34,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 @property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
-@property (strong, nonatomic) WMTeamInvitation *teamInvitationToDelete;
+@property (strong, nonatomic) WMTeamInvitation *teamInvitationToDeleteOrConfirm;
 @property (strong, nonatomic) WMParticipant *teamMemberToDelete;
 
 @end
@@ -54,9 +55,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Manage Team";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                           target:self
-                                                                                           action:@selector(doneAction:)];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView setEditing:YES];
 }
@@ -117,6 +115,17 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [actionSheet showInView:self.view];
 }
 
+- (void)initiateConfirmInvitation
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Confirm Invitation: By tapping Confirm, the invitee will have access to team patient information."
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Revoke Invitation"
+                                               destructiveButtonTitle:@"Confirm"
+                                                    otherButtonTitles:nil];
+    actionSheet.tag = kConfirmInvitationActionSheetTag;
+    [actionSheet showInView:self.view];
+}
+
 - (void)initiateRemoveTeamMember
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Remove %@ from Team", _teamMemberToDelete.name]
@@ -143,15 +152,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 }
 
 #pragma mark - Actions
-
-- (IBAction)doneAction:(id)sender
-{
-    __weak __typeof(&*self)weakSelf = self;
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        WM_ASSERT_MAIN_THREAD;
-        [weakSelf.delegate manageTeamViewControllerDidFinish:weakSelf];
-    }];
-}
 
 #pragma mark - WMBaseViewController
 
@@ -194,32 +194,58 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t revokeBlock = ^{
+        [ffm revokeTeamInvitation:_teamInvitationToDeleteOrConfirm ff:ff completionHandler:^(NSError *error) {
+            // update local
+            [weakSelf.managedObjectContext deleteObject:_teamInvitationToDeleteOrConfirm];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            _teamInvitationToDeleteOrConfirm = nil;
+            _teamInvitations = nil;
+            [weakSelf.tableView reloadData];
+        }];
+    };
     switch (actionSheet.tag) {
         case kRevokeInvitationActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_teamInvitations indexOfObject:_teamInvitationToDelete] inSection:1];
-                [self.managedObjectContext deleteObject:_teamInvitationToDelete];
-                _teamInvitations = nil;
-                _teamInvitationToDelete = nil;
-                [self.tableView beginUpdates];
-                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
-                [self.tableView endUpdates];
-                // update back end
-                
+                // revoke
+                revokeBlock();
+            }
+            break;
+        }
+        case kConfirmInvitationActionSheetTag: {
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                // add to team
+                [ffm addParticipantToTeamFromTeamInvitation:_teamInvitationToDeleteOrConfirm ff:ff completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                    // update regardless of error
+                    _teamInvitations = nil;
+                    _teamMembers = nil;
+                    [weakSelf.tableView reloadData];
+                    // remove invitation
+                    revokeBlock();
+                }];
+            } else if (buttonIndex == actionSheet.cancelButtonIndex) {
+                // revoke
+                revokeBlock();
             }
             break;
         }
         case kRemoveParticipantActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_teamMembers indexOfObject:_teamMemberToDelete] inSection:2];
-                [self.managedObjectContext deleteObject:_teamMemberToDelete];
-                _teamMembers = nil;
-                _teamMemberToDelete = nil;
-                [self.tableView beginUpdates];
-                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
-                [self.tableView endUpdates];
-                // update back end
-                
+                [ffm removeParticipantFromTeam:_teamMemberToDelete ff:ff completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        _teamMembers = nil;
+                        _teamMemberToDelete = nil;
+                        [weakSelf.tableView reloadData];
+                    }
+                }];
             }
             break;
         }
@@ -227,6 +253,32 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 }
 
 #pragma mark - UITableViewDelegate
+
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    BOOL shouldHighlight = NO;
+    switch (indexPath.section) {
+        case 0: {
+            // team name - nothing
+            shouldHighlight = NO;
+            break;
+        }
+        case 1: {
+            // invitations
+            shouldHighlight = YES;
+            break;
+        }
+        case 2: {
+            // participants - remove from team
+            WMParticipant *participant = [self.teamMembers objectAtIndex:indexPath.row];
+            if (!participant.isTeamLeader) {
+                shouldHighlight = YES;
+            }
+            break;
+        }
+    }
+    return shouldHighlight;
+}
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -241,7 +293,12 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             break;
         }
         case 2: {
-            tableViewCellEditingStyle = UITableViewCellEditingStyleDelete;
+            WMParticipant *teamMember = [self.teamMembers objectAtIndex:indexPath.row];
+            if (teamMember.isTeamLeader) {
+                tableViewCellEditingStyle = UITableViewCellEditingStyleNone;
+            } else {
+                tableViewCellEditingStyle = UITableViewCellEditingStyleDelete;
+            }
             break;
         }
     }
@@ -259,7 +316,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.view endEditing:YES];
     switch (indexPath.section) {
         case 0: {
             // team name - nothing
@@ -271,16 +327,23 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 // create a new invitation
                 [self navigateToCreateInvitationViewController];
             } else {
-                // revoke invitation
-                _teamInvitationToDelete = [self.teamInvitations objectAtIndex:indexPath.row];
-                [self initiateRevokeInvitation];
+                _teamInvitationToDeleteOrConfirm = [self.teamInvitations objectAtIndex:indexPath.row];
+                if (_teamInvitationToDeleteOrConfirm.isAccepted) {
+                    [self initiateConfirmInvitation];
+                } else {
+                    [self initiateRevokeInvitation];
+                }
             }
             break;
         }
         case 2: {
             // participants - remove from team
             _teamMemberToDelete = [self.teamMembers objectAtIndex:indexPath.row];
-            [self initiateRemoveTeamMember];
+            if (_teamMemberToDelete.isTeamLeader) {
+                _teamMemberToDelete = nil;
+            } else {
+                [self initiateRemoveTeamMember];
+            }
             break;
         }
     }
@@ -295,6 +358,25 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         ++count;
     }
     return count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *title = nil;
+    switch (section) {
+        case 0:
+            // nothing
+            break;
+        case 1:
+            // invitations
+            title = @"Team Invitations";
+            break;
+        case 2:
+            // participants
+            title = @"Team Members";
+            break;
+    }
+    return title;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -346,7 +428,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 cell.textLabel.text = teamInvitation.invitee.name;
                 NSString *message = nil;
                 if (teamInvitation.isAccepted) {
-                    message = @"Accepted - tap to confirm";
+                    message = @"Tap to Add";
                 } else {
                     message = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
                 }
