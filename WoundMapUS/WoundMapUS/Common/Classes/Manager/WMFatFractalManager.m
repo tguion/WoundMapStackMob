@@ -518,6 +518,18 @@
     completionHandler(error);
 }
 
+#pragma mark - Patient
+
+- (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    
+}
+
+- (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    
+}
+
 #pragma mark - Refresh
 
 - (NSMutableDictionary *)lastRefreshTimeMap

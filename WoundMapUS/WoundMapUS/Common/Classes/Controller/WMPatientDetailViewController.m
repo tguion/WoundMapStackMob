@@ -12,6 +12,7 @@
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMSegmentControlTableViewCell.h"
+#import "MBProgressHUD.h"
 #import "UIView+Custom.h"
 #import "WMPatient.h"
 #import "WMPerson.h"
@@ -20,12 +21,15 @@
 #import "WMUtilities.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
 @interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate>
 
 // data
 @property (strong, nonatomic) WMPatient *patient;
+@property (strong, nonatomic) WMPerson *person;
 // state
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 // UI
@@ -325,6 +329,12 @@
     if (nil == _patient) {
         if (_newPatientFlag) {
             _patient = [WMPatient MR_createInContext:self.managedObjectContext];
+            // must save to back end now - delete at cancel if needed
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm createPatient:_patient ff:ff completionHandler:^(NSError *error) {
+                // nothing more to do here
+            }];
         } else {
             _patient = super.patient;
         }
@@ -332,20 +342,14 @@
     return _patient;
 }
 
-- (void)setPatient:(WMPatient *)patient
-{
-    self.appDelegate.navigationCoordinator.patient = patient;
-}
-
 - (WMPerson *)person
 {
     WMPatient *patient = self.patient;
-    WMPerson *person = patient.person;
-    if (nil == person) {
-        person = [WMPerson MR_createInContext:self.managedObjectContext];
-        patient.person = person;
+    _person = patient.person;
+    if (nil == _person) {
+        _person = [WMPerson MR_createInContext:self.managedObjectContext];
     }
-    return person;
+    return _person;
 }
 
 #pragma mark - Actions
@@ -387,7 +391,7 @@
 
 - (IBAction)dismissDatePickerAction:(id)sender
 {
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
 }
 
 - (IBAction)cancelAction:(id)sender
@@ -406,7 +410,6 @@
     [self.delegate patientDetailViewControllerDidCancelUpdate:self];
 }
 
-// NOTE: delegate would typically set self.patient to appDelegate.patient and save
 - (IBAction)saveAction:(id)sender
 {
     [self.view endEditing:YES];
@@ -416,6 +419,28 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
+    // save local
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        // create person
+        if (_person) {
+            if (_person.ffUrl) {
+                // TODO update person back end
+            } else {
+                // TODO create person back end, then add to patient
+            }
+        }
+        // update back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        WMPatient *patient = weakSelf.patient;
+        NSParameterAssert(patient.ffUrl);
+        [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
+            // TODO finish
+        }];
+    }];
+    
     [self.delegate patientDetailViewControllerDidUpdatePatient:self];
 }
 
@@ -457,18 +482,16 @@
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
-    [viewController clearAllReferences];
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - IdListViewControllerDelegate
 
-- (id<idSource>) source
+- (id<idSource>)idSource
 {
     return self.patient;
 }
@@ -479,13 +502,11 @@
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
-    [viewController clearAllReferences];
 }
 
 - (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate

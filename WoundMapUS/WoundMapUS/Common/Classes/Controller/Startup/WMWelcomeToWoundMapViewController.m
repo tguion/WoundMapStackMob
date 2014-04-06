@@ -307,8 +307,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentAddPatientViewController
 {
-    // create new patient and document and wait for document open callback
-    [self showProgressViewWithMessage:@"Opening Patient Record"];
+    // create new patient
     WMPatientDetailViewController *patientDetailViewController = self.patientDetailViewController;
     patientDetailViewController.newPatientFlag = YES;
     if (self.isIPadIdiom) {
@@ -987,7 +986,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         WMNavigationStage *navigationStage = navigationTrack.initialStage;
         patient.stage = navigationStage;
     }
-    [self showProgressViewWithMessage:@"Saving patient record"];
     __weak __typeof(self) weakSelf = self;
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
