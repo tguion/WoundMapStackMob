@@ -39,7 +39,8 @@ typedef void (^WMObjectCallback)(NSError *error, id object);
    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
       completionHandler:(FFHttpMethodCompletion)completionHandler;
 
-- (void)createParticipant:(NSManagedObjectID *)participantObjectID ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
+- (void)createParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
+- (void)updateParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 - (void)createTeamWithParticipant:(WMParticipant *)participant user:(id<FFUserProtocol>)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler;
 

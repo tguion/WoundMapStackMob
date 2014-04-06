@@ -86,20 +86,13 @@
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     WMProcessCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection) {
         // update backend from main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
-            for (NSManagedObjectID *objectID in objectIDs) {
-                NSManagedObject *object = [managedObjectContext objectWithID:objectID];
-                NSLog(@"*** WoundMap: Will create collection backend: %@", object);
-                [ff createObj:object atUri:ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    } else {
-                        [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    }
-                }];
-            }
-        });
+        NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+        for (NSManagedObjectID *objectID in objectIDs) {
+            NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+            NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+            [ff createObj:object atUri:ffUrl];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
     };
     DLog(@"reading plists and seeding database start");
     [WMBradenCare seedDatabase:managedObjectContext];
@@ -109,152 +102,116 @@
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMWoundType seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMWoundType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMNavigationTrack *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMParticipantType *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMParticipantType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMParticipantType seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMParticipantType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMAmountQualifier *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMAmountQualifier entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMWoundOdor *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundOdor entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMWoundOdor seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMWoundOdor seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMInterventionStatus *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMInterventionStatus entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMInterventionEventType *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMInterventionEventType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMInterventionEventType seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMInterventionEventType seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMMedicationCategory *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMMedicationCategory entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMMedicationCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMMedicationCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMDeviceCategory *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMDeviceCategory entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMDeviceCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMDeviceCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMSkinAssessmentCategory *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentCategory entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMSkinAssessmentCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMSkinAssessmentCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMCarePlanCategory *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMCarePlanCategory entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMCarePlanCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMCarePlanCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WCWoundLocation *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundLocation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMWoundLocation seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMWoundLocation seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMWoundTreatment *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatment entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMWoundTreatment seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMWoundTreatment seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMWoundMeasurement *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurement entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMWoundMeasurement seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMWoundMeasurement seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMPsychoSocialItem *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialItem entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMPsychoSocialItem seedDatabase:managedObjectContext completionHandler:completionHandler];
-            }];
+            [WMPsychoSocialItem seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMTelecomType *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMTelecomType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
-            [_serialQueue addOperationWithBlock:^{
-                [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
-                DLog(@"reading plists and seeding database finished");
-                if (handler) {
-                    handler(nil);
-                }
-            }];
+            [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
+            DLog(@"reading plists and seeding database finished");
+            handler(nil);
         } else {
-            if (handler) {
-                handler(nil);
-            }
+            handler(nil);
         }
     }];
 }

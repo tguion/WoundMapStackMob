@@ -331,12 +331,27 @@
 
 #pragma mark - Backend Updates
 
-// create participant, with reference objects person and team
-- (void)createParticipant:(NSManagedObjectID *)participantObjectID ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+// create participant after successful FFUser registration
+- (void)createParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
 {
     WM_ASSERT_MAIN_THREAD;
+    NSParameterAssert(completionHandler);
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-    WMParticipant *participant = (WMParticipant *)[managedObjectContext objectWithID:participantObjectID];
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
+    [ff createObj:participant atUri:[NSString stringWithFormat:@"/%@", [WMParticipant entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            completionHandler(error);
+        }];
+    }];
+
+}
+
+- (void)updateParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+{
+    WM_ASSERT_MAIN_THREAD;
+    NSParameterAssert(completionHandler);
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
     WMOrganization *organization = participant.organization;
     if (organization) {
         [ff createObj:organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -344,71 +359,34 @@
                 completionHandler(error);
             } else {
                 for (WMAddress *address in organization.addresses) {
-                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]]];
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:nil];
                 }
                 for (WMId *anId in organization.ids) {
-                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]]];
+                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:nil];
                 }
-                [managedObjectContext MR_saveOnlySelfAndWait];
             }
         }];
     }
     WMPerson *person = participant.person;
-    participant.person = nil;
-    NSAssert(person.participant == nil, @"expected participant to be nil");
     [ff createObj:person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         for (WMAddress *address in person.addresses) {
-            [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]]];
+            [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:nil];
         }
         for (WMTelecom *telecom in person.telecoms) {
-            [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]]];
+            [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:nil];
         }
-        participant.person = person;
-        if (participant.ffUrl && [_updatedObjectIDs containsObject:[participant objectID]]) {
-            [_updatedObjectIDs removeObject:[participant objectID]];
-            [ff queueUpdateObj:participant];
-        } else {
-            [ff createObj:participant atUri:[NSString stringWithFormat:@"/%@", [WMParticipant entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                // acquiredConsultants
-                for (WMPatientConsultant *patientConsultant in participant.acquiredConsults) {
-                    if (patientConsultant.ffUrl && [_updatedObjectIDs containsObject:[patientConsultant objectID]]) {
-                        [_updatedObjectIDs removeObject:[patientConsultant objectID]];
-                        [ff queueUpdateObj:patientConsultant];
-                    } else {
-                        [ff createObj:patientConsultant atUri:[NSString stringWithFormat:@"/%@",[WMPatientConsultant entityName]]];
-                    }
-                }
-                // interventionEvents
-                for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
-                    if (interventionEvent.ffUrl && [_updatedObjectIDs containsObject:[interventionEvent objectID]]) {
-                        [_updatedObjectIDs removeObject:[interventionEvent objectID]];
-                        [ff queueUpdateObj:interventionEvent];
-                    } else {
-                        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@",[WMInterventionEvent entityName]]];
-                    }
-                }
-                // team
-                WMTeam *team = participant.team;
-                if (team) {
-                    [self createTeamWithParticipant:participant user:[ff loggedInUser] ff:ff completionHandler:^(NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
-                }
-                // teamInvitations
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                if (completionHandler) {
-                    completionHandler(nil);
-                }
+        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                completionHandler(error);
             }];
-        }
+        }];
     }];
 }
 
 - (void)createTeamWithParticipant:(WMParticipant *)participant user:(id<FFUserProtocol>)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 {
     WM_ASSERT_MAIN_THREAD;
+    NSParameterAssert(completionHandler);
     NSParameterAssert([participant.ffUrl length] > 0);
     NSParameterAssert(participant.isTeamLeader);
     NSParameterAssert(completionHandler);
@@ -456,7 +434,9 @@
                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
                                     });
                                 }];
-                                completionHandler(error);
+                                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                                    completionHandler(error);
+                                }];
                             }
                         }];
 

@@ -7,8 +7,24 @@
 //
 
 #import "WMIAPJoinTeamViewController.h"
+#import "WMParticipant.h"
+#import "WMTeam.h"
+#import "WMTeamInvitation.h"
+#import "WMFatFractal.h"
+#import "WCAppDelegate.h"
+#import "NSObject+performBlockAfterDelay.h"
 
-@interface WMIAPJoinTeamViewController ()
+@interface WMIAPJoinTeamViewController () <UITextFieldDelegate>
+
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
+
+@property (readonly, nonatomic) WMParticipant *participant;
+@property (readonly, nonatomic) WMTeam *team;
+@property (readonly, nonatomic) WMTeamInvitation *teamInvitation;
+
+@property (strong, nonatomic) IBOutlet UILabel *messageLabel;
+
+@property (strong, nonatomic) NSString *pincodeTextInput;
 
 @end
 
@@ -27,6 +43,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.title = @"Team Invitation";
+    
+    self.messageLabel.text = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", self.participant.name, self.team.name, self.participant.name];
 }
 
 - (void)didReceiveMemoryWarning
@@ -35,16 +54,88 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Core
+
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (WMParticipant *)participant
+{
+    return self.appDelegate.participant;
+}
+
+- (WMTeam *)team
+{
+    return self.participant.team;
+}
+
+- (WMTeamInvitation *)teamInvitation
+{
+    return self.participant.teamInvitation;
+}
+
 #pragma mark - Actions
 
 - (IBAction)purchaseAction:(id)sender
 {
+    // check pincode
+    if ([_pincodeTextInput integerValue] == self.teamInvitation.passcodeValue) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incorrect Pincode"
+                                                            message:@"The pincode that you entered does not match the invitation pincode"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Try Again"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    // else update invitation to accepted and update back end
+    WMTeamInvitation *teamInvitation = self.teamInvitation;
+    NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
+    teamInvitation.acceptedFlagValue = YES;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff updateObj:teamInvitation
+       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+           [managedObjectContext MR_saveToPersistentStoreAndWait];
+       } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+//           FFQueuedOperation *operation = (FFQueuedOperation *)object;
+       }];
     [self.delegate iapJoinTeamViewControllerDidPurchase:self];
 }
 
 - (IBAction)declineAction:(id)sender
 {
     [self.delegate iapJoinTeamViewControllerDidDecline:self];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    __weak __typeof(&*self)weakSelf = self;
+    [self performBlock:^{
+        switch (textField.tag) {
+            case 1000: {
+                weakSelf.pincodeTextInput = textField.text;
+                break;
+            }
+        }
+    } afterDelay:0.1];
+    return YES;
+}
+
+// may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    switch (textField.tag) {
+        case 1000: {
+            // userName
+            self.pincodeTextInput = textField.text;
+            break;
+        }
+    }
 }
 
 @end

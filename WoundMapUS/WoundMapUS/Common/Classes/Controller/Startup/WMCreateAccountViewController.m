@@ -128,7 +128,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         _person = [WMPerson MR_createInContext:self.managedObjectContext];
         _person.nameFamily = _lastNameTextInput;
         _person.nameGiven = _firstNameTextInput;
-        _participant.person = _person;
     }
     return _person;
 }
@@ -261,6 +260,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             break;
         }
         case CreateAccountAccountCreated: {
+            self.navigationItem.leftBarButtonItem = nil;
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                                    target:self
                                                                                                    action:@selector(doneAction:)];
@@ -300,6 +300,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     // else first save to object permenant objectID
     [[participant managedObjectContext] MR_saveOnlySelfAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     _ffUser = [[FFUser alloc] initWithFF:ff];
     _ffUser.userName = _userNameTextInput;
     _ffUser.email = _emailTextInput;
@@ -325,13 +326,20 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             // update participant
             participant.user = ffUser;
             participant.guid = ffUser.guid;
-            // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
-            WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-            [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+            // create participant on back end
+            [ffm createParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
                 if (error) {
                     [WMUtilities logError:error];
+                } else {
+                    // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
+                    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    }];
                 }
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
             }];
         }
     }];
@@ -359,7 +367,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             // participant has logged in as new user - now push data to backend
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm createParticipant:[participant objectID] ff:ff completionHandler:^(NSError *error) {
+            [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (error) {
                         [WMUtilities logError:error];

@@ -10,7 +10,7 @@
 #import "WMSignInViewController.h"
 #import "WMCreateAccountViewController.h"
 #import "WMPersonEditorViewController.h"
-#import "WMCreateTeamInvitationViewController.h"
+#import "WMManageTeamViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
 #import "WMCreateTeamViewController.h"
@@ -26,6 +26,7 @@
 #import "WMPerson.h"
 #import "WMTelecom.h"
 #import "WMTeam.h"
+#import "WMTeamInvitation.h"
 #import "WMConsultingGroup.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
@@ -44,7 +45,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, CreateTeamInvitationViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, ManageTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -53,7 +54,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
 @property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 @property (readonly, nonatomic) WMCreateTeamViewController *createTeamViewController;
-@property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
+@property (readonly, nonatomic) WMManageTeamViewController *manageTeamViewController;
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 
 @property (readonly, nonatomic) WMParticipant *participant;
@@ -217,11 +218,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return createTeamViewController;
 }
 
-- (WMCreateTeamInvitationViewController *)createTeamInvitationViewController
+- (WMManageTeamViewController *)manageTeamViewController
 {
-    WMCreateTeamInvitationViewController *createTeamInvitationViewController = [[WMCreateTeamInvitationViewController alloc] initWithNibName:@"WMCreateTeamInvitationViewController" bundle:nil];
-    createTeamInvitationViewController.delegate = self;
-    return createTeamInvitationViewController;
+    WMManageTeamViewController *manageTeamViewController = [[WMManageTeamViewController alloc] initWithNibName:@"WMManageTeamViewController" bundle:nil];
+    manageTeamViewController.delegate = self;
+    return manageTeamViewController;
 }
 
 - (WMPersonEditorViewController *)personEditorViewController
@@ -280,9 +281,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                      }];
 }
 
-- (void)presentTeamInvitationController
+- (void)presentTeamManagementController
 {
-    [self.navigationController pushViewController:self.createTeamInvitationViewController animated:YES];
+    [self.navigationController pushViewController:self.manageTeamViewController animated:YES];
 }
 
 - (void)presentChooseNavigationTrack
@@ -416,18 +417,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     // join team or team joined
                     if (self.welcomeState == WMWelcomeStateSignedInNoTeam || self.welcomeState == WMWelcomeStateDeferTeam) {
                         [self presentJoinTeamViewController];
+                    } else if (self.participant.isTeamLeader) {
+                        [self presentTeamManagementController];
                     }
-                    // else should not select - cell indicates the team
                     break;
                 }
                 case 1: {
-                    if (self.participant.isTeamLeader) {
-                        // invite
-                        [self presentTeamInvitationController];
-                    } else {
-                        // create team
-                        [self presentCreateTeamViewController];
-                    }
+                    [self presentCreateTeamViewController];
                     break;
                 }
                 case 2: {
@@ -533,7 +529,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    count = (self.participant.isTeamLeader ? 2:1);
+                    count = 1;
                     break;
                 }
                 case 2:
@@ -619,7 +615,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         case 0: {
                             title = @"Join Team";
                             if (self.participant.teamInvitation) {
-                                value = @"invitation";// TODO show icon
+                                value = (self.participant.teamInvitation.acceptedFlagValue ? @"accepted":@"invitation");// TODO show icon
                             }
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
@@ -670,11 +666,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             title = @"Team";
                             value = self.participant.team.name;
                             accessoryType = UITableViewCellAccessoryNone;
-                            break;
-                        }
-                        case 1: {
-                            title = @"Invite a Participant";
-                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            if (self.participant.isTeamLeader) {
+                                accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            }
                             break;
                         }
                     }
@@ -858,8 +852,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)iapJoinTeamViewControllerDidPurchase:(WMIAPJoinTeamViewController *)viewController
 {
+    __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
-        // TODO navigate to join team authentication
+        // update table view
+        [weakSelf.tableView beginUpdates];
+        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf.tableView endUpdates];
     }];
 }
 
@@ -924,32 +922,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [viewController clearAllReferences];
 }
 
-#pragma mark - CreateTeamInvitationViewControllerDelegate
+#pragma mark - ManageTeamViewControllerDelegate
 
-- (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation
+- (void)manageTeamViewControllerDidFinish:(WMManageTeamViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    // add to back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    __weak __typeof(&*self)weakSelf = self;
-    [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-            [weakSelf.tableView reloadData];
-        });
-    }];
 }
 
-- (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController
+- (void)manageTeamViewControllerDidCancel:(WMManageTeamViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - IAPCreateConsultantViewControllerDelegate

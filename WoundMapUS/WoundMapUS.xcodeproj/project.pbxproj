@@ -412,6 +412,8 @@
 		7DDE755018CE456800B15C77 /* WoundAreaPlotDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754B18CE456800B15C77 /* WoundAreaPlotDataSource.m */; };
 		7DDE755118CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754D18CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m */; };
 		7DDE755218CE456800B15C77 /* WoundStatusMeasurementRollup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754F18CE456800B15C77 /* WoundStatusMeasurementRollup.m */; };
+		7DDEE26D18F1919D00AF9FC6 /* WMManageTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */; };
+		7DDEE26E18F1919D00AF9FC6 /* WMManageTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */; };
 		7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68018B7C06D00041927 /* WMHomeBaseViewController.m */; };
 		7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68318B7C09B00041927 /* WMHomeBaseViewController_iPhone.m */; };
 		7DDFD68618B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDFD68418B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib */; };
@@ -1207,6 +1209,9 @@
 		7DDE754D18CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WoundStatusMeasurementPlotDataSource.m; sourceTree = "<group>"; };
 		7DDE754E18CE456800B15C77 /* WoundStatusMeasurementRollup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundStatusMeasurementRollup.h; sourceTree = "<group>"; };
 		7DDE754F18CE456800B15C77 /* WoundStatusMeasurementRollup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WoundStatusMeasurementRollup.m; sourceTree = "<group>"; };
+		7DDEE26A18F1919D00AF9FC6 /* WMManageTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMManageTeamViewController.h; sourceTree = "<group>"; };
+		7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMManageTeamViewController.m; sourceTree = "<group>"; };
+		7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMManageTeamViewController.xib; sourceTree = "<group>"; };
 		7DDFD67F18B7C06D00041927 /* WMHomeBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHomeBaseViewController.h; sourceTree = "<group>"; };
 		7DDFD68018B7C06D00041927 /* WMHomeBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMHomeBaseViewController.m; sourceTree = "<group>"; };
 		7DDFD68218B7C09B00041927 /* WMHomeBaseViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHomeBaseViewController_iPhone.h; sourceTree = "<group>"; };
@@ -1966,6 +1971,9 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
+				7DDEE26A18F1919D00AF9FC6 /* WMManageTeamViewController.h */,
+				7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */,
+				7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2957,6 +2965,7 @@
 				7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */,
 				5F67D1F218AC3BE000460C37 /* CarePlan.plist in Resources */,
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
+				7DDEE26E18F1919D00AF9FC6 /* WMManageTeamViewController.xib in Resources */,
 				5F67D1FB18AC3BE000460C37 /* PsychoSocialDefinitions.plist in Resources */,
 				7DB2061518A7D3400004DC32 /* InfoPlist.strings in Resources */,
 				7D39DAFC18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.xib in Resources */,
@@ -3188,6 +3197,7 @@
 				7D10CD8418D63C1900AD43E3 /* WMTelecom+CoreText.m in Sources */,
 				7DD8373018C78A390028C2D3 /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				5F67D22318AD8DE200460C37 /* _WMNavigationNode.m in Sources */,
+				7DDEE26D18F1919D00AF9FC6 /* WMManageTeamViewController.m in Sources */,
 				7DF4E97118C29A07000A3F5B /* WMCarePlanInterventionEvent.m in Sources */,
 				7D10CE0518DC634800AD43E3 /* WMDevicesSummaryViewController.m in Sources */,
 				7DF4E93218C22F27000A3F5B /* WMSkinAssessmentGroup.m in Sources */,

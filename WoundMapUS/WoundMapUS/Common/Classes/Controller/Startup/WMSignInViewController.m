@@ -116,6 +116,7 @@
                                                       cancelButtonTitle:@"Try Again"
                                                       otherButtonTitles:nil];
             [alertView show];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         } else {
             FFUser *user = (FFUser *)object;
             NSAssert(nil != user, @"loginWithUserName:password success but returned object is nil");

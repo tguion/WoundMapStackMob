@@ -1,48 +1,44 @@
 //
-//  WMCreateTeamViewController.m
+//  WMManageTeamViewController.m
 //  WoundMapUS
 //
-//  Created by Todd Guion on 4/1/14.
+//  Created by Todd Guion on 4/6/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMCreateTeamViewController.h"
+#import "WMManageTeamViewController.h"
 #import "WMCreateTeamInvitationViewController.h"
-#import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
-#import "WMTeamInvitation.h"
 #import "WMTeam.h"
+#import "WMTeamInvitation.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
-#import "WCAppDelegate.h"
 #import "WMUtilities.h"
-#import "NSObject+performBlockAfterDelay.h"
+#import "WCAppDelegate.h"
 
 typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRevokeInvitationActionSheetTag,
     kRemoveParticipantActionSheetTag,
 };
 
-@interface WMCreateTeamViewController () <UITextFieldDelegate, UIActionSheetDelegate, CreateTeamInvitationViewControllerDelegate>
+@interface WMManageTeamViewController () <CreateTeamInvitationViewControllerDelegate, UIActionSheetDelegate>
 
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMParticipant *participant;
+@property (readonly, nonatomic) WMTeam *team;
 @property (strong, nonatomic) NSArray *teamInvitations;
 @property (strong, nonatomic) NSArray *teamMembers;
 
-@property (strong, nonatomic) NSString *teamNameTextInput;
+@property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
 @property (strong, nonatomic) WMTeamInvitation *teamInvitationToDelete;
 @property (strong, nonatomic) WMParticipant *teamMemberToDelete;
 
-@property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
-
-- (IBAction)createInvitationAction:(id)sender;
-
 @end
 
-@implementation WMCreateTeamViewController
+@implementation WMManageTeamViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,13 +53,12 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Create Team";
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(createTeamAction:)];
-    [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
+    self.title = @"Manage Team";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                           target:self
+                                                                                           action:@selector(doneAction:)];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    // allow editing
-    [self.tableView setEditing:YES animated:NO];
+    [self.tableView setEditing:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,38 +69,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 #pragma mark - Core
 
-- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
-{
-    NSString *cellReuseIdentifier = nil;
-    switch (indexPath.section) {
-        case 0: {
-            cellReuseIdentifier = @"TextCell";
-            break;
-        }
-        case 1: {
-            cellReuseIdentifier = @"ValueCell";
-            break;
-        }
-        case 2: {
-            cellReuseIdentifier = @"ValueCell";
-            break;
-        }
-    }
-    return cellReuseIdentifier;
-}
-
-- (BOOL)hasSufficientInput
-{
-    return ([_teamNameTextInput length] > 3);
-}
-
-- (void)updateNavigation
-{
-    if (self.hasSufficientInput) {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    }
-}
-
 - (WMParticipant *)participant
 {
     return self.appDelegate.participant;
@@ -113,10 +76,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (WMTeam *)team
 {
-    if (nil == _team) {
-        _team = [WMTeam MR_createInContext:self.managedObjectContext];
-    }
-    return _team;
+    return self.participant.team;
 }
 
 - (NSArray *)teamInvitations
@@ -184,21 +144,13 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 #pragma mark - Actions
 
-- (IBAction)cancelAction:(id)sender
+- (IBAction)doneAction:(id)sender
 {
-    [self.managedObjectContext rollback];
-    [self.delegate createTeamViewControllerDidCancel:self];
-}
-
-- (IBAction)createTeamAction:(id)sender
-{
-    self.team.name = _teamNameTextInput;
-    [self.delegate createTeamViewController:self didCreateTeam:self.team];
-}
-
-- (IBAction)createInvitationAction:(id)sender
-{
-    [self navigateToCreateInvitationViewController];
+    __weak __typeof(&*self)weakSelf = self;
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        WM_ASSERT_MAIN_THREAD;
+        [weakSelf.delegate manageTeamViewControllerDidFinish:weakSelf];
+    }];
 }
 
 #pragma mark - WMBaseViewController
@@ -206,7 +158,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)clearDataCache
 {
     [super clearDataCache];
-    _team = nil;
     _teamInvitations = nil;
     _teamMembers = nil;
 }
@@ -216,11 +167,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     // add to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     __weak __typeof(&*self)weakSelf = self;
     [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
         if (error) {
@@ -236,41 +187,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    __weak __typeof(&*self)weakSelf = self;
-    [self performBlock:^{
-        switch (textField.tag) {
-            case 1000: {
-                weakSelf.teamNameTextInput = textField.text;
-                break;
-            }
-        }
-        [weakSelf updateNavigation];
-    } afterDelay:0.1];
-    return YES;
-}
-
-// may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    switch (textField.tag) {
-        case 1000: {
-            // userName
-            self.teamNameTextInput = textField.text;
-            break;
-        }
-    }
-}
-
-// called when 'return' key pressed. return NO to ignore.
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    return self.hasSufficientInput;
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -289,7 +205,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
                 [self.tableView endUpdates];
                 // update back end
-
+                
             }
             break;
         }
@@ -303,7 +219,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
                 [self.tableView endUpdates];
                 // update back end
-
+                
             }
             break;
         }
@@ -353,7 +269,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             // invitations
             if ([self indexPathIsAddInvitation:indexPath]) {
                 // create a new invitation
-                [self createInvitationAction:nil];
+                [self navigateToCreateInvitationViewController];
             } else {
                 // revoke invitation
                 _teamInvitationToDelete = [self.teamInvitations objectAtIndex:indexPath.row];
@@ -403,7 +319,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = [self cellReuseIdentifier:indexPath];
+    NSString *cellIdentifier = @"ValueCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
@@ -414,17 +330,9 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     switch (indexPath.section) {
         case 0: {
             // team name
+            cell.textLabel.text = @"Team Name";
+            cell.detailTextLabel.text = self.team.name;
             cell.accessoryType = UITableViewCellAccessoryNone;
-            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            UITextField *textField = myCell.textField;
-            textField = myCell.textField;
-            textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-            textField.autocorrectionType = UITextAutocorrectionTypeNo;
-            textField.spellCheckingType = UITextAutocorrectionTypeYes;
-            textField.returnKeyType = UIReturnKeyDefault;
-            textField.delegate = self;
-            textField.tag = 1000;
-            [myCell updateWithLabelText:@"Team Name" valueText:self.team.name valuePrompt:@"Enter Team Name"];
             break;
         }
         case 1: {
@@ -436,7 +344,13 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             } else {
                 WMTeamInvitation *teamInvitation = [self.teamInvitations objectAtIndex:indexPath.row];
                 cell.textLabel.text = teamInvitation.invitee.name;
-                cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+                NSString *message = nil;
+                if (teamInvitation.isAccepted) {
+                    message = @"Accepted - tap to confirm";
+                } else {
+                    message = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+                }
+                cell.detailTextLabel.text = message;
             }
             break;
         }
@@ -457,7 +371,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case 1: {
             // invitations
             if ([self indexPathIsAddInvitation:indexPath]) {
-                [self createInvitationAction:nil];
+                [self navigateToCreateInvitationViewController];
             } else {
                 // delete invitation - use UIActionSheet
                 [self initiateRevokeInvitation];
