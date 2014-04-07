@@ -14,12 +14,20 @@ NSString * const kTelecomTypeEmailTitle = @"email";
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
 {
     NSParameterAssert([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0);
+    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
     WMTelecomType *telecomType = [WMTelecomType MR_createInContext:managedObjectContext];
     telecomType.sortRankValue = 0;
     telecomType.title = kTelecomTypeEmailTitle;
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    [objectIDs addObject:[telecomType objectID]];
+    telecomType = [WMTelecomType MR_createInContext:managedObjectContext];
+    telecomType.sortRankValue = 1;
+    telecomType.title = @"telephone";
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    [objectIDs addObject:[telecomType objectID]];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     if (completionHandler) {
-        completionHandler(nil, @[[telecomType objectID]], [WMTelecomType entityName]);
+        completionHandler(nil, objectIDs, [WMTelecomType entityName]);
     }
 }
 

@@ -28,8 +28,8 @@
 @interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate>
 
 // data
-@property (strong, nonatomic) WMPatient *patient;
-@property (strong, nonatomic) WMPerson *person;
+@property (strong, nonatomic) WMPatient *patient;       // create patient if new patient, otherwise we hold a strong reference to the active patient (held by navigationCoordinator)
+@property (strong, nonatomic) WMPerson *person;         // do no attach to new patient, since ff backend will barf. wait until we persist patient to back end.
 // state
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 // UI
@@ -214,6 +214,7 @@
 {
     [super clearDataCache];
     _patient = nil;
+    _person = nil;
 }
 
 #pragma mark - Views
@@ -245,6 +246,22 @@
         _removeUndoManagerWhenDone = YES;
     }
     [self.managedObjectContext.undoManager beginUndoGrouping];
+    // acquire patient - creating local and back end
+    if (_newPatientFlag) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        __weak __typeof(&*self)weakSelf = self;
+        [self.appDelegate.navigationCoordinator createPatient:self.managedObjectContext completionHandler:^(NSError *error, id object) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                NSParameterAssert([object isKindOfClass:[WMPatient class]]);
+                _patient = object;
+            }
+        }];
+    } else {
+        _patient = super.patient;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -324,30 +341,13 @@
 
 #pragma mark - BaseViewController
 
-- (WMPatient *)patient
-{
-    if (nil == _patient) {
-        if (_newPatientFlag) {
-            _patient = [WMPatient MR_createInContext:self.managedObjectContext];
-            // must save to back end now - delete at cancel if needed
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm createPatient:_patient ff:ff completionHandler:^(NSError *error) {
-                // nothing more to do here
-            }];
-        } else {
-            _patient = super.patient;
-        }
-    }
-    return _patient;
-}
-
 - (WMPerson *)person
 {
-    WMPatient *patient = self.patient;
-    _person = patient.person;
     if (nil == _person) {
-        _person = [WMPerson MR_createInContext:self.managedObjectContext];
+        _person = _patient.person;
+        if (nil == _person) {
+            _person = [WMPerson MR_createInContext:self.managedObjectContext];
+        }
     }
     return _person;
 }
@@ -397,51 +397,60 @@
 - (IBAction)cancelAction:(id)sender
 {
     [self.view endEditing:YES];
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (self.managedObjectContext.undoManager.canUndo) {
-            // this should undo the insert of new person
-            [self.managedObjectContext.undoManager undoNestedGroup];
+    // delete patient if canceling a new patient
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        if (weakSelf.managedObjectContext.undoManager.groupingLevel > 0) {
+            [weakSelf.managedObjectContext.undoManager endUndoGrouping];
+            if (weakSelf.managedObjectContext.undoManager.canUndo) {
+                // this should undo the insert of new person
+                [weakSelf.managedObjectContext.undoManager undoNestedGroup];
+            }
         }
+        if (_removeUndoManagerWhenDone) {
+            weakSelf.managedObjectContext.undoManager = nil;
+        }
+        [weakSelf.delegate patientDetailViewControllerDidCancelUpdate:weakSelf];
+    };
+    if (_newPatientFlag) {
+        [self.appDelegate.navigationCoordinator deletePatient:_patient completionHandler:block];
+    } else {
+        block();
     }
-    if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
-    }
-    [self.delegate patientDetailViewControllerDidCancelUpdate:self];
 }
 
 - (IBAction)saveAction:(id)sender
 {
     [self.view endEditing:YES];
+    [self performSelector:@selector(delayedSaveAction:) withObject:sender afterDelay:0.0];
+}
+
+- (IBAction)delayedSaveAction:(id)sender
+{
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
+    // associate
+    if (nil == _patient.person) {
+        _patient.person = _person;
+    }
     // save local
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        // create person
-        if (_person) {
-            if (_person.ffUrl) {
-                // TODO update person back end
-            } else {
-                // TODO create person back end, then add to patient
-            }
-        }
         // update back end
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         WMPatient *patient = weakSelf.patient;
         NSParameterAssert(patient.ffUrl);
         [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
-            // TODO finish
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
         }];
     }];
-    
-    [self.delegate patientDetailViewControllerDidUpdatePatient:self];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -479,6 +488,20 @@
 - (void)personEditorViewController:(WMPersonEditorViewController *)viewController didEditPerson:(WMPerson *)person
 {
     [self.navigationController popViewControllerAnimated:YES];
+    // update back end now
+    _person = person;
+    if (nil == _patient.person) {
+        _patient.person = _person;
+    }
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    if (nil == _person.ffUrl) {
+        [ffm createPerson:person ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        }];
+    }
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
@@ -502,6 +525,8 @@
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
+    // update back end
+    
 }
 
 - (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController

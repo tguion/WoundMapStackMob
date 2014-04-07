@@ -1,20 +1,16 @@
 #import "_WMPatient.h"
 #import "WoundCareProtocols.h"
 
+extern NSString * const kConsultantGroupName;
+
 @class FFUserGroup;
 
 @interface WMPatient : _WMPatient <idSource> {}
 
 + (NSArray *)toManyRelationshipNames;
 
-@property (strong, nonatomic) FFUserGroup *participantGroup;
+// add FFUsers to this group when a consultant acquires the patient
 @property (strong, nonatomic) FFUserGroup *consultantGroup;
-
-- (void)updateParticipantGroupWithParticipants:(NSArray *)participants;
-- (void)addParticipant:(id<FFUserProtocol>)participant;
-- (void)addConsultant:(id<FFUserProtocol>)consultant;
-- (void)removeParticipant:(id<FFUserProtocol>)participant;
-- (void)removeConsultant:(id<FFUserProtocol>)consultant;
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext;
 

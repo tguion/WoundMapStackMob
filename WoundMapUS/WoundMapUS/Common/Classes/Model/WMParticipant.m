@@ -140,9 +140,7 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMParticipantRelationships.acquiredConsults,
-                                                            WMParticipantRelationships.interventionEvents,
-                                                            WMParticipantRelationships.patients]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

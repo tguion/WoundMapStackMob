@@ -42,6 +42,9 @@
 - (void)dealloc
 {
     DLog(@"%@.dealloc", self);
+    for (id observer in self.persistantObservers) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+    }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -55,7 +58,7 @@
 
 - (void)viewDidLoad
 {
-    DLog(@"%@ %@.viewWillAppear:", self, NSStringFromClass([self class]));
+    DLog(@"%@ %@.viewDidLoad:", self, NSStringFromClass([self class]));
     [super viewDidLoad];
     // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated.
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -98,7 +101,6 @@
     tableView.delegate = nil;
     tableView.dataSource = nil;
     self.view = nil;
-    [self hideProgressView];
 }
 
 - (void)clearDataCache

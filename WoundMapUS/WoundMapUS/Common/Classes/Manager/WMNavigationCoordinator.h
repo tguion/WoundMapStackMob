@@ -11,6 +11,7 @@
 #import "WMPhotoMeasureViewController.h"
 #import "WMPhotoDepthViewController.h"
 #import "WMUndermineTunnelViewController.h"
+#import "WMFatFractalManager.h"
 
 extern NSString *const kPatientChangedNotification;
 extern NSString *const kWoundChangedNotification;
@@ -43,6 +44,10 @@ typedef enum {
 
 @property (nonatomic) WMNavigationTrack *navigationTrack;   // active track
 @property (nonatomic) WMNavigationStage *navigationStage;   // active stage
+
+- (void)createPatient:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMObjectCallback)completionHandler;
+- (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler;
+
 
 @property (nonatomic) NavigationCoordinatorState state;
 @property (strong, nonatomic) WMBaseViewController *initialMeasurePhotoViewController;

@@ -7,6 +7,8 @@
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 
+NSString * const kConsultantGroupName = @"consultantGroup";
+
 typedef enum {
     PatientFlagsFaceDetectionFailed         = 0,
     
@@ -21,7 +23,7 @@ typedef enum {
 
 @implementation WMPatient
 
-@synthesize participantGroup=_participantGroup, consultantGroup=_consultantGroup;
+@synthesize consultantGroup=_consultantGroup;
 @dynamic managedObjectContext, objectID;
 
 + (NSArray *)toManyRelationshipNames
@@ -54,82 +56,12 @@ typedef enum {
     self.updatedAt = [NSDate date];
 }
 
-/**
- Call this method when a patient is created
- */
-- (void)updateParticipantGroupWithParticipants:(NSArray *)participants
-{
-    FFUserGroup *participantGroup = self.participantGroup;
-    NSError *error = nil;
-    NSMutableArray *currentParticipants = [[participantGroup getUsersWithError:&error] mutableCopy];
-    for (id<FFUserProtocol>participant in participants) {
-        if (![currentParticipants containsObject:participant]) {
-            [participantGroup addUser:participant error:&error];
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            [currentParticipants removeObjectIdenticalTo:participant];
-        }
-    }
-    // remove remaining users
-    for (id<FFUserProtocol>participant in currentParticipants) {
-        [participantGroup removeUser:participant error:&error];
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    }
-}
-
-- (void)addParticipant:(id<FFUserProtocol>)participant
-{
-    NSError *error = nil;
-    [self.participantGroup addUser:participant error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-}
-
-- (void)addConsultant:(id<FFUserProtocol>)consultant
-{
-    NSError *error = nil;
-    [self.consultantGroup addUser:consultant error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-}
-
-- (void)removeParticipant:(id<FFUserProtocol>)participant
-{
-    NSError *error = nil;
-    [self.participantGroup removeUser:participant error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-}
-
-- (void)removeConsultant:(id<FFUserProtocol>)consultant
-{
-    NSError *error = nil;
-    [self.consultantGroup removeUser:consultant error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-}
-
-- (FFUserGroup *)participantGroup
-{
-    if (nil == _participantGroup) {
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        _participantGroup = [[FFUserGroup alloc] initWithFF:ff];
-    }
-    return _participantGroup;
-}
-
 - (FFUserGroup *)consultantGroup
 {
     if (nil == _consultantGroup) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         _consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
+        [_consultantGroup setGroupName:kConsultantGroupName];
     }
     return _consultantGroup;
 }
@@ -144,7 +76,7 @@ typedef enum {
         [array addObject:self.person.nameGiven];
     }
     if ([array count] == 0 && [self.ids count] > 0) {
-        [array addObject:[[self.ids valueForKeyPath:@"extension"] componentsJoinedByString:@","]];
+        [array addObject:[[[self.ids valueForKeyPath:@"extension"] allObjects] componentsJoinedByString:@","]];
     }
     if ([array count] == 0) {
         [array addObject:@"New Patient"];
@@ -237,6 +169,60 @@ typedef enum {
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setDay:1];
     return [[NSDate date] compare:[calendar dateByAddingComponents:components toDate:self.createdAt options:0]] == NSOrderedDescending;
+}
+
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"acquiredByConsultantValue",
+                                                            @"archivedFlagValue",
+                                                            @"flagsValue",
+                                                            @"managedObjectContext",
+                                                            @"objectID",
+                                                            @"lastNameFirstName",
+                                                            @"lastNameFirstNameOrAnonymous",
+                                                            @"identifierEMR",
+                                                            @"faceDetectionFailed",
+                                                            @"genderIndex",
+                                                            @"lastActiveWound",
+                                                            @"hasMultipleWounds",
+                                                            @"sortedWounds",
+                                                            @"woundCount",
+                                                            @"photosCount",
+                                                            @"dayOrMoreSinceCreated"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMPatient attributeNamesNotToSerialize] containsObject:propertyName] || [[WMPatient relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMPatient relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end

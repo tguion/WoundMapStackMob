@@ -162,10 +162,7 @@
 - (BOOL)validateInput
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([self.person.telecoms count] == 0) {
-        [messages addObject:@"Please add at least one email address"];
-    }
-    
+
     if ([messages count]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Information"
                                                             message:[messages componentsJoinedByString:@"\r"]

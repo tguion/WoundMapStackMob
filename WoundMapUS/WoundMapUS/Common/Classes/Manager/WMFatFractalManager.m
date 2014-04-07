@@ -334,7 +334,7 @@
 #pragma mark - Backend Updates
 
 // create participant after successful FFUser registration
-- (void)createParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)createParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     WM_ASSERT_MAIN_THREAD;
     NSParameterAssert(completionHandler);
@@ -348,7 +348,7 @@
 
 }
 
-- (void)updateParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)updateParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     WM_ASSERT_MAIN_THREAD;
     NSParameterAssert(completionHandler);
@@ -361,27 +361,68 @@
                 completionHandler(error);
             } else {
                 for (WMAddress *address in organization.addresses) {
-                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:nil];
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        // nothing
+                    }];
                 }
                 for (WMId *anId in organization.ids) {
-                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:nil];
+                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        // nothing
+                    }];
                 }
             }
         }];
     }
     WMPerson *person = participant.person;
-    [ff createObj:person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        for (WMAddress *address in person.addresses) {
-            [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:nil];
-        }
-        for (WMTelecom *telecom in person.telecoms) {
-            [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:nil];
-        }
-        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    if (person.ffUrl) {
+        [ff updateObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
                 completionHandler(error);
-            }];
+            } else {
+                [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                        completionHandler(error);
+                    }];
+                }];
+            }
         }];
+    } else {
+        [self createPerson:person ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                completionHandler(error);
+            } else {
+                [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                        completionHandler(error);
+                    }];
+                }];
+            }
+        }];
+    }
+}
+
+- (void)createPerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    [ff createObj:person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            completionHandler(error);
+        } else {
+            for (WMAddress *address in person.addresses) {
+                [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                }];
+                for (WMTelecom *telecom in person.telecoms) {
+                    [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                    }];
+                }
+                completionHandler(nil);
+            }
+        }
     }];
 }
 
@@ -466,7 +507,7 @@
     }];
 }
 
-- (void)revokeTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)revokeTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSParameterAssert([teamInvitation.ffUrl length]);
     [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -476,7 +517,7 @@
     }];
 }
 
-- (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
     NSParameterAssert([teamInvitation.ffUrl length]);
@@ -506,7 +547,7 @@
     }
 }
 
-- (void)removeParticipantFromTeam:(WMParticipant *)teamMember ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)removeParticipantFromTeam:(WMParticipant *)teamMember ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSParameterAssert([teamMember.ffUrl length]);
     FFUser *user = teamMember.user;
@@ -520,15 +561,123 @@
 
 #pragma mark - Patient
 
-- (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler
 {
-    
+    NSParameterAssert(nil == patient.ffUrl);
+    FFUserGroup *consultantGroup = patient.consultantGroup;
+    // create FFUserGroup that will hold the FFUser instance in team
+    [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            completionHandler(error, object);
+        } else {
+            [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                completionHandler(error, object);
+            }];
+        }
+    }];
 }
 
-- (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(void (^)(NSError *))completionHandler
+- (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
-    
+    NSParameterAssert(patient.ffUrl);
+    WMAddToGrabBagBlock block = ^(NSManagedObject *item, NSManagedObject *aggregator, NSString *grabBagName) {
+        NSString *itemFFUrl = [item valueForKey:@"ffUrl"];
+        NSString *aggregatorFFUrl = [aggregator valueForKey:@"ffUrl"];
+        if (nil == itemFFUrl) {
+            [ff createObj:item atUri:[NSString stringWithFormat:@"/%@", [[item entity] name]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    NSString *itemFFUrl = [object valueForKey:@"ffUrl"];
+                    [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                    }];
+                }
+            }];
+        } else {
+            [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }];
+        }
+    };
+    for (id item in patient.ids) {
+        block(item, patient, WMPatientRelationships.ids);
+    }
+    [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        completionHandler(error);
+    }];
 }
+
+- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    NSParameterAssert(patient.ffUrl);
+    WMErrorCallback errorCallback = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    [ff deleteObj:patient onComplete:httpMethodCompletion];
+    [self deletePerson:patient.person ff:ff completionHandler:errorCallback];
+    for (WMBradenScale *bradenScale in patient.bradenScales) {
+        [self deleteBradenScale:bradenScale ff:ff completionHandler:errorCallback];
+    }
+    // TODO: remaining deletes of to-many relationships
+}
+
+- (void)deletePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    if (person.ffUrl) {
+        [ff deleteObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            for (id address in person.addresses) {
+                [ff deleteObj:address onComplete:httpMethodCompletion];
+            }
+            for (id telecom in person.telecoms) {
+                [ff deleteObj:telecom onComplete:httpMethodCompletion];
+            }
+            completionHandler(error);
+        }];
+    }
+}
+
+- (void)deleteBradenScale:(WMBradenScale *)bradenScale ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    if (bradenScale.ffUrl) {
+        [ff deleteObj:bradenScale onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            for (WMBradenSection *bradenSection in bradenScale.sections) {
+                if (bradenSection.ffUrl) {
+                    [ff deleteObj:bradenSection onComplete:httpMethodCompletion];
+                    for (WMBradenCell *bradenCell in bradenSection.cells) {
+                        if (bradenCell.ffUrl) {
+                            [ff deleteObj:bradenCell onComplete:httpMethodCompletion];
+                        }
+                    }
+                }
+            }
+            completionHandler(error);
+        }];
+    }
+}
+
+// TODO: delete for rest of patient to-many relationships
 
 #pragma mark - Refresh
 

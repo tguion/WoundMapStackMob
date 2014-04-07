@@ -9,6 +9,7 @@
 #import "WMNavigationCoordinator.h"
 #import "WMBaseViewController.h"
 #import "WMUserDefaultsManager.h"
+#import "WMParticipant.h"
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
@@ -21,6 +22,7 @@
 #import "CoreDataHelper.h"
 #import "WMPolicyManager.h"
 #import "WMUserDefaultsManager.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -39,6 +41,8 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
+
+@property (readonly, nonatomic) WMParticipant *participant;
 
 @property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueWidth;
 @property (strong, nonatomic) WMWoundMeasurementValue *woundMeasurementValueLength;
@@ -86,6 +90,11 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     return [WMUserDefaultsManager sharedInstance];
 }
 
+- (WMParticipant *)participant
+{
+    return self.appDelegate.participant;
+}
+
 #pragma mark - Core
 
 - (void)clearPatientCache
@@ -113,6 +122,37 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
+    }
+}
+
+- (void)createPatient:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMObjectCallback)completionHandler
+{
+    WMPatient *patient = [WMPatient MR_createInContext:managedObjectContext];
+    WMParticipant *participant = self.participant;
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
+    patient.participant = participant;
+    patient.team = participant.team;
+    patient.stage = [self.navigationTrack initialStage];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [ffm createPatient:patient ff:ff completionHandler:^(NSError *error, id object) {
+        completionHandler(error, object);
+    }];
+}
+
+- (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler
+{
+    if ([patient isEqual:_patient]) {
+        _patient = nil;
+    }
+    if (patient.ffUrl) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        [ffm deletePatient:_patient ff:ff completionHandler:^(NSError *error) {
+            completionHandler();
+        }];
+    } else {
+        completionHandler();
     }
 }
 

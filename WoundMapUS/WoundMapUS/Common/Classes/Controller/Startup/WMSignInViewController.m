@@ -123,7 +123,7 @@
             NSParameterAssert([user.userName length] > 0);
             NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
             // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
-            if (NO) {
+            if (YES) {
                 // fetch participant
                 NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
                 __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName

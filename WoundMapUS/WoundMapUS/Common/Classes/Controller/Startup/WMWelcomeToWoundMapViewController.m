@@ -966,11 +966,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
-    __block WMPatient *patient = viewController.patient;
-    // clear memory
-    [viewController clearAllReferences];
-    // update our reference to current patient
-    self.appDelegate.navigationCoordinator.patient = patient;
+    WMPatient *patient = viewController.patient;
     if (self.isIPadIdiom) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -978,22 +974,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // nothing
         }];
     }
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    // make sure the track/stage is set
-    if (nil == patient.stage) {
-        // set stage to initial for default clinical setting
-        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext];
-        WMNavigationStage *navigationStage = navigationTrack.initialStage;
-        patient.stage = navigationStage;
-    }
     __weak __typeof(self) weakSelf = self;
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        // update our reference to current patient
+        weakSelf.appDelegate.navigationCoordinator.patient = patient;
         if (error) {
             [WMUtilities logError:error];
         } else {
             [weakSelf.tableView reloadData];
             weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-            // make sure participant belongs to consultantGroup REFERENCE /FFUserGroup, participantGroup REFERENCE /FFUserGroup
         }
     }];
 }
