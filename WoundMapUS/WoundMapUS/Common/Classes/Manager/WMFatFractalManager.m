@@ -53,9 +53,6 @@
 
 @property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;      // map of objectID or collection to refresh times
 
-@property (strong, nonatomic) NSMutableSet *updatedObjectIDs;       // collected when parent context did save
-@property (strong, nonatomic) NSMutableSet *deletedObjectIDs;       // collected when parent context did save
-
 @end
 
 @implementation WMFatFractalManager
@@ -76,26 +73,37 @@
     if (!self)
         return nil;
     
-    _updatedObjectIDs = [[NSMutableSet alloc] init];
-    _deletedObjectIDs = [[NSMutableSet alloc] init];
-    
     __weak __typeof(&*self)weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextDidSaveNotification
                                                       object:[NSManagedObjectContext MR_rootSavingContext]
                                                        queue:[NSOperationQueue mainQueue]
                                                   usingBlock:^(NSNotification *notification) {
-                                                      [weakSelf handleDefaultManagedObjectContextDidSave:notification];
+                                                      [weakSelf handleRootManagedObjectContextDidSave:notification];
                                                   }];
     
     return self;
 }
 
-- (void)handleDefaultManagedObjectContextDidSave:(NSNotification *)notification
+- (void)handleRootManagedObjectContextDidSave:(NSNotification *)notification
 {
-    NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
-    [_updatedObjectIDs addObjectsFromArray:[[updatedObjects allObjects] valueForKeyPath:@"objectID"]];
-    NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
-    [_deletedObjectIDs addObjectsFromArray:[[deletedObjects allObjects] valueForKeyPath:@"objectID"]];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    if (_processDeletesOnNSManagedObjectContextObjectsDidChangeNotification) {
+        NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
+        for (id object in deletedObjects) {
+            [ff deleteObj:object onComplete:httpMethodCompletion];
+        }
+    }
+    if (_processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification) {
+        NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
+        for (id object in updatedObjects) {
+            [ff updateObj:object onComplete:httpMethodCompletion];
+        }
+    }
 }
 
 #pragma mark - FFQueueDelegate
@@ -129,41 +137,6 @@
     if (error) {
         [self showLoginWithTitle:@"Sign In Failed - please try again" andMessage:[error localizedDescription]];
     }
-}
-
-#pragma mark - Updates and Deletes
-
-- (void)processUpdatesAndDeletes
-{
-    NSArray *updatedObjectIDs = [_updatedObjectIDs allObjects];
-    [_updatedObjectIDs removeAllObjects];
-    NSArray *deletedObjectIDs = [_deletedObjectIDs allObjects];
-    [_deletedObjectIDs removeAllObjects];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        WMFatFractal *ff = [WMFatFractal instance];
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        NSError *error = nil;
-        for (NSManagedObjectID *objectID in updatedObjectIDs) {
-            NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
-            BOOL canUpdate = [[managedObject valueForKey:@"ffUrl"] length] > 0;
-            if (canUpdate) {
-                [ff updateObj:managedObject error:&error];
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            }
-        }
-        for (NSManagedObjectID *objectID in deletedObjectIDs) {
-            NSManagedObject *managedObject = [managedObjectContext objectWithID:objectID];
-            BOOL canDelete = [[managedObject valueForKey:@"ffUrl"] length] > 0;
-            if (canDelete) {
-                [ff deleteObj:managedObject error:&error];
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            }
-        }
-    });
 }
 
 #pragma mark - Fetch
@@ -612,25 +585,28 @@
     }];
 }
 
-- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+- (void)prepareToDeletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff
 {
     NSParameterAssert(patient.ffUrl);
-    WMErrorCallback errorCallback = ^(NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
     FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
     };
-    [ff deleteObj:patient onComplete:httpMethodCompletion];
-    [self deletePerson:patient.person ff:ff completionHandler:errorCallback];
-    for (WMBradenScale *bradenScale in patient.bradenScales) {
-        [self deleteBradenScale:bradenScale ff:ff completionHandler:errorCallback];
-    }
-    // TODO: remaining deletes of to-many relationships
+    FFUserGroup *consultantGroup = patient.consultantGroup;
+    [ff deleteObj:consultantGroup onComplete:httpMethodCompletion];
+}
+
+- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff
+{
+    NSParameterAssert(patient.ffUrl);
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    // deleted objects should have been registered
+
 }
 
 - (void)deletePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler

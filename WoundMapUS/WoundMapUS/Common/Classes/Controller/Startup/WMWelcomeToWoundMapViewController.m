@@ -843,11 +843,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     if (![person.nameGiven isEqualToString:participant.firstName]) {
         participant.firstName = person.nameGiven;
     }
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    [self.tableView reloadData];
     // update backend
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [ffm processUpdatesAndDeletes];
+    ffm.processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [self.tableView reloadData];
+    ffm.processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
@@ -996,8 +997,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // nothing
         }];
     }
-    // clear memory
-    [viewController clearAllReferences];
     // confirm that we have a clean moc
     NSAssert1(![self.managedObjectContext hasChanges], @"self.managedObjectContext has changes", self.managedObjectContext);
 }

@@ -21,10 +21,11 @@ typedef void (^WMAddToGrabBagBlock)(id item, id aggregator, NSString *grabBagNam
 
 + (WMFatFractalManager *)sharedInstance;
 
+@property (nonatomic) BOOL processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification;
+@property (nonatomic) BOOL processDeletesOnNSManagedObjectContextObjectsDidChangeNotification;
+
 // simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
-
-- (void)processUpdatesAndDeletes;
 
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler;
 - (void)acquireParticipantForUser:(FFUser *)user  completionHandler:(WMObjectCallback)completionHandler;
@@ -53,6 +54,7 @@ typedef void (^WMAddToGrabBagBlock)(id item, id aggregator, NSString *grabBagNam
 - (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 
 
-- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
+- (void)prepareToDeletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
+- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
 
 @end

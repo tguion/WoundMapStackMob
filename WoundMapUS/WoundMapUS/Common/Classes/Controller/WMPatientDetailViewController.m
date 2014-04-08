@@ -30,8 +30,6 @@
 // data
 @property (strong, nonatomic) WMPatient *patient;       // create patient if new patient, otherwise we hold a strong reference to the active patient (held by navigationCoordinator)
 @property (strong, nonatomic) WMPerson *person;         // do no attach to new patient, since ff backend will barf. wait until we persist patient to back end.
-// state
-@property (nonatomic) BOOL removeUndoManagerWhenDone;
 // UI
 @property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryToolbar;
 @property (readonly, nonatomic) UITextField *dobTextField;
@@ -42,7 +40,6 @@
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 @property (readonly, nonatomic) WMIdListViewController *idListViewController;
 
-- (IBAction)cancelAction:(id)sender;
 - (IBAction)saveAction:(id)sender;
 - (IBAction)dateOfBirthChangedValueAction:(id)sender;
 - (IBAction)dismissDatePickerAction:(id)sender;
@@ -99,9 +96,6 @@
 
 - (void)updateUIForDataChange
 {
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                          target:self
-                                                                                          action:@selector(cancelAction:)];
     if (self.managedObjectContext.hasChanges) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                                target:self
@@ -240,12 +234,6 @@
     // configure date picker
     _datePickerView.maximumDate = [NSDate date];
     _datePickerView.date = self.userDefaultsManager.lastDateOfBirth;
-    // we want to support cancel, so make sure we have an undoManager
-    if (nil == self.managedObjectContext.undoManager) {
-        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-        _removeUndoManagerWhenDone = YES;
-    }
-    [self.managedObjectContext.undoManager beginUndoGrouping];
     // acquire patient - creating local and back end
     if (_newPatientFlag) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -394,31 +382,6 @@
     [self.view endEditing:YES];
 }
 
-- (IBAction)cancelAction:(id)sender
-{
-    [self.view endEditing:YES];
-    // delete patient if canceling a new patient
-    __weak __typeof(&*self)weakSelf = self;
-    dispatch_block_t block = ^{
-        if (weakSelf.managedObjectContext.undoManager.groupingLevel > 0) {
-            [weakSelf.managedObjectContext.undoManager endUndoGrouping];
-            if (weakSelf.managedObjectContext.undoManager.canUndo) {
-                // this should undo the insert of new person
-                [weakSelf.managedObjectContext.undoManager undoNestedGroup];
-            }
-        }
-        if (_removeUndoManagerWhenDone) {
-            weakSelf.managedObjectContext.undoManager = nil;
-        }
-        [weakSelf.delegate patientDetailViewControllerDidCancelUpdate:weakSelf];
-    };
-    if (_newPatientFlag) {
-        [self.appDelegate.navigationCoordinator deletePatient:_patient completionHandler:block];
-    } else {
-        block();
-    }
-}
-
 - (IBAction)saveAction:(id)sender
 {
     [self.view endEditing:YES];
@@ -427,29 +390,22 @@
 
 - (IBAction)delayedSaveAction:(id)sender
 {
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-    }
-    if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
-    }
     // associate
     if (nil == _patient.person) {
         _patient.person = _person;
     }
     // save local
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     __weak __typeof(&*self)weakSelf = self;
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        // update back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        WMPatient *patient = weakSelf.patient;
-        NSParameterAssert(patient.ffUrl);
-        [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-            [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
-        }];
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    WMPatient *patient = weakSelf.patient;
+    NSParameterAssert(patient.ffUrl);
+    [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
     }];
 }
 
@@ -493,6 +449,7 @@
     if (nil == _patient.person) {
         _patient.person = _person;
     }
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     if (nil == _person.ffUrl) {

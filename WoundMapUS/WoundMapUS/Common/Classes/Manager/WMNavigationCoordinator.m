@@ -136,24 +136,29 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [ffm createPatient:patient ff:ff completionHandler:^(NSError *error, id object) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         completionHandler(error, object);
     }];
 }
 
 - (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    BOOL deleteFromBackend = (nil != patient.ffUrl);
+    if (deleteFromBackend) {
+        [ffm prepareToDeletePatient:patient ff:ff];
+        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+    }
     if ([patient isEqual:_patient]) {
         _patient = nil;
     }
-    if (patient.ffUrl) {
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        [ffm deletePatient:_patient ff:ff completionHandler:^(NSError *error) {
-            completionHandler();
-        }];
-    } else {
-        completionHandler();
-    }
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    [managedObjectContext MR_deleteObjects:@[patient]];
+    [managedObjectContext processPendingChanges];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
+    completionHandler();
 }
 
 - (void)setWound:(WMWound *)wound

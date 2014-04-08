@@ -16,6 +16,7 @@
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 
 #define kPatientTableViewCellHeight 76.0
@@ -55,15 +56,9 @@
 
 - (void)deletePatient:(WMPatient *)patient
 {
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    [managedObjectContext MR_deleteObjects:@[patient]];
     __weak __typeof(self) weakSelf = self;
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            [weakSelf.tableView reloadData];
-        }
+    [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
+        [weakSelf.tableView reloadData];
     }];
 }
 
