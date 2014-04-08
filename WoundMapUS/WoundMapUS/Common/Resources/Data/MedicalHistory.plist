@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Heart Disease</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Arterial Disease</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>20</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Vein Disease</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>30</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Cancer</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>40</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Skin Cancer</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>50</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Respitory</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>60</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Renal Failure</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>70</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Diabetes</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>80</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Rheumatoid Arthritus</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>90</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>CVA</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>100</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Dementia</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>8</integer>
+		<key>sortRank</key>
+		<integer>110</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Other</string>
+		<key>definition</key>
+		<string>0</string>
+		<key>valueTypeCode</key>
+		<integer>16</integer>
+		<key>sortRank</key>
+		<integer>10</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+	</dict>
+</array>
+</plist>

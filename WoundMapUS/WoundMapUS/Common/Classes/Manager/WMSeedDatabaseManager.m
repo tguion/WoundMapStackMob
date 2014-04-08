@@ -17,6 +17,7 @@
 #import "WMPatient.h"
 #import "WMBradenCare.h"
 #import "WMWoundType.h"
+#import "WMMedicalHistoryItem.h"
 #import "WMDefinition.h"
 #import "WMInstruction.h"
 #import "IAPProduct.h"
@@ -103,6 +104,13 @@
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
             [WMWoundType seedDatabase:managedObjectContext completionHandler:completionHandler];
+        }
+    }];
+    // *** WMMedicalHistoryItem *** first attempt to acquire data from backend
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryItem entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (![object count]) {
+            [WMMedicalHistoryItem seedDatabase:managedObjectContext completionHandler:completionHandler];
         }
     }];
     // *** WMNavigationTrack *** first attempt to acquire data from backend

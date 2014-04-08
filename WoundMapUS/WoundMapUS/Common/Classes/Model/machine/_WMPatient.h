@@ -23,6 +23,7 @@ extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *carePlanGroups;
 	__unsafe_unretained NSString *deviceGroups;
 	__unsafe_unretained NSString *ids;
+	__unsafe_unretained NSString *medicalHistoryGroups;
 	__unsafe_unretained NSString *medicationGroups;
 	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *patientConsultants;
@@ -41,6 +42,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMCarePlanGroup;
 @class WMDeviceGroup;
 @class WMId;
+@class WMMedicalHistoryGroup;
 @class WMMedicationGroup;
 @class WMParticipant;
 @class WMPatientConsultant;
@@ -226,6 +228,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *medicalHistoryGroups;
+
+- (NSMutableSet*)medicalHistoryGroupsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *medicationGroups;
 
 - (NSMutableSet*)medicationGroupsSet;
@@ -313,6 +322,11 @@ extern const struct WMPatientFetchedProperties {
 - (void)removeIds:(NSSet*)value_;
 - (void)addIdsObject:(WMId*)value_;
 - (void)removeIdsObject:(WMId*)value_;
+
+- (void)addMedicalHistoryGroups:(NSSet*)value_;
+- (void)removeMedicalHistoryGroups:(NSSet*)value_;
+- (void)addMedicalHistoryGroupsObject:(WMMedicalHistoryGroup*)value_;
+- (void)removeMedicalHistoryGroupsObject:(WMMedicalHistoryGroup*)value_;
 
 - (void)addMedicationGroups:(NSSet*)value_;
 - (void)removeMedicationGroups:(NSSet*)value_;
@@ -437,6 +451,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSMutableSet*)primitiveIds;
 - (void)setPrimitiveIds:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveMedicalHistoryGroups;
+- (void)setPrimitiveMedicalHistoryGroups:(NSMutableSet*)value;
 
 
 

@@ -414,6 +414,15 @@
 		7DDE755218CE456800B15C77 /* WoundStatusMeasurementRollup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754F18CE456800B15C77 /* WoundStatusMeasurementRollup.m */; };
 		7DDEE26D18F1919D00AF9FC6 /* WMManageTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */; };
 		7DDEE26E18F1919D00AF9FC6 /* WMManageTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */; };
+		7DDEE27718F4947500AF9FC6 /* _WMMedicalHistoryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE27218F4947500AF9FC6 /* _WMMedicalHistoryGroup.m */; };
+		7DDEE27818F4947500AF9FC6 /* _WMMedicalHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE27418F4947500AF9FC6 /* _WMMedicalHistoryItem.m */; };
+		7DDEE27918F4947500AF9FC6 /* _WMMedicalHistoryValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE27618F4947500AF9FC6 /* _WMMedicalHistoryValue.m */; };
+		7DDEE28018F4948B00AF9FC6 /* WMMedicalHistoryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE27B18F4948B00AF9FC6 /* WMMedicalHistoryGroup.m */; };
+		7DDEE28118F4948B00AF9FC6 /* WMMedicalHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE27D18F4948B00AF9FC6 /* WMMedicalHistoryItem.m */; };
+		7DDEE28218F4948B00AF9FC6 /* WMMedicalHistoryValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE27F18F4948B00AF9FC6 /* WMMedicalHistoryValue.m */; };
+		7DDEE28418F495F900AF9FC6 /* MedicalHistory.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DDEE28318F495F900AF9FC6 /* MedicalHistory.plist */; };
+		7DDEE28818F49E5500AF9FC6 /* WMMedicalHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEE28618F49E5500AF9FC6 /* WMMedicalHistoryViewController.m */; };
+		7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDEE28718F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib */; };
 		7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68018B7C06D00041927 /* WMHomeBaseViewController.m */; };
 		7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68318B7C09B00041927 /* WMHomeBaseViewController_iPhone.m */; };
 		7DDFD68618B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDFD68418B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib */; };
@@ -1212,6 +1221,22 @@
 		7DDEE26A18F1919D00AF9FC6 /* WMManageTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMManageTeamViewController.h; sourceTree = "<group>"; };
 		7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMManageTeamViewController.m; sourceTree = "<group>"; };
 		7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMManageTeamViewController.xib; sourceTree = "<group>"; };
+		7DDEE27118F4947500AF9FC6 /* _WMMedicalHistoryGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMMedicalHistoryGroup.h; sourceTree = "<group>"; };
+		7DDEE27218F4947500AF9FC6 /* _WMMedicalHistoryGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMMedicalHistoryGroup.m; sourceTree = "<group>"; };
+		7DDEE27318F4947500AF9FC6 /* _WMMedicalHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMMedicalHistoryItem.h; sourceTree = "<group>"; };
+		7DDEE27418F4947500AF9FC6 /* _WMMedicalHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMMedicalHistoryItem.m; sourceTree = "<group>"; };
+		7DDEE27518F4947500AF9FC6 /* _WMMedicalHistoryValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMMedicalHistoryValue.h; sourceTree = "<group>"; };
+		7DDEE27618F4947500AF9FC6 /* _WMMedicalHistoryValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMMedicalHistoryValue.m; sourceTree = "<group>"; };
+		7DDEE27A18F4948B00AF9FC6 /* WMMedicalHistoryGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedicalHistoryGroup.h; sourceTree = "<group>"; };
+		7DDEE27B18F4948B00AF9FC6 /* WMMedicalHistoryGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedicalHistoryGroup.m; sourceTree = "<group>"; };
+		7DDEE27C18F4948B00AF9FC6 /* WMMedicalHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedicalHistoryItem.h; sourceTree = "<group>"; };
+		7DDEE27D18F4948B00AF9FC6 /* WMMedicalHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedicalHistoryItem.m; sourceTree = "<group>"; };
+		7DDEE27E18F4948B00AF9FC6 /* WMMedicalHistoryValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedicalHistoryValue.h; sourceTree = "<group>"; };
+		7DDEE27F18F4948B00AF9FC6 /* WMMedicalHistoryValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedicalHistoryValue.m; sourceTree = "<group>"; };
+		7DDEE28318F495F900AF9FC6 /* MedicalHistory.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MedicalHistory.plist; sourceTree = "<group>"; };
+		7DDEE28518F49E5500AF9FC6 /* WMMedicalHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMedicalHistoryViewController.h; sourceTree = "<group>"; };
+		7DDEE28618F49E5500AF9FC6 /* WMMedicalHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMedicalHistoryViewController.m; sourceTree = "<group>"; };
+		7DDEE28718F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMMedicalHistoryViewController.xib; sourceTree = "<group>"; };
 		7DDFD67F18B7C06D00041927 /* WMHomeBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHomeBaseViewController.h; sourceTree = "<group>"; };
 		7DDFD68018B7C06D00041927 /* WMHomeBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMHomeBaseViewController.m; sourceTree = "<group>"; };
 		7DDFD68218B7C09B00041927 /* WMHomeBaseViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHomeBaseViewController_iPhone.h; sourceTree = "<group>"; };
@@ -1495,6 +1520,7 @@
 				5F67D1EB18AC3BE000460C37 /* WoundTreatmentDefinitions.plist */,
 				5F67D1EC18AC3BE000460C37 /* WoundType.plist */,
 				5F67D1ED18AC3BE000460C37 /* WoundTypeDefinitions.plist */,
+				7DDEE28318F495F900AF9FC6 /* MedicalHistory.plist */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1974,6 +2000,9 @@
 				7DDEE26A18F1919D00AF9FC6 /* WMManageTeamViewController.h */,
 				7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */,
 				7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */,
+				7DDEE28518F49E5500AF9FC6 /* WMMedicalHistoryViewController.h */,
+				7DDEE28618F49E5500AF9FC6 /* WMMedicalHistoryViewController.m */,
+				7DDEE28718F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2087,6 +2116,12 @@
 				7DF4E96618C29A07000A3F5B /* WMInterventionStatus.m */,
 				7DF4E97E18C362DD000A3F5B /* WMInterventionStatusJoin.h */,
 				7DF4E97F18C362DD000A3F5B /* WMInterventionStatusJoin.m */,
+				7DDEE27A18F4948B00AF9FC6 /* WMMedicalHistoryGroup.h */,
+				7DDEE27B18F4948B00AF9FC6 /* WMMedicalHistoryGroup.m */,
+				7DDEE27C18F4948B00AF9FC6 /* WMMedicalHistoryItem.h */,
+				7DDEE27D18F4948B00AF9FC6 /* WMMedicalHistoryItem.m */,
+				7DDEE27E18F4948B00AF9FC6 /* WMMedicalHistoryValue.h */,
+				7DDEE27F18F4948B00AF9FC6 /* WMMedicalHistoryValue.m */,
 				7D39DB7818B947330054DDC3 /* WMMedication.h */,
 				7D39DB7918B947330054DDC3 /* WMMedication.m */,
 				7D39DB7A18B947330054DDC3 /* WMMedicationCategory.h */,
@@ -2432,6 +2467,12 @@
 				7DF4E94818C299DC000A3F5B /* _WMInterventionStatus.m */,
 				7DF4E97B18C362D2000A3F5B /* _WMInterventionStatusJoin.h */,
 				7DF4E97C18C362D2000A3F5B /* _WMInterventionStatusJoin.m */,
+				7DDEE27118F4947500AF9FC6 /* _WMMedicalHistoryGroup.h */,
+				7DDEE27218F4947500AF9FC6 /* _WMMedicalHistoryGroup.m */,
+				7DDEE27318F4947500AF9FC6 /* _WMMedicalHistoryItem.h */,
+				7DDEE27418F4947500AF9FC6 /* _WMMedicalHistoryItem.m */,
+				7DDEE27518F4947500AF9FC6 /* _WMMedicalHistoryValue.h */,
+				7DDEE27618F4947500AF9FC6 /* _WMMedicalHistoryValue.m */,
 				7D39DB6F18B947250054DDC3 /* _WMMedication.h */,
 				7D39DB7018B947250054DDC3 /* _WMMedication.m */,
 				7D39DB7118B947250054DDC3 /* _WMMedicationCategory.h */,
@@ -2870,6 +2911,7 @@
 				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
 				7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
+				7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */,
 				5F67D20518AC3BE000460C37 /* WoundMeasurementTemplate.plist in Resources */,
 				7D10CE1F18DDEB7B00AD43E3 /* WMSelectWoundPositionViewController.xib in Resources */,
 				5F67D1F918AC3BE000460C37 /* ProfessionalTitle.plist in Resources */,
@@ -2896,6 +2938,7 @@
 				5F6DE53718B58BB000E87F7E /* Instructions.plist in Resources */,
 				5F6DE53F18B58BB000E87F7E /* InstructionsSkinAssessment.html in Resources */,
 				5F6DE53918B58BB000E87F7E /* InstructionsIntroduction.html in Resources */,
+				7DDEE28418F495F900AF9FC6 /* MedicalHistory.plist in Resources */,
 				7D10CD9818DA301100AD43E3 /* WMNoteViewController.xib in Resources */,
 				7D10CDA418DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.xib in Resources */,
 				5F6DE50418B2CC2200E87F7E /* WMPersonEditorViewController.xib in Resources */,
@@ -3036,6 +3079,7 @@
 				5F67D22C18AD8DF000460C37 /* WMNavigationNode.m in Sources */,
 				7DB206D718A839180004DC32 /* WMTelecom.m in Sources */,
 				7DF4E9A418C3D168000A3F5B /* WMWoundTreatmentIntEvent.m in Sources */,
+				7DDEE27718F4947500AF9FC6 /* _WMMedicalHistoryGroup.m in Sources */,
 				7D39DB8C18B94FEB0054DDC3 /* _WMDeviceValue.m in Sources */,
 				7DF4E92B18C22F27000A3F5B /* WMDefinitionKeyword.m in Sources */,
 				7DF4E93118C22F27000A3F5B /* WMSkinAssessmentCategory.m in Sources */,
@@ -3126,6 +3170,7 @@
 				7DF4E98F18C3C4D1000A3F5B /* _WMSkinAssessmentIntEvent.m in Sources */,
 				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
 				7DF4E93618C22F27000A3F5B /* WMWoundLocationValue.m in Sources */,
+				7DDEE28818F49E5500AF9FC6 /* WMMedicalHistoryViewController.m in Sources */,
 				7D13027E18D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m in Sources */,
 				7D10CD7718D618CD00AD43E3 /* WMTeamInvitation.m in Sources */,
 				7D10CE0318DC634800AD43E3 /* WMDevicesGroupHistoryViewContoller.m in Sources */,
@@ -3205,6 +3250,7 @@
 				7D10CD7B18D63B1600AD43E3 /* WMTelecomListViewController.m in Sources */,
 				7DD8372D18C78A390028C2D3 /* NSEntityDescription+MagicalDataImport.m in Sources */,
 				7D10CE2318DDF26300AD43E3 /* WMMedicationSummaryViewController.m in Sources */,
+				7DDEE27918F4947500AF9FC6 /* _WMMedicalHistoryValue.m in Sources */,
 				7DD8375E18C7A5080028C2D3 /* AFImageRequestOperation.m in Sources */,
 				7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */,
 				7DB206EB18A839240004DC32 /* _WMId.m in Sources */,
@@ -3213,6 +3259,7 @@
 				7DB206D318A839180004DC32 /* WMId.m in Sources */,
 				7DD8372E18C78A390028C2D3 /* NSNumber+MagicalDataImport.m in Sources */,
 				5F6DE51E18B589B300E87F7E /* WMInstructionTableViewCell.m in Sources */,
+				7DDEE27818F4947500AF9FC6 /* _WMMedicalHistoryItem.m in Sources */,
 				7D39DAE718B7E5DD0054DDC3 /* WMSelectWoundViewController.m in Sources */,
 				7D10CD9718DA301100AD43E3 /* WMNoteViewController.m in Sources */,
 				7D10CDE418DA3FC300AD43E3 /* WMDisclosureImageView.m in Sources */,
@@ -3266,6 +3313,7 @@
 				7D10CDD118DA37DB00AD43E3 /* WMWoundMeasurementGroupTableViewCell.m in Sources */,
 				7DD8374118C78A3A0028C2D3 /* MagicalRecord+Options.m in Sources */,
 				7DDFD68518B7C09B00041927 /* WMHomeBaseViewController_iPhone.m in Sources */,
+				7DDEE28218F4948B00AF9FC6 /* WMMedicalHistoryValue.m in Sources */,
 				7DF4E9C018C4CAAE000A3F5B /* PDFRenderer.m in Sources */,
 				7DF4E97518C29A07000A3F5B /* WMInterventionStatus.m in Sources */,
 				7D10CDEF18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m in Sources */,
@@ -3288,6 +3336,7 @@
 				7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */,
 				7DF4E98C18C3C036000A3F5B /* WMPsychoSocialIntEvent.m in Sources */,
 				7D10CD6518D24D5000AD43E3 /* WMUnderlayNavigationBar.m in Sources */,
+				7DDEE28018F4948B00AF9FC6 /* WMMedicalHistoryGroup.m in Sources */,
 				7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */,
 				7DF4E9AD18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m in Sources */,
 				5F67D22E18AD8DF000460C37 /* WMNavigationTrack.m in Sources */,
@@ -3345,6 +3394,7 @@
 				7DD8373D18C78A3A0028C2D3 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */,
 				7D10CDF318DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.m in Sources */,
+				7DDEE28118F4948B00AF9FC6 /* WMMedicalHistoryItem.m in Sources */,
 				7D10CE1718DCE13900AD43E3 /* WMBradenCellTableViewCell.m in Sources */,
 				7DF4E98918C3C017000A3F5B /* _WMPsychoSocialIntEvent.m in Sources */,
 			);
