@@ -86,7 +86,7 @@
 
 - (void)handleRootManagedObjectContextDidSave:(NSNotification *)notification
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractal *ff = [WMFatFractal instance];
     FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -99,6 +99,10 @@
         }
     }
     if (_processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification) {
+        /**
+         2014-04-08 11:58:44.663 WoundMapUS[38741:60b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Illegal attempt to establish a relationship 'participant' between objects in different contexts (source = <WMPerson: 0x11cacea0> (entity: WMPerson; id: 0xbecfd00 <x-coredata://2D3D83B0-FE6E-4058-92B3-2FCC63C58AEB/WMPerson/p1> ; data: {
+
+         */
         NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
         for (id object in updatedObjects) {
             [ff updateObj:object onComplete:httpMethodCompletion];
@@ -236,6 +240,7 @@
     // else
     for (object in objects) {
         for (NSString *alias in aliases) {
+            NSLog(@"fetching alias %@ for object %@", alias, object);
             [ff grabBagGetAllForObj:object
                         grabBagName:alias
                          onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -250,7 +255,7 @@
 {
     WM_ASSERT_MAIN_THREAD;
     NSParameterAssert(completionHandler);
-    // Fetch any events that have been updated on the backend
+    // Fetch any patients that have been updated on the backend
     // Guide to query language is here: http://fatfractal.com/prod/docs/queries/
     // and full syntax reference here: http://fatfractal.com/prod/docs/reference/#query-language
     // Note use of the "depthGb" parameter - see here: http://fatfractal.com/prod/docs/queries/#retrieving-related-objects-inline
@@ -553,107 +558,61 @@
 - (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSParameterAssert(patient.ffUrl);
-    WMAddToGrabBagBlock block = ^(NSManagedObject *item, NSManagedObject *aggregator, NSString *grabBagName) {
-        NSString *itemFFUrl = [item valueForKey:@"ffUrl"];
-        NSString *aggregatorFFUrl = [aggregator valueForKey:@"ffUrl"];
-        if (nil == itemFFUrl) {
-            [ff createObj:item atUri:[NSString stringWithFormat:@"/%@", [[item entity] name]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    NSString *itemFFUrl = [object valueForKey:@"ffUrl"];
-                    [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                    }];
-                }
-            }];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMErrorCallback localCompletionHandler = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
         } else {
-            [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            }];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
         }
     };
-    for (id item in patient.ids) {
-        block(item, patient, WMPatientRelationships.ids);
+    for (NSString *relationshipName in [WMPatient toManyRelationshipNames]) {
+        NSSet *items = [patient valueForKey:relationshipName];
+        for (id item in items) {
+            [self insertOrUpdateGrabBagItem:item
+                                 aggregator:patient
+                                grabBagName:relationshipName
+                                         ff:ff
+                          completionHandler:localCompletionHandler];
+        }
     }
     [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         completionHandler(error);
     }];
 }
 
-- (void)prepareToDeletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff
-{
-    NSParameterAssert(patient.ffUrl);
-    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
-    FFUserGroup *consultantGroup = patient.consultantGroup;
-    [ff deleteObj:consultantGroup onComplete:httpMethodCompletion];
-}
+#pragma mark - Inserts and Updates
 
-- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff
+- (void)insertOrUpdateGrabBagItem:(NSManagedObject *)item
+                       aggregator:(NSManagedObject *)aggregator
+                      grabBagName:(NSString *)grabBagName
+                               ff:(WMFatFractal *)ff
+                completionHandler:(WMErrorCallback)completionHandler
 {
-    NSParameterAssert(patient.ffUrl);
-    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
-    // deleted objects should have been registered
-
-}
-
-- (void)deletePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
-{
-    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
-    if (person.ffUrl) {
-        [ff deleteObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            for (id address in person.addresses) {
-                [ff deleteObj:address onComplete:httpMethodCompletion];
-            }
-            for (id telecom in person.telecoms) {
-                [ff deleteObj:telecom onComplete:httpMethodCompletion];
-            }
-            completionHandler(error);
-        }];
-    }
-}
-
-- (void)deleteBradenScale:(WMBradenScale *)bradenScale ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
-{
-    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
-    if (bradenScale.ffUrl) {
-        [ff deleteObj:bradenScale onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            for (WMBradenSection *bradenSection in bradenScale.sections) {
-                if (bradenSection.ffUrl) {
-                    [ff deleteObj:bradenSection onComplete:httpMethodCompletion];
-                    for (WMBradenCell *bradenCell in bradenSection.cells) {
-                        if (bradenCell.ffUrl) {
-                            [ff deleteObj:bradenCell onComplete:httpMethodCompletion];
-                        }
+    NSParameterAssert([item managedObjectContext] == [aggregator managedObjectContext]);
+    NSString *itemFFUrl = [item valueForKey:@"ffUrl"];
+    NSString *aggregatorFFUrl = [aggregator valueForKey:@"ffUrl"];
+    if (nil == itemFFUrl) {
+        [ff createObj:item atUri:[NSString stringWithFormat:@"/%@", [[item entity] name]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                NSString *itemFFUrl = [object valueForKey:@"ffUrl"];
+                [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
                     }
-                }
+                }];
             }
-            completionHandler(error);
+        }];
+    } else {
+        [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
         }];
     }
 }
-
-// TODO: delete for rest of patient to-many relationships
 
 #pragma mark - Refresh
 

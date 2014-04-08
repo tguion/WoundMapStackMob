@@ -58,6 +58,7 @@
 {
     __weak __typeof(self) weakSelf = self;
     [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
+        [weakSelf updateUIForPatientList];
         [weakSelf.tableView reloadData];
     }];
 }

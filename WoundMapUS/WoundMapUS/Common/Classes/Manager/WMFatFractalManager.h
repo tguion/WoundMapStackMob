@@ -11,7 +11,6 @@
 typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequired);
 typedef void (^WMErrorCallback)(NSError *error);
 typedef void (^WMObjectCallback)(NSError *error, id object);
-typedef void (^WMAddToGrabBagBlock)(id item, id aggregator, NSString *grabBagName);
 
 @class WMFatFractal;
 @class WMParticipant, WMPatient, WMPerson;
@@ -53,8 +52,5 @@ typedef void (^WMAddToGrabBagBlock)(id item, id aggregator, NSString *grabBagNam
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler;
 - (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 
-
-- (void)prepareToDeletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
-- (void)deletePatient:(WMPatient *)patient ff:(WMFatFractal *)ff;
 
 @end

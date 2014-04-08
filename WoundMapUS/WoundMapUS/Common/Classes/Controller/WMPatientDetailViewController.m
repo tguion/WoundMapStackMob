@@ -449,15 +449,33 @@
     if (nil == _patient.person) {
         _patient.person = _person;
     }
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    // prepare to update backend
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    if (nil == _person.ffUrl) {
+    NSSet *updatedObjects = [self.managedObjectContext updatedObjects];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    dispatch_block_t updateBlock = ^{
+        for (id object in updatedObjects) {
+            if ([object respondsToSelector:@selector(ffUrl)] && [object valueForKey:@"ffUrl"]) {
+                [ff updateObj:object onComplete:completionHandler];
+            }
+        }
+    };
+    if (![_person valueForKey:@"ffUrl"]) {
         [ffm createPerson:person ff:ff completionHandler:^(NSError *error) {
             if (error) {
                 [WMUtilities logError:error];
+            } else {
+                updateBlock();
             }
         }];
+    } else {
+        updateBlock();
     }
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
@@ -482,8 +500,6 @@
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
-    // update back end
-    
 }
 
 - (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController
@@ -498,10 +514,15 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.section) {
         case 0: {
-            // Patient Information - no selection
-            WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
-            personEditorViewController.person = self.person;
-            [self.navigationController pushViewController:personEditorViewController animated:YES];
+            switch (indexPath.row) {
+                case 0: {
+                    // Patient Information - no selection
+                    WMPersonEditorViewController *personEditorViewController = self.personEditorViewController;
+                    personEditorViewController.person = self.person;
+                    [self.navigationController pushViewController:personEditorViewController animated:YES];
+                    break;
+                }
+            }
             break;
         }
         case 1: {
@@ -617,8 +638,8 @@
             switch (indexPath.row) {
                 case 0: {
                     // identifier
-                    cell.textLabel.text = @"Idenfiers";
-                    NSString *string = ([patient.ids count] == 1 ? @"Identifier":@"Idenfiers");
+                    cell.textLabel.text = @"Identifiers";
+                    NSString *string = ([patient.ids count] == 1 ? @"Identifier":@"Identifiers");
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [patient.ids count], string];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;

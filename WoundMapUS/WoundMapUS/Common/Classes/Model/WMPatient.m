@@ -28,7 +28,15 @@ typedef enum {
 
 + (NSArray *)toManyRelationshipNames
 {
-    return @[WMPatientRelationships.bradenScales, WMPatientRelationships.carePlanGroups, WMPatientRelationships.deviceGroups, WMPatientRelationships.ids, WMPatientRelationships.medicationGroups, WMPatientRelationships.patientConsultants, WMPatientRelationships.psychosocialGroups, WMPatientRelationships.skinAssessmentGroups, WMPatientRelationships.wounds];
+    return @[WMPatientRelationships.bradenScales,
+             WMPatientRelationships.carePlanGroups,
+             WMPatientRelationships.deviceGroups,
+             WMPatientRelationships.ids,
+             WMPatientRelationships.medicationGroups,
+             WMPatientRelationships.patientConsultants,
+             WMPatientRelationships.psychosocialGroups,
+             WMPatientRelationships.skinAssessmentGroups,
+             WMPatientRelationships.wounds];
 }
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext

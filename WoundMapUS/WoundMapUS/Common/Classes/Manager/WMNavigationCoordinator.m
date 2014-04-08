@@ -24,6 +24,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMFatFractal.h"
 #import "WMUtilities.h"
+#import "NSObject+performBlockAfterDelay.h"
 #import "WCAppDelegate.h"
 
 NSString *const kPatientChangedNotification = @"PatientChangedNotification";
@@ -143,15 +144,13 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 - (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     BOOL deleteFromBackend = (nil != patient.ffUrl);
     if (deleteFromBackend) {
-        [ffm prepareToDeletePatient:patient ff:ff];
         ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
     }
     if ([patient isEqual:_patient]) {
-        _patient = nil;
+        self.patient = nil;
     }
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     [managedObjectContext MR_deleteObjects:@[patient]];

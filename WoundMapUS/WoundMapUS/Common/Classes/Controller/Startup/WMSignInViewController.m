@@ -25,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UIView *signInButtonContainerView;
 @property (strong, nonatomic) IBOutlet UIButton *signInButton;
 
+@property (nonatomic) BOOL makePasswordFieldFirstResponder;
 @property (readonly, nonatomic) BOOL hasSufficientInput;
 
 @end
@@ -51,6 +52,9 @@
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     _userNameTextInput = userDefaultsManager.lastUserName;
+    if ([_userNameTextInput length]) {
+        _makePasswordFieldFirstResponder = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -238,7 +242,11 @@
 // called when 'return' key pressed. return NO to ignore.
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    return self.hasSufficientInput;
+    BOOL shouldReturn = self.hasSufficientInput;
+    if (shouldReturn) {
+        [self signInAction:nil];
+    }
+    return shouldReturn;
 }
 
 #pragma mark - UITableViewDelegate
@@ -293,6 +301,10 @@
             textField.delegate = self;
             textField.secureTextEntry = YES;
             [myCell updateWithLabelText:@"Password" valueText:_passwordTextInput valuePrompt:@"Enter password"];
+            if (_makePasswordFieldFirstResponder) {
+                [textField becomeFirstResponder];
+                _makePasswordFieldFirstResponder = NO;
+            }
             break;
         }
     }

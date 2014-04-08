@@ -844,11 +844,20 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         participant.firstName = person.nameGiven;
     }
     // update backend
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    ffm.processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSSet * updatedObjects = [self.managedObjectContext updatedObjects];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     [self.tableView reloadData];
-    ffm.processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    for (id object in updatedObjects) {
+        if ([object respondsToSelector:@selector(ffUrl)] && [object valueForKey:@"ffUrl"]) {
+            [ff updateObj:object onComplete:completionHandler];
+        }
+    }
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
