@@ -555,7 +555,9 @@
         </attribute>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="relevantMedications" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ssn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="surgicalHistory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES">
             <userInfo/>
         </attribute>
@@ -1204,7 +1206,7 @@
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="328"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="418"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="448"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>

@@ -1,4 +1,5 @@
 #import "_WMMedicalHistoryGroup.h"
+#import "WMFatFractalManager.h"
 
 @class WMMedicalHistoryItem;
 
@@ -6,7 +7,7 @@
 
 @property (readonly, nonatomic) NSArray *sortedMedicalHistoryValues;
 
-+ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient;
++ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient groupCreatedCallback:(WMObjectCallback)groupCallback;
 
 + (NSSet *)medicalHistoryValuesForMedicalHistoryGroup:(WMMedicalHistoryGroup *)medicalHistoryGroup;
 + (NSInteger)medicalHistoryGroupsCount:(WMPatient *)patient;

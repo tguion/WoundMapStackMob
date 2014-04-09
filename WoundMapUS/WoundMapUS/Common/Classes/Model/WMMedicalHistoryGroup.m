@@ -25,13 +25,27 @@
     return [[self.values allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"item.sortRank" ascending:YES]]];
 }
 
-+ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient
++ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient groupCreatedCallback:(WMObjectCallback)groupCallback
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    return [WMMedicalHistoryGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
-                                                   sortedBy:@"updatedAt"
-                                                  ascending:NO
-                                                  inContext:managedObjectContext];
+    WMMedicalHistoryGroup *medicalHistoryGroup = [WMMedicalHistoryGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                                                                         sortedBy:@"updatedAt"
+                                                                                        ascending:NO
+                                                                                        inContext:managedObjectContext];
+    if (nil == medicalHistoryGroup) {
+        medicalHistoryGroup = [WMMedicalHistoryGroup MR_createInContext:managedObjectContext];
+        if (groupCallback) {
+            groupCallback(nil, medicalHistoryGroup);
+        }
+        NSArray *medicalHistoryItems = [WMMedicalHistoryItem sortedMedicalHistoryItems:managedObjectContext];
+        for (WMMedicalHistoryItem *medicalHistoryItem in medicalHistoryItems) {
+            WMMedicalHistoryValue *medicalHistoryValue = [WMMedicalHistoryValue MR_createInContext:managedObjectContext];
+            medicalHistoryValue.medicalHistoryGroup = medicalHistoryGroup;
+            medicalHistoryValue.medicalHistoryItem = medicalHistoryItem;
+            medicalHistoryValue.value = @"0";
+        }
+    }
+    return medicalHistoryGroup;
 }
 
 + (NSSet *)medicalHistoryValuesForMedicalHistoryGroup:(WMMedicalHistoryGroup *)medicalHistoryGroup

@@ -12,7 +12,9 @@ const struct WMPatientAttributes WMPatientAttributes = {
 	.flags = @"flags",
 	.gender = @"gender",
 	.patientStatusMessages = @"patientStatusMessages",
+	.relevantMedications = @"relevantMedications",
 	.ssn = @"ssn",
+	.surgicalHistory = @"surgicalHistory",
 	.thumbnail = @"thumbnail",
 	.updatedAt = @"updatedAt",
 };
@@ -198,7 +200,21 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 
 
 
+@dynamic relevantMedications;
+
+
+
+
+
+
 @dynamic ssn;
+
+
+
+
+
+
+@dynamic surgicalHistory;
 
 
 

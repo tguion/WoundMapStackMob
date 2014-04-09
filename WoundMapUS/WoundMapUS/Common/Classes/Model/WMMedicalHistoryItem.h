@@ -3,6 +3,8 @@
 
 @interface WMMedicalHistoryItem : _WMMedicalHistoryItem {}
 
++ (NSArray *)sortedMedicalHistoryItems:(NSManagedObjectContext *)managedObjectContext;
+
 + (WMMedicalHistoryItem *)medicalHistoryItemForTitle:(NSString *)title
                                               create:(BOOL)create
                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

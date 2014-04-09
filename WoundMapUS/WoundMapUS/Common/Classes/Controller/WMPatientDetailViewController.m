@@ -9,6 +9,8 @@
 #import "WMPatientDetailViewController.h"
 #import "WMPersonEditorViewController.h"
 #import "WMIdListViewController.h"
+#import "WMMedicalHistoryViewController.h"
+#import "WMNoteViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMSegmentControlTableViewCell.h"
@@ -25,7 +27,13 @@
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
-@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate>
+typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
+    None,
+    SurgicalHistory,
+    RelevantMedications
+};
+
+@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate, MedicalHistoryViewControllerDelegate, NoteViewControllerDelegate>
 
 // data
 @property (strong, nonatomic) WMPatient *patient;       // create patient if new patient, otherwise we hold a strong reference to the active patient (held by navigationCoordinator)
@@ -39,6 +47,11 @@
 
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 @property (readonly, nonatomic) WMIdListViewController *idListViewController;
+@property (readonly, nonatomic) WMMedicalHistoryViewController *medicalHistoryViewController;
+@property (readonly, nonatomic) WMNoteViewController *noteViewController;
+
+// state
+@property (nonatomic) WMMedicalHistoryViewControllerNoteSource noteSource;
 
 - (IBAction)saveAction:(id)sender;
 - (IBAction)dateOfBirthChangedValueAction:(id)sender;
@@ -297,6 +310,10 @@
             cellReuseIdentifier = @"ValueCell";
             break;
         }
+        case 2: {
+            cellReuseIdentifier = @"ValueCell";
+            break;
+        }
     }
     return cellReuseIdentifier;
 }
@@ -325,6 +342,20 @@
     WMIdListViewController *idListViewController = [[WMIdListViewController alloc] initWithNibName:@"WMIdListViewController" bundle:nil];
     idListViewController.delegate = self;
     return idListViewController;
+}
+
+- (WMMedicalHistoryViewController *)medicalHistoryViewController
+{
+    WMMedicalHistoryViewController *medicalHistoryViewController = [[WMMedicalHistoryViewController alloc] initWithNibName:@"WMMedicalHistoryViewController" bundle:nil];
+    medicalHistoryViewController.delegate = self;
+    return medicalHistoryViewController;
+}
+
+- (WMNoteViewController *)noteViewController
+{
+    WMNoteViewController *noteViewController = [[WMNoteViewController alloc] initWithNibName:@"WMNoteViewController" bundle:nil];
+    noteViewController.delegate = self;
+    return noteViewController;
 }
 
 #pragma mark - BaseViewController
@@ -507,6 +538,82 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark - MedicalHistoryViewControllerDelegate
+
+- (void)medicalHistoryViewControllerDidFinish:(WMMedicalHistoryViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)medicalHistoryViewControllerDidCancel:(WMMedicalHistoryViewController *)viewCnotroller
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - NoteViewControllerDelegate
+
+- (NSString *)note
+{
+    NSString *note = nil;
+    switch (_noteSource) {
+        case SurgicalHistory: {
+            note = self.patient.surgicalHistory;
+            break;
+        }
+        case RelevantMedications: {
+            note = self.patient.relevantMedications;
+            break;
+        }
+        default:
+            break;
+    }
+    return note;
+}
+
+- (NSString *)label
+{
+    NSString *label = nil;
+    switch (_noteSource) {
+        case SurgicalHistory: {
+            label = @"Surgical History";
+            break;
+        }
+        case RelevantMedications: {
+            label = @"Relevant Medications";
+            break;
+        }
+        default:
+            break;
+    }
+    return label;
+}
+
+- (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note
+{
+    NSIndexPath *indexPath = nil;
+    switch (_noteSource) {
+        case SurgicalHistory: {
+            self.patient.surgicalHistory = note;
+            indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+            break;
+        }
+        case RelevantMedications: {
+            self.patient.relevantMedications = note;
+            indexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+            break;
+        }
+        default:
+            break;
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)noteViewControllerDidCancel:(WMNoteViewController *)viewController withNote:(NSString *)note
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -531,6 +638,26 @@
             [self.navigationController pushViewController:idListViewController animated:YES];
             break;
         }
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self.navigationController pushViewController:self.medicalHistoryViewController animated:YES];
+                    break;
+                }
+                case 1: {
+                    _noteSource = SurgicalHistory;
+                    [self.navigationController pushViewController:self.noteViewController animated:YES];
+                    break;
+                }
+                case 2: {
+                    _noteSource = RelevantMedications;
+                    [self.navigationController pushViewController:self.noteViewController animated:YES];
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
     }
 }
 
@@ -538,7 +665,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 3;
 }
 
 // fixed font style. use custom view (UILabel) if you want something different
@@ -552,6 +679,10 @@
         }
         case 1: {
             title = @"EMR/Record Identifiers";
+            break;
+        }
+        case 2: {
+            title = @"Medical History";
             break;
         }
     }
@@ -568,6 +699,10 @@
         }
         case 1: {
             count = 1;
+            break;
+        }
+        case 2: {
+            count = 3;
             break;
         }
     }
@@ -641,6 +776,30 @@
                     cell.textLabel.text = @"Identifiers";
                     NSString *string = ([patient.ids count] == 1 ? @"Identifier":@"Identifiers");
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [patient.ids count], string];
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                }
+            }
+            break;
+        }
+        case 2: {
+            switch (indexPath.row) {
+                case 0: {
+                    cell.textLabel.text = @"Medical History";
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    break;
+                }
+                case 1: {
+                    // surgical history
+                    cell.textLabel.text = @"Surgical History";
+                    cell.detailTextLabel.text = self.patient.surgicalHistory;
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                }
+                case 2: {
+                    // relevant medications
+                    cell.textLabel.text = @"Relevant Medications";
+                    cell.detailTextLabel.text = self.patient.relevantMedications;
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }

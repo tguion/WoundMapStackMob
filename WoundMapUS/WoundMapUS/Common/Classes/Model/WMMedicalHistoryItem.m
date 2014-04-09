@@ -17,6 +17,11 @@
     self.updatedAt = [NSDate date];
 }
 
++ (NSArray *)sortedMedicalHistoryItems:(NSManagedObjectContext *)managedObjectContext
+{
+    return [WMMedicalHistoryItem MR_findAllSortedBy:WMMedicalHistoryItemAttributes.sortRank ascending:YES inContext:managedObjectContext];
+}
+
 + (WMMedicalHistoryItem *)medicalHistoryItemForTitle:(NSString *)title
                                               create:(BOOL)create
                                 managedObjectContext:(NSManagedObjectContext *)managedObjectContext

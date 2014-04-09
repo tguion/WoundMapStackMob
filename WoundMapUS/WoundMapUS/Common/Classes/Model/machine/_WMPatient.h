@@ -13,7 +13,9 @@ extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *gender;
 	__unsafe_unretained NSString *patientStatusMessages;
+	__unsafe_unretained NSString *relevantMedications;
 	__unsafe_unretained NSString *ssn;
+	__unsafe_unretained NSString *surgicalHistory;
 	__unsafe_unretained NSString *thumbnail;
 	__unsafe_unretained NSString *updatedAt;
 } WMPatientAttributes;
@@ -52,6 +54,8 @@ extern const struct WMPatientFetchedProperties {
 @class WMNavigationStage;
 @class WMTeam;
 @class WMWound;
+
+
 
 
 
@@ -170,11 +174,31 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* relevantMedications;
+
+
+
+//- (BOOL)validateRelevantMedications:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* ssn;
 
 
 
 //- (BOOL)validateSsn:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* surgicalHistory;
+
+
+
+//- (BOOL)validateSurgicalHistory:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -415,8 +439,20 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+- (NSString*)primitiveRelevantMedications;
+- (void)setPrimitiveRelevantMedications:(NSString*)value;
+
+
+
+
 - (NSString*)primitiveSsn;
 - (void)setPrimitiveSsn:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveSurgicalHistory;
+- (void)setPrimitiveSurgicalHistory:(NSString*)value;
 
 
 
