@@ -80,9 +80,18 @@
     return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+- (BOOL)databaseSeedHasCompleted
+{
+    return [WMWoundType woundTypeCount:[NSManagedObjectContext MR_defaultContext]] > 0;
+}
+
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler
 {
     WM_ASSERT_MAIN_THREAD;
+    if (self.databaseSeedHasCompleted) {
+        return;
+    }
+    // else
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     WMProcessCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection) {

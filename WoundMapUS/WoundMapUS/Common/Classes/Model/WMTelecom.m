@@ -37,20 +37,41 @@
     return [array0 componentsJoinedByString:@":"];
 }
 
-#pragma mar - FatFractal
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"isEmail",
+                                                            @"stringValue"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([propertyName isEqualToString:@"isEmail"]) {
+    if ([[WMTelecom attributeNamesNotToSerialize] containsObject:propertyName] || [[WMTelecom relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
-    if ([propertyName isEqualToString:@"stringValue"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"objectID"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"flagsValue"]) {
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMTelecom relationshipNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

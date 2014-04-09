@@ -6,6 +6,7 @@
 @interface WMMedicalHistoryGroup : _WMMedicalHistoryGroup {}
 
 @property (readonly, nonatomic) NSArray *sortedMedicalHistoryValues;
+@property (readonly, nonatomic) NSInteger valueCount;
 
 + (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient groupCreatedCallback:(WMObjectCallback)groupCallback;
 

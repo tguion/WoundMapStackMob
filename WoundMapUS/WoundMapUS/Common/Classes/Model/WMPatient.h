@@ -27,6 +27,7 @@ extern NSString * const kConsultantGroupName;
 @property (readonly, nonatomic) NSInteger woundCount;
 @property (readonly, nonatomic) NSInteger photosCount;
 @property (readonly, nonatomic) BOOL dayOrMoreSinceCreated;
+@property (readonly, nonatomic) WMMedicalHistoryGroup *lastActiveMedicalHistoryGroup;
 
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

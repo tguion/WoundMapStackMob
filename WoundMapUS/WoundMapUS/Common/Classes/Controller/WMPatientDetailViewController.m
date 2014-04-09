@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import "UIView+Custom.h"
 #import "WMPatient.h"
+#import "WMMedicalHistoryGroup.h"
 #import "WMPerson.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
@@ -682,7 +683,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
         }
         case 2: {
-            title = @"Medical History";
+            title = @"Patient Status";
             break;
         }
     }
@@ -786,7 +787,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             switch (indexPath.row) {
                 case 0: {
                     cell.textLabel.text = @"Medical History";
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    WMMedicalHistoryGroup *medicationGroup = self.patient.lastActiveMedicalHistoryGroup;
+                    NSString *detailText = (medicationGroup ? [NSString stringWithFormat:@"%d entries", medicationGroup.valueCount]:@"");
+                    cell.detailTextLabel.text = detailText;
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
                 case 1: {

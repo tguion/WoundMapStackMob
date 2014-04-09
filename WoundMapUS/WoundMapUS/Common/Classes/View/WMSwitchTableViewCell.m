@@ -41,12 +41,13 @@
     // Configure the view for the selected state
 }
 
-- (void)updateWithLabelText:(NSString *)labelText value:(BOOL)value target:(id)target action:(SEL)action
+- (void)updateWithLabelText:(NSString *)labelText value:(BOOL)value target:(id)target action:(SEL)action tag:(NSInteger)tag
 {
     self.textLabel.text = labelText;
     [self.textLabel sizeToFit];
     _aSwitch.on = value;
     [_aSwitch addTarget:target action:action forControlEvents:UIControlEventValueChanged];
+    _aSwitch.tag = tag;
 }
 
 

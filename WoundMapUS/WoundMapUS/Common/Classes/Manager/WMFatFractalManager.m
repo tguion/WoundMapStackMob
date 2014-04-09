@@ -335,48 +335,37 @@
     WMOrganization *organization = participant.organization;
     if (organization) {
         [ff createObj:organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                completionHandler(error);
-            } else {
-                for (WMAddress *address in organization.addresses) {
-                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        // nothing
-                    }];
-                }
-                for (WMId *anId in organization.ids) {
-                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        // nothing
-                    }];
-                }
+            for (WMAddress *address in organization.addresses) {
+                [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    // nothing
+                }];
+            }
+            for (WMId *anId in organization.ids) {
+                [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    // nothing
+                }];
             }
         }];
     }
     WMPerson *person = participant.person;
     if (person.ffUrl) {
         [ff updateObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                completionHandler(error);
-            } else {
-                [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        completionHandler(error);
-                    }];
+            [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    // nothing
                 }];
-            }
+            }];
         }];
     } else {
         [self createPerson:person ff:ff completionHandler:^(NSError *error) {
-            if (error) {
-                completionHandler(error);
-            } else {
-                [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                        completionHandler(error);
-                    }];
+            [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    // nothing
                 }];
-            }
+            }];
         }];
     }
+    completionHandler(nil);
 }
 
 - (void)createPerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
@@ -416,6 +405,12 @@
     NSParameterAssert(team);
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     FFUserGroup *participantGroup = team.participantGroup;
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    };
     // create FFUserGroup that will hold the FFUser instance in team
     [ff createObj:participantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
@@ -440,27 +435,22 @@
                             } else {
                                 // add invitations
                                 for (WMTeamInvitation *invitation in team.invitations) {
-                                    [ff queueCreateObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]]];
+                                    [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:httpMethodCompletion];
                                 }
                                 // seed team with navigation track, stage, node
                                 [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
                                     // update backend
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
-                                        for (NSManagedObjectID *objectID in objectIDs) {
-                                            NSManagedObject *object = [managedObjectContext objectWithID:objectID];
-                                            NSLog(@"*** WoundMap: Will create collection backend: %@", object);
-                                            [ff queueCreateObj:object atUri:ffUrl];
-                                        }
+                                    NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+                                    for (NSManagedObjectID *objectID in objectIDs) {
+                                        NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+                                        NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+                                        [ff createObj:object atUri:ffUrl];
                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                    });
+                                    }
                                 }];
-                                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                                    completionHandler(error);
-                                }];
+                                completionHandler(nil);
                             }
                         }];
-
                     }
                 }
             }];

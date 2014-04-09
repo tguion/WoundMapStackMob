@@ -25,6 +25,11 @@
     return [[self.values allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"item.sortRank" ascending:YES]]];
 }
 
+- (NSInteger)valueCount
+{
+    return [WMMedicalHistoryValue MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"medicalHistoryGroup == %@ AND value == %d", self, YES] inContext:[self managedObjectContext]];
+}
+
 + (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient groupCreatedCallback:(WMObjectCallback)groupCallback
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
@@ -86,7 +91,9 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue"]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"valueCount",
+                                                            @"sortedMedicalHistoryValues"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -14,6 +14,7 @@
 #endif
 
 typedef void (^WMProcessCallback)(NSError *error, NSArray *objectIDs, NSString *collection);
+typedef void (^WMProcessCallbackWithCalback)(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack);
 
 @protocol NavigationItemTitleViewSource <NSObject>
 - (UIView *)editorTitleView:(id)object;

@@ -69,6 +69,16 @@
 
 #pragma mark - Core
 
+- (WMPatient *)patient
+{
+    return self.delegate.patient;
+}
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    return [self.patient managedObjectContext];
+}
+
 - (WMMedicalHistoryGroup *)medicalHistoryGroup
 {
     if (nil == _medicalHistoryGroup) {
@@ -186,7 +196,7 @@
             [ff updateObj:medicalHistoryValue onComplete:block];
         } else {
             [ff createObj:medicalHistoryValue
-                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
+                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryValue entityName]]
                onComplete:block];
         }
     }
@@ -195,7 +205,7 @@
 - (IBAction)medicalHistoryValueChangedAction:(id)sender
 {
     UISwitch *aSwitch = (UISwitch *)sender;
-    NSInteger row = (1000 - aSwitch.tag);
+    NSInteger row = (aSwitch.tag - 1000);
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     WMMedicalHistoryValue *medicalHistoryValue = [self.fetchedResultsController objectAtIndexPath:indexPath];
     medicalHistoryValue.value = [NSString stringWithFormat:@"%d", aSwitch.isOn];
@@ -268,11 +278,11 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     // medical history panel
-    cell.tag = (1000 + indexPath.row);
     WMMedicalHistoryValue *medicalHistoryValue = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (indexPath.row < [[self.fetchedResultsController fetchedObjects] count]) {
         WMSwitchTableViewCell *myCell = (WMSwitchTableViewCell *)cell;
-        [myCell updateWithLabelText:medicalHistoryValue.medicalHistoryItem.title value:[medicalHistoryValue.value boolValue] target:self action:@selector(medicalHistoryValueChangedAction:)];
+        cell.tag = (1000 + indexPath.row);
+        [myCell updateWithLabelText:medicalHistoryValue.medicalHistoryItem.title value:[medicalHistoryValue.value boolValue] target:self action:@selector(medicalHistoryValueChangedAction:) tag:(1000 + indexPath.row)];
         cell.accessoryType = UITableViewCellAccessoryNone;
     } else {
         cell.textLabel.text = medicalHistoryValue.medicalHistoryItem.title;

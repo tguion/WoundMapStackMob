@@ -1,4 +1,5 @@
 #import "WMPatient.h"
+#import "WMMedicalHistoryGroup.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMId.h"
@@ -136,6 +137,14 @@ typedef enum {
     return [UIImage imageNamed:avitarFileName];
 }
 
+- (WMMedicalHistoryGroup *)lastActiveMedicalHistoryGroup
+{
+    return [WMMedicalHistoryGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", self]
+                                                   sortedBy:WMMedicalHistoryGroupAttributes.updatedAt
+                                                  ascending:NO
+                                                  inContext:[self managedObjectContext]];
+}
+
 - (WMWound *)lastActiveWound
 {
     return [self.sortedWounds firstObject];
@@ -201,7 +210,8 @@ typedef enum {
                                                             @"sortedWounds",
                                                             @"woundCount",
                                                             @"photosCount",
-                                                            @"dayOrMoreSinceCreated"]];
+                                                            @"dayOrMoreSinceCreated",
+                                                            @"lastActiveMedicalHistoryGroup"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -216,11 +216,7 @@ typedef enum {
     navigationTrack.limitToSinglePatientFlag = [[dictionary objectForKey:@"limitToSinglePatientFlag"] boolValue];
     navigationTrack.skipCarePlanFlag = [[dictionary objectForKey:@"skipCarePlanFlag"] boolValue];
     navigationTrack.skipPolicyEditor = [[dictionary objectForKey:@"skipPolicyEditor"] boolValue];
-    navigationTrack.team = team;
     [managedObjectContext MR_saveOnlySelfAndWait];
-    NSAssert(![[navigationTrack objectID] isTemporaryID], @"Expect a permanent objectID");
-    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
-    [objectIDs addObject:[navigationTrack objectID]];
     id stages = [dictionary objectForKey:@"stages"];
     if ([stages isKindOfClass:[NSArray class]]) {
         for (NSDictionary *d in stages) {

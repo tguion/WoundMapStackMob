@@ -10,6 +10,6 @@
 
 @interface WMSwitchTableViewCell : UITableViewCell
 
-- (void)updateWithLabelText:(NSString *)labelText value:(BOOL)value target:(id)target action:(SEL)action;
+- (void)updateWithLabelText:(NSString *)labelText value:(BOOL)value target:(id)target action:(SEL)action tag:(NSInteger)tag;
 
 @end

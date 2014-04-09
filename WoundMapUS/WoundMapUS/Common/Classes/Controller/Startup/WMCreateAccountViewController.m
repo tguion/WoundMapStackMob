@@ -261,6 +261,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         }
         case CreateAccountAccountCreated: {
             self.navigationItem.leftBarButtonItem = nil;
+            [self.navigationItem setHidesBackButton:YES];
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                                    target:self
                                                                                                    action:@selector(doneAction:)];
