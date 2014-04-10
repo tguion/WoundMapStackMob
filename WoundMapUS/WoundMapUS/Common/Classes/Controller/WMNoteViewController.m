@@ -7,6 +7,7 @@
 //
 
 #import "WMNoteViewController.h"
+#import "WMRoundedTextView.h"
 #import "ConstraintPack.h"
 
 @interface WMNoteViewController ()
@@ -38,15 +39,13 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveAction:)];
     
     // load text view
-    UITextView* tv = [[UITextView alloc] initWithFrame:CGRectZero];
+    WMRoundedTextView* tv = [[WMRoundedTextView alloc] initWithFrame:CGRectZero];
     tv.translatesAutoresizingMaskIntoConstraints = NO;
     tv.editable = YES;
     [self.view addSubview:tv];
     _textView = tv;
     _textView.text = self.delegate.note;
 
-    // add constraints
-//    [self updateTextViewContraints];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -72,16 +71,10 @@
     [self.view addConstraints:constraints];
 }
 
-// DEBUG
-
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
     [self updateTextViewContraints];
-}
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
