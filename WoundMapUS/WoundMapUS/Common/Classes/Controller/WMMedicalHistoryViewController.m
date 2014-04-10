@@ -95,31 +95,15 @@
     return _medicalHistoryGroup;
 }
 
+- (BOOL)indexPathIsOther:(NSIndexPath *)indexPath
+{
+    WMMedicalHistoryValue *medicalHistoryValue = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    return medicalHistoryValue.medicalHistoryItem.valueTypeCodeValue == GroupValueTypeCodeNavigateToNote;
+}
+
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
 {
-    NSString *cellReuseIdentifier = nil;
-    switch (indexPath.section) {
-        case 0: {
-            // medical history panel
-            if (indexPath.row == [[self.fetchedResultsController fetchedObjects] count]) {
-                cellReuseIdentifier = @"ValueCell";
-            } else {
-                cellReuseIdentifier = @"SwitchCell";
-            }
-            break;
-        }
-        case 1: {
-            // street 1
-            cellReuseIdentifier = @"ValueCell";
-            break;
-        }
-        case 2: {
-            // city
-            cellReuseIdentifier = @"ValueCell";
-            break;
-        }
-    }
-    return cellReuseIdentifier;
+    return ([self indexPathIsOther:indexPath] ? @"ValueCell":@"SwitchCell");
 }
 
 - (WMNoteViewController *)noteViewController
@@ -241,11 +225,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    BOOL result = YES;
-    if (indexPath.section == 0 && indexPath.row < [[self.fetchedResultsController fetchedObjects] count]) {
-        result = NO;
-    }
-    return result;
+    return [self indexPathIsOther:indexPath];
 }
 
 // Called after the user changes the selection.
@@ -256,16 +236,6 @@
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [[self.fetchedResultsController fetchedObjects] count];
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -279,15 +249,15 @@
 {
     // medical history panel
     WMMedicalHistoryValue *medicalHistoryValue = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    if (indexPath.row < [[self.fetchedResultsController fetchedObjects] count]) {
+    if ([self indexPathIsOther:indexPath]) {
+        cell.textLabel.text = medicalHistoryValue.medicalHistoryItem.title;
+        cell.detailTextLabel.text = medicalHistoryValue.value;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else {
         WMSwitchTableViewCell *myCell = (WMSwitchTableViewCell *)cell;
         cell.tag = (1000 + indexPath.row);
         [myCell updateWithLabelText:medicalHistoryValue.medicalHistoryItem.title value:[medicalHistoryValue.value boolValue] target:self action:@selector(medicalHistoryValueChangedAction:) tag:(1000 + indexPath.row)];
         cell.accessoryType = UITableViewCellAccessoryNone;
-    } else {
-        cell.textLabel.text = medicalHistoryValue.medicalHistoryItem.title;
-        cell.detailTextLabel.text = medicalHistoryValue.value;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 }
 
@@ -305,7 +275,7 @@
 
 - (NSArray *)fetchedResultsControllerSortDescriptors
 {
-    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"medicalHistoryItem.sortRank" ascending:NO]];
+    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"medicalHistoryItem.sortRank" ascending:YES]];
 }
 
 @end

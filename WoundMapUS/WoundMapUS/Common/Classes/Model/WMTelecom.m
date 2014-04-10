@@ -46,7 +46,8 @@
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"isEmail",
-                                                            @"stringValue"]];
+                                                            @"stringValue",
+                                                            @"objectID"]];
     });
     return PropertyNamesNotToSerialize;
 }

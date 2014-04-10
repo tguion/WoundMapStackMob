@@ -22,6 +22,25 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        UIView *contentView = self.contentView;
+        
+        [contentView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        [contentView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        
+        UILabel *textLabel = self.textLabel;
+        textLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [textLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        [textLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(textLabel);
+        NSDictionary *metrics = @{@"Left" : @(self.separatorInset.left)};
+
+        NSMutableArray *constraints = [NSMutableArray array];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[textLabel]|" options:NSLayoutFormatAlignAllLeading metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[textLabel]|" options:NSLayoutFormatAlignAllLeading metrics:metrics views:views]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+        [contentView addConstraints:constraints];
+
         UISwitch *aSwitch = [[UISwitch alloc] init];
         self.accessoryView = aSwitch;
         _aSwitch = aSwitch;
@@ -44,7 +63,6 @@
 - (void)updateWithLabelText:(NSString *)labelText value:(BOOL)value target:(id)target action:(SEL)action tag:(NSInteger)tag
 {
     self.textLabel.text = labelText;
-    [self.textLabel sizeToFit];
     _aSwitch.on = value;
     [_aSwitch addTarget:target action:action forControlEvents:UIControlEventValueChanged];
     _aSwitch.tag = tag;

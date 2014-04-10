@@ -22,7 +22,7 @@
 		<key>title</key>
 		<string>Arterial Disease</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -38,7 +38,7 @@
 		<key>title</key>
 		<string>Vein Disease</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -54,7 +54,7 @@
 		<key>title</key>
 		<string>Cancer</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -70,7 +70,7 @@
 		<key>title</key>
 		<string>Skin Cancer</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -86,7 +86,7 @@
 		<key>title</key>
 		<string>Respitory</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -102,7 +102,7 @@
 		<key>title</key>
 		<string>Renal Failure</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -118,7 +118,7 @@
 		<key>title</key>
 		<string>Diabetes</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -134,7 +134,7 @@
 		<key>title</key>
 		<string>Rheumatoid Arthritus</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -150,7 +150,7 @@
 		<key>title</key>
 		<string>CVA</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -166,7 +166,7 @@
 		<key>title</key>
 		<string>Dementia</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>8</integer>
 		<key>sortRank</key>
@@ -182,11 +182,11 @@
 		<key>title</key>
 		<string>Other</string>
 		<key>definition</key>
-		<string>0</string>
+		<string></string>
 		<key>valueTypeCode</key>
 		<integer>16</integer>
 		<key>sortRank</key>
-		<integer>10</integer>
+		<integer>120</integer>
 		<key>SNOMED CT FSN</key>
 		<string></string>
 		<key>SNOMED CT CID</key>
