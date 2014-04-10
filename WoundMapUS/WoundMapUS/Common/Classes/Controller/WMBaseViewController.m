@@ -23,6 +23,7 @@
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "IAPManager.h"
+#import "UIView+Custom.h"
 #import "WCAppDelegate.h"
 
 @interface WMBaseViewController ()
@@ -326,6 +327,111 @@
                      completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
                          [self.refreshControl endRefreshing];
                      }];
+}
+
+- (IBAction)previousAction:(id)sender
+{
+    UIView *view = (UIView *)[self.view findFirstResponder];
+    UITableViewCell *cell = [self cellForView:view];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSInteger section = indexPath.section;
+    NSInteger row = indexPath.row;
+    while (section >= 0) {
+        while (--row >= 0) {
+            indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            if (cell) {
+                UIResponder *responder = [self firstResponderInViews:@[cell]];
+                if (responder) {
+                    [responder becomeFirstResponder];
+                    return;
+                }
+            }
+        }
+        --section;
+        if (section >= 0) {
+            row = [self.tableView numberOfRowsInSection:section];
+        }
+    }
+}
+
+- (IBAction)nextAction:(id)sender
+{
+    UIView *view = (UIView *)[self.view findFirstResponder];
+    UITableViewCell *cell = [self cellForView:view];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSInteger section = indexPath.section;
+    NSInteger row = indexPath.row;
+    NSInteger sectionCount = [self.tableView numberOfSections];
+    while (section < sectionCount) {
+        NSInteger rowCount = [self.tableView numberOfRowsInSection:section];
+        while (++row < rowCount) {
+            indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            if (cell) {
+                UIResponder *responder = [self firstResponderInViews:@[cell]];
+                if (responder) {
+                    [responder becomeFirstResponder];
+                    return;
+                }
+            }
+        }
+        ++section;
+        row = -1;
+    }
+}
+
+- (IBAction)dismissAction:(id)sender
+{
+    [self.view endEditing:YES];
+}
+
+- (UIResponder *)firstResponderInViews:(NSArray *)views
+{
+    for (UIView *view in views) {
+        if ([view conformsToProtocol:@protocol(UITextInput)]) {
+            return (UIResponder *)view;
+        }
+        // else
+        UIResponder *responder = [self firstResponderInViews:view.subviews];
+        if (responder) {
+            return responder;
+        }
+    }
+    // else
+    return nil;
+}
+
+#pragma mark - Input Accessory View
+
+- (UIToolbar *)inputAccessoryView
+{
+    if (nil == _inputAccessoryView) {
+        // load the next/previous buttons
+        _inputAccessoryView = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), 44.0)];
+        UIBarButtonItem *fixedWidthBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+                                                                                                 target:nil
+                                                                                                 action:NULL];
+        fixedWidthBarButtonItem.width = 20.0;
+        NSArray *barButtonItems = @[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"keyboard_back"]
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(previousAction:)],
+                                    fixedWidthBarButtonItem,
+                                    [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"keyboard_forward"]
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(nextAction:)],
+                                    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                  target:nil
+                                                                                  action:NULL],
+                                    [[UIBarButtonItem alloc] initWithTitle:@"Dismiss"
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(dismissAction:)]];
+        _inputAccessoryView.items = barButtonItems;
+    }
+    return _inputAccessoryView;
 }
 
 #pragma mark - Progress view

@@ -177,10 +177,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         if (error) {
             [WMUtilities logError:error];
         }
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-            [weakSelf.tableView reloadData];
-        });
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [weakSelf.tableView reloadData];
     }];
 }
 

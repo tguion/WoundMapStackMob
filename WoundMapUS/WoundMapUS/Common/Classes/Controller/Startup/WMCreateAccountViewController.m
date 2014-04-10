@@ -756,13 +756,13 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 case CreateAccountInitial: {
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-                    UITextField *textField = nil;
-                    textField = myCell.textField;
+                    UITextField *textField = myCell.textField;
                     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     textField.autocorrectionType = UITextAutocorrectionTypeNo;
                     textField.spellCheckingType = UITextSpellCheckingTypeNo;
                     textField.returnKeyType = UIReturnKeyDefault;
                     textField.delegate = self;
+                    textField.inputAccessoryView = self.inputAccessoryView;
                     switch (indexPath.row) {
                         case 0: {
                             // first name

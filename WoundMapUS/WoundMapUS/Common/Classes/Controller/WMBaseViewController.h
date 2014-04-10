@@ -71,6 +71,8 @@
 - (void)showProgressViewWithMessage:(NSString *)message;
 - (void)hideProgressView;
 
+@property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryView;
+
 - (void)handleParticipantLoggedOut;
 
 - (void)handleApplicationWillResignActiveNotification NS_REQUIRES_SUPER;
