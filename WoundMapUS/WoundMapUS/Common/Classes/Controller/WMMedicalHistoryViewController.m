@@ -195,6 +195,13 @@
     medicalHistoryValue.value = [NSString stringWithFormat:@"%d", aSwitch.isOn];
 }
 
+#pragma mark - BaseViewController
+
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"/%@/%@/%@", [WMPatient entityName], [self.patient.ffUrl lastPathComponent], [WMMedicalHistoryGroup entityName]];
+}
+
 #pragma mark - NoteViewControllerDelegate
 
 - (NSString *)note

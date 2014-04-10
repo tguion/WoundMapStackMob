@@ -539,7 +539,11 @@
             completionHandler(error, object);
         } else {
             [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                completionHandler(error, object);
+                NSParameterAssert([object isKindOfClass:[WMPatient class]]);
+                WMPatient *localPatient = (WMPatient *)object;
+                [ff grabBagAddItemAtFfUrl:localPatient.ffUrl toObjAtFfUrl:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    completionHandler(error, localPatient);
+                }];
             }];
         }
     }];
