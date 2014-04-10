@@ -43,6 +43,7 @@
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"acceptedFlagValue",
                                                             @"flagsValue",
+                                                            @"passcodeValue",
                                                             @"isAccepted"]];
     });
     return PropertyNamesNotToSerialize;

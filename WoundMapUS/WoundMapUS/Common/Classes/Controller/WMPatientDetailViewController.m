@@ -490,19 +490,16 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         _patient.person = _person;
     }
     // prepare to update backend
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSSet *updatedObjects = [self.managedObjectContext updatedObjects];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
-    for (id object in updatedObjects) {
-        if ([object respondsToSelector:@selector(ffUrl)] && [object valueForKey:@"ffUrl"]) {
-            [ff updateObj:object onComplete:completionHandler];
-        }
-    }
+    // update backend
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+    }];
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];

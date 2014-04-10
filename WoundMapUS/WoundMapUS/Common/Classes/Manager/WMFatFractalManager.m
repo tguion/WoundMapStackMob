@@ -185,11 +185,6 @@
         if (completionHandler) {
             completionHandler(error, object);
         }
-        [self acquireGrabBagsForObjects:@[object] aliases:[WMParticipant relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-        }];
     }];
 }
 
@@ -461,6 +456,11 @@
                                         NSLog(@"*** WoundMap: Will create collection backend: %@", object);
                                         [ff createObj:object atUri:ffUrl];
                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                        NSError *localError = nil;
+                                        [ff grabBagAdd:object to:team grabBagName:WMTeamRelationships.navigationTracks error:&localError];
+                                        if (error) {
+                                            [WMUtilities logError:error];
+                                        }
                                     }
                                 }];
                                 block(nil);
@@ -607,18 +607,39 @@
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler
 {
     NSParameterAssert(nil == patient.ffUrl);
+    __block NSInteger counter = 0;
+    WMErrorCallback block = ^(NSError *error) {
+        if (error) {
+            counter = 0;
+            completionHandler(error, patient);
+        } else {
+            --counter;
+            if (counter == 0) {
+                completionHandler(error, patient);
+            }
+        }
+    };
     FFUserGroup *consultantGroup = patient.consultantGroup;
     // create FFUserGroup that will hold the FFUser instance in team
+    ++counter;
     [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
-            completionHandler(error, object);
+            block(error);
         } else {
             [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                NSParameterAssert([object isKindOfClass:[WMPatient class]]);
-                WMPatient *localPatient = (WMPatient *)object;
-                [ff grabBagAddItemAtFfUrl:localPatient.ffUrl toObjAtFfUrl:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    completionHandler(error, localPatient);
-                }];
+                if (error) {
+                    block(error);
+                } else {
+                    [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    }];
+                    if (patient.participant.team) {
+                        ++counter;
+                        [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            block(error);
+                        }];
+                    }
+                }
             }];
         }
     }];
