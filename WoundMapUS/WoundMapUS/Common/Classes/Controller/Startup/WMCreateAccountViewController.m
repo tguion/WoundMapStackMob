@@ -128,6 +128,16 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         _person = [WMPerson MR_createInContext:self.managedObjectContext];
         _person.nameFamily = _lastNameTextInput;
         _person.nameGiven = _firstNameTextInput;
+        // create back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        __weak __typeof(&*self)weakSelf = self;
+        [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        }];
     }
     return _person;
 }
@@ -348,9 +358,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (IBAction)cancelAction:(id)sender
 {
-    if (_participant) {
-        [[_participant managedObjectContext] rollback];
-    }
     [self.delegate createAccountViewControllerDidCancel:self];
 }
 
@@ -369,13 +376,11 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (error) {
-                        [WMUtilities logError:error];
-                    } else {
-                        [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
-                    }
-                });
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
+                }
             }];
         }];
     }
@@ -640,7 +645,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         }
         case 2: {
             // organization
-            WMOrganization *organization = self.participant.organization;
+            WMOrganization *organization = _organization;
             WMOrganizationEditorViewController *organizationEditorViewController = self.organizationEditorViewController;
             organizationEditorViewController.organization = organization;
             [self.navigationController pushViewController:organizationEditorViewController animated:YES];

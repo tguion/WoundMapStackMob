@@ -1,4 +1,5 @@
 #import "WMOrganization.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 
 @interface WMOrganization ()
@@ -17,6 +18,25 @@
     [super awakeFromInsert];
     self.createdAt = [NSDate date];
     self.updatedAt = [NSDate date];
+}
+
+#pragma mark - AddressSource
+
+- (NSSet *)addressesWithRefreshHandler:(dispatch_block_t)handler
+{
+    WM_ASSERT_MAIN_THREAD;
+    // update from back end
+    if (self.ffUrl) {
+        [[WMFatFractal instance] grabBagGetAllForObj:self
+                                         grabBagName:WMOrganizationRelationships.addresses
+                                          onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                              WM_ASSERT_MAIN_THREAD;
+                                              handler();
+                                          }];
+    } else {
+        handler();
+    }
+    return self.addresses;
 }
 
 #pragma mark - FatFractal
@@ -38,9 +58,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMOrganizationRelationships.addresses,
-                                                            WMOrganizationRelationships.ids,
-                                                            WMOrganizationRelationships.participants]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

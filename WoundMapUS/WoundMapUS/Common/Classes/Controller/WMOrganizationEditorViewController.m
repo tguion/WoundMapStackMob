@@ -11,13 +11,19 @@
 #import "WMIdListViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
+#import "MBProgressHUD.h"
 #import "WMOrganization.h"
+#import "WMFatFractal.h"
+#import "WMFatFractalManager.h"
+#import "WMUtilities.h"
 
 @interface WMOrganizationEditorViewController ()  <UITextFieldDelegate, AddressListViewControllerDelegate, IdListViewControllerDelegate>
 
 @property (weak, nonatomic) NSManagedObjectContext *moc;
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
+@property (nonatomic) BOOL organizationCreated;
+
 @property (readonly, nonatomic) WMAddressListViewController *addressListViewController;
 @property (readonly, nonatomic) WMIdListViewController *idListViewController;
 
@@ -49,12 +55,6 @@
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    // we want to support cancel, so make sure we have an undoManager
-    if (nil == self.managedObjectContext.undoManager) {
-        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-        _removeUndoManagerWhenDone = YES;
-    }
-    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,6 +77,23 @@
 {
     if (nil == _organization) {
         _organization = [WMOrganization MR_createInContext:self.managedObjectContext];
+        _organizationCreated = YES;
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        // create on back end before GRABBAG addresses and ids
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        __weak __typeof(&*self)weakSelf = self;
+        [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSParameterAssert([object isKindOfClass:[WMOrganization class]]);
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        }];
+    } else {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
     }
     return _organization;
 }
@@ -156,23 +173,52 @@
         if (_removeUndoManagerWhenDone) {
             self.managedObjectContext.undoManager = nil;
         }
-        [self.managedObjectContext MR_saveOnlySelfAndWait];
-        [self.delegate organizationEditorViewController:self didEditOrganization:_organization];
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        // update back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        __weak __typeof(&*self)weakSelf = self;
+        [ffm updateOrganization:_organization ff:ff completionHandler:^(NSError *error) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+                [weakSelf.delegate organizationEditorViewController:weakSelf didEditOrganization:_organization];
+            }
+        }];
     }
 }
 
 - (IBAction)cancelAction:(id)sender
 {
     [self.view endEditing:YES];
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (self.managedObjectContext.undoManager.canUndo) {
-            // this should undo the insert of new person
-            [self.managedObjectContext.undoManager undoNestedGroup];
+    // check if we are canceling a new organization
+    if (_organizationCreated) {
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        BOOL deleteFromBackend = (nil != _organization.ffUrl);
+        if (deleteFromBackend) {
+            ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
         }
-    }
-    if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        [managedObjectContext MR_deleteObjects:@[_organization]];
+        [managedObjectContext processPendingChanges];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
+
+    } else {
+        // cancel any updates
+        if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+            [self.managedObjectContext.undoManager endUndoGrouping];
+            if (self.managedObjectContext.undoManager.canUndo) {
+                // this should undo the insert of new person
+                [self.managedObjectContext.undoManager undoNestedGroup];
+            }
+        }
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
+        }
     }
     [self.delegate organizationEditorViewControllerDidCancel:self];
 }

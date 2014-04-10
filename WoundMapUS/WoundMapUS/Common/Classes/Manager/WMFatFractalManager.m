@@ -156,15 +156,6 @@
         if (error && completionHandler) {
             completionHandler(error);
         } else {
-            // make sure we fetch the ALIAS defined on WMParticipant - I'm not sure we have to do this since depthGb=1 in fetch above
-            // NOTE: we could also fetch as so: see bottom of http://fatfractal.com/docs/data-modeling/#grab-bags
-            // NSString *query = [NSString stringWithFormat:@"/%@/%@/%@", [WMParticipant entityName], [participant.ffUrl lastPathComponent], WMParticipantRelationships.patients];
-            // NSArray *participantPatients = [ff getArrayFromUri:query error:&error];
-            [self acquireGrabBagsForObjects:@[object] aliases:[WMParticipant relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            }];
             // update team
             WMTeam *team = participant.team;
             if (team) {
@@ -173,15 +164,9 @@
                 [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
-                    [self acquireGrabBagsForObjects:@[object] aliases:[WMTeam relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                        [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    }];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }];
             }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
             if (completionHandler) {
                 completionHandler(error);
             }
@@ -332,63 +317,75 @@
     NSParameterAssert(completionHandler);
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     NSParameterAssert([participant managedObjectContext] == managedObjectContext);
-    WMOrganization *organization = participant.organization;
-    if (organization) {
-        [ff createObj:organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            for (WMAddress *address in organization.addresses) {
-                [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    // nothing
-                }];
-            }
-            for (WMId *anId in organization.ids) {
-                [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    // nothing
-                }];
-            }
-        }];
-    }
-    WMPerson *person = participant.person;
-    if (person.ffUrl) {
-        [ff updateObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    // nothing
-                }];
-            }];
-        }];
-    } else {
-        [self createPerson:person ff:ff completionHandler:^(NSError *error) {
-            [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    // nothing
-                }];
-            }];
-        }];
-    }
-    completionHandler(nil);
-}
-
-- (void)createPerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
-{
-    [ff createObj:person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [self updatePerson:participant.person ff:ff completionHandler:^(NSError *error) {
         if (error) {
             completionHandler(error);
         } else {
+            [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                completionHandler(error);
+            }];
+        }
+    }];
+}
+
+- (void)updatePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    __block NSInteger counter = 0;
+    WMErrorCallback block = ^(NSError *error) {
+        if (error) {
+            counter = 0;
+            completionHandler(error);
+        } else {
+            --counter;
+            if (counter == 0) {
+                completionHandler(error);
+            }
+        }
+    };
+    ++counter;
+    [ff updateObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
+        } else {
             for (WMAddress *address in person.addresses) {
-                [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                }];
-                for (WMTelecom *telecom in person.telecoms) {
-                    [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                ++counter;
+                if (!address.ffUrl) {
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         if (error) {
-                            [WMUtilities logError:error];
+                            block(error);
+                        } else {
+                            WMAddress *localAddress = (WMAddress *)object;
+                            [ff grabBagAddItemAtFfUrl:localAddress.ffUrl toObjAtFfUrl:person.ffUrl grabBagName:WMPersonRelationships.addresses onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                block(error);
+                            }];
                         }
                     }];
+                } else {
+                    [ff updateObj:address onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    }];
                 }
-                completionHandler(nil);
             }
+            for (WMTelecom *telecom in person.telecoms) {
+                ++counter;
+                if (!telecom.ffUrl) {
+                    [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            block(error);
+                        } else {
+                            WMTelecom *localTelecom = (WMTelecom *)object;
+                            [ff grabBagAddItemAtFfUrl:localTelecom.ffUrl toObjAtFfUrl:person.ffUrl grabBagName:WMPersonRelationships.telecoms onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                block(error);
+                            }];
+                        }
+                    }];
+                } else {
+                    [ff updateObj:telecom onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    }];
+                }
+            }
+            block(nil);
         }
     }];
 }
@@ -405,36 +402,54 @@
     NSParameterAssert(team);
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     FFUserGroup *participantGroup = team.participantGroup;
+    
+    __block NSInteger counter = 0;
+    WMErrorCallback block = ^(NSError *error) {
+        if (error) {
+            counter = 0;
+            completionHandler(error);
+        } else {
+            --counter;
+            if (counter == 0) {
+                completionHandler(error);
+            }
+        }
+    };
+    
     FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
+        block(error);
     };
+    
     // create FFUserGroup that will hold the FFUser instance in team
+    ++counter;
     [ff createObj:participantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
-            completionHandler(error);
+            block(error);
         } else {
             NSAssert([object isKindOfClass:[FFUserGroup class]], @"Expected FFUserGroup but got %@", object);
             // create team
             [ff createObj:team atUri:[NSString stringWithFormat:@"/%@", [WMTeam entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
-                    completionHandler(error);
+                    block(error);
                 } else {
                     NSAssert([object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
                     // add participant (user) to FFUserGroup
                     [team.participantGroup addUser:user error:&error];
                     if (error) {
-                        completionHandler(error);
+                        block(error);
                     } else {
                         // update participant
                         [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                             if (error) {
-                                completionHandler(error);
+                                block(error);
                             } else {
                                 // add invitations
                                 for (WMTeamInvitation *invitation in team.invitations) {
+                                    ++counter;
                                     [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:httpMethodCompletion];
                                 }
                                 // seed team with navigation track, stage, node
@@ -448,12 +463,72 @@
                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
                                     }
                                 }];
-                                completionHandler(nil);
+                                block(nil);
                             }
                         }];
                     }
                 }
             }];
+        }
+    }];
+}
+
+- (void)updateOrganization:(WMOrganization *)organization ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    __block NSInteger counter = 0;
+    WMErrorCallback block = ^(NSError *error) {
+        if (error) {
+            counter = 0;
+            completionHandler(error);
+        } else {
+            --counter;
+            if (counter == 0) {
+                completionHandler(error);
+            }
+        }
+    };
+    ++counter;
+    [ff updateObj:organization onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
+        } else {
+            for (WMAddress *address in organization.addresses) {
+                ++counter;
+                if (!address.ffUrl) {
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            block(error);
+                        } else {
+                            [ff grabBagAddItemAtFfUrl:address.ffUrl toObjAtFfUrl:organization.ffUrl grabBagName:WMOrganizationRelationships.addresses onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                block(error);
+                            }];
+                        }
+                    }];
+                } else {
+                    [ff updateObj:address onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    }];
+                }
+            }
+            for (WMId *anId in organization.ids) {
+                ++counter;
+                if (!anId.ffUrl) {
+                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            block(error);
+                        } else {
+                            [ff grabBagAddItemAtFfUrl:anId.ffUrl toObjAtFfUrl:organization.ffUrl grabBagName:WMOrganizationRelationships.ids onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                block(error);
+                            }];
+                        }
+                    }];
+                } else {
+                    [ff updateObj:anId onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    }];
+                }
+            }
+            block(nil);
         }
     }];
 }

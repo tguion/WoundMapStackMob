@@ -109,6 +109,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return self.appDelegate.participant;
 }
 
+- (WMPerson *)person
+{
+    return self.participant.person;
+}
+
 - (BOOL)connectedTeamIsConsultingGroup
 {
     return nil != self.participant.team.consultingGroup;
@@ -843,21 +848,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     if (![person.nameGiven isEqualToString:participant.firstName]) {
         participant.firstName = person.nameGiven;
     }
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     // update backend
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSSet * updatedObjects = [self.managedObjectContext updatedObjects];
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    [self.tableView reloadData];
-    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    };
-    for (id object in updatedObjects) {
-        if ([object respondsToSelector:@selector(ffUrl)] && [object valueForKey:@"ffUrl"]) {
-            [ff updateObj:object onComplete:completionHandler];
-        }
-    }
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+    }];
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController

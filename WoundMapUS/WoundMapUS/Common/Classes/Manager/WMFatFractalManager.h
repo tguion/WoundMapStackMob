@@ -13,7 +13,7 @@ typedef void (^WMErrorCallback)(NSError *error);
 typedef void (^WMObjectCallback)(NSError *error, id object);
 
 @class WMFatFractal;
-@class WMParticipant, WMPatient, WMPerson;
+@class WMParticipant, WMPatient, WMPerson, WMOrganization;
 @class WMTeamInvitation, WMTeam;
 
 @interface WMFatFractalManager : NSObject <FFQueueDelegate>
@@ -42,7 +42,8 @@ typedef void (^WMObjectCallback)(NSError *error, id object);
 
 - (void)createParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)updateParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
-- (void)createPerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
+- (void)updatePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
+- (void)updateOrganization:(WMOrganization *)organization ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)createTeamWithParticipant:(WMParticipant *)participant user:(id<FFUserProtocol>)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)revokeTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;

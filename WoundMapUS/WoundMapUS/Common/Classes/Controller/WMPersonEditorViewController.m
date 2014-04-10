@@ -100,9 +100,7 @@
 {
     if (nil == _person) {
         _person = self.delegate.person;
-        if (nil == _person) {
-            _person = [WMPerson MR_createInContext:self.managedObjectContext];
-        }
+        NSParameterAssert(_person);
     }
     return _person;
 }

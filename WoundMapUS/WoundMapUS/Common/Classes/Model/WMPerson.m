@@ -104,8 +104,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMPersonRelationships.addresses,
-                                                            WMPersonRelationships.telecoms]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

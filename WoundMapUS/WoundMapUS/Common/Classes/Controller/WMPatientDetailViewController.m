@@ -367,6 +367,14 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         _person = _patient.person;
         if (nil == _person) {
             _person = [WMPerson MR_createInContext:self.managedObjectContext];
+            // create on back end before GRABBAG addresses and ids
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            __weak __typeof(&*self)weakSelf = self;
+            [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                NSParameterAssert([object isKindOfClass:[WMPerson class]]);
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            }];
         }
     }
     return _person;
@@ -483,7 +491,6 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     }
     // prepare to update backend
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSSet *updatedObjects = [self.managedObjectContext updatedObjects];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -491,23 +498,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             [WMUtilities logError:error];
         }
     };
-    dispatch_block_t updateBlock = ^{
-        for (id object in updatedObjects) {
-            if ([object respondsToSelector:@selector(ffUrl)] && [object valueForKey:@"ffUrl"]) {
-                [ff updateObj:object onComplete:completionHandler];
-            }
+    for (id object in updatedObjects) {
+        if ([object respondsToSelector:@selector(ffUrl)] && [object valueForKey:@"ffUrl"]) {
+            [ff updateObj:object onComplete:completionHandler];
         }
-    };
-    if (![_person valueForKey:@"ffUrl"]) {
-        [ffm createPerson:person ff:ff completionHandler:^(NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                updateBlock();
-            }
-        }];
-    } else {
-        updateBlock();
     }
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
