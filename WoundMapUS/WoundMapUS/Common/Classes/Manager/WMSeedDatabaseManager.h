@@ -14,6 +14,7 @@
 
 + (WMSeedDatabaseManager *)sharedInstance;
 
+- (void)seedLocalData:(NSManagedObjectContext *)managedObjectContext;
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler;
 
 @end

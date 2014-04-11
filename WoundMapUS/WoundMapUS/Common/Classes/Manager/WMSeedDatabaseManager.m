@@ -85,6 +85,13 @@
     return [WMWoundType woundTypeCount:[NSManagedObjectContext MR_defaultContext]] > 0;
 }
 
+- (void)seedLocalData:(NSManagedObjectContext *)managedObjectContext
+{
+    [WMBradenCare seedDatabase:managedObjectContext];
+    [WMDefinition seedDatabase:managedObjectContext];
+    [WMInstruction seedDatabase:managedObjectContext];
+}
+
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler
 {
     WM_ASSERT_MAIN_THREAD;
@@ -105,9 +112,7 @@
         }
     };
     DLog(@"reading plists and seeding database start");
-    [WMBradenCare seedDatabase:managedObjectContext];
-    [WMDefinition seedDatabase:managedObjectContext];
-    [WMInstruction seedDatabase:managedObjectContext];
+    [self seedLocalData:managedObjectContext];
     // *** WMWoundType *** first attempt to acquire data from backend
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMWoundType entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];

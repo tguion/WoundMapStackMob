@@ -15,6 +15,7 @@
 #import "WMTelecomType.h"
 #import "WCAppDelegate.h"
 #import "WMFatFractal.h"
+#import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 
 @interface WMTelecomEditorViewController () <SimpleTableViewControllerDelegate, UITextFieldDelegate>
@@ -52,12 +53,30 @@
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    // we want to support cancel, so make sure we have an undoManager
-    if (nil == self.managedObjectContext.undoManager) {
-        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-        _removeUndoManagerWhenDone = YES;
+    // update from back end
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == weakSelf.managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
+    };
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        block();
+    };
+    if ([ffm updateTelecomType:ff managedObjectContext:managedObjectContext completionHandler:completionHandler]) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    } else {
+        block();
     }
-    [self.managedObjectContext.undoManager beginUndoGrouping];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -131,26 +150,9 @@
 
 - (void)navigateToTelecomType
 {
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    __weak __typeof(&*self)weakSelf = self;
-    dispatch_block_t block = ^{
-        WMSimpleTableViewController *simpleTableViewController = weakSelf.simpleTableViewController;
-        [weakSelf.navigationController pushViewController:simpleTableViewController animated:YES];
-        simpleTableViewController.title = @"Select Telecom Type";
-    };
-    if ([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
-        // fetch from back end
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        NSString *query = [NSString stringWithFormat:@"/%@", [WMTelecomType entityName]];
-        [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            block();
-        }];
-    } else {
-        block();
-    }
+    WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
+    [self.navigationController pushViewController:simpleTableViewController animated:YES];
+    simpleTableViewController.title = @"Select Telecom Type";
 }
 
 - (NSString *)valuePlaceHolder

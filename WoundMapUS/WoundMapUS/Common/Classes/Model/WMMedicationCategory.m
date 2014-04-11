@@ -93,16 +93,19 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        NSMutableArray *medicationCategoryObjectIDs = [[NSMutableArray alloc] init];
+        NSMutableArray *medicationObjectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMMedicationCategory *medicationCategory = [self updateMedicationCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
             [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[medicationCategory objectID] isTemporaryID], @"Expect a permanent objectID");
-            [objectIDs addObject:[medicationCategory objectID]];
+            [medicationCategoryObjectIDs addObject:[medicationCategory objectID]];
+            [medicationObjectIDs addObjectsFromArray:[medicationCategory valueForKeyPath:@"medications.objectID"]];
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMMedicationCategory entityName]);
+            completionHandler(nil, medicationCategoryObjectIDs, [WMMedicationCategory entityName]);
+            completionHandler(nil, medicationObjectIDs, [WMMedication entityName]);
         }
     }
 }

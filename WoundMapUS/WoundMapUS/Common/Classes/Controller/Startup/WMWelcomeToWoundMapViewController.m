@@ -10,6 +10,7 @@
 #import "WMSignInViewController.h"
 #import "WMCreateAccountViewController.h"
 #import "WMPersonEditorViewController.h"
+#import "WMOrganizationEditorViewController.h"
 #import "WMManageTeamViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMIAPCreateTeamViewController.h"
@@ -24,6 +25,7 @@
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
+#import "WMOrganization.h"
 #import "WMTelecom.h"
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
@@ -45,7 +47,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -56,6 +58,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMCreateTeamViewController *createTeamViewController;
 @property (readonly, nonatomic) WMManageTeamViewController *manageTeamViewController;
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
+@property (readonly, nonatomic) WMOrganizationEditorViewController *organizationEditorViewController;
 
 @property (readonly, nonatomic) WMParticipant *participant;
 
@@ -93,7 +96,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.enterWoundMapButton.enabled = self.setupConfigurationComplete;
+    self.tableView.tableFooterView = _footerView;
+    _enterWoundMapButton.enabled = self.setupConfigurationComplete;
 }
 
 - (void)didReceiveMemoryWarning
@@ -185,6 +189,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         return NO;
     }
     // else
+    if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
+        return NO;
+    }
+    // else
     return (nil != self.appDelegate.navigationCoordinator.patient);
 }
 
@@ -233,6 +241,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMPersonEditorViewController *personEditorViewController = [[WMPersonEditorViewController alloc] initWithNibName:@"WMPersonEditorViewController" bundle:nil];
     personEditorViewController.delegate = self;
     return personEditorViewController;
+}
+
+- (WMOrganizationEditorViewController *)organizationEditorViewController
+{
+    WMOrganizationEditorViewController *organizationEditorViewController = [[WMOrganizationEditorViewController alloc] initWithNibName:@"WMOrganizationEditorViewController" bundle:nil];
+    organizationEditorViewController.delegate = self;
+    organizationEditorViewController.organization = self.participant.organization;
+    return organizationEditorViewController;
 }
 
 - (WMIAPCreateConsultantViewController *)iapCreateConsultantViewController
@@ -303,6 +319,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
 }
 
+- (void)presentCreateConsultingGroupViewController
+{
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateConsultantViewController];
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
+}
+
 - (WMPatientDetailViewController *)patientDetailViewController
 {
     WMPatientDetailViewController *patientDetailViewController = [[WMPatientDetailViewController alloc] initWithNibName:@"WMPatientDetailViewController" bundle:nil];
@@ -337,11 +363,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     UISwitch *deferTeamSwitch = (UISwitch *)sender;
     self.welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateSignedInNoTeam);
-    if (deferTeamSwitch.isOn) {
-        self.tableView.tableFooterView = _footerView;
-    } else {
-        self.tableView.tableFooterView = nil;
-    }
     [self.tableView reloadData];
 }
 
@@ -385,6 +406,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         [ff logout];
                         self.appDelegate.participant = nil;
                         self.welcomeState = WMWelcomeStateInitial;
+                        _enterWoundMapButton.enabled = NO;
                         [tableView reloadData];
                     }
                     break;
@@ -402,20 +424,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 2: {
-                    // defer or [become a consultant, consultant identifier]
-                    if (_welcomeState == WMWelcomeStateTeamSelected) {
-                        // is the team already a consultant
-                        if (self.connectedTeamIsConsultingGroup) {
-                            break;
-                        }
-                        // else
-                        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateConsultantViewController];
-                        [self presentViewController:navigationController
-                                           animated:YES
-                                         completion:^{
-                                             // nothing
-                                         }];
-                    }
+                    // organization
+                    [self.navigationController pushViewController:self.organizationEditorViewController animated:YES];
                     break;
                 }
             }
@@ -434,11 +444,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    [self presentCreateTeamViewController];
-                    break;
-                }
-                case 2: {
-                    // else user selected to defer - should not be able to select cell
+                    if (self.participant.isTeamLeader) {
+                        // is the team already a consultant
+                        if (self.connectedTeamIsConsultingGroup) {
+                            break;
+                        }
+                        // else
+                        [self presentCreateConsultingGroupViewController];
+                    } else {
+                        [self presentCreateTeamViewController];
+                    }
                     break;
                 }
             }
@@ -523,7 +538,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateSignedInNoTeam: {
             switch (section) {
                 case 0: {
-                    count = 2;
+                    count = 3;
                     break;
                 }
                 case 1: {
@@ -536,11 +551,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateTeamSelected: {
             switch (section) {
                 case 0: {
-                    count = 2;
+                    count = 3;
                     break;
                 }
                 case 1: {
-                    count = 1;
+                    count = 2;
                     break;
                 }
                 case 2:
@@ -554,7 +569,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         case WMWelcomeStateDeferTeam: {
             switch (section) {
                 case 0: {
-                    count = 2;
+                    count = 3;
                     break;
                 }
                 case 1: {
@@ -618,6 +633,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
                         }
+                        case 2: {
+                            title = @"Organization";
+                            value = self.participant.organization.name;
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
                     }
                     break;
                 }
@@ -668,6 +689,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
                         }
+                        case 2: {
+                            title = @"Organization";
+                            value = self.participant.organization.name;
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
                     }
                     break;
                 }
@@ -676,6 +703,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         case 0: {
                             title = @"Team";
                             value = self.participant.team.name;
+                            accessoryType = UITableViewCellAccessoryNone;
+                            if (self.participant.isTeamLeader) {
+                                accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            }
+                            break;
+                        }
+                        case 1: {
+                            title = @"Consulting Group";
+                            value = self.participant.team.consultingGroup.name;
                             accessoryType = UITableViewCellAccessoryNone;
                             if (self.participant.isTeamLeader) {
                                 accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -713,6 +749,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         case 1: {
                             title = @"Contact Details";
                             value = self.participant.lastNameFirstName;
+                            accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            break;
+                        }
+                        case 2: {
+                            title = @"Organization";
+                            value = self.participant.organization.name;
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
                         }
@@ -788,6 +830,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         userDefaultsManager.lastUserName = participant.userName;
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
     };
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -800,7 +843,20 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             });
         });
     } else {
-        block();
+        // attempt to acquire last patient
+        NSString *patientFFUrl = userDefaultsManager.lastPatientId;
+        if (patientFFUrl) {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff getObjFromUri:patientFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (object) {
+                    WMPatient *patient = (WMPatient *)object;
+                    self.appDelegate.navigationCoordinator.patient = patient;
+                    block();
+                }
+            }];
+        } else {
+            block();
+        }
     }
 }
 
@@ -861,6 +917,21 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 }
 
 - (void)personEditorViewControllerDidCancel:(WMPersonEditorViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - OrganizationEditorViewControllerDelegate
+
+- (void)organizationEditorViewController:(WMOrganizationEditorViewController *)viewController didEditOrganization:(WMOrganization *)organization
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+}
+
+- (void)organizationEditorViewControllerDidCancel:(WMOrganizationEditorViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -992,7 +1063,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             [WMUtilities logError:error];
         } else {
             [weakSelf.tableView reloadData];
-            weakSelf.enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
+            _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
         }
     }];
 }

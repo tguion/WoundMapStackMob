@@ -43,6 +43,7 @@
 #import "WMWoundTreatmentValue.h"
 #import "WMCarePlanInterventionEvent.h"
 #import "WMInterventionEvent.h"
+#import "WMTelecomType.h"
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
 #import "WMFatFractal.h"
@@ -148,7 +149,7 @@
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -160,7 +161,7 @@
             WMTeam *team = participant.team;
             if (team) {
                 NSParameterAssert(team.ffUrl);
-                NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                 [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
@@ -178,7 +179,7 @@
 - (void)acquireParticipantForUser:(FFUser *)user completionHandler:(WMObjectCallback)completionHandler
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
         NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
@@ -705,6 +706,34 @@
             }
         }];
     }
+}
+
+#pragma mark - Seed updates
+
+- (BOOL)updateTelecomType:(WMFatFractal *)ff managedObjectContext:(NSManagedObjectContext *)managedObjectContext completionHandler:(FFHttpMethodCompletion)completionHandler
+{
+    if ([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
+        // fetch from back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSString *query = [NSString stringWithFormat:@"/%@", [WMTelecomType entityName]];
+        [ff getArrayFromUri:query onComplete:completionHandler];
+        return YES;
+    }
+    // else
+    return NO;
+}
+
+- (BOOL)updateMedication:(WMFatFractal *)ff managedObjectContext:(NSManagedObjectContext *)managedObjectContext completionHandler:(FFHttpMethodCompletion)completionHandler
+{
+    if ([WMMedication MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
+        // fetch from back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSString *query = [NSString stringWithFormat:@"/%@", [WMMedication entityName]];
+        [ff getArrayFromUri:query onComplete:completionHandler];
+        return YES;
+    }
+    // else
+    return NO;
 }
 
 #pragma mark - Refresh

@@ -89,16 +89,19 @@
                                                                      format:NULL
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-        NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        NSMutableArray *skinAssessmentCategoryObjectIDs = [[NSMutableArray alloc] init];
+        NSMutableArray *skinAssessmentObjectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
             WMSkinAssessmentCategory *skinInspectionCategory = [self updateSkinAssessmentCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
             [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[skinInspectionCategory objectID] isTemporaryID], @"Expect a permanent objectID");
-            [objectIDs addObject:[skinInspectionCategory objectID]];
+            [skinAssessmentCategoryObjectIDs addObject:[skinInspectionCategory objectID]];
+            [skinAssessmentObjectIDs addObjectsFromArray:[skinInspectionCategory valueForKeyPath:@"assessments.objectID"]];
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMSkinAssessmentCategory entityName]);
+            completionHandler(nil, skinAssessmentCategoryObjectIDs, [WMSkinAssessmentCategory entityName]);
+            completionHandler(nil, skinAssessmentObjectIDs, [WMSkinAssessmentCategory entityName]);
         }
     }
 }

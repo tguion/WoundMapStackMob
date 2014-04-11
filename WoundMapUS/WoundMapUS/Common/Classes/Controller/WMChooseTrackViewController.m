@@ -103,6 +103,16 @@
     return ffQuery;
 }
 
+- (void)fetchedResultsControllerDidFetch
+{
+    // refresh since no guarentee we have all
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    if (!userDefaultsManager.navigationTracksFetchedFromBackEnd) {
+        [self refreshTable];
+        userDefaultsManager.navigationTracksFetchedFromBackEnd = YES;
+    }
+}
+
 - (void)clearDataCache
 {
     [super clearDataCache];

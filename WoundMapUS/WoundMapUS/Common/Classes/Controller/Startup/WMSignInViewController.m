@@ -55,6 +55,8 @@
     if ([_userNameTextInput length]) {
         _makePasswordFieldFirstResponder = YES;
     }
+    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+    [seedDatabaseManager seedLocalData:self.managedObjectContext];
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,6 +112,7 @@
     // else
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff loginWithUserName:self.userNameTextInput andPassword:self.passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -159,7 +162,6 @@
                     }];
                 }
             } else {
-                WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
                 [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];
