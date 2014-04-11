@@ -8,7 +8,7 @@
 @property (readonly, nonatomic) NSArray *sortedMedicalHistoryValues;
 @property (readonly, nonatomic) NSInteger valueCount;
 
-+ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient groupCreatedCallback:(WMObjectCallback)groupCallback;
++ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient;
 
 + (NSSet *)medicalHistoryValuesForMedicalHistoryGroup:(WMMedicalHistoryGroup *)medicalHistoryGroup;
 + (NSInteger)medicalHistoryGroupsCount:(WMPatient *)patient;

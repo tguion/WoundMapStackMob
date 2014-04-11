@@ -53,12 +53,31 @@
                                                                                            action:@selector(doneAction:)];
     [self.tableView registerClass:[WMSwitchTableViewCell class] forCellReuseIdentifier:@"SwitchCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    // we want to support cancel, so make sure we have an undoManager
-    if (nil == self.managedObjectContext.undoManager) {
-        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-        _removeUndoManagerWhenDone = YES;
+    // make sure we have data
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == weakSelf.managedObjectContext.undoManager) {
+            weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
+    };
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if ([WMMedicalHistoryItem MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
+        // fetch from back end
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSString *query = [NSString stringWithFormat:@"/%@", [WMMedicalHistoryItem entityName]];
+        [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            block();
+            [weakSelf.tableView reloadData];
+        }];
+    } else {
+        block();
     }
-    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,15 +101,16 @@
 - (WMMedicalHistoryGroup *)medicalHistoryGroup
 {
     if (nil == _medicalHistoryGroup) {
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:self.patient];
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:self.patient groupCreatedCallback:^(NSError *error, id object) {
-            _medicalHistoryGroupWasCreated = YES;
-            [ff createObj:object
-                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
-               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                   NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
-               }];
-        }];
+        _medicalHistoryGroupWasCreated = YES;
+        [ff createObj:_medicalHistoryGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
+           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+               NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
+               [managedObjectContext MR_saveToPersistentStoreAndWait];
+           }];
     }
     return _medicalHistoryGroup;
 }
@@ -243,6 +263,15 @@
 }
 
 #pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if ([WMMedicalHistoryItem MR_countOfEntitiesWithContext:self.managedObjectContext] == 0) {
+        return 0;
+    }
+    // else
+    return [super numberOfSectionsInTableView:tableView];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

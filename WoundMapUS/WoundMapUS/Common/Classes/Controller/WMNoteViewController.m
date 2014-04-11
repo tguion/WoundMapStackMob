@@ -33,6 +33,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];    // don't understand why need this
     // Do any additional setup after loading the view from its nib.
     self.title = self.delegate.label;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
@@ -61,9 +62,10 @@
 {
     RemoveConstraints(self.view.constraints);
     NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings (_textView);
-    NSDictionary *metrics = @{@"Bottom" : @(_contentInsets.bottom)};
+    NSDictionary *metrics = @{@"Top" : @(_contentInsets.top + 20),
+                              @"Bottom" : @(_contentInsets.bottom + 20)};
     NSMutableArray *constraints = [NSMutableArray array];
-    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_textView]-Bottom-|"
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-Top-[_textView]-Bottom-|"
                                                                              options:0
                                                                              metrics:metrics
                                                                                views:viewsDictionary]];

@@ -30,7 +30,7 @@
     return [WMMedicalHistoryValue MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"medicalHistoryGroup == %@ AND value == %d", self, YES] inContext:[self managedObjectContext]];
 }
 
-+ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient groupCreatedCallback:(WMObjectCallback)groupCallback
++ (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMMedicalHistoryGroup *medicalHistoryGroup = [WMMedicalHistoryGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
@@ -39,9 +39,7 @@
                                                                                         inContext:managedObjectContext];
     if (nil == medicalHistoryGroup) {
         medicalHistoryGroup = [WMMedicalHistoryGroup MR_createInContext:managedObjectContext];
-        if (groupCallback) {
-            groupCallback(nil, medicalHistoryGroup);
-        }
+        medicalHistoryGroup.patient = patient;
         NSArray *medicalHistoryItems = [WMMedicalHistoryItem sortedMedicalHistoryItems:managedObjectContext];
         for (WMMedicalHistoryItem *medicalHistoryItem in medicalHistoryItems) {
             WMMedicalHistoryValue *medicalHistoryValue = [WMMedicalHistoryValue MR_createInContext:managedObjectContext];

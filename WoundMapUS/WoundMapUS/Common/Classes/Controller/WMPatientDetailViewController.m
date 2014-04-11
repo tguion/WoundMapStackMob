@@ -250,10 +250,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     _datePickerView.date = self.userDefaultsManager.lastDateOfBirth;
     // acquire patient - creating local and back end
     if (_newPatientFlag) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        __weak __typeof(&*self)weakSelf = self;
         [self.appDelegate.navigationCoordinator createPatient:self.managedObjectContext completionHandler:^(NSError *error, id object) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
             if (error) {
                 [WMUtilities logError:error];
             } else {

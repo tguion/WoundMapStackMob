@@ -14,7 +14,7 @@
 #import "WMTelecom.h"
 #import "WMTelecomType.h"
 #import "WCAppDelegate.h"
-#import "WMFatFractalManager.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 
 @interface WMTelecomEditorViewController () <SimpleTableViewControllerDelegate, UITextFieldDelegate>
@@ -131,9 +131,26 @@
 
 - (void)navigateToTelecomType
 {
-    WMSimpleTableViewController *simpleTableViewController = self.simpleTableViewController;
-    [self.navigationController pushViewController:simpleTableViewController animated:YES];
-    simpleTableViewController.title = @"Select Telecom Type";
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        WMSimpleTableViewController *simpleTableViewController = weakSelf.simpleTableViewController;
+        [weakSelf.navigationController pushViewController:simpleTableViewController animated:YES];
+        simpleTableViewController.title = @"Select Telecom Type";
+    };
+    if ([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
+        // fetch from back end
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSString *query = [NSString stringWithFormat:@"/%@", [WMTelecomType entityName]];
+        [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            block();
+        }];
+    } else {
+        block();
+    }
 }
 
 - (NSString *)valuePlaceHolder
