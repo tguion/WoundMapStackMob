@@ -457,9 +457,12 @@
                                         [ff createObj:object atUri:ffUrl];
                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
                                         NSError *localError = nil;
-                                        [ff grabBagAdd:object to:team grabBagName:WMTeamRelationships.navigationTracks error:&localError];
-                                        if (error) {
-                                            [WMUtilities logError:error];
+                                        if ([[[object entity] name] isEqualToString:[WMNavigationTrack entityName]]) {
+                                            [ff grabBagAdd:object to:team grabBagName:WMTeamRelationships.navigationTracks error:&localError];
+                                            if (error) {
+                                                [WMUtilities logError:error];
+                                            }
+                                            
                                         }
                                     }
                                 }];

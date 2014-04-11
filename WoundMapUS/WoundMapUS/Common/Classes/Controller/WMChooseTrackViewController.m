@@ -8,13 +8,19 @@
 
 #import "WMChooseTrackViewController.h"
 #import "WMNavigationTrack.h"
+#import "WMParticipant.h"
+#import "WMTeam.h"
 #import "WMNavigationTrackTableViewCell.h"
 #import "CoreDataHelper.h"
 #import "WMUserDefaultsManager.h"
+#import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
 @interface WMChooseTrackViewController ()
+
+@property (readonly, nonatomic) WMParticipant *particpant;
 @property (strong, nonatomic) WMNavigationTrack *navigationTrack;
+
 @end
 
 @implementation WMChooseTrackViewController
@@ -59,6 +65,11 @@
 
 #pragma mark - Core
 
+- (WMParticipant *)particpant
+{
+    return self.appDelegate.participant;
+}
+
 - (WMNavigationTrack *)navigationTrack
 {
     if (nil == _navigationTrack) {
@@ -81,9 +92,15 @@
 
 #pragma mark - BaseViewController
 
-- (void)updateTitle
+- (NSString *)ffQuery
 {
-    // nothing
+    NSString *ffQuery = nil;
+    if (self.particpant.team) {
+        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks/()/stages/()/nodes?depthRef=1&depthGb=1", [WMTeam entityName], [self.particpant.team.ffUrl lastPathComponent]];
+    } else {
+        ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
+    }
+    return ffQuery;
 }
 
 - (void)clearDataCache
@@ -109,11 +126,6 @@
 }
 
 #pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

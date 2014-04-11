@@ -73,7 +73,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
             break;
         }
         case WMNetworkStatusNotReachable: {
-            message = @"The network is no longer reachable. You will not receive updates from team members, nor team members have access to patient data you enter until the network becomes reachable again.";
+            message = @"The network is no longer reachable. You will not receive updates from team members, nor will team members have access to patient data you enter until the network becomes reachable again.";
             break;
         }
         case WMNetworkStatusReachable: {

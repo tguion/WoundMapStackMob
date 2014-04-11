@@ -10,6 +10,7 @@
 #import "IAPBaseViewController.h"
 #import "IAPAggregatorViewController.h"
 #import "IAPNonConsumableViewController.h"
+#import "MBProgressHUD.h"
 #import "WMProgressViewHUD.h"
 #import "WMNavigationNodeButton.h"
 #import "WMUnderlayNavigationBar.h"
@@ -314,19 +315,16 @@
 - (void)refreshTable
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    NSString *collection = self.fetchedResultsControllerEntityName;
     NSString *query = self.ffQuery;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *fatFractalManager = [WMFatFractalManager sharedInstance];
-    [fatFractalManager fetchCollection:collection
-                                 query:query
-                               depthGb:1
-                              depthRef:1
-                                    ff:ff
-                  managedObjectContext:managedObjectContext
-                     completionHandler:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                         [self.refreshControl endRefreshing];
-                     }];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(self) weakSelf = self;
+    [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+            [weakSelf.refreshControl endRefreshing];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        }];
+    }];
 }
 
 - (IBAction)previousAction:(id)sender
@@ -887,6 +885,9 @@
 
 - (void)fetchedResultsControllerDidFetch
 {
+    if ([self.fetchedResultsController.fetchedObjects count] == 0) {
+        [self refreshTable];
+    }
 }
 
 - (void)nilFetchedResultsController
