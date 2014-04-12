@@ -273,6 +273,7 @@
 		7D39DBC818BAB5540054DDC3 /* WMUndermineTunnelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBC618BAB5530054DDC3 /* WMUndermineTunnelViewController.m */; };
 		7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D39DBC718BAB5530054DDC3 /* WMUndermineTunnelViewController.xib */; };
 		7D39DBCC18BAB5EA0054DDC3 /* WMAdjustAlpaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DBCB18BAB5EA0054DDC3 /* WMAdjustAlpaView.m */; };
+		7D40BFBC18F9560200DB2BCD /* TeamMemberIAPDesc.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -968,6 +969,7 @@
 		7D39DBC718BAB5530054DDC3 /* WMUndermineTunnelViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMUndermineTunnelViewController.xib; sourceTree = "<group>"; };
 		7D39DBCA18BAB5EA0054DDC3 /* WMAdjustAlpaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAdjustAlpaView.h; sourceTree = "<group>"; };
 		7D39DBCB18BAB5EA0054DDC3 /* WMAdjustAlpaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMAdjustAlpaView.m; sourceTree = "<group>"; };
+		7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TeamMemberIAPDesc.html; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -1449,6 +1451,12 @@
 				7D10CD6D18D4EA9E00AD43E3 /* WMCreateAccountViewController.h */,
 				7D10CD6E18D4EA9E00AD43E3 /* WMCreateAccountViewController.m */,
 				7D10CD6F18D4EA9E00AD43E3 /* WMCreateAccountViewController.xib */,
+				7D01510318EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.h */,
+				7D01510418EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m */,
+				7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */,
+				7D0150FC18EB5BA400D5C0A9 /* WMCreateTeamViewController.h */,
+				7D0150FD18EB5BA400D5C0A9 /* WMCreateTeamViewController.m */,
+				7D0150FE18EB5BA400D5C0A9 /* WMCreateTeamViewController.xib */,
 				7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */,
 				7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */,
 				7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */,
@@ -1464,12 +1472,6 @@
 				5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */,
 				5F67D1B118AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m */,
 				5F67D1B218AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib */,
-				7D0150FC18EB5BA400D5C0A9 /* WMCreateTeamViewController.h */,
-				7D0150FD18EB5BA400D5C0A9 /* WMCreateTeamViewController.m */,
-				7D0150FE18EB5BA400D5C0A9 /* WMCreateTeamViewController.xib */,
-				7D01510318EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.h */,
-				7D01510418EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m */,
-				7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -2723,6 +2725,7 @@
 			isa = PBXGroup;
 			children = (
 				7DD3EA4418C00E120093E370 /* IAPProducts.plist */,
+				7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */,
 			);
 			path = IAP;
 			sourceTree = "<group>";
@@ -2924,6 +2927,7 @@
 				7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */,
 				5F67D20518AC3BE000460C37 /* WoundMeasurementTemplate.plist in Resources */,
 				7D10CE1F18DDEB7B00AD43E3 /* WMSelectWoundPositionViewController.xib in Resources */,
+				7D40BFBC18F9560200DB2BCD /* TeamMemberIAPDesc.html in Resources */,
 				5F67D1F918AC3BE000460C37 /* ProfessionalTitle.plist in Resources */,
 				7D01510718EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib in Resources */,
 				7D39DBBA18BAB3BF0054DDC3 /* WMPhotoScaleViewController.xib in Resources */,

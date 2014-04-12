@@ -93,7 +93,7 @@
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [self.delegate.telecomSource telecomsWithRefreshHandler:^{
                 WM_ASSERT_MAIN_THREAD;
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 weakSelf.telecoms = [[weakSelf.delegate.telecomSource.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
                 [weakSelf.tableView reloadData];
             }];

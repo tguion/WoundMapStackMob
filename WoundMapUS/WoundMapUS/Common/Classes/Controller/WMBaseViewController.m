@@ -322,7 +322,7 @@
     [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             [weakSelf.refreshControl endRefreshing];
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         }];
     }];
 }

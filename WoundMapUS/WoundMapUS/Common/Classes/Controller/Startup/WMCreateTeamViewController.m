@@ -226,7 +226,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.tableView reloadData];
     }];
 }

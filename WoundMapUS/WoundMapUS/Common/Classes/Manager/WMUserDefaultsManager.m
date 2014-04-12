@@ -64,15 +64,21 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
-- (NSString *)lastPatientId
+- (NSString *)lastPatientFFURLForUserGUID:(NSString *)guid
 {
-    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.lastPatientId"];
+    NSDictionary *userGUID2PatientFFURLMap = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"com.mobilehealthware.woundmap.lastPatientId"];
+    return userGUID2PatientFFURLMap[guid];
 }
 
-- (void)setLastPatientId:(NSString *)lastPatientId
+- (void)setLastPatientFFURL:(NSString *)patientFFURL forUserGUID:(NSString *)guid
 {
+    NSMutableDictionary *userGUID2PatientFFURLMap = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"com.mobilehealthware.woundmap.lastPatientId"] mutableCopy];
+    if (nil == userGUID2PatientFFURLMap) {
+        userGUID2PatientFFURLMap = [[NSMutableDictionary alloc] init];
+    }
+    userGUID2PatientFFURLMap[guid] = patientFFURL;
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastPatientId forKey:@"com.mobilehealthware.woundmap.lastPatientId"];
+    [userDefaults setObject:userGUID2PatientFFURLMap forKey:@"com.mobilehealthware.woundmap.lastPatientId"];
     [userDefaults synchronize];
 }
 

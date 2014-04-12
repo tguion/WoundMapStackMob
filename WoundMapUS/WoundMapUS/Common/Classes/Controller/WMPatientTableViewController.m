@@ -88,6 +88,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
+    self.navigationItem.hidesBackButton = YES;
     [self.tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
 }

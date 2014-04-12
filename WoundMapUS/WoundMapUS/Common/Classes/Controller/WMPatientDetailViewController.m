@@ -370,7 +370,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             __weak __typeof(&*self)weakSelf = self;
             [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 NSParameterAssert([object isKindOfClass:[WMPerson class]]);
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }];
         }
     }
@@ -441,7 +441,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     WMPatient *patient = weakSelf.patient;
     NSParameterAssert(patient.ffUrl);
     [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
     }];
 }
@@ -495,7 +495,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
@@ -748,6 +748,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                 case 3: {
                     // ssn
                     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    myCell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
                     [myCell updateWithLabelText:@"SSN"
                                       valueText:patient.ssn
                                     valuePrompt:@"SSN (optional)"];

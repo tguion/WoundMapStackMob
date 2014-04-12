@@ -109,5 +109,19 @@
 		<key>aggregatorFlag</key>
 		<false/>
 	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>com.mobilehealthware.woundcare.woundmap.team.teamMember</string>
+		<key>title</key>
+		<string>Add a Team Member</string>
+		<key>proposition</key>
+		<string>Each new team member will be able to collaborate with wound care for team patients.</string>
+		<key>description</key>
+		<string>Your account will be charged a  monthly subscription fee for each team member.</string>
+		<key>descHTML</key>
+		<string>&lt;p&gt;A new &lt;strong&gt;Team Member&lt;/strong&gt; will be added to your team after an invitation is accepted by the invitee and confirmed by you.&lt;/p&gt;</string>
+		<key>aggregatorFlag</key>
+		<false/>
+	</dict>
 </array>
 </plist>

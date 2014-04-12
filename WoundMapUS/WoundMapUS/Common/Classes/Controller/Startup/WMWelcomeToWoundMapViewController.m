@@ -829,7 +829,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
     };
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
@@ -844,13 +844,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         });
     } else {
         // attempt to acquire last patient
-        NSString *patientFFUrl = userDefaultsManager.lastPatientId;
+        NSParameterAssert(participant.guid);
+        NSString *patientFFUrl = [userDefaultsManager lastPatientFFURLForUserGUID:participant.guid];
         if (patientFFUrl) {
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff getObjFromUri:patientFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (object) {
                     WMPatient *patient = (WMPatient *)object;
-                    self.appDelegate.navigationCoordinator.patient = patient;
+                    weakSelf.appDelegate.navigationCoordinator.patient = patient;
                     block();
                 }
             }];
@@ -912,7 +913,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
 }
 
@@ -943,6 +944,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // update table view
+        _welcomeState = WMWelcomeStateTeamSelected;
         [weakSelf.tableView reloadData];
     }];
 }
@@ -989,7 +991,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         } else {
             [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^(void) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     if (error) {
                         [WMUtilities logError:error];
                     } else {

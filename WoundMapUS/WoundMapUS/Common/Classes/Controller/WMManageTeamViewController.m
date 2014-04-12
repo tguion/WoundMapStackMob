@@ -57,6 +57,16 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     self.title = @"Manage Team";
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView setEditing:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm updateTeam:self.team ff:ff completionHandler:^(NSError *error, id object) {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        _teamInvitations = nil;
+        _teamMembers = nil;
+        [weakSelf.tableView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -177,7 +187,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        _teamInvitations = nil;
         [weakSelf.tableView reloadData];
     }];
 }
@@ -454,6 +465,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self navigateToCreateInvitationViewController];
             } else {
                 // delete invitation - use UIActionSheet
+                _teamInvitationToDeleteOrConfirm = [_teamInvitations objectAtIndex:indexPath.row];
                 [self initiateRevokeInvitation];
             }
             break;

@@ -123,7 +123,7 @@
                                                       cancelButtonTitle:@"Try Again"
                                                       otherButtonTitles:nil];
             [alertView show];
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         } else {
             FFUser *user = (FFUser *)object;
             NSAssert(nil != user, @"loginWithUserName:password success but returned object is nil");
@@ -138,7 +138,7 @@
                                                                       managedObjectContext:managedObjectContext];
                 WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
                 dispatch_block_t block = ^{
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     participant = [participant MR_inContext:weakSelf.managedObjectContext];
                     [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                 };
@@ -173,7 +173,7 @@
                                                                               managedObjectContext:managedObjectContext];
                         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
                         dispatch_block_t block = ^{
-                            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                             participant = [participant MR_inContext:weakSelf.managedObjectContext];
                             [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                         };

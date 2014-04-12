@@ -85,7 +85,7 @@
         __weak __typeof(&*self)weakSelf = self;
         [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             NSParameterAssert([object isKindOfClass:[WMOrganization class]]);
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         }];
     } else {
         // we want to support cancel, so make sure we have an undoManager
@@ -180,7 +180,7 @@
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         [ffm updateOrganization:_organization ff:ff completionHandler:^(NSError *error) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             if (error) {
                 [WMUtilities logError:error];
             } else {

@@ -96,6 +96,7 @@
 {
     WM_ASSERT_MAIN_THREAD;
     if (self.databaseSeedHasCompleted) {
+        handler(nil);
         return;
     }
     // else

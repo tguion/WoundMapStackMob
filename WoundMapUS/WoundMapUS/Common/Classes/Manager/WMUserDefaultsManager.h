@@ -16,7 +16,8 @@
 
 @property (nonatomic) NSString *lastUserName;
 @property (nonatomic) NSString *lastTeamName;
-@property (nonatomic) NSString *lastPatientId;
+- (NSString *)lastPatientFFURLForUserGUID:(NSString *)guid;
+- (void)setLastPatientFFURL:(NSString *)patientFFURL forUserGUID:(NSString *)guid;
 @property (nonatomic) NSDate *lastDateOfBirth;
 @property (nonatomic) NSString *defaultNavigationTrackFFURL;
 @property (strong, nonatomic) NSString *encryptionPassword;       // password to protect PDF

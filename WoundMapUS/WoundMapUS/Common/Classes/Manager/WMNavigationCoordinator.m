@@ -119,7 +119,8 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     _patient = patient;
     // save user defaults
     if ([patient.ffUrl length] > 0) {
-        self.userDefaultsManager.lastPatientId = patient.ffUrl;
+        NSParameterAssert(patient.participant.guid);
+        [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
     }
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];

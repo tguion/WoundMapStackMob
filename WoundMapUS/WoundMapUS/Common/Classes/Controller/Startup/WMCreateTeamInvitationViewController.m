@@ -164,12 +164,13 @@
     if (![self validateInput]) {
         return;
     }
+    [self.view endEditing:YES];
     // see if we can confirm user name
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@')", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         if (nil == object) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"
                                                                 message:[NSString stringWithFormat:@"Unable to resolve a participant with user name %@", _userNameTextInput]

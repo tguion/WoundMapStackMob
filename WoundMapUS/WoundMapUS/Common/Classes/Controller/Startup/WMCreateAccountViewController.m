@@ -133,7 +133,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             if (error) {
                 [WMUtilities logError:error];
             }
@@ -172,7 +172,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 
 - (BOOL)hasSufficientCreateAccountInput
 {
-    return ([_userNameTextInput length] > 3 && [_passwordTextInput length] > 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput] && [_firstNameTextInput length] > 0 && [_lastNameTextInput length] > 0 && [_emailTextInput length] > 0);
+    return ([_userNameTextInput length] >= 3 && [_passwordTextInput length] >= 3 && [_passwordTextInput isEqualToString:_passwordConfirmTextInput] && [_firstNameTextInput length] > 0 && [_lastNameTextInput length] > 0 && [_emailTextInput length] > 0);
 }
 
 // TODO impose validation on userName and password
@@ -293,15 +293,15 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (IBAction)delayedCreateAccountAction
 {
     if (![self checkForMatchingPasswords]) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:NO];
         return;
     }
     if (![self checkForValidUserName]) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:NO];
         return;
     }
     if (![self checkForValidEmail]) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:NO];
         return;
     }
     WMParticipant *participant = self.participant;
@@ -322,7 +322,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         WM_ASSERT_MAIN_THREAD;
         FFUser *ffUser = (FFUser *)object;
         if (error) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
                                                                 message:[NSString stringWithFormat:@"Unable to create an account: %@", error.localizedDescription]
                                                                delegate:nil
@@ -348,7 +348,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                         if (error) {
                             [WMUtilities logError:error];
                         }
-                        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                     }];
                 }
             }];
@@ -421,6 +421,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             break;
         }
     }
+    [self updateNavigationState];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

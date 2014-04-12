@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1792" defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMPatientDetailViewController">
             <connections>
                 <outlet property="datePickerView" destination="43" id="44"/>
-                <outlet property="inputAccessoryToolbar" destination="45" id="75"/>
                 <outlet property="view" destination="xDs-D4-2vh" id="p2Q-X0-4Me"/>
             </connections>
         </placeholder>
@@ -52,30 +51,5 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                 <action selector="dateOfBirthChangedValueAction:" destination="-1" eventType="valueChanged" id="74"/>
             </connections>
         </datePicker>
-        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="45">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-            <items>
-                <barButtonItem style="plain" id="48">
-                    <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" momentary="YES" id="49">
-                        <rect key="frame" x="16" y="7" width="160" height="30"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <segments>
-                            <segment title="Previous"/>
-                            <segment title="Next"/>
-                        </segments>
-                        <connections>
-                            <action selector="previousNextAction:" destination="-1" eventType="valueChanged" id="52"/>
-                        </connections>
-                    </segmentedControl>
-                </barButtonItem>
-                <barButtonItem style="plain" systemItem="flexibleSpace" id="47"/>
-                <barButtonItem title="Dismiss" style="done" id="46">
-                    <connections>
-                        <action selector="dismissDatePickerAction:" destination="-1" id="51"/>
-                    </connections>
-                </barButtonItem>
-            </items>
-        </toolbar>
     </objects>
 </document>

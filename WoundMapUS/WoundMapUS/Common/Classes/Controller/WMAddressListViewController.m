@@ -108,7 +108,7 @@
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [self.delegate.addressSource addressesWithRefreshHandler:^{
                 WM_ASSERT_MAIN_THREAD;
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 weakSelf.addresses = [[weakSelf.delegate.addressSource.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
                 [weakSelf.tableView reloadData];
             }];

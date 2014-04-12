@@ -192,22 +192,22 @@
 - (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler
 {
     NSParameterAssert(team.ffUrl);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-        NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-        [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
-            [managedObjectContext saveToPersistentStoreAndWait];
-            if (completionHandler) {
-                completionHandler(error, object);
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+    [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
+        FFUserGroup *participantGroup = team.participantGroup;
+        NSLog(@"participantGroup %@ users %@", participantGroup, [participantGroup getUsersWithError:&error]);
+        [managedObjectContext saveToPersistentStoreAndWait];
+        if (completionHandler) {
+            completionHandler(error, object);
+        }
+        [self acquireGrabBagsForObjects:@[object] aliases:[WMTeam relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
             }
-            [self acquireGrabBagsForObjects:@[object] aliases:[WMTeam relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            }];
         }];
-    });
+    }];
     self.lastRefreshTimeMap[[team objectID]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
 }
 
@@ -591,6 +591,15 @@
         NSParameterAssert(participantGroup);
         NSError *error = nil;
         [participantGroup addUser:user error:&error];
+        if (error) {
+            completionHandler(error);
+        }
+        [ff grabBagAddItemAtFfUrl:invitee.ffUrl
+                     toObjAtFfUrl:teamInvitation.team.ffUrl
+                      grabBagName:WMTeamRelationships.participants
+                       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                           completionHandler(error);
+                       }];
     }
 }
 
