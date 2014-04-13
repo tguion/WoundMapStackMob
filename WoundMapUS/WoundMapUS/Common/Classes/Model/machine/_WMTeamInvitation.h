@@ -6,8 +6,6 @@
 
 extern const struct WMTeamInvitationAttributes {
 	__unsafe_unretained NSString *acceptedFlag;
-	__unsafe_unretained NSString *addedToTeamFlag;
-	__unsafe_unretained NSString *confirmedFlag;
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
@@ -26,8 +24,6 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 @class WMParticipant;
 @class WMTeam;
-
-
 
 
 
@@ -59,34 +55,6 @@ extern const struct WMTeamInvitationFetchedProperties {
 - (void)setAcceptedFlagValue:(BOOL)value_;
 
 //- (BOOL)validateAcceptedFlag:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* addedToTeamFlag;
-
-
-
-@property BOOL addedToTeamFlagValue;
-- (BOOL)addedToTeamFlagValue;
-- (void)setAddedToTeamFlagValue:(BOOL)value_;
-
-//- (BOOL)validateAddedToTeamFlag:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* confirmedFlag;
-
-
-
-@property BOOL confirmedFlagValue;
-- (BOOL)confirmedFlagValue;
-- (void)setConfirmedFlagValue:(BOOL)value_;
-
-//- (BOOL)validateConfirmedFlag:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -189,24 +157,6 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 - (BOOL)primitiveAcceptedFlagValue;
 - (void)setPrimitiveAcceptedFlagValue:(BOOL)value_;
-
-
-
-
-- (NSNumber*)primitiveAddedToTeamFlag;
-- (void)setPrimitiveAddedToTeamFlag:(NSNumber*)value;
-
-- (BOOL)primitiveAddedToTeamFlagValue;
-- (void)setPrimitiveAddedToTeamFlagValue:(BOOL)value_;
-
-
-
-
-- (NSNumber*)primitiveConfirmedFlag;
-- (void)setPrimitiveConfirmedFlag:(NSNumber*)value;
-
-- (BOOL)primitiveConfirmedFlagValue;
-- (void)setPrimitiveConfirmedFlagValue:(BOOL)value_;
 
 
 

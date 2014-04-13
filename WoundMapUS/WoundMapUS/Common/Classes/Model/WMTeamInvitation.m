@@ -10,8 +10,6 @@
 
 @implementation WMTeamInvitation
 
-@synthesize user=_user;
-
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];

@@ -31,6 +31,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 @property (readonly, nonatomic) WMTeam *team;
 @property (strong, nonatomic) NSArray *teamInvitations;
 @property (strong, nonatomic) NSArray *teamMembers;
+@property (nonatomic) BOOL acquiringTeamInvitations;
+@property (nonatomic) BOOL acquiringTeamMembers;
 
 @property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
@@ -55,18 +57,29 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Manage Team";
-    [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    [self.tableView setEditing:YES];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    // update from back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    [ffm updateTeam:self.team ff:ff completionHandler:^(NSError *error, id object) {
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-        _teamInvitations = nil;
-        _teamMembers = nil;
+    _acquiringTeamInvitations = YES;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/invitations", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        _acquiringTeamInvitations = NO;
+        _teamInvitations = object;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.tableView reloadData];
     }];
+    _acquiringTeamMembers = YES;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/participants", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        _acquiringTeamMembers = NO;
+        _teamMembers = object;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [weakSelf.tableView reloadData];
+    }];
+    [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    [self.tableView setEditing:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -363,6 +376,10 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if (_acquiringTeamInvitations || _acquiringTeamMembers) {
+        return 0;
+    }
+    // else
     NSInteger count = 2;
     if ([self.teamMembers count]) {
         ++count;
@@ -441,9 +458,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 }
                 cell.textLabel.text = inviteeName;
                 NSString *message = nil;
-                if (teamInvitation.confirmedFlagValue) {
-                    message = @"Confirmed, waiting for invitee";
-                } else if (teamInvitation.isAccepted) {
+                if (teamInvitation.isAccepted) {
                     message = @"Accepted, tap to confirm";
                 } else {
                     message = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];

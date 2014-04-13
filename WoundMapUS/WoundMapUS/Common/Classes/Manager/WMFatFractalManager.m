@@ -443,10 +443,22 @@
                             if (error) {
                                 block(error);
                             } else {
+                                // add to grab bag
+                                [ff grabBagAddItemAtFfUrl:participant.ffUrl
+                                             toObjAtFfUrl:team.ffUrl
+                                              grabBagName:WMTeamRelationships.participants
+                                               onComplete:httpMethodCompletion];
                                 // add invitations
                                 for (WMTeamInvitation *invitation in team.invitations) {
                                     ++counter;
-                                    [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:httpMethodCompletion];
+                                    [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                        NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
+                                        WMTeamInvitation *teamInvitation = (WMTeamInvitation *)object;
+                                        [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
+                                                     toObjAtFfUrl:team.ffUrl
+                                                      grabBagName:WMTeamRelationships.invitations
+                                                       onComplete:httpMethodCompletion];
+                                    }];
                                 }
                                 // seed team with navigation track, stage, node
                                 [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
@@ -542,11 +554,19 @@
     NSParameterAssert([teamInvitation.ffUrl length] == 0);
     NSParameterAssert(nil != teamInvitation.team);
     NSParameterAssert([teamInvitation.team.ffUrl length] > 0);
-    NSParameterAssert(nil != teamInvitation.user);
+    NSParameterAssert(nil != teamInvitation.invitee);
+    NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
     [ff createObj:teamInvitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [[teamInvitation managedObjectContext] MR_saveToPersistentStoreAndWait];
-        if (completionHandler) {
+        if (error) {
             completionHandler(error);
+        } else {
+            [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
+                         toObjAtFfUrl:teamInvitation.team.ffUrl
+                          grabBagName:WMTeamRelationships.invitations
+                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               [managedObjectContext MR_saveToPersistentStoreAndWait];
+                               completionHandler(error);
+                           }];
         }
     }];
 }
@@ -563,22 +583,30 @@
 
 - (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
+    NSManagedObjectContext *managedObjectContext = teamInvitation.managedObjectContext;
     NSParameterAssert([teamInvitation.ffUrl length]);
-    FFUser *user = teamInvitation.user;
-    if (nil == user) {
-        NSString *ffUri = [NSString stringWithFormat:@"/FFUser/(userName eq '%@')", teamInvitation.inviteeUserName];
-        user = [ff getObjFromUri:ffUri];
-    }
+    WMParticipant *invitee = teamInvitation.invitee;
+    NSParameterAssert([invitee isKindOfClass:[WMParticipant class]]);
+    FFUser *user = teamInvitation.invitee.user;
     NSParameterAssert([user isKindOfClass:[FFUser class]]);
+    WMTeam *team = teamInvitation.team;
     // only team leader can do this
-    teamInvitation.confirmedFlag= @YES;
-    teamInvitation.user = user;
+    invitee.team = team;
     FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
     NSParameterAssert(participantGroup);
     NSError *error = nil;
     [participantGroup addUser:user error:&error];
-    [ff updateObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        completionHandler(error);
+    [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [ff grabBagAddItemAtFfUrl:invitee.ffUrl
+                     toObjAtFfUrl:team.ffUrl
+                      grabBagName:WMTeamRelationships.participants
+                       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                           [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                               [managedObjectContext MR_saveToPersistentStoreAndWait];
+                               completionHandler(error);
+                           }];
+                       }];
     }];
 }
 

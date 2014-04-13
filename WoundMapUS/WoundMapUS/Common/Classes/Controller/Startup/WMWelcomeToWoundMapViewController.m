@@ -542,7 +542,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    count = (self.participant.teamInvitation.confirmedFlagValue ? 1:3);
+                    count = 3;
                     break;
                 }
             }
@@ -555,7 +555,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    count = 2;
+                    count = (self.participant.isTeamLeader ? 2:1);
                     break;
                 }
                 case 2:

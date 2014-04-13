@@ -761,8 +761,6 @@
     </entity>
     <entity name="WMTeamInvitation" representedClassName="WMTeamInvitation" syncable="YES">
         <attribute name="acceptedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="addedToTeamFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="confirmedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -1226,7 +1224,7 @@
         <element name="WMSkinAssessmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTeam" positionX="9" positionY="153" width="128" height="195"/>
-        <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="210"/>
+        <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="178"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMWound" positionX="0" positionY="0" width="128" height="285"/>

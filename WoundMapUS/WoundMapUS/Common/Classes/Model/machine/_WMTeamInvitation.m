@@ -5,8 +5,6 @@
 
 const struct WMTeamInvitationAttributes WMTeamInvitationAttributes = {
 	.acceptedFlag = @"acceptedFlag",
-	.addedToTeamFlag = @"addedToTeamFlag",
-	.confirmedFlag = @"confirmedFlag",
 	.createdAt = @"createdAt",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
@@ -54,16 +52,6 @@ const struct WMTeamInvitationFetchedProperties WMTeamInvitationFetchedProperties
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"addedToTeamFlagValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"addedToTeamFlag"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"confirmedFlagValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"confirmedFlag"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 	if ([key isEqualToString:@"flagsValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"flags"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -101,58 +89,6 @@ const struct WMTeamInvitationFetchedProperties WMTeamInvitationFetchedProperties
 
 - (void)setPrimitiveAcceptedFlagValue:(BOOL)value_ {
 	[self setPrimitiveAcceptedFlag:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic addedToTeamFlag;
-
-
-
-- (BOOL)addedToTeamFlagValue {
-	NSNumber *result = [self addedToTeamFlag];
-	return [result boolValue];
-}
-
-- (void)setAddedToTeamFlagValue:(BOOL)value_ {
-	[self setAddedToTeamFlag:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveAddedToTeamFlagValue {
-	NSNumber *result = [self primitiveAddedToTeamFlag];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveAddedToTeamFlagValue:(BOOL)value_ {
-	[self setPrimitiveAddedToTeamFlag:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic confirmedFlag;
-
-
-
-- (BOOL)confirmedFlagValue {
-	NSNumber *result = [self confirmedFlag];
-	return [result boolValue];
-}
-
-- (void)setConfirmedFlagValue:(BOOL)value_ {
-	[self setConfirmedFlag:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveConfirmedFlagValue {
-	NSNumber *result = [self primitiveConfirmedFlag];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveConfirmedFlagValue:(BOOL)value_ {
-	[self setPrimitiveConfirmedFlag:[NSNumber numberWithBool:value_]];
 }
 
 
