@@ -6,9 +6,12 @@
 
 extern const struct WMTeamInvitationAttributes {
 	__unsafe_unretained NSString *acceptedFlag;
+	__unsafe_unretained NSString *addedToTeamFlag;
+	__unsafe_unretained NSString *confirmedFlag;
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *inviteeUserName;
 	__unsafe_unretained NSString *passcode;
 	__unsafe_unretained NSString *updatedAt;
 } WMTeamInvitationAttributes;
@@ -23,6 +26,9 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 @class WMParticipant;
 @class WMTeam;
+
+
+
 
 
 
@@ -58,6 +64,34 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* addedToTeamFlag;
+
+
+
+@property BOOL addedToTeamFlagValue;
+- (BOOL)addedToTeamFlagValue;
+- (void)setAddedToTeamFlagValue:(BOOL)value_;
+
+//- (BOOL)validateAddedToTeamFlag:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* confirmedFlag;
+
+
+
+@property BOOL confirmedFlagValue;
+- (BOOL)confirmedFlagValue;
+- (void)setConfirmedFlagValue:(BOOL)value_;
+
+//- (BOOL)validateConfirmedFlag:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSDate* createdAt;
 
 
@@ -87,6 +121,16 @@ extern const struct WMTeamInvitationFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* inviteeUserName;
+
+
+
+//- (BOOL)validateInviteeUserName:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -149,6 +193,24 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 
 
+- (NSNumber*)primitiveAddedToTeamFlag;
+- (void)setPrimitiveAddedToTeamFlag:(NSNumber*)value;
+
+- (BOOL)primitiveAddedToTeamFlagValue;
+- (void)setPrimitiveAddedToTeamFlagValue:(BOOL)value_;
+
+
+
+
+- (NSNumber*)primitiveConfirmedFlag;
+- (void)setPrimitiveConfirmedFlag:(NSNumber*)value;
+
+- (BOOL)primitiveConfirmedFlagValue;
+- (void)setPrimitiveConfirmedFlagValue:(BOOL)value_;
+
+
+
+
 - (NSDate*)primitiveCreatedAt;
 - (void)setPrimitiveCreatedAt:(NSDate*)value;
 
@@ -166,6 +228,12 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
+
+
+
+
+- (NSString*)primitiveInviteeUserName;
+- (void)setPrimitiveInviteeUserName:(NSString*)value;
 
 
 

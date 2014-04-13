@@ -1,6 +1,7 @@
 #import "WMParticipant.h"
 #import "WMParticipantType.h"
 #import "WMPerson.h"
+#import "WMTeamInvitation.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 

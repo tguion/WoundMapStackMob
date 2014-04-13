@@ -10,6 +10,8 @@
 #import "WMTextFieldTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
+#import "WMTeam.h"
+#import "WMTeamInvitation.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUserDefaultsManager.h"
@@ -140,6 +142,44 @@
                 dispatch_block_t block = ^{
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     participant = [participant MR_inContext:weakSelf.managedObjectContext];
+                    // handle team invitation confirmation
+                    __block WMTeamInvitation *teamInvitation = participant.teamInvitation;
+                    if (nil == teamInvitation) {
+                        // look for team invitation
+                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if ([object count]) {
+                                object = [object firstObject];
+                                NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
+                                teamInvitation = object;
+                                if ([teamInvitation.user isEqual:participant.user]) {
+                                    // invitation is for this participant
+                                    teamInvitation.invitee = participant;
+                                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                    NSError *error = nil;
+                                    [ff updateObj:teamInvitation error:&error];
+                                    NSAssert(nil == error, @"Unable to update teamInvitation: %@, error: %@", teamInvitation, error);
+                                    [ff updateObj:participant error:&error];
+                                    NSAssert(nil != error, @"Unable to update participant: %@, error: %@", participant, error);
+                                }
+                            }
+                        }];
+                    } else {
+                        // refresh from back end
+                        [ff getObjFromUri:teamInvitation.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            participant.team = teamInvitation.team;
+                            teamInvitation.addedToTeamFlagValue = YES;
+                            [ff updateObj:teamInvitation error:&error];
+                            NSAssert(nil == error, @"Unable to update teamInvitation: %@, error: %@", teamInvitation, error);
+                            [ff updateObj:participant error:&error];
+                            NSAssert(nil == error, @"Unable to update participant: %@, error: %@", participant, error);
+                            [ff grabBagAddItemAtFfUrl:participant.ffUrl
+                                         toObjAtFfUrl:teamInvitation.team.ffUrl
+                                          grabBagName:WMTeamRelationships.participants
+                                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                               [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                           }];
+                        }];
+                    }
                     [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                 };
                 if (nil == participant) {

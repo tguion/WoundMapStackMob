@@ -5,9 +5,12 @@
 
 const struct WMTeamInvitationAttributes WMTeamInvitationAttributes = {
 	.acceptedFlag = @"acceptedFlag",
+	.addedToTeamFlag = @"addedToTeamFlag",
+	.confirmedFlag = @"confirmedFlag",
 	.createdAt = @"createdAt",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
+	.inviteeUserName = @"inviteeUserName",
 	.passcode = @"passcode",
 	.updatedAt = @"updatedAt",
 };
@@ -48,6 +51,16 @@ const struct WMTeamInvitationFetchedProperties WMTeamInvitationFetchedProperties
 	
 	if ([key isEqualToString:@"acceptedFlagValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"acceptedFlag"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"addedToTeamFlagValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"addedToTeamFlag"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"confirmedFlagValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"confirmedFlag"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -94,6 +107,58 @@ const struct WMTeamInvitationFetchedProperties WMTeamInvitationFetchedProperties
 
 
 
+@dynamic addedToTeamFlag;
+
+
+
+- (BOOL)addedToTeamFlagValue {
+	NSNumber *result = [self addedToTeamFlag];
+	return [result boolValue];
+}
+
+- (void)setAddedToTeamFlagValue:(BOOL)value_ {
+	[self setAddedToTeamFlag:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveAddedToTeamFlagValue {
+	NSNumber *result = [self primitiveAddedToTeamFlag];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveAddedToTeamFlagValue:(BOOL)value_ {
+	[self setPrimitiveAddedToTeamFlag:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+@dynamic confirmedFlag;
+
+
+
+- (BOOL)confirmedFlagValue {
+	NSNumber *result = [self confirmedFlag];
+	return [result boolValue];
+}
+
+- (void)setConfirmedFlagValue:(BOOL)value_ {
+	[self setConfirmedFlag:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveConfirmedFlagValue {
+	NSNumber *result = [self primitiveConfirmedFlag];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveConfirmedFlagValue:(BOOL)value_ {
+	[self setPrimitiveConfirmedFlag:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
 @dynamic createdAt;
 
 
@@ -129,6 +194,13 @@ const struct WMTeamInvitationFetchedProperties WMTeamInvitationFetchedProperties
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
+
+
+
+
+
+@dynamic inviteeUserName;
+
 
 
 

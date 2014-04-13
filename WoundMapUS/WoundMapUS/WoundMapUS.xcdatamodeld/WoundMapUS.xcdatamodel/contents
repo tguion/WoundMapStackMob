@@ -761,9 +761,12 @@
     </entity>
     <entity name="WMTeamInvitation" representedClassName="WMTeamInvitation" syncable="YES">
         <attribute name="acceptedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="addedToTeamFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="confirmedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="inviteeUserName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="passcode" optional="YES" attributeType="Integer 16" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="invitee" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="teamInvitation" inverseEntity="WMParticipant" syncable="YES"/>
@@ -1196,6 +1199,9 @@
         <element name="WMInterventionEventType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMInterventionStatus" positionX="0" positionY="0" width="128" height="345"/>
         <element name="WMInterventionStatusJoin" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="WMMedicalHistoryGroup" positionX="27" positionY="171" width="128" height="133"/>
+        <element name="WMMedicalHistoryItem" positionX="9" positionY="153" width="128" height="223"/>
+        <element name="WMMedicalHistoryValue" positionX="18" positionY="162" width="128" height="148"/>
         <element name="WMMedication" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMMedicationCategory" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMMedicationGroup" positionX="0" positionY="0" width="128" height="270"/>
@@ -1220,7 +1226,7 @@
         <element name="WMSkinAssessmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTeam" positionX="9" positionY="153" width="128" height="195"/>
-        <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="163"/>
+        <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="210"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMWound" positionX="0" positionY="0" width="128" height="285"/>
@@ -1242,8 +1248,5 @@
         <element name="WMWoundTreatmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMMedicalHistoryItem" positionX="9" positionY="153" width="128" height="223"/>
-        <element name="WMMedicalHistoryValue" positionX="18" positionY="162" width="128" height="148"/>
-        <element name="WMMedicalHistoryGroup" positionX="27" positionY="171" width="128" height="133"/>
     </elements>
 </model>

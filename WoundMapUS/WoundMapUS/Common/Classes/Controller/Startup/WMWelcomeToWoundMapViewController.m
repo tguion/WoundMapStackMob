@@ -542,7 +542,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    count = (self.participant.teamInvitation.acceptedFlagValue ? 1:3);
+                    count = (self.participant.teamInvitation.confirmedFlagValue ? 1:3);
                     break;
                 }
             }
@@ -926,10 +926,30 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)organizationEditorViewController:(WMOrganizationEditorViewController *)viewController didEditOrganization:(WMOrganization *)organization
 {
+    WMParticipant *participant = self.participant;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
+    NSParameterAssert([organization managedObjectContext] == managedObjectContext);
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        [weakSelf.tableView beginUpdates];
+        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf.tableView endUpdates];
+    };
     [self.navigationController popViewControllerAnimated:YES];
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+    if (nil == participant.organization) {
+        participant.organization = organization;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            block();
+        }];
+    } else {
+        block();
+    }
 }
 
 - (void)organizationEditorViewControllerDidCancel:(WMOrganizationEditorViewController *)viewController
@@ -944,7 +964,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // update table view
-        _welcomeState = WMWelcomeStateTeamSelected;
         [weakSelf.tableView reloadData];
     }];
 }
@@ -990,15 +1009,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             [WMUtilities logError:error];
         } else {
             [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^(void) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                    if (error) {
-                        [WMUtilities logError:error];
-                    } else {
-                        weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-                        [weakSelf.tableView reloadData];
-                    }
-                });
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+                    [weakSelf.tableView reloadData];
+                }
             }];
         }
     }];

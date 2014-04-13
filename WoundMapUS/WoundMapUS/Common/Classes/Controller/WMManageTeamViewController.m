@@ -203,6 +203,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    NSManagedObjectContext *managedObjetContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
@@ -231,12 +232,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                     if (error) {
                         [WMUtilities logError:error];
                     }
+                    [managedObjetContext MR_saveToPersistentStoreAndWait];
                     // update regardless of error
                     _teamInvitations = nil;
                     _teamMembers = nil;
                     [weakSelf.tableView reloadData];
-                    // remove invitation
-                    revokeBlock();
                 }];
             } else if (buttonIndex == actionSheet.cancelButtonIndex) {
                 // revoke
@@ -250,6 +250,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                     if (error) {
                         [WMUtilities logError:error];
                     } else {
+                        [managedObjetContext MR_saveToPersistentStoreAndWait];
                         _teamMembers = nil;
                         _teamMemberToDelete = nil;
                         [weakSelf.tableView reloadData];
@@ -434,13 +435,20 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             } else {
                 WMTeamInvitation *teamInvitation = [self.teamInvitations objectAtIndex:indexPath.row];
-                cell.textLabel.text = teamInvitation.invitee.name;
+                NSString *inviteeName = teamInvitation.invitee.name;
+                if (nil == inviteeName) {
+                    inviteeName = teamInvitation.inviteeUserName;
+                }
+                cell.textLabel.text = inviteeName;
                 NSString *message = nil;
-                if (teamInvitation.isAccepted) {
-                    message = @"Tap to Add";
+                if (teamInvitation.confirmedFlagValue) {
+                    message = @"Confirmed, waiting for invitee";
+                } else if (teamInvitation.isAccepted) {
+                    message = @"Accepted, tap to confirm";
                 } else {
                     message = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
                 }
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
                 cell.detailTextLabel.text = message;
             }
             break;

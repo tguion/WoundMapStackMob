@@ -10,6 +10,8 @@
 
 @implementation WMTeamInvitation
 
+@synthesize user=_user;
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
@@ -42,6 +44,8 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"acceptedFlagValue",
+                                                            @"confirmedFlagValue",
+                                                            @"addedToTeamFlagValue",
                                                             @"flagsValue",
                                                             @"passcodeValue",
                                                             @"isAccepted"]];

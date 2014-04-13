@@ -30,7 +30,6 @@
 @property (strong, nonatomic) NSString *passcodeTextInput;
 
 @property (readonly, nonatomic) WMParticipant *participant;
-@property (strong, nonatomic) WMParticipant *invitee;
 
 @end
 
@@ -130,7 +129,7 @@
 {
     if ([_passcodeTextInput length] < kMinimumPasscodeLength) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid passcode"
-                                                            message:@"The passcode must be 4 numbers."
+                                                            message:@"The passcode must be at least 4 numbers."
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
@@ -169,7 +168,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@')", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [ff getObjFromUri:[NSString stringWithFormat:@"/FFUser/(userName eq '%@')", _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         if (nil == object) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"
@@ -179,10 +178,10 @@
                                                       otherButtonTitles:nil];
             [alertView show];
         } else {
-            _invitee = object;
             _teamInvitation = [WMTeamInvitation MR_createInContext:weakSelf.managedObjectContext];
             _teamInvitation.team = weakSelf.participant.team;
-            _teamInvitation.invitee = _invitee;
+            _teamInvitation.user = object;
+            _teamInvitation.inviteeUserName = _userNameTextInput;
             _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
             // else handle undo
             if (weakSelf.managedObjectContext.undoManager.groupingLevel > 0) {
@@ -202,7 +201,6 @@
 {
     [super clearAllReferences];
     _teamInvitation = nil;
-    _invitee = nil;
 }
 
 #pragma mark - UITextFieldDelegate

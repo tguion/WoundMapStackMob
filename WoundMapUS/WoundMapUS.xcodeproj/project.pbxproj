@@ -1876,6 +1876,12 @@
 				7D10CDD218DA3B5300AD43E3 /* WMInterventionStatusViewController.h */,
 				7D10CDD318DA3B5300AD43E3 /* WMInterventionStatusViewController.m */,
 				7D10CDD418DA3B5300AD43E3 /* WMInterventionStatusViewController.xib */,
+				7DDEE26A18F1919D00AF9FC6 /* WMManageTeamViewController.h */,
+				7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */,
+				7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */,
+				7DDEE28518F49E5500AF9FC6 /* WMMedicalHistoryViewController.h */,
+				7DDEE28618F49E5500AF9FC6 /* WMMedicalHistoryViewController.m */,
+				7DDEE28718F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib */,
 				7D10CE2518DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.h */,
 				7D10CE2618DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.m */,
 				7D10CE2718DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.xib */,
@@ -2005,12 +2011,6 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
-				7DDEE26A18F1919D00AF9FC6 /* WMManageTeamViewController.h */,
-				7DDEE26B18F1919D00AF9FC6 /* WMManageTeamViewController.m */,
-				7DDEE26C18F1919D00AF9FC6 /* WMManageTeamViewController.xib */,
-				7DDEE28518F49E5500AF9FC6 /* WMMedicalHistoryViewController.h */,
-				7DDEE28618F49E5500AF9FC6 /* WMMedicalHistoryViewController.m */,
-				7DDEE28718F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

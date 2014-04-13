@@ -104,24 +104,17 @@
     teamInvitation.acceptedFlagValue = YES;
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    dispatch_block_t block = ^{
-        [ffm addParticipantToTeamFromTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
-            }
-        }];
-    };
     [ff updateObj:teamInvitation
        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-           [managedObjectContext MR_saveToPersistentStoreAndWait];
-           block();
+           if (error) {
+               [WMUtilities logError:error];
+           } else {
+               [managedObjectContext MR_saveToPersistentStoreAndWait];
+               [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
+           }
        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
            //           FFQueuedOperation *operation = (FFQueuedOperation *)object;
-           block();
        }];
 }
 
