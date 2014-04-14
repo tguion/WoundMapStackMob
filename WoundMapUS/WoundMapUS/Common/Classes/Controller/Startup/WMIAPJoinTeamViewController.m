@@ -46,7 +46,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Team Invitation";
-    WMParticipant *teamLeader = self.team.teamLeader;
+    WMParticipant *teamLeader = self.teamInvitation.team.teamLeader;
     self.messageLabel.text = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", teamLeader.name, self.team.name, teamLeader.name];
 }
 

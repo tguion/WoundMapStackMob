@@ -767,24 +767,25 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     switch (indexPath.row) {
                         case 0: {
                             // first name
-                            myCell.textField.tag = 2000;
-                            myCell.textField.secureTextEntry = NO;
-                            myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
+                            textField.tag = 2000;
+                            textField.secureTextEntry = NO;
+                            textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
                             [myCell updateWithLabelText:@"First Name" valueText:_firstNameTextInput valuePrompt:@""];
                             break;
                         }
                         case 1: {
                             // last name
-                            myCell.textField.tag = 2001;
-                            myCell.textField.autocorrectionType = UITextAutocapitalizationTypeWords;
-                            myCell.textField.secureTextEntry = NO;
+                            textField.tag = 2001;
+                            textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+                            textField.secureTextEntry = NO;
                             [myCell updateWithLabelText:@"Last Name" valueText:_lastNameTextInput valuePrompt:@""];
                             break;
                         }
                         case 2: {
                             // email
-                            myCell.textField.tag = 2002;
-                            myCell.textField.secureTextEntry = NO;
+                            textField.tag = 2002;
+                            textField.secureTextEntry = NO;
+                            textField.keyboardType = UIKeyboardTypeEmailAddress;
                             [myCell updateWithLabelText:@"Email" valueText:_emailTextInput valuePrompt:@"you@host.com"];
                             break;
                         }
