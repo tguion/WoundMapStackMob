@@ -641,4 +641,17 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     [self cancelWoundMeasurementNavigation:viewController];
 }
 
+#pragma mark - UINavigationControllerDelegate
+
+- (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController *)navigationController
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController *)navigationController
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+
 @end

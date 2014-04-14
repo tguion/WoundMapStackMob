@@ -34,7 +34,7 @@ typedef enum {
     NavigationCoordinatorStateMeasureExistingPhoto = 4,
 } NavigationCoordinatorState;
 
-@interface WMNavigationCoordinator : NSObject <TransformPhotoViewControllerDelegate, PhotoScaleViewControllerDelegate, PhotoMeasureViewControllerDelegate, PhotoDepthViewControllerDelegate, UndermineTunnelViewControllerDelegate>
+@interface WMNavigationCoordinator : NSObject <TransformPhotoViewControllerDelegate, PhotoScaleViewControllerDelegate, PhotoMeasureViewControllerDelegate, PhotoDepthViewControllerDelegate, UndermineTunnelViewControllerDelegate, UINavigationControllerDelegate>
 
 + (WMNavigationCoordinator *)sharedInstance;
 

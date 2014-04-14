@@ -311,9 +311,7 @@
     [super setEnabled:enabled];
     NSString *iconImageName = self.iconImageName;
     UIImage *icon = [UIImage imageNamed:iconImageName];
-    if (nil == icon) {
-        icon = [UIImage animatedImageWithImages:self.iCloudIconImages duration:1.0];
-    } else {
+    if (icon) {
         self.iconImageView.image = icon;
     }
     if (enabled) {

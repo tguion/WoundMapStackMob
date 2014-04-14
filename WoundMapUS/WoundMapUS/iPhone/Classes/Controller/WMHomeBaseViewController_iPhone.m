@@ -55,6 +55,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setEdgesForExtendedLayout:UIRectEdgeNone];
     self.navigationPatientWoundContainerView.drawTopLine = NO;
     self.navigationPatientWoundContainerView.deltaY = 0.0;
     // update navigation bar

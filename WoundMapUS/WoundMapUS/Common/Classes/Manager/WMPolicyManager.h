@@ -16,10 +16,6 @@ extern NSString *const kTaskDidCompleteNotification;
 
 + (WMPolicyManager *)sharedInstance;
 
-+ (NSInteger)complianceDeltaForFrequencyUnit:(NavigationNodeFrequencyUnit)frequencyUnit
-                              frequencyValue:(NSInteger)frequencyValue
-                                updatedAt:(NSDate *)updatedAt;
-
 - (void)handleICloudAccountChanged;
 
 - (void)registerNavigationNodeButton:(WMNavigationNodeButton *)navigationNodeButton;
@@ -31,8 +27,6 @@ extern NSString *const kTaskDidCompleteNotification;
 - (UIImage *)statusImageForComplianceDelta:(NSInteger)complianceDelta;
 - (UIImage *)statusImageForNavigationNode:(WMNavigationNode *)navigationNode;
 - (WMNavigationNode *)recommendedNavigationNodeForNavigationNodes:(NSArray *)navigationNodes;
-
-- (void)updateDocumentPolicies:(UIManagedDocument *)document;
 
 - (NSInteger)closeExpiredRecords:(WMNavigationNode *)navigationNode;
 

@@ -72,6 +72,8 @@
     self.navigationItem.rightBarButtonItem = barButtonItem;
     // show table view separators all the way across
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    // make initial update to UI
+    _patientWoundUIRequiresUpdate = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -102,6 +104,11 @@
 - (BOOL)shouldShowSelectTrackTableViewCell
 {
     return (!self.removeTrackAndStageForSubnodes || nil == self.parentNavigationNode);
+}
+
+- (BOOL)shouldShowSelectStageTableViewCell
+{
+    return (!self.removeTrackAndStageForSubnodes || nil == self.parentNavigationNode) && !self.appDelegate.navigationCoordinator.navigationTrack.ignoresStagesFlag;
 }
 
 - (void)delayedScrollTrackAndScopeOffTop
@@ -912,6 +919,27 @@
 
 #pragma mark - Navigation
 
+- (void)navigateToPatientDetail:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToPatientDetailViewControllerForNewPatient:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToSelectPatient:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToWoundDetail:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToWoundDetailViewControllerForNewWound:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToSelectWound:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToSkinAssessmentForNavigationNode:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToBradenScaleAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToSkinAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToWoundAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToWoundTreatment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToBrowsePhotos:(id)sender {}
+- (void)navigateToViewGraphs:(id)sender {}
+- (void)navigateToPatientSummary:(id)sender {}
+- (void)navigateToShare:(id)sender {}
+
 - (void)navigateToNavigationTracks
 {
     [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
@@ -1124,6 +1152,12 @@
     _navigationNodeControls = nil;
 }
 
+#pragma mark - PolicyEditorDelegate
+
+- (void)policyEditorViewControllerDidSave:(WMPolicyEditorViewController *)viewController {}
+- (void)policyEditorViewControllerDidChangeTrack:(WMPolicyEditorViewController *)viewController {}
+- (void)policyEditorViewControllerDidCancel:(WMPolicyEditorViewController *)viewController {}
+
 #pragma mark - ChooseTrackDelegate
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
@@ -1168,6 +1202,16 @@
     [self.navigationController popViewControllerAnimated:YES];
     [chooseStageViewController clearAllReferences];
 }
+
+#pragma mark - PatientDetailViewControllerDelegate
+
+- (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController {}
+- (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController {}
+
+#pragma mark - PatientTableViewControllerDelegate
+
+- (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient {}
+- (void)patientTableViewControllerDidCancel:(WMPatientTableViewController *)viewController {}
 
 #pragma mark - SelectWoundViewControllerDelegate
 

@@ -20,6 +20,8 @@
 #import "WMPatientDetailViewController.h"
 #import "WMPatientTableViewController.h"
 #import "WMInstructionsViewController.h"
+#import "WMHomeBaseViewController_iPhone.h"
+#import "WMHomeBaseViewController_iPad.h"
 #import "WMValue1TableViewCell.h"
 #import "WMButtonCell.h"
 #import "MBProgressHUD.h"
@@ -366,9 +368,35 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.tableView reloadData];
 }
 
+- (UIViewController *)initialRootViewController
+{
+    UIViewController *viewController = nil;
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    if (isPad) {
+        viewController = [[WMHomeBaseViewController_iPad alloc] initWithNibName:@"WMHomeBaseViewController_iPad" bundle:nil];
+    } else {
+        viewController = [[WMHomeBaseViewController_iPhone alloc] initWithNibName:@"WMHomeBaseViewController_iPhone" bundle:nil];
+    }
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    if (self.isIPadIdiom) {
+        return navigationController;
+    }
+    // else
+    navigationController.delegate = self.appDelegate.navigationCoordinator;
+    return navigationController;
+}
+
 - (IBAction)enterWoundMapAction:(id)sender
 {
-    NSLog(@"Hurray");
+    UIViewController *viewController = self.initialRootViewController;
+    [UIView transitionWithView:self.appDelegate.window
+                      duration:0.5
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                        self.appDelegate.window.rootViewController = viewController;
+                    } completion:^(BOOL finished) {
+                        
+                    }];
 }
 
 - (IBAction)viewInstructionsAction:(id)sender
