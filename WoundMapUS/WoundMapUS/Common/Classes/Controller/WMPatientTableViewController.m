@@ -91,6 +91,7 @@
     self.navigationItem.hidesBackButton = YES;
     [self.tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
+    _patientToOpen = self.patient;
 }
 
 - (void)viewWillAppear:(BOOL)animated

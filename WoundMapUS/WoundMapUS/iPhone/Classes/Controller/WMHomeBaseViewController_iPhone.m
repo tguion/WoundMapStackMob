@@ -136,7 +136,7 @@
     WMPatientTableViewController *patientTableViewController = self.patientTableViewController;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:patientTableViewController];
     navigationController.delegate = self.appDelegate;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
+    [self presentViewController:navigationController animated:YES completion:^{
         // nothing more
     }];
 }

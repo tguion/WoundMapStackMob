@@ -87,6 +87,7 @@
 {
     [super viewWillAppear:animated];
     [self updateTitle];
+    [self.navigationPatientWoundContainerView updatePatientAndWoundNodes];
 }
 
 - (void)viewDidAppear:(BOOL)animated
