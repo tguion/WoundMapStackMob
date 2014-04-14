@@ -35,6 +35,11 @@
 @property (readonly, nonatomic) WMChooseStageViewController *chooseStageViewController;
 @property (readonly, nonatomic) WMPolicyEditorViewController *policyEditorViewController;
 
+@property (strong, nonatomic) NSArray *patientNavigationNodes;
+@property (strong, nonatomic) NSArray *woundNavigationNodes;
+@property (strong, nonatomic) NSArray *patientNavigationNodeControls;
+@property (strong, nonatomic) NSArray *woundNavigationNodeControls;
+
 @property (nonatomic) BOOL removingTrackAndOrStageCells;
 @property (nonatomic) BOOL updatePatientWoundComponentsInProgress;
 @property (nonatomic) BOOL updateNavigationComponentsInProgress;
@@ -42,6 +47,8 @@
 - (void)updatePatientWoundComponents;
 - (void)updateWoundPhotoComponents;
 - (void)updateNavigationComponents;
+
+- (SEL)selectorForNavigationNode:(WMNavigationNode *)navigationNode;
 
 - (void)delayedScrollTrackAndScopeOffTop;
 
@@ -74,6 +81,12 @@
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     // make initial update to UI
     _patientWoundUIRequiresUpdate = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateTitle];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -118,6 +131,17 @@
     if (nil != indexPath) {
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
+}
+
+- (void)updateTitle
+{
+    NSString *title = nil;
+    if (nil == self.parentNavigationNode) {
+        title = @"WoundMap";
+    } else {
+        title = self.parentNavigationNode.displayTitle;
+    }
+    self.title = title;
 }
 
 - (UITableViewCell *)carePlanCell
@@ -167,6 +191,271 @@
     return [nodeTitles componentsJoinedByString:@" > "];
 }
 
+- (WMNavigationNodeButton *)navigationControlForNavigationNode:(WMNavigationNode *)navigationNode rotationDirection:(MapBaseRotationDirection)rotationDirection
+{
+    WMNavigationNodeButton *button = [[WMNavigationNodeButton alloc] initWithNavigationNode:navigationNode rotationDirection:rotationDirection];
+    UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeNavigationNodeControl:)];
+    gestureRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    [button addGestureRecognizer:gestureRecognizer];
+    [button addTarget:self action:[self selectorForNavigationNode:navigationNode] forControlEvents:UIControlEventTouchUpInside];
+    return button;
+}
+
+- (NSArray *)patientNavigationNodes
+{
+    if (nil == _patientNavigationNodes) {
+        _patientNavigationNodes = [WMNavigationNode patientNodes:self.managedObjectContext];
+    }
+    return _patientNavigationNodes;
+}
+
+- (WMNavigationNode *)addPatientNavigationNode
+{
+    return [WMNavigationNode addPatientNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)selectPatientNavigationNode
+{
+    return [WMNavigationNode selectPatientNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)editPatientNavigationNode
+{
+    return [WMNavigationNode editPatientNavigationNode:self.managedObjectContext];
+}
+
+- (NSArray *)woundNavigationNodes
+{
+    if (nil == _woundNavigationNodes) {
+        _woundNavigationNodes = [WMNavigationNode woundNodes:self.managedObjectContext];
+    }
+    return _woundNavigationNodes;
+}
+
+- (WMNavigationNode *)addWoundNavigationNode
+{
+    return [WMNavigationNode addWoundNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)selectWoundNavigationNode
+{
+    return [WMNavigationNode selectWoundNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)editWoundNavigationNode
+{
+    return [WMNavigationNode editWoundNavigationNode:self.managedObjectContext];
+}
+
+- (NSArray *)patientNavigationNodeControls
+{
+    if (nil == _patientNavigationNodeControls) {
+        NSMutableArray *controls = [[NSMutableArray alloc] initWithCapacity:4];
+        for (WMNavigationNode *navigationNode in self.patientNavigationNodes) {
+            [controls addObject:[self navigationControlForNavigationNode:navigationNode rotationDirection:MapBaseRotationDirection_North]];
+        }
+        _patientNavigationNodeControls = controls;
+    }
+    return _patientNavigationNodeControls;
+}
+
+- (NSArray *)woundNavigationNodeControls
+{
+    if (nil == _woundNavigationNodeControls) {
+        NSMutableArray *controls = [[NSMutableArray alloc] initWithCapacity:4];
+        for (WMNavigationNode *navigationNode in self.woundNavigationNodes) {
+            [controls addObject:[self navigationControlForNavigationNode:navigationNode rotationDirection:MapBaseRotationDirection_North]];
+        }
+        _woundNavigationNodeControls = controls;
+    }
+    return _woundNavigationNodeControls;
+}
+
+- (WMNavigationNode *)initialStageNavigationNode
+{
+    return [WMNavigationNode initialStageNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)followupStageNavigationNode
+{
+    return [WMNavigationNode followupStageNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)dischargeStageNavigationNode
+{
+    return [WMNavigationNode dischargeStageNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)browsePhotosNavigationNode
+{
+    return [WMNavigationNode browsePhotosNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)viewGraphsNavigationNode
+{
+    return [WMNavigationNode viewGraphsNavigationNode:self.managedObjectContext];
+}
+
+- (WMNavigationNode *)shareNavigationNode
+{
+    return [WMNavigationNode shareNavigationNode:self.managedObjectContext];
+}
+
+- (SEL)selectorForNavigationNode:(WMNavigationNode *)navigationNode
+{
+    SEL selector = nil;
+    NavigationNodeIdentifier identifier = (NavigationNodeIdentifier)[navigationNode.taskIdentifier integerValue];
+    switch (identifier) {
+        case kInitialStageNode: {
+            selector = @selector(selectInitialStageAction:);
+            break;
+        }
+        case kFollowupStageNode: {
+            selector = @selector(selectFollowupStageAction:);
+            break;
+        }
+        case kDischargeStageNode: {
+            selector = @selector(selectDischargeStageAction:);
+            break;
+        }
+        case kSelectPatientNode: {
+            selector = @selector(selectPatientAction:);
+            break;
+        }
+        case kEditPatientNode: {
+            selector = @selector(editPatientAction:);
+            break;
+        }
+        case kAddPatientNode: {
+            selector = @selector(addPatientAction:);
+            break;
+        }
+        case kSelectWoundNode: {
+            selector = @selector(selectWoundAction:);
+            break;
+        }
+        case kEditWoundNode: {
+            selector = @selector(editWoundAction:);
+            break;
+        }
+        case kAddWoundNode: {
+            selector = @selector(addWoundAction:);
+            break;
+        }
+        case kWoundsNode: {
+            selector = @selector(woundsAction:);
+            break;
+        }
+        case kSelectStageNode: {
+            selector = @selector(selectStageAction:);
+            break;
+        }
+        case kRiskAssessmentNode: {
+            selector = @selector(riskAssessmentAction:);
+            break;
+        }
+        case kBradenScaleNode: {
+            selector = @selector(bradenScaleAction:);
+            break;
+        }
+        case kMedicationsNode: {
+            selector = @selector(medicationAssessmentAction:);
+            break;
+        }
+        case kDevicesNode: {
+            selector = @selector(deviceAssessmentAction:);
+            break;
+        }
+        case kPsycoSocialNode: {
+            selector = @selector(psycoSocialAssessmentAction:);
+            break;
+        }
+        case kSkinAssessmentNode: {
+            selector = @selector(skinAssessmentAction:);
+            break;
+        }
+        case kPhotoNode: {
+            selector = @selector(photoAction:);
+            break;
+        }
+        case kTakePhotoNode: {
+            selector = @selector(takePhotoAction:);
+            break;
+        }
+        case kMeasurePhotoNode: {
+            selector = @selector(measurePhotoAction:);
+            break;
+        }
+        case kWoundAssessmentNode: {
+            selector = @selector(woundAssessmentAction:);
+            break;
+        }
+        case kWoundTreatmentNode: {
+            selector = @selector(woundTreatmentAction:);
+            break;
+        }
+        case kCarePlanNode: {
+            selector = @selector(carePlanAction:);
+            break;
+        }
+        case kBrowsePhotosNode: {
+            selector = @selector(browsePhotosAction:);
+            break;
+        }
+        case kViewGraphsNode: {
+            selector = @selector(viewGraphsAction:);
+            break;
+        }
+        case kPatientSummaryNode: {
+            // TODO finish
+            break;
+        }
+        case kShareNode: {
+            selector = @selector(shareAction:);
+            break;
+        }
+        case kEmailReportNode: {
+            selector = @selector(emailCADAction:);
+            break;
+        }
+        case kPrintReportNode: {
+            selector = @selector(printCADAction:);
+            break;
+        }
+        case kPushEMRNode: {
+            selector = @selector(pushToEMRAction:);
+            break;
+        }
+    }
+    return selector;
+}
+
+- (NSArray *)navigationNodes
+{
+    if (nil == _navigationNodes) {
+        if (nil != _parentNavigationNode) {
+            _navigationNodes = _parentNavigationNode.sortedSubnodes;
+        } else {
+            _navigationNodes = self.appDelegate.navigationCoordinator.navigationStage.rootNavigationNodes;
+        }
+    }
+    return _navigationNodes;
+}
+
+- (NSArray *)navigationNodeControls
+{
+    if (nil == _navigationNodeControls) {
+        NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:4];
+        NSInteger rotationDirection = 0;
+        for (WMNavigationNode *navigationNode in self.navigationNodes) {
+            [array addObject:[self navigationControlForNavigationNode:navigationNode rotationDirection:(MapBaseRotationDirection)rotationDirection]];
+            ++rotationDirection;
+        }
+        _navigationNodeControls = array;
+    }
+    return _navigationNodeControls;
+}
+
 #pragma mark - Accessors
 
 - (WMNavigationNodeButton *)selectPatientButton
@@ -197,21 +486,6 @@
 - (WMNavigationNodeButton *)addWoundButton
 {
     return self.navigationPatientWoundContainerView.woundAddNavigationNodeButton;
-}
-
-- (WMNavigationNode *)initialStageNavigationNode
-{
-    return [WMNavigationNode initialStageNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)followupStageNavigationNode
-{
-    return [WMNavigationNode followupStageNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)dischargeStageNavigationNode
-{
-    return [WMNavigationNode dischargeStageNavigationNode:self.managedObjectContext];
 }
 
 #pragma mark - Toolbar
@@ -550,36 +824,6 @@
     }];
 }
 
-- (WMNavigationNode *)addPatientNavigationNode
-{
-    return [WMNavigationNode addPatientNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)selectPatientNavigationNode
-{
-    return [WMNavigationNode selectPatientNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)editPatientNavigationNode
-{
-    return [WMNavigationNode editPatientNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)addWoundNavigationNode
-{
-    return [WMNavigationNode addWoundNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)selectWoundNavigationNode
-{
-    return [WMNavigationNode selectWoundNavigationNode:self.managedObjectContext];
-}
-
-- (WMNavigationNode *)editWoundNavigationNode
-{
-    return [WMNavigationNode editWoundNavigationNode:self.managedObjectContext];
-}
-
 #pragma mark - Notification handlers
 
 - (void)handlePatientChanged:(WMPatient *)patient
@@ -628,6 +872,24 @@
     [self presentViewController:navigationController animated:YES completion:^{
         // nothing
     }];
+}
+
+- (IBAction)selectInitialStageAction:(id)sender
+{
+    WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
+    navigationCoordinator.navigationStage = [WMNavigationStage initialStageForTrack:navigationCoordinator.navigationTrack];
+}
+
+- (IBAction)selectFollowupStageAction:(id)sender
+{
+    WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
+    navigationCoordinator.navigationStage = [WMNavigationStage followupStageForTrack:navigationCoordinator.navigationTrack];
+}
+
+- (IBAction)selectDischargeStageAction:(id)sender
+{
+    WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
+    navigationCoordinator.navigationStage = [WMNavigationStage dischargeStageForTrack:navigationCoordinator.navigationTrack];
 }
 
 - (IBAction)selectPatientAction:(id)sender
