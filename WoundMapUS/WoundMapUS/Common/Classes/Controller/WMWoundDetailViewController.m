@@ -133,7 +133,13 @@
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             __weak __typeof(&*self)weakSelf = self;
             [ff createObj:_localWound atUri:[NSString stringWithFormat:@"/%@", [WMWound entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 [ff grabBagAddItemAtFfUrl:_localWound.ffUrl toObjAtFfUrl:self.patient.ffUrl grabBagName:WMPatientRelationships.wounds onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 }];
             }];

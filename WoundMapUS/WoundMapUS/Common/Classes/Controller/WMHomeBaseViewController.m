@@ -921,7 +921,7 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    [self navigateToWoundDetail:navigationNodeButton];
+    [self navigateToSelectWound:navigationNodeButton];
 }
 
 - (IBAction)editWoundAction:(id)sender

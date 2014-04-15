@@ -168,7 +168,7 @@
     WMSelectWoundViewController *selectWoundViewController = self.selectWoundViewController;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:selectWoundViewController];
     navigationController.delegate = self.appDelegate;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
+    [self presentViewController:navigationController animated:YES completion:^{
         // nothing
     }];
 }

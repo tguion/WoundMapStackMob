@@ -154,24 +154,33 @@
             } else {
                 weakSelf.patient.faceDetectionFailed = YES;
             }
-            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                // save to back end
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
                 WMPatient *patient = (WMPatient *)[managedObjectContext objectWithID:objectID];
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
                 [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
                     [ff updateBlob:UIImagePNGRepresentation(image)
                       withMimeType:@"image/png"
                             forObj:patient
                         memberName:WMPatientAttributes.thumbnail
                         onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
                             [managedObjectContext MR_saveToPersistentStoreAndWait];
                         } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
                             [managedObjectContext MR_saveToPersistentStoreAndWait];
                         }];
                 }];
-            }];
+            });
         });
     }];
     
