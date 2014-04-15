@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4469" systemVersion="13A476u" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3694"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMSelectWoundTypeViewController">
             <connections>
-                <outlet property="view" destination="1" id="3"/>
+                <outlet property="searchBar" destination="fSZ-cv-aMv" id="9pl-ie-sI8"/>
+                <outlet property="searchDisplayController" destination="9fH-e5-A2B" id="jVk-1K-GSe"/>
+                <outlet property="view" destination="2jT-rc-VcU" id="Sp1-2E-Rdv"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="1">
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="2jT-rc-VcU">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-        </view>
+            <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search Definitions" showsCancelButton="YES" showsScopeBar="YES" id="fSZ-cv-aMv">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                <textInputTraits key="textInputTraits"/>
+                <scopeButtonTitles>
+                    <string>Wound Type</string>
+                    <string>All Definitions</string>
+                </scopeButtonTitles>
+                <connections>
+                    <outlet property="delegate" destination="-1" id="se6-dE-Lzc"/>
+                </connections>
+            </searchBar>
+        </tableView>
+        <searchDisplayController id="9fH-e5-A2B">
+            <connections>
+                <outlet property="delegate" destination="-1" id="Ymj-k3-Tc5"/>
+                <outlet property="searchBar" destination="fSZ-cv-aMv" id="98f-qI-GRW"/>
+                <outlet property="searchContentsController" destination="-1" id="p4H-ZX-J1c"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="cvU-dR-NgU"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="uQy-iw-QTl"/>
+            </connections>
+        </searchDisplayController>
     </objects>
 </document>

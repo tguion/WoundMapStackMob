@@ -4,7 +4,7 @@
 //
 //  Created by Todd Guion on 2/21/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
-//  TODO: create and associate new wound as appropriate
+//
 
 #import "WMWoundDetailViewController.h"
 #import "WMSelectWoundTypeViewController.h"
@@ -124,8 +124,7 @@
 - (WMWound *)wound
 {
     if (nil == _localWound) {
-        _localWound = [super wound];
-        if (nil == _localWound) {
+        if (_newWoundFlag) {
             _localWound = [WMWound instanceWithPatient:self.patient];
             [self.managedObjectContext MR_saveToPersistentStoreAndWait];
             // create on back end
@@ -144,6 +143,8 @@
                 }];
             }];
         } else {
+            _localWound = [super wound];
+            NSParameterAssert(_localWound);
             // we want to support cancel, so make sure we have an undoManager
             if (nil == self.managedObjectContext.undoManager) {
                 self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
@@ -165,6 +166,20 @@
     [ff grabBagRemove:self.wound from:self.patient grabBagName:WMPatientRelationships.wounds error:&error];
     if (error) {
         [WMUtilities logError:error];
+    }
+    if (self.wound.locationValue) {
+        [ff deleteObj:self.wound.locationValue error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    if ([self.wound.positionValues count]) {
+        for (WMWoundPositionValue *positionValue in self.wound.positionValues) {
+            [ff deleteObj:positionValue error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        }
     }
     [ff deleteObj:self.wound error:&error];
     if (error) {
@@ -241,8 +256,9 @@
     }
     self.wound.woundType = woundType;
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 // FIXME: don't understand why the undo group does not work: if change wound name, and navigate to wound type and cancel, wound name is undone also
@@ -255,8 +271,6 @@
         }
     }
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
 }
 
 #pragma mark - SelectWoundLocationViewControllerDelegate
@@ -267,12 +281,20 @@
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
     WMWoundLocationValue *woundLocationValue = [WMWoundLocationValue woundLocationValueForWound:self.wound];
+    woundLocationValue.location = woundLocation;
     self.wound.locationValue = woundLocationValue;
     // update back end
-
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ff createObj:woundLocationValue atUri:[NSString stringWithFormat:@"/%@", [WMWoundLocationValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }];
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 - (void)selectWoundLocationViewControllerDidCancel:(WMSelectWoundLocationViewController *)viewController
