@@ -7,7 +7,7 @@
 //
 
 #import "WMNavigationPatientPhotoButton.h"
-#import "WCPatientPhotoImageView.h"
+#import "WMPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMPhotoManager.h"
 #import "WMNavigationCoordinator.h"
@@ -21,13 +21,21 @@
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 @property (readonly, nonatomic) WMPhotoManager *photoManager;
 @property (readonly, nonatomic) WMPatient *patient;
-@property (weak, nonatomic) WCPatientPhotoImageView *patientImageView;
+@property (weak, nonatomic) WMPatientPhotoImageView *patientImageView;
 @property (nonatomic) CGFloat overlayAlpha;
 @property (strong, nonatomic) NSDictionary *navigationNodeTitleAttributes;
 
 @end
 
 @implementation WMNavigationPatientPhotoButton
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    WMPatientPhotoImageView *patientImageView = [[WMPatientPhotoImageView alloc] initWithFrame:self.imageRect];
+    [self addSubview:patientImageView];
+    _patientImageView = patientImageView;
+}
 
 - (WCAppDelegate *)appDelegate
 {
@@ -94,6 +102,11 @@
     [self.patientImageView updateForPatient:patient];
     [self setNeedsDisplay];
 }
+                                                 
+- (CGRect)imageRect
+{
+     return CGRectInset(self.bounds, kNavigationImageInset, kNavigationImageInset);
+}
 
 - (CGRect)navigationImageFrameForImageName:(NSString *)imageName title:(NSString *)title inView:(UIView *)view
 {
@@ -114,12 +127,7 @@
 - (void)drawRect:(CGRect)rect
 {
     // draw patient in center
-    CGRect imageRect = CGRectInset(rect, kNavigationImageInset, kNavigationImageInset);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    // draw gray border
-    CGContextSetLineWidth(context, 4.0);
-    CGContextSetStrokeColorWithColor(context, [[UIColor lightGrayColor] CGColor]);
-    CGContextStrokeEllipseInRect(context, imageRect);
+    CGRect imageRect = self.imageRect;
     // draw action state
     NSString *imageName = nil;
     CGFloat overlayAlpha = self.overlayAlpha;

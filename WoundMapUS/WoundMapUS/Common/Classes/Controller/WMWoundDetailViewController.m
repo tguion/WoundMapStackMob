@@ -9,6 +9,8 @@
 #import "WMWoundDetailViewController.h"
 #import "WMSelectWoundTypeViewController.h"
 #import "WMSelectWoundLocationViewController.h"
+#import "MBProgressHUD.h"
+#import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundType.h"
 #import "WMWoundLocation.h"
@@ -21,6 +23,9 @@
 #define kDeleteWoundActionSheetTag 1000
 
 @interface WMWoundDetailViewController () <UITextFieldDelegate, UIActionSheetDelegate, SelectWoundTypeViewControllerDelegate, SelectWoundLocationViewControllerDelegate>
+
+@property (strong, nonatomic) WMWound *localWound;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (strong, nonatomic) IBOutlet UITableViewCell *woundNameCell;
 @property (strong, nonatomic) IBOutlet UIView *deleteWoundContainerView;
@@ -81,7 +86,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.managedObjectContext.undoManager beginUndoGrouping];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
@@ -117,9 +121,49 @@
 
 #pragma mark - BaseViewController
 
-- (void)updateTitle
+- (WMWound *)wound
 {
-    // no
+    if (nil == _localWound) {
+        _localWound = [super wound];
+        if (nil == _localWound) {
+            _localWound = [WMWound instanceWithPatient:self.patient];
+            [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+            // create on back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            __weak __typeof(&*self)weakSelf = self;
+            [ff createObj:_localWound atUri:[NSString stringWithFormat:@"/%@", [WMWound entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff grabBagAddItemAtFfUrl:_localWound.ffUrl toObjAtFfUrl:self.patient.ffUrl grabBagName:WMPatientRelationships.wounds onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                }];
+            }];
+        } else {
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == self.managedObjectContext.undoManager) {
+                self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [self.managedObjectContext.undoManager beginUndoGrouping];
+        }
+    }
+    return _localWound;
+}
+
+#pragma mark - Core
+
+- (void)deleteWoundFromBackEnd
+{
+    // delete from back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSError *error = nil;
+    [ff grabBagRemove:self.wound from:self.patient grabBagName:WMPatientRelationships.wounds error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+    [ff deleteObj:self.wound error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
 }
 
 #pragma mark - Actions
@@ -130,16 +174,22 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
-    [self.delegate woundDetailViewControllerDidUpdateWound:self];
+    [self.delegate woundDetailViewController:self didUpdateWound:self.wound];
 }
 
 - (IBAction)cancelAction:(id)sender
 {
     _didCancel = YES;
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (_didCancel && self.managedObjectContext.undoManager.canUndo) {
-            [self.managedObjectContext.undoManager undoNestedGroup];
+    if (_newWoundFlag) {
+        [self.managedObjectContext MR_deleteObjects:@[self.wound]];
+        // delete from back end
+        [self deleteWoundFromBackEnd];
+    } else {
+        if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+            [self.managedObjectContext.undoManager endUndoGrouping];
+            if (_didCancel && self.managedObjectContext.undoManager.canUndo) {
+                [self.managedObjectContext.undoManager undoNestedGroup];
+            }
         }
     }
     [self.delegate woundDetailViewControllerDidCancelUpdate:self];
@@ -168,6 +218,9 @@
 {
     if (actionSheet.tag == kDeleteWoundActionSheetTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
+            // delete from back end
+            [self deleteWoundFromBackEnd];
+            // let delegate handle the consequences
             [self.delegate woundDetailViewController:self didDeleteWound:self.wound];
         }
     }

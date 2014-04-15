@@ -10,7 +10,7 @@
 //  Consider receiving UIApplicationDidReceiveMemoryWarningNotification notification to close visible documents.
 
 #import "WMPatientTableViewCell.h"
-#import "WCPatientPhotoImageView.h"
+#import "WMPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMPerson.h"
 #import "WMPatientConsultant.h"
@@ -19,7 +19,7 @@
 @interface WMPatientTableViewCell()
 
 @property (weak, nonatomic) UIActivityIndicatorView *activityView;
-@property (weak, nonatomic) WCPatientPhotoImageView *thumbnailImageView;
+@property (weak, nonatomic) WMPatientPhotoImageView *thumbnailImageView;
 
 @property (readonly, nonatomic) NSDictionary *titleAttributes;
 @property (readonly, nonatomic) NSDictionary *identifierAttributes;
@@ -209,7 +209,7 @@
         CGFloat x = 8.0;
         CGFloat y = roundf((CGRectGetHeight(self.bounds) - 57.0)/2.0);
         // insert thumbnailImageView  
-        WCPatientPhotoImageView *anImageView = [[WCPatientPhotoImageView alloc] initWithFrame:CGRectMake(x, y, 57.0, 57.0)];
+        WMPatientPhotoImageView *anImageView = [[WMPatientPhotoImageView alloc] initWithFrame:CGRectMake(x, y, 57.0, 57.0)];
         anImageView.contentScaleFactor = [[UIScreen mainScreen] scale];
         anImageView.clipsToBounds = YES;
         if (nil != _patient) {

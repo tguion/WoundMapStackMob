@@ -98,6 +98,8 @@
         [alertView show];
         return;
     }
+    // TODO: ask to add current patients to team
+    
     // else update invitation to accepted and update back end
     WMTeamInvitation *teamInvitation = self.teamInvitation;
     NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];

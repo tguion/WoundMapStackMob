@@ -11,6 +11,7 @@
 #import "WMCarePlanTableViewCell.h"
 #import "WMNavigationNodeButton.h"
 #import "WMNavigationPatientPhotoButton.h"
+#import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMBradenScale.h"
 #import "WMMedicationGroup.h"
@@ -669,6 +670,7 @@
     // update other UI
     self.parentNavigationNode = nil;
     self.breadcrumbLabel.text = self.breadcrumbString;
+    [self.compassView updateForPatient:self.patient];
     self.compassView.navigationNodeControls = self.navigationNodeControls;
     [self.compassView animateNodesIntoActivePosition];
     [self rotateCompassToRecommendedTask];
@@ -935,10 +937,6 @@
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // create new wound
     NSParameterAssert(nil != self.patient);
-
-    WMWound *wound = [WMWound instanceWithPatient:self.patient];
-
-    self.appDelegate.navigationCoordinator.wound = wound;
     [self navigateToWoundDetailViewControllerForNewWound:navigationNodeButton];
 }
 
@@ -1491,52 +1489,33 @@
 
 #pragma mark - WoundDetailViewControllerDelegate
 
-- (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController
+- (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didUpdateWound:(WMWound *)wound
 {
+    self.appDelegate.navigationCoordinator.wound = wound;
     // save
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (success) {
-            // commit to back end
-
-        } else {
-            [WMUtilities logError:error];
-        }
-    }];
-    // clear memory
-    [viewController clearAllReferences];
-    [self dismissViewControllerAnimated:YES completion:^{
-        // update UI
-        [self.navigationPatientWoundContainerView updateContentForPatient];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    // update UI
+    [self.navigationPatientWoundContainerView updateContentForPatient];
+    __weak __typeof(&*self)weakSelf = self;
+    // commit to back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
 }
 
 - (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController
 {
-    if (viewController.isNewWound) {
-        [self.appDelegate.navigationCoordinator deleteWound:viewController.wound];
-    }
-    // abort back end
-
-    [self dismissViewControllerAnimated:YES completion:^{
-        // update UI
-        [self.navigationPatientWoundContainerView updateContentForPatient];
-    }];
 }
 
 - (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
 {
-    NSString *patientFFURL = wound.patient.ffUrl;
-    NSString *woundFFURL = wound.ffUrl;
-    NSParameterAssert([patientFFURL length] > 0);
-    NSParameterAssert([woundFFURL length] > 0);
     [self.appDelegate.navigationCoordinator deleteWound:wound];
     // save
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        // commit to back end
-
+        // commit to back end handled by WMWoundDetailViewController
     }];
-    // clear memory
-    [viewController clearAllReferences];
 }
 
 #pragma mark - BradenScaleDelegate
@@ -1683,7 +1662,6 @@
 
 - (void)takePatientPhotoViewControllerDidFinish:(WMTakePatientPhotoViewController *)viewController
 {
-    [viewController clearAllReferences];
     [self.compassView updateForPatientPhotoProcessed];
     [self.compassView updateForPatient:self.patient];
     self.photoAcquisitionState = PhotoAcquisitionStateNone;

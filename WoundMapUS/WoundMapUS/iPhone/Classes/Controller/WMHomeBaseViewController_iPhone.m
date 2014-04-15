@@ -407,9 +407,9 @@
 
 #pragma mark - WoundDetailViewControllerDelegate
 
-- (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController
+- (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didUpdateWound:(WMWound *)wound
 {
-    [super woundDetailViewControllerDidUpdateWound:viewController];
+    [super woundDetailViewController:viewController didUpdateWound:wound];
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];

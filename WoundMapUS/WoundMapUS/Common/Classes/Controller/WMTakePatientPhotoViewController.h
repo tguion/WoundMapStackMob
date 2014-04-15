@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class WMTakePatientPhotoViewController;
 
 @protocol TakePatientPhotoDelegate <NSObject>
@@ -16,7 +14,7 @@
 
 @end
 
-@interface WMTakePatientPhotoViewController : WMBaseViewController
+@interface WMTakePatientPhotoViewController : UIViewController
 
 @property (weak, nonatomic) id<TakePatientPhotoDelegate> delegate;
 

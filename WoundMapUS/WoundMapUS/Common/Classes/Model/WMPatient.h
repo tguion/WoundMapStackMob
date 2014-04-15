@@ -14,11 +14,13 @@ extern NSString * const kConsultantGroupName;
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext;
 
+@property (readonly, nonatomic) UIImage *thumbnailImage;
 + (UIImage *)missingThumbnailImage;
 
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (readonly, nonatomic) NSString *lastNameFirstNameOrAnonymous;
 @property (readonly, nonatomic) NSString *identifierEMR;
+@property (nonatomic) BOOL facePhotoTaken;
 @property (nonatomic) BOOL faceDetectionFailed;
 @property (readonly, nonatomic) NSInteger genderIndex;
 @property (readonly, nonatomic) WMWound *lastActiveWound;

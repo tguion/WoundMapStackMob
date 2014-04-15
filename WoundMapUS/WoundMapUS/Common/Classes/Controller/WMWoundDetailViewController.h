@@ -13,7 +13,7 @@
 
 @protocol WoundDetailViewControllerDelegate <NSObject>
 
-- (void)woundDetailViewControllerDidUpdateWound:(WMWoundDetailViewController *)viewController;
+- (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didUpdateWound:(WMWound *)wound;
 - (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController;
 - (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound;
 

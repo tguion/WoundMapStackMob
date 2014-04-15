@@ -15,7 +15,7 @@
 @property (nonatomic) MapBaseRotationDirection rotationDirection;
 @property (strong, nonatomic) WMNavigationNode *navigationNode;
 @property (nonatomic) NSInteger complianceDelta;
-@property (readonly, nonatomic) UIImageView *iconImageView;
+@property (readonly, weak, nonatomic) UIImageView *iconImageView;
 @property (nonatomic) NSInteger recentlyClosedCount;
 
 - (id)initWithNavigationNode:(WMNavigationNode *)navigationNode rotationDirection:(MapBaseRotationDirection)rotationDirection;

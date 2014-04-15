@@ -12,7 +12,7 @@ NSString * const kConsultantGroupName = @"consultantGroup";
 
 typedef enum {
     PatientFlagsFaceDetectionFailed         = 0,
-    
+    PatientFlagsFacePhotoTaken              = 1,
 } PatientFlags;
 
 @interface WMPatient ()
@@ -126,6 +126,21 @@ typedef enum {
     return genderIndex;
 }
 
+- (UIImage *)thumbnailImage
+{
+    if (nil != self.thumbnail) {
+        return self.thumbnail;
+    }
+    // else
+    NSString *avitarFileName = @"user_";
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        avitarFileName = [avitarFileName stringByAppendingString:@"iPad"];
+    } else {
+        avitarFileName = [avitarFileName stringByAppendingString:@"iPhone"];
+    }
+    return [WMPatient missingThumbnailImage];
+}
+
 + (UIImage *)missingThumbnailImage
 {
     NSString *avitarFileName = @"user_";
@@ -180,6 +195,16 @@ typedef enum {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:PatientFlagsFaceDetectionFailed to:faceDetectionFailed]);
 }
 
+- (BOOL)facePhotoTaken
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:PatientFlagsFacePhotoTaken];
+}
+
+- (void)setFacePhotoTaken:(BOOL)facePhotoTaken
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:PatientFlagsFacePhotoTaken to:facePhotoTaken]);
+}
+
 - (BOOL)dayOrMoreSinceCreated
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -198,11 +223,14 @@ typedef enum {
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"acquiredByConsultantValue",
                                                             @"archivedFlagValue",
                                                             @"flagsValue",
+                                                            @"thumbnail",
                                                             @"managedObjectContext",
                                                             @"objectID",
+                                                            @"thumbnailImage",
                                                             @"lastNameFirstName",
                                                             @"lastNameFirstNameOrAnonymous",
                                                             @"identifierEMR",
+                                                            @"facePhotoTaken",
                                                             @"faceDetectionFailed",
                                                             @"genderIndex",
                                                             @"lastActiveWound",

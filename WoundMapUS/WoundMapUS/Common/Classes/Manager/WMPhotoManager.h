@@ -8,9 +8,15 @@
 
 #import "TakePhotoProtocols.h"
 
+#define kMaximumThumbnailMiniWidth 40.0
+#define kMaximumThumbnailWidth 320.0
+#define kMaximumThumbnailHeight 460.0
+#define kMaximumPadThumbnailWidth 768.0
+#define kMaximumPadThumbnailHeight 1024.0
+
 @class WMWound, WMWoundPhoto, WMPhoto;
 
-@interface WMPhotoManager : NSObject
+@interface WMPhotoManager : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 + (WMPhotoManager *)sharedInstance;
 
@@ -28,8 +34,7 @@
 
 - (WMWoundPhoto *)processNewImage:(UIImage *)image
                          metadata:(NSDictionary *)metadata
-                            wound:(WMWound *)wound
-                         document:(UIManagedDocument *)document;
+                            wound:(WMWound *)wound;
 
 // patient photo
 
