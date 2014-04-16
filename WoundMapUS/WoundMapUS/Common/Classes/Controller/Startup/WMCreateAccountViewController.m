@@ -420,6 +420,21 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             
             break;
         }
+        case 2000: {
+            // first name
+
+            break;
+        }
+        case 2001: {
+            // last name
+
+            break;
+        }
+        case 2002: {
+            // email
+            
+            break;
+        }
     }
     [self updateNavigationState];
 }

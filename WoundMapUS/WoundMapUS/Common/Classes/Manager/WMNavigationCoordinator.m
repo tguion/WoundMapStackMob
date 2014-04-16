@@ -143,24 +143,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }];
 }
 
-- (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler
-{
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    BOOL deleteFromBackend = (nil != patient.ffUrl);
-    if (deleteFromBackend) {
-        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
-    }
-    if ([patient isEqual:_patient]) {
-        self.patient = nil;
-    }
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    [managedObjectContext MR_deleteObjects:@[patient]];
-    [managedObjectContext processPendingChanges];
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
-    ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
-    completionHandler();
-}
-
 - (void)setWound:(WMWound *)wound
 {
     WM_ASSERT_MAIN_THREAD;
@@ -195,10 +177,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 - (WMWound *)selectLastWoundForPatient
 {
     WMWound *wound = self.lastWoundForPatient;
-    if (nil == wound) {
-        return nil;
-    }
-    // else
     self.wound = wound;
     return wound;
 }
@@ -483,13 +461,68 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 #pragma mark - Delete
 
+- (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler
+{
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    BOOL deleteFromBackend = (nil != patient.ffUrl);
+    if (deleteFromBackend) {
+        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+    }
+    if ([patient isEqual:_patient]) {
+        self.patient = nil;
+    }
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    [managedObjectContext MR_deleteObjects:@[patient]];
+    [managedObjectContext processPendingChanges];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
+    completionHandler();
+}
+
+- (void)deleteWoundFromBackEnd:(WMWound *)wound
+{
+    // delete from back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSError *error = nil;
+    [ff grabBagRemove:self.wound from:self.patient grabBagName:WMPatientRelationships.wounds error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+    if (self.wound.locationValue) {
+        [ff deleteObj:self.wound.locationValue error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    if ([self.wound.positionValues count]) {
+        for (WMWoundPositionValue *positionValue in self.wound.positionValues) {
+            [ff deleteObj:positionValue error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        }
+    }
+    [ff deleteObj:self.wound error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+}
+
 - (void)deleteWound:(WMWound *)wound
 {
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     BOOL deletingCurrentWound = (_wound == wound);
+    BOOL deleteFromBackend = (nil != wound.ffUrl);
+    if (deleteFromBackend) {
+        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+    }
     NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
     [[NSNotificationCenter defaultCenter] postNotificationName:kWoundWillDeleteNotification object:wound];
     [wound.patient removeWoundsObject:wound];
-    [managedObjectContext deleteObject:wound];
+    [managedObjectContext MR_deleteObjects:@[wound]];
+    [managedObjectContext processPendingChanges];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
     if (deletingCurrentWound) {
         [self selectLastWoundForPatient];
     }

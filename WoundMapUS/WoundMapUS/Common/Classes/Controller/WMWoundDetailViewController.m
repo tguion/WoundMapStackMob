@@ -17,6 +17,7 @@
 #import "WMWoundLocationValue.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
@@ -158,35 +159,6 @@
 
 #pragma mark - Core
 
-- (void)deleteWoundFromBackEnd
-{
-    // delete from back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSError *error = nil;
-    [ff grabBagRemove:self.wound from:self.patient grabBagName:WMPatientRelationships.wounds error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-    if (self.wound.locationValue) {
-        [ff deleteObj:self.wound.locationValue error:&error];
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    }
-    if ([self.wound.positionValues count]) {
-        for (WMWoundPositionValue *positionValue in self.wound.positionValues) {
-            [ff deleteObj:positionValue error:&error];
-            if (error) {
-                [WMUtilities logError:error];
-            }
-        }
-    }
-    [ff deleteObj:self.wound error:&error];
-    if (error) {
-        [WMUtilities logError:error];
-    }
-}
-
 #pragma mark - Actions
 
 - (IBAction)saveAction:(id)sender
@@ -202,9 +174,13 @@
 {
     _didCancel = YES;
     if (_newWoundFlag) {
-        [self.managedObjectContext MR_deleteObjects:@[self.wound]];
-        // delete from back end
-        [self deleteWoundFromBackEnd];
+        // if not saved to database, we need only delete from back end
+        WMWound *wound = self.wound;
+        if ([[wound objectID] isTemporaryID]) {
+            [self.appDelegate.navigationCoordinator deleteWoundFromBackEnd:self.wound];
+        } else {
+            [self.appDelegate.navigationCoordinator deleteWound:self.wound];
+        }
     } else {
         if (self.managedObjectContext.undoManager.groupingLevel > 0) {
             [self.managedObjectContext.undoManager endUndoGrouping];
@@ -240,7 +216,7 @@
     if (actionSheet.tag == kDeleteWoundActionSheetTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             // delete from back end
-            [self deleteWoundFromBackEnd];
+            [self.appDelegate.navigationCoordinator deleteWound:self.wound];
             // let delegate handle the consequences
             [self.delegate woundDetailViewController:self didDeleteWound:self.wound];
         }

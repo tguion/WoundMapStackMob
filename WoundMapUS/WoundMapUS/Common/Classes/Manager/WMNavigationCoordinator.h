@@ -54,6 +54,7 @@ typedef enum {
 
 @property (readonly, nonatomic) WMWound *lastWoundForPatient;
 - (WMWound *)selectLastWoundForPatient;
+- (void)deleteWoundFromBackEnd:(WMWound *)wound;
 - (void)deleteWound:(WMWound *)wound;
 
 - (void)viewController:(WMBaseViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto;

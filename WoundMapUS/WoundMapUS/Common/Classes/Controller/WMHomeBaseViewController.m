@@ -1511,11 +1511,7 @@
 
 - (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
 {
-    [self.appDelegate.navigationCoordinator deleteWound:wound];
-    // save
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        // commit to back end handled by WMWoundDetailViewController
-    }];
+    [self updatePatientWoundComponents];
 }
 
 #pragma mark - BradenScaleDelegate
