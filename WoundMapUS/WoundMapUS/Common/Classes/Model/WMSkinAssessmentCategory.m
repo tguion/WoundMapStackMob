@@ -101,7 +101,7 @@
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
             completionHandler(nil, skinAssessmentCategoryObjectIDs, [WMSkinAssessmentCategory entityName]);
-            completionHandler(nil, skinAssessmentObjectIDs, [WMSkinAssessmentCategory entityName]);
+            completionHandler(nil, skinAssessmentObjectIDs, [WMSkinAssessment entityName]);
         }
     }
 }

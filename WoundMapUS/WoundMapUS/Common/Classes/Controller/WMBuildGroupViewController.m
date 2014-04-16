@@ -20,7 +20,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 
 @interface WMBuildGroupViewController ()
 
-@property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryToolbar;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *previousNextSegmentedControl;
 @property (readonly, nonatomic) WMInterventionStatusViewController *interventionStatusViewController;
 @property (readonly, nonatomic) WMInterventionEventViewController *interventionEventViewController;
@@ -52,7 +51,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     [self.tableView registerClass:[WMAssessmentTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.searchDisplayController.searchResultsTableView registerClass:[WMDefinitionTableViewCell class] forCellReuseIdentifier:@"DefinitionCell"];
     self.navigationItem.hidesBackButton = YES;
-    self.inputAccessoryToolbar.translucent = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -85,7 +83,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 // clear any strong references to views
 - (void)clearViewReferences
 {
-    _inputAccessoryToolbar = nil;
     _searchBar = nil;
     self.searchDisplayController.delegate = nil;
     self.searchDisplayController.searchResultsDataSource = nil;
@@ -753,6 +750,11 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 }
 
 #pragma mark - AssessmentTableViewCellDelegate
+
+- (UIToolbar *)inputAccessoryToolbar
+{
+    return self.inputAccessoryView;
+}
 
 - (id)currentGroup
 {

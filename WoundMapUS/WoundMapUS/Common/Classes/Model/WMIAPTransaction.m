@@ -37,28 +37,27 @@ typedef enum {
 	return iapTransaction;
 }
 
-+(NSNumber *)sumTokens:(NSManagedObjectContext *)managedObjectContext
++ (NSNumber *)sumTokens:(NSManagedObjectContext *)managedObjectContext
 {
     NSNumber *resultValue = nil;
     
     NSExpression *ex = [NSExpression expressionForFunction:@"sum:"
-                                                 arguments:[NSArray arrayWithObject:[NSExpression expressionForKeyPath:@"credits"]]];
+                                                 arguments:@[[NSExpression expressionForKeyPath:@"credits"]]];
     
     NSExpressionDescription *ed = [[NSExpressionDescription alloc] init];
     [ed setName:@"result"];
     [ed setExpression:ex];
     [ed setExpressionResultType:NSInteger64AttributeType];
     
-    NSArray *properties = [NSArray arrayWithObject:ed];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[WMIAPTransaction entityName]];
     
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    
-    [request setPropertiesToFetch:properties];
+    [request setPropertiesToFetch:@[ed]];
     [request setResultType:NSDictionaryResultType];
     
     if (nil != managedObjectContext) {
-        NSDictionary *resultsDictionary = (NSDictionary *)[WMIAPTransaction MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
-        resultValue = [resultsDictionary objectForKey:@"result"];
+        NSDictionary *resultsDictionary = (NSDictionary *)[WMIAPTransaction MR_executeFetchRequestAndReturnFirstObject:request
+                                                                                                             inContext:managedObjectContext];
+        resultValue = resultsDictionary[@"result"];
     }
     //    DLog(@"sumTokens has resultValue: %i", [resultValue integerValue]);
     return resultValue;

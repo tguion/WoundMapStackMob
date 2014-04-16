@@ -289,6 +289,9 @@
             --counter;
         }
     }];
+    if (counter == 0) {
+        handler(nil);
+    }
 }
 
 @end

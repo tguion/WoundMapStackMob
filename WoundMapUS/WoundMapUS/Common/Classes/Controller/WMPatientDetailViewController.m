@@ -40,7 +40,6 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 @property (strong, nonatomic) WMPatient *patient;       // create patient if new patient, otherwise we hold a strong reference to the active patient (held by navigationCoordinator)
 @property (strong, nonatomic) WMPerson *person;         // do no attach to new patient, since ff backend will barf. wait until we persist patient to back end.
 // UI
-@property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryToolbar;
 @property (readonly, nonatomic) UITextField *dobTextField;
 @property (readonly, nonatomic) UITextField *ssnTextField;
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePickerView;
@@ -706,7 +705,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     if ([cell isKindOfClass:[WMTextFieldTableViewCell class]]) {
         WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
         myCell.textField.delegate = self;
-        myCell.textField.inputAccessoryView = self.inputAccessoryToolbar;
+        myCell.textField.inputAccessoryView = self.inputAccessoryView;
     } else if ([cell isKindOfClass:[WMSegmentControlTableViewCell class]]) {
         WMSegmentControlTableViewCell *myCell = (WMSegmentControlTableViewCell *)cell;
         [myCell configureWithItems:@[@"Male", @"Female"] target:self action:@selector(genderChangedAction:)];

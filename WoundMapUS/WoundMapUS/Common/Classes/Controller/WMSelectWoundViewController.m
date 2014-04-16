@@ -8,6 +8,7 @@
 
 #import "WMSelectWoundViewController.h"
 #import "WMWoundDetailViewController.h"
+#import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundType.h"
@@ -15,6 +16,8 @@
 #import "WMUtilities.h"
 #import "WMNavigationCoordinator.h"
 #import "WMDesignUtilities.h"
+#import "WMFatFractal.h"
+#import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
 @interface WMSelectWoundViewController () <WoundDetailViewControllerDelegate>
@@ -42,6 +45,8 @@
     WMWoundDetailViewController *woundDetailViewController = self.woundDetailViewController;
     if (nil == wound) {
         woundDetailViewController.newWoundFlag = YES;
+    } else {
+        woundDetailViewController.wound = wound;
     }
     [self.navigationController pushViewController:woundDetailViewController animated:YES];
 }
@@ -112,6 +117,17 @@
     [super viewWillAppear:animated];
     [self refetchDataForTableView];
     self.navigationItem.rightBarButtonItem.enabled = (nil != self.wound);
+    // check for wound deletions
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm updateWoundsForPatient:self.patient ff:ff completionHandler:^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+    }];
 }
 
 #pragma mark - BaseViewController
@@ -144,6 +160,13 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
     [self.tableView reloadData];
+    // commit to back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+    }];
 }
 
 - (void)woundDetailViewControllerDidCancelUpdate:(WMWoundDetailViewController *)viewController

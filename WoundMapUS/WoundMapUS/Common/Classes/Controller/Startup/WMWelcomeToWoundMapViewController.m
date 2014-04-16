@@ -871,16 +871,28 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             });
         });
     } else {
-        // attempt to acquire last patient
+        // attempt to acquire last patient and wound
         NSParameterAssert(participant.guid);
+        WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
         NSString *patientFFUrl = [userDefaultsManager lastPatientFFURLForUserGUID:participant.guid];
         if (patientFFUrl) {
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff getObjFromUri:patientFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (object) {
                     WMPatient *patient = (WMPatient *)object;
-                    weakSelf.appDelegate.navigationCoordinator.patient = patient;
-                    block();
+                    navigationCoordinator.patient = patient;
+                    NSString *woundFFUrl = [userDefaultsManager lastWoundFFURLOnDeviceForPatientFFURL:patientFFUrl];
+                    if (woundFFUrl) {
+                        [ff getObjFromUri:woundFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (object) {
+                                WMWound *wound = (WMWound *)object;
+                                navigationCoordinator.wound = wound;
+                            }
+                            block();
+                        }];
+                    } else {
+                        block();
+                    }
                 }
             }];
         } else {

@@ -11,6 +11,7 @@
 typedef enum {
     SelectWoundAndActionShareOption_Print,
     SelectWoundAndActionShareOption_Email,
+    SelectWoundAndActionShareOption_FTP,
     SelectWoundAndActionShareOption_EMR,
     SelectWoundAndActionShareOption_iCloud
 } SelectWoundAndActionShareOption;

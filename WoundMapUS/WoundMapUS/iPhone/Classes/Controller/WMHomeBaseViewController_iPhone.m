@@ -508,6 +508,9 @@
 - (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
 {
     [super skinAssessmentGroupViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
 }
 
 #pragma mark - TakePatientPhotoDelegate

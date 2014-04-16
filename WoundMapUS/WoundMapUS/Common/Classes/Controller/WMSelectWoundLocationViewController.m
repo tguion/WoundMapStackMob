@@ -14,6 +14,8 @@
 #import "WMWoundPositionValue.h"
 #import "WMDefinition.h"
 #import "WMDesignUtilities.h"
+#import "WMFatFractal.h"
+#import "WMUtilities.h"
 
 @interface WMSelectWoundLocationViewController () <SelectWoundPositionViewControllerDelegate>
 
@@ -34,12 +36,30 @@
         // remove position values from wound
         NSSet *positionValues = [self.wound.positionValues copy];
         for (WMWoundPositionValue *positionValue in positionValues) {
+            // update back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            NSError *error = nil;
+            if (positionValue.ffUrl) {
+                [ff grabBagRemove:positionValue
+                             from:self.wound
+                      grabBagName:WMWoundRelationships.positionValues
+                            error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [ff deleteObj:positionValue error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+            // handle local store
             [self.wound removePositionValuesObject:positionValue];
             [self.managedObjectContext deleteObject:positionValue];
         }
     }
     WMSelectWoundPositionViewController *woundPositionViewController = self.woundPositionViewController;
     woundPositionViewController.woundLocation = self.selectedWoundLocation;
+    woundPositionViewController.wound = self.wound;
     [self.navigationController pushViewController:woundPositionViewController animated:YES];
 }
 
@@ -57,10 +77,13 @@
 
 @implementation WMSelectWoundLocationViewController
 
+@synthesize wound=_wound;
+
 - (WMSelectWoundPositionViewController *)woundPositionViewController
 {
     WMSelectWoundPositionViewController *woundPositionViewController = [[WMSelectWoundPositionViewController alloc] initWithNibName:@"WMSelectWoundPositionViewController" bundle:nil];
     woundPositionViewController.delegate = self;
+    woundPositionViewController.wound = _wound;
     return woundPositionViewController;
 }
 
@@ -151,6 +174,7 @@
 {
     [super clearDataCache];
     _selectedWoundLocation = nil;
+    _wound = nil;
 }
 
 #pragma mark - Actions
@@ -175,8 +199,6 @@
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
     if (nil != self.selectedWoundLocation) {
         NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:self.selectedWoundLocation];
         if (nil != indexPath) {
@@ -194,8 +216,6 @@
         }
     }
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate

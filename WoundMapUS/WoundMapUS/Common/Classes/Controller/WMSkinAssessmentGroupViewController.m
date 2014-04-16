@@ -9,6 +9,9 @@
 #import "WMSkinAssessmentGroupViewController.h"
 #import "WMSkinAssessmentSummaryViewController.h"
 #import "WMSkinAssessmentGroupHistoryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMParticipant.h"
+#import "WMPatient.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMSkinAssessmentCategory.h"
 #import "WMSkinAssessment.h"
@@ -18,11 +21,14 @@
 #import "WMDefinition.h"
 #import "WMWound.h"
 #import "WMWoundType.h"
+#import "WMFatFractal.h"
 #import "WMDesignUtilities.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 @interface WMSkinAssessmentGroupViewController ()
+
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (readonly, nonatomic) WMSkinAssessmentSummaryViewController *skinAssessmentSummaryViewController;
 @property (readonly, nonatomic) WMSkinAssessmentGroupHistoryViewController *skinAssessmentGroupHistoryViewController;
@@ -36,7 +42,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.managedObjectContext.undoManager beginUndoGrouping];
+    if (_skinAssessmentGroup) {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    // make sure we have seed data
+    if ([WMSkinAssessment MR_countOfEntitiesWithContext:self.managedObjectContext] == 0) {
+        [self refreshTable];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -66,6 +88,13 @@
     [super clearDataCache];
     _skinAssessmentGroup = nil;
     _navigationNode = nil;
+}
+
+#pragma mark - BaseViewController
+
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"/%@?depthRef=1", [WMSkinAssessment entityName]];
 }
 
 #pragma mark - BuildGroupViewController
@@ -155,6 +184,19 @@
     } else if (nil != skinAssessmentValue) {
         [self.skinAssessmentGroup removeValuesObject:skinAssessmentValue];
         [self.managedObjectContext deleteObject:skinAssessmentValue];
+        // update back end
+        if (_skinAssessmentGroup.ffUrl) {
+            if (skinAssessmentValue.ffUrl) {
+                FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                };
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                [ff grabBagRemoveItemAtFfUrl:skinAssessmentValue.ffUrl fromObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.values onComplete:completionHandler];
+                [ff deleteObj:skinAssessmentValue onComplete:completionHandler];
+            }
+        }
     }
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:skinAssessment];
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
@@ -177,8 +219,26 @@
     if (nil == _skinAssessmentGroup) {
         WMSkinAssessmentGroup *skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroup:self.patient];
         if (nil == skinAssessmentGroup) {
+            WMPatient *patient = self.patient;
             skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:self.managedObjectContext];
+            skinAssessmentGroup.patient = patient;
             self.didCreateGroup = YES;
+            // create on back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff createObj:skinAssessmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff grabBagAddItemAtFfUrl:skinAssessmentGroup.ffUrl
+                                 toObjAtFfUrl:patient.ffUrl
+                                  grabBagName:WMPatientRelationships.skinAssessmentGroups
+                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                       if (error) {
+                                           [WMUtilities logError:error];
+                                       }
+                                   }];
+                }
+            }];
             WMInterventionEvent *event = [skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                        title:nil
                                                                                    valueFrom:nil
@@ -191,7 +251,7 @@
                                                                         managedObjectContext:self.managedObjectContext];
             DLog(@"Created event %@", event.eventType.title);
         }
-        self.skinAssessmentGroup = skinAssessmentGroup;
+        _skinAssessmentGroup = skinAssessmentGroup;
     }
     return _skinAssessmentGroup;
 }
@@ -222,9 +282,32 @@
             [self.managedObjectContext.undoManager undoNestedGroup];
         }
     }
-    if (self.didCreateGroup && [[self.skinAssessmentGroup objectID] isTemporaryID]) {
-        [self.managedObjectContext deleteObject:self.skinAssessmentGroup];
-        [self clearDataCache];
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
+    if (self.didCreateGroup && _skinAssessmentGroup.ffUrl) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSError *error = nil;
+        for (WMSkinAssessmentValue *value in _skinAssessmentGroup.values) {
+            if (value.ffUrl) {
+                [ff grabBagRemove:value from:_skinAssessmentGroup grabBagName:WMSkinAssessmentRelationships.values error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [ff deleteObj:value error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+        }
+        [ff grabBagRemove:_skinAssessmentGroup from:self.patient grabBagName:WMPatientRelationships.skinAssessmentGroups error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff deleteObj:_skinAssessmentGroup error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
     }
     [self.delegate skinAssessmentGroupViewControllerDidCancel:self];
 }
@@ -234,9 +317,40 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [super saveAction:sender];
     // create intervention events before super
     [self.skinAssessmentGroup createEditEventsForParticipant:self.appDelegate.participant];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    WMParticipant *participant = self.appDelegate.participant;
+    for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
+        if (interventionEvent.ffUrl) {
+            continue;
+        }
+        // else
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
+        }];
+    }
+    for (WMSkinAssessmentValue *value in _skinAssessmentGroup.values) {
+        if (value.ffUrl) {
+            continue;
+        }
+        // else
+        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentRelationships.values onComplete:completionHandler];
+        }];
+    }
+    [ff updateObj:_skinAssessmentGroup onComplete:completionHandler];
     [self.delegate skinAssessmentGroupViewControllerDidSave:self];
 }
 
@@ -314,13 +428,28 @@
                                                                                                          create:NO
                                                                                                           value:nil];
     BOOL reloadSection = YES;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
     if (nil == skinAssessmentValue) {
         // no skinAssessmentValue for this skinAssessment - add one or make control first responder
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         UIResponder *responder = [self possibleFirstResponderInCell:cell];
         if (nil == responder) {
             // unselect any other selection in category (section)
-            [self.skinAssessmentGroup removeSkinAssessmentValuesForCategory:skinAssessment.category];
+            NSArray *values = [self.skinAssessmentGroup removeSkinAssessmentValuesForCategory:skinAssessment.category];
+            // update back end
+            if (_skinAssessmentGroup.ffUrl) {
+                for (WMSkinAssessmentValue *value in values) {
+                    if (value.ffUrl) {
+                        [ff grabBagRemoveItemAtFfUrl:value.ffUrl fromObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.values onComplete:completionHandler];
+                        [ff deleteObj:value onComplete:completionHandler];
+                    }
+                }
+            }
             // go ahead and select
             [self.skinAssessmentGroup skinAssessmentValueForSkinAssessment:skinAssessment
                                                                     create:YES
@@ -334,6 +463,13 @@
         // unselect - remove
         [self.skinAssessmentGroup removeValuesObject:skinAssessmentValue];
         [self.managedObjectContext deleteObject:skinAssessmentValue];
+        // update back end
+        if (_skinAssessmentGroup.ffUrl) {
+            if (skinAssessmentValue.ffUrl) {
+                [ff grabBagRemoveItemAtFfUrl:skinAssessmentValue.ffUrl fromObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.values onComplete:completionHandler];
+                [ff deleteObj:skinAssessmentValue onComplete:completionHandler];
+            }
+        }
     }
     // reload section
     if (reloadSection) {

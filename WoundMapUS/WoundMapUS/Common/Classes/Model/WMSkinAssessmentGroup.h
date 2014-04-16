@@ -29,7 +29,7 @@
                                                          create:(BOOL)create
                                                           value:(id)value;
 
-- (void)removeSkinAssessmentValuesForCategory:(WMSkinAssessmentCategory *)category;
+- (NSArray *)removeSkinAssessmentValuesForCategory:(WMSkinAssessmentCategory *)category;
 
 - (WMSkinAssessmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                        title:(NSString *)title

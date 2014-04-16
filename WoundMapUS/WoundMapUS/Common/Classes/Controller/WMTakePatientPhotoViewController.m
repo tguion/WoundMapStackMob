@@ -157,6 +157,7 @@
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                [_photoImageView updateForPatient:patient];
                 NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
                 WMPatient *patient = (WMPatient *)[managedObjectContext objectWithID:objectID];
                 WMFatFractal *ff = [WMFatFractal sharedInstance];

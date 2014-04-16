@@ -24,5 +24,6 @@
 @property (weak, nonatomic) id<WoundDetailViewControllerDelegate> delegate;
 
 @property (nonatomic, getter = isNewWound) BOOL newWoundFlag;
+@property (strong, nonatomic) WMWound *wound;
 
 @end

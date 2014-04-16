@@ -1429,14 +1429,12 @@
     // else let navigationCoordinator update patient and defaults
     self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
     
 }
 
 - (void)chooseTrackViewControllerDidCancel:(WMChooseTrackViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - ChooseStageDelegate
@@ -1455,13 +1453,11 @@
 {
     self.appDelegate.navigationCoordinator.navigationStage = navigationStage;
     [self.navigationController popViewControllerAnimated:YES];
-    [chooseStageViewController clearAllReferences];
 }
 
 - (void)chooseStageViewControllerDidCancel:(WMChooseStageViewController *)chooseStageViewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [chooseStageViewController clearAllReferences];
 }
 
 #pragma mark - PatientDetailViewControllerDelegate
@@ -1478,13 +1474,11 @@
 
 - (void)selectWoundController:(WMSelectWoundViewController *)viewController didSelectWound:(WMWound *)wound
 {
-    [viewController clearAllReferences];
     self.appDelegate.navigationCoordinator.wound = wound;
 }
 
 - (void)selectWoundControllerDidCancel:(WMSelectWoundViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 #pragma mark - WoundDetailViewControllerDelegate
@@ -1518,7 +1512,6 @@
 
 - (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController
 {
-    [viewController clearAllReferences];
     // save in order to update updatedAt
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
@@ -1555,7 +1548,6 @@
 //        [self.managedObjectContext deleteObject:viewController.deviceGroup];
 //        hasChanges = YES;
 //    }
-//    [viewController clearAllReferences];
 //    // save in order to update updatedAt
 //    NSError *error = nil;
 //    [self.managedObjectContext saveAndWait:&error];
@@ -1579,7 +1571,6 @@
 //            [WMUtilities logError:error];
 //        }
 //    }
-//    [viewController clearAllReferences];
 }
 
 #pragma mark - PsychoSocialGroupViewControllerDelegate
@@ -1592,7 +1583,6 @@
 //        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
 //        hasChanges = YES;
 //    }
-//    [viewController clearAllReferences];
 //    // save in order to update updatedAt
 //    NSError *error = nil;
 //    [self.managedObjectContext saveAndWait:&error];
@@ -1615,7 +1605,6 @@
 //            [WMUtilities logError:error];
 //        }
 //    }
-//    [viewController clearAllReferences];
 }
 
 #pragma mark - SkinAssessmentGroupViewControllerDelegate
@@ -1628,7 +1617,6 @@
 //        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
 //        hasChanges = YES;
 //    }
-//    [viewController clearAllReferences];
 //    // save in order to update updatedAt
 //    NSError *error = nil;
 //    [self.managedObjectContext saveAndWait:&error];
@@ -1651,7 +1639,6 @@
 //            [WMUtilities logError:error];
 //        }
 //    }
-//    [viewController clearAllReferences];
 }
 
 #pragma mark - TakePatientPhotoDelegate
@@ -1748,7 +1735,6 @@
 //    if (nil != error) {
 //        [WMUtilities logError:error];
 //    }
-//    [viewController clearAllReferences];
 //    [self dismissViewControllerAnimated:YES completion:^{
 //        // post notification if some values were added
 //        if (hasChanges) {
@@ -1759,7 +1745,6 @@
 
 - (void)carePlanGroupViewControllerDidCancel:(WMCarePlanGroupViewController *)viewController
 {
-    [viewController clearAllReferences];
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];
@@ -1769,7 +1754,6 @@
 
 - (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
 {
-//    [viewController clearAllReferences];
 //    // save in order to update updatedAt
 //    NSError *error = nil;
 //    [self.managedObjectContext saveAndWait:&error];
@@ -1781,14 +1765,12 @@
 
 - (void)woundTreatmentGroupsViewControllerDidCancel:(WMWoundTreatmentGroupsViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 #pragma mark - WoundMeasurementGroupViewControllerDelegate
 
 - (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
 {
-//    [viewController clearAllReferences];
 //    // save in order to update updatedAt
 //    NSError *error = nil;
 //    [self.managedObjectContext saveAndWait:&error];
@@ -1801,33 +1783,28 @@
 
 - (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 #pragma mark - PlotViewControllerDelegate
 
 - (void)plotViewControllerDidCancel:(WMBaseViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 - (void)plotViewControllerDidFinish:(WMBaseViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 #pragma mark - PatientSummaryContainerDelegate
 
 - (void)patientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 #pragma mark - ShareViewControllerDelegate
 
 - (void)shareViewControllerDidFinish:(WMShareViewController *)viewController
 {
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UIAlertViewDelegate

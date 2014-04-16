@@ -25,7 +25,6 @@
 
 @interface WMWoundDetailViewController () <UITextFieldDelegate, UIActionSheetDelegate, SelectWoundTypeViewControllerDelegate, SelectWoundLocationViewControllerDelegate>
 
-@property (strong, nonatomic) WMWound *localWound;
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (strong, nonatomic) IBOutlet UITableViewCell *woundNameCell;
@@ -41,6 +40,8 @@
 
 @implementation WMWoundDetailViewController
 
+@synthesize wound=_wound;
+
 - (WMSelectWoundTypeViewController *)selectWoundTypeViewController
 {
     WMSelectWoundTypeViewController *selectWoundTypeViewController = [[WMSelectWoundTypeViewController alloc] initWithNibName:@"WMSelectWoundTypeViewController" bundle:nil];
@@ -52,6 +53,7 @@
 {
     WMSelectWoundLocationViewController *selectWoundLocationViewController = [[WMSelectWoundLocationViewController alloc] initWithNibName:@"WMSelectWoundLocationViewController" bundle:nil];
     selectWoundLocationViewController.delegate = self;
+    selectWoundLocationViewController.wound = self.wound;
     return selectWoundLocationViewController;
 }
 
@@ -93,6 +95,15 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                            target:self
                                                                                            action:@selector(saveAction:)];
+    if (!_newWoundFlag) {
+        NSParameterAssert(_wound);
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -124,19 +135,19 @@
 
 - (WMWound *)wound
 {
-    if (nil == _localWound) {
+    if (nil == _wound) {
         if (_newWoundFlag) {
-            _localWound = [WMWound instanceWithPatient:self.patient];
+            _wound = [WMWound instanceWithPatient:self.patient];
             [self.managedObjectContext MR_saveToPersistentStoreAndWait];
             // create on back end
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             __weak __typeof(&*self)weakSelf = self;
-            [ff createObj:_localWound atUri:[NSString stringWithFormat:@"/%@", [WMWound entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff createObj:_wound atUri:[NSString stringWithFormat:@"/%@", [WMWound entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
-                [ff grabBagAddItemAtFfUrl:_localWound.ffUrl toObjAtFfUrl:self.patient.ffUrl grabBagName:WMPatientRelationships.wounds onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff grabBagAddItemAtFfUrl:_wound.ffUrl toObjAtFfUrl:self.patient.ffUrl grabBagName:WMPatientRelationships.wounds onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     if (error) {
                         [WMUtilities logError:error];
                     }
@@ -144,17 +155,10 @@
                 }];
             }];
         } else {
-            _localWound = [super wound];
-            NSParameterAssert(_localWound);
-            // we want to support cancel, so make sure we have an undoManager
-            if (nil == self.managedObjectContext.undoManager) {
-                self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                _removeUndoManagerWhenDone = YES;
-            }
-            [self.managedObjectContext.undoManager beginUndoGrouping];
+            _wound = [super wound];
         }
     }
-    return _localWound;
+    return _wound;
 }
 
 #pragma mark - Core
@@ -262,7 +266,9 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
     [ff createObj:woundLocationValue atUri:[NSString stringWithFormat:@"/%@", [WMWoundLocationValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
         }

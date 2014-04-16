@@ -182,6 +182,10 @@
 		7D13027F18D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027618D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m */; };
 		7D13028018D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */; };
 		7D13028118D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */; };
+		7D1BA8B518FEEC7C00ED385D /* WMPrintConfigureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */; };
+		7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */; };
+		7D1BA8BC18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1BA8BA18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m */; };
+		7D1BA8BD18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D1BA8BB18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib */; };
 		7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */; };
 		7D39DACE18B7CBA90054DDC3 /* WMWound.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DACD18B7CBA90054DDC3 /* WMWound.m */; };
 		7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D39DAD018B7CD480054DDC3 /* WMNavigationNodeButton.m */; };
@@ -817,6 +821,12 @@
 		7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMWoundMeasurementGroup+CoreText.m"; sourceTree = "<group>"; };
 		7D13027918D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMWoundTreatmentGroup+CoreText.h"; sourceTree = "<group>"; };
 		7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMWoundTreatmentGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D1BA8B218FEEC7C00ED385D /* WMPrintConfigureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPrintConfigureViewController.h; sourceTree = "<group>"; };
+		7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPrintConfigureViewController.m; sourceTree = "<group>"; };
+		7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPrintConfigureViewController.xib; sourceTree = "<group>"; };
+		7D1BA8B918FEEE5F00ED385D /* WMSelectWoundPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSelectWoundPhotoViewController.h; sourceTree = "<group>"; };
+		7D1BA8BA18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSelectWoundPhotoViewController.m; sourceTree = "<group>"; };
+		7D1BA8BB18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMSelectWoundPhotoViewController.xib; sourceTree = "<group>"; };
 		7D39DAC918B7CB9B0054DDC3 /* _WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWound.h; sourceTree = "<group>"; };
 		7D39DACA18B7CB9B0054DDC3 /* _WMWound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWound.m; sourceTree = "<group>"; };
 		7D39DACC18B7CBA90054DDC3 /* WMWound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWound.h; sourceTree = "<group>"; };
@@ -1821,6 +1831,12 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7D1BA8B918FEEE5F00ED385D /* WMSelectWoundPhotoViewController.h */,
+				7D1BA8BA18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m */,
+				7D1BA8BB18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib */,
+				7D1BA8B218FEEC7C00ED385D /* WMPrintConfigureViewController.h */,
+				7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */,
+				7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				7D39DBA318BA97A70054DDC3 /* IAP */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
@@ -2929,6 +2945,7 @@
 				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
 				7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
+				7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */,
 				7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */,
 				5F67D20518AC3BE000460C37 /* WoundMeasurementTemplate.plist in Resources */,
 				7D10CE1F18DDEB7B00AD43E3 /* WMSelectWoundPositionViewController.xib in Resources */,
@@ -3013,6 +3030,7 @@
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
 				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
+				7D1BA8BD18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib in Resources */,
 				7D10CDF918DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.xib in Resources */,
 				5F67D1F418AC3BE000460C37 /* Devices.plist in Resources */,
 				7D39DB0618B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib in Resources */,
@@ -3312,6 +3330,7 @@
 				7DF4E99218C3C4DE000A3F5B /* WMSkinAssessmentIntEvent.m in Sources */,
 				7D10CD6918D258FC00AD43E3 /* _WMTeam.m in Sources */,
 				5F6DE54418B6D44400E87F7E /* WMSegmentControlTableViewCell.m in Sources */,
+				7D1BA8B518FEEC7C00ED385D /* WMPrintConfigureViewController.m in Sources */,
 				5F6DE52718B58A8300E87F7E /* _WMInstruction.m in Sources */,
 				5F67D1C918AC39C600460C37 /* _WMParticipant.m in Sources */,
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
@@ -3399,6 +3418,7 @@
 				7DF4E92918C22F27000A3F5B /* WMCarePlanValue.m in Sources */,
 				7DF4E8ED18C22EEC000A3F5B /* _WMPsychoSocialValue.m in Sources */,
 				7D39DB6218B921EE0054DDC3 /* WMPhotosContainerViewController.m in Sources */,
+				7D1BA8BC18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m in Sources */,
 				7DD8372F18C78A390028C2D3 /* NSObject+MagicalDataImport.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				7DF4E93A18C22F27000A3F5B /* WMWoundTreatmentGroup.m in Sources */,

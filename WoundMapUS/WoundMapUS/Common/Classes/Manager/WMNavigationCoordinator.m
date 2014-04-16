@@ -152,6 +152,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     // else
     _wound = wound;
     if (nil != _wound) {
+        [[WMUserDefaultsManager sharedInstance] setLastWoundFFURLOnDevice:wound.ffUrl forPatientFFURL:self.patient.ffUrl];
         [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[_wound objectID]];
     }
 }

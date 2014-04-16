@@ -8,6 +8,7 @@
 
 #import "WMSelectWoundPositionViewController.h"
 #import "WMSimpleTableViewController.h"
+#import "MBProgressHUD.h"
 #import "WMWound.h"
 #import "WMWoundLocation.h"
 #import "WMWoundLocationValue.h"
@@ -16,6 +17,8 @@
 #import "WMWoundPositionValue.h"
 #import "WMDefinition.h"
 #import "WMUserDefaultsManager.h"
+#import "WMFatFractal.h"
+#import "WMUtilities.h"
 
 @interface WMSelectWoundPositionViewController () <SimpleTableViewControllerDelegate>
 @property (strong, nonatomic) WMWoundLocationPositionJoin *selectedJoin;
@@ -32,6 +35,8 @@
 @end
 
 @implementation WMSelectWoundPositionViewController
+
+@synthesize wound=_wound;
 
 - (WMWoundLocation *)woundLocation
 {
@@ -65,11 +70,28 @@
     // Add code to clean up any of your own resources that are no longer necessary.
 }
 
+#pragma mark - Back end
+
+- (void)deleteWoundPositionValueFromBackEnd:(WMWoundPositionValue *)woundPositionValue
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSError *error = nil;
+    [ff grabBagRemove:woundPositionValue from:self.wound grabBagName:WMWoundRelationships.positionValues error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+    [ff deleteObj:woundPositionValue error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+}
+
 #pragma mark - BaseViewController
 
 - (void)clearDataCache
 {
     [super clearDataCache];
+    _wound = nil;
     _woundLocation = nil;
     _selectedJoin = nil;
 }
@@ -167,6 +189,10 @@
         woundPositionValue.value = value;
         woundPositionValue.woundPosition = [join positionAtIndex:[value intValue]];
     } else if (nil != woundPositionValue) {
+        // update back end
+        if (woundPositionValue.ffUrl) {
+            [self deleteWoundPositionValueFromBackEnd:woundPositionValue];
+        }
         [self.wound removePositionValuesObject:woundPositionValue];
         [self.managedObjectContext deleteObject:woundPositionValue];
     }
@@ -178,9 +204,14 @@
 - (IBAction)clearAction:(id)sender
 {
     NSArray *values = [self.wound.positionValues allObjects];
-    for (WMWoundPositionValue *value in values) {
-        [self.wound removePositionValuesObject:value];
-        [self.managedObjectContext deleteObject:value];
+    for (WMWoundPositionValue *woundPositionValue in values) {
+        // update back end
+        // update back end
+        if (woundPositionValue.ffUrl) {
+            [self deleteWoundPositionValueFromBackEnd:woundPositionValue];
+        }
+        [self.wound removePositionValuesObject:woundPositionValue];
+        [self.managedObjectContext deleteObject:woundPositionValue];
     }
     [self updateUIForDataChange];
     [self.tableView reloadData];
@@ -208,6 +239,22 @@
 - (IBAction)saveAction:(id)sender
 {
     [super saveAction:sender];
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSError *error = nil;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    for (WMWoundPositionValue *woundPositionValue in self.wound.positionValues) {
+        if (woundPositionValue.ffUrl) {
+            [ff updateObj:woundPositionValue error:&error];
+        } else {
+            [ff createObj:woundPositionValue atUri:[NSString stringWithFormat:@"/%@", [WMWoundPositionValue entityName]] error:&error];
+            [ff grabBagAdd:woundPositionValue to:self.wound grabBagName:WMWoundRelationships.positionValues error:&error];
+        }
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    [MBProgressHUD hideHUDForView:self.view animated:NO];
     [self.delegate selectWoundPositionViewControllerDidSave:self];
 }
 
@@ -256,6 +303,10 @@
         WMWoundPositionValue *woundPositionValue = [self.wound woundPositionValueForWoundPosition:woundPosition
                                                                                            create:NO
                                                                                             value:nil];
+        // update back end
+        if (woundPositionValue.ffUrl) {
+            [self deleteWoundPositionValueFromBackEnd:woundPositionValue];
+        }
         [self.wound removePositionValuesObject:woundPositionValue];
         [self.managedObjectContext deleteObject:woundPositionValue];
     }

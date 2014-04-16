@@ -6,8 +6,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMSkinAssessmentGroupViewController">
             <connections>
-                <outlet property="inputAccessoryToolbar" destination="0Hy-SZ-D5w" id="4EO-yH-HlE"/>
-                <outlet property="previousNextSegmentedControl" destination="fNr-6y-hJP" id="BpN-Wk-NAL"/>
                 <outlet property="searchBar" destination="25m-M1-pIq" id="cCd-bN-XuZ"/>
                 <outlet property="searchDisplayController" destination="HhI-dG-i4p" id="Cde-9l-WRv"/>
                 <outlet property="view" destination="0fT-HJ-9kU" id="rrj-wJ-IaO"/>
@@ -30,32 +28,6 @@
                 </connections>
             </searchBar>
         </tableView>
-        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="0Hy-SZ-D5w">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-            <items>
-                <barButtonItem style="plain" id="Rvh-OM-Jfj">
-                    <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" momentary="YES" id="fNr-6y-hJP">
-                        <rect key="frame" x="16" y="7" width="160" height="30"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <segments>
-                            <segment title="Previous"/>
-                            <segment title="Next"/>
-                        </segments>
-                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <action selector="previousNextAction:" destination="-1" eventType="valueChanged" id="LoN-qz-frV"/>
-                        </connections>
-                    </segmentedControl>
-                </barButtonItem>
-                <barButtonItem style="plain" systemItem="flexibleSpace" id="bFT-cR-EAe"/>
-                <barButtonItem title="Dismiss" id="7zD-Yx-Kx8">
-                    <connections>
-                        <action selector="dismissInputViewAction:" destination="-1" id="dkg-2c-hij"/>
-                    </connections>
-                </barButtonItem>
-            </items>
-        </toolbar>
         <searchDisplayController id="HhI-dG-i4p">
             <connections>
                 <outlet property="delegate" destination="-1" id="Dmc-yi-JcA"/>

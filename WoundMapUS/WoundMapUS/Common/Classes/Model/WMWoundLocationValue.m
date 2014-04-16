@@ -33,7 +33,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
-                                        @"sortRankValue"]];
+                                                            @"sortRankValue"]];
     });
     return PropertyNamesNotToSerialize;
 }

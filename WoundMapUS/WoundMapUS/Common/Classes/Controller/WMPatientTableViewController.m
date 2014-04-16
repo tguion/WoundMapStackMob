@@ -10,6 +10,7 @@
 
 #import "WMPatientTableViewController.h"
 #import "WMPatientTableViewCell.h"
+#import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
 #import "CoreDataHelper.h"
@@ -98,7 +99,7 @@
 {
     [super viewWillAppear:animated];
     // show progress
-    [self showProgressViewWithMessage:@"Acquiring Patient Records"];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(self) weakSelf = self;
@@ -109,6 +110,7 @@
         } else {
             [weakSelf.tableView reloadData];
         }
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
 }
 

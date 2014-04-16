@@ -99,7 +99,7 @@
     return skinAssessmentValue;
 }
 
-- (void)removeSkinAssessmentValuesForCategory:(WMSkinAssessmentCategory *)category
+- (NSArray *)removeSkinAssessmentValuesForCategory:(WMSkinAssessmentCategory *)category
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"skinAssessment.category == %@", category];
@@ -108,6 +108,7 @@
         [self removeValuesObject:value];
         [managedObjectContext deleteObject:value];
     }
+    return values;
 }
 
 - (NSArray *)sortedSkinAssessmentValues
