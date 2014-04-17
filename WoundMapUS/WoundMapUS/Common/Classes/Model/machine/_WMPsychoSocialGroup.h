@@ -23,7 +23,7 @@ extern const struct WMPsychoSocialGroupRelationships {
 extern const struct WMPsychoSocialGroupFetchedProperties {
 } WMPsychoSocialGroupFetchedProperties;
 
-@class WMPsychoSocialIntEvent;
+@class WMInterventionEvent;
 @class WMPatient;
 @class WMInterventionStatus;
 @class WMPsychoSocialValue;
@@ -151,8 +151,8 @@ extern const struct WMPsychoSocialGroupFetchedProperties {
 
 - (void)addInterventionEvents:(NSSet*)value_;
 - (void)removeInterventionEvents:(NSSet*)value_;
-- (void)addInterventionEventsObject:(WMPsychoSocialIntEvent*)value_;
-- (void)removeInterventionEventsObject:(WMPsychoSocialIntEvent*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;

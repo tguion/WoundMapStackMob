@@ -1,7 +1,7 @@
 #import "WMMedicationGroup.h"
 #import "WMMedication.h"
 #import "WMPatient.h"
-#import "WMMedicationInterventionEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
@@ -128,7 +128,7 @@
 
 #pragma mark - Events
 
-- (WMMedicationInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                             title:(NSString *)title
                                                         valueFrom:(id)valueFrom
                                                           valueTo:(id)valueTo
@@ -137,15 +137,15 @@
                                                            create:(BOOL)create
                                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMMedicationInterventionEvent *event = [WMMedicationInterventionEvent medicationInterventionEventForMedicationGroup:self
-                                                                                                             changeType:changeType
-                                                                                                                  title:title
-                                                                                                              valueFrom:valueFrom
-                                                                                                                valueTo:valueTo
-                                                                                                                   type:type
-                                                                                                            participant:participant
-                                                                                                                 create:create
-                                                                                                   managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForMedicationGroup:self
+                                                                               changeType:changeType
+                                                                                    title:title
+                                                                                valueFrom:valueFrom
+                                                                                  valueTo:valueTo
+                                                                                     type:type
+                                                                              participant:participant
+                                                                                   create:create
+                                                                     managedObjectContext:managedObjectContext];
     return event;
 }
 
@@ -174,27 +174,27 @@
     NSArray *medicationsRemoved = self.medicationsRemoved;
     NSMutableArray *events = [NSMutableArray array];
     for (WMMedication *medication in medicationsAdded) {
-        [events addObject:[WMMedicationInterventionEvent medicationInterventionEventForMedicationGroup:self
-                                                                                            changeType:InterventionEventChangeTypeAdd
-                                                                                                 title:medication.title
-                                                                                             valueFrom:nil
-                                                                                               valueTo:nil
-                                                                                                  type:nil
-                                                                                           participant:participant
-                                                                                                create:YES
-                                                                                  managedObjectContext:self.managedObjectContext]];
+        [events addObject:[WMInterventionEvent interventionEventForMedicationGroup:self
+                                                                        changeType:InterventionEventChangeTypeAdd
+                                                                             title:medication.title
+                                                                         valueFrom:nil
+                                                                           valueTo:nil
+                                                                              type:nil
+                                                                       participant:participant
+                                                                            create:YES
+                                                              managedObjectContext:self.managedObjectContext]];
         DLog(@"Created add event %@", medication.title);
     }
     for (WMMedication *medication in medicationsRemoved) {
-        [events addObject:[WMMedicationInterventionEvent medicationInterventionEventForMedicationGroup:self
-                                                                                            changeType:InterventionEventChangeTypeDelete
-                                                                                                 title:medication.title
-                                                                                             valueFrom:nil
-                                                                                               valueTo:nil
-                                                                                                  type:nil
-                                                                                           participant:participant
-                                                                                                create:YES
-                                                                                  managedObjectContext:self.managedObjectContext]];
+        [events addObject:[WMInterventionEvent interventionEventForMedicationGroup:self
+                                                                        changeType:InterventionEventChangeTypeDelete
+                                                                             title:medication.title
+                                                                         valueFrom:nil
+                                                                           valueTo:nil
+                                                                              type:nil
+                                                                       participant:participant
+                                                                            create:YES
+                                                              managedObjectContext:self.managedObjectContext]];
         DLog(@"Created delete event %@", medication.title);
     }
     return events;

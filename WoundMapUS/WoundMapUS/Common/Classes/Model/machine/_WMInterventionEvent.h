@@ -18,15 +18,25 @@ extern const struct WMInterventionEventAttributes {
 } WMInterventionEventAttributes;
 
 extern const struct WMInterventionEventRelationships {
+	__unsafe_unretained NSString *carePlanGroup;
+	__unsafe_unretained NSString *deviceGroup;
 	__unsafe_unretained NSString *eventType;
+	__unsafe_unretained NSString *medicationGroup;
 	__unsafe_unretained NSString *participant;
+	__unsafe_unretained NSString *psychoSocialGroup;
+	__unsafe_unretained NSString *skinAssessmentGroup;
 } WMInterventionEventRelationships;
 
 extern const struct WMInterventionEventFetchedProperties {
 } WMInterventionEventFetchedProperties;
 
+@class WMCarePlanGroup;
+@class WMDeviceGroup;
 @class WMInterventionEventType;
+@class WMMedicationGroup;
 @class WMParticipant;
+@class WMPsychoSocialGroup;
+@class WMSkinAssessmentGroup;
 
 
 
@@ -156,6 +166,20 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMCarePlanGroup *carePlanGroup;
+
+//- (BOOL)validateCarePlanGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMDeviceGroup *deviceGroup;
+
+//- (BOOL)validateDeviceGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) WMInterventionEventType *eventType;
 
 //- (BOOL)validateEventType:(id*)value_ error:(NSError**)error_;
@@ -163,9 +187,30 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMMedicationGroup *medicationGroup;
+
+//- (BOOL)validateMedicationGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) WMParticipant *participant;
 
 //- (BOOL)validateParticipant:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMPsychoSocialGroup *psychoSocialGroup;
+
+//- (BOOL)validatePsychoSocialGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMSkinAssessmentGroup *skinAssessmentGroup;
+
+//- (BOOL)validateSkinAssessmentGroup:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -244,13 +289,38 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+- (WMCarePlanGroup*)primitiveCarePlanGroup;
+- (void)setPrimitiveCarePlanGroup:(WMCarePlanGroup*)value;
+
+
+
+- (WMDeviceGroup*)primitiveDeviceGroup;
+- (void)setPrimitiveDeviceGroup:(WMDeviceGroup*)value;
+
+
+
 - (WMInterventionEventType*)primitiveEventType;
 - (void)setPrimitiveEventType:(WMInterventionEventType*)value;
 
 
 
+- (WMMedicationGroup*)primitiveMedicationGroup;
+- (void)setPrimitiveMedicationGroup:(WMMedicationGroup*)value;
+
+
+
 - (WMParticipant*)primitiveParticipant;
 - (void)setPrimitiveParticipant:(WMParticipant*)value;
+
+
+
+- (WMPsychoSocialGroup*)primitivePsychoSocialGroup;
+- (void)setPrimitivePsychoSocialGroup:(WMPsychoSocialGroup*)value;
+
+
+
+- (WMSkinAssessmentGroup*)primitiveSkinAssessmentGroup;
+- (void)setPrimitiveSkinAssessmentGroup:(WMSkinAssessmentGroup*)value;
 
 
 @end

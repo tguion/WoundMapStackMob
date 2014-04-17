@@ -206,7 +206,6 @@
     NSArray *values = [self.wound.positionValues allObjects];
     for (WMWoundPositionValue *woundPositionValue in values) {
         // update back end
-        // update back end
         if (woundPositionValue.ffUrl) {
             [self deleteWoundPositionValueFromBackEnd:woundPositionValue];
         }
@@ -318,7 +317,6 @@
         [self.wound addPositionValuesObject:woundPositionValue];
     }
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 - (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)viewController
@@ -330,7 +328,6 @@
         }
     }
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate

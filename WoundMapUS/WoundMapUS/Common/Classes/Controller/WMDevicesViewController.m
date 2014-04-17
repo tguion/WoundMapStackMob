@@ -13,7 +13,7 @@
 #import "WMDevice.h"
 #import "WMDeviceGroup.h"
 #import "WMDeviceValue.h"
-#import "WMDeviceInterventionEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"
 #import "WMWound.h"
@@ -262,7 +262,7 @@
                                                                       participant:self.appDelegate.participant
                                                                            create:YES
                                                              managedObjectContext:self.managedObjectContext];
-    DLog(@"Created WMDeviceInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
+    DLog(@"Created WMInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
 }

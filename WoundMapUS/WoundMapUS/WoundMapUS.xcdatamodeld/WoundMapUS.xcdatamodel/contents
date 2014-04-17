@@ -136,14 +136,10 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanInterventionEvent" inverseName="carePlanGroup" inverseEntity="WMCarePlanInterventionEvent" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="carePlanGroup" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="carePlanGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="carePlanGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanValue" inverseName="group" inverseEntity="WMCarePlanValue" syncable="YES"/>
-    </entity>
-    <entity name="WMCarePlanInterventionEvent" representedClassName="WMCarePlanInterventionEvent" parentEntity="WMInterventionEvent" syncable="YES">
-        <attribute name="wmcareplaninterventionevent_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="carePlanGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanGroup" inverseName="interventionEvents" inverseEntity="WMCarePlanGroup" syncable="YES"/>
     </entity>
     <entity name="WMCarePlanValue" representedClassName="WMCarePlanValue" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -217,14 +213,10 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceInterventionEvent" inverseName="deviceGroup" inverseEntity="WMDeviceInterventionEvent" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="deviceGroup" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="deviceGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="deviceGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceValue" inverseName="group" inverseEntity="WMDeviceValue" syncable="YES"/>
-    </entity>
-    <entity name="WMDeviceInterventionEvent" representedClassName="WMDeviceInterventionEvent" parentEntity="WMInterventionEvent" syncable="YES">
-        <attribute name="wmdeviceinterventionevent_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="deviceGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMDeviceGroup" inverseName="interventionEvents" inverseEntity="WMDeviceGroup" syncable="YES"/>
     </entity>
     <entity name="WMDeviceValue" representedClassName="WMDeviceValue" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -302,8 +294,13 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <attribute name="valueFrom" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="valueTo" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="carePlanGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMCarePlanGroup" inverseName="interventionEvents" inverseEntity="WMCarePlanGroup" syncable="YES"/>
+        <relationship name="deviceGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMDeviceGroup" inverseName="interventionEvents" inverseEntity="WMDeviceGroup" syncable="YES"/>
         <relationship name="eventType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionEventType" inverseName="interventionEvents" inverseEntity="WMInterventionEventType" syncable="YES"/>
+        <relationship name="medicationGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMMedicationGroup" inverseName="interventionEvents" inverseEntity="WMMedicationGroup" syncable="YES"/>
         <relationship name="participant" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="interventionEvents" inverseEntity="WMParticipant" syncable="YES"/>
+        <relationship name="psychoSocialGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPsychoSocialGroup" inverseName="interventionEvents" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
+        <relationship name="skinAssessmentGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMSkinAssessmentGroup" inverseName="interventionEvents" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
     </entity>
     <entity name="WMInterventionEventType" representedClassName="WMInterventionEventType" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -419,14 +416,10 @@
         <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationInterventionEvent" inverseName="medicationGroup" inverseEntity="WMMedicationInterventionEvent" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="medicationGroup" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="medications" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMMedication" inverseName="groups" inverseEntity="WMMedication" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="medicationGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="medicationGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
-    </entity>
-    <entity name="WMMedicationInterventionEvent" representedClassName="WMMedicationInterventionEvent" parentEntity="WMInterventionEvent" syncable="YES">
-        <attribute name="wmmedicationinterventionevent_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="medicationGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMMedicationGroup" inverseName="interventionEvents" inverseEntity="WMMedicationGroup" syncable="YES"/>
     </entity>
     <entity name="WMNavigationNode" representedClassName="WMNavigationNode" syncable="YES">
         <attribute name="activeFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -641,14 +634,10 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPsychoSocialIntEvent" inverseName="group" inverseEntity="WMPsychoSocialIntEvent" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="psychoSocialGroup" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="psychosocialGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="psychoSocialGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPsychoSocialValue" inverseName="group" inverseEntity="WMPsychoSocialValue" syncable="YES"/>
-    </entity>
-    <entity name="WMPsychoSocialIntEvent" representedClassName="WMPsychoSocialIntEvent" parentEntity="WMInterventionEvent" syncable="YES">
-        <attribute name="wmpsychosocialinterventionevent_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPsychoSocialGroup" inverseName="interventionEvents" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
     </entity>
     <entity name="WMPsychoSocialItem" representedClassName="WMPsychoSocialItem" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -728,14 +717,10 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMSkinAssessmentIntEvent" inverseName="skinAssessmentGroup" inverseEntity="WMSkinAssessmentIntEvent" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="skinAssessmentGroup" inverseEntity="WMInterventionEvent" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="skinAssessmentGroups" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="skinAssessmentGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMSkinAssessmentValue" inverseName="group" inverseEntity="WMSkinAssessmentValue" syncable="YES"/>
-    </entity>
-    <entity name="WMSkinAssessmentIntEvent" representedClassName="WMSkinAssessmentIntEvent" parentEntity="WMInterventionEvent" syncable="YES">
-        <attribute name="wmskinassessmentinterventionevent_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="skinAssessmentGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMSkinAssessmentGroup" inverseName="interventionEvents" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
     </entity>
     <entity name="WMSkinAssessmentValue" representedClassName="WMSkinAssessmentValue" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -1110,13 +1095,11 @@
         <memberEntity name="WMBradenSection"/>
         <memberEntity name="WMCarePlanCategory"/>
         <memberEntity name="WMCarePlanGroup"/>
-        <memberEntity name="WMCarePlanInterventionEvent"/>
         <memberEntity name="WMCarePlanValue"/>
         <memberEntity name="WMConsultingGroup"/>
         <memberEntity name="WMDevice"/>
         <memberEntity name="WMDeviceCategory"/>
         <memberEntity name="WMDeviceGroup"/>
-        <memberEntity name="WMDeviceInterventionEvent"/>
         <memberEntity name="WMDeviceValue"/>
         <memberEntity name="WMIAPTransaction"/>
         <memberEntity name="WMId"/>
@@ -1127,7 +1110,6 @@
         <memberEntity name="WMMedication"/>
         <memberEntity name="WMMedicationCategory"/>
         <memberEntity name="WMMedicationGroup"/>
-        <memberEntity name="WMMedicationInterventionEvent"/>
         <memberEntity name="WMNavigationNode"/>
         <memberEntity name="WMNavigationStage"/>
         <memberEntity name="WMNavigationTrack"/>
@@ -1139,13 +1121,11 @@
         <memberEntity name="WMPerson"/>
         <memberEntity name="WMPhoto"/>
         <memberEntity name="WMPsychoSocialGroup"/>
-        <memberEntity name="WMPsychoSocialIntEvent"/>
         <memberEntity name="WMPsychoSocialItem"/>
         <memberEntity name="WMPsychoSocialValue"/>
         <memberEntity name="WMSkinAssessment"/>
         <memberEntity name="WMSkinAssessmentCategory"/>
         <memberEntity name="WMSkinAssessmentGroup"/>
-        <memberEntity name="WMSkinAssessmentIntEvent"/>
         <memberEntity name="WMSkinAssessmentValue"/>
         <memberEntity name="WMTelecom"/>
         <memberEntity name="WMTelecomType"/>
@@ -1179,7 +1159,6 @@
         <element name="WMBradenSection" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMCarePlanCategory" positionX="0" positionY="0" width="128" height="345"/>
         <element name="WMCarePlanGroup" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMCarePlanInterventionEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMCarePlanValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="133"/>
         <element name="WMDefinition" positionX="0" positionY="0" width="128" height="120"/>
@@ -1187,13 +1166,12 @@
         <element name="WMDevice" positionX="0" positionY="0" width="128" height="285"/>
         <element name="WMDeviceCategory" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMDeviceGroup" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMDeviceInterventionEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMDeviceValue" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMFFMetadata" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMIAPTransaction" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMId" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMInstruction" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="WMInterventionEvent" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="WMInterventionEvent" positionX="0" positionY="0" width="128" height="298"/>
         <element name="WMInterventionEventType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMInterventionStatus" positionX="0" positionY="0" width="128" height="345"/>
         <element name="WMInterventionStatusJoin" positionX="0" positionY="0" width="128" height="120"/>
@@ -1203,7 +1181,6 @@
         <element name="WMMedication" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMMedicationCategory" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMMedicationGroup" positionX="0" positionY="0" width="128" height="270"/>
-        <element name="WMMedicationInterventionEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="450"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
@@ -1215,13 +1192,11 @@
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="WMPsychoSocialIntEvent" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WMPsychoSocialItem" positionX="0" positionY="0" width="128" height="375"/>
         <element name="WMPsychoSocialValue" positionX="0" positionY="0" width="128" height="195"/>
         <element name="WMSkinAssessment" positionX="0" positionY="0" width="128" height="285"/>
         <element name="WMSkinAssessmentCategory" positionX="0" positionY="0" width="128" height="255"/>
-        <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMSkinAssessmentIntEvent" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="208"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTeam" positionX="9" positionY="153" width="128" height="195"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="178"/>

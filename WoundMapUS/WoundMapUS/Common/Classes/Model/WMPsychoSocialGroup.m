@@ -2,7 +2,7 @@
 #import "WMPatient.h"
 #import "WMPsychoSocialItem.h"
 #import "WMPsychoSocialValue.h"
-#import "WMPsychoSocialIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
@@ -219,7 +219,7 @@
 
 #pragma mark - Events
 
-- (WMPsychoSocialIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                       path:(NSString *)path
                                                      title:(NSString *)title
                                                  valueFrom:(id)valueFrom
@@ -229,16 +229,16 @@
                                                     create:(BOOL)create
                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMPsychoSocialIntEvent *event = [WMPsychoSocialIntEvent psychoSocialInterventionEventForPsychoSocialGroup:self
-                                                                                                   changeType:changeType
-                                                                                                         path:path
-                                                                                                        title:title
-                                                                                                    valueFrom:valueFrom
-                                                                                                      valueTo:valueTo
-                                                                                                         type:type
-                                                                                                  participant:participant
-                                                                                                       create:create
-                                                                                         managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForPsychoSocialGroup:self
+                                                                                 changeType:changeType
+                                                                                       path:path
+                                                                                      title:title
+                                                                                  valueFrom:valueFrom
+                                                                                    valueTo:valueTo
+                                                                                       type:type
+                                                                                participant:participant
+                                                                                     create:create
+                                                                       managedObjectContext:managedObjectContext];
     return event;
 }
 

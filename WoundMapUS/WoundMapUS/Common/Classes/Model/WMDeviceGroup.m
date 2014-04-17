@@ -3,7 +3,7 @@
 #import "WMDeviceValue.h"
 #import "WMDevice.h"
 #import "WMInterventionStatus.h"
-#import "WMDeviceInterventionEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMUtilities.h"
 
 @interface WMDeviceGroup ()
@@ -139,7 +139,7 @@
 
 #pragma mark - Events
 
-- (WMDeviceInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                         title:(NSString *)title
                                                     valueFrom:(id)valueFrom
                                                       valueTo:(id)valueTo
@@ -148,15 +148,15 @@
                                                        create:(BOOL)create
                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMDeviceInterventionEvent *event = [WMDeviceInterventionEvent deviceInterventionEventForDeviceGroup:self
-                                                                                             changeType:changeType
-                                                                                                  title:title
-                                                                                              valueFrom:valueFrom
-                                                                                                valueTo:valueTo
-                                                                                                   type:type
-                                                                                            participant:participant
-                                                                                                 create:create
-                                                                                   managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForDeviceGroup:self
+                                                                           changeType:changeType
+                                                                                title:title
+                                                                            valueFrom:valueFrom
+                                                                              valueTo:valueTo
+                                                                                 type:type
+                                                                          participant:participant
+                                                                               create:create
+                                                                 managedObjectContext:managedObjectContext];
     return event;
 }
 
@@ -252,11 +252,13 @@
                                                             @"continueCountValue",
                                                             @"flagsValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents",
+                                                            @"objectID",
                                                             @"devices",
                                                             @"hasInterventionEvents",
                                                             @"sortedDeviceValues",
@@ -272,8 +274,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMDeviceGroupRelationships.interventionEvents,
-                                                            WMDeviceGroupRelationships.values]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

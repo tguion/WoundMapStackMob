@@ -24,7 +24,7 @@ extern const struct WMDeviceGroupRelationships {
 extern const struct WMDeviceGroupFetchedProperties {
 } WMDeviceGroupFetchedProperties;
 
-@class WMDeviceInterventionEvent;
+@class WMInterventionEvent;
 @class WMPatient;
 @class WMInterventionStatus;
 @class WMDeviceValue;
@@ -167,8 +167,8 @@ extern const struct WMDeviceGroupFetchedProperties {
 
 - (void)addInterventionEvents:(NSSet*)value_;
 - (void)removeInterventionEvents:(NSSet*)value_;
-- (void)addInterventionEventsObject:(WMDeviceInterventionEvent*)value_;
-- (void)removeInterventionEventsObject:(WMDeviceInterventionEvent*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;

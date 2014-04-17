@@ -2,7 +2,7 @@
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
 
-@class WMPatient, WMDeviceValue, WMDevice, WMDeviceInterventionEvent, WMInterventionEventType, WMParticipant;
+@class WMPatient, WMDeviceValue, WMDevice, WMInterventionEvent, WMInterventionEventType, WMParticipant;
 
 @interface WMDeviceGroup : _WMDeviceGroup <AssessmentGroup> {}
 
@@ -32,14 +32,14 @@
 
 - (BOOL)removeExcludesOtherValues;
 
-- (WMDeviceInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
-                                                        title:(NSString *)title
-                                                    valueFrom:(id)valueFrom
-                                                      valueTo:(id)valueTo
-                                                         type:(WMInterventionEventType *)type
-                                                  participant:(WMParticipant *)participant
-                                                       create:(BOOL)create
-                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                  title:(NSString *)title
+                                              valueFrom:(id)valueFrom
+                                                valueTo:(id)valueTo
+                                                   type:(WMInterventionEventType *)type
+                                            participant:(WMParticipant *)participant
+                                                 create:(BOOL)create
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 - (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 - (void)incrementContinueCount;
 

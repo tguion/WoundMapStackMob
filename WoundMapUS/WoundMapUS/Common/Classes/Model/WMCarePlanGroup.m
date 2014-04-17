@@ -3,7 +3,7 @@
 #import "WMCarePlanGroup.h"
 #import "WMCarePlanCategory.h"
 #import "WMCarePlanValue.h"
-#import "WMCarePlanInterventionEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
@@ -189,7 +189,7 @@
 
 #pragma mark - Events
 
-- (WMCarePlanInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                            path:(NSString *)path
                                                           title:(NSString *)title
                                                       valueFrom:(id)valueFrom
@@ -199,16 +199,16 @@
                                                          create:(BOOL)create
                                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMCarePlanInterventionEvent *event = [WMCarePlanInterventionEvent carePlanInterventionEventForCarePlanGroup:self
-                                                                                                     changeType:changeType
-                                                                                                           path:path
-                                                                                                          title:title
-                                                                                                      valueFrom:valueFrom
-                                                                                                        valueTo:valueTo
-                                                                                                           type:type
-                                                                                                    participant:participant
-                                                                                                         create:create
-                                                                                           managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForCarePlanGroup:self
+                                                                             changeType:changeType
+                                                                                   path:path
+                                                                                  title:title
+                                                                              valueFrom:valueFrom
+                                                                                valueTo:valueTo
+                                                                                   type:type
+                                                                            participant:participant
+                                                                                 create:create
+                                                                   managedObjectContext:managedObjectContext];
     return event;
 }
 

@@ -2,7 +2,7 @@
 #import "WMPatient.h"
 #import "WMSkinAssessment.h"
 #import "WMSkinAssessmentValue.h"
-#import "WMSkinAssessmentIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
@@ -126,24 +126,24 @@
 
 #pragma mark - Events
 
-- (WMSkinAssessmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
-                                                       title:(NSString *)title
-                                                   valueFrom:(id)valueFrom
-                                                     valueTo:(id)valueTo
-                                                        type:(WMInterventionEventType *)type
-                                                 participant:(WMParticipant *)participant
-                                                      create:(BOOL)create
-                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                  title:(NSString *)title
+                                              valueFrom:(id)valueFrom
+                                                valueTo:(id)valueTo
+                                                   type:(WMInterventionEventType *)type
+                                            participant:(WMParticipant *)participant
+                                                 create:(BOOL)create
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMSkinAssessmentIntEvent *event = [WMSkinAssessmentIntEvent skinAssessmentInterventionEventForSkinAssessmentGroup:self
-                                                                                                           changeType:changeType
-                                                                                                                title:title
-                                                                                                            valueFrom:valueFrom
-                                                                                                              valueTo:valueTo
-                                                                                                                 type:type
-                                                                                                          participant:participant
-                                                                                                               create:create
-                                                                                                 managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForSkinAssessmentGroup:self
+                                                                                   changeType:changeType
+                                                                                        title:title
+                                                                                    valueFrom:valueFrom
+                                                                                      valueTo:valueTo
+                                                                                         type:type
+                                                                                  participant:participant
+                                                                                       create:create
+                                                                         managedObjectContext:managedObjectContext];
     return event;
 }
 
@@ -241,11 +241,13 @@
                                                             @"continueCountValue",
                                                             @"flagsValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents",
+                                                            @"objectID",
                                                             @"isClosed",
                                                             @"hasInterventionEvents",
                                                             @"sortedSkinAssessmentValues",
@@ -261,8 +263,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMSkinAssessmentGroupRelationships.interventionEvents,
-                                                            WMSkinAssessmentGroupRelationships.values]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

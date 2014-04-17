@@ -13,7 +13,7 @@
 #import "WMMedicationCategory.h"
 #import "WMMedication.h"
 #import "WMMedicationGroup.h"
-#import "WMMedicationInterventionEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionEventType.h"
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"
@@ -273,7 +273,7 @@
                                                                           participant:self.appDelegate.participant
                                                                                create:YES
                                                                  managedObjectContext:self.managedObjectContext];
-    DLog(@"Created WMMedicationInterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
+    DLog(@"Created WMnterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
     // update back end

@@ -2,7 +2,7 @@
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
 
-@class WMPatient, WMSkinAssessment, WMSkinAssessmentCategory, WMSkinAssessmentValue, WMSkinAssessmentIntEvent, WMParticipant;
+@class WMPatient, WMSkinAssessment, WMSkinAssessmentCategory, WMSkinAssessmentValue, WMInterventionEvent, WMParticipant;
 
 @interface WMSkinAssessmentGroup : _WMSkinAssessmentGroup <AssessmentGroup> {}
 
@@ -31,14 +31,15 @@
 
 - (NSArray *)removeSkinAssessmentValuesForCategory:(WMSkinAssessmentCategory *)category;
 
-- (WMSkinAssessmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
-                                                       title:(NSString *)title
-                                                   valueFrom:(id)valueFrom
-                                                     valueTo:(id)valueTo
-                                                        type:(WMInterventionEventType *)type
-                                                 participant:(WMParticipant *)participant
-                                                      create:(BOOL)create
-                                        managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                  title:(NSString *)title
+                                              valueFrom:(id)valueFrom
+                                                valueTo:(id)valueTo
+                                                   type:(WMInterventionEventType *)type
+                                            participant:(WMParticipant *)participant
+                                                 create:(BOOL)create
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
 - (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 - (void)incrementContinueCount;
 

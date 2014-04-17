@@ -24,7 +24,7 @@ extern const struct WMSkinAssessmentGroupRelationships {
 extern const struct WMSkinAssessmentGroupFetchedProperties {
 } WMSkinAssessmentGroupFetchedProperties;
 
-@class WMSkinAssessmentIntEvent;
+@class WMInterventionEvent;
 @class WMPatient;
 @class WMInterventionStatus;
 @class WMSkinAssessmentValue;
@@ -167,8 +167,8 @@ extern const struct WMSkinAssessmentGroupFetchedProperties {
 
 - (void)addInterventionEvents:(NSSet*)value_;
 - (void)removeInterventionEvents:(NSSet*)value_;
-- (void)addInterventionEventsObject:(WMSkinAssessmentIntEvent*)value_;
-- (void)removeInterventionEventsObject:(WMSkinAssessmentIntEvent*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;

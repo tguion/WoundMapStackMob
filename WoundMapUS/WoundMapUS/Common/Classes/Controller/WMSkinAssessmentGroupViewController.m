@@ -16,7 +16,7 @@
 #import "WMSkinAssessmentCategory.h"
 #import "WMSkinAssessment.h"
 #import "WMSkinAssessmentValue.h"
-#import "WMSkinAssessmentIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"
 #import "WMWound.h"
@@ -324,11 +324,26 @@
     // create intervention events before super
     [self.skinAssessmentGroup createEditEventsForParticipant:self.appDelegate.participant];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    // wait for back end calls to complete
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        WM_ASSERT_MAIN_THREAD;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [weakSelf.delegate skinAssessmentGroupViewControllerDidSave:weakSelf];
+    };
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
-            [WMUtilities logError:error];
+            counter = 0;
+            block();
+        } else {
+            --counter;
+            if (counter == 0) {
+                block();
+            }
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
@@ -337,6 +352,7 @@
             continue;
         }
         // else
+        ++counter;
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
         }];
@@ -346,12 +362,13 @@
             continue;
         }
         // else
+        ++counter;
         [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentRelationships.values onComplete:completionHandler];
         }];
     }
+    ++counter;
     [ff updateObj:_skinAssessmentGroup onComplete:completionHandler];
-    [self.delegate skinAssessmentGroupViewControllerDidSave:self];
 }
 
 #pragma mark - InterventionStatusViewControllerDelegate

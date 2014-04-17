@@ -24,7 +24,7 @@ extern const struct WMCarePlanGroupRelationships {
 extern const struct WMCarePlanGroupFetchedProperties {
 } WMCarePlanGroupFetchedProperties;
 
-@class WMCarePlanInterventionEvent;
+@class WMInterventionEvent;
 @class WMPatient;
 @class WMInterventionStatus;
 @class WMCarePlanValue;
@@ -167,8 +167,8 @@ extern const struct WMCarePlanGroupFetchedProperties {
 
 - (void)addInterventionEvents:(NSSet*)value_;
 - (void)removeInterventionEvents:(NSSet*)value_;
-- (void)addInterventionEventsObject:(WMCarePlanInterventionEvent*)value_;
-- (void)removeInterventionEventsObject:(WMCarePlanInterventionEvent*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
