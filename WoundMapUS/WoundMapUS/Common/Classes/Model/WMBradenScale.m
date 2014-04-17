@@ -9,18 +9,23 @@ NSInteger const kBradenSectionCount = 6;
 
 @interface WMBradenScale ()
 
-// Private interface goes here.
+- (void)populateSectionsWithHandler:(NSMutableArray *)objectIDs;
 
 @end
 
 
 @implementation WMBradenScale
 
-+ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient
++ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient handler:(WMProcessCallback)handler
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMBradenScale *bradenScale = [WMBradenScale MR_createInContext:managedObjectContext];
     bradenScale.patient = patient;
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+    [objectIDs addObject:[bradenScale objectID]];
+    [bradenScale populateSectionsWithHandler:objectIDs];
+    handler(nil, objectIDs, nil);
     return bradenScale;
 }
 
@@ -163,7 +168,7 @@ NSInteger const kBradenSectionCount = 6;
     return self.closedFlagValue;
 }
 
-- (void)populateSections
+- (void)populateSectionsWithHandler:(NSMutableArray *)objectIDs
 {
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"BradenScale" withExtension:@"plist"];
 	if (nil == fileURL) {
@@ -177,6 +182,7 @@ NSInteger const kBradenSectionCount = 6;
 																 format:NULL
 																  error:&error];
 	NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     @autoreleasepool {
         for (NSDictionary *dictionary in propertyList) {
             WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:self];
@@ -184,6 +190,8 @@ NSInteger const kBradenSectionCount = 6;
             bradenSection.bradenScale = self;
             bradenSection.title = [dictionary objectForKey:@"title"];
             bradenSection.desc = [dictionary objectForKey:@"desc"];
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            [objectIDs addObject:[bradenSection objectID]];
             id object = [dictionary objectForKey:@"cells"];
             if ([object isKindOfClass:[NSArray class]]) {
                 for (NSDictionary *d in object) {
@@ -196,10 +204,60 @@ NSInteger const kBradenSectionCount = 6;
                         bradenCell.secondaryDescription = obj;
                     }
                     bradenCell.value = [d objectForKey:@"value"];
+                    [managedObjectContext MR_saveOnlySelfAndWait];
+                    [objectIDs addObject:[bradenCell objectID]];
                 }
             }
         }
     }
+}
+
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"closedFlagValue",
+                                                            @"completeFlagValue",
+                                                            @"flagsValue",
+                                                            @"scoreValue",
+                                                            @"isClosed",
+                                                            @"isScored",
+                                                            @"isScoredCalculated",
+                                                            @"scoreMessage",
+                                                            @"sortedSections",
+                                                            @"updateScoreFromSections"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMBradenScale attributeNamesNotToSerialize] containsObject:propertyName] || [[WMBradenScale relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMBradenScale relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end

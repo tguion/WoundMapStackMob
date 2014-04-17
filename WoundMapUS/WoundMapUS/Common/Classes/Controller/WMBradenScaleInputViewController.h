@@ -23,5 +23,6 @@
 @property (weak, nonatomic) id<BradenScaleInputDelegate> delegate;
 
 @property (strong, nonatomic) WMBradenScale *bradenScale;
+@property (nonatomic) BOOL newBradenScaleFlag;
 
 @end

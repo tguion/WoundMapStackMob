@@ -19,6 +19,8 @@
 
 @interface WMBradenScaleInputViewController () <BradenSectionCellDelegate, BradenCellSelectionDelegate>
 
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
 @property (readonly, nonatomic) WMBradenScaleTableHeaderView *bradenScaleTableViewHeader;
 @property (strong, nonatomic) NSMutableDictionary *bradenSectionExpansionMap;
 @property (readonly, nonatomic) WMBradenSectionSelectCellViewController *bradenSectionSelectCellViewController;
@@ -102,7 +104,14 @@
                                                                                           action:@selector(cancelAction:)];
 	WMBradenScaleTableHeaderView *aView = [[WMBradenScaleTableHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), 64.0)];
 	self.tableView.tableHeaderView = aView;
-    [self.managedObjectContext.undoManager beginUndoGrouping];
+    if (!_newBradenScaleFlag) {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -118,11 +127,6 @@
 }
 
 #pragma mark - BaseViewController
-
-- (void)updateTitle
-{
-    // nothing
-}
 
 - (void)clearDataCache
 {
@@ -150,8 +154,13 @@
 
 - (IBAction)doneAction:(id)sender
 {
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    if (!_newBradenScaleFlag) {
+        if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+            [self.managedObjectContext.undoManager endUndoGrouping];
+        }
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
+        }
     }
     [self.delegate bradenScaleInputController:self didFinishWithBradenScale:self.bradenScale];
 }
@@ -159,10 +168,15 @@
 - (IBAction)cancelAction:(id)sender
 {
     _didCancel = YES;
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (_didCancel && self.managedObjectContext.undoManager.canUndo) {
-            [self.managedObjectContext.undoManager undoNestedGroup];
+    if (!_newBradenScaleFlag) {
+        if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+            [self.managedObjectContext.undoManager endUndoGrouping];
+            if (_didCancel && self.managedObjectContext.undoManager.canUndo) {
+                [self.managedObjectContext.undoManager undoNestedGroup];
+            }
+        }
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
         }
     }
     [self.delegate bradenScaleInputControllerDidCancel:self];

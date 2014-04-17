@@ -1,4 +1,5 @@
 #import "_WMBradenScale.h"
+#import "WoundCareProtocols.h"
 
 extern NSString * const kBradenScaleTitle;
 
@@ -6,7 +7,8 @@ extern NSString * const kBradenScaleTitle;
 
 @interface WMBradenScale : _WMBradenScale {}
 
-+ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient;
++ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient handler:(WMProcessCallback)handler;
+
 + (WMBradenScale *)latestBradenScale:(WMPatient *)patient create:(BOOL)create;
 + (WMBradenScale *)latestCompleteBradenScale:(WMPatient *)patient;
 + (NSDate *)lastCompleteBradenScaleDataModified:(WMPatient *)patient;
@@ -20,7 +22,6 @@ extern NSString * const kBradenScaleTitle;
 @property (readonly, nonatomic) BOOL isScoredCalculated;
 @property (readonly, nonatomic) NSString *scoreMessage;
 
-- (void)populateSections;
 - (NSArray *)sortedSections;
 - (void)updateScoreFromSections;
 

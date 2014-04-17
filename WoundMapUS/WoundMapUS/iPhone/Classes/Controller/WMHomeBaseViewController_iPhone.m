@@ -191,7 +191,7 @@
 {
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.bradenScaleViewController];
     navigationController.delegate = self.appDelegate;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
+    [self presentViewController:navigationController animated:YES completion:^{
         // nothing
     }];
 }
@@ -202,7 +202,7 @@
     medicationsViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:medicationsViewController];
     navigationController.delegate = self.appDelegate;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
+    [self presentViewController:navigationController animated:YES completion:^{
         // nothing
     }];
 }
@@ -214,7 +214,7 @@
     devicesViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:devicesViewController];
     navigationController.delegate = self.appDelegate;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:navigationController] animated:YES completion:^{
+    [self presentViewController:navigationController animated:YES completion:^{
         // nothing
     }];
 }
