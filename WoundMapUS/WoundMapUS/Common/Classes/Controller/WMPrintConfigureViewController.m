@@ -270,7 +270,7 @@
 
 - (IBAction)nextAction:(id)sender
 {
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
     if (self.delegate.shouldRequestPassword && [_password length] == 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Password is Required"
                                                             message:@"A password is required to encrypt the attachment"
@@ -408,7 +408,7 @@
 // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [[self.view findFirstResponder] resignFirstResponder];
+    [self.view endEditing:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     // be sure to nil the _sortedWoundPhotos if selecting a woundPhoto to print and updateUI
     NSInteger section = indexPath.section;

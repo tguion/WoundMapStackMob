@@ -3,7 +3,7 @@
 #import "WMWoundTreatmentValue.h"
 #import "WMWound.h"
 #import "WMWoundTreatment.h"
-#import "WMWoundTreatmentIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
@@ -146,7 +146,7 @@
 
 #pragma mark - Events
 
-- (WMWoundTreatmentIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                        title:(NSString *)title
                                                    valueFrom:(id)valueFrom
                                                      valueTo:(id)valueTo
@@ -155,15 +155,15 @@
                                                       create:(BOOL)create
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMWoundTreatmentIntEvent *event = [WMWoundTreatmentIntEvent woundTreatmentInterventionEventForWoundTreatmentGroup:self
-                                                                                                           changeType:changeType
-                                                                                                                title:title
-                                                                                                            valueFrom:valueFrom
-                                                                                                              valueTo:valueTo
-                                                                                                                 type:type
-                                                                                                          participant:participant
-                                                                                                               create:create
-                                                                                                 managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForWoundTreatmentGroup:self
+                                                                                   changeType:changeType
+                                                                                        title:title
+                                                                                    valueFrom:valueFrom
+                                                                                      valueTo:valueTo
+                                                                                         type:type
+                                                                                  participant:participant
+                                                                                       create:create
+                                                                         managedObjectContext:managedObjectContext];
     return event;
 }
 
@@ -259,10 +259,13 @@
                                                             @"continueCountValue",
                                                             @"flagsValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
+                                                            @"objectID",
                                                             @"interventionEvents",
                                                             @"isClosed",
                                                             @"hasInterventionEvents",

@@ -6,7 +6,7 @@
 #import "WMWoundPhoto.h"
 #import "WMAmountQualifier.h"
 #import "WMWoundOdor.h"
-#import "WMWoundMeasurementIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMUtilities.h"
 
@@ -400,24 +400,24 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 
 #pragma mark - Events
 
-- (WMWoundMeasurementIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
-                                                         title:(NSString *)title
-                                                     valueFrom:(id)valueFrom
-                                                       valueTo:(id)valueTo
-                                                          type:(WMInterventionEventType *)type
-                                                   participant:(WMParticipant *)participant
-                                                        create:(BOOL)create
-                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                  title:(NSString *)title
+                                              valueFrom:(id)valueFrom
+                                                valueTo:(id)valueTo
+                                                   type:(WMInterventionEventType *)type
+                                            participant:(WMParticipant *)participant
+                                                 create:(BOOL)create
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    WMWoundMeasurementIntEvent *event = [WMWoundMeasurementIntEvent woundMeasurementInterventionEventForWoundMeasurementGroup:self
-                                                                                                                   changeType:changeType
-                                                                                                                        title:title
-                                                                                                                    valueFrom:valueFrom
-                                                                                                                      valueTo:valueTo
-                                                                                                                         type:type
-                                                                                                                  participant:participant
-                                                                                                                       create:create
-                                                                                                         managedObjectContext:managedObjectContext];
+    WMInterventionEvent *event = [WMInterventionEvent interventionEventForWoundMeasurementGroup:self
+                                                                                     changeType:changeType
+                                                                                          title:title
+                                                                                      valueFrom:valueFrom
+                                                                                        valueTo:valueTo
+                                                                                           type:type
+                                                                                    participant:participant
+                                                                                         create:create
+                                                                           managedObjectContext:managedObjectContext];
     return event;
 }
 
@@ -560,6 +560,73 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 - (BOOL)isClosed
 {
     return self.closedFlagValue;
+}
+
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"closedFlagValue",
+                                                            @"continueCountValue",
+                                                            @"flagsValue",
+                                                            @"isClosed",
+                                                            @"measurementValueWidth",
+                                                            @"measurementValueLength",
+                                                            @"measurementValueDepth",
+                                                            @"hasInterventionEvents",
+                                                            @"woundMeasurementValuesAdded",
+                                                            @"woundMeasurementValuesRemoved",
+                                                            @"lastWoundMeasurementDate",
+                                                            @"dateModifiedExludingMeasurement",
+                                                            @"tunnelingValueCount",
+                                                            @"underminingValueCount",
+                                                            @"valuesFromFetch",
+                                                            @"groupValueTypeCode",
+                                                            @"title",
+                                                            @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
+                                                            @"optionsArray",
+                                                            @"secondaryOptionsArray",
+                                                            @"objectID",
+                                                            @"devices",
+                                                            @"hasInterventionEvents",
+                                                            @"sortedDeviceValues",
+                                                            @"isClosed",
+                                                            @"deviceValuesAdded",
+                                                            @"deviceValuesRemoved"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundMeasurementGroup attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundMeasurementGroup relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundMeasurementGroup relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end

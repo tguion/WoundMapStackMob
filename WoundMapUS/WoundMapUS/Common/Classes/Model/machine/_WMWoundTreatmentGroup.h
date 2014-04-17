@@ -24,7 +24,7 @@ extern const struct WMWoundTreatmentGroupRelationships {
 extern const struct WMWoundTreatmentGroupFetchedProperties {
 } WMWoundTreatmentGroupFetchedProperties;
 
-@class WMWoundTreatmentIntEvent;
+@class WMInterventionEvent;
 @class WMInterventionStatus;
 @class WMWoundTreatmentValue;
 @class WMWound;
@@ -167,8 +167,8 @@ extern const struct WMWoundTreatmentGroupFetchedProperties {
 
 - (void)addInterventionEvents:(NSSet*)value_;
 - (void)removeInterventionEvents:(NSSet*)value_;
-- (void)addInterventionEventsObject:(WMWoundTreatmentIntEvent*)value_;
-- (void)removeInterventionEventsObject:(WMWoundTreatmentIntEvent*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;

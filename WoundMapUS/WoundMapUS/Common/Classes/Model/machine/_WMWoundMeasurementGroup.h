@@ -25,7 +25,7 @@ extern const struct WMWoundMeasurementGroupRelationships {
 extern const struct WMWoundMeasurementGroupFetchedProperties {
 } WMWoundMeasurementGroupFetchedProperties;
 
-@class WMWoundMeasurementIntEvent;
+@class WMInterventionEvent;
 @class WMInterventionStatus;
 @class WMWoundMeasurementValue;
 @class WMWound;
@@ -176,8 +176,8 @@ extern const struct WMWoundMeasurementGroupFetchedProperties {
 
 - (void)addInterventionEvents:(NSSet*)value_;
 - (void)removeInterventionEvents:(NSSet*)value_;
-- (void)addInterventionEventsObject:(WMWoundMeasurementIntEvent*)value_;
-- (void)removeInterventionEventsObject:(WMWoundMeasurementIntEvent*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;

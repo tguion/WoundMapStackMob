@@ -24,6 +24,8 @@ const struct WMInterventionEventRelationships WMInterventionEventRelationships =
 	.participant = @"participant",
 	.psychoSocialGroup = @"psychoSocialGroup",
 	.skinAssessmentGroup = @"skinAssessmentGroup",
+	.woundMeasurementGroup = @"woundMeasurementGroup",
+	.woundTreatmentGroup = @"woundTreatmentGroup",
 };
 
 const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProperties = {
@@ -181,6 +183,14 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 	
 
 @dynamic skinAssessmentGroup;
+
+	
+
+@dynamic woundMeasurementGroup;
+
+	
+
+@dynamic woundTreatmentGroup;
 
 	
 

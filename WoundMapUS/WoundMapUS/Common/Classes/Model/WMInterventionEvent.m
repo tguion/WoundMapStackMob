@@ -5,6 +5,8 @@
 #import "WMDeviceGroup.h"
 #import "WMMedicationGroup.h"
 #import "WMPsychoSocialGroup.h"
+#import "WMWoundMeasurementGroup.h"
+#import "WMWoundTreatmentGroup.h"
 
 @interface WMInterventionEvent ()
 
@@ -191,6 +193,72 @@
         interventionEvent.title = title;
         interventionEvent.valueFrom = valueFrom;
         interventionEvent.valueTo = valueTo;
+        interventionEvent.eventType = eventType;
+        interventionEvent.participant = participant;
+    }
+    return interventionEvent;
+}
+
++ (WMInterventionEvent *)interventionEventForWoundMeasurementGroup:(WMWoundMeasurementGroup *)woundMeasurementGroup
+                                                        changeType:(InterventionEventChangeType)changeType
+                                                             title:(NSString *)title
+                                                         valueFrom:(id)valueFrom
+                                                           valueTo:(id)valueTo
+                                                              type:(WMInterventionEventType *)eventType
+                                                       participant:(WMParticipant *)participant
+                                                            create:(BOOL)create
+                                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    NSParameterAssert([woundMeasurementGroup managedObjectContext] == managedObjectContext);
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
+    if (nil != eventType) {
+        NSParameterAssert([eventType managedObjectContext] == managedObjectContext);
+    }
+    WMInterventionEvent *interventionEvent = [WMInterventionEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
+                                                                                             @"measurementGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                             woundMeasurementGroup, changeType, title, valueFrom, valueTo, eventType, participant]
+                                                                                  inContext:managedObjectContext];
+    if (create && nil == interventionEvent) {
+        interventionEvent = [WMInterventionEvent MR_createInContext:managedObjectContext];
+        interventionEvent.woundMeasurementGroup = woundMeasurementGroup;
+        interventionEvent.changeType = [NSNumber numberWithInt:changeType];
+        interventionEvent.title = title;
+        if ([valueFrom isKindOfClass:[NSString class]]) {
+            interventionEvent.valueFrom = valueFrom;
+        }
+        if ([valueTo isKindOfClass:[NSString class]]) {
+            interventionEvent.valueTo = valueTo;
+        }
+        interventionEvent.eventType = eventType;
+        interventionEvent.participant = participant;
+    }
+    return interventionEvent;
+}
+
++ (WMInterventionEvent *)interventionEventForWoundTreatmentGroup:(WMWoundTreatmentGroup *)woundTreatmentGroup
+                                                      changeType:(InterventionEventChangeType)changeType
+                                                           title:(NSString *)title
+                                                       valueFrom:(id)valueFrom
+                                                         valueTo:(id)valueTo
+                                                            type:(WMInterventionEventType *)eventType
+                                                     participant:(WMParticipant *)participant
+                                                          create:(BOOL)create
+                                            managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    WMInterventionEvent *interventionEvent = [WMInterventionEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
+                                                                                                                     @"treatmentGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                                                     woundTreatmentGroup, changeType, title, valueFrom, valueTo, eventType, participant] inContext:managedObjectContext];
+    if (create && nil == interventionEvent) {
+        interventionEvent = [WMInterventionEvent MR_createInContext:managedObjectContext];
+        interventionEvent.woundTreatmentGroup = woundTreatmentGroup;
+        interventionEvent.changeType = [NSNumber numberWithInt:changeType];
+        interventionEvent.title = title;
+        if ([valueFrom isKindOfClass:[NSString class]]) {
+            interventionEvent.valueFrom = valueFrom;
+        }
+        if ([valueTo isKindOfClass:[NSString class]]) {
+            interventionEvent.valueTo = valueTo;
+        }
         interventionEvent.eventType = eventType;
         interventionEvent.participant = participant;
     }

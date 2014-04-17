@@ -21,6 +21,7 @@
 @interface WMSelectWoundTypeViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<SelectWoundTypeViewControllerDelegate> delegate;
+@property (strong, nonatomic) WMWound *wound;
 @property (strong, nonatomic) WMWoundType *selectedWoundType;
 @property (strong, nonatomic) WMWoundType *parentWoundType;
 

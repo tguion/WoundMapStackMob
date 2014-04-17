@@ -217,11 +217,13 @@
                                                             @"flagsValue",
                                                             @"snomedCIDValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents",
+                                                            @"objectID",
                                                             @"hasInterventionEvents",
                                                             @"sortedMedications",
                                                             @"medicationsInGroup",
@@ -237,7 +239,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMMedicationGroupRelationships.interventionEvents]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

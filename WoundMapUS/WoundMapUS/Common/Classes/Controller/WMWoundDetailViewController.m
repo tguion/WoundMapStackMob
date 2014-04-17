@@ -46,6 +46,7 @@
 {
     WMSelectWoundTypeViewController *selectWoundTypeViewController = [[WMSelectWoundTypeViewController alloc] initWithNibName:@"WMSelectWoundTypeViewController" bundle:nil];
     selectWoundTypeViewController.delegate = self;
+    selectWoundTypeViewController.wound = self.wound;
     return selectWoundTypeViewController;
 }
 

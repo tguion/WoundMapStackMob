@@ -21,7 +21,7 @@
 #import "WMAmountQualifier.h"
 #import "WMWoundOdor.h"
 #import "WMInterventionEvent.h"
-#import "WMWoundMeasurementIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionEventType.h"
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"

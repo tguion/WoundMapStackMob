@@ -21,9 +21,13 @@
 #import "WMUtilities.h"
 
 @interface WMSelectWoundPositionViewController () <SimpleTableViewControllerDelegate>
+
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
 @property (strong, nonatomic) WMWoundLocationPositionJoin *selectedJoin;
 @property (readonly, nonatomic) WMSimpleTableViewController *simpleTableViewController;
 @property (weak, nonatomic) UISegmentedControl *clinicalCommonSegmentedControl;
+
 @end
 
 @interface WMSelectWoundPositionViewController (PrivateMethods)
@@ -59,6 +63,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
     [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
@@ -238,6 +247,12 @@
 - (IBAction)saveAction:(id)sender
 {
     [super saveAction:sender];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSError *error = nil;
@@ -260,6 +275,16 @@
 - (IBAction)cancelAction:(id)sender
 {
     [super cancelAction:sender];
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+        if (self.managedObjectContext.undoManager.canUndo) {
+            // this should undo the insert of new person
+            [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate selectWoundPositionViewControllerDidCancel:self];
 }
 

@@ -15,7 +15,7 @@
 #import "WMWoundTreatmentValue.h"
 #import "WMWoundTreatmentGroup.h"
 #import "WMWoundTreatmentGroup+CoreText.h"
-#import "WMWoundTreatmentIntEvent.h"
+#import "WMInterventionEvent.h"
 #import "WMInterventionStatus.h"
 #import "WMInterventionEventType.h"
 #import "WMDefinition.h"
@@ -551,7 +551,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     UIResponder *responder = [self possibleFirstResponderInCell:cell];
     if (nil == responder) {
-        [[self.view findFirstResponder] resignFirstResponder];
+        [self.view endEditing:YES];
         // check for a control
         UIControl *control = [self controlInCell:cell];
         if (nil != control) {

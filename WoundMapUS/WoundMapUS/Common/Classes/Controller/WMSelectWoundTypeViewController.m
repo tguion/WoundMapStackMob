@@ -59,6 +59,8 @@
 
 @implementation WMSelectWoundTypeViewController
 
+@synthesize wound=_wound;
+
 - (WMWoundType *)selectedWoundType
 {
     if (nil == _selectedWoundType) {
@@ -71,6 +73,7 @@
 {
     WMSelectWoundTypeViewController *selectWoundTypeViewController = [[WMSelectWoundTypeViewController alloc] initWithNibName:@"WMSelectWoundTypeViewController" bundle:nil];
     selectWoundTypeViewController.delegate = self;
+    selectWoundTypeViewController.wound = self.wound;
     return selectWoundTypeViewController;
 }
 
@@ -100,6 +103,16 @@
     [super clearDataCache];
     _selectedWoundType = nil;
     _parentWoundType = nil;
+}
+
+#pragma mark - Core
+
+- (WMWound *)wound
+{
+    if (nil == _wound) {
+        _wound = [super wound];
+    }
+    return _wound;
 }
 
 #pragma mark - BuildGroupViewController
@@ -171,15 +184,11 @@
 {
     self.selectedWoundType = woundType;
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
 }
 
 - (void)selectWoundTypeViewControllerDidCancel:(WMSelectWoundTypeViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    // clear
-    [viewController clearAllReferences];
 }
 
 #pragma mark - UITableViewDelegate
@@ -202,7 +211,7 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         UIResponder *responder = [self possibleFirstResponderInCell:cell];
         if (nil == responder) {
-            [[self.view findFirstResponder] resignFirstResponder];
+            [self.view endEditing:YES];
             // check for a control
             UIControl *control = [self controlInCell:cell];
             if (nil != control) {

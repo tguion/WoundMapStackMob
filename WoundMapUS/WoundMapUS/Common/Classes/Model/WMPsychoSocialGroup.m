@@ -333,11 +333,13 @@
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"closedFlagValue",
                                                             @"flagsValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents",
+                                                            @"objectID",
                                                             @"hasInterventionEvents",
                                                             @"psychoSocialValuesAdded",
                                                             @"psychoSocialValuesRemoved"]];
@@ -350,8 +352,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMPsychoSocialGroupRelationships.interventionEvents,
-                                                            WMPsychoSocialGroupRelationships.values]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

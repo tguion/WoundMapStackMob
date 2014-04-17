@@ -383,7 +383,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
     UIResponder *responder = ((segmentedControl.selectedSegmentIndex == 1) ? [self nextTextFieldResponder]:[self previousTextFieldResponder]);
     if (nil == responder) {
-        [[self.view findFirstResponder] resignFirstResponder];
+        [self.view endEditing:YES];
     } else {
         [responder becomeFirstResponder];
     }

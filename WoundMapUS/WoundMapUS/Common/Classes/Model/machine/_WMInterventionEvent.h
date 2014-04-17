@@ -25,6 +25,8 @@ extern const struct WMInterventionEventRelationships {
 	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *psychoSocialGroup;
 	__unsafe_unretained NSString *skinAssessmentGroup;
+	__unsafe_unretained NSString *woundMeasurementGroup;
+	__unsafe_unretained NSString *woundTreatmentGroup;
 } WMInterventionEventRelationships;
 
 extern const struct WMInterventionEventFetchedProperties {
@@ -37,6 +39,8 @@ extern const struct WMInterventionEventFetchedProperties {
 @class WMParticipant;
 @class WMPsychoSocialGroup;
 @class WMSkinAssessmentGroup;
+@class WMWoundMeasurementGroup;
+@class WMWoundTreatmentGroup;
 
 
 
@@ -215,6 +219,20 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMWoundMeasurementGroup *woundMeasurementGroup;
+
+//- (BOOL)validateWoundMeasurementGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMWoundTreatmentGroup *woundTreatmentGroup;
+
+//- (BOOL)validateWoundTreatmentGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -321,6 +339,16 @@ extern const struct WMInterventionEventFetchedProperties {
 
 - (WMSkinAssessmentGroup*)primitiveSkinAssessmentGroup;
 - (void)setPrimitiveSkinAssessmentGroup:(WMSkinAssessmentGroup*)value;
+
+
+
+- (WMWoundMeasurementGroup*)primitiveWoundMeasurementGroup;
+- (void)setPrimitiveWoundMeasurementGroup:(WMWoundMeasurementGroup*)value;
+
+
+
+- (WMWoundTreatmentGroup*)primitiveWoundTreatmentGroup;
+- (void)setPrimitiveWoundTreatmentGroup:(WMWoundTreatmentGroup*)value;
 
 
 @end

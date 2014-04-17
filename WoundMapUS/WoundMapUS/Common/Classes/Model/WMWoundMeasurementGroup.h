@@ -7,7 +7,7 @@ extern NSString * const kDimensionLengthWoundMeasurementTitle;
 extern NSString * const kDimensionDepthWoundMeasurementTitle;
 extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
-@class WMPatient, WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue, WMWoundMeasurementIntEvent, WMParticipant;
+@class WMPatient, WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue, WMInterventionEvent, WMParticipant;
 
 @interface WMWoundMeasurementGroup : _WMWoundMeasurementGroup {}
 
@@ -38,14 +38,14 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
 - (void)normalizeInputsForParentWoundMeasurement:(WMWoundMeasurement *)parentWoundMeasurement;
 
-- (WMWoundMeasurementIntEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
-                                                         title:(NSString *)title
-                                                     valueFrom:(id)valueFrom
-                                                       valueTo:(id)valueTo
-                                                          type:(WMInterventionEventType *)type
-                                                   participant:(WMParticipant *)participant
-                                                        create:(BOOL)create
-                                          managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                  title:(NSString *)title
+                                              valueFrom:(id)valueFrom
+                                                valueTo:(id)valueTo
+                                                   type:(WMInterventionEventType *)type
+                                            participant:(WMParticipant *)participant
+                                                 create:(BOOL)create
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 - (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 
 @property (readonly, nonatomic) BOOL isClosed;

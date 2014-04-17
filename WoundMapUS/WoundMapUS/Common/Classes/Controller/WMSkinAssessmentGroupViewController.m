@@ -336,7 +336,7 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
+        if (error && counter) {
             counter = 0;
             block();
         } else {
