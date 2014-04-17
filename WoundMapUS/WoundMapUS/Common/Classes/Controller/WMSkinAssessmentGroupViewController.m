@@ -353,8 +353,10 @@
         }
         // else
         ++counter;
+        ++counter;
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.interventionEvents onComplete:completionHandler];
         }];
     }
     for (WMSkinAssessmentValue *value in _skinAssessmentGroup.values) {

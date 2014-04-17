@@ -7,7 +7,6 @@
 //
 
 #import "WMNavigationPatientPhotoButton.h"
-#import "WMPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMPhotoManager.h"
 #import "WMNavigationCoordinator.h"
@@ -21,21 +20,12 @@
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 @property (readonly, nonatomic) WMPhotoManager *photoManager;
 @property (readonly, nonatomic) WMPatient *patient;
-@property (weak, nonatomic) WMPatientPhotoImageView *patientImageView;
 @property (nonatomic) CGFloat overlayAlpha;
 @property (strong, nonatomic) NSDictionary *navigationNodeTitleAttributes;
 
 @end
 
 @implementation WMNavigationPatientPhotoButton
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    WMPatientPhotoImageView *patientImageView = [[WMPatientPhotoImageView alloc] initWithFrame:self.imageRect];
-    [self addSubview:patientImageView];
-    _patientImageView = patientImageView;
-}
 
 - (WCAppDelegate *)appDelegate
 {
@@ -99,7 +89,6 @@
 - (void)updateForPatient:(WMPatient *)patient
 {
     self.overlayAlpha = (nil == patient.thumbnail ? 1.0:0.05);
-    [self.patientImageView updateForPatient:patient];
     [self setNeedsDisplay];
 }
                                                  

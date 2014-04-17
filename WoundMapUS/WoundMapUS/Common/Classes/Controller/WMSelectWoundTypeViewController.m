@@ -183,6 +183,14 @@
 - (void)selectWoundTypeViewController:(WMSelectWoundTypeViewController *)viewController didSelectWoundType:(WMWoundType *)woundType
 {
     self.selectedWoundType = woundType;
+    if (woundType.parent) {
+        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:woundType.parent];
+        if (indexPath) {
+            [self.tableView beginUpdates];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView endUpdates];
+        }
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

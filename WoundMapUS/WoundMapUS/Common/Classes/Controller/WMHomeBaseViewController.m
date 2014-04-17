@@ -668,7 +668,9 @@
         [self.tableView endUpdates];
     }
     // update other UI
-    self.parentNavigationNode = nil;
+    [self updateTitle];
+    [self updateToolbar];
+    [self updateNavigationBar];
     self.breadcrumbLabel.text = self.breadcrumbString;
     [self.compassView updateForPatient:self.patient];
     self.compassView.navigationNodeControls = self.navigationNodeControls;
@@ -980,6 +982,7 @@
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WMNavigationNode *navigationNode = navigationNodeButton.navigationNode;
+    self.parentNavigationNode = navigationNode;
     if ([navigationNode.subnodes count] > 0) {
         // this should have subnodes, just being anal
         [self animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];

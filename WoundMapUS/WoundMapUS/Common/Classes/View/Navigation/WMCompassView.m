@@ -8,6 +8,7 @@
 
 #import "WMCompassView.h"
 #import "WMNavigationNodeButton.h"
+#import "WMPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMNavigationPatientPhotoButton.h"
@@ -33,6 +34,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 @property (readonly, nonatomic) WMPolicyManager *policyManager;
 @property (strong, nonatomic) NSArray *previousNavigationNodeControls;
 @property (assign, nonatomic) BOOL navigationNodeControlsActiveFlag;            // YES is nav controls are in active position
+@property (weak, nonatomic) WMPatientPhotoImageView *patientImageView;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 
 @property (nonatomic) CGRect compassImageViewFrame;                             // acquire before transforms
@@ -60,6 +62,9 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 {
     [super awakeFromNib];
     self.rotationState = MapBaseRotationDirection_East;
+    WMPatientPhotoImageView *patientImageView = [[WMPatientPhotoImageView alloc] initWithFrame:CGRectInset(self.patientPhotoView.frame, 10.0, 10.0)];
+    [self insertSubview:patientImageView belowSubview:self.patientPhotoView];
+    _patientImageView = patientImageView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -115,6 +120,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 - (void)updateForPatient:(WMPatient *)patient
 {
+    [self.patientImageView updateForPatient:patient];
     [self.patientPhotoView updateForPatient:patient];
 }
 

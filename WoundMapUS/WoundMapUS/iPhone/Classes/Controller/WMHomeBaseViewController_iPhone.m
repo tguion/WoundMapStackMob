@@ -87,7 +87,6 @@
 // the action depends on parentNavigationNode
 - (IBAction)takePatientPhotoAction:(id)sender
 {
-    [super takePatientPhotoAction:sender];
     if (nil == self.parentNavigationNode) {
         // we are home, so take photo
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.takePatientPhotoViewController];
@@ -96,6 +95,7 @@
             // nothing
         }];
     }
+    [super takePatientPhotoAction:sender];
 }
 
 #pragma mark - Model/View synchronization
