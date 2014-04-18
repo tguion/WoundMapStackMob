@@ -76,7 +76,7 @@
     return medicationCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Medications" withExtension:@"plist"];
@@ -104,8 +104,8 @@
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, medicationCategoryObjectIDs, [WMMedicationCategory entityName]);
-            completionHandler(nil, medicationObjectIDs, [WMMedication entityName]);
+            completionHandler(nil, medicationCategoryObjectIDs, [WMMedicationCategory entityName], nil);
+            completionHandler(nil, medicationObjectIDs, [WMMedication entityName], nil);
         }
     }
 }

@@ -7,7 +7,9 @@ extern NSString * const kBradenScaleTitle;
 
 @interface WMBradenScale : _WMBradenScale {}
 
-+ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient handler:(WMProcessCallback)handler;
++ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient;
++ (void)populateBradenScaleSections:(WMBradenScale *)bradenScale;
++ (void)populateBradenSectionCells:(WMBradenSection *)bradenSection;
 
 + (WMBradenScale *)latestBradenScale:(WMPatient *)patient create:(BOOL)create;
 + (WMBradenScale *)latestCompleteBradenScale:(WMPatient *)patient;

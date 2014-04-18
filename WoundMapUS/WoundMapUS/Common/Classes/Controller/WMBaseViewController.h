@@ -55,6 +55,7 @@
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
 - (void)refreshTable;                                                       // refetch using FatFractal
 @property (readonly, nonatomic) NSString *ffQuery;                          // query string that fetches same as predicate from FatFractal
+@property (strong, nonatomic) dispatch_block_t refreshCompletionHandler;    // block to call after table auto refreshes
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource
 - (NSIndexPath *)indexPathTableToFetchedResultsController:(NSIndexPath *)indexPath;

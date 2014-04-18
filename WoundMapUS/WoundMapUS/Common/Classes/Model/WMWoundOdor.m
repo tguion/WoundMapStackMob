@@ -29,7 +29,7 @@
     return woundOdor;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundOdor" withExtension:@"plist"];
@@ -59,7 +59,7 @@
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundOdor entityName]);
+            completionHandler(nil, objectIDs, [WMWoundOdor entityName], nil);
         }
     }
 }

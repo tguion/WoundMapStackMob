@@ -47,7 +47,7 @@
     return participantType;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"RoleType" withExtension:@"plist"];
@@ -77,7 +77,7 @@
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMParticipantType entityName]);
+            completionHandler(nil, objectIDs, [WMParticipantType entityName], nil);
         }
     }
 }

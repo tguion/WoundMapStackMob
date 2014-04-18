@@ -60,7 +60,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     return [WMWoundType MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundType" withExtension:@"plist"];
@@ -88,7 +88,7 @@ NSString * const kOtherWoundTypeTitle = @"Other";
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundType entityName]);
+            completionHandler(nil, objectIDs, [WMWoundType entityName], nil);
         }
     }
 }

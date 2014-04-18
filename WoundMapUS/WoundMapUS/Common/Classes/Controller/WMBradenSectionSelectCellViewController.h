@@ -21,6 +21,7 @@
 @property (weak, nonatomic) id<BradenCellSelectionDelegate> delegate;
 
 @property (strong, nonatomic) WMBradenSection *bradenSection;
+@property (nonatomic) BOOL newBradenScaleFlag;
 @property (strong, nonatomic) WMBradenCell *selectedBradenCell;
 
 @end

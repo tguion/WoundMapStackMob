@@ -163,7 +163,7 @@ typedef enum {
     return treatment;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundTreatment" withExtension:@"plist"];
@@ -210,7 +210,7 @@ typedef enum {
             [self reportWoundTreatmentHierarchy:woundTreatment indent:0 recurs:NO];
         }
         NSLog(@"*** WMWoundTreatment Hierarchy Report by objectID End ***");
-        completionHandler(nil, objectIDs, [WMWoundTreatment entityName]);
+        completionHandler(nil, objectIDs, [WMWoundTreatment entityName], nil);
     }
 }
 

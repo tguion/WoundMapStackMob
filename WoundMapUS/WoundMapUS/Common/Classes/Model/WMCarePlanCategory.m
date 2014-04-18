@@ -169,7 +169,7 @@ typedef enum {
     return [NSSet setWithArray:[WMCarePlanCategory MR_findAllInContext:managedObjectContext]];
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"CarePlan" withExtension:@"plist"];
@@ -194,7 +194,7 @@ typedef enum {
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMCarePlanCategory entityName]);
+            completionHandler(nil, objectIDs, [WMCarePlanCategory entityName], nil);
         }
     }
 }

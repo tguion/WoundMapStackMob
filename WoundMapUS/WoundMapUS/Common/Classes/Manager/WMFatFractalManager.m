@@ -482,7 +482,7 @@
                                     }];
                                 }
                                 // seed team with navigation track, stage, node 1
-                                [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection) {
+                                [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
                                     // update backend
                                     NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
                                     for (NSManagedObjectID *objectID in objectIDs) {

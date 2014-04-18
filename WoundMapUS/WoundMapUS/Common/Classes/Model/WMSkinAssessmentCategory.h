@@ -3,7 +3,7 @@
 
 @interface WMSkinAssessmentCategory : _WMSkinAssessmentCategory {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (WMSkinAssessmentCategory *)skinAssessmentCategoryForTitle:(NSString *)title
                                                       create:(BOOL)create

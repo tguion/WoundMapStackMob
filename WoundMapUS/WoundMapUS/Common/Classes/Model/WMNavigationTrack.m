@@ -92,7 +92,7 @@ typedef enum {
 }
 
 // first attempt to find WMNavigationTrack data in index store
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
@@ -126,13 +126,13 @@ typedef enum {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         NSArray *objects = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
         NSArray *objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationTrack entityName]);
+        completionHandler(nil, objectIDs, [WMNavigationTrack entityName], nil);
         objects = [WMNavigationStage MR_findAllInContext:managedObjectContext];
         objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationStage entityName]);
+        completionHandler(nil, objectIDs, [WMNavigationStage entityName], nil);
         objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
         objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+        completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
         while (YES) {
             objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", objects] inContext:managedObjectContext];
             if ([objects count] == 0) {
@@ -140,7 +140,7 @@ typedef enum {
             }
             // else
             objectIDs = [objects valueForKeyPath:@"objectID"];
-            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+            completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
         }
     }
 }

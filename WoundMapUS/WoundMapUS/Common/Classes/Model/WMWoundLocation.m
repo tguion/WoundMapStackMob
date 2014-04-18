@@ -133,7 +133,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
     }
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"AnatomicLocation" withExtension:@"plist"];
@@ -156,7 +156,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         [self updateWoundLocationsFromArray:locations managedObjectContext:managedObjectContext objectIDs:objectIDs];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundLocation entityName]);
+            completionHandler(nil, objectIDs, [WMWoundLocation entityName], nil);
         }
         id qualifiers = [propertyList objectForKey:@"Qualifier"];
         NSAssert1([qualifiers isKindOfClass:[NSArray class]], @"Qualifier is not an NSArray, class was %@", NSStringFromClass([locations class]));
@@ -164,7 +164,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         [self updateWoundLocationQualifiersFromArray:qualifiers managedObjectContext:managedObjectContext objectIDs:objectIDs];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundPosition entityName]);
+            completionHandler(nil, objectIDs, [WMWoundPosition entityName], nil);
         }
         id joins = [propertyList objectForKey:@"Joins"];
         NSAssert1([joins isKindOfClass:[NSArray class]], @"Joins is not an NSArray, class was %@", NSStringFromClass([locations class]));
@@ -172,7 +172,7 @@ NSString * const kOtherWoundLocationTitle = @"Other";
         [self updateLocationQualifierJoinsFromArray:joins managedObjectContext:managedObjectContext objectIDs:objectIDs];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundLocationPositionJoin entityName]);
+            completionHandler(nil, objectIDs, [WMWoundLocationPositionJoin entityName], nil);
         }
     }
 }

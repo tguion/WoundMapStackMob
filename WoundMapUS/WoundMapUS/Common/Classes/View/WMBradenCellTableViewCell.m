@@ -109,7 +109,7 @@
 - (void)setExpandedFlag:(BOOL)expandedFlag
 {
     _expandedFlag = expandedFlag;
-    [self.button setImage:[UIImage imageNamed:(self.expandedFlag ? @"ui_up.png":@"ui_down.png")] forState:UIControlStateNormal];
+    [self.button setImage:[UIImage imageNamed:(self.expandedFlag ? @"ui_up":@"ui_down")] forState:UIControlStateNormal];
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -121,7 +121,7 @@
         aButton.tag = 1000;
         aButton.opaque = YES;
         [aButton addTarget:self action:@selector(expandedButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [aButton setImage:[UIImage imageNamed:(self.expandedFlag ? @"ui_up.png":@"ui_down.png")] forState:UIControlStateNormal];
+        [aButton setImage:[UIImage imageNamed:(self.expandedFlag ? @"ui_up":@"ui_down")] forState:UIControlStateNormal];
         [self.customContentView addSubview:aButton];
         self.button = aButton;
     }
@@ -131,7 +131,7 @@
 - (IBAction)expandedButtonAction:(id)sender
 {
     self.expandedFlag = !self.expandedFlag;
-    [self.button setImage:[UIImage imageNamed:(self.expandedFlag ? @"ui_up.png":@"ui_down.png")] forState:UIControlStateNormal];
+    [self.button setImage:[UIImage imageNamed:(self.expandedFlag ? @"ui_up":@"ui_down")] forState:UIControlStateNormal];
     [self.delegate updateExpandedMapForBradenSection:self.bradenSection expanded:self.expandedFlag];
     [self setNeedsLayout];
 }

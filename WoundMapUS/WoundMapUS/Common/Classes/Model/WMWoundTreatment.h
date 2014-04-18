@@ -15,7 +15,7 @@
 - (NSString *)combineKeyAndValue:(NSString *)value;
 - (void)aggregateWoundTreatments:(NSMutableSet *)set;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 + (void)reportWoundTreatments:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMWoundTreatment *)woundTreatmentForTitle:(NSString *)title

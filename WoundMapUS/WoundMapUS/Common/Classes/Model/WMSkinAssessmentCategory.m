@@ -72,7 +72,7 @@
     return skinInspectionCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"SkinAssessment" withExtension:@"plist"];
@@ -100,8 +100,8 @@
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, skinAssessmentCategoryObjectIDs, [WMSkinAssessmentCategory entityName]);
-            completionHandler(nil, skinAssessmentObjectIDs, [WMSkinAssessment entityName]);
+            completionHandler(nil, skinAssessmentCategoryObjectIDs, [WMSkinAssessmentCategory entityName], nil);
+            completionHandler(nil, skinAssessmentObjectIDs, [WMSkinAssessment entityName], nil);
         }
     }
 }

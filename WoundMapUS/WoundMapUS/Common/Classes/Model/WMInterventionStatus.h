@@ -13,7 +13,7 @@ extern NSString * const kInterventionStatusNotAdopted;
 @property (readonly, nonatomic) BOOL isActive;
 @property (readonly, nonatomic) BOOL isInProcess;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (WMInterventionStatus *)initialInterventionStatus:(NSManagedObjectContext *)managedObjectContext;
 + (WMInterventionStatus *)completedInterventionStatus:(NSManagedObjectContext *)managedObjectContext;

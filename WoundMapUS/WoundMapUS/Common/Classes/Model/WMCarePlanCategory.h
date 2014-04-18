@@ -15,7 +15,7 @@
 - (NSString *)combineKeyAndValue:(NSString *)value;
 - (void)aggregateSubcategories:(NSMutableSet *)set;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (NSArray *)sortedRootCarePlanCategories:(NSManagedObjectContext *)managedObjectContext;
 + (NSSet *)carePlanCategories:(NSManagedObjectContext *)managedObjectContext;

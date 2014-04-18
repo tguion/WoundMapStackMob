@@ -1,6 +1,7 @@
 #import "WMDeviceCategory.h"
 #import "WMDevice.h"
 #import "WMWoundType.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 
 @interface WMDeviceCategory ()
@@ -38,33 +39,37 @@
 }
 
 // Restrict to
-+ (WMDeviceCategory *)updateDeviceCategoryFromDictionary:(NSDictionary *)dictionary
-                                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext
++ (WMDeviceCategory *)updateDeviceCategory:(WMDeviceCategory *)deviceCategory
+                            fromDictionary:(NSDictionary *)dictionary
+                      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    id title = [dictionary objectForKey:@"title"];
-    WMDeviceCategory *deviceCategory = [self deviceCategoryForTitle:title
-                                                             create:YES
-                                               managedObjectContext:managedObjectContext];
-    deviceCategory.definition = [dictionary objectForKey:@"definition"];
-    deviceCategory.loincCode = [dictionary objectForKey:@"LOINC Code"];
-    deviceCategory.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
-    deviceCategory.snomedFSN = [dictionary objectForKey:@"SNOMED CT FSN"];
-    deviceCategory.sortRank = [dictionary objectForKey:@"sortRank"];
-    id woundTypeCodes = [dictionary objectForKey:@"woundTypeCodes"];
-    if ([woundTypeCodes isKindOfClass:[NSString class]]) {
-        NSArray *typeCodes = [woundTypeCodes componentsSeparatedByString:@","];
-        NSMutableSet *set = [NSMutableSet set];
-        for (id typeCode in typeCodes) {
-            NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
-                                                     managedObjectContext:managedObjectContext];
-            [set addObjectsFromArray:woundTypes];
+    if (nil == deviceCategory) {
+        id title = [dictionary objectForKey:@"title"];
+        deviceCategory = [self deviceCategoryForTitle:title
+                                               create:YES
+                                 managedObjectContext:managedObjectContext];
+        deviceCategory.definition = [dictionary objectForKey:@"definition"];
+        deviceCategory.loincCode = [dictionary objectForKey:@"LOINC Code"];
+        deviceCategory.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
+        deviceCategory.snomedFSN = [dictionary objectForKey:@"SNOMED CT FSN"];
+        deviceCategory.sortRank = [dictionary objectForKey:@"sortRank"];
+        id woundTypeCodes = [dictionary objectForKey:@"woundTypeCodes"];
+        if ([woundTypeCodes isKindOfClass:[NSString class]]) {
+            NSArray *typeCodes = [woundTypeCodes componentsSeparatedByString:@","];
+            NSMutableSet *set = [NSMutableSet set];
+            for (id typeCode in typeCodes) {
+                NSArray *woundTypes = [WMWoundType woundTypesForWoundTypeCode:[typeCode integerValue]
+                                                         managedObjectContext:managedObjectContext];
+                [set addObjectsFromArray:woundTypes];
+            }
+            [deviceCategory setWoundTypes:set];
         }
-        [deviceCategory setWoundTypes:set];
+        return deviceCategory;
     }
-    // devices
+    // else devices
     id devices = [dictionary objectForKey:@"devices"];
     for (NSDictionary *d in devices) {
-        title = [d objectForKey:@"title"];
+        id title = [d objectForKey:@"title"];
         WMDevice *device = [WMDevice deviceForTitle:title create:YES managedObjectContext:managedObjectContext];
         device.definition = [d objectForKey:@"definition"];
         device.sortRank = [d objectForKey:@"sortRank"];
@@ -81,7 +86,7 @@
     return deviceCategory;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Devices" withExtension:@"plist"];
@@ -99,15 +104,40 @@
                                                                       error:&error];
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
+        NSMutableArray *deviceCategories = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            WMDeviceCategory *deviceCategory = [self updateDeviceCategoryFromDictionary:dictionary managedObjectContext:managedObjectContext];
+            WMDeviceCategory *deviceCategory = [self updateDeviceCategory:nil fromDictionary:dictionary managedObjectContext:managedObjectContext];
             [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[deviceCategory objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[deviceCategory objectID]];
+            [deviceCategories addObject:deviceCategory];
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMDeviceCategory entityName]);
+            completionHandler(nil, objectIDs, [WMDeviceCategory entityName], nil);
+        }
+        NSInteger index = 0;
+        objectIDs = [[NSMutableArray alloc] init];
+        for (NSDictionary *dictionary in propertyList) {
+            WMDeviceCategory *deviceCategory = [deviceCategories objectAtIndex:index++];
+            [self updateDeviceCategory:deviceCategory fromDictionary:dictionary managedObjectContext:managedObjectContext];
+            [managedObjectContext MR_saveOnlySelfAndWait];
+            [objectIDs addObjectsFromArray:[[deviceCategory.devices allObjects] valueForKey:@"objectID"]];
+        }
+        if (completionHandler) {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            dispatch_block_t block = ^{
+                NSError *error = nil;
+                for (WMDeviceCategory *deviceCategory in deviceCategories) {
+                    for (WMDevice *device in deviceCategory.devices) {
+                        [ff grabBagAdd:device to:deviceCategory grabBagName:WMDeviceCategoryRelationships.devices error:&error];
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                    }
+                }
+            };
+            completionHandler(nil, objectIDs, [WMDevice entityName], block);
         }
     }
 }
@@ -131,7 +161,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMDeviceCategoryRelationships.devices]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

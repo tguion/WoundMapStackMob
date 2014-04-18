@@ -8,10 +8,17 @@
 
 #import "WMBradenSectionSelectCellViewController.h"
 #import "WMBradenCellSelectTableViewCell.h"
+#import "MBProgressHUD.h"
+#import "WMFatFractal.h"
+#import "WMFatFractalManager.h"
+#import "WMBradenScale.h"
 #import "WMBradenSection.h"
 #import "WMBradenCell.h"
+#import "WMUtilities.h"
 
 @interface WMBradenSectionSelectCellViewController ()
+
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @end
 
@@ -26,8 +33,63 @@
     if (self) {
         self.modalInPopover = YES;
         self.preferredContentSize = CGSizeMake(320.0, 460.0);
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            if (!weakSelf.newBradenScaleFlag) {
+                // we want to support cancel, so make sure we have an undoManager
+                if (nil == weakSelf.managedObjectContext.undoManager) {
+                    weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                    weakSelf.removeUndoManagerWhenDone = YES;
+                }
+                [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
+            }
+        };
     }
     return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    if (_newBradenScaleFlag) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        // create and save to back end
+        NSParameterAssert(_bradenSection);
+        NSParameterAssert(_bradenSection.ffUrl);
+        NSParameterAssert([_bradenSection.cells count] == 0);
+        [WMBradenScale populateBradenSectionCells:_bradenSection];
+        __block NSInteger counter = [_bradenSection.cells count];
+        FFHttpMethodCompletion handler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                --counter;
+                if (counter == 0) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                }
+            }
+        };
+        for (WMBradenCell *bradenCell in _bradenSection.cells) {
+            [ff createObj:bradenCell
+                    atUri:[NSString stringWithFormat:@"/%@", [WMBradenCell entityName]]
+               onComplete:handler
+                onOffline:handler];
+        }
+    } else {
+        // make sure we have the data from back end will be handled by fetchedResultsControllerDidFetch
+        if ([_bradenSection.cells count]) {
+            [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == self.managedObjectContext.undoManager) {
+                self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [self.managedObjectContext.undoManager beginUndoGrouping];
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -43,11 +105,6 @@
 }
 
 #pragma mark - BaseViewController
-
-- (void)updateTitle
-{
-    // nothing
-}
 
 - (void)clearDataCache
 {
@@ -71,6 +128,15 @@
 - (NSArray *)fetchedResultsControllerSortDescriptors
 {
 	return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"value" ascending:YES]];
+}
+
+- (NSString *)ffQuery
+{
+    if (_bradenSection.ffUrl) {
+        return [NSString stringWithFormat:@"%@/cells", _bradenSection.ffUrl];
+    }
+    // else
+    return nil;
 }
 
 #pragma mark - UITableViewDataSource

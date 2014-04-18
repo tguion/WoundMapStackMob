@@ -9,7 +9,7 @@
 @property (nonatomic) BOOL allowMultipleChildSelection;
 @property (readonly, nonatomic) NSInteger updatedScore;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (NSArray *)sortedPsychoSocialItemsForParentItem:(WMPsychoSocialItem *)parentItem
                              managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

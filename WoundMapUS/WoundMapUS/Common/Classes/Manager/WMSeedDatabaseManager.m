@@ -103,7 +103,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     __block NSInteger counter = 0;
-    WMProcessCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection) {
+    WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
         // update backend from main thread
         NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
         for (NSManagedObjectID *objectID in objectIDs) {
@@ -111,6 +111,9 @@
             NSLog(@"*** WoundMap: Will create collection backend: %@", object);
             [ff createObj:object atUri:ffUrl];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
+        if (callBack) {
+            callBack();
         }
         --counter;
         if (counter == 0) {

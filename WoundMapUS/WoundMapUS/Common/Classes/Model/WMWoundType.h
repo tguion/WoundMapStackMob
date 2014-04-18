@@ -25,7 +25,7 @@ typedef enum {
 @property (readonly, nonatomic) BOOL childrenHaveSectionTitles;
 @property (readonly, nonatomic) NSString *titleForDisplay;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (NSInteger)woundTypeCount:(NSManagedObjectContext *)managedObjectContext;
 

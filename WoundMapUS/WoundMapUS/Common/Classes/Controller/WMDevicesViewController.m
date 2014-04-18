@@ -9,6 +9,9 @@
 #import "WMDevicesViewController.h"
 #import "WMDevicesGroupHistoryViewContoller.h"
 #import "WMDevicesSummaryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMParticipant.h"
+#import "WMPatient.h"
 #import "WMDeviceCategory.h"
 #import "WMDevice.h"
 #import "WMDeviceGroup.h"
@@ -17,11 +20,14 @@
 #import "WMInterventionStatus.h"
 #import "WMDefinition.h"
 #import "WMWound.h"
+#import "WMFatFractal.h"
 #import "WMDesignUtilities.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 @interface WMDevicesViewController ()
+
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (readonly, nonatomic) WMDevicesGroupHistoryViewContoller *devicesGroupHistoryViewContoller;
 @property (readonly, nonatomic) WMDevicesSummaryViewController *devicesSummaryViewController;
@@ -30,12 +36,32 @@
 
 @implementation WMDevicesViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.modalInPopover = YES;
+        self.preferredContentSize = CGSizeMake(320.0, 380.0);
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            if (!weakSelf.didCreateGroup) {
+                // we want to support cancel, so make sure we have an undoManager
+                if (nil == weakSelf.managedObjectContext.undoManager) {
+                    weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                    weakSelf.removeUndoManagerWhenDone = YES;
+                }
+                [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
+            }
+        };
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Devices";
-    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -149,10 +175,30 @@
     } else if (nil != deviceValue) {
         [self.deviceGroup removeValuesObject:deviceValue];
         [self.managedObjectContext deleteObject:deviceValue];
+        [self deleteDeviceValuesFromBackEnd:@[deviceValue]];
     }
 }
 
 #pragma mark - Core
+
+- (void)deleteDeviceValuesFromBackEnd:(NSArray *)deviceValues
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    for (WMDeviceValue *deviceValue in deviceValues) {
+        if (deviceValue.ffUrl) {
+            [ff deleteObj:deviceValue
+               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                   if (error) {
+                       [WMUtilities logError:error];
+                   }
+               } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                   if (error) {
+                       [WMUtilities logError:error];
+                   }
+               }];
+        }
+    }
+}
 
 - (WMDeviceGroup *)deviceGroup
 {
@@ -171,6 +217,27 @@
                                                             managedObjectContext:self.managedObjectContext];
         DLog(@"Created event %@", event.eventType.title);
         self.deviceGroup = deviceGroup;
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        __weak __typeof(&*self)weakSelf = self;
+        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:deviceGroup.ffUrl
+                             toObjAtFfUrl:weakSelf.patient.ffUrl
+                              grabBagName:WMPatientRelationships.deviceGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            }
+        };
+        [ff createObj:deviceGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMDeviceGroup entityName]]
+           onComplete:block
+            onOffline:block];
     }
     return _deviceGroup;
 }
@@ -214,21 +281,82 @@
     }
     if (self.didCreateGroup) {
         [self.managedObjectContext deleteObject:self.deviceGroup];
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSError *error = nil;
+        [ff grabBagRemove:_deviceGroup from:self.patient grabBagName:WMPatientRelationships.deviceGroups error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff deleteObj:_deviceGroup error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
     }
-    // TODO finish
     [self.delegate devicesViewControllerDidCancel:self];
 }
 
 - (IBAction)saveAction:(id)sender
 {
+    if ([_deviceGroup.values count] == 0) {
+        [self cancelAction:sender];
+        return;
+    }
+    // else
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
     [super saveAction:sender];
     // create intervention events before super
     [self.deviceGroup createEditEventsForParticipant:self.appDelegate.participant];
-    // TODO finish
-    [self.delegate devicesViewControllerDidSave:self];
+    // update backend
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        WM_ASSERT_MAIN_THREAD;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf.delegate devicesViewControllerDidSave:weakSelf];
+    };
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error && counter) {
+            counter = 0;
+            block();
+        } else {
+            --counter;
+            if (counter == 0) {
+                block();
+            }
+        }
+    };
+    WMParticipant *participant = self.appDelegate.participant;
+    for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
+        if (interventionEvent.ffUrl) {
+            continue;
+        }
+        // else
+        ++counter;
+        ++counter;
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.interventionEvents onComplete:completionHandler];
+        }];
+    }
+    for (WMDeviceValue *value in _deviceGroup.values) {
+        if (value.ffUrl) {
+            continue;
+        }
+        // else
+        ++counter;
+        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMDeviceValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.values onComplete:completionHandler];
+        }];
+    }
+    ++counter;
+    [ff updateObj:_deviceGroup onComplete:completionHandler];
 }
 
 #pragma mark - InterventionStatusViewControllerDelegate
@@ -337,6 +465,7 @@
                     [self.deviceGroup removeValuesObject:value];
                     [self.managedObjectContext deleteObject:value];
                 }
+                [self deleteDeviceValuesFromBackEnd:values];
             } else {
                 refreshTableView = [self.deviceGroup removeExcludesOtherValues];
             }
@@ -349,6 +478,7 @@
             // unselect - remove
             [self.deviceGroup removeValuesObject:deviceValue];
             [self.managedObjectContext deleteObject:deviceValue];
+            [self deleteDeviceValuesFromBackEnd:@[deviceValue]];
         }
         // allow multiple selection
         if (refreshTableView) {
@@ -374,6 +504,11 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"/%@", [WMDevice entityName]];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

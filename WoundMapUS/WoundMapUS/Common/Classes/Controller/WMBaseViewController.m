@@ -314,16 +314,22 @@
 
 - (void)refreshTable
 {
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     NSString *query = self.ffQuery;
+    if (nil == query) {
+        return;
+    }
+    // else
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;
     [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            [weakSelf.refreshControl endRefreshing];
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-        }];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf.refreshControl endRefreshing];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (weakSelf.refreshCompletionHandler) {
+            weakSelf.refreshCompletionHandler();
+        }
     }];
 }
 

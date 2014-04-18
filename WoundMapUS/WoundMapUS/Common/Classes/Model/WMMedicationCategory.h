@@ -3,7 +3,7 @@
 
 @interface WMMedicationCategory : _WMMedicationCategory {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (WMMedicationCategory *)medicationCategoryForTitle:(NSString *)title
                                               create:(BOOL)create

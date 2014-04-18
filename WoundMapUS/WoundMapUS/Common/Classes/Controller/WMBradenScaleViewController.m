@@ -79,8 +79,8 @@
 - (void)navigateToBradenScaleEditor:(BOOL)animated
 {
     WMBradenScaleInputViewController *bradenScaleInputViewController = self.bradenScaleInputViewController;
-    bradenScaleInputViewController.bradenScale = self.bradenScale;
     bradenScaleInputViewController.newBradenScaleFlag = self.didCreateBradenScale;
+    bradenScaleInputViewController.bradenScale = self.bradenScale;
 	[self.navigationController pushViewController:bradenScaleInputViewController animated:animated];
 }
 
@@ -89,50 +89,20 @@
 - (IBAction)addBradenScaleAction:(id)sender
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    __block NSInteger counter = 0;
-    __weak __typeof(&*self)weakSelf = self;
-    FFHttpMethodCompletion grabBagHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            --counter;
-            if (counter == 0) {
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                [weakSelf navigateToBradenScaleEditor:YES];
-            }
-        }
-    };
-    FFHttpMethodCompletion createHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            if ([object isKindOfClass:[WMBradenScale class]]) {
-                --counter;
-            } else if ([object isKindOfClass:[WMBradenSection class]]) {
-                [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
-                             toObjAtFfUrl:[object valueForKeyPath:@"bradenScale.ffUrl"]
-                              grabBagName:WMBradenScaleRelationships.sections
-                               onComplete:grabBagHandler];
-            } else if ([object isKindOfClass:[WMBradenCell class]]) {
-                [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
-                             toObjAtFfUrl:[object valueForKeyPath:@"section.ffUrl"]
-                              grabBagName:WMBradenScaleRelationships.sections
-                               onComplete:grabBagHandler];
-            }
-        }
-    };
-    WMProcessCallback callback = ^(NSError *error, NSArray *objectIDs, NSString *collection) {
-        // update backend from main thread
-        counter = [objectIDs count];
-        for (NSManagedObjectID *objectID in objectIDs) {
-            NSManagedObject *object = [managedObjectContext objectWithID:objectID];
-            NSString *ffUrl = [NSString stringWithFormat:@"/%@", [[object entity] name]];
-            [ff createObj:object atUri:ffUrl onComplete:createHandler];
-        }
-    };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-	self.bradenScale = [WMBradenScale createNewBradenScaleForPatient:self.patient handler:callback];
+	_bradenScale = [WMBradenScale createNewBradenScaleForPatient:self.patient];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff createObj:_bradenScale
+            atUri:[NSString stringWithFormat:@"/%@", [WMBradenScale entityName]]
+       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+           [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
+                        toObjAtFfUrl:weakSelf.patient.ffUrl
+                         grabBagName:WMPatientRelationships.bradenScales
+                          onComplete: ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                              [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                              [weakSelf navigateToBradenScaleEditor:YES];
+                          }];
+       }];
     self.didCreateBradenScale = YES;
 }
 
@@ -160,23 +130,32 @@
     }
     // else update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion updateHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
+        } else {
+            --counter;
+            if (counter == 0) {
+                // save local
+                NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+                weakSelf.didCreateBradenScale = NO;
+            }
         }
     };
     for (WMBradenSection *bradenSection in _bradenScale.sections) {
+        ++counter;
         for (WMBradenCell *bradenCell in bradenSection.cells) {
+            ++counter;
             [ff updateObj:bradenCell onComplete:updateHandler];
         }
         [ff updateObj:bradenSection onComplete:updateHandler];
     }
+    ++counter;
     [ff updateObj:_bradenScale onComplete:updateHandler];
-    // save local
-    NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
-    [self.navigationController popViewControllerAnimated:YES];
-    self.didCreateBradenScale = NO;
 }
 
 - (void)bradenScaleInputControllerDidCancel:(WMBradenScaleInputViewController *)viewController

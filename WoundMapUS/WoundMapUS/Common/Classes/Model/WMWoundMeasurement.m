@@ -213,7 +213,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
     return NSRangeFromString(range);
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundMeasurement" withExtension:@"plist"];
@@ -239,7 +239,7 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMWoundMeasurement entityName]);
+            completionHandler(nil, objectIDs, [WMWoundMeasurement entityName], nil);
         }
     }
 }

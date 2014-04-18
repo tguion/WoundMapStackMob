@@ -11,7 +11,7 @@ NSString * const kTelecomTypeEmailTitle = @"email";
 
 @implementation WMTelecomType
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     NSParameterAssert([WMTelecomType MR_countOfEntitiesWithContext:managedObjectContext] == 0);
     NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
@@ -27,7 +27,7 @@ NSString * const kTelecomTypeEmailTitle = @"email";
     [objectIDs addObject:[telecomType objectID]];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     if (completionHandler) {
-        completionHandler(nil, objectIDs, [WMTelecomType entityName]);
+        completionHandler(nil, objectIDs, [WMTelecomType entityName], nil);
     }
 }
 

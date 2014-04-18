@@ -79,7 +79,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
     return interventionStatus;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"InterventionStatus" withExtension:@"plist"];
@@ -109,7 +109,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
             [objectIDs addObject:[interventionStatus objectID]];
         }
         if (completionHandler) {
-            completionHandler(nil, [objectIDs allObjects], [WMInterventionStatus entityName]);
+            completionHandler(nil, [objectIDs allObjects], [WMInterventionStatus entityName], nil);
         }
         objectIDs = [[NSMutableSet alloc] init];
         array = [propertyList objectForKey:@"Joins"];
@@ -134,7 +134,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                 [objectIDs addObject:[interventionStatusJoin objectID]];
             }
             if (completionHandler) {
-                completionHandler(nil, [objectIDs allObjects], [WMInterventionStatusJoin entityName]);
+                completionHandler(nil, [objectIDs allObjects], [WMInterventionStatusJoin entityName], nil);
             }
         }
     }

@@ -1517,11 +1517,11 @@
 {
     // save in order to update updatedAt
     [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (success) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
             [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-        } else {
-            [WMUtilities logError:error];
         }
     }];
 }
@@ -1545,35 +1545,12 @@
 
 - (void)devicesViewControllerDidSave:(WMDevicesViewController *)viewController
 {
-//    BOOL hasChanges = self.managedObjectContext.hasChanges;
-//    BOOL hasValues = [viewController.deviceGroup.values count] > 0;
-//    if (!hasValues) {
-//        [self.managedObjectContext deleteObject:viewController.deviceGroup];
-//        hasChanges = YES;
-//    }
-//    // save in order to update updatedAt
-//    NSError *error = nil;
-//    [self.managedObjectContext saveAndWait:&error];
-//    if (nil != error) {
-//        [WMUtilities logError:error];
-//    }
-//    if (hasChanges) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-//    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kDevicesNode]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
 
 - (void)devicesViewControllerDidCancel:(WMDevicesViewController *)viewController
 {
-//    BOOL hasValues = [viewController.deviceGroup.values count] > 0;
-//    if (!hasValues) {
-//        [self.managedObjectContext deleteObject:viewController.deviceGroup];
-//        NSError *error = nil;
-//        [self.managedObjectContext saveAndWait:&error];
-//        if (nil != error) {
-//            [WMUtilities logError:error];
-//        }
-//    }
 }
 
 #pragma mark - PsychoSocialGroupViewControllerDelegate

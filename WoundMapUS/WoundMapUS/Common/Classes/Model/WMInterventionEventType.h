@@ -20,7 +20,7 @@ typedef enum {
 
 @interface WMInterventionEventType : _WMInterventionEventType {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (WMInterventionEventType *)interventionEventTypeForTitle:(NSString *)title
                                                     create:(BOOL)create

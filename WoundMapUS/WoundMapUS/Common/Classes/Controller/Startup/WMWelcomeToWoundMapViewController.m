@@ -365,6 +365,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     UISwitch *deferTeamSwitch = (UISwitch *)sender;
     self.welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateSignedInNoTeam);
+    _enterWoundMapButton.enabled = self.setupConfigurationComplete;
     [self.tableView reloadData];
 }
 

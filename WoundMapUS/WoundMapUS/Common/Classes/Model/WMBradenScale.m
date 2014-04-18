@@ -9,24 +9,82 @@ NSInteger const kBradenSectionCount = 6;
 
 @interface WMBradenScale ()
 
-- (void)populateSectionsWithHandler:(NSMutableArray *)objectIDs;
-
 @end
 
 
 @implementation WMBradenScale
 
-+ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient handler:(WMProcessCallback)handler
++ (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMBradenScale *bradenScale = [WMBradenScale MR_createInContext:managedObjectContext];
     bradenScale.patient = patient;
-    [managedObjectContext MR_saveOnlySelfAndWait];
-    NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
-    [objectIDs addObject:[bradenScale objectID]];
-    [bradenScale populateSectionsWithHandler:objectIDs];
-    handler(nil, objectIDs, nil);
     return bradenScale;
+}
+
++ (void)populateBradenScaleSections:(WMBradenScale *)bradenScale
+{
+	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"BradenScale" withExtension:@"plist"];
+	if (nil == fileURL) {
+		DLog(@"BradenScale.plist not found");
+		return;
+	}
+    @autoreleasepool {
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        id propertyList = [NSPropertyListSerialization propertyListWithData:data
+                                                                    options:NSPropertyListImmutable
+                                                                     format:NULL
+                                                                      error:&error];
+        NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+        @autoreleasepool {
+            for (NSDictionary *dictionary in propertyList) {
+                WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:bradenScale];
+                bradenSection.sortRank = [dictionary objectForKey:@"sortRank"];
+                bradenSection.bradenScale = bradenScale;
+                bradenSection.title = [dictionary objectForKey:@"title"];
+                bradenSection.desc = [dictionary objectForKey:@"desc"];
+            }
+        }
+    }
+}
+
++ (void)populateBradenSectionCells:(WMBradenSection *)bradenSection
+{
+	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"BradenScale" withExtension:@"plist"];
+	if (nil == fileURL) {
+		DLog(@"BradenScale.plist not found");
+		return;
+	}
+	NSError *error = nil;
+	NSData *data = [NSData dataWithContentsOfURL:fileURL];
+	id propertyList = [NSPropertyListSerialization propertyListWithData:data
+																options:NSPropertyListImmutable
+																 format:NULL
+																  error:&error];
+	NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
+    NSManagedObjectContext *managedObjectContext = [bradenSection managedObjectContext];
+    @autoreleasepool {
+        for (NSDictionary *dictionary in propertyList) {
+            NSString *title = [dictionary objectForKey:@"title"];
+            if ([title isEqualToString:bradenSection.title]) {
+                id object = [dictionary objectForKey:@"cells"];
+                if ([object isKindOfClass:[NSArray class]]) {
+                    for (NSDictionary *d in object) {
+                        WMBradenCell *bradenCell = [WMBradenCell instanceWithBradenSection:bradenSection
+                                                                      managedObjectContext:managedObjectContext];
+                        bradenCell.title = [d objectForKey:@"title"];
+                        bradenCell.primaryDescription = [d objectForKey:@"primaryDescription"];
+                        id obj = [d objectForKey:@"secondaryDescription"];
+                        if ([obj isKindOfClass:[NSString class]]) {
+                            bradenCell.secondaryDescription = obj;
+                        }
+                        bradenCell.value = [d objectForKey:@"value"];
+                    }
+                }
+            }
+        }
+    }
 }
 
 + (WMBradenScale *)latestBradenScale:(WMPatient *)patient create:(BOOL)create
@@ -166,50 +224,6 @@ NSInteger const kBradenSectionCount = 6;
 - (BOOL)isClosed
 {
     return self.closedFlagValue;
-}
-
-- (void)populateSectionsWithHandler:(NSMutableArray *)objectIDs
-{
-	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"BradenScale" withExtension:@"plist"];
-	if (nil == fileURL) {
-		DLog(@"BradenScale.plist not found");
-		return;
-	}
-	NSError *error = nil;
-	NSData *data = [NSData dataWithContentsOfURL:fileURL];
-	id propertyList = [NSPropertyListSerialization propertyListWithData:data
-																options:NSPropertyListImmutable
-																 format:NULL
-																  error:&error];
-	NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    @autoreleasepool {
-        for (NSDictionary *dictionary in propertyList) {
-            WMBradenSection *bradenSection = [WMBradenSection instanceWithBradenScale:self];
-            bradenSection.sortRank = [dictionary objectForKey:@"sortRank"];
-            bradenSection.bradenScale = self;
-            bradenSection.title = [dictionary objectForKey:@"title"];
-            bradenSection.desc = [dictionary objectForKey:@"desc"];
-            [managedObjectContext MR_saveOnlySelfAndWait];
-            [objectIDs addObject:[bradenSection objectID]];
-            id object = [dictionary objectForKey:@"cells"];
-            if ([object isKindOfClass:[NSArray class]]) {
-                for (NSDictionary *d in object) {
-                    WMBradenCell *bradenCell = [WMBradenCell instanceWithBradenSection:bradenSection
-                                                                  managedObjectContext:[self managedObjectContext]];
-                    bradenCell.title = [d objectForKey:@"title"];
-                    bradenCell.primaryDescription = [d objectForKey:@"primaryDescription"];
-                    id obj = [d objectForKey:@"secondaryDescription"];
-                    if ([obj isKindOfClass:[NSString class]]) {
-                        bradenCell.secondaryDescription = obj;
-                    }
-                    bradenCell.value = [d objectForKey:@"value"];
-                    [managedObjectContext MR_saveOnlySelfAndWait];
-                    [objectIDs addObject:[bradenCell objectID]];
-                }
-            }
-        }
-    }
 }
 
 #pragma mark - FatFractal

@@ -142,7 +142,7 @@ typedef enum {
     return psychoSocialItem;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"PsychoSocial" withExtension:@"plist"];
@@ -168,7 +168,7 @@ typedef enum {
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMPsychoSocialItem entityName]);
+            completionHandler(nil, objectIDs, [WMPsychoSocialItem entityName], nil);
         }
     }
 }

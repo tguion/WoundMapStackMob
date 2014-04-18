@@ -52,15 +52,6 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    // make sure we have seed data
-    if ([WMSkinAssessment MR_countOfEntitiesWithContext:self.managedObjectContext] == 0) {
-        [self refreshTable];
-    }
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

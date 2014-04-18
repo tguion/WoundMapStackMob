@@ -105,7 +105,7 @@ NSString * const kInterventionEventTypeRevise = @"Revise";
     return interventionEventType;
 }
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WCInterventionEventType" withExtension:@"plist"];
@@ -131,7 +131,7 @@ NSString * const kInterventionEventTypeRevise = @"Revise";
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (completionHandler) {
-            completionHandler(nil, objectIDs, [WMInterventionEventType entityName]);
+            completionHandler(nil, objectIDs, [WMInterventionEventType entityName], nil);
         }
     }
 }

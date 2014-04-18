@@ -7,7 +7,7 @@ extern NSString * const kTelecomTypeEmailTitle;
 
 @property (readonly, nonatomic) BOOL isEmail;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (NSArray *)sortedTelecomTypes:(NSManagedObjectContext *)managedObjectContext;
 

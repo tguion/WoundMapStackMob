@@ -6,7 +6,7 @@
 @property (readonly, nonatomic) BOOL isOther;
 @property (readonly, nonatomic) NSArray *sortedWoundPositionJoins;
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (WMWoundLocation *)woundLocationForTitle:(NSString *)title
                                     create:(BOOL)create

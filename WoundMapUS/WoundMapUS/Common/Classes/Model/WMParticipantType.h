@@ -3,7 +3,7 @@
 
 @interface WMParticipantType : _WMParticipantType {}
 
-+ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallback)completionHandler;
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 
 + (NSInteger)participantTypeCount:(NSManagedObjectContext *)managedObjectContext;
 
