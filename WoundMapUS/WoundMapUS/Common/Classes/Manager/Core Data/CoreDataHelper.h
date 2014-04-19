@@ -27,4 +27,7 @@ extern NSString *localStoreFilename;
 
 - (void)setupCoreData;
 
+- (void)markBackendDataAcquiredForEntityName:(NSString *)entityName;
+- (BOOL)isBackendDataAcquiredForEntityName:(NSString *)entityName;
+
 @end

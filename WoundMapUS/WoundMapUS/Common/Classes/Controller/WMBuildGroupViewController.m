@@ -941,7 +941,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 - (void)searchDisplayController:(UISearchDisplayController *)viewController willShowSearchResultsTableView:(UITableView *)tableView
 {
     [tableView registerClass:[WMDefinitionTableViewCell class] forCellReuseIdentifier:@"DefinitionCell"];
-    self.tableView.hidden = YES;
+//    self.tableView.hidden = YES;
 }
 
 // return YES to reload table. called when search string/option changes. convenience methods on top UISearchBar delegate methods
@@ -965,10 +965,10 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 	return YES;
 }
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
-{
-    self.tableView.hidden = NO;
-}
+//- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
+//{
+//    self.tableView.hidden = NO;
+//}
 
 - (void)searchDisplayController:(UISearchDisplayController *)viewController didHideSearchResultsTableView:(UITableView *)tableView
 {

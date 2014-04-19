@@ -42,6 +42,8 @@
 
 @property (strong, nonatomic) UIPopoverController *iapPopoverController;
 
+- (void)acquireBackendDataForEntityName:(NSString *)entityName;
+
 @end
 
 @implementation WMBaseViewController
@@ -82,6 +84,8 @@
     [super viewWillAppear:animated];
     // listen for stuff
     [self registerForNotifications];
+    // make sure we have any seed data from back end
+    [self acquireBackendDataForEntityName:self.backendSeedEntityName];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -319,12 +323,10 @@
         return;
     }
     // else
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;
     [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
         [weakSelf.refreshControl endRefreshing];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (weakSelf.refreshCompletionHandler) {
@@ -490,6 +492,13 @@
     // check if we are already registered
     if (0 == [self.opaqueNotificationObservers count]) {
         // add observers
+        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:NSManagedObjectContextWillSaveNotification
+                                                                            object:[NSManagedObjectContext MR_defaultContext]
+                                                                             queue:[NSOperationQueue mainQueue]
+                                                                        usingBlock:^(NSNotification *notification) {
+                                                                            [weakSelf handleDefaultManagedObjectContextWillSave:notification];
+                                                                        }];
+        [self.opaqueNotificationObservers addObject:observer];
     }
     if (0 == [self.persistantObservers count]) {
         // update for change in patient
@@ -551,6 +560,11 @@
 }
 
 #pragma mark - Notification handlers
+
+- (void)handleDefaultManagedObjectContextWillSave:(NSNotification *)notification
+{
+    
+}
 
 - (void)handleParticipantLoggedOut
 {
@@ -622,6 +636,26 @@
 - (NSPersistentStore *)store
 {
     return self.appDelegate.coreDataHelper.store;
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return nil;
+}
+
+- (void)acquireBackendDataForEntityName:(NSString *)entityName
+{
+    NSString *backendSeedEntityName = self.backendSeedEntityName;
+    if (backendSeedEntityName && ![self.coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        __weak __typeof(self) weakSelf = self;
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", entityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            [weakSelf.coreDataHelper markBackendDataAcquiredForEntityName:backendSeedEntityName];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        }];
+    }
 }
 
 - (WMUserDefaultsManager *)userDefaultsManager
@@ -891,7 +925,7 @@
 
 - (void)fetchedResultsControllerDidFetch
 {
-    if ([self.fetchedResultsController.fetchedObjects count] == 0) {
+    if ([self.fetchedResultsController.fetchedObjects count] == 0 && self.activeTableView == self.tableView) {
         [self refreshTable];
     }
 }

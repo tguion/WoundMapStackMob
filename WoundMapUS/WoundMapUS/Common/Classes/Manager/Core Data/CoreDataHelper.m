@@ -132,6 +132,22 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 //    [[NSManagedObjectContext MR_defaultContext] MR_observeContext:[NSManagedObjectContext MR_rootSavingContext]];
 }
 
+#pragma mark - Store metadata
+
+- (void)markBackendDataAcquiredForEntityName:(NSString *)entityName
+{
+    NSMutableDictionary *metadata = [[self.coordinator metadataForPersistentStore:self.store] mutableCopy];
+    metadata[entityName] = @YES;
+    [self.coordinator setMetadata:metadata forPersistentStore:self.store];
+}
+
+- (BOOL)isBackendDataAcquiredForEntityName:(NSString *)entityName
+{
+    return (nil != [self.coordinator metadataForPersistentStore:self.store][entityName]);
+}
+
+#pragma mark Network Reachability
+
 - (WMNetworkReachability *)networkReachability
 {
     if (nil == _networkMonitor) {
@@ -154,12 +170,17 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
 - (NSManagedObjectModel *)model
 {
-    return [NSManagedObjectModel defaultManagedObjectModel];
+    return [NSManagedObjectModel MR_defaultManagedObjectModel];
 }
 
 - (NSPersistentStoreCoordinator *)coordinator
 {
-    return [NSPersistentStoreCoordinator defaultStoreCoordinator];
+    return [NSPersistentStoreCoordinator MR_defaultStoreCoordinator];
+}
+
+- (NSPersistentStore *)store
+{
+    return [NSPersistentStore MR_defaultPersistentStore];
 }
 
 #pragma mark - VALIDATION ERROR HANDLING

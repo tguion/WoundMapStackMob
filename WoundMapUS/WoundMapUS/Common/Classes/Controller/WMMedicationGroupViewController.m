@@ -9,6 +9,8 @@
 #import "WMMedicationGroupViewController.h"
 #import "WMMedicationSummaryViewController.h"
 #import "WMMedicationGroupHistoryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMParticipant.h"
 #import "WMPatient.h"
 #import "WMMedicationCategory.h"
 #import "WMMedication.h"
@@ -29,11 +31,13 @@
 
 @interface WMMedicationGroupViewController ()
 
-@property (strong, nonatomic) NSBlockOperation *insertMedicationGroupOperation;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (readonly, nonatomic) WMMedicationSummaryViewController *medicationSummaryViewController;
 @property (readonly, nonatomic) WMMedicationGroupHistoryViewController *medicationGroupHistoryViewController;
 @property (nonatomic) BOOL didCancel;
+
+- (void)grabBagRemoveMedications:(NSArray *)medications;
 
 @end
 
@@ -41,10 +45,31 @@
 
 #pragma mark - View
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.modalInPopover = YES;
+        self.preferredContentSize = CGSizeMake(320.0, 380.0);
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            if (!weakSelf.didCreateGroup) {
+                // we want to support cancel, so make sure we have an undoManager
+                if (nil == weakSelf.managedObjectContext.undoManager) {
+                    weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                    weakSelf.removeUndoManagerWhenDone = YES;
+                }
+                [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
+            }
+        };
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.managedObjectContext.undoManager beginUndoGrouping];
+    self.title = @"Medications";
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -73,7 +98,6 @@
 {
     [super clearDataCache];
     _medicationGroup = nil;
-    _insertMedicationGroupOperation = nil;
 }
 
 #pragma mark - BuildGroupViewController
@@ -157,8 +181,6 @@
         if (nil == medicationGroup) {
             medicationGroup = [WMMedicationGroup medicationGroupForPatient:self.patient];
             self.didCreateGroup = YES;
-            // update back end
-            //
             WMInterventionEvent *event = [medicationGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                    title:nil
                                                                                valueFrom:nil
@@ -169,12 +191,47 @@
                                                                              participant:self.appDelegate.participant
                                                                                   create:YES
                                                                     managedObjectContext:self.managedObjectContext];
-            //
             DLog(@"Created event %@", event.eventType.title);
+            // update backend
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            __weak __typeof(&*self)weakSelf = self;
+            FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    [ff grabBagAddItemAtFfUrl:medicationGroup.ffUrl
+                                 toObjAtFfUrl:weakSelf.patient.ffUrl
+                                  grabBagName:WMPatientRelationships.medicationGroups
+                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                       if (error) {
+                                           [WMUtilities logError:error];
+                                       }
+                                   }];
+                }
+            };
+            [ff createObj:medicationGroup
+                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicationGroup entityName]]
+               onComplete:block
+                onOffline:block];
         }
         self.medicationGroup = medicationGroup;
     }
     return _medicationGroup;
+}
+
+- (void)grabBagRemoveMedications:(NSArray *)medications
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    for (WMMedication *medication in medications) {
+        [ff grabBagRemoveItemAtFfUrl:medication.ffUrl
+                      fromObjAtFfUrl:_medicationGroup.ffUrl
+                         grabBagName:WMMedicationGroupRelationships.medications
+                          onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                              if (error) {
+                                  [WMUtilities logError:error];
+                              }
+                          }];
+    }
 }
 
 #pragma mark - Actions
@@ -197,7 +254,7 @@
 
 - (IBAction)cancelAction:(id)sender
 {
-    self.willCancelFlag = YES;
+    [super cancelAction:sender];
     BOOL hasValues = [_medicationGroup.medications count] > 0;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext.undoManager.groupingLevel > 0) {
@@ -207,15 +264,19 @@
         }
     }
     if (self.didCreateGroup || !hasValues) {
-
-        [managedObjectContext deleteObject:_medicationGroup];
-        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            if (success) {
-                // update back end
-            } else {
-                [WMUtilities logError:error];
-            }
-        }];
+        [self.managedObjectContext deleteObject:_medicationGroup];
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSError *error = nil;
+        [ff grabBagRemove:_medicationGroup from:self.patient grabBagName:WMPatientRelationships.medicationGroups error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff deleteObj:_medicationGroup error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     [self.delegate medicationGroupViewControllerDidCancel:self];
 }
@@ -233,13 +294,50 @@
         [managedObjectContext.undoManager endUndoGrouping];
     }
     [super saveAction:sender];
+    WMParticipant *participant = self.appDelegate.participant;
     // create intervention events before super
-
-    // update back end - need to handle medications added/removed, interventionEvents added
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        //
-    }];
-    [self.delegate medicationGroupViewControllerDidSave:self];
+    [_medicationGroup createEditEventsForParticipant:participant];
+    // update backend
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        WM_ASSERT_MAIN_THREAD;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf.delegate medicationGroupViewControllerDidSave:weakSelf];
+    };
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error && counter) {
+            counter = 0;
+            block();
+        } else {
+            --counter;
+            if (counter == 0) {
+                block();
+            }
+        }
+    };
+    for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
+        if (interventionEvent.ffUrl) {
+            continue;
+        }
+        // else
+        ++counter;
+        ++counter;
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_medicationGroup.ffUrl grabBagName:WMMedicationGroupRelationships.interventionEvents onComplete:completionHandler];
+        }];
+    }
+    for (WMMedication *value in _medicationGroup.medications) {
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_medicationGroup.ffUrl grabBagName:WMMedicationGroupRelationships.medications onComplete:completionHandler];
+    }
+    ++counter;
+    [ff updateObj:_medicationGroup onComplete:completionHandler];
 }
 
 #pragma mark - InterventionStatusViewControllerDelegate
@@ -276,8 +374,6 @@
     DLog(@"Created WMnterventionEvent %@ for WMInterventionStatus %@", event.eventType.title, interventionStatus.title);
     [super interventionStatusViewController:viewController didSelectInterventionStatus:interventionStatus];
     [self updateToolbarItems];
-    // update back end
-
 }
 
 #pragma mark - InterventionEventViewControllerDelegate
@@ -328,12 +424,14 @@
     BOOL refreshTableView = NO;
     if ([self.medicationGroup.medications containsObject:medication]) {
         [self.medicationGroup removeMedicationsObject:medication];
+        [self grabBagRemoveMedications:@[medication]];
     } else {
         if (medication.exludesOtherValues) {
             NSArray *medications = [self.medicationGroup.medications allObjects];
             for (WMMedication *m in medications) {
                 [self.medicationGroup removeMedicationsObject:m];
             }
+            [self grabBagRemoveMedications:medications];
             refreshTableView = YES;
         } else {
             refreshTableView = [self.medicationGroup removeExcludesOtherValues];
@@ -348,7 +446,7 @@
     if (refreshTableView) {
         [tableView reloadData];
     } else {
-        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
     [self updateUIForDataChange];
 }
@@ -373,6 +471,16 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"/%@", [WMMedication entityName]];
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMMedication entityName];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

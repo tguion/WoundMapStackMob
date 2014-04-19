@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMDevicesViewController">
             <connections>
+                <outlet property="searchBar" destination="ptb-0P-J4F" id="zf2-cZ-lF1"/>
                 <outlet property="searchDisplayController" destination="Bsw-B8-nUR" id="kqJ-F6-IeX"/>
                 <outlet property="view" destination="pCf-yI-qev" id="amy-zA-B29"/>
             </connections>

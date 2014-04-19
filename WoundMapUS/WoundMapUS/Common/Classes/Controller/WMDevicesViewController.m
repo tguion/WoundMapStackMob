@@ -92,6 +92,13 @@
     _deviceGroup = nil;
 }
 
+#pragma mark - Notification handlers
+
+- (void)handleDefaultManagedObjectContextWillSave:(NSNotification *)notification
+{
+    
+}
+
 #pragma mark - BuildGroupViewController
 
 - (BOOL)shouldShowToolbar
@@ -273,14 +280,15 @@
 - (IBAction)cancelAction:(id)sender
 {
     [super cancelAction:sender];
+    BOOL hasValues = [_deviceGroup.devices count] > 0;
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
         if (self.willCancelFlag && self.managedObjectContext.undoManager.canUndo) {
             [self.managedObjectContext.undoManager undoNestedGroup];
         }
     }
-    if (self.didCreateGroup) {
-        [self.managedObjectContext deleteObject:self.deviceGroup];
+    if (self.didCreateGroup || !hasValues) {
+        [self.managedObjectContext deleteObject:_deviceGroup];
         // update backend
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         NSError *error = nil;
@@ -292,6 +300,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     [self.delegate devicesViewControllerDidCancel:self];
 }
@@ -308,7 +317,7 @@
     }
     [super saveAction:sender];
     // create intervention events before super
-    [self.deviceGroup createEditEventsForParticipant:self.appDelegate.participant];
+    [_deviceGroup createEditEventsForParticipant:self.appDelegate.participant];
     // update backend
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block NSInteger counter = 0;
@@ -508,6 +517,11 @@
 - (NSString *)ffQuery
 {
     return [NSString stringWithFormat:@"/%@", [WMDevice entityName]];
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMDevice entityName];
 }
 
 - (NSString *)fetchedResultsControllerEntityName
