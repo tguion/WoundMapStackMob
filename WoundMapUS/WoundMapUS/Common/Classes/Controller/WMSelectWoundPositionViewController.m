@@ -401,6 +401,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)backendSeedEntityName
+{
+    return [WMWoundLocationPositionJoin entityName];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
     return (self.isSearchActive ? @"WMDefinition":@"WMWoundLocationPositionJoin");

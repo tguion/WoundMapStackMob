@@ -262,6 +262,9 @@
         if (managedObjectContext.undoManager.canUndo) {
             [managedObjectContext.undoManager undoNestedGroup];
         }
+        if (_removeUndoManagerWhenDone) {
+            managedObjectContext.undoManager = nil;
+        }
     }
     if (self.didCreateGroup || !hasValues) {
         [self.managedObjectContext deleteObject:_medicationGroup];
@@ -292,6 +295,9 @@
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext.undoManager.groupingLevel > 0) {
         [managedObjectContext.undoManager endUndoGrouping];
+        if (_removeUndoManagerWhenDone) {
+            managedObjectContext.undoManager = nil;
+        }
     }
     [super saveAction:sender];
     WMParticipant *participant = self.appDelegate.participant;

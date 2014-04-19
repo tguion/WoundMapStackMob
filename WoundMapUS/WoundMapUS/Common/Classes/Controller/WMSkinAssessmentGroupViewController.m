@@ -190,7 +190,7 @@
         }
     }
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:skinAssessment];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Core
@@ -483,7 +483,7 @@
     }
     // reload section
     if (reloadSection) {
-        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
     }
     // update remaining UI
     [self updateUIForDataChange];

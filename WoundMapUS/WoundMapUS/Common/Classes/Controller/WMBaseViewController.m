@@ -643,17 +643,19 @@
     return nil;
 }
 
-- (void)acquireBackendDataForEntityName:(NSString *)entityName
+- (void)acquireBackendDataForEntityName:(NSString *)backendSeedEntityName
 {
-    NSString *backendSeedEntityName = self.backendSeedEntityName;
     if (backendSeedEntityName && ![self.coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(self) weakSelf = self;
-        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", entityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", backendSeedEntityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.coreDataHelper markBackendDataAcquiredForEntityName:backendSeedEntityName];
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            if (weakSelf.refreshCompletionHandler) {
+                weakSelf.refreshCompletionHandler();
+            }
         }];
     }
 }
@@ -958,11 +960,11 @@
 {
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
             break;
     }
 }
@@ -975,11 +977,11 @@
     
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             break;
             
         case NSFetchedResultsChangeUpdate:
@@ -987,8 +989,8 @@
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             break;
     }
 }

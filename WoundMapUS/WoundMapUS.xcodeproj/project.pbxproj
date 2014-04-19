@@ -280,6 +280,9 @@
 		7D40BFBC18F9560200DB2BCD /* TeamMemberIAPDesc.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */; };
 		7D40BFC118FD4CF000DB2BCD /* WMPatientPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D40BFC018FD4CF000DB2BCD /* WMPatientPhotoImageView.m */; };
 		7D40BFC418FD6FEF00DB2BCD /* DictionaryToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D40BFC318FD6FEF00DB2BCD /* DictionaryToDataTransformer.m */; };
+		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
+		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
+		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -970,6 +973,11 @@
 		7D40BFC018FD4CF000DB2BCD /* WMPatientPhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientPhotoImageView.m; sourceTree = "<group>"; };
 		7D40BFC218FD6FEF00DB2BCD /* DictionaryToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DictionaryToDataTransformer.h; sourceTree = "<group>"; };
 		7D40BFC318FD6FEF00DB2BCD /* DictionaryToDataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DictionaryToDataTransformer.m; sourceTree = "<group>"; };
+		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
+		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
+		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
+		7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationStageTableViewCell.m; sourceTree = "<group>"; };
+		7D6894521902EC6B006DE509 /* EditNodeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditNodeCell.xib; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -1658,6 +1666,14 @@
 			path = IAP;
 			sourceTree = "<group>";
 		};
+		7D6894511902EC6B006DE509 /* Nibs */ = {
+			isa = PBXGroup;
+			children = (
+				7D6894521902EC6B006DE509 /* EditNodeCell.xib */,
+			);
+			path = Nibs;
+			sourceTree = "<group>";
+		};
 		7D9AA25818AE549300C1B698 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -1906,6 +1922,8 @@
 				7D39DB0218B7E8BE0054DDC3 /* WMPolicyEditorViewController.h */,
 				7D39DB0318B7E8BE0054DDC3 /* WMPolicyEditorViewController.m */,
 				7D39DB0418B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib */,
+				7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */,
+				7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */,
 				7D1BA8B218FEEC7C00ED385D /* WMPrintConfigureViewController.h */,
 				7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */,
 				7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */,
@@ -2191,6 +2209,8 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */,
+				7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */,
 				7DDEE28D18F6B5BA00AF9FC6 /* WMRoundedTextView.h */,
 				7DDEE28E18F6B5BA00AF9FC6 /* WMRoundedTextView.m */,
 				5F6DE4F518AEE08D00E87F7E /* APTableViewCell.h */,
@@ -2260,6 +2280,7 @@
 		7DB2069F18A7D6950004DC32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7D6894511902EC6B006DE509 /* Nibs */,
 				5F6DE52B18B58BB000E87F7E /* Instructions */,
 				7DDAFAED18B4E9F700A05F5D /* IAP */,
 				7D9AA27518B003D600C1B698 /* Policy */,
@@ -2868,6 +2889,7 @@
 				5F67D20718AC3BE000460C37 /* WoundPositionDefinitions.plist in Resources */,
 				7D39DBAD18BA97A70054DDC3 /* IAPAggregatorViewController.xib in Resources */,
 				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
+				7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */,
 				7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
 				7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */,
@@ -3188,6 +3210,7 @@
 				7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */,
 				7DF4E95618C299DC000A3F5B /* _WMInterventionEventType.m in Sources */,
 				7D10CDFC18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.m in Sources */,
+				7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */,
 				7D39DAFB18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.m in Sources */,
 				7DF4E8EE18C22EEC000A3F5B /* _WMSkinAssessment.m in Sources */,
 				5F6DE4F418AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m in Sources */,
@@ -3264,6 +3287,7 @@
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
 				7DD8376118C7A5080028C2D3 /* AFPropertyListRequestOperation.m in Sources */,
 				7D10CDC918DA352800AD43E3 /* View-Nametag.m in Sources */,
+				7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */,
 				5F6DE51018B586F600E87F7E /* WMInstructionsViewController.m in Sources */,
 				7D10CDD118DA37DB00AD43E3 /* WMWoundMeasurementGroupTableViewCell.m in Sources */,
 				7DD8374118C78A3A0028C2D3 /* MagicalRecord+Options.m in Sources */,

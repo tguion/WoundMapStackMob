@@ -68,7 +68,7 @@
 - (void)reloadRowsForSelectedWoundMeasurement:(WMWoundMeasurement *)selectedWoundMeasurement previousIndexPath:(NSIndexPath *)previousIndexPath
 {
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:selectedWoundMeasurement];
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, previousIndexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, previousIndexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)navigateToChildrenWoundMeasurementsForParentWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
@@ -422,9 +422,9 @@
     }
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:woundMeasurement];
     if (reloadSection) {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
     } else if ([self shouldShowSelectionImageForAssessmentGroup:woundMeasurement]) {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
@@ -579,7 +579,7 @@
     value.amountQualifier = amount;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationNone];
     _selectedWoundMeasurement = nil;
     // clear
     [viewController clearAllReferences];
@@ -611,7 +611,7 @@
     value.odor = woundOdor;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationNone];
     _selectedWoundMeasurement = nil;
     // clear
     [viewController clearAllReferences];
@@ -674,7 +674,7 @@
     value.value = note;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundMeasurement]] withRowAnimation:UITableViewRowAnimationNone];
     self.selectedWoundMeasurement = nil;
 }
 

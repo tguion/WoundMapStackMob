@@ -52,7 +52,7 @@
             woundType = woundType.parent;
         }
     }
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, currentIndexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, currentIndexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end
@@ -254,6 +254,11 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMWoundType entityName];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

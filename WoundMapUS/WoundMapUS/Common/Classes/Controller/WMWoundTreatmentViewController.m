@@ -63,7 +63,7 @@
 {
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:selectedWoundTreatment];
     if (![indexPath isEqual:previousIndexPath]) {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, previousIndexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, previousIndexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
@@ -280,7 +280,7 @@
             NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:previousWoundTreatment];
             if (nil != indexPath) {
                 [self.tableView beginUpdates];
-                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
                 [self.tableView endUpdates];
             }
         }
@@ -297,7 +297,7 @@
     // don't refresh if entering string value
     if (![value isKindOfClass:[NSString class]]) {
         NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:woundTreatment];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
@@ -516,7 +516,7 @@
     value.value = note;
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundTreatment]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundTreatment]] withRowAnimation:UITableViewRowAnimationNone];
     self.selectedWoundTreatment = nil;
 }
 

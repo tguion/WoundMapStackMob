@@ -70,7 +70,7 @@
     if (nil != previousWoundLocation && ![previousWoundLocation isEqual:self.selectedWoundLocation]) {
         currentIndexPath = [self.fetchedResultsController indexPathForObject:previousWoundLocation];
     }
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, currentIndexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, currentIndexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end
@@ -202,7 +202,7 @@
     if (nil != self.selectedWoundLocation) {
         NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:self.selectedWoundLocation];
         if (nil != indexPath) {
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
     }
 }
@@ -246,7 +246,7 @@
     if (nil != currentIndexPath && ![currentIndexPath isEqual:indexPath]) {
         indexPaths = [NSArray arrayWithObjects:indexPath, currentIndexPath, nil];
     }
-    [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+    [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
     [self updateUIForDataChange];
 }
 
@@ -267,6 +267,11 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMWoundLocation entityName];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

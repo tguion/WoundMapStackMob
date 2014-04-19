@@ -57,10 +57,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 {
     [super viewWillAppear:animated];
     [self updateUIForDataChange];
-    // hide the search views in tableView tableHeaderView
-    if (CGPointEqualToPoint(CGPointZero, self.tableView.contentOffset)) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -886,7 +882,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     }
     // refresh this cell
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
@@ -1017,7 +1013,7 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
         }
         self.selectedDefinition = [self.fetchedResultsController objectAtIndexPath:indexPath];
         [indexPaths addObject:indexPath];
-        [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
         [self.searchDisplayController.searchBar resignFirstResponder];
         [self performSelector:@selector(scrollSelectedDefinitionIntoView:) withObject:indexPath afterDelay:0.0];
         return;

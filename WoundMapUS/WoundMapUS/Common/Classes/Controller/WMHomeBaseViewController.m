@@ -12,6 +12,7 @@
 #import "WMNavigationNodeButton.h"
 #import "WMNavigationPatientPhotoButton.h"
 #import "MBProgressHUD.h"
+#import "WMParticipant.h"
 #import "WMPatient.h"
 #import "WMBradenScale.h"
 #import "WMMedicationGroup.h"
@@ -61,7 +62,11 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
+            [weakSelf updatePatientWoundComponents];
+        };
     }
     return self;
 }
@@ -115,6 +120,11 @@
 }
 
 #pragma mark - Core
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMNavigationNode entityName];
+}
 
 - (BOOL)shouldShowSelectTrackTableViewCell
 {
@@ -1242,6 +1252,13 @@
 
 #pragma mark - View Controllers
 
+- (WMPolicyEditorViewController *)policyEditorViewController
+{
+    WMPolicyEditorViewController *policyEditorViewController = [[WMPolicyEditorViewController alloc] initWithNibName:@"WMPolicyEditorViewController" bundle:nil];
+    policyEditorViewController.delegate = self;
+    return policyEditorViewController;
+}
+
 - (WMChooseTrackViewController *)chooseTrackViewController
 {
     WMChooseTrackViewController *chooseTrackViewController = [[WMChooseTrackViewController alloc] initWithNibName:@"WMChooseTrackViewController" bundle:nil];
@@ -1418,11 +1435,34 @@
 
 #pragma mark - PolicyEditorDelegate
 
-- (void)policyEditorViewControllerDidSave:(WMPolicyEditorViewController *)viewController {}
-- (void)policyEditorViewControllerDidChangeTrack:(WMPolicyEditorViewController *)viewController {}
-- (void)policyEditorViewControllerDidCancel:(WMPolicyEditorViewController *)viewController {}
+- (void)policyEditorViewControllerDidSave:(WMPolicyEditorViewController *)viewController
+{
+    self.navigationNodes = nil;
+    self.navigationNodeControls = nil;
+    self.navigationUIRequiresUpdate = YES;
+    [self dismissViewControllerAnimated:YES completion:^{
+        // reload navigation on view did appear
+    }];
+}
+
+- (void)policyEditorViewController:(WMPolicyEditorViewController *)viewController didChangeTrack:(WMNavigationTrack *)navigationTrack
+{
+    self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
+}
+
+- (void)policyEditorViewControllerDidCancel:(WMPolicyEditorViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
 
 #pragma mark - ChooseTrackDelegate
+
+- (NSPredicate *)navigationTrackPredicate
+{
+    return [NSPredicate predicateWithFormat:@"team == %@", self.appDelegate.participant.team];
+}
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack
 {

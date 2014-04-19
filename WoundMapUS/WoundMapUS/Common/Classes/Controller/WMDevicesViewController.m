@@ -286,6 +286,9 @@
         if (self.willCancelFlag && self.managedObjectContext.undoManager.canUndo) {
             [self.managedObjectContext.undoManager undoNestedGroup];
         }
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
+        }
     }
     if (self.didCreateGroup || !hasValues) {
         [self.managedObjectContext deleteObject:_deviceGroup];
@@ -314,6 +317,9 @@
     // else
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
+        }
     }
     [super saveAction:sender];
     // create intervention events before super
@@ -493,7 +499,7 @@
         if (refreshTableView) {
             [tableView reloadData];
         } else {
-            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
     }
     [self updateUIForDataChange];
