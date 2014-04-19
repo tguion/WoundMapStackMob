@@ -183,7 +183,7 @@
         NSParameterAssert([eventType managedObjectContext] == managedObjectContext);
     }
     WMInterventionEvent *interventionEvent = [WMInterventionEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
-                                                                                             @"group == %@ AND changeType == %d AND path == %@ AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                             @"psychoSocialGroup == %@ AND changeType == %d AND path == %@ AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
                                                                                              psychoSocialGroup, changeType, path, title, valueFrom, valueTo, eventType, participant] inContext:managedObjectContext];
     if (create && nil == interventionEvent) {
         interventionEvent = [WMInterventionEvent MR_createInContext:managedObjectContext];

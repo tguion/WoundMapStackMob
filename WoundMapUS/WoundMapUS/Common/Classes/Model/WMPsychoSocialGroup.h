@@ -11,6 +11,7 @@
 @property (readonly, nonatomic) NSArray *psychoSocialValuesAdded;
 @property (readonly, nonatomic) NSArray *psychoSocialValuesRemoved;
 
++ (WMPsychoSocialGroup *)psychoSocialGroupForPatient:(WMPatient *)patient;
 + (BOOL)psychoSocialGroupsHaveHistory:(WMPatient *)patient;
 + (NSInteger)psychoSocialGroupsCount:(WMPatient *)patient;
 + (NSSet *)psychoSocialValuesForPsychoSocialGroup:(WMPsychoSocialGroup *)psychoSocialGroup;
@@ -34,7 +35,7 @@
                                                          value:(NSString *)value;
 
 - (WMPsychoSocialValue *)psychoSocialValueForParentItem:(WMPsychoSocialItem *)parentItem;
-- (void)removePsychoSocialValuesForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem;
+- (NSArray *)removePsychoSocialValuesForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem;
 
 
 - (NSInteger)valuesCountForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem;

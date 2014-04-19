@@ -283,6 +283,11 @@
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
+		7D6894571902F6A4006DE509 /* WMPsychoSocialSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894551902F6A4006DE509 /* WMPsychoSocialSummaryViewController.m */; };
+		7D6894581902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894561902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib */; };
+		7D68945C1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */; };
+		7D68945D1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */; };
+		7D6894601902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68945F1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -978,6 +983,14 @@
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
 		7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationStageTableViewCell.m; sourceTree = "<group>"; };
 		7D6894521902EC6B006DE509 /* EditNodeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditNodeCell.xib; sourceTree = "<group>"; };
+		7D6894541902F6A4006DE509 /* WMPsychoSocialSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPsychoSocialSummaryViewController.h; sourceTree = "<group>"; };
+		7D6894551902F6A4006DE509 /* WMPsychoSocialSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPsychoSocialSummaryViewController.m; sourceTree = "<group>"; };
+		7D6894561902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPsychoSocialSummaryViewController.xib; sourceTree = "<group>"; };
+		7D6894591902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPsychoSocialGroupHistoryViewController.h; sourceTree = "<group>"; };
+		7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPsychoSocialGroupHistoryViewController.m; sourceTree = "<group>"; };
+		7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPsychoSocialGroupHistoryViewController.xib; sourceTree = "<group>"; };
+		7D68945E1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPsychoSocialGroupTableViewCell.h; sourceTree = "<group>"; };
+		7D68945F1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPsychoSocialGroupTableViewCell.m; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -1802,6 +1815,9 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7D6894591902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.h */,
+				7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */,
+				7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				7D39DBA318BA97A70054DDC3 /* IAP */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
@@ -1930,6 +1946,9 @@
 				7D39DB5618B828630054DDC3 /* WMPsychoSocialGroupViewController.h */,
 				7D39DB5718B828630054DDC3 /* WMPsychoSocialGroupViewController.m */,
 				7D39DB5818B828630054DDC3 /* WMPsychoSocialGroupViewController.xib */,
+				7D6894541902F6A4006DE509 /* WMPsychoSocialSummaryViewController.h */,
+				7D6894551902F6A4006DE509 /* WMPsychoSocialSummaryViewController.m */,
+				7D6894561902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib */,
 				7D10CD8A18D7755700AD43E3 /* WMSelectAmountQualifierViewController.h */,
 				7D10CD8B18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m */,
 				7D10CD8C18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib */,
@@ -2209,10 +2228,6 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */,
-				7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */,
-				7DDEE28D18F6B5BA00AF9FC6 /* WMRoundedTextView.h */,
-				7DDEE28E18F6B5BA00AF9FC6 /* WMRoundedTextView.m */,
 				5F6DE4F518AEE08D00E87F7E /* APTableViewCell.h */,
 				5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */,
 				7DB2074518ABAB8E0004DC32 /* AsyncImageView.h */,
@@ -2249,12 +2264,18 @@
 				5F6DE51D18B589B300E87F7E /* WMInstructionTableViewCell.m */,
 				7D10CE2A18DDF47F00AD43E3 /* WMMedicationGroupTableViewCell.h */,
 				7D10CE2B18DDF47F00AD43E3 /* WMMedicationGroupTableViewCell.m */,
+				7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */,
+				7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */,
 				5F6DE4F218AEE00D00E87F7E /* WMNavigationTrackTableViewCell.h */,
 				5F6DE4F318AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m */,
 				7D9AA28818B13F5900C1B698 /* WMPatientTableViewCell.h */,
 				7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */,
 				5F6DE4F818AEE58900E87F7E /* WMProgressViewHUD.h */,
 				5F6DE4F918AEE58900E87F7E /* WMProgressViewHUD.m */,
+				7D68945E1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.h */,
+				7D68945F1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m */,
+				7DDEE28D18F6B5BA00AF9FC6 /* WMRoundedTextView.h */,
+				7DDEE28E18F6B5BA00AF9FC6 /* WMRoundedTextView.m */,
 				5F6DE54218B6D44400E87F7E /* WMSegmentControlTableViewCell.h */,
 				5F6DE54318B6D44400E87F7E /* WMSegmentControlTableViewCell.m */,
 				7D10CDFA18DB277800AD43E3 /* WMSkinAssessmentGroupTableViewCell.h */,
@@ -2886,6 +2907,7 @@
 				7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */,
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
 				5F67D1FF18AC3BE000460C37 /* SkinIntervention.plist in Resources */,
+				7D6894581902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib in Resources */,
 				5F67D20718AC3BE000460C37 /* WoundPositionDefinitions.plist in Resources */,
 				7D39DBAD18BA97A70054DDC3 /* IAPAggregatorViewController.xib in Resources */,
 				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
@@ -2959,6 +2981,7 @@
 				7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
 				7D10CD7118D4EA9E00AD43E3 /* WMCreateAccountViewController.xib in Resources */,
+				7D68945D1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib in Resources */,
 				7D39DAED18B7E5F80054DDC3 /* WMWoundDetailViewController.xib in Resources */,
 				7D10CE2918DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.xib in Resources */,
 				5F67D1F618AC3BE000460C37 /* InterventionStatus.plist in Resources */,
@@ -3170,6 +3193,7 @@
 				7D39DB2818B821920054DDC3 /* WMPhoto.m in Sources */,
 				7DD8373C18C78A3A0028C2D3 /* NSPersistentStore+MagicalRecord.m in Sources */,
 				7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */,
+				7D6894601902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m in Sources */,
 				7D39DB8918B94FEB0054DDC3 /* _WMDevice.m in Sources */,
 				7D10CD6618D24D5100AD43E3 /* WMUnderlayToolbar.m in Sources */,
 				7D10CD7418D618B600AD43E3 /* _WMTeamInvitation.m in Sources */,
@@ -3244,6 +3268,7 @@
 				7D10CDE418DA3FC300AD43E3 /* WMDisclosureImageView.m in Sources */,
 				5F67D1C418AC39B800460C37 /* WMParticipantType.m in Sources */,
 				7D9AA27418AFF74C00C1B698 /* WMConsultingGroup.m in Sources */,
+				7D68945C1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m in Sources */,
 				7D10CDE718DA431200AD43E3 /* WMDefinitionTableViewCell.m in Sources */,
 				7D10CD5C18D2146000AD43E3 /* ImageToDataTransformer.m in Sources */,
 				7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */,
@@ -3312,6 +3337,7 @@
 				7D39DB0D18B7FA080054DDC3 /* WMSelectWoundTypeViewController.m in Sources */,
 				7D39DB0518B7E8BE0054DDC3 /* WMPolicyEditorViewController.m in Sources */,
 				7DDAFB0318B62CE700A05F5D /* WMAddress+CoreText.m in Sources */,
+				7D6894571902F6A4006DE509 /* WMPsychoSocialSummaryViewController.m in Sources */,
 				7D10CD6518D24D5000AD43E3 /* WMUnderlayNavigationBar.m in Sources */,
 				7DDEE28018F4948B00AF9FC6 /* WMMedicalHistoryGroup.m in Sources */,
 				7DDFD68118B7C06D00041927 /* WMHomeBaseViewController.m in Sources */,

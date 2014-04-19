@@ -15,6 +15,13 @@
 
 @implementation WMPsychoSocialGroup
 
++ (WMPsychoSocialGroup *)psychoSocialGroupForPatient:(WMPatient *)patient
+{
+    WMPsychoSocialGroup *psychoSocialGroup = [WMPsychoSocialGroup MR_createInContext:[patient managedObjectContext]];
+    psychoSocialGroup.patient = patient;
+    return psychoSocialGroup;
+}
+
 + (BOOL)psychoSocialGroupsHaveHistory:(WMPatient *)patient
 {
     return [self psychoSocialGroupsCount:patient] > 1;
@@ -159,7 +166,7 @@
     return [WMPsychoSocialValue MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND psychoSocialItem.parentItem == %@", self, parentItem] inContext:[self managedObjectContext]];
 }
 
-- (void)removePsychoSocialValuesForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
+- (NSArray *)removePsychoSocialValuesForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"psychoSocialItem == %@", psychoSocialItem];
@@ -168,6 +175,7 @@
         [self removeValuesObject:value];
         [managedObjectContext deleteObject:value];
     }
+    return values;
 }
 
 - (NSInteger)valuesCountForPsychoSocialItem:(WMPsychoSocialItem *)psychoSocialItem
