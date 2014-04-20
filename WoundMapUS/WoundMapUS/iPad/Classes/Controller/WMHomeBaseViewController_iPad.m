@@ -428,12 +428,13 @@
                     // nothing more
                 }];
             }
+            self.photoAcquisitionState = PhotoAcquisitionStateNone;
             break;
         }
         case PhotoAcquisitionStateAcquirePatientPhoto: {
             // process image in background using self.photoManager scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect
             [self dismissViewControllerAnimated:YES completion:^{
-                // nothing more
+                self.photoAcquisitionState = PhotoAcquisitionStateNone;
             }];
             break;
         }

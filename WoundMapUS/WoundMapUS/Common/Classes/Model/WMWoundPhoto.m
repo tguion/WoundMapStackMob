@@ -269,7 +269,10 @@ typedef enum {
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundPhotoAttributes.thumbnail,
+                                                            WMWoundPhotoAttributes.thumbnailLarge,
+                                                            WMWoundPhotoAttributes.thumbnailMini,
+                                                            @"flagsValue",
                                                             @"imageHeightValue",
                                                             @"imageOrientationValue",
                                                             @"imageWidthValue",

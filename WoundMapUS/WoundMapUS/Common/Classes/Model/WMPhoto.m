@@ -23,7 +23,8 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMPhotoAttributes.photo,
+                                                            @"flagsValue",
                                                             @"originalFlagValue",
                                                             @"scaleValue",
                                                             @"sortRankValue"]];

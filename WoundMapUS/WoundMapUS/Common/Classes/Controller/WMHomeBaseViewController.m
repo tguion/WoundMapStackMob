@@ -18,6 +18,7 @@
 #import "WMMedicationGroup.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
+#import "WMPhoto.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
@@ -969,7 +970,21 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    [self navigateToWounds:navigationNodeButton.navigationNode];
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf navigateToWounds:navigationNodeButton.navigationNode];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups]
+                                              aggregator:self.wound
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
+
 }
 
 - (IBAction)chooseTrackAction:(id)sender
@@ -1711,69 +1726,111 @@
 
 - (void)photoManager:(WMPhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata
 {
-//    switch (self.photoAcquisitionState) {
-//        case PhotoAcquisitionStateNone: {
-//            NSAssert(NO, @"acquire photo in invalid state");
-//            break;
-//        }
-//        case PhotoAcquisitionStateAcquireWoundPhoto: {
-//            [self showProgressViewWithMessage:@"Processing Photo"];
-//            // have photoManager start the process
-//            WMWoundPhoto *woundPhoto = [photoManager processNewImage:image
-//                                                            metadata:metadata
-//                                                               wound:self.wound];
-//            // save the photo
-//            [self.managedObjectContext saveOnSuccess:^{
-//                [self hideProgressView];
-//                // save the photo now and wait for save to complete
-//                self.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
-//                [self updateToolbar];
-//                // notify interface of completed task
-//                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
-//            } onFailure:^(NSError *error) {
-//                [self hideProgressView];
-//                if (nil != error) {
-//                    [WMUtilities logError:error];
-//                }
-//                // TODO show alert on fail
-//            }];
-//            self.photoAcquisitionState = PhotoAcquisitionStateNone;
-//            self.savingWoundPhotoFlag = NO;
-//            break;
-//        }
-//        case PhotoAcquisitionStateAcquirePatientPhoto: {
-//            [self showProgressViewWithMessage:@"Processing Photo"];
-//            // process image in background using self.photoManager scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect
-//            __weak __typeof(self) weakSelf = self;
-//            [self.compassView updateForPatientPhotoProcessing];
-//            NSData *theData = UIImagePNGRepresentation(image);
-//            NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:[NSString stringWithFormat:@"%@.raw", self.patient.wmpatient_id] contentType:@"image/png"];
-//            patient.thumbnail = picData;
-//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//                BOOL success = NO;
-//                UIImage *face = [photoManager scaleAndCenterPatientPhoto:image rect:CGRectMake(0.0, 0.0, 256.0, 256.0) success:&success];
-//                NSManagedObjectContext *managedObjectContext = [weakSelf.coreDataHelper.stackMobStore contextForCurrentThread];
-//                WMPatient *patient = (WMPatient *)[managedObjectContext objectWithID:[weakSelf.patient objectID]];
-//                if (success) {
-//                    patient.faceDetectionFailed = NO;
-//                    NSData *theData = UIImagePNGRepresentation(face);
-//                    NSString *picData = [SMBinaryDataConversion stringForBinaryData:theData name:[NSString stringWithFormat:@"%@.face", patient.wmpatient_id] contentType:@"image/png"];
-//                    patient.thumbnail = picData;
-//                } else {
-//                    patient.faceDetectionFailed = YES;
-//                }
-//                [managedObjectContext saveOnSuccess:^{
-//                    [self hideProgressView];
-//                    [weakSelf.compassView updateForPatientPhotoProcessed];
-//                    [weakSelf.compassView updateForPatient:weakSelf.patient];
-//                } onFailure:^(NSError *){
-//                    [self hideProgressView];
-//                }];
-//            });
-//            self.photoAcquisitionState = PhotoAcquisitionStateNone;
-//            break;
-//        }
-//    }
+    switch (self.photoAcquisitionState) {
+        case PhotoAcquisitionStateNone: {
+            NSAssert(NO, @"acquire photo in invalid state");
+            break;
+        }
+        case PhotoAcquisitionStateAcquireWoundPhoto: {
+            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            progressHUD.labelText = @"Processing Photo";
+            // have photoManager start the process
+            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            };
+            WMObjectsCallback createPhotoComplete = ^(NSError *error, id object0, id object1) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
+                    WMPhoto *photo = (WMPhoto *)object1;
+                    WMFatFractal *ff = [WMFatFractal sharedInstance];
+                    [ff updateBlob:UIImagePNGRepresentation(photo.photo)
+                      withMimeType:@"image/png"
+                            forObj:photo
+                        memberName:WMPhotoAttributes.photo
+                        onComplete:onComplete onOffline:onComplete];
+                    [ff grabBagAddItemAtFfUrl:photo.ffUrl
+                                 toObjAtFfUrl:woundPhoto.ffUrl
+                                  grabBagName:WMWoundPhotoRelationships.photos
+                                   onComplete:onComplete];
+                }
+            };
+            WMObjectsCallback createWoundPhotoComplete = ^(NSError *error, id object0, id object1) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
+                WMPhoto *photo = (WMPhoto *)object1;
+                [woundPhoto addPhotosObject:photo];
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                [ff createObj:photo
+                        atUri:[NSString stringWithFormat:@"/%@", [WMPhoto entityName]]
+                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                       createPhotoComplete(error, woundPhoto, photo);
+                   } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                       createPhotoComplete(error, woundPhoto, photo);
+                   }];
+                [ff updateBlob:UIImagePNGRepresentation(image)
+                  withMimeType:@"image/png"
+                        forObj:woundPhoto
+                    memberName:WMWoundPhotoAttributes.thumbnail
+                    onComplete:onComplete onOffline:onComplete];
+                [ff updateBlob:UIImagePNGRepresentation(image)
+                  withMimeType:@"image/png"
+                        forObj:woundPhoto
+                    memberName:WMWoundPhotoAttributes.thumbnailLarge
+                    onComplete:onComplete onOffline:onComplete];
+                [ff updateBlob:UIImagePNGRepresentation(image)
+                  withMimeType:@"image/png"
+                        forObj:woundPhoto
+                    memberName:WMWoundPhotoAttributes.thumbnailMini
+                    onComplete:onComplete onOffline:onComplete];
+            };
+            [photoManager processNewImage:image
+                                 metadata:metadata
+                                    wound:self.wound
+                        completionHandler:^(NSError *error, id object) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
+                            WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object;
+                            WMPhoto *photo = [woundPhoto.photos anyObject];
+                            // save the photo
+                            __weak __typeof(&*self)weakSelf = self;
+                            NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+                            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                                if (error) {
+                                    [WMUtilities logError:error];
+                                }
+                                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                                weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
+                                [weakSelf updateToolbar];
+                                // notify interface of completed task
+                                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
+                                // save to back end
+                                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                                // break the relationship
+                                [woundPhoto removePhotosObject:photo];
+                                [ff createObj:woundPhoto
+                                        atUri:[NSString stringWithFormat:@"/%@", [WMWoundPhoto entityName]]
+                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                       createWoundPhotoComplete(error, woundPhoto, photo);
+                                   } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                       createWoundPhotoComplete(error, woundPhoto, photo);
+                                   }];
+                            }];
+                        }];
+            break;
+        }
+        case PhotoAcquisitionStateAcquirePatientPhoto: {
+            // should not be here
+            self.photoAcquisitionState = PhotoAcquisitionStateNone;
+            break;
+        }
+    }
 }
 
 - (void)photoManagerDidCancelCaptureImage:(WMPhotoManager *)photoManager

@@ -620,9 +620,10 @@
     [library assetForURL:assetURL resultBlock:resultsBlock failureBlock:failure];
 }
 
-- (WMWoundPhoto *)processNewImage:(UIImage *)image
-                         metadata:(NSDictionary *)metadata
-                            wound:(WMWound *)wound
+- (void)processNewImage:(UIImage *)image
+               metadata:(NSDictionary *)metadata
+                  wound:(WMWound *)wound
+      completionHandler:(WMObjectCallback)completionHandler;
 {
     // DEBUG tiling test
     //    image = [UIImage imageNamed:@"CuriousFrog.jpg"];
@@ -682,9 +683,9 @@
             thumbnail = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             woundPhoto.thumbnailMini = thumbnail;
+            completionHandler(nil, [woundPhoto MR_inContext:[wound managedObjectContext]]);
         }];
     });
-    return [woundPhoto MR_inContext:[wound managedObjectContext]];
 }
 
 #pragma mark - Patient Photo

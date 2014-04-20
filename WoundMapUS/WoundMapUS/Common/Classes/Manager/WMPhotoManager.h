@@ -7,6 +7,7 @@
 //
 
 #import "TakePhotoProtocols.h"
+#import "WMFatFractalManager.h"
 
 #define kMaximumThumbnailMiniWidth 40.0
 #define kMaximumThumbnailWidth 320.0
@@ -32,9 +33,10 @@
 
 - (void)loadImageFromAssetURL:(NSURL *)assetURL into:(UIImage **)image;
 
-- (WMWoundPhoto *)processNewImage:(UIImage *)image
-                         metadata:(NSDictionary *)metadata
-                            wound:(WMWound *)wound;
+- (void)processNewImage:(UIImage *)image
+               metadata:(NSDictionary *)metadata
+                  wound:(WMWound *)wound
+      completionHandler:(WMObjectCallback)completionHandler;
 
 // patient photo
 

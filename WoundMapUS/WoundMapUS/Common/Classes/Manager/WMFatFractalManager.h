@@ -11,6 +11,7 @@
 typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequired);
 typedef void (^WMErrorCallback)(NSError *error);
 typedef void (^WMObjectCallback)(NSError *error, id object);
+typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 
 @class WMFatFractal;
 @class WMParticipant, WMPatient, WMPerson, WMOrganization;
