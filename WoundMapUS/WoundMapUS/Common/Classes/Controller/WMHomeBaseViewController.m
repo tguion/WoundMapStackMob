@@ -933,7 +933,20 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    [self navigateToSelectWound:navigationNodeButton];
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf navigateToSelectWound:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.wounds]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)editWoundAction:(id)sender
@@ -992,11 +1005,22 @@
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WMNavigationNode *navigationNode = navigationNodeButton.navigationNode;
-    self.parentNavigationNode = navigationNode;
-    if ([navigationNode.subnodes count] > 0) {
-        // this should have subnodes, just being anal
-        [self animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
-    }
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            weakSelf.parentNavigationNode = navigationNode;
+            [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.bradenScales, WMPatientRelationships.deviceGroups, WMPatientRelationships.medicalHistoryGroups, WMPatientRelationships.psychosocialGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
+
 }
 
 - (IBAction)bradenScaleAction:(id)sender
@@ -1054,8 +1078,21 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    [self navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
+                                             aggregator:self.patient
+                                                     ff:[WMFatFractal sharedInstance]
+                                      completionHandler:block];
 }
 
 - (IBAction)photoAction:(id)sender

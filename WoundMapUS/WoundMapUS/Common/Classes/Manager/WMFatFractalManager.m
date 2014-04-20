@@ -275,6 +275,40 @@
     }];
 }
 
+- (void)updateGrabBags:(NSArray *)grabBagNames aggregator:(NSManagedObject *)aggregator ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    NSManagedObjectContext *managedObjectContext = [aggregator managedObjectContext];
+    __block NSInteger counter = 0;
+    WMErrorCallback onComplete = ^(NSError *error) {
+        if (counter > 0) {
+            if (error) {
+                counter = NSIntegerMin;
+                completionHandler(error);
+            } else {
+                --counter;
+                if (counter == 0) {
+                    completionHandler(error);
+                }
+            }
+        }
+    };
+    for (NSString *grabBagName in grabBagNames) {
+        NSMutableSet *localGrabBagObjects = [[aggregator valueForKey:grabBagName] mutableCopy];
+        ++counter;
+        [ff grabBagGetAllForObj:aggregator grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                onComplete(error);
+            } else {
+                NSSet *remoteGrabBag = [NSSet setWithArray:object];
+                [localGrabBagObjects minusSet:remoteGrabBag];
+                [managedObjectContext MR_deleteObjects:localGrabBagObjects];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                onComplete(nil);
+            }
+        }];
+    }
+}
+
 - (void)fetchCollection:(NSString *)collection
                   query:(NSString *)query
                 depthGb:(NSInteger)depthGb

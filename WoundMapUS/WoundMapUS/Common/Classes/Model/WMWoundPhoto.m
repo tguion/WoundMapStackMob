@@ -262,4 +262,62 @@ typedef enum {
     self.transformRotation = [NSNumber numberWithFloat:0.0];
 }
 
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"imageHeightValue",
+                                                            @"imageOrientationValue",
+                                                            @"imageWidthValue",
+                                                            @"transformRotationValue",
+                                                            @"transformScaleValue",
+                                                            @"transformTranslationXValue",
+                                                            @"transformTranslationYValue",
+                                                            @"landscapeOrientation",
+                                                            @"tilingHasStarted",
+                                                            @"waitingForTilingToFinish",
+                                                            @"measurementGroup",
+                                                            @"photo",
+                                                            @"photoLabelText",
+                                                            @"translation",
+                                                            @"transform",
+                                                            @"hasTransform",
+                                                            @"isTransformIdentity",
+                                                            @"transformBoundsSize",
+                                                            @"tilesCreatedForOriginalImage"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundPhoto attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundPhoto relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundPhoto relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
 @end
