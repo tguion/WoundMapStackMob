@@ -4,7 +4,7 @@
 //  Created by Todd Guion on 8/3/11.
 //  Copyright 2011 etreasure consulting LLC. All rights reserved.
 //
-//  TODO: handle low memory and document close/delete: see WoundPhotoCollectionViewCell
+//  TODO: handle low memory and document close/delete: see WMWoundPhotoCollectionViewCell
 
 #import "WMBradenCellTableViewCell.h"
 #import "WMBradenSection.h"

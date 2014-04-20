@@ -19,6 +19,9 @@ extern NSString *const kWoundPhotoChangedNotification;
 extern NSString *const kWoundWillDeleteNotification;
 extern NSString *const kWoundPhotoAddedNotification;
 extern NSString *const kWoundPhotoWillDeleteNotification;
+extern NSString *const kRequestToBrowsePhotosNotification;
+extern NSString *const kTransformControllerDidInstallNotification;
+extern NSString *const kTransformControllerDidUninstallNotification;
 extern NSString *const kNavigationTrackChangedNotification;
 extern NSString *const kNavigationStageChangedNotification;
 
@@ -50,14 +53,14 @@ typedef enum {
 
 
 @property (nonatomic) NavigationCoordinatorState state;
-@property (strong, nonatomic) WMBaseViewController *initialMeasurePhotoViewController;
+@property (strong, nonatomic) UIViewController *initialMeasurePhotoViewController;
 
 @property (readonly, nonatomic) WMWound *lastWoundForPatient;
 - (WMWound *)selectLastWoundForPatient;
 - (void)deleteWoundFromBackEnd:(WMWound *)wound;
 - (void)deleteWound:(WMWound *)wound;
 
-- (void)viewController:(WMBaseViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto;
+- (void)viewController:(UIViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto;
 - (void)cancelWoundMeasurementNavigation:(UIViewController *)viewController;
 - (void)deleteWoundPhoto:(WMWoundPhoto *)woundPhoto;
 

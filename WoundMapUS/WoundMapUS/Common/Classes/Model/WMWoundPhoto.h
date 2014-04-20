@@ -35,6 +35,7 @@ typedef enum {
 @property (nonatomic) BOOL tilesCreatedForOriginalImage;
 
 - (WMPhoto *)fetchOrCreatePhotoForType:(PhotoType)photoType;
+- (UIImage *)tileImageForScale:(NSInteger)scale row:(NSInteger)row column:(NSInteger)column;
 
 - (CGAffineTransform)transformForSize:(CGSize)aSize;
 - (void)updateTranslation:(CGPoint)translation;

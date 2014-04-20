@@ -126,6 +126,32 @@ typedef enum {
     return photo;
 }
 
+- (UIImage *)tileImageForScale:(NSInteger)scale row:(NSInteger)row column:(NSInteger)column
+{
+    // look at relationship first
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"scale == %d AND row == %d AND column == %d AND tileFlag == YES", scale, row, column];
+    NSArray *array = [[self.photos allObjects] filteredArrayUsingPredicate:predicate];
+    if ([array count] > 0) {
+        WMPhoto *photo = [array lastObject];
+        return photo.photo;
+    }
+    // else search database
+    predicate = [NSPredicate predicateWithFormat:@"woundPhoto == %@ AND scale == %d AND row == %d AND column == %d AND tileFlag == YES", self, scale, row, column];
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"WCPhoto" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:predicate];
+    NSError *error = nil;
+    array = [managedObjectContext executeFetchRequest:request error:&error];
+    if (nil != error) {
+        [WMUtilities logError:error];
+        abort();
+    }
+    // else
+    WMPhoto *photo = [array lastObject];
+    return photo.photo;
+}
+
 - (WMPhoto *)photo
 {
     return [WMPhoto MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"woundPhoto == %@ AND originalFlag == YES", self] inContext:[self managedObjectContext]];

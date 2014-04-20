@@ -288,6 +288,36 @@
 		7D68945C1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */; };
 		7D68945D1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */; };
 		7D6894601902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68945F1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m */; };
+		7D68946419043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68946219043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m */; };
+		7D68946519043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D68946319043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib */; };
+		7D68946819043DA4006DE509 /* WMGridImageViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68946719043DA4006DE509 /* WMGridImageViewContainer.m */; };
+		7D68946B19043E1B006DE509 /* WMRoundedSemitransparentLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68946A19043E1B006DE509 /* WMRoundedSemitransparentLabel.m */; };
+		7D68946F19043F8B006DE509 /* WMPhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68946D19043F8B006DE509 /* WMPhotoGridViewController.m */; };
+		7D68947019043F8B006DE509 /* WMPhotoGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D68946E19043F8B006DE509 /* WMPhotoGridViewController.xib */; };
+		7D68947319044032006DE509 /* WMWoundPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68947219044032006DE509 /* WMWoundPhotoCollectionViewCell.m */; };
+		7D68947719044427006DE509 /* WMWoundPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68947519044427006DE509 /* WMWoundPhotoViewController.m */; };
+		7D68947819044427006DE509 /* WMWoundPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D68947619044427006DE509 /* WMWoundPhotoViewController.xib */; };
+		7D68947C1904452C006DE509 /* WMComparePhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68947A1904452C006DE509 /* WMComparePhotosViewController.m */; };
+		7D68947D1904452C006DE509 /* WMComparePhotosViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D68947B1904452C006DE509 /* WMComparePhotosViewController.xib */; };
+		7D6894831904459D006DE509 /* KalDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894801904459D006DE509 /* KalDelegate.m */; };
+		7D6894841904459D006DE509 /* TableViewDelegateDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894821904459D006DE509 /* TableViewDelegateDataSource.m */; };
+		7D68949D190445D8006DE509 /* Kal.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7D689486190445D8006DE509 /* Kal.bundle */; };
+		7D68949E190445D8006DE509 /* KalDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D689489190445D8006DE509 /* KalDataSource.m */; };
+		7D68949F190445D8006DE509 /* KalDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68948B190445D8006DE509 /* KalDate.m */; };
+		7D6894A0190445D8006DE509 /* KalGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68948D190445D8006DE509 /* KalGridView.m */; };
+		7D6894A1190445D8006DE509 /* KalLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68948F190445D8006DE509 /* KalLogic.m */; };
+		7D6894A2190445D8006DE509 /* KalMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D689491190445D8006DE509 /* KalMonthView.m */; };
+		7D6894A3190445D8006DE509 /* KalTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D689494190445D8006DE509 /* KalTileView.m */; };
+		7D6894A4190445D8006DE509 /* KalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D689496190445D8006DE509 /* KalView.m */; };
+		7D6894A5190445D8006DE509 /* KalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D689498190445D8006DE509 /* KalViewController.m */; };
+		7D6894A6190445D8006DE509 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68949A190445D8006DE509 /* NSDateAdditions.m */; };
+		7D6894A7190445D8006DE509 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68949C190445D8006DE509 /* UIViewAdditions.m */; };
+		7D6894AB1904484D006DE509 /* WMPhotoZoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894A91904484D006DE509 /* WMPhotoZoomViewController.m */; };
+		7D6894AC1904484D006DE509 /* WMPhotoZoomViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894AA1904484D006DE509 /* WMPhotoZoomViewController.xib */; };
+		7D6894AF190448D1006DE509 /* WMWoundMeasurementLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894AE190448D1006DE509 /* WMWoundMeasurementLabel.m */; };
+		7D6894B21904494F006DE509 /* WMSelectWoundPhotoForDateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894B11904494F006DE509 /* WMSelectWoundPhotoForDateController.m */; };
+		7D6894B519044ACA006DE509 /* WMImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894B419044ACA006DE509 /* WMImageScrollView.m */; };
+		7D6894B819044B19006DE509 /* WMTilingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894B719044B19006DE509 /* WMTilingView.m */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -991,6 +1021,62 @@
 		7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPsychoSocialGroupHistoryViewController.xib; sourceTree = "<group>"; };
 		7D68945E1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPsychoSocialGroupTableViewCell.h; sourceTree = "<group>"; };
 		7D68945F1902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPsychoSocialGroupTableViewCell.m; sourceTree = "<group>"; };
+		7D68946119043D1C006DE509 /* WMWoundPhotoSlideShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundPhotoSlideShowViewController.h; sourceTree = "<group>"; };
+		7D68946219043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundPhotoSlideShowViewController.m; sourceTree = "<group>"; };
+		7D68946319043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundPhotoSlideShowViewController.xib; sourceTree = "<group>"; };
+		7D68946619043DA4006DE509 /* WMGridImageViewContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMGridImageViewContainer.h; sourceTree = "<group>"; };
+		7D68946719043DA4006DE509 /* WMGridImageViewContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMGridImageViewContainer.m; sourceTree = "<group>"; };
+		7D68946919043E1B006DE509 /* WMRoundedSemitransparentLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMRoundedSemitransparentLabel.h; sourceTree = "<group>"; };
+		7D68946A19043E1B006DE509 /* WMRoundedSemitransparentLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMRoundedSemitransparentLabel.m; sourceTree = "<group>"; };
+		7D68946C19043F8B006DE509 /* WMPhotoGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPhotoGridViewController.h; sourceTree = "<group>"; };
+		7D68946D19043F8B006DE509 /* WMPhotoGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPhotoGridViewController.m; sourceTree = "<group>"; };
+		7D68946E19043F8B006DE509 /* WMPhotoGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPhotoGridViewController.xib; sourceTree = "<group>"; };
+		7D68947119044031006DE509 /* WMWoundPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundPhotoCollectionViewCell.h; sourceTree = "<group>"; };
+		7D68947219044032006DE509 /* WMWoundPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundPhotoCollectionViewCell.m; sourceTree = "<group>"; };
+		7D68947419044427006DE509 /* WMWoundPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundPhotoViewController.h; sourceTree = "<group>"; };
+		7D68947519044427006DE509 /* WMWoundPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundPhotoViewController.m; sourceTree = "<group>"; };
+		7D68947619044427006DE509 /* WMWoundPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWoundPhotoViewController.xib; sourceTree = "<group>"; };
+		7D6894791904452C006DE509 /* WMComparePhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMComparePhotosViewController.h; sourceTree = "<group>"; };
+		7D68947A1904452C006DE509 /* WMComparePhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMComparePhotosViewController.m; sourceTree = "<group>"; };
+		7D68947B1904452C006DE509 /* WMComparePhotosViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMComparePhotosViewController.xib; sourceTree = "<group>"; };
+		7D68947F1904459D006DE509 /* KalDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDelegate.h; sourceTree = "<group>"; };
+		7D6894801904459D006DE509 /* KalDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDelegate.m; sourceTree = "<group>"; };
+		7D6894811904459D006DE509 /* TableViewDelegateDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewDelegateDataSource.h; sourceTree = "<group>"; };
+		7D6894821904459D006DE509 /* TableViewDelegateDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewDelegateDataSource.m; sourceTree = "<group>"; };
+		7D689486190445D8006DE509 /* Kal.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Kal.bundle; sourceTree = "<group>"; };
+		7D689487190445D8006DE509 /* Kal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kal.h; sourceTree = "<group>"; };
+		7D689488190445D8006DE509 /* KalDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDataSource.h; sourceTree = "<group>"; };
+		7D689489190445D8006DE509 /* KalDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDataSource.m; sourceTree = "<group>"; };
+		7D68948A190445D8006DE509 /* KalDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalDate.h; sourceTree = "<group>"; };
+		7D68948B190445D8006DE509 /* KalDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalDate.m; sourceTree = "<group>"; };
+		7D68948C190445D8006DE509 /* KalGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalGridView.h; sourceTree = "<group>"; };
+		7D68948D190445D8006DE509 /* KalGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalGridView.m; sourceTree = "<group>"; };
+		7D68948E190445D8006DE509 /* KalLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalLogic.h; sourceTree = "<group>"; };
+		7D68948F190445D8006DE509 /* KalLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalLogic.m; sourceTree = "<group>"; };
+		7D689490190445D8006DE509 /* KalMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalMonthView.h; sourceTree = "<group>"; };
+		7D689491190445D8006DE509 /* KalMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalMonthView.m; sourceTree = "<group>"; };
+		7D689492190445D8006DE509 /* KalPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalPrivate.h; sourceTree = "<group>"; };
+		7D689493190445D8006DE509 /* KalTileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalTileView.h; sourceTree = "<group>"; };
+		7D689494190445D8006DE509 /* KalTileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalTileView.m; sourceTree = "<group>"; };
+		7D689495190445D8006DE509 /* KalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalView.h; sourceTree = "<group>"; };
+		7D689496190445D8006DE509 /* KalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalView.m; sourceTree = "<group>"; };
+		7D689497190445D8006DE509 /* KalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KalViewController.h; sourceTree = "<group>"; };
+		7D689498190445D8006DE509 /* KalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KalViewController.m; sourceTree = "<group>"; };
+		7D689499190445D8006DE509 /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDateAdditions.h; sourceTree = "<group>"; };
+		7D68949A190445D8006DE509 /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDateAdditions.m; sourceTree = "<group>"; };
+		7D68949B190445D8006DE509 /* UIViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewAdditions.h; sourceTree = "<group>"; };
+		7D68949C190445D8006DE509 /* UIViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewAdditions.m; sourceTree = "<group>"; };
+		7D6894A81904484D006DE509 /* WMPhotoZoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPhotoZoomViewController.h; sourceTree = "<group>"; };
+		7D6894A91904484D006DE509 /* WMPhotoZoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPhotoZoomViewController.m; sourceTree = "<group>"; };
+		7D6894AA1904484D006DE509 /* WMPhotoZoomViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPhotoZoomViewController.xib; sourceTree = "<group>"; };
+		7D6894AD190448D1006DE509 /* WMWoundMeasurementLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementLabel.h; sourceTree = "<group>"; };
+		7D6894AE190448D1006DE509 /* WMWoundMeasurementLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementLabel.m; sourceTree = "<group>"; };
+		7D6894B01904494F006DE509 /* WMSelectWoundPhotoForDateController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMSelectWoundPhotoForDateController.h; sourceTree = "<group>"; };
+		7D6894B11904494F006DE509 /* WMSelectWoundPhotoForDateController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMSelectWoundPhotoForDateController.m; sourceTree = "<group>"; };
+		7D6894B319044ACA006DE509 /* WMImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMImageScrollView.h; sourceTree = "<group>"; };
+		7D6894B419044ACA006DE509 /* WMImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMImageScrollView.m; sourceTree = "<group>"; };
+		7D6894B619044B19006DE509 /* WMTilingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTilingView.h; sourceTree = "<group>"; };
+		7D6894B719044B19006DE509 /* WMTilingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTilingView.m; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -1687,6 +1773,47 @@
 			path = Nibs;
 			sourceTree = "<group>";
 		};
+		7D68947E1904459D006DE509 /* Kal */ = {
+			isa = PBXGroup;
+			children = (
+				7D68947F1904459D006DE509 /* KalDelegate.h */,
+				7D6894801904459D006DE509 /* KalDelegate.m */,
+				7D6894811904459D006DE509 /* TableViewDelegateDataSource.h */,
+				7D6894821904459D006DE509 /* TableViewDelegateDataSource.m */,
+			);
+			path = Kal;
+			sourceTree = "<group>";
+		};
+		7D689485190445D8006DE509 /* Kal */ = {
+			isa = PBXGroup;
+			children = (
+				7D689486190445D8006DE509 /* Kal.bundle */,
+				7D689487190445D8006DE509 /* Kal.h */,
+				7D689488190445D8006DE509 /* KalDataSource.h */,
+				7D689489190445D8006DE509 /* KalDataSource.m */,
+				7D68948A190445D8006DE509 /* KalDate.h */,
+				7D68948B190445D8006DE509 /* KalDate.m */,
+				7D68948C190445D8006DE509 /* KalGridView.h */,
+				7D68948D190445D8006DE509 /* KalGridView.m */,
+				7D68948E190445D8006DE509 /* KalLogic.h */,
+				7D68948F190445D8006DE509 /* KalLogic.m */,
+				7D689490190445D8006DE509 /* KalMonthView.h */,
+				7D689491190445D8006DE509 /* KalMonthView.m */,
+				7D689492190445D8006DE509 /* KalPrivate.h */,
+				7D689493190445D8006DE509 /* KalTileView.h */,
+				7D689494190445D8006DE509 /* KalTileView.m */,
+				7D689495190445D8006DE509 /* KalView.h */,
+				7D689496190445D8006DE509 /* KalView.m */,
+				7D689497190445D8006DE509 /* KalViewController.h */,
+				7D689498190445D8006DE509 /* KalViewController.m */,
+				7D689499190445D8006DE509 /* NSDateAdditions.h */,
+				7D68949A190445D8006DE509 /* NSDateAdditions.m */,
+				7D68949B190445D8006DE509 /* UIViewAdditions.h */,
+				7D68949C190445D8006DE509 /* UIViewAdditions.m */,
+			);
+			path = Kal;
+			sourceTree = "<group>";
+		};
 		7D9AA25818AE549300C1B698 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -1798,6 +1925,7 @@
 		7DB2068D18A7D6950004DC32 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7D689485190445D8006DE509 /* Kal */,
 				7D10CDA518DA352800AD43E3 /* AutoLayoutDemystified */,
 				7DDE754918CE456800B15C77 /* CorePlotDataSource */,
 				7DD8374818C7A5080028C2D3 /* AFNetworking */,
@@ -1815,6 +1943,24 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7D6894B01904494F006DE509 /* WMSelectWoundPhotoForDateController.h */,
+				7D6894B11904494F006DE509 /* WMSelectWoundPhotoForDateController.m */,
+				7D6894A81904484D006DE509 /* WMPhotoZoomViewController.h */,
+				7D6894A91904484D006DE509 /* WMPhotoZoomViewController.m */,
+				7D6894AA1904484D006DE509 /* WMPhotoZoomViewController.xib */,
+				7D68947E1904459D006DE509 /* Kal */,
+				7D6894791904452C006DE509 /* WMComparePhotosViewController.h */,
+				7D68947A1904452C006DE509 /* WMComparePhotosViewController.m */,
+				7D68947B1904452C006DE509 /* WMComparePhotosViewController.xib */,
+				7D68947419044427006DE509 /* WMWoundPhotoViewController.h */,
+				7D68947519044427006DE509 /* WMWoundPhotoViewController.m */,
+				7D68947619044427006DE509 /* WMWoundPhotoViewController.xib */,
+				7D68946C19043F8B006DE509 /* WMPhotoGridViewController.h */,
+				7D68946D19043F8B006DE509 /* WMPhotoGridViewController.m */,
+				7D68946E19043F8B006DE509 /* WMPhotoGridViewController.xib */,
+				7D68946119043D1C006DE509 /* WMWoundPhotoSlideShowViewController.h */,
+				7D68946219043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m */,
+				7D68946319043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib */,
 				7D6894591902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.h */,
 				7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */,
 				7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */,
@@ -2228,6 +2374,18 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D6894B619044B19006DE509 /* WMTilingView.h */,
+				7D6894B719044B19006DE509 /* WMTilingView.m */,
+				7D6894B319044ACA006DE509 /* WMImageScrollView.h */,
+				7D6894B419044ACA006DE509 /* WMImageScrollView.m */,
+				7D6894AD190448D1006DE509 /* WMWoundMeasurementLabel.h */,
+				7D6894AE190448D1006DE509 /* WMWoundMeasurementLabel.m */,
+				7D68947119044031006DE509 /* WMWoundPhotoCollectionViewCell.h */,
+				7D68947219044032006DE509 /* WMWoundPhotoCollectionViewCell.m */,
+				7D68946919043E1B006DE509 /* WMRoundedSemitransparentLabel.h */,
+				7D68946A19043E1B006DE509 /* WMRoundedSemitransparentLabel.m */,
+				7D68946619043DA4006DE509 /* WMGridImageViewContainer.h */,
+				7D68946719043DA4006DE509 /* WMGridImageViewContainer.m */,
 				5F6DE4F518AEE08D00E87F7E /* APTableViewCell.h */,
 				5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */,
 				7DB2074518ABAB8E0004DC32 /* AsyncImageView.h */,
@@ -2898,6 +3056,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F67D1F818AC3BE000460C37 /* MedicationsDefinitions.plist in Resources */,
+				7D68947019043F8B006DE509 /* WMPhotoGridViewController.xib in Resources */,
 				7D39DB1818B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib in Resources */,
 				5F67D20218AC3BE000460C37 /* WoundDescription.plist in Resources */,
 				7D39DB6818B9220E0054DDC3 /* WMPhotosContainerViewController_iPad.xib in Resources */,
@@ -2933,6 +3092,7 @@
 				5F67D1B418AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib in Resources */,
 				5F67D21818AC4ACF00460C37 /* WMSimpleTableViewController.xib in Resources */,
 				7D39DB5518B828000054DDC3 /* WMPatientSummaryContainerViewController.xib in Resources */,
+				7D68947D1904452C006DE509 /* WMComparePhotosViewController.xib in Resources */,
 				5F6DE53E18B58BB000E87F7E /* InstructionsSecurity.html in Resources */,
 				5F67D1EF18AC3BE000460C37 /* AnatomicLocation.plist in Resources */,
 				5F67D20118AC3BE000460C37 /* WoundAssessmentDefinitions.plist in Resources */,
@@ -2958,6 +3118,7 @@
 				7D10CD7C18D63B1600AD43E3 /* WMTelecomListViewController.xib in Resources */,
 				7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */,
 				7DDBEDD818BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib in Resources */,
+				7D68946519043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib in Resources */,
 				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
 				7D39DBB518BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib in Resources */,
 				7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */,
@@ -2974,6 +3135,7 @@
 				5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
 				5F67D20018AC3BE000460C37 /* WCInterventionEventType.plist in Resources */,
+				7D68949D190445D8006DE509 /* Kal.bundle in Resources */,
 				7DB2062C18A7D3400004DC32 /* Images.xcassets in Resources */,
 				7D39DAE818B7E5DD0054DDC3 /* WMSelectWoundViewController.xib in Resources */,
 				5F67D20818AC3BE000460C37 /* WoundTreatment.plist in Resources */,
@@ -2981,6 +3143,7 @@
 				7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
 				7D10CD7118D4EA9E00AD43E3 /* WMCreateAccountViewController.xib in Resources */,
+				7D6894AC1904484D006DE509 /* WMPhotoZoomViewController.xib in Resources */,
 				7D68945D1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib in Resources */,
 				7D39DAED18B7E5F80054DDC3 /* WMWoundDetailViewController.xib in Resources */,
 				7D10CE2918DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.xib in Resources */,
@@ -3020,6 +3183,7 @@
 				7DB2061518A7D3400004DC32 /* InfoPlist.strings in Resources */,
 				7D39DAFC18B7E6430054DDC3 /* WMPlotSelectDatasetViewController.xib in Resources */,
 				5F6DE53C18B58BB000E87F7E /* InstructionsPolicy.html in Resources */,
+				7D68947819044427006DE509 /* WMWoundPhotoViewController.xib in Resources */,
 				7D39DB5A18B828630054DDC3 /* WMPsychoSocialGroupViewController.xib in Resources */,
 				7D39DBBF18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib in Resources */,
 				7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */,
@@ -3098,7 +3262,9 @@
 				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
 				7D10CDF818DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m in Sources */,
 				7DDBEDCD18BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m in Sources */,
+				7D68949E190445D8006DE509 /* KalDataSource.m in Sources */,
 				7D10CDC618DA352800AD43E3 /* NSObject-Description.m in Sources */,
+				7D68947C1904452C006DE509 /* WMComparePhotosViewController.m in Sources */,
 				7DD8373E18C78A3A0028C2D3 /* MagicalRecord+Actions.m in Sources */,
 				7D39DB0018B7E6560054DDC3 /* WMShareViewController.m in Sources */,
 				7DF4E92618C22F27000A3F5B /* WMCarePlanCategory.m in Sources */,
@@ -3106,14 +3272,18 @@
 				7DF4E97D18C362D2000A3F5B /* _WMInterventionStatusJoin.m in Sources */,
 				7DF4E8EA18C22EEC000A3F5B /* _WMIAPTransaction.m in Sources */,
 				7DF4E8E718C22EEC000A3F5B /* _WMCarePlanValue.m in Sources */,
+				7D6894A0190445D8006DE509 /* KalGridView.m in Sources */,
 				7D39DB5418B828000054DDC3 /* WMPatientSummaryContainerViewController.m in Sources */,
 				7DD8373318C78A390028C2D3 /* NSManagedObject+MagicalDataImport.m in Sources */,
 				7DD3EA4918C011A70093E370 /* IAPManager.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7DDE755118CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m in Sources */,
+				7D68946B19043E1B006DE509 /* WMRoundedSemitransparentLabel.m in Sources */,
 				7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */,
 				7DD8373618C78A3A0028C2D3 /* NSManagedObject+MagicalRequests.m in Sources */,
+				7D68946819043DA4006DE509 /* WMGridImageViewContainer.m in Sources */,
 				7DDBEDEE18BEA96C00FEF3FA /* WMBradenCell.m in Sources */,
+				7D6894A6190445D8006DE509 /* NSDateAdditions.m in Sources */,
 				7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */,
 				7DDBEDD018BC0DED00FEF3FA /* WMWoundOdor.m in Sources */,
 				7D39DB9718B94FFD0054DDC3 /* WMDeviceGroup.m in Sources */,
@@ -3124,6 +3294,7 @@
 				7D39DBB418BAB2CC0054DDC3 /* WMTransformPhotoViewController.m in Sources */,
 				7D39DB9518B94FFD0054DDC3 /* WMDevice.m in Sources */,
 				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
+				7D6894B819044B19006DE509 /* WMTilingView.m in Sources */,
 				7DD8376318C7A5080028C2D3 /* AFXMLRequestOperation.m in Sources */,
 				7D39DBC818BAB5540054DDC3 /* WMUndermineTunnelViewController.m in Sources */,
 				7D13027B18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m in Sources */,
@@ -3135,9 +3306,11 @@
 				7DDBEDE218BEA95C00FEF3FA /* _WMBradenCell.m in Sources */,
 				7DD8376018C7A5080028C2D3 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				7D10CD8D18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m in Sources */,
+				7D68947319044032006DE509 /* WMWoundPhotoCollectionViewCell.m in Sources */,
 				7D39DB7E18B947330054DDC3 /* WMMedication.m in Sources */,
 				7D10CDC518DA352800AD43E3 /* ConstraintUtilities-Matching.m in Sources */,
 				5F6DE54818B6FA4E00E87F7E /* WMIdListViewController.m in Sources */,
+				7D6894AF190448D1006DE509 /* WMWoundMeasurementLabel.m in Sources */,
 				7DD8373718C78A3A0028C2D3 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
 				7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */,
 				7DF4E93818C22F27000A3F5B /* WMWoundPositionValue.m in Sources */,
@@ -3171,6 +3344,7 @@
 				7D13028118D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m in Sources */,
 				7D10CE1018DCE01900AD43E3 /* WMBradenSectionSelectCellViewController.m in Sources */,
 				7DD8373218C78A390028C2D3 /* NSManagedObject+MagicalAggregation.m in Sources */,
+				7D68947719044427006DE509 /* WMWoundPhotoViewController.m in Sources */,
 				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
 				7DF4E93618C22F27000A3F5B /* WMWoundLocationValue.m in Sources */,
 				7DDEE28818F49E5500AF9FC6 /* WMMedicalHistoryViewController.m in Sources */,
@@ -3184,6 +3358,7 @@
 				5F6DE52A18B58A8D00E87F7E /* WMInstruction.m in Sources */,
 				7D39DB0918B7EFE30054DDC3 /* WMCarePlanTableViewCell.m in Sources */,
 				7D10CDD518DA3B5300AD43E3 /* WMInterventionStatusViewController.m in Sources */,
+				7D6894A2190445D8006DE509 /* KalMonthView.m in Sources */,
 				7DF4E8F918C22EEC000A3F5B /* _WMWoundTreatmentValue.m in Sources */,
 				5F67D20E18AC447400460C37 /* WMUserDefaultsManager.m in Sources */,
 				7D39DBAE18BA97A70054DDC3 /* IAPBaseViewController.m in Sources */,
@@ -3219,15 +3394,19 @@
 				7D10CDDE18DA3E7800AD43E3 /* WMEventTableViewCell.m in Sources */,
 				7DDBEDCB18BC0DED00FEF3FA /* WMWoundMeasurement.m in Sources */,
 				7D39DB2918B821920054DDC3 /* WMWoundPhoto.m in Sources */,
+				7D68949F190445D8006DE509 /* KalDate.m in Sources */,
 				7DD8374418C78A3A0028C2D3 /* MagicalRecord.m in Sources */,
 				7D9AA26818AFBE6300C1B698 /* WMValue1TableViewCell.m in Sources */,
 				7D39DBA118BA8AB20054DDC3 /* WMPlotGraphViewController.m in Sources */,
 				7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */,
 				7DDFD69118B7C2C000041927 /* WMNavigationPatientWoundContainerView.m in Sources */,
 				7D9AA28A18B13F5900C1B698 /* WMPatientTableViewCell.m in Sources */,
+				7D6894841904459D006DE509 /* TableViewDelegateDataSource.m in Sources */,
 				7D13026018CF7EE200AE33B2 /* WMFFMetadata.m in Sources */,
 				7DF4E8F418C22EEC000A3F5B /* _WMWoundLocationValue.m in Sources */,
 				7DDEE28C18F5617700AF9FC6 /* WMSwitchTableViewCell.m in Sources */,
+				7D6894A7190445D8006DE509 /* UIViewAdditions.m in Sources */,
+				7D6894B21904494F006DE509 /* WMSelectWoundPhotoForDateController.m in Sources */,
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */,
 				7DF4E92718C22F27000A3F5B /* WMCarePlanGroup.m in Sources */,
@@ -3240,6 +3419,7 @@
 				5F6DE4F418AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m in Sources */,
 				7DD8373918C78A3A0028C2D3 /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				7DF4E98018C362DD000A3F5B /* WMInterventionStatusJoin.m in Sources */,
+				7D6894A4190445D8006DE509 /* KalView.m in Sources */,
 				7D39DADA18B7CEF50054DDC3 /* WMNavigationPatientPhotoButton.m in Sources */,
 				7DB206ED18A839240004DC32 /* _WMPatient.m in Sources */,
 				7DD8372B18C78A390028C2D3 /* MagicalImportFunctions.m in Sources */,
@@ -3247,12 +3427,14 @@
 				7DD8373018C78A390028C2D3 /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				5F67D22318AD8DE200460C37 /* _WMNavigationNode.m in Sources */,
 				7DDEE26D18F1919D00AF9FC6 /* WMManageTeamViewController.m in Sources */,
+				7D6894B519044ACA006DE509 /* WMImageScrollView.m in Sources */,
 				7D10CE0518DC634800AD43E3 /* WMDevicesSummaryViewController.m in Sources */,
 				7DF4E93218C22F27000A3F5B /* WMSkinAssessmentGroup.m in Sources */,
 				7DD8376418C7A5080028C2D3 /* UIImageView+AFNetworking.m in Sources */,
 				7D10CD7B18D63B1600AD43E3 /* WMTelecomListViewController.m in Sources */,
 				7DD8372D18C78A390028C2D3 /* NSEntityDescription+MagicalDataImport.m in Sources */,
 				7D10CE2318DDF26300AD43E3 /* WMMedicationSummaryViewController.m in Sources */,
+				7D6894831904459D006DE509 /* KalDelegate.m in Sources */,
 				7DDEE27918F4947500AF9FC6 /* _WMMedicalHistoryValue.m in Sources */,
 				7DD8375E18C7A5080028C2D3 /* AFImageRequestOperation.m in Sources */,
 				7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */,
@@ -3278,6 +3460,7 @@
 				7DD8373518C78A390028C2D3 /* NSManagedObject+MagicalRecord.m in Sources */,
 				7D10CDC718DA352800AD43E3 /* NSObject-Nametag.m in Sources */,
 				7DB206D518A839180004DC32 /* WMPatient.m in Sources */,
+				7D68946419043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m in Sources */,
 				7DF4E95518C299DC000A3F5B /* _WMInterventionEvent.m in Sources */,
 				7D39DB1718B7FBA10054DDC3 /* WMWoundTreatmentViewController.m in Sources */,
 				7D39DB3F18B825750054DDC3 /* WMSkinAssessmentGroupViewController.m in Sources */,
@@ -3288,6 +3471,7 @@
 				7DD8372C18C78A390028C2D3 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */,
 				7DF4E92D18C22F27000A3F5B /* WMPsychoSocialGroup.m in Sources */,
+				7D6894A3190445D8006DE509 /* KalTileView.m in Sources */,
 				7D10CD7018D4EA9E00AD43E3 /* WMCreateAccountViewController.m in Sources */,
 				7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */,
 				7D39DB1218B7FA750054DDC3 /* WMSelectWoundLocationViewController.m in Sources */,
@@ -3309,10 +3493,12 @@
 				7DD8375D18C7A5080028C2D3 /* AFHTTPRequestOperation.m in Sources */,
 				7DD8373B18C78A3A0028C2D3 /* NSManagedObjectModel+MagicalRecord.m in Sources */,
 				7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */,
+				7D6894A5190445D8006DE509 /* KalViewController.m in Sources */,
 				7DB206D618A839180004DC32 /* WMPerson.m in Sources */,
 				7DD8376118C7A5080028C2D3 /* AFPropertyListRequestOperation.m in Sources */,
 				7D10CDC918DA352800AD43E3 /* View-Nametag.m in Sources */,
 				7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */,
+				7D68946F19043F8B006DE509 /* WMPhotoGridViewController.m in Sources */,
 				5F6DE51018B586F600E87F7E /* WMInstructionsViewController.m in Sources */,
 				7D10CDD118DA37DB00AD43E3 /* WMWoundMeasurementGroupTableViewCell.m in Sources */,
 				7DD8374118C78A3A0028C2D3 /* MagicalRecord+Options.m in Sources */,
@@ -3322,6 +3508,7 @@
 				7DF4E97518C29A07000A3F5B /* WMInterventionStatus.m in Sources */,
 				7D10CDEF18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m in Sources */,
 				7DF4E9C318C4CAAE000A3F5B /* PrintConfiguration.m in Sources */,
+				7D6894A1190445D8006DE509 /* KalLogic.m in Sources */,
 				7DD8373F18C78A3A0028C2D3 /* MagicalRecord+ErrorHandling.m in Sources */,
 				7D39DB2D18B8230F0054DDC3 /* WMBradenScaleViewController.m in Sources */,
 				7DDBEDCA18BC0DED00FEF3FA /* WMAmountQualifier.m in Sources */,
@@ -3384,6 +3571,7 @@
 				7DD8372F18C78A390028C2D3 /* NSObject+MagicalDataImport.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,
 				7DF4E93A18C22F27000A3F5B /* WMWoundTreatmentGroup.m in Sources */,
+				7D6894AB1904484D006DE509 /* WMPhotoZoomViewController.m in Sources */,
 				5F6DE4FE18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m in Sources */,
 				7D39DAF118B7E6130054DDC3 /* WMChooseStageViewController.m in Sources */,
 				7D39DB7718B947250054DDC3 /* _WMMedicationGroup.m in Sources */,

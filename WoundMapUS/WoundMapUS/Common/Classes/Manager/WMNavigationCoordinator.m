@@ -33,6 +33,9 @@ NSString *const kWoundPhotoChangedNotification = @"WoundPhotoChangedNotification
 NSString *const kWoundWillDeleteNotification = @"WoundWillDeleteNotification";
 NSString *const kWoundPhotoAddedNotification = @"WoundPhotoAddedNotification";
 NSString *const kWoundPhotoWillDeleteNotification = @"WoundPhotoWillDeleteNotification";
+NSString *const kRequestToBrowsePhotosNotification = @"RequestToBrowsePhotosNotification";
+NSString *const kTransformControllerDidInstallNotification = @"TransformControllerDidInstallNotification";
+NSString *const kTransformControllerDidUninstallNotification = @"TransformControllerDidUninstallNotification";
 NSString *const kNavigationStageChangedNotification = @"NavigationStageChangedNotification";
 NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNotification";
 
@@ -321,7 +324,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 #pragma mark - Wound Measurements
 
-- (void)viewController:(WMBaseViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto
+- (void)viewController:(UIViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto
 {
     // make sure the navigation bar is showing
     [viewController.navigationController setNavigationBarHidden:NO];
@@ -336,7 +339,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     // else
     self.initialMeasurePhotoViewController = viewController;
     // adjust image or scale
-    [viewController hideProgressView];
     if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto]) {
         // adjust image
         WMTransformPhotoViewController *transformPhotoViewController = self.transformPhotoViewController;
