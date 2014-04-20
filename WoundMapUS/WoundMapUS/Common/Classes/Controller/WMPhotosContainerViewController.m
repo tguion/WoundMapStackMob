@@ -26,6 +26,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMUtilities.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 
 #define kWaitingForTilingToFinishAlertTag 1001
@@ -912,9 +913,20 @@
     if (actionSheet.tag == kDeletePhotoActionSheetTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [self.appDelegate.navigationCoordinator deleteWoundPhoto:self.woundPhoto];
+            NSSet *deletedObjects = self.managedObjectContext.deletedObjects;
             [self.managedObjectContext MR_saveToPersistentStoreAndWait];
             // update back end
-            xxxx;
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            };
+            for (id object in deletedObjects) {
+                [ff deleteObj:object
+                   onComplete:onComplete
+                    onOffline:onComplete];
+            }
         }
     }
 }

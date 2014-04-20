@@ -1732,6 +1732,8 @@
             break;
         }
         case PhotoAcquisitionStateAcquireWoundPhoto: {
+            WMWound *wound = self.wound;
+            NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
             MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             progressHUD.labelText = @"Processing Photo";
             // have photoManager start the process
@@ -1739,6 +1741,7 @@
                 if (error) {
                     [WMUtilities logError:error];
                 }
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
             };
             WMObjectsCallback createPhotoComplete = ^(NSError *error, id object0, id object1) {
                 if (error) {
@@ -1788,6 +1791,10 @@
                         forObj:woundPhoto
                     memberName:WMWoundPhotoAttributes.thumbnailMini
                     onComplete:onComplete onOffline:onComplete];
+                [ff grabBagAddItemAtFfUrl:woundPhoto.ffUrl
+                             toObjAtFfUrl:wound.ffUrl
+                              grabBagName:WMWoundRelationships.photos
+                               onComplete:onComplete];
             };
             [photoManager processNewImage:image
                                  metadata:metadata
