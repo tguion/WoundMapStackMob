@@ -535,6 +535,11 @@
     return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+- (NSManagedObjectContext *)managedObjectContext
+{
+    return [NSManagedObjectContext MR_defaultContext];
+}
+
 - (WMPatient *)patient
 {
     return self.appDelegate.navigationCoordinator.patient;

@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class WMPatientSummaryContainerViewController;
 
 @protocol PatientSummaryContainerDelegate <NSObject>
@@ -16,7 +14,7 @@
 
 @end
 
-@interface WMPatientSummaryContainerViewController : WMBaseViewController
+@interface WMPatientSummaryContainerViewController : UIViewController
 
 @property (weak, nonatomic) id<PatientSummaryContainerDelegate> delegate;
 

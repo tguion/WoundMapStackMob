@@ -233,12 +233,13 @@
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     NSManagedObjectID *woundPhotoID = [self.woundPhoto objectID];
     NSManagedObjectID *photoID = [self.woundPhoto.photo objectID];
+    __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         // make a new UIImageView for the new image
         UIImage *image = self.woundPhoto.photo.photo;
         _zoomView = [[UIImageView alloc] initWithImage:image];
-        [self addSubview:_zoomView];
-        [self configureForImageSize:image.size];
+        [weakSelf addSubview:_zoomView];
+        [weakSelf configureForImageSize:image.size];
         // fault our cache
         [Faulter faultObjectWithID:photoID inContext:managedObjectContext];
         [Faulter faultObjectWithID:woundPhotoID inContext:managedObjectContext];
