@@ -12,6 +12,6 @@
 
 @interface WMWoundPhotoViewController : UIViewController
 
-@property (strong, nonatomic) WMWoundPhoto *woundPhoto;
+@property (strong, nonatomic) NSManagedObjectID *woundPhotoObjectID;
 
 @end

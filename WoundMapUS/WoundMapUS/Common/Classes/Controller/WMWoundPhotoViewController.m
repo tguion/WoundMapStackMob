@@ -15,12 +15,11 @@
 
 @interface WMWoundPhotoViewController ()
 @property (weak, nonatomic) IBOutlet WMGridImageViewContainer *imageViewContainer;
-@property (strong, nonatomic) NSManagedObjectID *woundPhotoObjectID;
+@property (strong, nonatomic) WMWoundPhoto *woundPhoto;
 @end
 
 @implementation WMWoundPhotoViewController
 
-@synthesize woundPhoto=_woundPhoto;
 @synthesize imageViewContainer=_imageViewContainer;
 
 - (void)viewDidLoad
@@ -72,17 +71,14 @@
     return _woundPhoto;
 }
 
-- (void)setWoundPhoto:(WMWoundPhoto *)woundPhoto
+- (void)setWoundPhotoObjectID:(NSManagedObjectID *)woundPhotoObjectID
 {
-    if (_woundPhoto == woundPhoto) {
+    if (_woundPhotoObjectID == woundPhotoObjectID) {
         return;
     }
     // else
-    [self willChangeValueForKey:@"woundPhoto"];
-    _woundPhoto = woundPhoto;
-    [self didChangeValueForKey:@"woundPhoto"];
-    _woundPhotoObjectID = [woundPhoto objectID];
-    _imageViewContainer.woundPhoto = woundPhoto;
+    _woundPhotoObjectID = woundPhotoObjectID;
+    _imageViewContainer.woundPhoto = self.woundPhoto;
 }
 
 #pragma mark - Actions

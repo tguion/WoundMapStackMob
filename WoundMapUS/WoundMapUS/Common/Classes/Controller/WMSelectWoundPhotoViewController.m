@@ -125,7 +125,7 @@
 
 - (NSArray *)fetchedResultsControllerSortDescriptors
 {
-    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateCreated" ascending:NO]];
+    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:NO]];
 }
 
 @end

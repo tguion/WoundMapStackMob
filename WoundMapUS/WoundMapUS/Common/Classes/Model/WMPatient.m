@@ -213,6 +213,11 @@ typedef enum {
     return [[NSDate date] compare:[calendar dateByAddingComponents:components toDate:self.createdAt options:0]] == NSOrderedDescending;
 }
 
+- (BOOL)hasPatientDetails
+{
+    return ([self.person.addresses count] || [self.person.telecoms count] || [self.medicalHistoryGroups count] || self.surgicalHistory || self.relevantMedications);
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -239,7 +244,8 @@ typedef enum {
                                                             @"woundCount",
                                                             @"photosCount",
                                                             @"dayOrMoreSinceCreated",
-                                                            @"lastActiveMedicalHistoryGroup"]];
+                                                            @"lastActiveMedicalHistoryGroup",
+                                                            @"hasPatientDetails"]];
     });
     return PropertyNamesNotToSerialize;
 }

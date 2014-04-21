@@ -313,19 +313,20 @@
     [self removeCurrentChildViewControllerFromParentViewController];
 }
 
-- (WMWoundPhotoViewController *)woundPhotoViewControllerForWoundPhoto:(WMWoundPhoto *)woundPhoto
+- (WMWoundPhotoViewController *)woundPhotoViewControllerForWoundPhotoObjectID:(NSManagedObjectID *)woundPhotoObjectID
 {
     WMWoundPhotoViewController *viewController = [[WMWoundPhotoViewController alloc] initWithNibName:@"WMWoundPhotoViewController" bundle:nil];
-    viewController.woundPhoto = woundPhoto;
+    viewController.woundPhotoObjectID = woundPhotoObjectID;
     return viewController;
 }
 
 - (void)kickStartPhotoPageViewController
 {
     self.photoPageViewController.dataSource = self;
-    WMWoundPhoto *woundPhoto = [self.cachedSortedWoundPhotos count] > 0 ? [self woundPhotoAtIndex:0]:nil;
-    if (nil != woundPhoto) {
-        WMWoundPhotoViewController *pageZero = [self woundPhotoViewControllerForWoundPhoto:woundPhoto];
+    NSArray *objectIDs = self.cachedSortedWoundPhotos;
+    NSManagedObjectID *woundPhotoObjectID = [objectIDs count] > 0 ? [objectIDs firstObject]:nil;
+    if (nil != woundPhotoObjectID) {
+        WMWoundPhotoViewController *pageZero = [self woundPhotoViewControllerForWoundPhotoObjectID:woundPhotoObjectID];
         [self.photoPageViewController setViewControllers:@[pageZero]
                                                direction:UIPageViewControllerNavigationDirectionForward
                                                 animated:NO
@@ -411,9 +412,9 @@
 
 - (NSInteger)indexOfWoundPhoto:(WMWoundPhoto *)woundPhoto
 {
-    NSManagedObjectID *objectID = [woundPhoto objectID];
     NSInteger index = NSNotFound;
     if (nil != woundPhoto) {
+        NSManagedObjectID *objectID = [woundPhoto objectID];
         index = [self.cachedSortedWoundPhotos indexOfObject:objectID];
     }
     return index;
@@ -679,7 +680,7 @@
 - (UIPageViewController *)photoPageViewController
 {
     if (nil == _photoPageViewController) {
-        _photoPageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl//UIPageViewControllerTransitionStyleScroll
+        _photoPageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll//UIPageViewControllerTransitionStyleScroll, UIPageViewControllerTransitionStylePageCurl
                                                                    navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                                  options:@{ UIPageViewControllerOptionInterPageSpacingKey : @20.f }];
         _photoPageViewController.delegate = self;
@@ -971,6 +972,7 @@
 
 - (WMWoundPhoto *)woundPhotoAtIndex:(NSInteger)index
 {
+    NSParameterAssert(index != NSNotFound);
     id object = [self.cachedSortedWoundPhotos objectAtIndex:index];
     if ([object isKindOfClass:[WMWoundPhoto class]]) {
         return object;
@@ -1211,9 +1213,10 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
     WMWoundPhotoViewController *myController = (WMWoundPhotoViewController *)viewController;
-    NSInteger index = [self indexOfWoundPhoto:myController.woundPhoto];
-    if (index > 0) {
-        return [self woundPhotoViewControllerForWoundPhoto:[self woundPhotoAtIndex:(index - 1)]];
+    NSArray *objectIDs = self.cachedSortedWoundPhotos;
+    NSInteger index = [objectIDs indexOfObject:myController.woundPhotoObjectID];
+    if (index != NSNotFound && index > 0) {
+        return [self woundPhotoViewControllerForWoundPhotoObjectID:[objectIDs objectAtIndex:(index - 1)]];
     }
     // else
     return nil;
@@ -1222,9 +1225,10 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
     WMWoundPhotoViewController *myController = (WMWoundPhotoViewController *)viewController;
-    NSInteger index = [self indexOfWoundPhoto:myController.woundPhoto];
-    if (index < ([self.cachedSortedWoundPhotos count] - 1)) {
-        return [self woundPhotoViewControllerForWoundPhoto:[self woundPhotoAtIndex:(index + 1)]];
+    NSArray *objectIDs = self.cachedSortedWoundPhotos;
+    NSInteger index = [objectIDs indexOfObject:myController.woundPhotoObjectID];
+    if (index != NSNotFound && index < ([objectIDs count] - 1)) {
+        return [self woundPhotoViewControllerForWoundPhotoObjectID:[objectIDs objectAtIndex:(index + 1)]];
     }
     // else
     return nil;

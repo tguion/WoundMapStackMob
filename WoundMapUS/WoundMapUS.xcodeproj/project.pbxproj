@@ -98,6 +98,13 @@
 		7D01510A18EEEF7500D5C0A9 /* WMFatFractal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */; };
 		7D0F2F4419058614009F8346 /* WMCarePlanSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4219058614009F8346 /* WMCarePlanSummaryViewController.m */; };
 		7D0F2F4519058614009F8346 /* WMCarePlanSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4319058614009F8346 /* WMCarePlanSummaryViewController.xib */; };
+		7D0F2F4A1905B747009F8346 /* WMPatient+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F491905B747009F8346 /* WMPatient+CoreText.m */; };
+		7D0F2F4F1905BD97009F8346 /* TemplateTwoColumnsPlan3.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4B1905BD97009F8346 /* TemplateTwoColumnsPlan3.xib */; };
+		7D0F2F501905BD97009F8346 /* TemplateTwoColumnsTreatment.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4C1905BD97009F8346 /* TemplateTwoColumnsTreatment.xib */; };
+		7D0F2F511905BD97009F8346 /* TemplateTwoColumnsTwoPhotosAssessment.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4D1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosAssessment.xib */; };
+		7D0F2F521905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4E1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib */; };
+		7D0F2F561905C120009F8346 /* WMPatientSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */; };
+		7D0F2F571905C120009F8346 /* WMPatientSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */; };
 		7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */; };
 		7D10CD5C18D2146000AD43E3 /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5B18D2146000AD43E3 /* ImageToDataTransformer.m */; };
 		7D10CD5F18D217D500AD43E3 /* APLImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5E18D217D500AD43E3 /* APLImageToDataTransformer.m */; };
@@ -694,6 +701,15 @@
 		7D0F2F4119058614009F8346 /* WMCarePlanSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanSummaryViewController.h; sourceTree = "<group>"; };
 		7D0F2F4219058614009F8346 /* WMCarePlanSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanSummaryViewController.m; sourceTree = "<group>"; };
 		7D0F2F4319058614009F8346 /* WMCarePlanSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCarePlanSummaryViewController.xib; sourceTree = "<group>"; };
+		7D0F2F481905B747009F8346 /* WMPatient+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMPatient+CoreText.h"; sourceTree = "<group>"; };
+		7D0F2F491905B747009F8346 /* WMPatient+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMPatient+CoreText.m"; sourceTree = "<group>"; };
+		7D0F2F4B1905BD97009F8346 /* TemplateTwoColumnsPlan3.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplateTwoColumnsPlan3.xib; sourceTree = "<group>"; };
+		7D0F2F4C1905BD97009F8346 /* TemplateTwoColumnsTreatment.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplateTwoColumnsTreatment.xib; sourceTree = "<group>"; };
+		7D0F2F4D1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosAssessment.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplateTwoColumnsTwoPhotosAssessment.xib; sourceTree = "<group>"; };
+		7D0F2F4E1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplateTwoColumnsTwoPhotosGraphs.xib; sourceTree = "<group>"; };
+		7D0F2F531905C120009F8346 /* WMPatientSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientSummaryViewController.h; sourceTree = "<group>"; };
+		7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientSummaryViewController.m; sourceTree = "<group>"; };
+		7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPatientSummaryViewController.xib; sourceTree = "<group>"; };
 		7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFatFractalManager.h; sourceTree = "<group>"; };
 		7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFatFractalManager.m; sourceTree = "<group>"; };
 		7D10CD5A18D2146000AD43E3 /* ImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageToDataTransformer.h; sourceTree = "<group>"; };
@@ -1773,6 +1789,10 @@
 		7D6894511902EC6B006DE509 /* Nibs */ = {
 			isa = PBXGroup;
 			children = (
+				7D0F2F4B1905BD97009F8346 /* TemplateTwoColumnsPlan3.xib */,
+				7D0F2F4C1905BD97009F8346 /* TemplateTwoColumnsTreatment.xib */,
+				7D0F2F4D1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosAssessment.xib */,
+				7D0F2F4E1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib */,
 				7D6894521902EC6B006DE509 /* EditNodeCell.xib */,
 			);
 			path = Nibs;
@@ -1948,32 +1968,9 @@
 		7DB2068E18A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7D0F2F4119058614009F8346 /* WMCarePlanSummaryViewController.h */,
-				7D0F2F4219058614009F8346 /* WMCarePlanSummaryViewController.m */,
-				7D0F2F4319058614009F8346 /* WMCarePlanSummaryViewController.xib */,
-				7D6894B01904494F006DE509 /* WMSelectWoundPhotoForDateController.h */,
-				7D6894B11904494F006DE509 /* WMSelectWoundPhotoForDateController.m */,
-				7D6894A81904484D006DE509 /* WMPhotoZoomViewController.h */,
-				7D6894A91904484D006DE509 /* WMPhotoZoomViewController.m */,
-				7D6894AA1904484D006DE509 /* WMPhotoZoomViewController.xib */,
-				7D68947E1904459D006DE509 /* Kal */,
-				7D6894791904452C006DE509 /* WMComparePhotosViewController.h */,
-				7D68947A1904452C006DE509 /* WMComparePhotosViewController.m */,
-				7D68947B1904452C006DE509 /* WMComparePhotosViewController.xib */,
-				7D68947419044427006DE509 /* WMWoundPhotoViewController.h */,
-				7D68947519044427006DE509 /* WMWoundPhotoViewController.m */,
-				7D68947619044427006DE509 /* WMWoundPhotoViewController.xib */,
-				7D68946C19043F8B006DE509 /* WMPhotoGridViewController.h */,
-				7D68946D19043F8B006DE509 /* WMPhotoGridViewController.m */,
-				7D68946E19043F8B006DE509 /* WMPhotoGridViewController.xib */,
-				7D68946119043D1C006DE509 /* WMWoundPhotoSlideShowViewController.h */,
-				7D68946219043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m */,
-				7D68946319043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib */,
-				7D6894591902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.h */,
-				7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */,
-				7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */,
 				7DB206B218A7D8590004DC32 /* GroceryDude */,
 				7D39DBA318BA97A70054DDC3 /* IAP */,
+				7D68947E1904459D006DE509 /* Kal */,
 				5F67D1AF18AC2FD000460C37 /* Startup */,
 				7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */,
 				7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */,
@@ -1997,12 +1994,18 @@
 				7D39DB4118B826620054DDC3 /* WMCarePlanGroupViewController.h */,
 				7D39DB4218B826620054DDC3 /* WMCarePlanGroupViewController.m */,
 				7D39DB4318B826620054DDC3 /* WMCarePlanGroupViewController.xib */,
+				7D0F2F4119058614009F8346 /* WMCarePlanSummaryViewController.h */,
+				7D0F2F4219058614009F8346 /* WMCarePlanSummaryViewController.m */,
+				7D0F2F4319058614009F8346 /* WMCarePlanSummaryViewController.xib */,
 				7D39DAEE18B7E6130054DDC3 /* WMChooseStageViewController.h */,
 				7D39DAEF18B7E6130054DDC3 /* WMChooseStageViewController.m */,
 				7D39DAF018B7E6130054DDC3 /* WMChooseStageViewController.xib */,
 				5F6DE4ED18AEDF2400E87F7E /* WMChooseTrackViewController.h */,
 				5F6DE4EE18AEDF2400E87F7E /* WMChooseTrackViewController.m */,
 				5F6DE4EF18AEDF2400E87F7E /* WMChooseTrackViewController.xib */,
+				7D6894791904452C006DE509 /* WMComparePhotosViewController.h */,
+				7D68947A1904452C006DE509 /* WMComparePhotosViewController.m */,
+				7D68947B1904452C006DE509 /* WMComparePhotosViewController.xib */,
 				7D10CDFD18DC634800AD43E3 /* WMDevicesGroupHistoryViewContoller.h */,
 				7D10CDFE18DC634800AD43E3 /* WMDevicesGroupHistoryViewContoller.m */,
 				7D10CDFF18DC634800AD43E3 /* WMDevicesGroupHistoryViewContoller.xib */,
@@ -2071,6 +2074,9 @@
 				7D39DBC018BAB4FB0054DDC3 /* WMPhotoDepthViewController.h */,
 				7D39DBC118BAB4FB0054DDC3 /* WMPhotoDepthViewController.m */,
 				7D39DBC218BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib */,
+				7D68946C19043F8B006DE509 /* WMPhotoGridViewController.h */,
+				7D68946D19043F8B006DE509 /* WMPhotoGridViewController.m */,
+				7D68946E19043F8B006DE509 /* WMPhotoGridViewController.xib */,
 				7D39DBBB18BAB4960054DDC3 /* WMPhotoMeasureViewController.h */,
 				7D39DBBC18BAB4960054DDC3 /* WMPhotoMeasureViewController.m */,
 				7D39DBBD18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib */,
@@ -2080,6 +2086,9 @@
 				7D39DB5F18B921EE0054DDC3 /* WMPhotosContainerViewController.h */,
 				7D39DB6018B921EE0054DDC3 /* WMPhotosContainerViewController.m */,
 				7D39DB6118B921EE0054DDC3 /* WMPhotosContainerViewController.xib */,
+				7D6894A81904484D006DE509 /* WMPhotoZoomViewController.h */,
+				7D6894A91904484D006DE509 /* WMPhotoZoomViewController.m */,
+				7D6894AA1904484D006DE509 /* WMPhotoZoomViewController.xib */,
 				7D39DB1918B7FC350054DDC3 /* WMPlotConfigureGraphViewController.h */,
 				7D39DB1A18B7FC350054DDC3 /* WMPlotConfigureGraphViewController.m */,
 				7D39DB1B18B7FC350054DDC3 /* WMPlotConfigureGraphViewController.xib */,
@@ -2097,6 +2106,9 @@
 				7D1BA8B218FEEC7C00ED385D /* WMPrintConfigureViewController.h */,
 				7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */,
 				7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */,
+				7D6894591902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.h */,
+				7D68945A1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.m */,
+				7D68945B1902F84F006DE509 /* WMPsychoSocialGroupHistoryViewController.xib */,
 				7D39DB5618B828630054DDC3 /* WMPsychoSocialGroupViewController.h */,
 				7D39DB5718B828630054DDC3 /* WMPsychoSocialGroupViewController.m */,
 				7D39DB5818B828630054DDC3 /* WMPsychoSocialGroupViewController.xib */,
@@ -2112,6 +2124,8 @@
 				7D10CD8F18D775E100AD43E3 /* WMSelectWoundOdorViewController.h */,
 				7D10CD9018D775E100AD43E3 /* WMSelectWoundOdorViewController.m */,
 				7D10CD9118D775E100AD43E3 /* WMSelectWoundOdorViewController.xib */,
+				7D6894B01904494F006DE509 /* WMSelectWoundPhotoForDateController.h */,
+				7D6894B11904494F006DE509 /* WMSelectWoundPhotoForDateController.m */,
 				7D1BA8B918FEEE5F00ED385D /* WMSelectWoundPhotoViewController.h */,
 				7D1BA8BA18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m */,
 				7D1BA8BB18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib */,
@@ -2166,6 +2180,12 @@
 				7D10CDA018DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.h */,
 				7D10CDA118DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.m */,
 				7D10CDA218DA348400AD43E3 /* WMWoundMeasurementSummaryViewController.xib */,
+				7D68946119043D1C006DE509 /* WMWoundPhotoSlideShowViewController.h */,
+				7D68946219043D1C006DE509 /* WMWoundPhotoSlideShowViewController.m */,
+				7D68946319043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib */,
+				7D68947419044427006DE509 /* WMWoundPhotoViewController.h */,
+				7D68947519044427006DE509 /* WMWoundPhotoViewController.m */,
+				7D68947619044427006DE509 /* WMWoundPhotoViewController.xib */,
 				7D10CDE818DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.h */,
 				7D10CDE918DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m */,
 				7D10CDEA18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib */,
@@ -2178,6 +2198,9 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
+				7D0F2F531905C120009F8346 /* WMPatientSummaryViewController.h */,
+				7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */,
+				7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2905,6 +2928,8 @@
 				7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */,
 				7D10CD8218D63C1900AD43E3 /* WMTelecom+CoreText.h */,
 				7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */,
+				7D0F2F481905B747009F8346 /* WMPatient+CoreText.h */,
+				7D0F2F491905B747009F8346 /* WMPatient+CoreText.m */,
 			);
 			path = CoreText;
 			sourceTree = "<group>";
@@ -3084,6 +3109,7 @@
 				7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */,
 				7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */,
 				5F67D20518AC3BE000460C37 /* WoundMeasurementTemplate.plist in Resources */,
+				7D0F2F501905BD97009F8346 /* TemplateTwoColumnsTreatment.xib in Resources */,
 				7D10CE1F18DDEB7B00AD43E3 /* WMSelectWoundPositionViewController.xib in Resources */,
 				7D40BFBC18F9560200DB2BCD /* TeamMemberIAPDesc.html in Resources */,
 				5F67D1F918AC3BE000460C37 /* ProfessionalTitle.plist in Resources */,
@@ -3128,12 +3154,15 @@
 				7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */,
 				7DDBEDD818BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib in Resources */,
 				7D68946519043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib in Resources */,
+				7D0F2F511905BD97009F8346 /* TemplateTwoColumnsTwoPhotosAssessment.xib in Resources */,
 				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
 				7D39DBB518BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib in Resources */,
+				7D0F2F571905C120009F8346 /* WMPatientSummaryViewController.xib in Resources */,
 				7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */,
 				5F67D1FD18AC3BE000460C37 /* SkinAssessment.plist in Resources */,
 				5F6DE51B18B5885E00E87F7E /* WMInstructionContentViewController.xib in Resources */,
 				5F6DE4FF18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib in Resources */,
+				7D0F2F4F1905BD97009F8346 /* TemplateTwoColumnsPlan3.xib in Resources */,
 				7D39DB0118B7E6560054DDC3 /* WMShareViewController.xib in Resources */,
 				5F67D1FE18AC3BE000460C37 /* SkinAssessmentDefinitions.plist in Resources */,
 				5F67D1F518AC3BE000460C37 /* IAPProducts.plist in Resources */,
@@ -3194,6 +3223,7 @@
 				5F6DE53C18B58BB000E87F7E /* InstructionsPolicy.html in Resources */,
 				7D68947819044427006DE509 /* WMWoundPhotoViewController.xib in Resources */,
 				7D39DB5A18B828630054DDC3 /* WMPsychoSocialGroupViewController.xib in Resources */,
+				7D0F2F521905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib in Resources */,
 				7D39DBBF18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib in Resources */,
 				7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */,
 				7D10CD8918D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib in Resources */,
@@ -3263,6 +3293,7 @@
 				7D39DB8C18B94FEB0054DDC3 /* _WMDeviceValue.m in Sources */,
 				7DF4E92B18C22F27000A3F5B /* WMDefinitionKeyword.m in Sources */,
 				7DF4E93118C22F27000A3F5B /* WMSkinAssessmentCategory.m in Sources */,
+				7D0F2F4A1905B747009F8346 /* WMPatient+CoreText.m in Sources */,
 				7DD8376218C7A5080028C2D3 /* AFURLConnectionOperation.m in Sources */,
 				7DF4E8F118C22EEC000A3F5B /* _WMSkinAssessmentValue.m in Sources */,
 				7D0F2F4419058614009F8346 /* WMCarePlanSummaryViewController.m in Sources */,
@@ -3496,6 +3527,7 @@
 				7D10CDEB18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
+				7D0F2F561905C120009F8346 /* WMPatientSummaryViewController.m in Sources */,
 				7D39DBC318BAB4FB0054DDC3 /* WMPhotoDepthViewController.m in Sources */,
 				7D39DBAC18BA97A70054DDC3 /* IAPAggregatorViewController.m in Sources */,
 				7DD8373A18C78A3A0028C2D3 /* NSManagedObjectContext+MagicalThreading.m in Sources */,

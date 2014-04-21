@@ -7,6 +7,7 @@
 //
 
 #import "WMPatientSummaryContainerViewController.h"
+#import "WMPatientSummaryViewController.h"
 #import "WMCarePlanSummaryViewController.h"
 #import "WMSkinAssessmentSummaryViewController.h"
 #import "WMMedicationSummaryViewController.h"
@@ -40,6 +41,7 @@
 
 @property (strong, nonatomic) NSMutableArray *viewTitles;
 
+@property (strong, nonatomic) WMPatientSummaryViewController *patientSummaryViewController;
 @property (strong, nonatomic) WMCarePlanSummaryViewController *carePlanSummaryViewController;
 @property (strong, nonatomic) WMSkinAssessmentSummaryViewController *skinAssessmentSummaryViewController;
 @property (strong, nonatomic) WMMedicationSummaryViewController *medicationSummaryViewController;
@@ -75,6 +77,16 @@
     // install child view controllers
     CGFloat width = CGRectGetWidth(self.view.bounds);
     CGRect frame = _scrollView.bounds;
+    WMPatientSummaryViewController *patientSummaryViewController = self.patientSummaryViewController;
+    if (patientSummaryViewController) {
+        patientSummaryViewController.view.frame = frame;
+        [self addChildViewController:patientSummaryViewController];
+        [_scrollView addSubview:patientSummaryViewController.view];
+        [patientSummaryViewController didMoveToParentViewController:self];
+        patientSummaryViewController.automaticallyAdjustsScrollViewInsets = NO;
+        [self.viewTitles addObject:@"Patient Details"];
+        frame.origin.x += width;
+    }
     WMCarePlanSummaryViewController *carePlanSummaryViewController = self.carePlanSummaryViewController;
     if (nil != carePlanSummaryViewController) {
         carePlanSummaryViewController.view.frame = frame;
@@ -189,6 +201,17 @@
         _viewTitles = [[NSMutableArray alloc] init];
     }
     return _viewTitles;
+}
+
+- (WMPatientSummaryViewController *)patientSummaryViewController
+{
+    if (nil == _patientSummaryViewController) {
+        if (self.patient.hasPatientDetails) {
+            _patientSummaryViewController = [[WMPatientSummaryViewController alloc] initWithNibName:@"WMPatientSummaryViewController" bundle:nil];
+            _patientSummaryViewController.patient = self.patient;
+        }
+    }
+    return _patientSummaryViewController;
 }
 
 - (WMCarePlanSummaryViewController *)carePlanSummaryViewController

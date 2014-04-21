@@ -7,6 +7,8 @@
 //
 
 #import "PDFRendererTwoColumnsSOAP.h"
+#import "WMPatient.h"
+#import "WMPatient+CoreText.h"
 #import "WMWound.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurementGroup+CoreText.h"
@@ -51,7 +53,7 @@
 
 - (NSArray *)templateNibNames
 {
-    return [NSArray arrayWithObjects:@"TemplateTwoColumnsTwoPhotosAssessment", @"TemplateTwoColumnsTwoPhotosGraphs", @"TemplateTwoColumnsTreatment", @"TemplateTwoColumnsPlan3", nil];
+    return @[@"TemplateTwoColumnsTwoPhotosAssessment", @"TemplateTwoColumnsTwoPhotosGraphs", @"TemplateTwoColumnsTreatment", @"TemplateTwoColumnsPlan3", @"TemplateTwoColumnsPlan3"];
 }
 
 - (NSInteger)woundPhotosPerPage
@@ -261,24 +263,24 @@
         NSAttributedString *paragraphAttributedString = [modelTextKitAtrributes paragraphAttributedString];
         if (self.printConfiguration.printSkinAssessment) {
             skinAssessmentWasDrawn = YES;
-            WMSkinAssessmentGroup *skinAssessmentGroup = [WMSkinAssessmentGroup mostRecentOrActiveSkinAssessmentGroup:self.printConfiguration.managedObjectContext];
+            WMSkinAssessmentGroup *skinAssessmentGroup = [WMSkinAssessmentGroup mostRecentOrActiveSkinAssessmentGroup:self.patient];
             if (nil != skinAssessmentGroup) {
                 [mutableAttributedString appendAttributedString:[skinAssessmentGroup descriptionAsMutableAttributedStringWithBaseFontSize:self.defaultFontSize]];
                 [mutableAttributedString appendAttributedString:paragraphAttributedString];
             }
         }
-        WMMedicationGroup *medicationGroup = [WMMedicationGroup mostRecentOrActiveMedicationGroup:self.printConfiguration.managedObjectContext];
+        WMMedicationGroup *medicationGroup = [WMMedicationGroup mostRecentOrActiveMedicationGroup:self.patient];
         if (nil != medicationGroup) {
             [mutableAttributedString appendAttributedString:[medicationGroup descriptionAsMutableAttributedStringWithBaseFontSize:self.defaultFontSize]];
         }
-        WMDeviceGroup *deviceGroup = [WMDeviceGroup mostRecentOrActiveDeviceGroup:self.printConfiguration.managedObjectContext];
+        WMDeviceGroup *deviceGroup = [WMDeviceGroup mostRecentOrActiveDeviceGroup:self.patient];
         if (nil != deviceGroup) {
             if ([mutableAttributedString length] > 0) {
                 [mutableAttributedString appendAttributedString:paragraphAttributedString];
             }
             [mutableAttributedString appendAttributedString:[deviceGroup descriptionAsMutableAttributedStringWithBaseFontSize:self.defaultFontSize]];
         }
-        WMPsychoSocialGroup *psychoSocialGroup = [WMPsychoSocialGroup mostRecentOrActivePsychosocialGroup:self.printConfiguration.managedObjectContext];
+        WMPsychoSocialGroup *psychoSocialGroup = [WMPsychoSocialGroup mostRecentOrActivePsychosocialGroup:self.patient];
         if (nil != psychoSocialGroup) {
             if ([mutableAttributedString length] > 0) {
                 [mutableAttributedString appendAttributedString:paragraphAttributedString];
@@ -310,7 +312,7 @@
         CGRect frame2 = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
         placeHolderView = self.rightColumnView;
         CGRect frame3 = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
-        deltaY = [self drawAttributedStringForDataSource:[WMSkinAssessmentGroup mostRecentOrActiveSkinAssessmentGroup:self.printConfiguration.managedObjectContext]
+        deltaY = [self drawAttributedStringForDataSource:[WMSkinAssessmentGroup mostRecentOrActiveSkinAssessmentGroup:self.patient]
                                    rectLeft:frame1
                                  rectMiddle:frame2
                                   rectRight:frame3];
@@ -329,7 +331,28 @@
         CGRect aFrameMiddle = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
         placeHolderView = self.rightColumnView;
         CGRect aFrameRight = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
-        deltaY = [self drawAttributedStringForDataSource:[WMCarePlanGroup mostRecentOrActiveCarePlanGroup:self.printConfiguration.managedObjectContext]
+        deltaY = [self drawAttributedStringForDataSource:[WMCarePlanGroup mostRecentOrActiveCarePlanGroup:self.patient]
+                                                rectLeft:aFrameLeft
+                                              rectMiddle:aFrameMiddle
+                                               rectRight:aFrameRight];
+    }
+    if (self.patient.hasPatientDetails) {
+        // draw Medical History and other details
+        self.templateNibObjects = [[NSBundle mainBundle] loadNibNamed:[self.templateNibNames objectAtIndex:4] owner:self options:nil];
+        // move to next page
+        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 792), nil);
+        ++pageNumber;
+        // draw header/footer
+        [self drawPageHeader:pageNumber];
+        [self drawPageFooter:pageNumber];
+        // draw in leftColumnView, middleColumnView, and rightColumnView
+        UIView *placeHolderView = self.leftColumnView;
+        CGRect aFrameLeft = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
+        placeHolderView = self.middleColumnView;
+        CGRect aFrameMiddle = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
+        placeHolderView = self.rightColumnView;
+        CGRect aFrameRight = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
+        deltaY = [self drawAttributedStringForDataSource:self.patient
                                                 rectLeft:aFrameLeft
                                               rectMiddle:aFrameMiddle
                                                rectRight:aFrameRight];
