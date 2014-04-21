@@ -11,6 +11,8 @@
 #import "WMPhoto.h"
 #import "WMPhotoManager.h"
 #import "WMDesignUtilities.h"
+#import "WMFatFractal.h"
+#import "Faulter.h"
 #import "WCAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -85,11 +87,31 @@
     } else {
         self.imageView.hidden = NO;
         self.dateLabel.hidden = NO;
-        WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[[NSManagedObjectContext MR_defaultContext] objectWithID:woundPhotoObjectID];
-        self.imageView.image = woundPhoto.thumbnail;
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:woundPhotoObjectID];
         self.dateLabel.text = [NSDateFormatter localizedStringFromDate:woundPhoto.createdAt
                                                              dateStyle:NSDateFormatterMediumStyle
                                                              timeStyle:NSDateFormatterMediumStyle];
+        __weak __typeof(&*self)weakSelf = self;
+        dispatch_block_t block = ^{
+            weakSelf.imageView.image = woundPhoto.thumbnail;
+            [Faulter faultObjectWithID:woundPhotoObjectID inContext:managedObjectContext];
+        };
+        UIImage *image = woundPhoto.thumbnail;
+        if (nil == image) {
+            UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+            activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+            [self addSubview:activityIndicatorView];
+            [activityIndicatorView startAnimating];
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [activityIndicatorView removeFromSuperview];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                block();
+            }];
+        } else {
+            block();
+        }
     }
     [self setNeedsDisplay];
 }

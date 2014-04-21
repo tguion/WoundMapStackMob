@@ -12,6 +12,7 @@
 #import "WMPhotoManager.h"
 #import "WMNavigationCoordinator.h"
 #import "Faulter.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 
 @interface WMImageScrollView () <UIScrollViewDelegate> {    
@@ -50,7 +51,7 @@
     self.delegate = self;
     self.zoomScale = self.minimumZoomScale;
     // listen for low memory
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification
                                                                     object:nil
                                                                      queue:[NSOperationQueue mainQueue]
@@ -142,7 +143,7 @@
             //DLog(@"%@.setWoundPhoto tiling for image size %@", NSStringFromClass([self class]), NSStringFromCGSize(((UIImage *)woundPhoto.photo.photo).size));
             [self displayTiledImageOfSize:CGSizeMake([self.woundPhoto.imageWidth floatValue], [self.woundPhoto.imageHeight floatValue])];
         } else {
-            [self displayImage:self.woundPhoto.photo.photo];
+            [self displayImage];
             //DLog(@"%@.setWoundPhoto no tiling for image size %@", NSStringFromClass([self class]), NSStringFromCGSize(((UIImage *)woundPhoto.photo.photo).size));
         }
     }
@@ -205,7 +206,7 @@
 - (UIImage *)tileForScale:(CGFloat)scale row:(int)row col:(int)col
 {
     __block UIImage *image = nil;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [self.managedObjectContext performBlockAndWait:^{
         image = [weakSelf.woundPhoto tileImageForScale:(int)(1000 * scale) row:row column:col];
     }];
@@ -221,20 +222,41 @@
 
 #pragma mark - Configure scrollView to display new image (tiled or not)
 
-- (void)displayImage:(UIImage *)image
+- (void)displayImage
 {
     // clear the previous image
     [_zoomView removeFromSuperview];
     _zoomView = nil;
     // reset our zoomScale to 1.0 before doing any further calculations
     self.zoomScale = 1.0;
-    // make a new UIImageView for the new image
-    _zoomView = [[UIImageView alloc] initWithImage:image];
-    [self addSubview:_zoomView];
-    [self configureForImageSize:image.size];
-    // fault our cache
-    [Faulter faultObjectWithID:[self.woundPhoto.photo objectID] inContext:self.managedObjectContext];
-    [Faulter faultObjectWithID:[self.woundPhoto objectID] inContext:self.managedObjectContext];
+    // make sure the data is local
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSManagedObjectID *woundPhotoID = [self.woundPhoto objectID];
+    NSManagedObjectID *photoID = [self.woundPhoto.photo objectID];
+    dispatch_block_t block = ^{
+        // make a new UIImageView for the new image
+        UIImage *image = self.woundPhoto.photo.photo;
+        _zoomView = [[UIImageView alloc] initWithImage:image];
+        [self addSubview:_zoomView];
+        [self configureForImageSize:image.size];
+        // fault our cache
+        [Faulter faultObjectWithID:photoID inContext:managedObjectContext];
+        [Faulter faultObjectWithID:woundPhotoID inContext:managedObjectContext];
+    };
+    if (nil == self.woundPhoto.photo.photo) {
+        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        [self addSubview:activityIndicatorView];
+        [activityIndicatorView startAnimating];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff loadBlobsForObj:self.woundPhoto.photo onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [activityIndicatorView removeFromSuperview];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            block();
+        }];
+    } else {
+        block();
+    }
 }
 
 - (void)displayTiledImageOfSize:(CGSize)imageSize
@@ -299,7 +321,7 @@
         //DLog(@"%@.setWoundPhoto tiling for image size %@", NSStringFromClass([self class]), NSStringFromCGSize(((UIImage *)woundPhoto.photo.photo).size));
         [self displayTiledImageOfSize:CGSizeMake([self.woundPhoto.imageWidth floatValue], [self.woundPhoto.imageHeight floatValue])];
     } else {
-        [self displayImage:self.woundPhoto.photo.photo];
+        [self displayImage];
         //DLog(@"%@.setWoundPhoto no tiling for image size %@", NSStringFromClass([self class]), NSStringFromCGSize(((UIImage *)woundPhoto.photo.photo).size));
     }
 }

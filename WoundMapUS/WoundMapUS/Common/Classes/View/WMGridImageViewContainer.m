@@ -11,6 +11,7 @@
 #import "WMPhoto.h"
 #import "WMRoundedSemitransparentLabel.h"
 #import "WMDesignUtilities.h"
+#import "WMFatFractal.h"
 #import "Faulter.h"
 #import "ConstraintPack.h"
 #import <QuartzCore/QuartzCore.h>
@@ -100,6 +101,23 @@
     RESIST(imageView, 249);
 }
 
+- (UIImage *)imageForDisplayOption
+{
+    UIImage *image = nil;
+    switch (self.displayOption) {
+        case WoundPhotoDisplayOptionThumbnail:
+            image = _woundPhoto.thumbnail;
+            break;
+        case WoundPhotoDisplayOptionFull:
+            image = _woundPhoto.photo.photo;
+            break;
+        case WoundPhotoDisplayOptionTiled:
+            image = _woundPhoto.thumbnail;
+            break;
+    }
+    return image;
+}
+
 - (WMWoundPhoto *)woundPhoto
 {
     if (nil == _woundPhoto && nil != _woundPhotoObjectID) {
@@ -124,19 +142,6 @@
         self.dateLabel.hidden = YES;
     } else {
         self.dateLabel.hidden = NO;
-        UIImage *image = nil;
-        switch (self.displayOption) {
-            case WoundPhotoDisplayOptionThumbnail:
-                image = woundPhoto.thumbnail;
-                break;
-            case WoundPhotoDisplayOptionFull:
-                image = woundPhoto.photo.photo;
-                break;
-            case WoundPhotoDisplayOptionTiled:
-                image = woundPhoto.thumbnail;
-                break;
-        }
-        [self addImageView:image];
         // update frame
         self.dateLabel.text = [NSDateFormatter localizedStringFromDate:woundPhoto.createdAt
                                                              dateStyle:NSDateFormatterMediumStyle
@@ -163,9 +168,30 @@
     }
     [self setNeedsUpdateConstraints];
     [self setNeedsDisplay];
-    // turn our photos into fault
-    [Faulter faultObjectWithID:[woundPhoto.photo objectID] inContext:self.managedObjectContext];
-    [Faulter faultObjectWithID:[woundPhoto objectID] inContext:self.managedObjectContext];
+        UIImage *image = [self imageForDisplayOption];
+        NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+        __weak __typeof(&*self)weakSelf = self;
+        dispatch_block_t block = ^{
+            UIImage *image = [weakSelf imageForDisplayOption];
+            [weakSelf addImageView:image];
+            // turn our photos into fault
+            [Faulter faultObjectWithID:[woundPhoto.photo objectID] inContext:managedObjectContext];
+            [Faulter faultObjectWithID:[woundPhoto objectID] inContext:managedObjectContext];
+        };
+        if (nil == image) {
+            UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+            activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+            [self addSubview:activityIndicatorView];
+            [activityIndicatorView startAnimating];
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [activityIndicatorView removeFromSuperview];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                block();
+            }];
+        } else {
+            block();
+        }
 }
 
 - (void)addImageView:(UIImage *)image
