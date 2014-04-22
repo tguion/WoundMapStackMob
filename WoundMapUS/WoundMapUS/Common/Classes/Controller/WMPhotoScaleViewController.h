@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class WMWoundPhoto;
 @class WMPhotoScaleViewController;
 
@@ -18,7 +16,7 @@
 
 @end
 
-@interface WMPhotoScaleViewController : WMBaseViewController
+@interface WMPhotoScaleViewController : UIViewController
 
 @property (weak, nonatomic) id<PhotoScaleViewControllerDelegate> delegate;
 

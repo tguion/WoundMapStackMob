@@ -8,10 +8,15 @@ const struct WMWoundMeasurementValueAttributes WMWoundMeasurementValueAttributes
 	.datePushed = @"datePushed",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
+	.fromOClockValue = @"fromOClockValue",
 	.revisedFlag = @"revisedFlag",
+	.sectionTitle = @"sectionTitle",
+	.sortRank = @"sortRank",
 	.title = @"title",
+	.toOClockValue = @"toOClockValue",
 	.updatedAt = @"updatedAt",
 	.value = @"value",
+	.woundMeasurementValueType = @"woundMeasurementValueType",
 };
 
 const struct WMWoundMeasurementValueRelationships WMWoundMeasurementValueRelationships = {
@@ -55,8 +60,28 @@ const struct WMWoundMeasurementValueFetchedProperties WMWoundMeasurementValueFet
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
+	if ([key isEqualToString:@"fromOClockValueValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"fromOClockValue"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"revisedFlagValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"revisedFlag"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"sortRankValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"sortRank"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"toOClockValueValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"toOClockValue"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"woundMeasurementValueTypeValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"woundMeasurementValueType"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -114,6 +139,32 @@ const struct WMWoundMeasurementValueFetchedProperties WMWoundMeasurementValueFet
 
 
 
+@dynamic fromOClockValue;
+
+
+
+- (int16_t)fromOClockValueValue {
+	NSNumber *result = [self fromOClockValue];
+	return [result shortValue];
+}
+
+- (void)setFromOClockValueValue:(int16_t)value_ {
+	[self setFromOClockValue:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveFromOClockValueValue {
+	NSNumber *result = [self primitiveFromOClockValue];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveFromOClockValueValue:(int16_t)value_ {
+	[self setPrimitiveFromOClockValue:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
 @dynamic revisedFlag;
 
 
@@ -140,8 +191,67 @@ const struct WMWoundMeasurementValueFetchedProperties WMWoundMeasurementValueFet
 
 
 
+@dynamic sectionTitle;
+
+
+
+
+
+
+@dynamic sortRank;
+
+
+
+- (int16_t)sortRankValue {
+	NSNumber *result = [self sortRank];
+	return [result shortValue];
+}
+
+- (void)setSortRankValue:(int16_t)value_ {
+	[self setSortRank:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveSortRankValue {
+	NSNumber *result = [self primitiveSortRank];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveSortRankValue:(int16_t)value_ {
+	[self setPrimitiveSortRank:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
 @dynamic title;
 
+
+
+
+
+
+@dynamic toOClockValue;
+
+
+
+- (int16_t)toOClockValueValue {
+	NSNumber *result = [self toOClockValue];
+	return [result shortValue];
+}
+
+- (void)setToOClockValueValue:(int16_t)value_ {
+	[self setToOClockValue:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveToOClockValueValue {
+	NSNumber *result = [self primitiveToOClockValue];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveToOClockValueValue:(int16_t)value_ {
+	[self setPrimitiveToOClockValue:[NSNumber numberWithShort:value_]];
+}
 
 
 
@@ -156,6 +266,32 @@ const struct WMWoundMeasurementValueFetchedProperties WMWoundMeasurementValueFet
 
 @dynamic value;
 
+
+
+
+
+
+@dynamic woundMeasurementValueType;
+
+
+
+- (int16_t)woundMeasurementValueTypeValue {
+	NSNumber *result = [self woundMeasurementValueType];
+	return [result shortValue];
+}
+
+- (void)setWoundMeasurementValueTypeValue:(int16_t)value_ {
+	[self setWoundMeasurementValueType:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveWoundMeasurementValueTypeValue {
+	NSNumber *result = [self primitiveWoundMeasurementValueType];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveWoundMeasurementValueTypeValue:(int16_t)value_ {
+	[self setPrimitiveWoundMeasurementValueType:[NSNumber numberWithShort:value_]];
+}
 
 
 

@@ -392,16 +392,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         // already cancelled
         return;
     }
-    // clear caches for all view controllers
     BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
-    NSArray *viewControllers = viewController.navigationController.viewControllers;
-    SEL selector = @selector(clearAllReferences);
-    [viewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj respondsToSelector:selector]) {
-            SuppressPerformSelectorLeakWarning([obj performSelector:selector]);
-            *stop = YES;
-        }
-    }];
     switch (self.state) {
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
@@ -554,7 +545,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-            [viewController clearAllReferences];
+
             break;
         }
     }
@@ -571,7 +562,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-            [viewController clearAllReferences];
+
             break;
         }
     }
@@ -593,7 +584,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-            [viewController clearAllReferences];
+
             break;
         }
     }
@@ -610,7 +601,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-            [viewController clearAllReferences];
+
             break;
         }
     }
@@ -633,7 +624,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-            [viewController clearAllReferences];
+
             break;
         }
     }
@@ -658,7 +649,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-            [viewController clearAllReferences];
+
             break;
         }
     }

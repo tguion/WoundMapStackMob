@@ -9,10 +9,15 @@ extern const struct WMWoundMeasurementValueAttributes {
 	__unsafe_unretained NSString *datePushed;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *fromOClockValue;
 	__unsafe_unretained NSString *revisedFlag;
+	__unsafe_unretained NSString *sectionTitle;
+	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
+	__unsafe_unretained NSString *toOClockValue;
 	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *value;
+	__unsafe_unretained NSString *woundMeasurementValueType;
 } WMWoundMeasurementValueAttributes;
 
 extern const struct WMWoundMeasurementValueRelationships {
@@ -29,6 +34,11 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 @class WMWoundMeasurementGroup;
 @class WMWoundOdor;
 @class WMWoundMeasurement;
+
+
+
+
+
 
 
 
@@ -96,6 +106,20 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* fromOClockValue;
+
+
+
+@property int16_t fromOClockValueValue;
+- (int16_t)fromOClockValueValue;
+- (void)setFromOClockValueValue:(int16_t)value_;
+
+//- (BOOL)validateFromOClockValue:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* revisedFlag;
 
 
@@ -110,11 +134,49 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* sectionTitle;
+
+
+
+//- (BOOL)validateSectionTitle:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* sortRank;
+
+
+
+@property int16_t sortRankValue;
+- (int16_t)sortRankValue;
+- (void)setSortRankValue:(int16_t)value_;
+
+//- (BOOL)validateSortRank:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* title;
 
 
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* toOClockValue;
+
+
+
+@property int16_t toOClockValueValue;
+- (int16_t)toOClockValueValue;
+- (void)setToOClockValueValue:(int16_t)value_;
+
+//- (BOOL)validateToOClockValue:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -135,6 +197,20 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 //- (BOOL)validateValue:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* woundMeasurementValueType;
+
+
+
+@property int16_t woundMeasurementValueTypeValue;
+- (int16_t)woundMeasurementValueTypeValue;
+- (void)setWoundMeasurementValueTypeValue:(int16_t)value_;
+
+//- (BOOL)validateWoundMeasurementValueType:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -205,6 +281,15 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+- (NSNumber*)primitiveFromOClockValue;
+- (void)setPrimitiveFromOClockValue:(NSNumber*)value;
+
+- (int16_t)primitiveFromOClockValueValue;
+- (void)setPrimitiveFromOClockValueValue:(int16_t)value_;
+
+
+
+
 - (NSNumber*)primitiveRevisedFlag;
 - (void)setPrimitiveRevisedFlag:(NSNumber*)value;
 
@@ -214,8 +299,32 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 
 
+- (NSString*)primitiveSectionTitle;
+- (void)setPrimitiveSectionTitle:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveSortRank;
+- (void)setPrimitiveSortRank:(NSNumber*)value;
+
+- (int16_t)primitiveSortRankValue;
+- (void)setPrimitiveSortRankValue:(int16_t)value_;
+
+
+
+
 - (NSString*)primitiveTitle;
 - (void)setPrimitiveTitle:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveToOClockValue;
+- (void)setPrimitiveToOClockValue:(NSNumber*)value;
+
+- (int16_t)primitiveToOClockValueValue;
+- (void)setPrimitiveToOClockValueValue:(int16_t)value_;
 
 
 
@@ -228,6 +337,15 @@ extern const struct WMWoundMeasurementValueFetchedProperties {
 
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveWoundMeasurementValueType;
+- (void)setPrimitiveWoundMeasurementValueType:(NSNumber*)value;
+
+- (int16_t)primitiveWoundMeasurementValueTypeValue;
+- (void)setPrimitiveWoundMeasurementValueTypeValue:(int16_t)value_;
 
 
 

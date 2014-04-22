@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class WMPhotoMeasureViewController;
 
 @protocol PhotoMeasureViewControllerDelegate <NSObject>
@@ -16,7 +14,7 @@
 
 @end
 
-@interface WMPhotoMeasureViewController : WMBaseViewController
+@interface WMPhotoMeasureViewController : UIViewController
 
 @property (weak, nonatomic) id<PhotoMeasureViewControllerDelegate> delegate;
 

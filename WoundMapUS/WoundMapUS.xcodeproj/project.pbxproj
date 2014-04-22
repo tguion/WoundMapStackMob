@@ -105,6 +105,13 @@
 		7D0F2F521905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4E1905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib */; };
 		7D0F2F561905C120009F8346 /* WMPatientSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */; };
 		7D0F2F571905C120009F8346 /* WMPatientSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */; };
+		7D0F2F5A1906DA12009F8346 /* WMNormalizingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F591906DA12009F8346 /* WMNormalizingView.m */; };
+		7D0F2F5D1906E4C5009F8346 /* WMScalingRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F5C1906E4C5009F8346 /* WMScalingRulerView.m */; };
+		7D0F2F621906E8A3009F8346 /* WMDimensionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F5F1906E8A3009F8346 /* WMDimensionView.m */; };
+		7D0F2F631906E8A3009F8346 /* WMWidthHeightOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F611906E8A3009F8346 /* WMWidthHeightOverlayView.m */; };
+		7D0F2F661906E9AE009F8346 /* WMMeasurementThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F651906E9AE009F8346 /* WMMeasurementThumbView.m */; };
+		7D0F2F691906EA1F009F8346 /* WMThumbImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F681906EA1F009F8346 /* WMThumbImageView.m */; };
+		7D0F2F6C1906F2FB009F8346 /* WMUndermineTunnelContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F6B1906F2FB009F8346 /* WMUndermineTunnelContainerView.m */; };
 		7D10CD5618D1F35C00AD43E3 /* WMFatFractalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */; };
 		7D10CD5C18D2146000AD43E3 /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5B18D2146000AD43E3 /* ImageToDataTransformer.m */; };
 		7D10CD5F18D217D500AD43E3 /* APLImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D10CD5E18D217D500AD43E3 /* APLImageToDataTransformer.m */; };
@@ -440,14 +447,12 @@
 		7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA418BC0DD300FEF3FA /* _WMAmountQualifier.m */; };
 		7DDBEDB318BC0DD300FEF3FA /* _WMWoundMeasurement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA618BC0DD300FEF3FA /* _WMWoundMeasurement.m */; };
 		7DDBEDB418BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDA818BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m */; };
-		7DDBEDB518BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDAA18BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m */; };
 		7DDBEDB718BC0DD300FEF3FA /* _WMWoundMeasurementValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDAE18BC0DD300FEF3FA /* _WMWoundMeasurementValue.m */; };
 		7DDBEDB818BC0DD300FEF3FA /* _WMWoundOdor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDB018BC0DD300FEF3FA /* _WMWoundOdor.m */; };
 		7DDBEDC918BC0DED00FEF3FA /* IAPProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDBA18BC0DED00FEF3FA /* IAPProduct.m */; };
 		7DDBEDCA18BC0DED00FEF3FA /* WMAmountQualifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDBC18BC0DED00FEF3FA /* WMAmountQualifier.m */; };
 		7DDBEDCB18BC0DED00FEF3FA /* WMWoundMeasurement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDBE18BC0DED00FEF3FA /* WMWoundMeasurement.m */; };
 		7DDBEDCC18BC0DED00FEF3FA /* WMWoundMeasurementGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC018BC0DED00FEF3FA /* WMWoundMeasurementGroup.m */; };
-		7DDBEDCD18BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC218BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m */; };
 		7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC618BC0DED00FEF3FA /* WMWoundMeasurementValue.m */; };
 		7DDBEDD018BC0DED00FEF3FA /* WMWoundOdor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDC818BC0DED00FEF3FA /* WMWoundOdor.m */; };
 		7DDBEDD718BEA6E700FEF3FA /* WMBradenScaleInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDD518BEA6E700FEF3FA /* WMBradenScaleInputViewController.m */; };
@@ -536,8 +541,6 @@
 		7DF4E97518C29A07000A3F5B /* WMInterventionStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E96618C29A07000A3F5B /* WMInterventionStatus.m */; };
 		7DF4E97D18C362D2000A3F5B /* _WMInterventionStatusJoin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E97C18C362D2000A3F5B /* _WMInterventionStatusJoin.m */; };
 		7DF4E98018C362DD000A3F5B /* WMInterventionStatusJoin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E97F18C362DD000A3F5B /* WMInterventionStatusJoin.m */; };
-		7DF4E99B18C3CDFD000A3F5B /* _WMWoundMeasurementUnderValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E99A18C3CDFD000A3F5B /* _WMWoundMeasurementUnderValue.m */; };
-		7DF4E99E18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E99D18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m */; };
 		7DF4E9AA18C4B76B000A3F5B /* WMEmailManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */; };
 		7DF4E9AD18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9AC18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.m */; };
 		7DF4E9B018C4C7FE000A3F5B /* WMIAPCreditTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E9AF18C4C7FE000A3F5B /* WMIAPCreditTransaction.m */; };
@@ -710,6 +713,20 @@
 		7D0F2F531905C120009F8346 /* WMPatientSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientSummaryViewController.h; sourceTree = "<group>"; };
 		7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientSummaryViewController.m; sourceTree = "<group>"; };
 		7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPatientSummaryViewController.xib; sourceTree = "<group>"; };
+		7D0F2F581906DA12009F8346 /* WMNormalizingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNormalizingView.h; sourceTree = "<group>"; };
+		7D0F2F591906DA12009F8346 /* WMNormalizingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNormalizingView.m; sourceTree = "<group>"; };
+		7D0F2F5B1906E4C5009F8346 /* WMScalingRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMScalingRulerView.h; sourceTree = "<group>"; };
+		7D0F2F5C1906E4C5009F8346 /* WMScalingRulerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMScalingRulerView.m; sourceTree = "<group>"; };
+		7D0F2F5E1906E8A3009F8346 /* WMDimensionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMDimensionView.h; sourceTree = "<group>"; };
+		7D0F2F5F1906E8A3009F8346 /* WMDimensionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMDimensionView.m; sourceTree = "<group>"; };
+		7D0F2F601906E8A3009F8346 /* WMWidthHeightOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWidthHeightOverlayView.h; sourceTree = "<group>"; };
+		7D0F2F611906E8A3009F8346 /* WMWidthHeightOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWidthHeightOverlayView.m; sourceTree = "<group>"; };
+		7D0F2F641906E9AE009F8346 /* WMMeasurementThumbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMeasurementThumbView.h; sourceTree = "<group>"; };
+		7D0F2F651906E9AE009F8346 /* WMMeasurementThumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMeasurementThumbView.m; sourceTree = "<group>"; };
+		7D0F2F671906EA1F009F8346 /* WMThumbImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMThumbImageView.h; sourceTree = "<group>"; };
+		7D0F2F681906EA1F009F8346 /* WMThumbImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMThumbImageView.m; sourceTree = "<group>"; };
+		7D0F2F6A1906F2FB009F8346 /* WMUndermineTunnelContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMUndermineTunnelContainerView.h; sourceTree = "<group>"; };
+		7D0F2F6B1906F2FB009F8346 /* WMUndermineTunnelContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMUndermineTunnelContainerView.m; sourceTree = "<group>"; };
 		7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFatFractalManager.h; sourceTree = "<group>"; };
 		7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFatFractalManager.m; sourceTree = "<group>"; };
 		7D10CD5A18D2146000AD43E3 /* ImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageToDataTransformer.h; sourceTree = "<group>"; };
@@ -1301,8 +1318,6 @@
 		7DDBEDA618BC0DD300FEF3FA /* _WMWoundMeasurement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurement.m; sourceTree = "<group>"; };
 		7DDBEDA718BC0DD300FEF3FA /* _WMWoundMeasurementGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementGroup.h; sourceTree = "<group>"; };
 		7DDBEDA818BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementGroup.m; sourceTree = "<group>"; };
-		7DDBEDA918BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementTunnelValue.h; sourceTree = "<group>"; };
-		7DDBEDAA18BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementTunnelValue.m; sourceTree = "<group>"; };
 		7DDBEDAD18BC0DD300FEF3FA /* _WMWoundMeasurementValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementValue.h; sourceTree = "<group>"; };
 		7DDBEDAE18BC0DD300FEF3FA /* _WMWoundMeasurementValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementValue.m; sourceTree = "<group>"; };
 		7DDBEDAF18BC0DD300FEF3FA /* _WMWoundOdor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundOdor.h; sourceTree = "<group>"; };
@@ -1315,8 +1330,6 @@
 		7DDBEDBE18BC0DED00FEF3FA /* WMWoundMeasurement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurement.m; sourceTree = "<group>"; };
 		7DDBEDBF18BC0DED00FEF3FA /* WMWoundMeasurementGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementGroup.h; sourceTree = "<group>"; };
 		7DDBEDC018BC0DED00FEF3FA /* WMWoundMeasurementGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementGroup.m; sourceTree = "<group>"; };
-		7DDBEDC118BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementTunnelValue.h; sourceTree = "<group>"; };
-		7DDBEDC218BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementTunnelValue.m; sourceTree = "<group>"; };
 		7DDBEDC518BC0DED00FEF3FA /* WMWoundMeasurementValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementValue.h; sourceTree = "<group>"; };
 		7DDBEDC618BC0DED00FEF3FA /* WMWoundMeasurementValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementValue.m; sourceTree = "<group>"; };
 		7DDBEDC718BC0DED00FEF3FA /* WMWoundOdor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundOdor.h; sourceTree = "<group>"; };
@@ -1485,10 +1498,6 @@
 		7DF4E97C18C362D2000A3F5B /* _WMInterventionStatusJoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMInterventionStatusJoin.m; sourceTree = "<group>"; };
 		7DF4E97E18C362DD000A3F5B /* WMInterventionStatusJoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMInterventionStatusJoin.h; sourceTree = "<group>"; };
 		7DF4E97F18C362DD000A3F5B /* WMInterventionStatusJoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMInterventionStatusJoin.m; sourceTree = "<group>"; };
-		7DF4E99918C3CDFC000A3F5B /* _WMWoundMeasurementUnderValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMWoundMeasurementUnderValue.h; sourceTree = "<group>"; };
-		7DF4E99A18C3CDFD000A3F5B /* _WMWoundMeasurementUnderValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMWoundMeasurementUnderValue.m; sourceTree = "<group>"; };
-		7DF4E99C18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWoundMeasurementUnderValue.h; sourceTree = "<group>"; };
-		7DF4E99D18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWoundMeasurementUnderValue.m; sourceTree = "<group>"; };
 		7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMEmailManager.h; sourceTree = "<group>"; };
 		7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMEmailManager.m; sourceTree = "<group>"; };
 		7DF4E9AB18C4B9AC000A3F5B /* IAPDeviceTransactionAggregate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPDeviceTransactionAggregate.h; sourceTree = "<group>"; };
@@ -2376,10 +2385,6 @@
 				7DDBEDBE18BC0DED00FEF3FA /* WMWoundMeasurement.m */,
 				7DDBEDBF18BC0DED00FEF3FA /* WMWoundMeasurementGroup.h */,
 				7DDBEDC018BC0DED00FEF3FA /* WMWoundMeasurementGroup.m */,
-				7DDBEDC118BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.h */,
-				7DDBEDC218BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m */,
-				7DF4E99C18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.h */,
-				7DF4E99D18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m */,
 				7DDBEDC518BC0DED00FEF3FA /* WMWoundMeasurementValue.h */,
 				7DDBEDC618BC0DED00FEF3FA /* WMWoundMeasurementValue.m */,
 				7DDBEDC718BC0DED00FEF3FA /* WMWoundOdor.h */,
@@ -2405,6 +2410,20 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D0F2F6A1906F2FB009F8346 /* WMUndermineTunnelContainerView.h */,
+				7D0F2F6B1906F2FB009F8346 /* WMUndermineTunnelContainerView.m */,
+				7D0F2F671906EA1F009F8346 /* WMThumbImageView.h */,
+				7D0F2F681906EA1F009F8346 /* WMThumbImageView.m */,
+				7D0F2F641906E9AE009F8346 /* WMMeasurementThumbView.h */,
+				7D0F2F651906E9AE009F8346 /* WMMeasurementThumbView.m */,
+				7D0F2F5E1906E8A3009F8346 /* WMDimensionView.h */,
+				7D0F2F5F1906E8A3009F8346 /* WMDimensionView.m */,
+				7D0F2F601906E8A3009F8346 /* WMWidthHeightOverlayView.h */,
+				7D0F2F611906E8A3009F8346 /* WMWidthHeightOverlayView.m */,
+				7D0F2F5B1906E4C5009F8346 /* WMScalingRulerView.h */,
+				7D0F2F5C1906E4C5009F8346 /* WMScalingRulerView.m */,
+				7D0F2F581906DA12009F8346 /* WMNormalizingView.h */,
+				7D0F2F591906DA12009F8346 /* WMNormalizingView.m */,
 				5F6DE4F518AEE08D00E87F7E /* APTableViewCell.h */,
 				5F6DE4F618AEE08D00E87F7E /* APTableViewCell.m */,
 				7DB2074518ABAB8E0004DC32 /* AsyncImageView.h */,
@@ -2732,10 +2751,6 @@
 				7DDBEDA618BC0DD300FEF3FA /* _WMWoundMeasurement.m */,
 				7DDBEDA718BC0DD300FEF3FA /* _WMWoundMeasurementGroup.h */,
 				7DDBEDA818BC0DD300FEF3FA /* _WMWoundMeasurementGroup.m */,
-				7DDBEDA918BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.h */,
-				7DDBEDAA18BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m */,
-				7DF4E99918C3CDFC000A3F5B /* _WMWoundMeasurementUnderValue.h */,
-				7DF4E99A18C3CDFD000A3F5B /* _WMWoundMeasurementUnderValue.m */,
 				7DDBEDAD18BC0DD300FEF3FA /* _WMWoundMeasurementValue.h */,
 				7DDBEDAE18BC0DD300FEF3FA /* _WMWoundMeasurementValue.m */,
 				7DDBEDAF18BC0DD300FEF3FA /* _WMWoundOdor.h */,
@@ -3265,6 +3280,7 @@
 				7DF4E8EB18C22EEC000A3F5B /* _WMPsychoSocialGroup.m in Sources */,
 				5F67D1CE18AC3B5B00460C37 /* WMUtilities.m in Sources */,
 				7DF4E92C18C22F27000A3F5B /* WMIAPTransaction.m in Sources */,
+				7D0F2F621906E8A3009F8346 /* WMDimensionView.m in Sources */,
 				7D9AA26B18AFBF3E00C1B698 /* BoxedButton.m in Sources */,
 				7DF4E8F518C22EEC000A3F5B /* _WMWoundPosition.m in Sources */,
 				7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */,
@@ -3274,7 +3290,6 @@
 				5F67D22D18AD8DF000460C37 /* WMNavigationStage.m in Sources */,
 				7DD8374018C78A3A0028C2D3 /* MagicalRecord+iCloud.m in Sources */,
 				5F6DE4F018AEDF2400E87F7E /* WMChooseTrackViewController.m in Sources */,
-				7DF4E99B18C3CDFD000A3F5B /* _WMWoundMeasurementUnderValue.m in Sources */,
 				7D10CE2818DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.m in Sources */,
 				7D39DB3218B823A30054DDC3 /* WMMedicationGroupViewController.m in Sources */,
 				5F67D1C318AC39B800460C37 /* WMParticipant.m in Sources */,
@@ -3291,6 +3306,7 @@
 				7DB206D718A839180004DC32 /* WMTelecom.m in Sources */,
 				7DDEE27718F4947500AF9FC6 /* _WMMedicalHistoryGroup.m in Sources */,
 				7D39DB8C18B94FEB0054DDC3 /* _WMDeviceValue.m in Sources */,
+				7D0F2F6C1906F2FB009F8346 /* WMUndermineTunnelContainerView.m in Sources */,
 				7DF4E92B18C22F27000A3F5B /* WMDefinitionKeyword.m in Sources */,
 				7DF4E93118C22F27000A3F5B /* WMSkinAssessmentCategory.m in Sources */,
 				7D0F2F4A1905B747009F8346 /* WMPatient+CoreText.m in Sources */,
@@ -3299,10 +3315,10 @@
 				7D0F2F4419058614009F8346 /* WMCarePlanSummaryViewController.m in Sources */,
 				7DF4E93318C22F27000A3F5B /* WMSkinAssessmentValue.m in Sources */,
 				7DF4E93418C22F27000A3F5B /* WMWoundLocation.m in Sources */,
+				7D0F2F5A1906DA12009F8346 /* WMNormalizingView.m in Sources */,
 				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
 				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
 				7D10CDF818DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m in Sources */,
-				7DDBEDCD18BC0DED00FEF3FA /* WMWoundMeasurementTunnelValue.m in Sources */,
 				7D68949E190445D8006DE509 /* KalDataSource.m in Sources */,
 				7D10CDC618DA352800AD43E3 /* NSObject-Description.m in Sources */,
 				7D68947C1904452C006DE509 /* WMComparePhotosViewController.m in Sources */,
@@ -3319,6 +3335,7 @@
 				7DD3EA4918C011A70093E370 /* IAPManager.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7DDE755118CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m in Sources */,
+				7D0F2F691906EA1F009F8346 /* WMThumbImageView.m in Sources */,
 				7D68946B19043E1B006DE509 /* WMRoundedSemitransparentLabel.m in Sources */,
 				7D39DB8018B947330054DDC3 /* WMMedicationGroup.m in Sources */,
 				7DD8373618C78A3A0028C2D3 /* NSManagedObject+MagicalRequests.m in Sources */,
@@ -3332,6 +3349,7 @@
 				7D39DB7F18B947330054DDC3 /* WMMedicationCategory.m in Sources */,
 				7D39DAD718B7CE6E0054DDC3 /* WMCompassView.m in Sources */,
 				7D13027F18D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m in Sources */,
+				7D0F2F661906E9AE009F8346 /* WMMeasurementThumbView.m in Sources */,
 				7D39DBB418BAB2CC0054DDC3 /* WMTransformPhotoViewController.m in Sources */,
 				7D39DB9518B94FFD0054DDC3 /* WMDevice.m in Sources */,
 				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
@@ -3342,7 +3360,6 @@
 				7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */,
 				7DF4E92A18C22F27000A3F5B /* WMDefinition.m in Sources */,
 				7DB206EC18A839240004DC32 /* _WMOrganization.m in Sources */,
-				7DDBEDB518BC0DD300FEF3FA /* _WMWoundMeasurementTunnelValue.m in Sources */,
 				7D10CE1E18DDEB7B00AD43E3 /* WMSelectWoundPositionViewController.m in Sources */,
 				7DDBEDE218BEA95C00FEF3FA /* _WMBradenCell.m in Sources */,
 				7DD8376018C7A5080028C2D3 /* AFNetworkActivityIndicatorManager.m in Sources */,
@@ -3447,6 +3464,7 @@
 				7DF4E8F418C22EEC000A3F5B /* _WMWoundLocationValue.m in Sources */,
 				7DDEE28C18F5617700AF9FC6 /* WMSwitchTableViewCell.m in Sources */,
 				7D6894A7190445D8006DE509 /* UIViewAdditions.m in Sources */,
+				7D0F2F5D1906E4C5009F8346 /* WMScalingRulerView.m in Sources */,
 				7D6894B21904494F006DE509 /* WMSelectWoundPhotoForDateController.m in Sources */,
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */,
@@ -3487,6 +3505,7 @@
 				5F6DE51E18B589B300E87F7E /* WMInstructionTableViewCell.m in Sources */,
 				7DDEE27818F4947500AF9FC6 /* _WMMedicalHistoryItem.m in Sources */,
 				7D39DAE718B7E5DD0054DDC3 /* WMSelectWoundViewController.m in Sources */,
+				7D0F2F631906E8A3009F8346 /* WMWidthHeightOverlayView.m in Sources */,
 				7D10CD9718DA301100AD43E3 /* WMNoteViewController.m in Sources */,
 				7D10CDE418DA3FC300AD43E3 /* WMDisclosureImageView.m in Sources */,
 				5F67D1C418AC39B800460C37 /* WMParticipantType.m in Sources */,
@@ -3598,7 +3617,6 @@
 				7D10CE0C18DCDF5C00AD43E3 /* WMBradenScaleTableHeaderView.m in Sources */,
 				7DF4E8EF18C22EEC000A3F5B /* _WMSkinAssessmentCategory.m in Sources */,
 				7DD8375F18C7A5080028C2D3 /* AFJSONRequestOperation.m in Sources */,
-				7DF4E99E18C3CE0B000A3F5B /* WMWoundMeasurementUnderValue.m in Sources */,
 				7D10CD9218D775E100AD43E3 /* WMSelectWoundOdorViewController.m in Sources */,
 				7DF4E92E18C22F27000A3F5B /* WMPsychoSocialItem.m in Sources */,
 				7D10CD6C18D2590E00AD43E3 /* WMTeam.m in Sources */,

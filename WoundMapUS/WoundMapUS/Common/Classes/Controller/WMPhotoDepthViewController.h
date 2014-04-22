@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class WMPhotoDepthViewController;
 
 @protocol PhotoDepthViewControllerDelegate <NSObject>
@@ -16,7 +14,7 @@
 
 @end
 
-@interface WMPhotoDepthViewController : WMBaseViewController
+@interface WMPhotoDepthViewController : UIViewController
 
 @property (weak, nonatomic) id<PhotoDepthViewControllerDelegate> delegate;
 @property (nonatomic) BOOL showCancelButton;

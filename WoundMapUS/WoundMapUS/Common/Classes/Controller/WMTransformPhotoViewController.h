@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
-
 @class WMWoundPhoto;
 @class WMTransformPhotoViewController;
 
@@ -18,7 +16,7 @@
 
 @end
 
-@interface WMTransformPhotoViewController : WMBaseViewController
+@interface WMTransformPhotoViewController : UIViewController
 
 @property (weak, nonatomic) id<TransformPhotoViewControllerDelegate> delegate;
 

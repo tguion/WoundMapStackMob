@@ -890,23 +890,20 @@
         <relationship name="wound" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWound" inverseName="measurementGroups" inverseEntity="WMWound" syncable="YES"/>
         <relationship name="woundPhoto" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundPhoto" inverseName="measurementGroups" inverseEntity="WMWoundPhoto" syncable="YES"/>
     </entity>
-    <entity name="WMWoundMeasurementTunnelValue" representedClassName="WMWoundMeasurementTunnelValue" parentEntity="WMWoundMeasurementValue" syncable="YES">
-        <attribute name="fromOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="3" syncable="YES"/>
-        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-    </entity>
-    <entity name="WMWoundMeasurementUnderValue" representedClassName="WMWoundMeasurementUnderValue" parentEntity="WMWoundMeasurementTunnelValue" syncable="YES">
-        <attribute name="toOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="5" syncable="YES"/>
-    </entity>
     <entity name="WMWoundMeasurementValue" representedClassName="WMWoundMeasurementValue" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="datePushed" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="fromOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="3" syncable="YES"/>
         <attribute name="revisedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="sectionTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toOClockValue" optional="YES" attributeType="Integer 16" defaultValueString="5" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="woundMeasurementValueType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="amountQualifier" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMAmountQualifier" inverseName="measurementValues" inverseEntity="WMAmountQualifier" syncable="YES"/>
         <relationship name="group" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundMeasurementGroup" inverseName="values" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
         <relationship name="odor" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundOdor" inverseName="measurementValues" inverseEntity="WMWoundOdor" syncable="YES"/>
@@ -1129,8 +1126,6 @@
         <memberEntity name="WMWoundLocationValue"/>
         <memberEntity name="WMWoundMeasurement"/>
         <memberEntity name="WMWoundMeasurementGroup"/>
-        <memberEntity name="WMWoundMeasurementTunnelValue"/>
-        <memberEntity name="WMWoundMeasurementUnderValue"/>
         <memberEntity name="WMWoundMeasurementValue"/>
         <memberEntity name="WMWoundOdor"/>
         <memberEntity name="WMWoundPhoto"/>
@@ -1200,9 +1195,7 @@
         <element name="WMWoundLocationValue" positionX="0" positionY="0" width="128" height="150"/>
         <element name="WMWoundMeasurement" positionX="0" positionY="0" width="128" height="405"/>
         <element name="WMWoundMeasurementGroup" positionX="0" positionY="0" width="128" height="225"/>
-        <element name="WMWoundMeasurementTunnelValue" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="WMWoundMeasurementUnderValue" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="WMWoundMeasurementValue" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="WMWoundMeasurementValue" positionX="0" positionY="0" width="128" height="298"/>
         <element name="WMWoundOdor" positionX="0" positionY="0" width="128" height="285"/>
         <element name="WMWoundPhoto" positionX="0" positionY="0" width="128" height="358"/>
         <element name="WMWoundPosition" positionX="0" positionY="0" width="128" height="270"/>

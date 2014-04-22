@@ -1,21 +1,104 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4469" systemVersion="13A476u" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3694"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMPhotoMeasureViewController">
             <connections>
-                <outlet property="view" destination="1" id="3"/>
+                <outlet property="dimensionView" destination="xP8-jx-KI2" id="ZNJ-Nf-BxM"/>
+                <outlet property="imageView" destination="9dw-vo-rRf" id="QkM-ZS-z2L"/>
+                <outlet property="view" destination="rR2-r7-33t" id="VSJ-P4-dPF"/>
+                <outlet property="widthHeightOverlayView" destination="wpI-bd-HaR" id="UGx-PA-Sbb"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="1">
+        <view contentMode="scaleToFill" id="rR2-r7-33t">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" id="9dw-vo-rRf">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <accessibility key="accessibilityConfiguration">
+                        <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                    </accessibility>
+                </imageView>
+                <view opaque="NO" alpha="0.75" contentMode="scaleToFill" id="wpI-bd-HaR" customClass="WMWidthHeightOverlayView">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" id="opC-cF-ZII" customClass="WMMeasurementThumbView">
+                            <rect key="frame" x="138" y="10" width="44" height="548"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView tag="1000" contentMode="scaleToFill" image="ui_slider_up" id="NIZ-RL-bDy" customClass="WMThumbImageView">
+                                    <rect key="frame" x="6" y="488" width="32" height="32"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                        </view>
+                        <view contentMode="scaleToFill" id="GcS-ao-i4m" customClass="WMMeasurementThumbView">
+                            <rect key="frame" x="138" y="0.0" width="44" height="656"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView tag="1000" contentMode="scaleToFill" image="ui_slider_up" id="N3I-8y-ag6" customClass="WMThumbImageView">
+                                    <rect key="frame" x="6" y="312" width="32" height="32"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                        </view>
+                        <view contentMode="scaleToFill" id="eQQ-iJ-YH1" customClass="WMMeasurementThumbView">
+                            <rect key="frame" x="0.0" y="216" width="568" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView tag="1000" contentMode="scaleToFill" image="ui_slider_right" id="dVR-Cb-nli" customClass="WMThumbImageView">
+                                    <rect key="frame" x="268" y="6" width="32" height="32"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                        </view>
+                        <view contentMode="scaleToFill" id="GzB-f4-zbD" customClass="WMMeasurementThumbView">
+                            <rect key="frame" x="0.0" y="216" width="568" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <imageView tag="1000" contentMode="scaleToFill" image="ui_slider_right" id="U4z-Sr-q7O" customClass="WMThumbImageView">
+                                    <rect key="frame" x="268" y="6" width="32" height="32"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="x1View" destination="opC-cF-ZII" id="O01-C6-rgR"/>
+                        <outlet property="x2View" destination="GcS-ao-i4m" id="Nql-wH-vNV"/>
+                        <outlet property="y1View" destination="eQQ-iJ-YH1" id="M8t-3w-jVX"/>
+                        <outlet property="y2View" destination="GzB-f4-zbD" id="yyd-ku-BjG"/>
+                    </connections>
+                </view>
+                <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" id="xP8-jx-KI2" customClass="WMDimensionView">
+                    <rect key="frame" x="0.0" y="10" width="320" height="548"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </view>
+            </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>
+    <resources>
+        <image name="ui_slider_right" width="44" height="44"/>
+        <image name="ui_slider_up" width="44" height="44"/>
+    </resources>
 </document>

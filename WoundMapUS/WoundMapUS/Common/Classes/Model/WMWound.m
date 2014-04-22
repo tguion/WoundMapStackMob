@@ -218,8 +218,10 @@
     [request setEntity:[NSEntityDescription entityForName:@"WMWoundPhoto" inManagedObjectContext:managedObjectContext]];
     [request setPredicate:[NSPredicate predicateWithFormat:@"wound == %@", self]];
     [request setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES]]];
-    [request setResultType:NSManagedObjectIDResultType];
-    return [WMWoundPhoto MR_executeFetchRequest:request inContext:managedObjectContext];
+    [request setReturnsObjectsAsFaults:YES];
+    [request setIncludesPropertyValues:NO];
+    NSArray *woundPhotos = [WMWoundPhoto MR_executeFetchRequest:request inContext:managedObjectContext];
+    return [woundPhotos valueForKeyPath:@"objectID"];
 }
 
 - (WMWoundTreatmentGroup *)lastWoundTreatmentGroup
