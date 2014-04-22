@@ -9,11 +9,14 @@
 #import "WMPhotoMeasureViewController.h"
 #import "WMWidthHeightOverlayView.h"
 #import "WMDimensionView.h"
+#import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurementValue.h"
+#import "WMFatFractal.h"
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 
 @interface WMPhotoMeasureViewController () <UIGestureRecognizerDelegate>
 
@@ -166,7 +169,58 @@
 - (IBAction)doneAction:(id)sender
 {
     [self updateModel];
-    [self.delegate photoMeasureViewControllerDelegate:self length:self.lengthInCentimeters width:self.widthInCentimeters];
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMWoundPhoto *woundPhoto = self.woundPhoto;
+    WMWound *wound = woundPhoto.wound;
+    WMWoundMeasurementGroup *woundMeasurementGroup = self.woundPhoto.measurementGroup;
+    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        [weakSelf.delegate photoMeasureViewControllerDelegate:weakSelf length:weakSelf.lengthInCentimeters width:weakSelf.widthInCentimeters];
+    };
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            --counter;
+            if (counter == 0) {
+                block();
+            }
+        }
+    };
+    FFHttpMethodCompletion createdCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            ++counter;
+            [ff grabBagAddItemAtFfUrl:woundMeasurementGroup.ffUrl
+                         toObjAtFfUrl:wound.ffUrl
+                          grabBagName:WMWoundRelationships.measurementGroups
+                           onComplete:completionHandler];
+            ++counter;
+            [ff grabBagAddItemAtFfUrl:woundMeasurementGroup.ffUrl
+                         toObjAtFfUrl:woundPhoto.ffUrl
+                          grabBagName:WMWoundPhotoRelationships.measurementGroups
+                           onComplete:completionHandler];
+        }
+    };
+    if (woundMeasurementGroup.ffUrl) {
+        NSSet *updatedObjects = managedObjectContext.updatedObjects;
+        for (id object in updatedObjects) {
+            ++counter;
+            NSParameterAssert(nil != [object valueForKey:WMWoundMeasurementValueAttributes.ffUrl]);
+            [ff updateObj:object
+               onComplete:completionHandler
+                onOffline:completionHandler];
+        }
+    } else {
+        [ff createObj:woundMeasurementGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]]
+           onComplete:createdCompletionHandler
+            onOffline:createdCompletionHandler];
+    }
 }
 
 #pragma mark - WidthHeightOverlayViewDelegate

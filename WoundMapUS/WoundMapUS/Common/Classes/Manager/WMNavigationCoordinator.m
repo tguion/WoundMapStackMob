@@ -59,8 +59,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 @property (readonly, nonatomic) WMPhotoDepthViewController *photoDepthViewController;
 @property (readonly, nonatomic) WMUndermineTunnelViewController *undermineTunnelViewController;
 
-@property (nonatomic) BOOL exitingWoundMeasurement;                                         // exiting measurement
-
 @end
 
 @implementation WMNavigationCoordinator
@@ -329,7 +327,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     // make sure the navigation bar is showing
     [viewController.navigationController setNavigationBarHidden:NO];
     self.state = addingPhoto ? NavigationCoordinatorStateMeasureNewPhoto:NavigationCoordinatorStateMeasureExistingPhoto;
-    self.exitingWoundMeasurement = NO;
     self.woundPhoto = woundPhoto;
     BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
     if (isIPadIdiom) {
@@ -425,32 +422,39 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 - (void)purgeMemoryAfterMeasurement
 {
     // check for empty dimensions
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (nil != _woundMeasurementValueWidth && [_woundMeasurementValueWidth.value length] == 0) {
         _woundMeasurementValueWidth.group = nil;
         _woundMeasurementValueWidth.woundMeasurement = nil;
-        [self.managedObjectContext deleteObject:_woundMeasurementValueWidth];
+        [managedObjectContext deleteObject:_woundMeasurementValueWidth];
         _woundMeasurementValueWidth = nil;
     }
     if (nil != _woundMeasurementValueLength && [_woundMeasurementValueLength.value length] == 0) {
         _woundMeasurementValueLength.group = nil;
         _woundMeasurementValueLength.woundMeasurement = nil;
-        [self.managedObjectContext deleteObject:_woundMeasurementValueLength];
+        [managedObjectContext deleteObject:_woundMeasurementValueLength];
         _woundMeasurementValueLength = nil;
     }
     if (nil != _woundMeasurementValueDepth && [_woundMeasurementValueDepth.value length] == 0) {
         _woundMeasurementValueDepth.group = nil;
         _woundMeasurementValueDepth.woundMeasurement = nil;
-        [self.managedObjectContext deleteObject:_woundMeasurementValueDepth];
+        [managedObjectContext deleteObject:_woundMeasurementValueDepth];
         _woundMeasurementValueDepth = nil;
     }
-    // wait for notification that document has saved
-    self.exitingWoundMeasurement = YES;
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error){
-        // nothing more
+    NSSet *deletedObjects = managedObjectContext.deletedObjects;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
-    }];
+    };
+    for (id object in deletedObjects) {
+        // don't think I need to remove from grab bags
+        [ff deleteObj:object
+           onComplete:completionHandler
+            onOffline:completionHandler];
+    }
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 #pragma mark - Delete
@@ -624,7 +628,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         case NavigationCoordinatorStateAuthenticating:
         case NavigationCoordinatorStatePasscode:
         case NavigationCoordinatorStateInitialized: {
-
+            [[self.woundPhoto managedObjectContext] MR_saveToPersistentStoreAndWait];
             break;
         }
     }

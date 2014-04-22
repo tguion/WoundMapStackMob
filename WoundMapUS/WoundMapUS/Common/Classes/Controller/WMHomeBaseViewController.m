@@ -994,13 +994,17 @@
             [weakSelf navigateToWounds:navigationNodeButton.navigationNode];
             [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
         }
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups]
-                                              aggregator:self.wound
-                                                      ff:[WMFatFractal sharedInstance]
-                                       completionHandler:block];
-
+    if (nil == self.wound) {
+        block(nil);
+    } else {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups]
+                                                  aggregator:self.wound
+                                                          ff:[WMFatFractal sharedInstance]
+                                           completionHandler:block];
+    }
 }
 
 - (IBAction)chooseTrackAction:(id)sender

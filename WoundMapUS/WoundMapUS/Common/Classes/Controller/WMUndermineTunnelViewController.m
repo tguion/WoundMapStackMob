@@ -8,6 +8,7 @@
 
 #import "WMUndermineTunnelViewController.h"
 #import "WMAdjustAlpaView.h"
+#import "MBProgressHUD.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurementValue.h"
 #import "WMWoundMeasurement.h"
@@ -15,9 +16,12 @@
 #import "WMDefinition.h"
 #import "WMUndermineTunnelContainerView.h"
 #import "UIView+Custom.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 
 @interface WMUndermineTunnelViewController ()
+
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (strong, nonatomic) WMWoundMeasurement *woundMeasurement;
 
@@ -131,16 +135,27 @@
     // Do any additional setup after loading the view from its nib.
     self.title = @"Undermining & Tunneling";
     [self setEdgesForExtendedLayout:UIRectEdgeNone];    // don't understand why need this
-    if (self.showCancelButton) {
+    if (_showCancelButton) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                               target:self
                                                                                               action:@selector(cancelAction:)];
+    } else {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
     }
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                            target:self
                                                                                            action:@selector(saveAction:)];
-    self.inputTextField.inputView = self.pickerViewContainer;
-    self.inputTextField.inputAccessoryView = self.inputAccessoryToolbar;
+    [self.view addSubview:_inputTextField];
+    CGRect frame = _inputTextField.frame;
+    frame.origin.y = -44.0;
+    _inputTextField.frame = frame;
+    _inputTextField.inputView = self.pickerViewContainer;
+    _inputTextField.inputAccessoryView = self.inputAccessoryToolbar;
     self.depthTextField.inputAccessoryView = self.inputAccessoryToolbar;
     if (self.isIPadIdiom) {
         self.depthTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -183,7 +198,6 @@
     }
     [self.tableView setEditing:YES animated:NO];
     self.tableView.allowsSelectionDuringEditing = YES;
-    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -195,12 +209,6 @@
         responder = self.depthTextField;
     }
     [responder resignFirstResponder];
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (_didCancel && self.managedObjectContext.undoManager.canUndo) {
-            [self.managedObjectContext.undoManager undoNestedGroup];
-        }
-    }
 }
 
 #pragma mark - Core
@@ -241,14 +249,26 @@
 - (IBAction)cancelAction:(id)sender
 {
 	_didCancel = YES;
-    // handle back end
-    xxx;
-    
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+        if (self.managedObjectContext.undoManager.canUndo) {
+            [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
 	[self.delegate undermineTunnelViewControllerDidCancel:self];
 }
 
 - (IBAction)saveAction:(id)sender
 {
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     if (self.depthTextField.isFirstResponder) {
         [self.depthTextField resignFirstResponder];
         [self updateCurrentUndermineTunnelValues];
@@ -256,9 +276,53 @@
         [[self.view findFirstResponder] resignFirstResponder];
     }
     // handle back end
-    xxx;
-    
-	[self.delegate undermineTunnelViewControllerDidDone:self];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMWoundMeasurementGroup *woundMeasurementGroup = self.woundMeasurementGroup;
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+    dispatch_block_t block = ^{;
+        [[woundMeasurementGroup managedObjectContext] MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf.delegate undermineTunnelViewControllerDidDone:weakSelf];
+    };
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            --counter;
+            if (counter == 0) {
+                block();
+            }
+        }
+    };
+    FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [ff grabBagAddItemAtFfUrl:[object valueForKey:WMWoundMeasurementValueAttributes.ffUrl]
+                         toObjAtFfUrl:woundMeasurementGroup.ffUrl
+                          grabBagName:WMWoundMeasurementGroupRelationships.values
+                           onComplete:completionHandler];
+        }
+    };
+    // update back end now
+    for (WMWoundMeasurementValue *value in woundMeasurementGroup.values) {
+        ++counter;
+        if (value.ffUrl) {
+            [ff updateObj:value onComplete:completionHandler
+                onOffline:completionHandler];
+        } else {
+            [ff createObj:value
+                    atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementValue entityName]]
+               onComplete:createCompletionHandler
+                onOffline:createCompletionHandler];
+        }
+    }
+    ++counter;
+    [ff updateObj:woundMeasurementGroup
+       onComplete:completionHandler
+        onOffline:completionHandler];
 }
 
 - (IBAction)pickerViewChangedValueAction:(id)sender
@@ -467,6 +531,7 @@
         WMWoundMeasurementValue *value = [self.fetchedResultsController objectAtIndexPath:[self indexPathTableToFetchedResultsController:indexPath]];
         [self.woundMeasurementGroup removeValuesObject:value];
         [self.managedObjectContext deleteObject:value];
+        // no need for back end update
         NSError *error = nil;
         if (![self.fetchedResultsController performFetch:&error]) {
             abort();
@@ -515,7 +580,7 @@
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-    return (self.isSearchActive ? @"WMDefinition":@"WMWoundMeasurementTunnelValue");
+    return (self.isSearchActive ? @"WMDefinition":@"WMWoundMeasurementValue");
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate
@@ -530,7 +595,8 @@
             }
         }
     } else {
-        predicate = [NSPredicate predicateWithFormat:@"woundMeasurement == %@ AND group == %@", self.woundMeasurement, self.woundMeasurementGroup];
+        predicate = [NSPredicate predicateWithFormat:@"woundMeasurement == %@ AND group == %@ AND (woundMeasurementValueType == %d OR woundMeasurementValueType == %d)", self.woundMeasurement, self.woundMeasurementGroup, kWoundMeasurementValueTypeTunnel,
+                     kWoundMeasurementValueTypeUndermine];
     }
     return predicate;
 }

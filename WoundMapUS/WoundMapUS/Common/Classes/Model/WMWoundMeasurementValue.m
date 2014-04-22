@@ -3,12 +3,6 @@
 #import "WMAmountQualifier.h"
 #import "WMWoundOdor.h"
 
-typedef NS_ENUM(NSUInteger, WoundMeasurementValueType) {
-    kWoundMeasurementValueTypeNormal,
-    kWoundMeasurementValueTypeTunnel,
-    kWoundMeasurementValueTypeUndermine
-};
-
 @interface WMWoundMeasurementValue ()
 
 // Private interface goes here.

@@ -1,21 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4469" systemVersion="13A476u" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3694"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMUndermineTunnelViewController">
             <connections>
-                <outlet property="view" destination="1" id="3"/>
+                <outlet property="depthTextField" destination="8Is-32-eSk" id="TGa-gB-gwZ"/>
+                <outlet property="fromPickerView" destination="gF5-H5-tp1" id="aUm-sg-6Xb"/>
+                <outlet property="inputAccessoryToolbar" destination="nHc-Kv-BoI" id="RyZ-LL-aao"/>
+                <outlet property="inputTextField" destination="GWX-hw-iE2" id="ZMw-8G-oIS"/>
+                <outlet property="pickerViewContainer" destination="HaS-pD-4bE" id="9vf-4n-yRL"/>
+                <outlet property="toPickerView" destination="SaY-40-7wC" id="jqb-a3-AEw"/>
+                <outlet property="view" destination="acU-KD-1vk" id="HEu-21-OPm"/>
             </connections>
         </placeholder>
+        <view contentMode="scaleToFill" id="HaS-pD-4bE" customClass="WMUndermineTunnelContainerView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="258"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gF5-H5-tp1">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="216"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="uio-Ve-gpV"/>
+                        <outlet property="delegate" destination="-1" id="30P-oh-jqG"/>
+                    </connections>
+                </pickerView>
+                <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SaY-40-7wC">
+                    <rect key="frame" x="200" y="0.0" width="120" height="216"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="r3p-QQ-mYT"/>
+                        <outlet property="delegate" destination="-1" id="jmZ-Qo-jCL"/>
+                    </connections>
+                </pickerView>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="To" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TZY-zD-ROr">
+                    <rect key="frame" x="119" y="119" width="81" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="O'Clock" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mse-GA-EUL">
+                    <rect key="frame" x="0.0" y="224" width="120" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="O'Clock" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0BT-Bc-lXd">
+                    <rect key="frame" x="200" y="224" width="120" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="fromOClockLabel" destination="mse-GA-EUL" id="7DB-dA-2DN"/>
+                <outlet property="fromPickerView" destination="gF5-H5-tp1" id="2W7-fc-0h1"/>
+                <outlet property="toLabel" destination="TZY-zD-ROr" id="bJ0-B7-lVZ"/>
+                <outlet property="toOClockLabel" destination="0BT-Bc-lXd" id="J6D-fd-tkN"/>
+                <outlet property="toPickerView" destination="SaY-40-7wC" id="KUZ-6j-TdT"/>
+            </connections>
+        </view>
+        <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="nHc-Kv-BoI">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <items>
+                <barButtonItem style="plain" systemItem="fixedSpace" id="LnY-u1-ycZ"/>
+                <barButtonItem style="plain" id="Xi7-Vt-g9B">
+                    <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Depth (cm)" minimumFontSize="17" id="8Is-32-eSk">
+                        <rect key="frame" x="16" y="10" width="80" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad"/>
+                        <connections>
+                            <outlet property="delegate" destination="-1" id="GPB-Q4-ARb"/>
+                        </connections>
+                    </textField>
+                </barButtonItem>
+                <barButtonItem style="plain" systemItem="flexibleSpace" id="FJd-xi-dDO"/>
+                <barButtonItem title="Dismiss" id="xXZ-uO-dqT">
+                    <connections>
+                        <action selector="dismissAction:" destination="-1" id="BsZ-EU-XI8"/>
+                    </connections>
+                </barButtonItem>
+            </items>
+        </toolbar>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="1">
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="acU-KD-1vk">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
-        </view>
+        </tableView>
+        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="GWX-hw-iE2">
+            <rect key="frame" x="0.0" y="0.0" width="97" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+            <textInputTraits key="textInputTraits"/>
+            <connections>
+                <outlet property="delegate" destination="-1" id="0sh-pO-Bdj"/>
+            </connections>
+        </textField>
     </objects>
 </document>

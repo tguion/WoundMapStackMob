@@ -270,8 +270,8 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WCWoundMeasurementTunnelValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@", self]];
+    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementValue" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND woundMeasurementValueType == %d", self, kWoundMeasurementValueTypeTunnel]];
     return [managedObjectContext countForFetchRequest:request error:NULL];
 }
 
@@ -279,8 +279,8 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"WCWoundMeasurementUndermineValue" inManagedObjectContext:managedObjectContext]];
-    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@", self]];
+    [request setEntity:[NSEntityDescription entityForName:@"WMWoundMeasurementValue" inManagedObjectContext:managedObjectContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND woundMeasurementValueType == %d", self, kWoundMeasurementValueTypeUndermine]];
     return [managedObjectContext countForFetchRequest:request error:NULL];
 }
 
