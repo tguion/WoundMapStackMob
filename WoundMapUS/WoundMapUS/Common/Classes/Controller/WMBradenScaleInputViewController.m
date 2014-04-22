@@ -272,7 +272,7 @@
 - (NSString *)ffQuery
 {
     if (_bradenScale.ffUrl) {
-        return [NSString stringWithFormat:@"%@/sections", _bradenScale.ffUrl];
+        return [NSString stringWithFormat:@"%@/%@", _bradenScale.ffUrl, WMBradenScaleRelationships.sections];
     }
     // else
     return nil;

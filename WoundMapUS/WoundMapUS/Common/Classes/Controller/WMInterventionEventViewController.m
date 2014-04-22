@@ -18,14 +18,10 @@
 #import "WMWoundTreatmentGroup.h"
 
 @interface WMInterventionEventViewController ()
-@property (strong, nonatomic) NSString *eventEntityName;
 @property (strong, nonatomic) NSString *keyName;
 @end
 
 @implementation WMInterventionEventViewController
-
-@synthesize assessmentGroup=_assessmentGroup, delegate;
-@synthesize eventEntityName=_eventEntityName, keyName=_keyName;
 
 - (void)viewDidLoad
 {
@@ -55,7 +51,6 @@
 {
     [super clearDataCache];
     _assessmentGroup = nil;
-    _eventEntityName = nil;
     _keyName = nil;
 }
 
@@ -67,28 +62,6 @@
         _assessmentGroup = self.delegate.assessmentGroup;
     }
     return _assessmentGroup;
-}
-
-- (NSString *)eventEntityName
-{
-    if (nil == _eventEntityName) {
-        if ([self.assessmentGroup isKindOfClass:[WMMedicationGroup class]]) {
-            _eventEntityName = @"WCMedicationInterventionEvent";
-        } else if ([self.assessmentGroup isKindOfClass:[WMSkinAssessmentGroup class]]) {
-            _eventEntityName = @"WCSkinAssessmentInterventionEvent";
-        } else if ([self.assessmentGroup isKindOfClass:[WMCarePlanGroup class]]) {
-            _eventEntityName = @"WCCarePlanInterventionEvent";
-        } else if ([self.assessmentGroup isKindOfClass:[WMDeviceGroup class]]) {
-            _eventEntityName = @"WCDeviceInterventionEvent";
-        } else if ([self.assessmentGroup isKindOfClass:[WMPsychoSocialGroup class]]) {
-            _eventEntityName = @"WCPsychoSocialInterventionEvent";
-        } else if ([self.assessmentGroup isKindOfClass:[WMWoundMeasurementGroup class]]) {
-            _eventEntityName = @"WCWoundMeasurementInterventionEvent";
-        } else if ([self.assessmentGroup isKindOfClass:[WMWoundTreatmentGroup class]]) {
-            _eventEntityName = @"WCWoundTreatmentInterventionEvent";
-        }
-    }
-    return _eventEntityName;
 }
 
 - (NSString *)keyName
@@ -103,7 +76,7 @@
         } else if ([self.assessmentGroup isKindOfClass:[WMDeviceGroup class]]) {
             _keyName = @"deviceGroup";
         } else if ([self.assessmentGroup isKindOfClass:[WMPsychoSocialGroup class]]) {
-            _keyName = @"group";
+            _keyName = @"psychoSocialGroup";
         } else if ([self.assessmentGroup isKindOfClass:[WMWoundMeasurementGroup class]]) {
             _keyName = @"measurementGroup";
         } else if ([self.assessmentGroup isKindOfClass:[WMWoundTreatmentGroup class]]) {
@@ -169,7 +142,7 @@
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-	return self.eventEntityName;
+	return [WMInterventionEvent entityName];
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate

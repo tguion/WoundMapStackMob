@@ -480,7 +480,7 @@
 
 - (NSString *)ffQuery
 {
-    return [NSString stringWithFormat:@"/%@", [WMMedication entityName]];
+    return [NSString stringWithFormat:@"%@/%@", self.medicationGroup.ffUrl, WMMedicationGroupRelationships.medications];
 }
 
 - (NSString *)backendSeedEntityName

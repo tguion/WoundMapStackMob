@@ -133,7 +133,7 @@
 - (NSString *)ffQuery
 {
     if (_bradenSection.ffUrl) {
-        return [NSString stringWithFormat:@"%@/cells", _bradenSection.ffUrl];
+        return [NSString stringWithFormat:@"%@/%@", _bradenSection.ffUrl, WMBradenSectionRelationships.cells];
     }
     // else
     return nil;

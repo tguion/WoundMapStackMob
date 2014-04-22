@@ -219,7 +219,7 @@
 
 - (NSString *)ffQuery
 {
-    return [NSString stringWithFormat:@"/%@/%@/%@", [WMPatient entityName], [self.patient.ffUrl lastPathComponent], [WMMedicalHistoryGroup entityName]];
+    return [NSString stringWithFormat:@"%@/%@", self.medicalHistoryGroup.ffUrl, WMMedicalHistoryGroupRelationships.values];
 }
 
 #pragma mark - NoteViewControllerDelegate

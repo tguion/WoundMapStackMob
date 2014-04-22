@@ -522,7 +522,7 @@
 
 - (NSString *)ffQuery
 {
-    return [NSString stringWithFormat:@"/%@", [WMDevice entityName]];
+    return [NSString stringWithFormat:@"%@/%@", self.deviceGroup.ffUrl, WMDeviceGroupRelationships.values];
 }
 
 - (NSString *)backendSeedEntityName

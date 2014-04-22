@@ -81,13 +81,6 @@
     _navigationNode = nil;
 }
 
-#pragma mark - BaseViewController
-
-- (NSString *)ffQuery
-{
-    return [NSString stringWithFormat:@"/%@?depthRef=1", [WMSkinAssessment entityName]];
-}
-
 #pragma mark - BuildGroupViewController
 
 - (BOOL)shouldShowToolbar
@@ -504,6 +497,11 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.skinAssessmentGroup.ffUrl, WMSkinAssessmentGroupRelationships.values];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

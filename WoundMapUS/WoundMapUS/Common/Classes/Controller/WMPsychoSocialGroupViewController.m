@@ -685,7 +685,7 @@
 
 - (NSString *)ffQuery
 {
-    return [NSString stringWithFormat:@"/%@", [WMPsychoSocialItem entityName]];
+    return [NSString stringWithFormat:@"%@/%@", self.psychoSocialGroup.ffUrl, WMPsychoSocialGroupRelationships.values];
 }
 
 - (NSString *)backendSeedEntityName
