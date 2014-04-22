@@ -18,7 +18,7 @@
 
 @interface WMChooseTrackViewController ()
 
-@property (readonly, nonatomic) WMParticipant *particpant;
+@property (readonly, nonatomic) WMParticipant *participant;
 @property (strong, nonatomic) WMNavigationTrack *navigationTrack;
 
 @end
@@ -65,7 +65,7 @@
 
 #pragma mark - Core
 
-- (WMParticipant *)particpant
+- (WMParticipant *)participant
 {
     return self.appDelegate.participant;
 }
@@ -95,8 +95,8 @@
 - (NSString *)ffQuery
 {
     NSString *ffQuery = nil;
-    if (self.particpant.team) {
-        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks", [WMTeam entityName], [self.particpant.team.ffUrl lastPathComponent]];
+    if (self.participant.team) {
+        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks", [WMTeam entityName], [self.participant.team.ffUrl lastPathComponent]];
     } else {
         ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
     }

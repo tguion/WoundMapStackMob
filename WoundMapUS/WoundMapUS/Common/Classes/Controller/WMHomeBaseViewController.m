@@ -884,10 +884,25 @@
 
 - (IBAction)editPoliciesAction:(id)sender
 {
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.policyEditorViewController];
-    [self presentViewController:navigationController animated:YES completion:^{
-        // nothing
-    }];
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:weakSelf.policyEditorViewController];
+            [weakSelf presentViewController:navigationController animated:YES completion:^{
+                // nothing
+            }];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMNavigationTrackRelationships.stages]
+                                              aggregator:self.appDelegate.navigationCoordinator.navigationTrack
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
+
 }
 
 - (IBAction)selectInitialStageAction:(id)sender
@@ -977,6 +992,7 @@
             [WMUtilities logError:error];
         } else {
             [weakSelf navigateToWounds:navigationNodeButton.navigationNode];
+            [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
         }
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -1035,7 +1051,6 @@
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
                                        completionHandler:block];
-
 }
 
 - (IBAction)bradenScaleAction:(id)sender
@@ -1084,8 +1099,22 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    [self navigateToPsychoSocialAssessment:navigationNodeButton];
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToPsychoSocialAssessment:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)skinAssessmentAction:(id)sender
@@ -1100,6 +1129,7 @@
             [WMUtilities logError:error];
         } else {
             navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
         }
     };
@@ -1115,7 +1145,22 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WMNavigationNode *navigationNode = navigationNodeButton.navigationNode;
-    [self navigateToPhoto:navigationNode];
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToPhoto:navigationNode];
+            [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups,WMWoundRelationships.photos]
+                                              aggregator:self.wound
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)handleSwipeNavigationNodeControl:(UISwipeGestureRecognizer *)gestureRecognizer

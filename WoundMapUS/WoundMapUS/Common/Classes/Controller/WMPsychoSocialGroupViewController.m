@@ -116,7 +116,7 @@
     [super viewDidAppear:animated];
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
-                                                            message:[NSString stringWithFormat:@"Your Policy has closed %d open Psychosocial records. A new Psychosocial Record has been created for you.", self.recentlyClosedCount]
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %d open Psychosocial records.", self.recentlyClosedCount]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];

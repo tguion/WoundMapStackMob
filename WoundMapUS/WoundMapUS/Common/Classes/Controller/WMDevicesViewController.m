@@ -69,7 +69,7 @@
     [super viewDidAppear:animated];
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
-                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Device records. A new Device Record has been created for you.", (long)self.recentlyClosedCount]
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Device records.", (long)self.recentlyClosedCount]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];

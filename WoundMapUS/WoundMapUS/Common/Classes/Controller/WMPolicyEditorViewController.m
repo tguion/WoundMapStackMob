@@ -10,6 +10,7 @@
 #import "WMPolicySubnodeEditorViewController.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
+#import "WMTeam.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
@@ -197,6 +198,18 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 @implementation WMPolicyEditorViewController
 
 @synthesize navigationTrack=_navigationTrack, navigationStage=_navigationStage;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        };
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -482,7 +495,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     }
 }
 
-#pragma mark - PolicyEditorDelegate <NSObject>
+#pragma mark - PolicyEditorDelegate
 
 - (void)policyEditorViewControllerDidSave:(WMPolicyEditorViewController *)viewController
 {
@@ -494,7 +507,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)policyEditorViewControllerDidChangeTrack:(WMPolicyEditorViewController *)viewController
+- (void)policyEditorViewController:(WMPolicyEditorViewController *)viewController didChangeTrack:(WMNavigationTrack *)navigationTrack
 {
     
 }
@@ -787,6 +800,18 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    NSString *ffQuery = nil;
+    WMParticipant *participant = self.appDelegate.participant;
+    if (participant.team) {
+        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks?depthRef=1&depthGb=2", [WMTeam entityName], [participant.team.ffUrl lastPathComponent]];
+    } else {
+        ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
+    }
+    return ffQuery;
+}
 
 - (NSString *)backendSeedEntityName
 {

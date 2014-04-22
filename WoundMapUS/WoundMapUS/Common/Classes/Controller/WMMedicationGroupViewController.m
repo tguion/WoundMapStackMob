@@ -77,7 +77,7 @@
     [super viewDidAppear:animated];
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
-                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Medication records. A new Medication Plan has been created for you.", (long)self.recentlyClosedCount]
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Medication records.", (long)self.recentlyClosedCount]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
