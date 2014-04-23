@@ -259,6 +259,19 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         }];
     } else {
         _patient = super.patient;
+        if (_patient.ffUrl) {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            __weak __typeof(&*self)weakSelf = self;
+            WMErrorCallback completionHandler = ^(NSError *error) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [weakSelf.tableView reloadData];
+            };
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm updatePatient:_patient ff:[WMFatFractal sharedInstance] completionHandler:completionHandler];
+        }
     }
 }
 

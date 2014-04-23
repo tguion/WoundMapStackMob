@@ -21,14 +21,14 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </scrollView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20" customClass="WoundMeasurementLabel">
-                    <rect key="frame" x="20" y="415" width="280" height="21"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20" customClass="WMWoundMeasurementLabel">
+                    <rect key="frame" x="20" y="439" width="280" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="31"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
@@ -38,11 +38,13 @@
                 <constraint firstItem="4" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="6"/>
                 <constraint firstItem="4" firstAttribute="top" secondItem="1" secondAttribute="top" id="7"/>
                 <constraint firstItem="4" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" id="8"/>
-                <constraint firstItem="20" firstAttribute="trailing" secondItem="1" secondAttribute="trailing" constant="-20" id="33"/>
-                <constraint firstItem="20" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="35"/>
-                <constraint firstAttribute="bottom" secondItem="20" secondAttribute="bottom" constant="44" id="jik-eG-PMv"/>
+                <constraint firstItem="20" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="3hN-vL-ulJ"/>
+                <constraint firstAttribute="bottom" secondItem="20" secondAttribute="bottom" constant="20" symbolic="YES" placeholder="YES" id="6YG-ff-bJJ"/>
+                <constraint firstAttribute="trailing" secondItem="20" secondAttribute="trailing" constant="20" symbolic="YES" id="fcw-A3-Qpb"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
         </view>
     </objects>
 </document>

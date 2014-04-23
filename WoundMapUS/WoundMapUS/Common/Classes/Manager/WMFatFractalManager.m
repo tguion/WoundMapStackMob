@@ -723,16 +723,22 @@
 {
     NSParameterAssert(patient.ffUrl);
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __block NSInteger counter = 0;
     WMErrorCallback localCompletionHandler = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         } else {
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            --counter;
+            if (counter == 0) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                completionHandler(error);
+            }
         }
     };
     for (NSString *relationshipName in [WMPatient toManyRelationshipNames]) {
         NSSet *items = [patient valueForKey:relationshipName];
         for (id item in items) {
+            ++counter;
             [self insertOrUpdateGrabBagItem:item
                                  aggregator:patient
                                 grabBagName:relationshipName
@@ -740,8 +746,9 @@
                           completionHandler:localCompletionHandler];
         }
     }
+    ++counter;
     [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        completionHandler(error);
+        localCompletionHandler(error);
     }];
 }
 
@@ -760,12 +767,14 @@
         [ff createObj:item atUri:[NSString stringWithFormat:@"/%@", [[item entity] name]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
+                completionHandler(error);
             } else {
                 NSString *itemFFUrl = [object valueForKey:@"ffUrl"];
                 [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     if (error) {
                         [WMUtilities logError:error];
                     }
+                    completionHandler(error);
                 }];
             }
         }];
@@ -773,6 +782,9 @@
         [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
+                completionHandler(error);
+            } else {
+                completionHandler(error);
             }
         }];
     }

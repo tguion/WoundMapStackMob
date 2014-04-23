@@ -144,6 +144,7 @@ CGFloat kRetartSetScaleDownFactor = 0.9;
     [self.navigationController setToolbarHidden:YES animated:YES];
     self.retartedTranslation = CGPointZero;
     self.retartedScaleFactor = 1.0;
+    [self.scalingRulerView reset];
 }
 
 - (void)didReceiveMemoryWarning

@@ -23,14 +23,20 @@
                         <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
                     </accessibility>
                 </imageView>
-                <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zNK-D1-HeM" customClass="WMScalingRulerView">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zNK-D1-HeM" customClass="WMScalingRulerView">
+                    <rect key="frame" x="20" y="20" width="280" height="528"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="zNK-D1-HeM" firstAttribute="leading" secondItem="rh8-6l-7re" secondAttribute="leading" constant="20" symbolic="YES" id="CHq-YA-JLr"/>
+                <constraint firstAttribute="centerY" secondItem="zNK-D1-HeM" secondAttribute="centerY" id="GbO-3H-a4W"/>
+                <constraint firstAttribute="bottom" secondItem="zNK-D1-HeM" secondAttribute="bottom" constant="20" symbolic="YES" id="RIA-LC-Bxn"/>
+                <constraint firstAttribute="centerX" secondItem="zNK-D1-HeM" secondAttribute="centerX" id="ZYZ-Vo-fkp"/>
+                <constraint firstAttribute="trailing" secondItem="zNK-D1-HeM" secondAttribute="trailing" constant="20" symbolic="YES" id="jgn-XF-cBk"/>
+                <constraint firstItem="zNK-D1-HeM" firstAttribute="top" secondItem="rh8-6l-7re" secondAttribute="top" constant="20" symbolic="YES" id="tRW-71-urg"/>
                 <constraint firstAttribute="centerX" secondItem="HKp-z7-mIs" secondAttribute="centerX" id="v9K-wp-r7m"/>
                 <constraint firstAttribute="centerY" secondItem="HKp-z7-mIs" secondAttribute="centerY" id="wKj-Th-s7P"/>
             </constraints>

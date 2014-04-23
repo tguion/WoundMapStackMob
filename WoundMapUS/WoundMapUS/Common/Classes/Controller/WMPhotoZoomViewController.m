@@ -34,6 +34,14 @@
                                                                     [weakSelf handleWoundPhotoChanged:[notification object]];
                                                                 }];
     [self.opaqueNotificationObservers addObject:observer];
+    
+    id bottomGuide = self.bottomLayoutGuide;
+    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings (_woundMeasurementLabel, bottomGuide);
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_woundMeasurementLabel]-8-[bottomGuide]"
+                                                                      options:0
+                                                                      metrics:nil
+                                                                        views:viewsDictionary]];
+    [self.view layoutSubviews]; // You must call this method here or the system raises an exception
 }
 
 - (void)viewWillAppear:(BOOL)animated

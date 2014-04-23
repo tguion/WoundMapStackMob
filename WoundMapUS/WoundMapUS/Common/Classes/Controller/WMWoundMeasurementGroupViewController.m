@@ -36,7 +36,9 @@
 
 @interface WMWoundMeasurementGroupViewController () <AdjustAlpaViewDelegate, WoundMeasurementGroupViewControllerDelegate, SelectAmountQualifierViewControllerDelegate, SelectWoundOdorViewControllerDelegate, UndermineTunnelViewControllerDelegate, NoteViewControllerDelegate>
 
-@property (weak, nonatomic) WMAdjustAlpaView *adjustAlpaView;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
+@property (weak, nonatomic) IBOutlet WMAdjustAlpaView *adjustAlpaView;
 @property (strong, nonatomic) IBOutlet UIView *tableFooterView;
 @property (strong, nonatomic) NSManagedObjectID *woundMeasurementGroupObjectID;
 @property (strong, nonatomic) NSManagedObjectID *parentWoundMeasurementObjectID;
@@ -122,6 +124,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
     [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
@@ -134,8 +141,7 @@
     } else {
         self.tableView.tableFooterView = nil;
     }
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:self.woundMeasurementGroup.woundPhoto.thumbnail];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.tableView.backgroundView = imageView;
@@ -197,24 +203,6 @@
         _selectedWoundMeasurementObjectID = [_selectedWoundMeasurement objectID];
         _selectedWoundMeasurement = nil;
     }
-}
-
-// clear any strong references to views
-- (void)clearViewReferences
-{
-    [super clearViewReferences];
-    _tableFooterView = nil;
-}
-
-- (void)clearDataCache
-{
-    [super clearDataCache];
-    _woundMeasurementGroup = nil;
-    _woundMeasurementGroupObjectID = nil;
-    _parentWoundMeasurement = nil;
-    _parentWoundMeasurementObjectID = nil;
-    _selectedWoundMeasurement = nil;
-    _selectedWoundMeasurementObjectID = nil;
 }
 
 #pragma mark - Core
@@ -467,6 +455,9 @@
 {
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
     }
     [super saveAction:sender];
     // create intervention events before super

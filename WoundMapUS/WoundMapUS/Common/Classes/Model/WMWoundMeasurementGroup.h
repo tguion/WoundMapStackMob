@@ -7,7 +7,7 @@ extern NSString * const kDimensionLengthWoundMeasurementTitle;
 extern NSString * const kDimensionDepthWoundMeasurementTitle;
 extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
-@class WMPatient, WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue, WMInterventionEvent, WMParticipant;
+@class WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue, WMInterventionEvent, WMParticipant;
 
 @interface WMWoundMeasurementGroup : _WMWoundMeasurementGroup {}
 
@@ -20,7 +20,7 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 + (NSDate *)mostRecentWoundMeasurementGroupDateCreatedForDimensions:(WMWoundPhoto *)woundPhoto;
 + (NSDate *)mostRecentWoundMeasurementGroupDateModifiedExcludingDimensions:(WMWoundPhoto *)woundPhoto;
 + (NSInteger)closeWoundAssessmentGroupsCreatedBefore:(NSDate *)date
-                                             patient:(WMPatient *)patient;
+                                               wound:(WMWound *)wound;
 
 + (BOOL)woundMeasurementGroupsHaveHistoryForWound:(WMWound *)wound;
 + (NSInteger)woundMeasurementGroupsCountForWound:(WMWound *)wound;

@@ -1062,14 +1062,29 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    if ([navigationNodeButton.navigationNode requiresIAPForWoundType:self.wound.woundType]) {
-        // show IAP purchase view controller with self as delegate
-        
-        return;
-    }
-    // else
-    [self navigateToBradenScaleAssessment:navigationNodeButton];
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            if ([navigationNodeButton.navigationNode requiresIAPForWoundType:weakSelf.wound.woundType]) {
+                // show IAP purchase view controller with self as delegate
+                
+                return;
+            }
+            // else
+            [weakSelf navigateToBradenScaleAssessment:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.bradenScales]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 // IAP: mock up for medication node having an IAP
@@ -1078,15 +1093,30 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"sender:%@ must be NavigationNodeButton", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    if (nil != navigationNodeButton.navigationNode.iapIdentifier) {
-        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier successSelector:@selector(navigateToMedicationAssessment:) withObject:navigationNodeButton];
-        if (!proceed) {
-            return;
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            if (nil != navigationNodeButton.navigationNode.iapIdentifier) {
+                BOOL proceed = [weakSelf presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier successSelector:@selector(navigateToMedicationAssessment:) withObject:navigationNodeButton];
+                if (!proceed) {
+                    return;
+                }
+            }
+            // else
+            [weakSelf navigateToMedicationAssessment:navigationNodeButton];
         }
-    }
-    // else
-    [self navigateToMedicationAssessment:navigationNodeButton];
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.medicationGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)deviceAssessmentAction:(id)sender
@@ -1094,8 +1124,23 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    [self navigateToDeviceAssessment:navigationNodeButton];
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToDeviceAssessment:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)psycoSocialAssessmentAction:(id)sender
@@ -1103,6 +1148,7 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
+    // update from back end
     __weak __typeof(self) weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -1149,6 +1195,10 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WMNavigationNode *navigationNode = navigationNodeButton.navigationNode;
+    // attempt to set the last woundPhoto
+    if (nil == self.appDelegate.navigationCoordinator.woundPhoto) {
+        self.appDelegate.navigationCoordinator.woundPhoto = self.wound.lastWoundPhoto;
+    }
     __weak __typeof(self) weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -1212,8 +1262,23 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    [self navigateToWoundAssessment:navigationNodeButton];
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToWoundAssessment:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups]
+                                              aggregator:self.wound
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)woundTreatmentAction:(id)sender
@@ -1221,13 +1286,43 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-    [self navigateToWoundTreatment:navigationNodeButton];
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToWoundTreatment:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.treatmentGroups]
+                                              aggregator:self.wound
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)carePlanAction:(id)sender
 {
-    [self navigateToCarePlan];
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToCarePlan];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.carePlanGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)browsePhotosAction:(id)sender
@@ -1251,8 +1346,22 @@
         [alertView show];
         return;
     }
-    // else
-    [self navigateToBrowsePhotos:sender];
+    // else update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToBrowsePhotos:sender];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]
+                                              aggregator:self.wound
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
 }
 
 - (IBAction)viewGraphsAction:(id)sender

@@ -25,8 +25,7 @@
 {
     [super awakeFromNib];
     // update state
-    self.boxOffset = 8.0;
-    self.scaleFactor = 1.0;
+    [self reset];
     // set the anchorPoints
     self.layer.anchorPoint = CGPointMake(0.5, 0.5);
 }
