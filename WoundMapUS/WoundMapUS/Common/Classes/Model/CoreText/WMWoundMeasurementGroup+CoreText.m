@@ -66,10 +66,11 @@
         for (WMWoundMeasurementValue *woundMeasurementValue in woundMeasurementValues) {
             NSString *unit = woundMeasurementValue.woundMeasurement.unit;
             NSString *title = nil;
-            if ([woundMeasurementValue respondsToSelector:@selector(labelText)]) {
-                title = [woundMeasurementValue performSelector:@selector(labelText)];
-            } else {
+            NSString *labelText = woundMeasurementValue.labelText;
+            if ([labelText length] == 0) {
                 title = woundMeasurementValue.woundMeasurement.title;
+            } else {
+                title = labelText;
             }
             NSString *value = woundMeasurementValue.displayValue;
             BOOL keyHasValue = [value length] > 0;

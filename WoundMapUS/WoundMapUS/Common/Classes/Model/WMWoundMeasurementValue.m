@@ -125,5 +125,54 @@
     }
     return displayValue;
 }
+//, , , , , , , , , ,
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"fromOClockValueValue",
+                                                            @"revisedFlagValue",
+                                                            @"sortRankValue",
+                                                            @"toOClockValueValue",
+                                                            @"woundMeasurementValueTypeValue",
+                                                            @"isUnderminingValue",
+                                                            @"displayValue",
+                                                            @"valueText",
+                                                            @"labelText",
+                                                            @"isTunnelingValue"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMWoundMeasurementValue attributeNamesNotToSerialize] containsObject:propertyName] || [[WMWoundMeasurementValue relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMWoundMeasurementValue relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
 
 @end

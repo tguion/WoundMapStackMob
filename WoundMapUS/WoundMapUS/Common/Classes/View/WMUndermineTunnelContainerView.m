@@ -93,6 +93,8 @@
             self.toOClockLabel.hidden = YES;
             break;
         }
+        default:
+            break;
     }
     [self setNeedsLayout];
 }
@@ -135,6 +137,8 @@
             self.fixedWidthBarButtonItem.width = 0.0;
             break;
         }
+        default:
+            break;
     }
 }
 

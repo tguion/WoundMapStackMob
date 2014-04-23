@@ -174,7 +174,6 @@
     WMWoundPhoto *woundPhoto = self.woundPhoto;
     WMWound *wound = woundPhoto.wound;
     WMWoundMeasurementGroup *woundMeasurementGroup = self.woundPhoto.measurementGroup;
-    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
@@ -206,20 +205,13 @@
                            onComplete:completionHandler];
         }
     };
-    if (woundMeasurementGroup.ffUrl) {
-        NSSet *updatedObjects = managedObjectContext.updatedObjects;
-        for (id object in updatedObjects) {
-            ++counter;
-            NSParameterAssert(nil != [object valueForKey:WMWoundMeasurementValueAttributes.ffUrl]);
-            [ff updateObj:object
-               onComplete:completionHandler
-                onOffline:completionHandler];
-        }
-    } else {
+    if (!woundMeasurementGroup.ffUrl) {
         [ff createObj:woundMeasurementGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]]
            onComplete:createdCompletionHandler
             onOffline:createdCompletionHandler];
+    } else {
+        block();
     }
 }
 

@@ -120,6 +120,17 @@
 
 #pragma mark - View
 
+- (void)dealloc
+{
+    _fromPickerView.delegate = nil;
+    _fromPickerView.dataSource = nil;
+    _toPickerView.delegate = nil;
+    _toPickerView.dataSource = nil;
+    _depthTextField.delegate = nil;
+    _inputTextField.delegate = nil;
+
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -134,7 +145,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Undermining & Tunneling";
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];    // don't understand why need this
     if (_showCancelButton) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                               target:self
@@ -181,8 +191,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:self.woundMeasurementGroup.woundPhoto.thumbnail];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.tableView.backgroundView = imageView;

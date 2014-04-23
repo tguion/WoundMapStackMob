@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 typedef enum {
+    UndermineTunnelContainerViewState_None,
     UndermineTunnelContainerViewState_Undermine,
     UndermineTunnelContainerViewState_Tunnel,
 } UndermineTunnelContainerViewState;

@@ -55,6 +55,9 @@
 - (void)dealloc
 {
     DLog(@"%@.dealloc", self);
+    for (id observer in self.opaqueNotificationObservers) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+    }
     for (id observer in self.persistantObservers) {
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
     }
