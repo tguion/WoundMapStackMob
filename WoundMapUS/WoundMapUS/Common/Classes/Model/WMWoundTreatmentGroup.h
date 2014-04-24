@@ -27,7 +27,7 @@
 - (void)removeWoundTreatmentValuesForParentWoundTreatment:(WMWoundTreatment *)woundTreatment;
 - (WMWoundTreatment *)woundTreatmentForParentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment sectionTitle:(NSString *)sectionTitle;
 + (NSInteger)closeWoundTreatmentGroupsCreatedBefore:(NSDate *)date
-                                            patient:(WMPatient *)patient;
+                                              wound:(WMWound *)wound;
 
 + (NSDate *)mostRecentDateModified:(WMWound *)wound;
 + (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound;

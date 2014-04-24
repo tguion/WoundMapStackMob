@@ -318,6 +318,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 {
     WMUndermineTunnelViewController *undermineTunnelViewController = [[WMUndermineTunnelViewController alloc] initWithNibName:@"WMUndermineTunnelViewController" bundle:nil];
     undermineTunnelViewController.delegate = self;
+    undermineTunnelViewController.saveToStoreOnSave = YES;
     return undermineTunnelViewController;
 }
 

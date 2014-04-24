@@ -11,9 +11,16 @@
 #import "WMDesignUtilities.h"
 
 @interface WMInterventionStatusViewController ()
+
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
 @property (nonatomic) BOOL selectedInterventionStatusHasChangedFlag;
 @property (strong, nonatomic) NSManagedObjectID *selectedInterventionStatusID;
 @property (nonatomic) BOOL didCancel;
+
+- (IBAction)cancelAction:(id)sender;
+- (IBAction)doneAction:(id)sender;
+
 @end
 
 @interface WMInterventionStatusViewController (PrivateMethods)
@@ -64,6 +71,11 @@
                                                          target:self
                                                          action:@selector(continueAction:)],
                          nil];
+    // we want to support cancel, so make sure we have an undoManager
+    if (nil == self.managedObjectContext.undoManager) {
+        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        _removeUndoManagerWhenDone = YES;
+    }
     [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
@@ -125,13 +137,6 @@
     [self didChangeValueForKey:@"selectedInterventionStatus"];
 }
 
-#pragma mark - BaseViewController
-
-- (void)updateTitle
-{
-    // no
-}
-
 #pragma mark - Actions
 
 - (IBAction)presentSummaryAction:(id)sender
@@ -152,6 +157,9 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [self.delegate interventionStatusViewController:self didSelectInterventionStatus:self.selectedInterventionStatus];
 }
 
@@ -160,8 +168,11 @@
     _didCancel = YES;
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
-        if (_didCancel && self.managedObjectContext.undoManager.canUndo) {
+        if (self.managedObjectContext.undoManager.canUndo) {
             [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
         }
     }
     [self.delegate interventionStatusViewControllerDidCancel:self];

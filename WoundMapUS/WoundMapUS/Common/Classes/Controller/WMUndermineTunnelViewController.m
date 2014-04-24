@@ -290,8 +290,10 @@
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     [MBProgressHUD showHUDAddedTo:self.view animated:NO];
-    dispatch_block_t block = ^{;
-        [[woundMeasurementGroup managedObjectContext] MR_saveToPersistentStoreAndWait];
+    dispatch_block_t block = ^{
+        if (_saveToStoreOnSave) {
+            [[woundMeasurementGroup managedObjectContext] MR_saveToPersistentStoreAndWait];
+        }
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf.delegate undermineTunnelViewControllerDidDone:weakSelf];
     };

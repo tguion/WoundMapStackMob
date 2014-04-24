@@ -331,7 +331,7 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
         case kWoundTreatmentNode: {
             // fetch all WCWoundTreatmentGroup where dateCreate > dateCreatedCutoff
             count = [WMWoundTreatmentGroup closeWoundTreatmentGroupsCreatedBefore:dateCreatedCutoff
-                                                                          patient:self.patient];
+                                                                            wound:self.wound];
             break;
         }
         case kCarePlanNode: {

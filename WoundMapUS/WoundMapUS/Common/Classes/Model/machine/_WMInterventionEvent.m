@@ -20,12 +20,12 @@ const struct WMInterventionEventRelationships WMInterventionEventRelationships =
 	.carePlanGroup = @"carePlanGroup",
 	.deviceGroup = @"deviceGroup",
 	.eventType = @"eventType",
+	.measurementGroup = @"measurementGroup",
 	.medicationGroup = @"medicationGroup",
 	.participant = @"participant",
 	.psychoSocialGroup = @"psychoSocialGroup",
 	.skinAssessmentGroup = @"skinAssessmentGroup",
-	.woundMeasurementGroup = @"woundMeasurementGroup",
-	.woundTreatmentGroup = @"woundTreatmentGroup",
+	.treatmentGroup = @"treatmentGroup",
 };
 
 const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProperties = {
@@ -170,6 +170,10 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 
 	
 
+@dynamic measurementGroup;
+
+	
+
 @dynamic medicationGroup;
 
 	
@@ -186,11 +190,7 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 
 	
 
-@dynamic woundMeasurementGroup;
-
-	
-
-@dynamic woundTreatmentGroup;
+@dynamic treatmentGroup;
 
 	
 

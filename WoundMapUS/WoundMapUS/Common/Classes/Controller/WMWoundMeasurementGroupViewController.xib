@@ -7,7 +7,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMWoundMeasurementGroupViewController">
             <connections>
-                <outlet property="adjustAlpaView" destination="eNV-ln-y5s" id="7bG-BZ-4IQ"/>
                 <outlet property="searchDisplayController" destination="Uk4-EZ-1RS" id="a0H-v3-RhE"/>
                 <outlet property="tableFooterView" destination="8" id="kQM-UT-vgH"/>
                 <outlet property="view" destination="Tb1-Ew-r26" id="IEa-4l-Koc"/>
@@ -29,12 +28,6 @@
                     <string>All Definitions</string>
                 </scopeButtonTitles>
             </searchBar>
-            <view key="tableFooterView" contentMode="redraw" id="eNV-ln-y5s" customClass="WMAdjustAlpaView">
-                <rect key="frame" x="0.0" y="132" width="320" height="568"/>
-                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            </view>
         </tableView>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view opaque="NO" contentMode="scaleToFill" id="8">

@@ -66,13 +66,6 @@
     [self.delegate selectAmountQualifierViewController:self didSelectQualifierAmount:self.amountQualifier];
 }
 
-#pragma mark - BaseViewController
-
-- (void)updateTitle
-{
-    
-}
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

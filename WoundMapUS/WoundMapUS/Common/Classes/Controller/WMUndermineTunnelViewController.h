@@ -24,5 +24,6 @@
 @property (strong, nonatomic) WMWoundMeasurementGroup *woundMeasurementGroup;
 
 @property (nonatomic) BOOL showCancelButton;
+@property (nonatomic) BOOL saveToStoreOnSave;
 
 @end

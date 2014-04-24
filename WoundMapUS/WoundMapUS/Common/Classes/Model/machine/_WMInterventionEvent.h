@@ -21,12 +21,12 @@ extern const struct WMInterventionEventRelationships {
 	__unsafe_unretained NSString *carePlanGroup;
 	__unsafe_unretained NSString *deviceGroup;
 	__unsafe_unretained NSString *eventType;
+	__unsafe_unretained NSString *measurementGroup;
 	__unsafe_unretained NSString *medicationGroup;
 	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *psychoSocialGroup;
 	__unsafe_unretained NSString *skinAssessmentGroup;
-	__unsafe_unretained NSString *woundMeasurementGroup;
-	__unsafe_unretained NSString *woundTreatmentGroup;
+	__unsafe_unretained NSString *treatmentGroup;
 } WMInterventionEventRelationships;
 
 extern const struct WMInterventionEventFetchedProperties {
@@ -35,11 +35,11 @@ extern const struct WMInterventionEventFetchedProperties {
 @class WMCarePlanGroup;
 @class WMDeviceGroup;
 @class WMInterventionEventType;
+@class WMWoundMeasurementGroup;
 @class WMMedicationGroup;
 @class WMParticipant;
 @class WMPsychoSocialGroup;
 @class WMSkinAssessmentGroup;
-@class WMWoundMeasurementGroup;
 @class WMWoundTreatmentGroup;
 
 
@@ -191,6 +191,13 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMWoundMeasurementGroup *measurementGroup;
+
+//- (BOOL)validateMeasurementGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) WMMedicationGroup *medicationGroup;
 
 //- (BOOL)validateMedicationGroup:(id*)value_ error:(NSError**)error_;
@@ -219,16 +226,9 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
-@property (nonatomic, strong) WMWoundMeasurementGroup *woundMeasurementGroup;
+@property (nonatomic, strong) WMWoundTreatmentGroup *treatmentGroup;
 
-//- (BOOL)validateWoundMeasurementGroup:(id*)value_ error:(NSError**)error_;
-
-
-
-
-@property (nonatomic, strong) WMWoundTreatmentGroup *woundTreatmentGroup;
-
-//- (BOOL)validateWoundTreatmentGroup:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateTreatmentGroup:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -322,6 +322,11 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+- (WMWoundMeasurementGroup*)primitiveMeasurementGroup;
+- (void)setPrimitiveMeasurementGroup:(WMWoundMeasurementGroup*)value;
+
+
+
 - (WMMedicationGroup*)primitiveMedicationGroup;
 - (void)setPrimitiveMedicationGroup:(WMMedicationGroup*)value;
 
@@ -342,13 +347,8 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
-- (WMWoundMeasurementGroup*)primitiveWoundMeasurementGroup;
-- (void)setPrimitiveWoundMeasurementGroup:(WMWoundMeasurementGroup*)value;
-
-
-
-- (WMWoundTreatmentGroup*)primitiveWoundTreatmentGroup;
-- (void)setPrimitiveWoundTreatmentGroup:(WMWoundTreatmentGroup*)value;
+- (WMWoundTreatmentGroup*)primitiveTreatmentGroup;
+- (void)setPrimitiveTreatmentGroup:(WMWoundTreatmentGroup*)value;
 
 
 @end

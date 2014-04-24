@@ -42,6 +42,7 @@ NSString * const kInterventionEventTypeRevise = @"Revise";
 + (WMInterventionEventType *)interventionEventTypeForStatusTitle:(NSString *)title
                                             managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
+    title = [self interventionEventTypeTitleForInterventionStatusTitle:title];
     return [WMInterventionEventType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", title] inContext:managedObjectContext];
 }
 

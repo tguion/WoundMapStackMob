@@ -220,7 +220,7 @@
                                                                                   inContext:managedObjectContext];
     if (create && nil == interventionEvent) {
         interventionEvent = [WMInterventionEvent MR_createInContext:managedObjectContext];
-        interventionEvent.woundMeasurementGroup = woundMeasurementGroup;
+        interventionEvent.measurementGroup = woundMeasurementGroup;
         interventionEvent.changeType = [NSNumber numberWithInt:changeType];
         interventionEvent.title = title;
         if ([valueFrom isKindOfClass:[NSString class]]) {
@@ -250,7 +250,7 @@
                                                                                                                      woundTreatmentGroup, changeType, title, valueFrom, valueTo, eventType, participant] inContext:managedObjectContext];
     if (create && nil == interventionEvent) {
         interventionEvent = [WMInterventionEvent MR_createInContext:managedObjectContext];
-        interventionEvent.woundTreatmentGroup = woundTreatmentGroup;
+        interventionEvent.treatmentGroup = woundTreatmentGroup;
         interventionEvent.changeType = [NSNumber numberWithInt:changeType];
         interventionEvent.title = title;
         if ([valueFrom isKindOfClass:[NSString class]]) {
