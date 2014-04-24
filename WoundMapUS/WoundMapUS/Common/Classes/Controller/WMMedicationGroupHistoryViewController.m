@@ -8,6 +8,7 @@
 
 #import "WMMedicationGroupHistoryViewController.h"
 #import "WMMedicationSummaryViewController.h"
+#import "WMPatient.h"
 #import "WMMedicationGroup.h"
 #import "WMMedicationGroupTableViewCell.h"
 
@@ -33,6 +34,19 @@
 @end
 
 @implementation WMMedicationGroupHistoryViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+        };
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -61,8 +75,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-#pragma mark - BaseViewController
 
 #pragma mark - Core
 
@@ -101,6 +113,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.medicationGroups];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMMedicationGroup";
@@ -108,7 +125,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"status.activeFlag == NO OR closedFlag == YES"];
+    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

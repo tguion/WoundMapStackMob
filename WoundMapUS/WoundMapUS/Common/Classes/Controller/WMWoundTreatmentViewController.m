@@ -11,6 +11,8 @@
 #import "WMWoundTreatmentSummaryViewController.h"
 #import "WMWoundTreatmentGroupHistoryViewController.h"
 #import "WMNoteViewController.h"
+#import "MBProgressHUD.h"
+#import "WMParticipant.h"
 #import "WMWoundTreatment.h"
 #import "WMWoundTreatmentValue.h"
 #import "WMWoundTreatmentGroup.h"
@@ -24,15 +26,15 @@
 #import "WMDesignUtilities.h"
 #import "PDFRenderer.h"
 #import "UIView+Custom.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 @interface WMWoundTreatmentViewController () <WoundTreatmentViewControllerDelegate, NoteViewControllerDelegate>
 
-@property (strong, nonatomic) NSManagedObjectID *woundTreatmentGroupObjectID;
-@property (strong, nonatomic) NSManagedObjectID *parentWoundTreatmentObjectID;
+@property (nonatomic) BOOL removeUndoManagerWhenDone;
+
 @property (strong, nonatomic) WMWoundTreatment *selectedWoundTreatment;
-@property (strong, nonatomic) NSManagedObjectID *selectedWoundTreatmentObjectID;
 @property (readonly, nonatomic) WMWoundTreatmentViewController *woundTreatmentViewController;
 @property (readonly, nonatomic) WMWoundTreatmentSummaryViewController *woundTreatmentSummaryViewController;
 @property (readonly, nonatomic) WMWoundTreatmentGroupHistoryViewController *woundTreatmentGroupHistoryViewController;
@@ -82,40 +84,44 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (self.parentWoundTreatment.hasChildrenWoundTreatments) {
+    if (_parentWoundTreatment || _woundTreatmentGroup) {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
         [self.managedObjectContext.undoManager beginUndoGrouping];
     }
 }
 
 #pragma mark - Memory
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            if (!weakSelf.didCreateGroup) {
+                [weakSelf.tableView reloadData];
+            }
+        };
+    }
+    return self;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Add code to clean up any of your own resources that are no longer necessary.
-    if (nil != _woundTreatmentGroupObjectID && ![[_woundTreatmentGroup objectID] isTemporaryID]) {
-        _woundTreatmentGroupObjectID = [_woundTreatmentGroup objectID];
-        _woundTreatmentGroup = nil;
-    }
-    if (nil != _parentWoundTreatmentObjectID && ![[_parentWoundTreatment objectID] isTemporaryID]) {
-        _parentWoundTreatmentObjectID = [_parentWoundTreatment objectID];
-        _parentWoundTreatment = nil;
-    }
-    if (nil != _selectedWoundTreatmentObjectID && ![[_selectedWoundTreatment objectID] isTemporaryID]) {
-        _selectedWoundTreatmentObjectID = [_selectedWoundTreatment objectID];
-        _selectedWoundTreatment = nil;
-    }
 }
 
 - (void)clearDataCache
 {
     [super clearDataCache];
     _woundTreatmentGroup = nil;
-    _woundTreatmentGroupObjectID = nil;
     _parentWoundTreatment = nil;
-    _parentWoundTreatmentObjectID = nil;
     _selectedWoundTreatment = nil;
-    _selectedWoundTreatmentObjectID = nil;
 }
 
 #pragma mark - Core
@@ -123,11 +129,39 @@
 - (WMWoundTreatmentGroup *)woundTreatmentGroup
 {
     if (nil == _woundTreatmentGroup) {
-        WMWoundTreatmentGroup *woundTreatmentGroup = nil;
-        if (nil == _woundTreatmentGroupObjectID) {
-            woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
+        _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:self.wound];
+        if (nil == _woundTreatmentGroup) {
+            _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
             self.didCreateGroup = YES;
-            WMInterventionEvent *event = [woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+            // create on back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMWound *wound = self.wound;
+            __block NSInteger counter = 0;
+            __weak __typeof(&*self)weakSelf = self;
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    --counter;
+                    if (counter == 0) {
+                        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                    }
+                }
+            };
+            [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    ++counter;
+                    [ff grabBagAddItemAtFfUrl:_woundTreatmentGroup.ffUrl
+                                 toObjAtFfUrl:wound.ffUrl
+                                  grabBagName:WMWoundRelationships.treatmentGroups
+                                   onComplete:completionHandler];
+                }
+            }];
+
+            WMInterventionEvent *event = [_woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                        title:nil
                                                                                    valueFrom:nil
                                                                                      valueTo:nil
@@ -138,28 +172,9 @@
                                                                                       create:YES
                                                                         managedObjectContext:self.managedObjectContext];
             DLog(@"Created event %@", event.eventType.title);
-        } else {
-            woundTreatmentGroup = (WMWoundTreatmentGroup *)[self.managedObjectContext objectWithID:_woundTreatmentGroupObjectID];
         }
-        self.woundTreatmentGroup = woundTreatmentGroup;
     }
     return _woundTreatmentGroup;
-}
-
-- (WMWoundTreatment *)parentWoundTreatment
-{
-    if (nil == _parentWoundTreatment && nil != _parentWoundTreatmentObjectID) {
-        _parentWoundTreatment = (WMWoundTreatment *)[[self managedObjectContext] objectWithID:_parentWoundTreatmentObjectID];
-    }
-    return _parentWoundTreatment;
-}
-
-- (WMWoundTreatment *)selectedWoundTreatment
-{
-    if (nil == _selectedWoundTreatment && nil != _selectedWoundTreatmentObjectID) {
-        _selectedWoundTreatment = (WMWoundTreatment *)[[self managedObjectContext] objectWithID:_selectedWoundTreatmentObjectID];
-    }
-    return _selectedWoundTreatment;
 }
 
 - (WMWoundTreatmentViewController *)woundTreatmentViewController
@@ -241,6 +256,22 @@
     self.title = @"Search Definitions";
 }
 
+- (void)deleteWoundTreatmentValue:(WMWoundTreatmentValue *)woundTreatmentValue
+{
+    if (_woundTreatmentGroup.ffUrl) {
+        if (woundTreatmentValue.ffUrl) {
+            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            };
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff grabBagRemoveItemAtFfUrl:woundTreatmentValue.ffUrl fromObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values onComplete:completionHandler];
+            [ff deleteObj:woundTreatmentValue onComplete:completionHandler];
+        }
+    }
+}
+
 - (id)valueForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
     WMWoundTreatment *woundTreatment = (WMWoundTreatment *)assessmentGroup;
@@ -276,6 +307,8 @@
             // remove previous (assumes parent does not allow multiple values)
             [self.woundTreatmentGroup removeValuesObject:previousWoundTreatmentValue];
             [self.managedObjectContext deleteObject:previousWoundTreatmentValue];
+            // update back end
+            [self deleteWoundTreatmentValue:previousWoundTreatmentValue];
             // refresh the row
             NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:previousWoundTreatment];
             if (nil != indexPath) {
@@ -293,6 +326,8 @@
     } else if (nil != woundTreatmentValue) {
         [self.woundTreatmentGroup removeValuesObject:woundTreatmentValue];
         [self.managedObjectContext deleteObject:woundTreatmentValue];
+        // update back end
+        [self deleteWoundTreatmentValue:woundTreatmentValue];
     }
     // don't refresh if entering string value
     if (![value isKindOfClass:[NSString class]]) {
@@ -335,10 +370,59 @@
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
     [super saveAction:sender];
-    // create intervention events before super
+    // create intervention events after super
     [self.woundTreatmentGroup createEditEventsForParticipant:self.appDelegate.participant];
-    [self.delegate woundTreatmentViewControllerDidFinish:self];
+    // wait for back end calls to complete
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __block NSInteger counter = 0;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        WM_ASSERT_MAIN_THREAD;
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [weakSelf.delegate woundTreatmentViewControllerDidFinish:weakSelf];
+    };
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error && counter) {
+            counter = 0;
+            block();
+        } else {
+            --counter;
+            if (counter == 0) {
+                block();
+            }
+        }
+    };
+    WMParticipant *participant = self.appDelegate.participant;
+    for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
+        if (interventionEvent.ffUrl) {
+            continue;
+        }
+        // else
+        ++counter;
+        ++counter;
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
+            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.interventionEvents onComplete:completionHandler];
+        }];
+    }
+    for (WMWoundTreatmentValue *value in _woundTreatmentGroup.values) {
+        if (value.ffUrl) {
+            continue;
+        }
+        // else
+        ++counter;
+        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values onComplete:completionHandler];
+        }];
+    }
+    ++counter;
+    [ff updateObj:_woundTreatmentGroup onComplete:completionHandler];
 }
 
 - (IBAction)cancelAction:(id)sender
@@ -346,8 +430,35 @@
     [super cancelAction:sender];
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
-        if (self.managedObjectContext.undoManager.canUndo) {
+        if (self.willCancelFlag && self.managedObjectContext.undoManager.canUndo) {
             [self.managedObjectContext.undoManager undoNestedGroup];
+        }
+        if (_removeUndoManagerWhenDone) {
+            self.managedObjectContext.undoManager = nil;
+        }
+    }
+    if (self.didCreateGroup && _woundTreatmentGroup.ffUrl) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSError *error = nil;
+        for (WMWoundTreatmentValue *value in _woundTreatmentGroup.values) {
+            if (value.ffUrl) {
+                [ff grabBagRemove:value from:_woundTreatmentGroup grabBagName:WMWoundTreatmentGroupRelationships.values error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [ff deleteObj:value error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+        }
+        [ff grabBagRemove:_woundTreatmentGroup from:self.wound grabBagName:WMWoundRelationships.treatmentGroups error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff deleteObj:_woundTreatmentGroup error:&error];
+        if (error) {
+            [WMUtilities logError:error];
         }
     }
     [self.delegate woundTreatmentViewControllerDidCancel:self];
@@ -415,17 +526,11 @@
 - (void)woundTreatmentViewControllerDidFinish:(WMWoundTreatmentViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    // clear ivars
-    [viewController clearViewReferences];   // prevent refetch of WMWoundTreatmentGroup
-    [viewController clearAllReferences];
 }
 
 - (void)woundTreatmentViewControllerDidCancel:(WMWoundTreatmentViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    // clear ivars and view
-    [viewController clearViewReferences];   // prevent refetch of WMWoundTreatmentGroup
-    [viewController clearAllReferences];
 }
 
 #pragma mark - AssessmentTableViewCellDelegate
@@ -591,11 +696,15 @@
             // remove previous (assumes parent does not allow multiple values)
             [self.woundTreatmentGroup removeValuesObject:previousWoundTreatmentValue];
             [self.managedObjectContext deleteObject:previousWoundTreatmentValue];
+            // update back end
+            [self deleteWoundTreatmentValue:previousWoundTreatmentValue];
         }
     } else {
         // existed, so selecting will remove value
         [self.woundTreatmentGroup removeValuesObject:woundTreatmentValue];
         [self.managedObjectContext deleteObject:woundTreatmentValue];
+        // update back end
+        [self deleteWoundTreatmentValue:woundTreatmentValue];
     }
     [self reloadRowsForSelectedWoundTreatment:woundTreatment previousIndexPath:previousIndexPath];
     [self updateUIForDataChange];
@@ -634,6 +743,20 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    if (self.didCreateGroup) {
+        return nil;
+    }
+    // else
+    return [NSString stringWithFormat:@"%@/%@", self.woundTreatmentGroup.ffUrl, WMWoundTreatmentGroupRelationships.values];
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMWoundTreatment entityName];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

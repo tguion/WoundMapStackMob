@@ -186,6 +186,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.bradenScales];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMBradenScale";
@@ -193,7 +198,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-	return nil;
+	return [NSPredicate predicateWithFormat:@"patient == %@", self.patient];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

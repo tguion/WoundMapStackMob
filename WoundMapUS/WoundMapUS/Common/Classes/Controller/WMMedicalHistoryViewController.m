@@ -35,7 +35,10 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            [weakSelf.tableView reloadData];
+        };
     }
     return self;
 }
@@ -215,13 +218,6 @@
     medicalHistoryValue.value = [NSString stringWithFormat:@"%d", aSwitch.isOn];
 }
 
-#pragma mark - BaseViewController
-
-- (NSString *)ffQuery
-{
-    return [NSString stringWithFormat:@"%@/%@", self.medicalHistoryGroup.ffUrl, WMMedicalHistoryGroupRelationships.values];
-}
-
 #pragma mark - NoteViewControllerDelegate
 
 - (NSString *)note
@@ -298,6 +294,11 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.medicalHistoryGroup.ffUrl, WMMedicalHistoryGroupRelationships.values];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

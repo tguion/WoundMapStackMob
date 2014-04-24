@@ -7,10 +7,11 @@
 //
 
 #import "WMChooseTrackViewController.h"
+#import "WMNavigationTrackTableViewCell.h"
 #import "WMNavigationTrack.h"
+#import "WMNavigationNode.h"
 #import "WMParticipant.h"
 #import "WMTeam.h"
-#import "WMNavigationTrackTableViewCell.h"
 #import "CoreDataHelper.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
@@ -92,27 +93,6 @@
 
 #pragma mark - BaseViewController
 
-- (NSString *)ffQuery
-{
-    NSString *ffQuery = nil;
-    if (self.participant.team) {
-        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks", [WMTeam entityName], [self.participant.team.ffUrl lastPathComponent]];
-    } else {
-        ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
-    }
-    return ffQuery;
-}
-
-- (void)fetchedResultsControllerDidFetch
-{
-    // refresh since no guarentee we have all
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    if (!userDefaultsManager.navigationTracksFetchedFromBackEnd) {
-        [self refreshTable];
-        userDefaultsManager.navigationTracksFetchedFromBackEnd = YES;
-    }
-}
-
 - (void)clearDataCache
 {
     [super clearDataCache];
@@ -156,6 +136,22 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    NSString *ffQuery = nil;
+    if (self.participant.team) {
+        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks", [WMTeam entityName], [self.participant.team.ffUrl lastPathComponent]];
+    } else {
+        ffQuery = [NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]];
+    }
+    return ffQuery;
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMNavigationNode entityName];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

@@ -137,13 +137,13 @@
 - (WMWound *)wound
 {
     if (nil == _wound) {
+        __weak __typeof(&*self)weakSelf = self;
         if (_newWoundFlag) {
             _wound = [WMWound instanceWithPatient:self.patient];
             [self.managedObjectContext MR_saveToPersistentStoreAndWait];
             // create on back end
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            __weak __typeof(&*self)weakSelf = self;
             [ff createObj:_wound atUri:[NSString stringWithFormat:@"/%@", [WMWound entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
@@ -157,6 +157,11 @@
             }];
         } else {
             _wound = [super wound];
+            // initiate update from server
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff getObjFromUri:_wound.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [weakSelf.tableView reloadData];
+            }];
         }
     }
     return _wound;

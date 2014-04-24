@@ -122,6 +122,11 @@
 
 #pragma mark - Core
 
+- (NSString *)ffQuery
+{
+    return  [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", self.patient.ffUrl];
+}
+
 - (NSString *)backendSeedEntityName
 {
     return [WMNavigationNode entityName];
@@ -2061,6 +2066,31 @@
 }
 
 - (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController
+{
+}
+
+#pragma mark - SimpleTableViewControllerDelegate
+
+- (NSString *)navigationTitle
+{
+    return @"Hello";
+}
+
+- (NSArray *)valuesForDisplay
+{
+    return [NSArray array];
+}
+
+- (NSArray *)selectedValuesForDisplay
+{
+    return [NSArray array];
+}
+
+- (void)simpleTableViewController:(WMSimpleTableViewController *)simpleTableViewController didSelectValues:(NSArray *)selectedValues
+{
+}
+
+- (void)simpleTableViewControllerDidCancel:(WMSimpleTableViewController *)simpleTableViewController
 {
 }
 

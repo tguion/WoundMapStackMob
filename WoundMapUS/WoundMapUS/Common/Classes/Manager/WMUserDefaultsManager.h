@@ -29,7 +29,6 @@
 @property (nonatomic) NSString *woundPositionTermKey;           // key used to display wound position (Left, Right, etc)
 
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext;
-@property (nonatomic) BOOL navigationTracksFetchedFromBackEnd;
 
 - (NSString *)lastWoundFFURLOnDeviceForPatientFFURL:(NSString *)ffUrl;
 - (void)setLastWoundFFURLOnDevice:(NSString *)lastWoundFFURLOnDevice forPatientFFURL:(NSString *)ffUrl;

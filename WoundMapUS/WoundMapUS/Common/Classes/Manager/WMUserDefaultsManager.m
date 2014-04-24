@@ -185,18 +185,6 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
-- (BOOL)navigationTracksFetchedFromBackEnd
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"com.mobilehealthware.woundmap.navigationTrackFetched"];
-}
-
-- (void)setNavigationTracksFetchedFromBackEnd:(BOOL)navigationTracksFetchedFromBackEnd
-{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setBool:navigationTracksFetchedFromBackEnd forKey:@"com.mobilehealthware.woundmap.navigationTrackFetched"];
-    [userDefaults synchronize];
-}
-
 #pragma mark - Email
 
 - (NSString *)encryptionPassword

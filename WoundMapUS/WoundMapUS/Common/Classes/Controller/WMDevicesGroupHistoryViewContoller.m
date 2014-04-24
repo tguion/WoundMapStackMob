@@ -105,7 +105,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"status.activeFlag == NO OR closedFlag == YES"];
+    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

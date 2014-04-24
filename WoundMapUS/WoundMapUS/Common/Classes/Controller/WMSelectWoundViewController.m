@@ -287,6 +287,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.wounds];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return [WMWound entityName];

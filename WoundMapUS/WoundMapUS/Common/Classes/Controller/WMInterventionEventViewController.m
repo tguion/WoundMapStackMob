@@ -140,6 +140,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/(%@ eq %@)", self.fetchedResultsControllerEntityName, self.keyName, self.assessmentGroup];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return [WMInterventionEvent entityName];

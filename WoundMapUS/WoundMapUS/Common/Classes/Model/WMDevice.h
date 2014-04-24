@@ -1,7 +1,7 @@
 #import "_WMDevice.h"
 #import "WoundCareProtocols.h"
 
-@class WMWoundType;
+@class WMWoundType, WMPatient;
 
 @interface WMDevice : _WMDevice <AssessmentGroup> {}
 

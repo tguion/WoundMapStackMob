@@ -227,6 +227,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)backendSeedEntityName
+{
+    return [WMInterventionStatus entityName];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMInterventionStatus";

@@ -9,6 +9,7 @@
 #import "WMPsychoSocialGroupHistoryViewController.h"
 #import "WMPsychoSocialSummaryViewController.h"
 #import "WMPsychoSocialGroupTableViewCell.h"
+#import "WMPatient.h"
 #import "WMPsychoSocialGroup.h"
 
 @interface WMPsychoSocialGroupHistoryViewController ()
@@ -100,6 +101,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.psychosocialGroups];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMPsychoSocialGroup";
@@ -107,7 +113,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"status.activeFlag == NO OR closedFlag == YES"];
+    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

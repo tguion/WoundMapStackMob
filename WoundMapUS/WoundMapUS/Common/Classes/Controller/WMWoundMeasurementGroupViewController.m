@@ -115,6 +115,20 @@
 
 #pragma mark - View
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^{
+            if (!weakSelf.didCreateGroup) {
+                [weakSelf.tableView reloadData];
+            }
+        };
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -813,6 +827,20 @@
 }
 
 #pragma mark - NSFetchedResultsController
+
+- (NSString *)ffQuery
+{
+    if (self.didCreateGroup) {
+        return nil;
+    }
+    // else
+    return [NSString stringWithFormat:@"%@/%@", self.woundMeasurementGroup.ffUrl, WMWoundMeasurementGroupRelationships.values];
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMWoundMeasurement entityName];
+}
 
 - (NSString *)fetchedResultsControllerEntityName
 {

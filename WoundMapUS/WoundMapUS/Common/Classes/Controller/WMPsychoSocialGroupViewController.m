@@ -78,12 +78,7 @@
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^{
             if (!weakSelf.didCreateGroup) {
-                // we want to support cancel, so make sure we have an undoManager
-                if (nil == weakSelf.managedObjectContext.undoManager) {
-                    weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                    weakSelf.removeUndoManagerWhenDone = YES;
-                }
-                [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
+                [weakSelf.tableView reloadData];
             }
         };
     }
@@ -93,7 +88,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (self.parentPsychoSocialItem.hasSubItems) {
+    if (_psychoSocialGroup.ffUrl || self.parentPsychoSocialItem.hasSubItems) {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            self.removeUndoManagerWhenDone = YES;
+        }
         [self.managedObjectContext.undoManager beginUndoGrouping];
     }
 }
@@ -685,6 +685,10 @@
 
 - (NSString *)ffQuery
 {
+    if (self.didCreateGroup) {
+        return nil;
+    }
+    // else
     return [NSString stringWithFormat:@"%@/%@", self.psychoSocialGroup.ffUrl, WMPsychoSocialGroupRelationships.values];
 }
 

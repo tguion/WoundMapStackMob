@@ -8,6 +8,7 @@
 
 #import "WMWoundMeasurementGroupHistoryViewController.h"
 #import "WMWoundMeasurementSummaryViewController.h"
+#import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurementGroupTableViewCell.h"
@@ -121,6 +122,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.medicationGroups];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMWoundMeasurementGroup";
@@ -128,7 +134,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"status.activeFlag == NO OR closedFlag == YES"];
+    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

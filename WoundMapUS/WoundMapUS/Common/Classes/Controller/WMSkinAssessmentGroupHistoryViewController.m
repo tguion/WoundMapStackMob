@@ -8,6 +8,7 @@
 
 #import "WMSkinAssessmentGroupHistoryViewController.h"
 #import "WMSkinAssessmentSummaryViewController.h"
+#import "WMPatient.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMSkinAssessmentGroupTableViewCell.h"
 
@@ -106,6 +107,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.skinAssessmentGroups];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMSkinAssessmentGroup";
@@ -113,7 +119,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"status.activeFlag == NO OR closedFlag == YES"];
+    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

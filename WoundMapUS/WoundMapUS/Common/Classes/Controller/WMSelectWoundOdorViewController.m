@@ -101,6 +101,11 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)backendSeedEntityName
+{
+    return self.fetchedResultsControllerEntityName;
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
     return @"WCWoundOdor";

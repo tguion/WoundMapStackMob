@@ -44,14 +44,7 @@
         self.preferredContentSize = CGSizeMake(320.0, 380.0);
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^{
-            if (!weakSelf.didCreateGroup) {
-                // we want to support cancel, so make sure we have an undoManager
-                if (nil == weakSelf.managedObjectContext.undoManager) {
-                    weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                    weakSelf.removeUndoManagerWhenDone = YES;
-                }
-                [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
-            }
+            [weakSelf.tableView reloadData];
         };
     }
     return self;
@@ -62,6 +55,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Devices";
+    if (_deviceGroup) {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            self.removeUndoManagerWhenDone = YES;
+        }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
