@@ -1268,7 +1268,7 @@ NSInteger kXPlotOffset = 0;
     NSManagedObjectID *objectID = [woundPhoto objectID];
     NSArray *sortedWoundPhotoIDs = woundPhoto.wound.sortedWoundPhotoIDs;
     NSString *string = [NSString stringWithFormat:@"Photo %lu/%lu taken %@",
-                        [sortedWoundPhotoIDs indexOfObject:objectID] + 1,
+                        (unsigned long)[sortedWoundPhotoIDs indexOfObject:objectID] + 1,
                         (unsigned long)[sortedWoundPhotoIDs count],
                         [NSDateFormatter localizedStringFromDate:woundPhoto.createdAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle]];
     // draw woundPhoto first

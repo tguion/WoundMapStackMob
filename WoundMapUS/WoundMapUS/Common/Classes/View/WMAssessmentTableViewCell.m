@@ -787,8 +787,6 @@ NSDictionary * kAssessmentTableViewCellSubtextAttributes;
             UISwitch *aSwitch = [self addSwitchSubview];
             aSwitch.on = [value boolValue];
             if ([aSwitch.allTargets count] == 0) {
-                aSwitch.onImage = [UIImage imageNamed:@"yesSwitch.png"];
-                aSwitch.offImage = [UIImage imageNamed:@"noSwitch.png"];
                 [aSwitch addTarget:self.delegate action:@selector(switchValueChangedAction:) forControlEvents:UIControlEventValueChanged];
             }
             [self removeControlSubviewsExceptForClass:[UISwitch class]];

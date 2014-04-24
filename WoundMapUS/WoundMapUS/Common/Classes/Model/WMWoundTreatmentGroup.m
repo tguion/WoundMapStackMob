@@ -23,19 +23,19 @@
     return woundTreatmentGroup;
 }
 
-+ (BOOL)woundTreatmentGroupsHaveHistory:(WMPatient *)patient
++ (BOOL)woundTreatmentGroupsHaveHistory:(WMWound *)wound
 {
-    return [self woundTreatmentGroupsInactiveOrClosedCount:patient] > 0;
+    return [self woundTreatmentGroupsInactiveOrClosedCount:wound] > 0;
 }
 
-+ (NSInteger)woundTreatmentGroupsCount:(WMPatient *)patient
++ (NSInteger)woundTreatmentGroupsCount:(WMWound *)wound
 {
-    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient] inContext:[patient managedObjectContext]];
+    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@", wound] inContext:[wound managedObjectContext]];
 }
 
-+ (NSInteger)woundTreatmentGroupsInactiveOrClosedCount:(WMPatient *)patient
++ (NSInteger)woundTreatmentGroupsInactiveOrClosedCount:(WMWound *)wound
 {
-    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@ AND status.activeFlag == NO OR closedFlag == YES", patient] inContext:[patient managedObjectContext]];
+    return [WMWoundTreatmentGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND status.activeFlag == NO OR closedFlag == YES", wound] inContext:[wound managedObjectContext]];
 }
 
 + (NSDate *)mostRecentDateModified:(WMWound *)wound

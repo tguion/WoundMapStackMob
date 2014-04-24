@@ -24,7 +24,7 @@
 - (void)addDisclosureLayer
 {
     disclosureLayer = [CALayer layer];
-    UIImage *image = [UIImage imageNamed:@"ui_btnarrow.png"];
+    UIImage *image = [UIImage imageNamed:@"ui_btnarrow"];
     disclosureLayer.contents = (__bridge id)(image.CGImage);
     disclosureLayer.frame = CGRectMake(0.0, 0.0, 30.0, 30.0);
 	disclosureLayer.anchorPoint = CGPointMake(0.5, 0.5);
@@ -51,7 +51,7 @@
         }
         default: {
             selectionCount = MIN(selectionCount, 10);
-            image = [UIImage imageNamed:[NSString stringWithFormat:@"btn_%ld.png", (long)selectionCount]];
+            image = [UIImage imageNamed:[NSString stringWithFormat:@"btn_%ld", (long)selectionCount]];
             break;
         }
     }

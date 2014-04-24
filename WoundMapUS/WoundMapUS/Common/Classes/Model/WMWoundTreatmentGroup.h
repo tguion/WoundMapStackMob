@@ -8,9 +8,9 @@
 
 + (WMWoundTreatmentGroup *)woundTreatmentGroupForWound:(WMWound *)wound;
 
-+ (BOOL)woundTreatmentGroupsHaveHistory:(WMPatient *)patient;
-+ (NSInteger)woundTreatmentGroupsCount:(WMPatient *)patient;
-+ (NSInteger)woundTreatmentGroupsInactiveOrClosedCount:(WMPatient *)patient;
++ (BOOL)woundTreatmentGroupsHaveHistory:(WMWound *)wound;
++ (NSInteger)woundTreatmentGroupsCount:(WMWound *)wound;
++ (NSInteger)woundTreatmentGroupsInactiveOrClosedCount:(WMWound *)wound;
 
 - (BOOL)hasWoundTreatmentValuesForWoundTreatmentAndChildren:(WMWoundTreatment *)woundTreatment;
 

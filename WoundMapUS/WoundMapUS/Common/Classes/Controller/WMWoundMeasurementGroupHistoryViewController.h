@@ -12,6 +12,4 @@
 
 @interface WMWoundMeasurementGroupHistoryViewController : WMBaseViewController
 
-@property (strong, nonatomic) WMWound *wound;
-
 @end

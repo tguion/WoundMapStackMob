@@ -701,20 +701,13 @@
 
 - (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
 {
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-    }
+    NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:viewController.parentWoundMeasurement];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController
 {
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (self.managedObjectContext.undoManager.canUndo) {
-            [self.managedObjectContext.undoManager undoNestedGroup];
-        }
-    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

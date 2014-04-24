@@ -124,22 +124,22 @@
 
 - (NSString *)ffQuery
 {
-    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.medicationGroups];
+    return [NSString stringWithFormat:@"%@/%@", self.wound.ffUrl, WMWoundRelationships.measurementGroups];
 }
 
 - (NSString *)fetchedResultsControllerEntityName
 {
-	return @"WMWoundMeasurementGroup";
+	return [WMWoundMeasurementGroup entityName];
 }
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
+    return [NSPredicate predicateWithFormat:@"wound == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.wound];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors
 {
-    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"dateModified" ascending:NO]];
+    return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:NO]];
 }
 
 @end

@@ -211,7 +211,7 @@
 - (void)updateToolbarItems
 {
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:8];
-    if ([WMWoundTreatmentGroup woundTreatmentGroupsHaveHistory:self.patient]) {
+    if ([WMWoundTreatmentGroup woundTreatmentGroupsHaveHistory:self.wound]) {
         [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ui_segmented_Notepad.png"]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
@@ -382,6 +382,9 @@
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
+        if (nil == _parentWoundTreatment) {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate woundTreatmentViewControllerDidFinish:weakSelf];
     };
@@ -525,6 +528,8 @@
 
 - (void)woundTreatmentViewControllerDidFinish:(WMWoundTreatmentViewController *)viewController
 {
+    NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:viewController.parentWoundTreatment];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
