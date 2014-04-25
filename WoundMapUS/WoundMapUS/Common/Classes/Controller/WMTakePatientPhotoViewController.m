@@ -165,7 +165,7 @@
                     if (error) {
                         [WMUtilities logError:error];
                     }
-                    [ff updateBlob:UIImagePNGRepresentation(image)
+                    [ff updateBlob:UIImagePNGRepresentation(patient.thumbnail)
                       withMimeType:@"image/png"
                             forObj:patient
                         memberName:WMPatientAttributes.thumbnail

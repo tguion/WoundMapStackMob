@@ -40,6 +40,11 @@
             __weak __typeof(&*self)weakSelf = self;
             [ff loadBlobsForObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [activityIndicatorView removeFromSuperview];
+                // image will be NSData, must convert to image
+                if ([patient.thumbnail isKindOfClass:[NSData class]]) {
+                    NSData *data = patient.thumbnail;
+                    patient.thumbnail = [UIImage imageWithData:data];
+                }
                 weakSelf.image = patient.thumbnail;
             }];
         } else {

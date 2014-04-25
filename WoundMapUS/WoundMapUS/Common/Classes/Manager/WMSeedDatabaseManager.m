@@ -120,6 +120,12 @@
             handler(nil);
         }
     };
+    dispatch_block_t counterHandler = ^{
+        --counter;
+        if (counter == 0) {
+            handler(nil);
+        }
+    };
     DLog(@"reading plists and seeding database start");
     [self seedLocalData:managedObjectContext];
     // *** WMWoundType *** first attempt to acquire data from backend
@@ -129,7 +135,7 @@
         if (![object count]) {
             [WMWoundType seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMMedicalHistoryItem *** first attempt to acquire data from backend
@@ -139,7 +145,7 @@
         if (![object count]) {
             [WMMedicalHistoryItem seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMNavigationTrack *** first attempt to acquire data from backend
@@ -149,7 +155,7 @@
         if (![object count]) {
             [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMParticipantType *** first attempt to acquire data from backend
@@ -159,7 +165,7 @@
         if (![object count]) {
             [WMParticipantType seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMAmountQualifier *** first attempt to acquire data from backend
@@ -169,7 +175,7 @@
         if (![object count]) {
             [WMAmountQualifier seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMWoundOdor *** first attempt to acquire data from backend
@@ -178,7 +184,7 @@
         if (![object count]) {
             [WMWoundOdor seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMInterventionStatus *** first attempt to acquire data from backend
@@ -188,7 +194,7 @@
         if (![object count]) {
             [WMInterventionStatus seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMInterventionEventType *** first attempt to acquire data from backend
@@ -198,7 +204,7 @@
         if (![object count]) {
             [WMInterventionEventType seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMMedicationCategory *** first attempt to acquire data from backend
@@ -208,7 +214,7 @@
         if (![object count]) {
             [WMMedicationCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMDeviceCategory *** first attempt to acquire data from backend
@@ -218,7 +224,7 @@
         if (![object count]) {
             [WMDeviceCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMSkinAssessmentCategory *** first attempt to acquire data from backend
@@ -228,7 +234,7 @@
         if (![object count]) {
             [WMSkinAssessmentCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMCarePlanCategory *** first attempt to acquire data from backend
@@ -238,7 +244,7 @@
         if (![object count]) {
             [WMCarePlanCategory seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WCWoundLocation *** first attempt to acquire data from backend
@@ -248,7 +254,7 @@
         if (![object count]) {
             [WMWoundLocation seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMWoundTreatment *** first attempt to acquire data from backend
@@ -258,7 +264,7 @@
         if (![object count]) {
             [WMWoundTreatment seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMWoundMeasurement *** first attempt to acquire data from backend
@@ -268,7 +274,7 @@
         if (![object count]) {
             [WMWoundMeasurement seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMPsychoSocialItem *** first attempt to acquire data from backend
@@ -278,7 +284,7 @@
         if (![object count]) {
             [WMPsychoSocialItem seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
-            --counter;
+            counterHandler();
         }
     }];
     // *** WMTelecomType *** first attempt to acquire data from backend
@@ -289,12 +295,9 @@
             [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
             DLog(@"reading plists and seeding database finished");
         } else {
-            --counter;
+            counterHandler();
         }
     }];
-    if (counter == 0) {
-        handler(nil);
-    }
 }
 
 @end

@@ -326,6 +326,7 @@
         return;
     }
     // else
+    query = [query stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;

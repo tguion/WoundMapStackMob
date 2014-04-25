@@ -70,6 +70,7 @@
         self.refreshCompletionHandler = ^{
             [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
             [weakSelf updatePatientWoundComponents];
+            [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
         };
     }
     return self;
@@ -127,7 +128,7 @@
 
 - (NSString *)ffQuery
 {
-    return  [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", self.patient.ffUrl];
+    return  [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.patient.ffUrl];
 }
 
 - (NSString *)backendSeedEntityName
@@ -1888,68 +1889,22 @@
 
 - (void)psychoSocialGroupViewControllerDidFinish:(WMPsychoSocialGroupViewController *)viewController
 {
-//    BOOL hasChanges = self.managedObjectContext.hasChanges;
-//    BOOL hasValues = [viewController.psychoSocialGroup.values count] > 0;
-//    if (!hasValues) {
-//        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
-//        hasChanges = YES;
-//    }
-//    // save in order to update updatedAt
-//    NSError *error = nil;
-//    [self.managedObjectContext saveAndWait:&error];
-//    if (nil != error) {
-//        [WMUtilities logError:error];
-//    }
-//    if (hasChanges) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kPsycoSocialNode]];
-//    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kPsycoSocialNode]];
 }
 
 - (void)psychoSocialGroupViewControllerDidCancel:(WMPsychoSocialGroupViewController *)viewController
 {
-//    BOOL hasValues = [viewController.psychoSocialGroup.values count] > 0;
-//    if (!hasValues) {
-//        [self.managedObjectContext deleteObject:viewController.psychoSocialGroup];
-//        NSError *error = nil;
-//        [self.managedObjectContext saveAndWait:&error];
-//        if (nil != error) {
-//            [WMUtilities logError:error];
-//        }
-//    }
 }
 
 #pragma mark - SkinAssessmentGroupViewControllerDelegate
 
 - (void)skinAssessmentGroupViewControllerDidSave:(WMSkinAssessmentGroupViewController *)viewController
 {
-//    BOOL hasChanges = self.managedObjectContext.hasChanges;
-//    BOOL hasValues = [viewController.skinAssessmentGroup.values count] > 0;
-//    if (!hasValues) {
-//        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
-//        hasChanges = YES;
-//    }
-//    // save in order to update updatedAt
-//    NSError *error = nil;
-//    [self.managedObjectContext saveAndWait:&error];
-//    if (nil != error) {
-//        [WMUtilities logError:error];
-//    }
-//    if (hasChanges) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kSkinAssessmentNode]];
-//    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kSkinAssessmentNode]];
 }
 
 - (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
 {
-//    BOOL hasValues = [viewController.skinAssessmentGroup.values count] > 0;
-//    if (!hasValues) {
-//        [self.managedObjectContext deleteObject:viewController.skinAssessmentGroup];
-//        NSError *error = nil;
-//        [self.managedObjectContext saveAndWait:&error];
-//        if (nil != error) {
-//            [WMUtilities logError:error];
-//        }
-//    }
 }
 
 #pragma mark - TakePatientPhotoDelegate
@@ -2177,19 +2132,6 @@
 }
 
 #pragma mark - UIAlertViewDelegate
-
-// Called when a button is clicked. The view will be automatically dismissed after this call returns
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    // if we are to try again, check the status of our document
-//    if (alertView.tag == kFailedToCreateAndSaveDocumentAlertTag) {
-//        if (alertView.cancelButtonIndex == buttonIndex) {
-//            return;
-//        }
-//        // else let's try to create/open a new document again
-//        [self addPatientAction:nil];
-//    }
-//}
 
 #pragma mark - UITableViewDelegate
 

@@ -43,10 +43,11 @@
 #import "WCAppDelegate.h"
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
-    WMWelcomeStateInitial,          // Sign In, Create Account
-    WMWelcomeStateSignedInNoTeam,   // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
-    WMWelcomeStateTeamSelected,     // Sign Out | Team (value) | Clinical Setting | Patient
-    WMWelcomeStateDeferTeam,        // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
+    WMWelcomeStateInitial,              // Sign In, Create Account
+    WMWelcomeStateSignedInNoTeam,       // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
+    WMWelcomeStateInvitationAccepted,   // Sign Out | Team (value) | Clinical Setting | Patient
+    WMWelcomeStateTeamSelected,         // Sign Out | Team (value) | Clinical Setting | Patient
+    WMWelcomeStateDeferTeam,            // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
 @interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
@@ -131,12 +132,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     switch (indexPath.section) {
         case 0: {
             // section 0
-            switch (self.welcomeState) {
+            switch (_welcomeState) {
                 case WMWelcomeStateInitial: {
                     cellReuseIdentifier = @"ValueCell";
                     break;
                 }
                 case WMWelcomeStateSignedInNoTeam: {
+                    cellReuseIdentifier = @"ValueCell";
+                    break;
+                }
+                case WMWelcomeStateInvitationAccepted: {
                     cellReuseIdentifier = @"ValueCell";
                     break;
                 }
@@ -191,8 +196,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         return NO;
     }
     // else
-    if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
-        return NO;
+    if (_welcomeState != WMWelcomeStateInvitationAccepted) {
+        if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
+            return NO;
+        }
     }
     // else
     return (nil != self.appDelegate.navigationCoordinator.patient);
@@ -364,7 +371,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (IBAction)deferTeamAction:(id)sender
 {
     UISwitch *deferTeamSwitch = (UISwitch *)sender;
-    self.welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateSignedInNoTeam);
+    _welcomeState = (deferTeamSwitch.isOn ? WMWelcomeStateDeferTeam:WMWelcomeStateSignedInNoTeam);
     _enterWoundMapButton.enabled = self.setupConfigurationComplete;
     [self.tableView reloadData];
 }
@@ -434,7 +441,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         WMFatFractal *ff = [WMFatFractal sharedInstance];
                         [ff logout];
                         self.appDelegate.participant = nil;
-                        self.welcomeState = WMWelcomeStateInitial;
+                        _welcomeState = WMWelcomeStateInitial;
                         _enterWoundMapButton.enabled = NO;
                         [tableView reloadData];
                     }
@@ -465,7 +472,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             switch (indexPath.row) {
                 case 0: {
                     // join team or team joined
-                    if (self.welcomeState == WMWelcomeStateSignedInNoTeam || self.welcomeState == WMWelcomeStateDeferTeam) {
+                    if (_welcomeState == WMWelcomeStateInvitationAccepted || _welcomeState == WMWelcomeStateSignedInNoTeam || _welcomeState == WMWelcomeStateDeferTeam) {
                         [self presentJoinTeamViewController];
                     } else if (self.participant.isTeamLeader) {
                         [self presentTeamManagementController];
@@ -511,13 +518,17 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     NSInteger count = 0;
-    switch (self.welcomeState) {
+    switch (_welcomeState) {
         case WMWelcomeStateInitial: {
             count = 1;
             break;
         }
         case WMWelcomeStateSignedInNoTeam: {
             count = 2;
+            break;
+        }
+        case WMWelcomeStateInvitationAccepted: {
+            count = 4;
             break;
         }
         case WMWelcomeStateTeamSelected: {
@@ -559,7 +570,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger count = 0;
-    switch (self.welcomeState) {
+    switch (_welcomeState) {
         case WMWelcomeStateInitial: {
             count = 2;
             break;
@@ -577,6 +588,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             }
             break;
         }
+        case WMWelcomeStateInvitationAccepted:
         case WMWelcomeStateTeamSelected: {
             switch (section) {
                 case 0: {
@@ -632,7 +644,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     UIImage *image = nil;
     UITableViewCellAccessoryType accessoryType = UITableViewCellAccessoryNone;
     UIView *accessoryView = nil;
-    switch (self.welcomeState) {
+    switch (_welcomeState) {
         case WMWelcomeStateInitial: {
             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             switch (indexPath.row) {
@@ -703,6 +715,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             }
             break;
         }
+        case WMWelcomeStateInvitationAccepted:
         case WMWelcomeStateTeamSelected: {
             switch (indexPath.section) {
                 case 0: {
@@ -730,11 +743,17 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 case 1: {
                     switch (indexPath.row) {
                         case 0: {
-                            title = @"Team";
-                            value = self.participant.team.name;
-                            accessoryType = UITableViewCellAccessoryNone;
-                            if (self.participant.isTeamLeader) {
+                            if (_welcomeState == WMWelcomeStateInvitationAccepted) {
+                                title = @"Team Invitation Accepted";
+                                value = @"Pending Approval";
                                 accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                            } else {
+                                title = @"Team";
+                                value = self.participant.team.name;
+                                accessoryType = UITableViewCellAccessoryNone;
+                                if (self.participant.isTeamLeader) {
+                                    accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                                }
                             }
                             break;
                         }
@@ -854,7 +873,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     NSString *lastUserName = userDefaultsManager.lastUserName;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
-        weakSelf.welcomeState = (nil == weakSelf.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
+        if (participant.teamInvitation.isAccepted) {
+            weakSelf.welcomeState = WMWelcomeStateInvitationAccepted;
+        } else if (weakSelf.participant.team) {
+            weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+        } else {
+            weakSelf.welcomeState = WMWelcomeStateSignedInNoTeam;
+        }
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -918,7 +943,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.appDelegate.participant = participant;
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     userDefaultsManager.lastUserName = participant.userName;
-    self.welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
+    _welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
     [self.tableView reloadData];
 }
 
@@ -1002,6 +1027,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)iapJoinTeamViewControllerDidPurchase:(WMIAPJoinTeamViewController *)viewController
 {
+    _welcomeState = WMWelcomeStateInvitationAccepted;
     __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // update table view

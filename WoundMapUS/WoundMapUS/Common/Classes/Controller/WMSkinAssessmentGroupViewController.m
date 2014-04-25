@@ -297,6 +297,11 @@
 
 - (IBAction)saveAction:(id)sender
 {
+    if (!_skinAssessmentGroup.hasValues) {
+        [self cancelAction:sender];
+        return;
+    }
+    // else
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];
     }

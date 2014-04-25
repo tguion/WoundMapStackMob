@@ -22,30 +22,24 @@
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     [importContext performBlock:^{
-        
-        NSFetchRequest *request =
-        [NSFetchRequest fetchRequestWithEntityName:entityName];
-        request.predicate =
-        [NSPredicate predicateWithFormat:@"%K==nil && %K.%K!=nil",
-         thumbnailAttributeName, photoRelationshipName, photoAttributeName];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
+        request.predicate = [NSPredicate predicateWithFormat:@"%K==nil && %K.%K!=nil", thumbnailAttributeName, photoRelationshipName, photoAttributeName];
         request.sortDescriptors = sortDescriptors;
         request.fetchBatchSize = 15;
         NSError *error;
-        NSArray *missingThumbnails =
-        [importContext executeFetchRequest:request error:&error];
-        if (error) {NSLog(@"Error: %@", error.localizedDescription);}
+        NSArray *missingThumbnails = [importContext executeFetchRequest:request error:&error];
+        if (error) {
+            NSLog(@"Error: %@", error.localizedDescription);
+        }
         
         for (NSManagedObject *object in missingThumbnails) {
             
-            NSManagedObject *photoObject =
-            [object valueForKey:photoRelationshipName];
+            NSManagedObject *photoObject = [object valueForKey:photoRelationshipName];
             
-            if (![object valueForKey:thumbnailAttributeName] &&
-                [photoObject valueForKey:photoAttributeName]) {
+            if (![object valueForKey:thumbnailAttributeName] && [photoObject valueForKey:photoAttributeName]) {
                 
                 // Create Thumbnail
-                UIImage *photo =
-                [UIImage imageWithData:[photoObject valueForKey:photoAttributeName]];
+                UIImage *photo = [UIImage imageWithData:[photoObject valueForKey:photoAttributeName]];
                 CGSize size = CGSizeMake(66, 66);
                 UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
                 [photo drawInRect:CGRectMake(0, 0, size.width, size.height)];

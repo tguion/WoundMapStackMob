@@ -37,57 +37,12 @@
                         <outlet property="delegate" destination="-1" id="94y-bU-LK3"/>
                     </connections>
                 </textField>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oWE-JF-wjj">
-                    <rect key="frame" x="20" y="274" width="280" height="34"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zsy-fb-jTn">
-                            <rect key="frame" x="0.0" y="2" width="120" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="120" id="1t7-AR-ZyS"/>
-                            </constraints>
-                            <state key="normal" title="Decline">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="declineAction:" destination="-1" eventType="touchUpInside" id="QMI-zB-nm1"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFh-wp-X32">
-                            <rect key="frame" x="160" y="2" width="120" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="120" id="7TM-d2-8Z0"/>
-                            </constraints>
-                            <state key="normal" title="Accept">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="acceptAction:" destination="-1" eventType="touchUpInside" id="Etw-8O-mvQ"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstItem="DFh-wp-X32" firstAttribute="leading" secondItem="zsy-fb-jTn" secondAttribute="trailing" constant="40" id="477-kv-c6o"/>
-                        <constraint firstAttribute="bottom" secondItem="DFh-wp-X32" secondAttribute="bottom" constant="2" id="EgG-6j-4Kn"/>
-                        <constraint firstItem="zsy-fb-jTn" firstAttribute="top" secondItem="oWE-JF-wjj" secondAttribute="top" constant="2" id="Ij7-4B-xhN"/>
-                        <constraint firstItem="DFh-wp-X32" firstAttribute="top" secondItem="oWE-JF-wjj" secondAttribute="top" constant="2" id="Xdj-Nq-tpQ"/>
-                        <constraint firstItem="zsy-fb-jTn" firstAttribute="leading" secondItem="oWE-JF-wjj" secondAttribute="leading" id="b2D-1A-LIe"/>
-                        <constraint firstAttribute="bottom" secondItem="zsy-fb-jTn" secondAttribute="bottom" constant="2" id="kIE-NT-13T"/>
-                        <constraint firstAttribute="trailing" secondItem="DFh-wp-X32" secondAttribute="trailing" id="rcg-Nv-y3G"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="BBJ-fY-GIx" firstAttribute="centerX" secondItem="UBu-jL-aNI" secondAttribute="centerX" constant="0.5" id="BFo-Cg-2ib"/>
                 <constraint firstItem="BBJ-fY-GIx" firstAttribute="top" secondItem="UBu-jL-aNI" secondAttribute="bottom" constant="8" id="GDQ-90-aHF"/>
-                <constraint firstItem="oWE-JF-wjj" firstAttribute="top" secondItem="BBJ-fY-GIx" secondAttribute="bottom" constant="29" id="K2m-gJ-voZ"/>
                 <constraint firstItem="UBu-jL-aNI" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="KrG-8K-Poa"/>
-                <constraint firstItem="oWE-JF-wjj" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="MXb-pP-45u"/>
-                <constraint firstAttribute="trailing" secondItem="oWE-JF-wjj" secondAttribute="trailing" constant="20" symbolic="YES" id="Nl0-po-yxy"/>
                 <constraint firstAttribute="trailing" secondItem="UBu-jL-aNI" secondAttribute="trailing" constant="20" symbolic="YES" id="h1o-Ah-s4n"/>
                 <constraint firstItem="UBu-jL-aNI" firstAttribute="top" secondItem="1" secondAttribute="top" constant="87" id="ueC-zX-BDa"/>
             </constraints>
