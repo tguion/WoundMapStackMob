@@ -42,6 +42,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (nil == _skinAssessmentGroup) {
+        _skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroup:self.patient];
+    }
     if (_skinAssessmentGroup) {
         // we want to support cancel, so make sure we have an undoManager
         if (nil == self.managedObjectContext.undoManager) {
@@ -201,41 +204,37 @@
 - (WMSkinAssessmentGroup *)skinAssessmentGroup
 {
     if (nil == _skinAssessmentGroup) {
-        WMSkinAssessmentGroup *skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroup:self.patient];
-        if (nil == skinAssessmentGroup) {
-            WMPatient *patient = self.patient;
-            skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:self.managedObjectContext];
-            skinAssessmentGroup.patient = patient;
-            self.didCreateGroup = YES;
-            // create on back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff createObj:skinAssessmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    [ff grabBagAddItemAtFfUrl:skinAssessmentGroup.ffUrl
-                                 toObjAtFfUrl:patient.ffUrl
-                                  grabBagName:WMPatientRelationships.skinAssessmentGroups
-                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                       if (error) {
-                                           [WMUtilities logError:error];
-                                       }
-                                   }];
-                }
-            }];
-            WMInterventionEvent *event = [skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                       title:nil
-                                                                                   valueFrom:nil
-                                                                                     valueTo:nil
-                                                                                        type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                             create:YES
-                                                                                                                               managedObjectContext:self.managedObjectContext]
-                                                                                 participant:self.appDelegate.participant
-                                                                                      create:YES
-                                                                        managedObjectContext:self.managedObjectContext];
-            DLog(@"Created event %@", event.eventType.title);
-        }
-        _skinAssessmentGroup = skinAssessmentGroup;
+        WMPatient *patient = self.patient;
+        _skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:self.managedObjectContext];
+        _skinAssessmentGroup.patient = patient;
+        self.didCreateGroup = YES;
+        // create on back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff createObj:_skinAssessmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:_skinAssessmentGroup.ffUrl
+                             toObjAtFfUrl:patient.ffUrl
+                              grabBagName:WMPatientRelationships.skinAssessmentGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            }
+        }];
+        WMInterventionEvent *event = [_skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                   title:nil
+                                                                               valueFrom:nil
+                                                                                 valueTo:nil
+                                                                                    type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                         create:YES
+                                                                                                                           managedObjectContext:self.managedObjectContext]
+                                                                             participant:self.appDelegate.participant
+                                                                                  create:YES
+                                                                    managedObjectContext:self.managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
     }
     return _skinAssessmentGroup;
 }
@@ -501,6 +500,11 @@
 - (NSString *)ffQuery
 {
     return [NSString stringWithFormat:@"%@/%@", self.skinAssessmentGroup.ffUrl, WMSkinAssessmentGroupRelationships.values];
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMSkinAssessment entityName];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

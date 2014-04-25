@@ -13,6 +13,7 @@
 #import "WMNavigationPatientPhotoButton.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
+#import "WMTeam.h"
 #import "WMPatient.h"
 #import "WMBradenScale.h"
 #import "WMMedicationGroup.h"
@@ -32,7 +33,9 @@
 #import "WMUtilities.h"
 #import <objc/runtime.h>
 
-@interface WMHomeBaseViewController ()
+#define kSignOutActionSheetTag 1000
+
+@interface WMHomeBaseViewController () <UIActionSheetDelegate>
 
 @property (readonly, nonatomic) WMChooseTrackViewController *chooseTrackViewController;
 @property (readonly, nonatomic) WMChooseStageViewController *chooseStageViewController;
@@ -607,16 +610,20 @@
 - (void)updateNavigationBar
 {
     // show policy editor if home
+    NSMutableArray *items = [NSMutableArray array];
     if (nil == self.parentNavigationNode) {
         WMNavigationTrack *navigationTrack = self.appDelegate.navigationCoordinator.navigationTrack;
-        if (!sel_isEqual(self.navigationItem.leftBarButtonItem.action, @selector(editPoliciesAction:)) && !navigationTrack.skipPolicyEditor) {
-            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings"]
-                                                                                     style:UIBarButtonItemStylePlain
-                                                                                    target:self
-                                                                                    action:@selector(editPoliciesAction:)];
-        } else if (navigationTrack.skipPolicyEditor) {
-            self.navigationItem.leftBarButtonItem = nil;
+        if (!navigationTrack.skipPolicyEditor) {
+            [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings"]
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self
+                                                             action:@selector(editPoliciesAction:)]];
         }
+        NSString *imageName = (self.appDelegate.participant.team ? @"ui_rabbit":@"ui_rabbit");
+        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName]
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(editUserOrTeamAction:)]];
     } else {
         NSString *imageName = nil;
         if (nil == self.parentNavigationNode.parentNode) {
@@ -626,11 +633,12 @@
             // more than one step from home
             imageName = @"homeback";
         }
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName]
-                                                                                 style:UIBarButtonItemStylePlain
-                                                                                target:self
-                                                                                action:@selector(homeAction:)];
+        [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName]
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(homeAction:)]];
     }
+    self.navigationItem.leftBarButtonItems = items;
 }
 
 - (void)updatePatientWoundComponents
@@ -907,7 +915,37 @@
                                               aggregator:self.appDelegate.navigationCoordinator.navigationTrack
                                                       ff:[WMFatFractal sharedInstance]
                                        completionHandler:block];
+}
 
+- (IBAction)editUserOrTeamAction:(id)sender
+{
+    WMTeam *team = self.appDelegate.participant.team;
+    if (team) {
+        __weak __typeof(self) weakSelf = self;
+        WMErrorCallback block = ^(NSError *error) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+                [weakSelf navigateToManageTeam:sender];
+            }
+        };
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMTeamRelationships.invitations, WMTeamRelationships.participants, WMTeamRelationships.patients]
+                                                  aggregator:team
+                                                          ff:[WMFatFractal sharedInstance]
+                                           completionHandler:block];
+    } else {
+        // no team, sign out
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Sign Out"
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                   destructiveButtonTitle:@"Sign Out"
+                                                        otherButtonTitles:nil];
+        actionSheet.tag = kSignOutActionSheetTag;
+        [actionSheet showInView:self.view];
+    }
 }
 
 - (IBAction)selectInitialStageAction:(id)sender
@@ -1406,6 +1444,33 @@
     }];
 }
 
+#pragma mark - UIActionSheetDelegate
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (actionSheet.tag) {
+        case kSignOutActionSheetTag: {
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                [ff logout];
+                __weak __typeof(self) weakSelf = self;
+                [UIView transitionWithView:self.appDelegate.window
+                                  duration:0.5
+                                   options:UIViewAnimationOptionTransitionFlipFromLeft
+                                animations:^{
+                                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:weakSelf.welcomeToWoundMapViewController];
+                                    navigationController.delegate = weakSelf.appDelegate;
+                                    self.appDelegate.window.rootViewController = navigationController;
+                                } completion:^(BOOL finished) {
+                                    // nothing
+                                }];
+            }
+            break;
+        }
+    }
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToPatientDetail:(WMNavigationNodeButton *)navigationNodeButton {}
@@ -1428,6 +1493,7 @@
 - (void)navigateToViewGraphs:(id)sender {}
 - (void)navigateToPatientSummary:(id)sender {}
 - (void)navigateToShare:(id)sender {}
+- (void)navigateToManageTeam:(UIBarButtonItem *)barButtonItem {}
 
 - (void)navigateToNavigationTracks
 {
@@ -1472,6 +1538,16 @@
     WMPolicyEditorViewController *policyEditorViewController = [[WMPolicyEditorViewController alloc] initWithNibName:@"WMPolicyEditorViewController" bundle:nil];
     policyEditorViewController.delegate = self;
     return policyEditorViewController;
+}
+
+- (WMManageTeamViewController *)manageTeamViewController
+{
+    return [[WMManageTeamViewController alloc] initWithNibName:@"WMManageTeamViewController" bundle:nil];
+}
+
+- (WMWelcomeToWoundMapViewController *)welcomeToWoundMapViewController
+{
+    return [[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil];
 }
 
 - (WMChooseTrackViewController *)chooseTrackViewController
@@ -2012,19 +2088,14 @@
 
 - (void)carePlanGroupViewControllerDidSave:(WMCarePlanGroupViewController *)viewController
 {
-//    BOOL hasChanges = self.managedObjectContext.hasChanges;
-//    // save in order to update updatedAt
-//    NSError *error = nil;
-//    [self.managedObjectContext saveAndWait:&error];
-//    if (nil != error) {
-//        [WMUtilities logError:error];
-//    }
-//    [self dismissViewControllerAnimated:YES completion:^{
-//        // post notification if some values were added
-//        if (hasChanges) {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
-//        }
-//    }];
+    BOOL hasChanges = self.managedObjectContext.hasChanges;
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // post notification if some values were added
+        if (hasChanges) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
+        }
+    }];
 }
 
 - (void)carePlanGroupViewControllerDidCancel:(WMCarePlanGroupViewController *)viewController
@@ -2038,13 +2109,8 @@
 
 - (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
 {
-//    // save in order to update updatedAt
-//    NSError *error = nil;
-//    [self.managedObjectContext saveAndWait:&error];
-//    if (nil != error) {
-//        [WMUtilities logError:error];
-//    }
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
 }
 
 - (void)woundTreatmentGroupsViewControllerDidCancel:(WMWoundTreatmentGroupsViewController *)viewController
@@ -2055,14 +2121,8 @@
 
 - (void)woundMeasurementGroupViewControllerDidFinish:(WMWoundMeasurementGroupViewController *)viewController
 {
-//    // save in order to update updatedAt
-//    NSError *error = nil;
-//    [self.managedObjectContext saveAndWait:&error];
-//    if (nil != error) {
-//        [WMUtilities logError:error];
-//    }
-//    // notify interface of completed task
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundAssessmentNode)];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundAssessmentNode)];
 }
 
 - (void)woundMeasurementGroupViewControllerDidCancel:(WMWoundMeasurementGroupViewController *)viewController

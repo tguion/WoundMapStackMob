@@ -114,6 +114,7 @@
     // else
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __weak __typeof(&*self)weakSelf = self;
     [ff loginWithUserName:self.userNameTextInput andPassword:self.passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -131,59 +132,55 @@
             NSParameterAssert([user.userName length] > 0);
             NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
             // fetch participant
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
             __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
                                                                                 create:NO
                                                                   managedObjectContext:managedObjectContext];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            //                [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];// DEBUG
-            if (YES) {
-                dispatch_block_t block = ^{
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                    participant = [participant MR_inContext:weakSelf.managedObjectContext];
-                    // handle team invitation confirmation
-                    __block WMTeamInvitation *teamInvitation = participant.teamInvitation;
-                    if (nil == teamInvitation) {
-                        // look for team invitation
-                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], participant.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            if ([object count]) {
-                                // invitation is for this participant
-                                object = [object firstObject];
-                                NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
-                                teamInvitation = object;
-                                participant.teamInvitation = teamInvitation;
-                                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                teamInvitation.invitee = participant;
-                                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                NSError *error = nil;
-                                [ff updateObj:teamInvitation error:&error];
-                                NSAssert(nil == error, @"Unable to update teamInvitation: %@, error: %@", teamInvitation, error);
-                                [ff updateObj:participant error:&error];
-                                NSAssert(nil == error, @"Unable to update participant: %@, error: %@", participant, error);
-                            }
-                        }];
-                    }
-                    [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
-                };
-                if (nil == participant) {
-                    // must be on back end
-                    [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        } else {
-                            participant = object;
-                            block();
-                        }
-                    }];
-                } else {
-                    [ffm updateParticipant:participant completionHandler:^(NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        } else {
-                            block();
+            dispatch_block_t block = ^{
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                // handle team invitation confirmation
+                __block WMTeamInvitation *teamInvitation = participant.teamInvitation;
+                if (nil == teamInvitation) {
+                    // look for team invitation
+                    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], participant.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if ([object count]) {
+                            // invitation is for this participant
+                            object = [object firstObject];
+                            NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
+                            teamInvitation = object;
+                            participant.teamInvitation = teamInvitation;
+                            [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            teamInvitation.invitee = participant;
+                            [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            NSError *error = nil;
+                            [ff updateObj:teamInvitation error:&error];
+                            NSAssert(nil == error, @"Unable to update teamInvitation: %@, error: %@", teamInvitation, error);
+                            [ff updateObj:participant error:&error];
+                            NSAssert(nil == error, @"Unable to update participant: %@, error: %@", participant, error);
                         }
                     }];
                 }
+                [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
+            };
+            if (nil == participant) {
+                // must be on back end
+                [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        participant = object;
+                        block();
+                    }
+                }];
+            } else {
+                [ffm updateParticipant:participant completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        block();
+                    }
+                }];
             }
         }
     }];

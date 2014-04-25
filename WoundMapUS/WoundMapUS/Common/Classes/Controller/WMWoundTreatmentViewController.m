@@ -84,6 +84,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (nil == _parentWoundTreatment && nil == _woundTreatmentGroup) {
+        _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:self.wound];
+    }
     if (_parentWoundTreatment || _woundTreatmentGroup) {
         // we want to support cancel, so make sure we have an undoManager
         if (nil == self.managedObjectContext.undoManager) {
@@ -129,50 +132,47 @@
 - (WMWoundTreatmentGroup *)woundTreatmentGroup
 {
     if (nil == _woundTreatmentGroup) {
-        _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:self.wound];
-        if (nil == _woundTreatmentGroup) {
-            _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
-            self.didCreateGroup = YES;
-            // create on back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMWound *wound = self.wound;
-            __block NSInteger counter = 0;
-            __weak __typeof(&*self)weakSelf = self;
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    --counter;
-                    if (counter == 0) {
-                        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                    }
+        _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
+        self.didCreateGroup = YES;
+        // create on back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMWound *wound = self.wound;
+        __block NSInteger counter = 0;
+        __weak __typeof(&*self)weakSelf = self;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                --counter;
+                if (counter == 0) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 }
-            };
-            [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    ++counter;
-                    [ff grabBagAddItemAtFfUrl:_woundTreatmentGroup.ffUrl
-                                 toObjAtFfUrl:wound.ffUrl
-                                  grabBagName:WMWoundRelationships.treatmentGroups
-                                   onComplete:completionHandler];
-                }
-            }];
-
-            WMInterventionEvent *event = [_woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                       title:nil
-                                                                                   valueFrom:nil
-                                                                                     valueTo:nil
-                                                                                        type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                             create:YES
-                                                                                                                               managedObjectContext:self.managedObjectContext]
-                                                                                 participant:self.appDelegate.participant
-                                                                                      create:YES
-                                                                        managedObjectContext:self.managedObjectContext];
-            DLog(@"Created event %@", event.eventType.title);
-        }
+            }
+        };
+        [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                ++counter;
+                [ff grabBagAddItemAtFfUrl:_woundTreatmentGroup.ffUrl
+                             toObjAtFfUrl:wound.ffUrl
+                              grabBagName:WMWoundRelationships.treatmentGroups
+                               onComplete:completionHandler];
+            }
+        }];
+        
+        WMInterventionEvent *event = [_woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                    title:nil
+                                                                                valueFrom:nil
+                                                                                  valueTo:nil
+                                                                                     type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                          create:YES
+                                                                                                                            managedObjectContext:self.managedObjectContext]
+                                                                              participant:self.appDelegate.participant
+                                                                                   create:YES
+                                                                     managedObjectContext:self.managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
     }
     return _woundTreatmentGroup;
 }

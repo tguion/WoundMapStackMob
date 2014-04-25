@@ -145,7 +145,7 @@ typedef enum {
     }
 }
 
-+ (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallback)completionHandler
++ (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
@@ -177,13 +177,13 @@ typedef enum {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         NSArray *objects = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
         NSArray *objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationTrack entityName]);
+        completionHandler(nil, objectIDs, [WMNavigationTrack entityName], nil);
         objects = [WMNavigationStage MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"track IN (%@)", objects] inContext:managedObjectContext];
         objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationStage entityName]);
+        completionHandler(nil, objectIDs, [WMNavigationStage entityName], nil);
         objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil AND stage IN (%@)", objects] inContext:managedObjectContext];
         objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+        completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
         while (YES) {
             objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", objects] inContext:managedObjectContext];
             if ([objects count] == 0) {
@@ -191,7 +191,7 @@ typedef enum {
             }
             // else
             objectIDs = [objects valueForKeyPath:@"objectID"];
-            completionHandler(nil, objectIDs, [WMNavigationNode entityName]);
+            completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
         }
     }
 }

@@ -29,6 +29,8 @@
 #import "WMInstructionsViewController.h"
 #import "WMPlotSelectDatasetViewController.h"
 #import "WMShareViewController.h"
+#import "WMManageTeamViewController.h"
+#import "WMWelcomeToWoundMapViewController.h"
 #import "WMCompassView.h"
 #import "TakePhotoProtocols.h"
 
@@ -97,6 +99,9 @@ typedef enum {
 @property (weak, nonatomic) UIBarButtonItem *reviewGraphsBarButtonItem;
 @property (weak, nonatomic) UIBarButtonItem *patientSummaryBarButtonItem;
 
+@property (readonly, nonatomic) WMManageTeamViewController *manageTeamViewController;
+@property (readonly, nonatomic) WMWelcomeToWoundMapViewController *welcomeToWoundMapViewController;
+
 @property (readonly, nonatomic) WMPatientTableViewController *patientTableViewController;
 @property (readonly, nonatomic) WMPatientDetailViewController *patientDetailViewController;
 @property (readonly, nonatomic) WMSelectWoundViewController *selectWoundViewController;
@@ -124,6 +129,7 @@ typedef enum {
 
 - (IBAction)homeAction:(id)sender;
 - (IBAction)editPoliciesAction:(id)sender;
+- (IBAction)editUserOrTeamAction:(id)sender;
 - (IBAction)viewInstructionsAction:(id)sender;
 
 - (IBAction)selectPatientAction:(id)sender;
@@ -146,6 +152,8 @@ typedef enum {
 - (void)navigateToWoundDetail:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToWoundDetailViewControllerForNewWound:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToSelectWound:(WMNavigationNodeButton *)navigationNodeButton;
+
+- (void)navigateToManageTeam:(UIBarButtonItem *)barButtonItem;
 
 - (void)navigateToSkinAssessmentForNavigationNode:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToBradenScaleAssessment:(WMNavigationNodeButton *)navigationNodeButton;

@@ -109,6 +109,11 @@
 
 #pragma mark - Navigation
 
+- (void)navigateToManageTeam:(UIBarButtonItem *)barButtonItem
+{
+    [self.navigationController pushViewController:self.manageTeamViewController animated:YES];
+}
+
 - (void)navigateToPatientDetail:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMPatientDetailViewController *patientDetailViewController = self.patientDetailViewController;

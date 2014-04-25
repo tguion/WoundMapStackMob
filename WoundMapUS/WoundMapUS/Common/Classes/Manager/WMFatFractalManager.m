@@ -529,6 +529,8 @@
                                             [ff grabBagAdd:object to:team grabBagName:WMTeamRelationships.navigationTracks error:&localError];
                                             if (error) {
                                                 [WMUtilities logError:error];
+                                            } else if (callBack) {
+                                                callBack();
                                             }
                                         }
                                     }

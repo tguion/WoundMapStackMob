@@ -132,6 +132,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (nil == _woundMeasurementGroup) {
+        _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:self.woundPhoto];
+    }
     if (_woundMeasurementGroup) {
         // we want to support cancel, so make sure we have an undoManager
         if (nil == self.managedObjectContext.undoManager) {
@@ -208,56 +211,52 @@
 - (WMWoundMeasurementGroup *)woundMeasurementGroup
 {
     if (nil == _woundMeasurementGroup) {
-        _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:self.woundPhoto];
-        if (nil == _woundMeasurementGroup) {
-            _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:self.woundPhoto];
-            self.didCreateGroup = YES;
-            // create on back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMWound *wound = self.wound;
-            WMWoundPhoto *woundPhoto = self.woundPhoto;
-            __block NSInteger counter = 0;
-            __weak __typeof(&*self)weakSelf = self;
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    --counter;
-                    if (counter == 0) {
-                        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                    }
+        _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:self.woundPhoto];
+        self.didCreateGroup = YES;
+        // create on back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMWound *wound = self.wound;
+        WMWoundPhoto *woundPhoto = self.woundPhoto;
+        __block NSInteger counter = 0;
+        __weak __typeof(&*self)weakSelf = self;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                --counter;
+                if (counter == 0) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 }
-            };
-            [ff createObj:_woundMeasurementGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    ++counter;
-                    [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
-                                 toObjAtFfUrl:wound.ffUrl
-                                  grabBagName:WMWoundRelationships.measurementGroups
-                                   onComplete:completionHandler];
-                    ++counter;
-                    [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
-                                 toObjAtFfUrl:woundPhoto.ffUrl
-                                  grabBagName:WMWoundPhotoRelationships.measurementGroups
-                                   onComplete:completionHandler];
-                }
-            }];
-            WMInterventionEvent *event = [_woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                          title:nil
-                                                                                      valueFrom:nil
-                                                                                        valueTo:nil
-                                                                                           type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                                create:YES
-                                                                                                                                  managedObjectContext:self.managedObjectContext]
-                                                                                    participant:self.appDelegate.participant
-                                                                                         create:YES
-                                                                           managedObjectContext:self.managedObjectContext];
-            DLog(@"Created event %@", event.eventType.title);
-
-        }
+            }
+        };
+        [ff createObj:_woundMeasurementGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                ++counter;
+                [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
+                             toObjAtFfUrl:wound.ffUrl
+                              grabBagName:WMWoundRelationships.measurementGroups
+                               onComplete:completionHandler];
+                ++counter;
+                [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
+                             toObjAtFfUrl:woundPhoto.ffUrl
+                              grabBagName:WMWoundPhotoRelationships.measurementGroups
+                               onComplete:completionHandler];
+            }
+        }];
+        WMInterventionEvent *event = [_woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                      title:nil
+                                                                                  valueFrom:nil
+                                                                                    valueTo:nil
+                                                                                       type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                            create:YES
+                                                                                                                              managedObjectContext:self.managedObjectContext]
+                                                                                participant:self.appDelegate.participant
+                                                                                     create:YES
+                                                                       managedObjectContext:self.managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
     }
     return _woundMeasurementGroup;
 }
