@@ -130,8 +130,7 @@ NSString *const kDischargeStageTitle = @"Discharge";
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationStageRelationships.nodes,
-                                                            WMNavigationStageRelationships.patients]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationStageRelationships.patients]];
     });
     return PropertyNamesNotToSerialize;
 }

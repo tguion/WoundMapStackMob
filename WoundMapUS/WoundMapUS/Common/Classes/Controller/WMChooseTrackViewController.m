@@ -143,7 +143,7 @@
     if (self.participant.team) {
         ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks", [WMTeam entityName], [self.participant.team.ffUrl lastPathComponent]];
     } else {
-        ffQuery = [NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]];
+        ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
     }
     return ffQuery;
 }

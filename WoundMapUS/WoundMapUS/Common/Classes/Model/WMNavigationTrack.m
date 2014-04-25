@@ -4,6 +4,7 @@
 #import "WMTeam.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
+#import "WMFatFractal.h"
 #import "NSObject+performBlockAfterDelay.h"
 
 typedef enum {
@@ -122,26 +123,81 @@ typedef enum {
         if (!completionHandler) {
             return;
         }
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
         // else now gather the objectIDs
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        NSArray *objects = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
-        NSArray *objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationTrack entityName], nil);
-        objects = [WMNavigationStage MR_findAllInContext:managedObjectContext];
-        objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationStage entityName], nil);
-        objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
-        objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
-        while (YES) {
-            objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", objects] inContext:managedObjectContext];
-            if ([objects count] == 0) {
-                break;
-            }
-            // else
-            objectIDs = [objects valueForKeyPath:@"objectID"];
-            completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
+        NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+        NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
+        // remove the stages
+        NSMutableDictionary *trackObjectID2Stages = [NSMutableDictionary dictionaryWithCapacity:[navigationTrackObjectIDs count]];
+        for (WMNavigationTrack *navigationTrack in navigationTracks) {
+            trackObjectID2Stages[[navigationTrack objectID]] = navigationTrack.stages;
+            navigationTrack.stages = nil;
         }
+        dispatch_block_t block0 = ^{
+            for (WMNavigationTrack *navigationTrack in navigationTracks) {
+                navigationTrack.stages = trackObjectID2Stages[[navigationTrack objectID]];
+            }
+            // now stages
+            NSArray *stages = [WMNavigationStage MR_findAllInContext:managedObjectContext];
+            NSArray *stageobjectIDs = [stages valueForKeyPath:@"objectID"];
+            NSMutableDictionary *stageObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[stageobjectIDs count]];
+            for (WMNavigationStage *navigationStage in stages) {
+                stageObjectID2Nodes[[navigationStage objectID]] = navigationStage.nodes;
+                navigationStage.nodes = nil;
+            }
+            completionHandler(nil, stageobjectIDs, [WMNavigationStage entityName], ^{
+                NSError *error = nil;
+                for (WMNavigationStage *navigationStage in stages) {
+                    [ff grabBagAdd:navigationStage to:navigationStage.track grabBagName:WMNavigationTrackRelationships.stages error:&error];
+                    navigationStage.nodes = stageObjectID2Nodes[[navigationStage objectID]];
+                }
+                __block NSArray *nodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
+                NSArray *nodeObjectIDs = [nodes  valueForKeyPath:@"objectID"];
+                NSMutableDictionary *nodeObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[nodeObjectIDs count]];
+                for (WMNavigationNode *navigationNode in nodes) {
+                    nodeObjectID2Nodes[[navigationNode objectID]] = navigationNode.subnodes;
+                    navigationNode.subnodes = nil;
+                }
+                completionHandler(nil, nodeObjectIDs, [WMNavigationNode entityName], ^{
+                    for (WMNavigationNode *navigationNode in nodes) {
+                        NSError *error = nil;
+                        if (navigationNode.stage) {
+                            [ff grabBagAdd:navigationNode to:navigationNode.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                        }
+                        navigationNode.subnodes = nodeObjectID2Nodes[[navigationNode objectID]];
+                    }
+                    while (YES) {
+                        NSArray *subnodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", nodes] inContext:managedObjectContext];
+                        if ([subnodes count] == 0) {
+                            break;
+                        }
+                        // else
+                        NSArray *subnodeObjectIDs = [subnodes valueForKeyPath:@"objectID"];
+                        NSMutableDictionary *nodeObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[subnodeObjectIDs count]];
+                        for (WMNavigationNode *navigationNode in subnodes) {
+                            nodeObjectID2Nodes[[navigationNode objectID]] = navigationNode.subnodes;
+                            navigationNode.subnodes = nil;
+                        }
+                        completionHandler(nil, subnodeObjectIDs, [WMNavigationNode entityName], ^{
+                            NSError *error = nil;
+                            for (WMNavigationNode *navigationNode in subnodes) {
+                                if (navigationNode.stage) {
+                                    [ff grabBagAdd:navigationNode to:navigationNode.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                                }
+                                if (navigationNode.parentNode) {
+                                    [ff grabBagAdd:navigationNode to:navigationNode.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                }
+                                navigationNode.subnodes = nodeObjectID2Nodes[[navigationNode objectID]];
+                            }
+                            nodes = subnodes;
+                        });
+                    }
+                    
+                });
+            });
+        };
+        completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], block0);
     }
 }
 
@@ -173,26 +229,81 @@ typedef enum {
         if (!completionHandler) {
             return;
         }
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
         // else now gather the objectIDs
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        NSArray *objects = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
-        NSArray *objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationTrack entityName], nil);
-        objects = [WMNavigationStage MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"track IN (%@)", objects] inContext:managedObjectContext];
-        objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationStage entityName], nil);
-        objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil AND stage IN (%@)", objects] inContext:managedObjectContext];
-        objectIDs = [objects valueForKeyPath:@"objectID"];
-        completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
-        while (YES) {
-            objects = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", objects] inContext:managedObjectContext];
-            if ([objects count] == 0) {
-                break;
-            }
-            // else
-            objectIDs = [objects valueForKeyPath:@"objectID"];
-            completionHandler(nil, objectIDs, [WMNavigationNode entityName], nil);
+        NSArray *navigationTracks = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
+        NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
+        // remove the stages
+        NSMutableDictionary *trackObjectID2Stages = [NSMutableDictionary dictionaryWithCapacity:[navigationTrackObjectIDs count]];
+        for (WMNavigationTrack *navigationTrack in navigationTracks) {
+            trackObjectID2Stages[[navigationTrack objectID]] = navigationTrack.stages;
+            navigationTrack.stages = nil;
         }
+        dispatch_block_t block0 = ^{
+            for (WMNavigationTrack *navigationTrack in navigationTracks) {
+                navigationTrack.stages = trackObjectID2Stages[[navigationTrack objectID]];
+            }
+            // now stages
+            NSArray *stages = [WMNavigationStage MR_findAllInContext:managedObjectContext];
+            NSArray *stageobjectIDs = [stages valueForKeyPath:@"objectID"];
+            NSMutableDictionary *stageObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[stageobjectIDs count]];
+            for (WMNavigationStage *navigationStage in stages) {
+                stageObjectID2Nodes[[navigationStage objectID]] = navigationStage.nodes;
+                navigationStage.nodes = nil;
+            }
+            completionHandler(nil, stageobjectIDs, [WMNavigationStage entityName], ^{
+                NSError *error = nil;
+                for (WMNavigationStage *navigationStage in stages) {
+                    [ff grabBagAdd:navigationStage to:navigationStage.track grabBagName:WMNavigationTrackRelationships.stages error:&error];
+                    navigationStage.nodes = stageObjectID2Nodes[[navigationStage objectID]];
+                }
+                __block NSArray *nodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
+                NSArray *nodeObjectIDs = [nodes  valueForKeyPath:@"objectID"];
+                NSMutableDictionary *nodeObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[nodeObjectIDs count]];
+                for (WMNavigationNode *navigationNode in nodes) {
+                    nodeObjectID2Nodes[[navigationNode objectID]] = navigationNode.subnodes;
+                    navigationNode.subnodes = nil;
+                }
+                completionHandler(nil, nodeObjectIDs, [WMNavigationNode entityName], ^{
+                    for (WMNavigationNode *navigationNode in nodes) {
+                        NSError *error = nil;
+                        if (navigationNode.stage) {
+                            [ff grabBagAdd:navigationNode to:navigationNode.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                        }
+                        navigationNode.subnodes = nodeObjectID2Nodes[[navigationNode objectID]];
+                    }
+                    while (YES) {
+                        NSArray *subnodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", nodes] inContext:managedObjectContext];
+                        if ([subnodes count] == 0) {
+                            break;
+                        }
+                        // else
+                        NSArray *subnodeObjectIDs = [subnodes valueForKeyPath:@"objectID"];
+                        NSMutableDictionary *nodeObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[subnodeObjectIDs count]];
+                        for (WMNavigationNode *navigationNode in subnodes) {
+                            nodeObjectID2Nodes[[navigationNode objectID]] = navigationNode.subnodes;
+                            navigationNode.subnodes = nil;
+                        }
+                        completionHandler(nil, subnodeObjectIDs, [WMNavigationNode entityName], ^{
+                            NSError *error = nil;
+                            for (WMNavigationNode *navigationNode in subnodes) {
+                                if (navigationNode.stage) {
+                                    [ff grabBagAdd:navigationNode to:navigationNode.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                                }
+                                if (navigationNode.parentNode) {
+                                    [ff grabBagAdd:navigationNode to:navigationNode.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                }
+                                navigationNode.subnodes = nodeObjectID2Nodes[[navigationNode objectID]];
+                            }
+                            nodes = subnodes;
+                        });
+                    }
+                    
+                });
+            });
+        };
+        completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], block0);
     }
 }
 
@@ -284,7 +395,7 @@ typedef enum {
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationTrackRelationships.stages]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

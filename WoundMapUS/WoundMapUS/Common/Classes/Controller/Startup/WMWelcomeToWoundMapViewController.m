@@ -1069,7 +1069,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.navigationController popViewControllerAnimated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Team...";
     __weak __typeof(&*self)weakSelf = self;
     [self.managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {

@@ -532,6 +532,8 @@
                                             } else if (callBack) {
                                                 callBack();
                                             }
+                                        } else if (callBack) {
+                                            callBack();
                                         }
                                     }
                                     block(nil); // 0
