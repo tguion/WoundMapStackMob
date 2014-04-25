@@ -524,17 +524,9 @@
                                         NSLog(@"*** WoundMap: Will create collection backend: %@", object);
                                         [ff createObj:object atUri:ffUrl];
                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                        NSError *localError = nil;
-                                        if ([[[object entity] name] isEqualToString:[WMNavigationTrack entityName]]) {
-                                            [ff grabBagAdd:object to:team grabBagName:WMTeamRelationships.navigationTracks error:&localError];
-                                            if (error) {
-                                                [WMUtilities logError:error];
-                                            } else if (callBack) {
-                                                callBack();
-                                            }
-                                        } else if (callBack) {
-                                            callBack();
-                                        }
+                                    }
+                                    if (callBack) {
+                                        callBack();
                                     }
                                     block(nil); // 0
                                 }];

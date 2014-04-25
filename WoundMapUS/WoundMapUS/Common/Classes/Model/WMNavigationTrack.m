@@ -138,6 +138,7 @@ typedef enum {
             for (WMNavigationTrack *navigationTrack in navigationTracks) {
                 navigationTrack.stages = trackObjectID2Stages[[navigationTrack objectID]];
             }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             // now stages
             NSArray *stages = [WMNavigationStage MR_findAllInContext:managedObjectContext];
             NSArray *stageobjectIDs = [stages valueForKeyPath:@"objectID"];
@@ -152,6 +153,7 @@ typedef enum {
                     [ff grabBagAdd:navigationStage to:navigationStage.track grabBagName:WMNavigationTrackRelationships.stages error:&error];
                     navigationStage.nodes = stageObjectID2Nodes[[navigationStage objectID]];
                 }
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
                 __block NSArray *nodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
                 NSArray *nodeObjectIDs = [nodes  valueForKeyPath:@"objectID"];
                 NSMutableDictionary *nodeObjectID2Nodes = [NSMutableDictionary dictionaryWithCapacity:[nodeObjectIDs count]];
@@ -167,6 +169,7 @@ typedef enum {
                         }
                         navigationNode.subnodes = nodeObjectID2Nodes[[navigationNode objectID]];
                     }
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                     while (YES) {
                         NSArray *subnodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", nodes] inContext:managedObjectContext];
                         if ([subnodes count] == 0) {
@@ -190,6 +193,7 @@ typedef enum {
                                 }
                                 navigationNode.subnodes = nodeObjectID2Nodes[[navigationNode objectID]];
                             }
+                            [managedObjectContext MR_saveToPersistentStoreAndWait];
                             nodes = subnodes;
                         });
                     }
@@ -241,7 +245,9 @@ typedef enum {
             navigationTrack.stages = nil;
         }
         dispatch_block_t block0 = ^{
+            NSError *error = nil;
             for (WMNavigationTrack *navigationTrack in navigationTracks) {
+                [ff grabBagAdd:navigationTrack to:team grabBagName:WMTeamRelationships.navigationTracks error:&error];
                 navigationTrack.stages = trackObjectID2Stages[[navigationTrack objectID]];
             }
             // now stages
