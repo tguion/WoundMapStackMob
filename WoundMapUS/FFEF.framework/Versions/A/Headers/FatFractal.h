@@ -24,7 +24,7 @@
 #import "FFLocalStorageSQLite.h"
 #import "FFReadRequest.h"
 #import "FFReadResponse.h"
-#import "NSObject+FFSerializerSugar.h"
+#import "FFSerializationProtocol.h"
 
 //#import "FFWriteRequest.h"
 //#import "FFWriteResponse.h"
@@ -185,6 +185,11 @@ typedef NS_ENUM(NSInteger, FFUrlType) {
  * <br>Also, if you use localStorage, then the logged-in user will be preserved across application restarts</br>
  */
 @property (strong, nonatomic)           id <FFLocalStorage>     localStorage;
+
+/**
+ Allow setting of custom http headers for requests
+ */
+@property (strong, nonatomic)   NSDictionary                *customHttpHeaders;
 
 /**
  Get the callback URI for the specified ScriptAuth service.
