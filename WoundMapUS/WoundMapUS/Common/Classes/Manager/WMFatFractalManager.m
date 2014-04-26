@@ -142,32 +142,50 @@
     }
 }
 
+- (void)truncateStoreForSignIn:(NSString *)userName completionHandler:(dispatch_block_t)completionHandler
+{
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    NSString *lastUserName = userDefaultsManager.lastUserName;
+    if (lastUserName && ![lastUserName isEqualToString:userName]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            [WMPatient MR_truncateAllInContext:managedObjectContext];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler();
+            });
+        });
+    } else {
+        completionHandler();
+    }
+}
+
 #pragma mark - Fetch
 
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
         NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
-        if (error && completionHandler) {
+        if (error) {
             completionHandler(error);
         } else {
             // update team
             WMTeam *team = participant.team;
             if (team) {
                 NSParameterAssert(team.ffUrl);
-                NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                 [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    completionHandler(error);
                 }];
-            }
-            if (completionHandler) {
-                completionHandler(error);
+            } else {
+                completionHandler(nil);
             }
         }
     }];
@@ -177,7 +195,7 @@
 - (void)acquireParticipantForUser:(FFUser *)user completionHandler:(WMObjectCallback)completionHandler
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@/?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
         NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);

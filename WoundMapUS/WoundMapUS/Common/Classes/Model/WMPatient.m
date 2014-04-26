@@ -132,12 +132,6 @@ typedef enum {
         return self.thumbnail;
     }
     // else
-    NSString *avitarFileName = @"user_";
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        avitarFileName = [avitarFileName stringByAppendingString:@"iPad"];
-    } else {
-        avitarFileName = [avitarFileName stringByAppendingString:@"iPhone"];
-    }
     return [WMPatient missingThumbnailImage];
 }
 

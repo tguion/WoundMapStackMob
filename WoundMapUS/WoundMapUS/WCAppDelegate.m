@@ -8,6 +8,7 @@
 
 #import "WCAppDelegate.h"
 #import "WMWelcomeToWoundMapViewController.h"
+#import "WMWelcomeToWoundMapViewController_iPad.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
@@ -142,8 +143,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 - (void)initializeInterface
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]];
-    navigationController.delegate = self;
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    UIViewController *viewController = (isPad ? [[WMWelcomeToWoundMapViewController_iPad alloc] initWithNibName:@"WMWelcomeToWoundMapViewController_iPad" bundle:nil]:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]);
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    if (!isPad) {
+        navigationController.delegate = self;
+    }
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
 }

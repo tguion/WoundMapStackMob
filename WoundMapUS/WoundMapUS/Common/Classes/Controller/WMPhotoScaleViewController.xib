@@ -16,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HKp-z7-mIs">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="HKp-z7-mIs">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <accessibility key="accessibilityConfiguration">
@@ -33,9 +33,13 @@
             <constraints>
                 <constraint firstItem="zNK-D1-HeM" firstAttribute="leading" secondItem="rh8-6l-7re" secondAttribute="leading" constant="20" symbolic="YES" id="CHq-YA-JLr"/>
                 <constraint firstAttribute="centerY" secondItem="zNK-D1-HeM" secondAttribute="centerY" id="GbO-3H-a4W"/>
+                <constraint firstAttribute="trailing" secondItem="HKp-z7-mIs" secondAttribute="trailing" id="Mwa-iY-cDK"/>
                 <constraint firstAttribute="bottom" secondItem="zNK-D1-HeM" secondAttribute="bottom" constant="20" symbolic="YES" id="RIA-LC-Bxn"/>
+                <constraint firstAttribute="bottom" secondItem="HKp-z7-mIs" secondAttribute="bottom" id="TZl-Za-DFh"/>
                 <constraint firstAttribute="centerX" secondItem="zNK-D1-HeM" secondAttribute="centerX" id="ZYZ-Vo-fkp"/>
+                <constraint firstItem="HKp-z7-mIs" firstAttribute="top" secondItem="rh8-6l-7re" secondAttribute="top" id="cp7-GN-a3m"/>
                 <constraint firstAttribute="trailing" secondItem="zNK-D1-HeM" secondAttribute="trailing" constant="20" symbolic="YES" id="jgn-XF-cBk"/>
+                <constraint firstItem="HKp-z7-mIs" firstAttribute="leading" secondItem="rh8-6l-7re" secondAttribute="leading" id="mee-yd-aaI"/>
                 <constraint firstItem="zNK-D1-HeM" firstAttribute="top" secondItem="rh8-6l-7re" secondAttribute="top" constant="20" symbolic="YES" id="tRW-71-urg"/>
                 <constraint firstAttribute="centerX" secondItem="HKp-z7-mIs" secondAttribute="centerX" id="v9K-wp-r7m"/>
                 <constraint firstAttribute="centerY" secondItem="HKp-z7-mIs" secondAttribute="centerY" id="wKj-Th-s7P"/>

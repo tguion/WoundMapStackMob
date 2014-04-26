@@ -414,7 +414,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             cell.accessoryType = UITableViewCellAccessoryNone;
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
             UITextField *textField = myCell.textField;
-            textField = myCell.textField;
             textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
             textField.autocorrectionType = UITextAutocorrectionTypeNo;
             textField.spellCheckingType = UITextAutocorrectionTypeYes;

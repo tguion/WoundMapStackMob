@@ -212,11 +212,7 @@
 {
     NSString *iconImageName = self.iconImageName;
     UIImage *icon = [UIImage imageNamed:iconImageName];
-    if (nil == icon) {
-        icon = [UIImage animatedImageWithImages:self.iCloudIconImages duration:1.0];
-    } else {
-        self.iconImageView.image = icon;
-    }
+    self.iconImageView.image = icon;
     self.nodeTitleLabel.text = self.navigationNode.displayTitle;
     if (self.navigationNode.hidesStatusIndicator) {
         _statusImageView.hidden = YES;

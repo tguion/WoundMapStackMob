@@ -334,6 +334,9 @@
 		7D6894B21904494F006DE509 /* WMSelectWoundPhotoForDateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894B11904494F006DE509 /* WMSelectWoundPhotoForDateController.m */; };
 		7D6894B519044ACA006DE509 /* WMImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894B419044ACA006DE509 /* WMImageScrollView.m */; };
 		7D6894B819044B19006DE509 /* WMTilingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6894B719044B19006DE509 /* WMTilingView.m */; };
+		7D6A58C6190C24E500D72800 /* WMCompassView_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A58C5190C24E500D72800 /* WMCompassView_iPad.m */; };
+		7D6A58CA190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */; };
+		7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -1115,6 +1118,11 @@
 		7D6894B419044ACA006DE509 /* WMImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMImageScrollView.m; sourceTree = "<group>"; };
 		7D6894B619044B19006DE509 /* WMTilingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTilingView.h; sourceTree = "<group>"; };
 		7D6894B719044B19006DE509 /* WMTilingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTilingView.m; sourceTree = "<group>"; };
+		7D6A58C4190C24E500D72800 /* WMCompassView_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCompassView_iPad.h; sourceTree = "<group>"; };
+		7D6A58C5190C24E500D72800 /* WMCompassView_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCompassView_iPad.m; sourceTree = "<group>"; };
+		7D6A58C7190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWelcomeToWoundMapViewController_iPad.h; sourceTree = "<group>"; };
+		7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWelcomeToWoundMapViewController_iPad.m; sourceTree = "<group>"; };
+		7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWelcomeToWoundMapViewController_iPad.xib; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -1848,6 +1856,15 @@
 			path = Kal;
 			sourceTree = "<group>";
 		};
+		7D6A58C3190C24E500D72800 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7D6A58C4190C24E500D72800 /* WMCompassView_iPad.h */,
+				7D6A58C5190C24E500D72800 /* WMCompassView_iPad.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		7D9AA25818AE549300C1B698 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -2531,10 +2548,10 @@
 		7DB206A118A7D6950004DC32 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7D6A58C3190C24E500D72800 /* View */,
 				7D39DB5B18B90DBC0054DDC3 /* Manager */,
 				7DB206A218A7D6950004DC32 /* Controller */,
 				7DB206A318A7D6950004DC32 /* Model */,
-				7DB206A418A7D6950004DC32 /* View */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2542,6 +2559,9 @@
 		7DB206A218A7D6950004DC32 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7D6A58C7190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.h */,
+				7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */,
+				7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */,
 				7DDFD68718B7C0B900041927 /* WMHomeBaseViewController_iPad.h */,
 				7DDFD68818B7C0B900041927 /* WMHomeBaseViewController_iPad.m */,
 				7DDFD68918B7C0B900041927 /* WMHomeBaseViewController_iPad.xib */,
@@ -2557,13 +2577,6 @@
 			children = (
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		7DB206A418A7D6950004DC32 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		7DB206A518A7D6950004DC32 /* Resources */ = {
@@ -3206,6 +3219,7 @@
 				7D9A94D618E892F600D92E95 /* WMOrganizationEditorViewController.xib in Resources */,
 				7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */,
 				7D10CDF418DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib in Resources */,
+				7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
 				7D39DBC418BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib in Resources */,
 				7D10CDD618DA3B5300AD43E3 /* WMInterventionStatusViewController.xib in Resources */,
@@ -3276,6 +3290,7 @@
 				7DD8376818C8B3980028C2D3 /* WMNetworkReachability.m in Sources */,
 				7D10CE0918DC651F00AD43E3 /* WMDevicesGroupTableViewCell.m in Sources */,
 				7D39DBCC18BAB5EA0054DDC3 /* WMAdjustAlpaView.m in Sources */,
+				7D6A58C6190C24E500D72800 /* WMCompassView_iPad.m in Sources */,
 				7DF4E95718C299DC000A3F5B /* _WMInterventionStatus.m in Sources */,
 				7DF4E8EB18C22EEC000A3F5B /* _WMPsychoSocialGroup.m in Sources */,
 				5F67D1CE18AC3B5B00460C37 /* WMUtilities.m in Sources */,
@@ -3355,6 +3370,7 @@
 				5F67D23218AD901600460C37 /* WMPatientDetailViewController.m in Sources */,
 				7D6894B819044B19006DE509 /* WMTilingView.m in Sources */,
 				7DD8376318C7A5080028C2D3 /* AFXMLRequestOperation.m in Sources */,
+				7D6A58CA190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m in Sources */,
 				7D39DBC818BAB5540054DDC3 /* WMUndermineTunnelViewController.m in Sources */,
 				7D13027B18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m in Sources */,
 				7D39DB7518B947250054DDC3 /* _WMMedication.m in Sources */,
@@ -3784,10 +3800,7 @@
 					"${PROJECT_DIR}/framework/**",
 				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"~/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS/StackMob-v2.2.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				"OTHER_LDFLAGS[arch=*]" = (
 					"-ObjC",
 					"-all_load",
@@ -3816,10 +3829,7 @@
 					"${PROJECT_DIR}/framework/**",
 				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"~/Documents/Projects/MobileHealthWare/WoundMapStackMob/WoundMapUS/StackMob-v2.2.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				"OTHER_LDFLAGS[arch=*]" = (
 					"-ObjC",
 					"-all_load",

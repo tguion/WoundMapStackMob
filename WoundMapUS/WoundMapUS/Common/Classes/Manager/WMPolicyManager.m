@@ -23,6 +23,7 @@
 #import "WMSkinAssessmentGroup.h"
 #import "WMNavigationNodeButton.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
 #import "CoreDataHelper.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
@@ -343,6 +344,21 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
         default: {
             NSAssert1(NO, @"Uncovered node: %@", navigationNode);
             break;
+        }
+    }
+    if (count) {
+        // update back end now
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        NSSet *updatedObjects = managedObjectContext.updatedObjects;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        };
+        for (id object in updatedObjects) {
+            [ff updateObj:object onComplete:httpMethodCompletion];
         }
     }
     return count;

@@ -146,10 +146,13 @@
 
 - (IBAction)continueAction:(id)sender
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([self.delegate.assessmentGroup respondsToSelector:@selector(incrementContinueCount)]) {
         [self.delegate.assessmentGroup performSelector:@selector(incrementContinueCount)];
         [self updateUIForDataChange];
     }
+#pragma clang diagnostic pop
 }
 
 - (IBAction)doneAction:(id)sender

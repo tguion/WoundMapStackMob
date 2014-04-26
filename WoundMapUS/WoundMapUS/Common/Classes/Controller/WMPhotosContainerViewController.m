@@ -72,7 +72,7 @@
 - (void)installSlideShowController;
 - (void)presentMeasurementGroupViewController;
 - (void)uninstallCurrentChildViewController;
-- (WMWoundPhotoViewController *)woundPhotoViewControllerForWoundPhoto:(WMWoundPhoto *)woundPhoto;
+- (WMWoundPhotoViewController *)woundPhotoViewControllerForWoundPhotoObjectID:(NSManagedObjectID *)woundPhotoObjectID;
 - (void)kickStartPhotoPageViewController;
 - (void)updateViewForNewImage;
 - (void)updateImageViewAtIndexPath:(NSIndexPath *)indexPath;
@@ -343,7 +343,7 @@
         }
         case PhotosContainerViewControllerStatePage: {
             // navigate to new image
-            WMWoundPhotoViewController *pageLast = [self woundPhotoViewControllerForWoundPhoto:[self lastCachedWoundPhoto]]; // TODO use objectID
+            WMWoundPhotoViewController *pageLast = [self woundPhotoViewControllerForWoundPhotoObjectID:[self.cachedSortedWoundPhotos lastObject]];
             [self.photoPageViewController setViewControllers:@[pageLast]
                                                    direction:UIPageViewControllerNavigationDirectionForward
                                                     animated:YES
@@ -424,6 +424,7 @@
 
 @implementation WMPhotosContainerViewController
 
+@dynamic managedObjectContext;
 @synthesize woundPhotoDate1=_woundPhotoDate1, woundPhotoDate2=_woundPhotoDate2;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

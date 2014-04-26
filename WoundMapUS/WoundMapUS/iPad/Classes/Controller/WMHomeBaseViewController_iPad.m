@@ -67,6 +67,23 @@
     return [[WMPhotosContainerViewController_iPad alloc] initWithNibName:@"WMPhotosContainerViewController_iPad" bundle:nil];
 }
 
+#pragma mark - Orientation
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self.navigationNodeControls makeObjectsPerformSelector:@selector(setHidden:) withObject:@YES];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self.compassView recenterNavigationControls];
+    [self.navigationNodeControls makeObjectsPerformSelector:@selector(setHidden:) withObject:@NO];
+    [self.compassView animateNodesIntoActivePosition];
+    [self.compassView setNeedsDisplay];
+}
+
 #pragma mark - Core
 
 - (UIPopoverController *)navigationNodePopoverControllerForContentViewController:(UIViewController *)viewController
@@ -235,48 +252,8 @@
 
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
-//    __block WMPatient *patient = viewController.patient;
-//    // clear memory
-//    [viewController clearAllReferences];
-//    // update our reference to current patient
-//    self.appDelegate.navigationCoordinator.patient = patient;
-//    [_navigationNodePopoverController dismissPopoverAnimated:YES];
-//    _navigationNodePopoverController = nil;
-//    CoreDataHelper *coreDataHelper = self.coreDataHelper;
-//    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-//    NSPersistentStore *store = self.store;
-//    // make sure the track/stage is set
-//    if (nil == patient.stage) {
-//        // set stage to initial for default clinical setting
-//        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext persistentStore:store];
-//        WMNavigationStage *navigationStage = navigationTrack.initialStage;
-//        patient.stage = navigationStage;
-//    }
-//    [self showProgressViewWithMessage:@"Saving patient record"];
-//    __weak __typeof(self) weakSelf = self;
-//    [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-//        [WMUtilities logError:error];
-//        // make sure the user (sm_owner) has access via the consultants relationship
-//        User *user = nil;
-//        if([coreDataHelper.stackMobClient isLoggedIn]) {
-//            user = [User userForUsername:weakSelf.appDelegate.stackMobUsername
-//                    managedObjectContext:managedObjectContext persistentStore:store];
-//            WMParticipant *participant = weakSelf.appDelegate.participant;
-//            WMPatientConsultant *patientConsultant = [WMPatientConsultant patientConsultantForPatient:patient
-//                                                                                           consultant:user
-//                                                                                          participant:participant
-//                                                                                               create:YES
-//                                                                                 managedObjectContext:managedObjectContext
-//                                                                                      persistentStore:store];
-//            patientConsultant.acquiredFlagValue = NO;
-//        }
-//        [weakSelf.tableView reloadData];
-//        // save again
-//        [self.coreDataHelper saveContextWithCompletionHandler:^(NSError *error) {
-//            [WMUtilities logError:error];
-//            [weakSelf hideProgressView];
-//        }];
-//    }];
+    [super patientDetailViewControllerDidUpdatePatient:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
 }
 
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController

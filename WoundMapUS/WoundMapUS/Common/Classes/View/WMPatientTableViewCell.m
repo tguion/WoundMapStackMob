@@ -258,7 +258,7 @@
     if (nil == patient) {
         patient = _patientConsultant.patient;
     }
-    NSString *string = _patient.lastNameFirstName;
+    NSString *string = patient.lastNameFirstName;
     if (self.isHighlightedOrSelected) {
         textAttributes = self.titleSelectedAttributes;
     } else {
@@ -279,7 +279,7 @@
     } else {
         textAttributes = self.identifierAttributes;
     }
-    string = _patient.identifierEMR;
+    string = patient.identifierEMR;
     if ([string length] > 0) {
         [string drawInRect:textRect withAttributes:textAttributes];
         textRect.origin.y += CGRectGetHeight(textRect);
@@ -290,13 +290,13 @@
     } else {
         textAttributes = self.statusAttributes;
     }
-    string = _patient.patientStatusMessages;
+    string = patient.patientStatusMessages;
     if (_patientConsultant) {
         string = _patientConsultant.consultingDescription;
     } else {
         // check if submitted for consult
-        if ([_patient.patientConsultants count]) {
-            string = [NSString stringWithFormat:@"Submitted for consult to %@", [_patient valueForKeyPath:@"patientConsultants.consultant.name"]];
+        if ([patient.patientConsultants count]) {
+            string = [NSString stringWithFormat:@"Submitted for consult to %@", [patient valueForKeyPath:@"patientConsultants.consultant.name"]];
         }
     }
     if ([string length] > 0) {

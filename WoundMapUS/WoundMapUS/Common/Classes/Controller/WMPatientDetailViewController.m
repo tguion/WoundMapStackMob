@@ -443,6 +443,13 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     if (nil == _patient.person) {
         _patient.person = _person;
     }
+    // make sure the track/stage is set
+    if (nil == _patient.stage) {
+        // set stage to initial for default clinical setting
+        WMNavigationTrack *navigationTrack = self.appDelegate.navigationCoordinator.navigationTrack;
+        WMNavigationStage *navigationStage = navigationTrack.initialStage;
+        _patient.stage = navigationStage;
+    }
     // save local
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -607,7 +614,9 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
     }
     [self.navigationController popViewControllerAnimated:YES];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    if (indexPath) {
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (void)noteViewControllerDidCancel:(WMNoteViewController *)viewController withNote:(NSString *)note

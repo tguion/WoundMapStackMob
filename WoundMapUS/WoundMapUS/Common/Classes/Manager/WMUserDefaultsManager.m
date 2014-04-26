@@ -101,7 +101,7 @@ NSDateFormatter * DOB_Formatter;
         dictionary = [[NSMutableDictionary alloc] initWithCapacity:2];
     }
     if (nil == lastWoundFFURLOnDevice) {
-        [dictionary removeObjectForKey:lastWoundFFURLOnDevice];
+        [dictionary removeObjectForKey:ffUrl];
     } else {
         [dictionary setValue:lastWoundFFURLOnDevice forKey:ffUrl];
     }

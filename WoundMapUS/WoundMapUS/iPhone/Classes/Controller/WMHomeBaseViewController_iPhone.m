@@ -20,6 +20,7 @@
 #import "WMPhotosContainerViewController.h"
 #import "WMPatientSummaryContainerViewController.h"
 #import "WMNavigationNodeButton.h"
+#import "MBProgressHUD.h"
 #import "WMNavigationCoordinator.h"
 #import "WMParticipant.h"
 #import "WMPatient.h"
@@ -352,32 +353,9 @@
 
 - (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
 {
-    __block WMPatient *patient = viewController.patient;
-    // clear memory
-    [viewController clearAllReferences];
-    // update our reference to current patient
-    self.appDelegate.navigationCoordinator.patient = patient;
+    [super patientDetailViewControllerDidUpdatePatient:viewController];
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
-    }];
-    NSManagedObjectContext *managedObjectContext = patient.managedObjectContext;
-    // make sure the track/stage is set
-    if (nil == patient.stage) {
-        // set stage to initial for default clinical setting
-        WMNavigationTrack *navigationTrack = [self.userDefaultsManager defaultNavigationTrack:managedObjectContext];
-        WMNavigationStage *navigationStage = navigationTrack.initialStage;
-        patient.stage = navigationStage;
-    }
-    [self showProgressViewWithMessage:@"Saving patient record"];
-    __weak __typeof(self) weakSelf = self;
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            [weakSelf hideProgressView];
-            // update backend
-
-        }
     }];
 }
 

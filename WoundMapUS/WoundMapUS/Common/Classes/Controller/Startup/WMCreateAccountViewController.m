@@ -23,6 +23,7 @@
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMSeedDatabaseManager.h"   // DEBUG
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -317,6 +318,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     _ffUser.email = _emailTextInput;
     _ffUser.firstName = _firstNameTextInput;
     _ffUser.lastName = _lastNameTextInput;
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -337,21 +339,31 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             // update participant
             participant.user = ffUser;
             participant.guid = ffUser.guid;
-            // create participant on back end
-            [ffm createParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
-                    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-                    }];
-                }
-            }];
+            // check for data access
+            dispatch_block_t participantBlock = ^{
+                // create participant on back end
+                [ffm createParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    } else {
+                        // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
+                        WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+                        [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
+                            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                        }];
+                    }
+                }];
+            };
+            NSString *lastUserName = userDefaultsManager.lastUserName;
+            if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Checking access to patient records...";
+                [ffm truncateStoreForSignIn:participant.userName completionHandler:participantBlock];
+            } else {
+                participantBlock();
+            }
         }
     }];
 }

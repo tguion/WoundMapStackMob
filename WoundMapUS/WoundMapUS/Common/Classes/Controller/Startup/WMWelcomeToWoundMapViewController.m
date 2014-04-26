@@ -42,6 +42,8 @@
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
+#define kAddPatientToTeamActionSheetTag 1000
+
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateInitial,              // Sign In, Create Account
     WMWelcomeStateSignedInNoTeam,       // Sign Out | Join Team, Create Team, No Team (signed in user has not joined/created a team)
@@ -50,7 +52,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,            // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -415,7 +417,33 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }];
 }
 
-#pragma mark - Notification handlers
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet.tag == kAddPatientToTeamActionSheetTag) {
+        WMTeam *team = self.participant.team;
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        __block NSInteger counter = 0;
+        __weak __typeof(&*self)weakSelf = self;
+        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            --counter;
+            if (counter == 0) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            }
+        };
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
+        counter = [patients count];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
+        for (WMPatient *patient in patients) {
+            [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:completionHandler];
+        }
+    }
+}
 
 #pragma mark - UITableViewDelegate
 
@@ -869,6 +897,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     self.appDelegate.participant = participant;
     [self.navigationController popViewControllerAnimated:YES];
     // if participant has changed, we need to purge the local cache
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     NSString *lastUserName = userDefaultsManager.lastUserName;
     __weak __typeof(&*self)weakSelf = self;
@@ -886,23 +915,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
     };
-    if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            [WMPatient MR_truncateAllInContext:managedObjectContext];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                block();
-            });
-        });
-    } else {
+    if ([lastUserName isEqualToString:participant.userName]) {
         // attempt to acquire last patient and wound
         NSParameterAssert(participant.guid);
         WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
         NSString *patientFFUrl = [userDefaultsManager lastPatientFFURLForUserGUID:participant.guid];
         if (patientFFUrl) {
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff getObjFromUri:patientFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (object) {
                     WMPatient *patient = (WMPatient *)object;
@@ -919,11 +937,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     } else {
                         block();
                     }
+                } else {
+                    block();
                 }
             }];
         } else {
             block();
         }
+    } else {
+        block();
     }
 }
 
@@ -937,11 +959,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)createAccountViewController:(WMCreateAccountViewController *)viewController didCreateParticipant:(WMParticipant *)participant
 {
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     participant.dateLastSignin = [NSDate date];
     [self.navigationController popViewControllerAnimated:YES];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     self.appDelegate.participant = participant;
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     userDefaultsManager.lastUserName = participant.userName;
     _welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
     [self.tableView reloadData];
@@ -1067,11 +1089,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     participant.isTeamLeader = YES;
     participant.team = team;
     [self.navigationController popViewControllerAnimated:YES];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Team...";
     __weak __typeof(&*self)weakSelf = self;
-    [self.managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         } else {
@@ -1082,6 +1105,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 } else {
                     weakSelf.welcomeState = WMWelcomeStateTeamSelected;
                     [weakSelf.tableView reloadData];
+                    // check if team leader wants to add current patients to team
+                    if ([WMPatient patientCount:managedObjectContext]) {
+                        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
+                                                                                 delegate:self
+                                                                        cancelButtonTitle:@"Not now"
+                                                                   destructiveButtonTitle:@"Add all patients to Team"
+                                                                        otherButtonTitles:nil];
+                        actionSheet.tag = kAddPatientToTeamActionSheetTag;
+                        [actionSheet showInView:weakSelf.view];
+                    }
                 }
             }];
         }
@@ -1141,17 +1174,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // nothing
         }];
     }
-    __weak __typeof(self) weakSelf = self;
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        // update our reference to current patient
-        weakSelf.appDelegate.navigationCoordinator.patient = patient;
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            [weakSelf.tableView reloadData];
-            _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-        }
-    }];
+    self.appDelegate.navigationCoordinator.patient = patient;
+    _enterWoundMapButton.enabled = self.setupConfigurationComplete;
 }
 
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController

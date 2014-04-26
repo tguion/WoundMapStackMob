@@ -89,10 +89,7 @@
     // calculate horizontal bottom ticks - skip the first tickmark
     CGFloat x = minX + majorTickLength;
     CGFloat y = maxY;
-    CGFloat xr = x;
-    CGFloat yr = y;
-    CGFloat xmr = 0.0;
-    CGFloat ymr = 0.0;
+    CGFloat xr, yr, xmr, ymr;
     NSMutableArray *points = [[NSMutableArray alloc] initWithCapacity:36];
     while (x < (maxX - deltaMajor)) {
         // major tick

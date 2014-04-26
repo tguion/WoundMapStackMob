@@ -921,7 +921,7 @@
 - (IBAction)editUserOrTeamAction:(id)sender
 {
     WMTeam *team = self.appDelegate.participant.team;
-    if (team) {
+    if (team && self.appDelegate.participant.isTeamLeader) {
         __weak __typeof(self) weakSelf = self;
         WMErrorCallback block = ^(NSError *error) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -1797,7 +1797,12 @@
 
 #pragma mark - PatientDetailViewControllerDelegate
 
-- (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController {}
+- (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
+{
+    // update our reference to current patient
+    self.appDelegate.navigationCoordinator.patient = viewController.patient;
+}
+
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController {}
 
 #pragma mark - PatientTableViewControllerDelegate

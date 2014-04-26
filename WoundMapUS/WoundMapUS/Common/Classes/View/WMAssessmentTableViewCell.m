@@ -803,7 +803,10 @@ NSDictionary * kAssessmentTableViewCellSubtextAttributes;
             slider.maximumValue = 10.0;
             slider.value = [value floatValue];
             if ([[slider allTargets] count] == 0) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
                 [slider addTarget:self.delegate action:@selector(sliderValueChangedAction:) forControlEvents:UIControlEventValueChanged];
+#pragma clang diagnostic pop
             }
             label = [self addValueLabelSubview];
             if ([value isKindOfClass:[NSString class]]) {
@@ -885,7 +888,10 @@ NSDictionary * kAssessmentTableViewCellSubtextAttributes;
             segmentedControl.selectedSegmentIndex = (nil == value ? UISegmentedControlNoSegment:[value intValue]);
             // target/action
             if ([segmentedControl.allTargets count] == 0) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
                 [segmentedControl addTarget:self.delegate action:@selector(optionSegmentedControlValueChangedAction:) forControlEvents:UIControlEventValueChanged];
+#pragma clang diagnostic pop
             }
             [self removeValueLabelSubview];
             [self removeExtendsOutLabelSubviews];

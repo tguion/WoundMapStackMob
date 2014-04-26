@@ -51,6 +51,9 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Sign In"
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self action:@selector(signInAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     _userNameTextInput = userDefaultsManager.lastUserName;
@@ -114,7 +117,9 @@
     // else
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff loginWithUserName:self.userNameTextInput andPassword:self.passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -135,7 +140,6 @@
             __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
                                                                                 create:NO
                                                                   managedObjectContext:managedObjectContext];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             dispatch_block_t block = ^{
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -163,24 +167,33 @@
                 }
                 [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
             };
-            if (nil == participant) {
-                // must be on back end
-                [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    } else {
-                        participant = object;
-                        block();
-                    }
-                }];
+            dispatch_block_t participantBlock = ^{
+                if (nil == participant) {
+                    // must be on back end
+                    [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        } else {
+                            participant = object;
+                            block();
+                        }
+                    }];
+                } else {
+                    [ffm updateParticipant:participant completionHandler:^(NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        } else {
+                            block();
+                        }
+                    }];
+                }
+            };
+            // check assess to data
+            NSString *lastUserName = userDefaultsManager.lastUserName;
+            if (lastUserName && ![lastUserName isEqualToString:user.userName]) {
+                [ffm truncateStoreForSignIn:user.userName completionHandler:participantBlock];
             } else {
-                [ffm updateParticipant:participant completionHandler:^(NSError *error) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    } else {
-                        block();
-                    }
-                }];
+                participantBlock();
             }
         }
     }];
