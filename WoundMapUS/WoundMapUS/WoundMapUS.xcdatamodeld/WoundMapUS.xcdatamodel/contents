@@ -4,7 +4,6 @@
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="iapproduct_id" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Decimal" defaultValueString="0.0" syncable="YES"/>
         <attribute name="proposition" optional="YES" attributeType="String" syncable="YES"/>
@@ -508,8 +507,10 @@
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastTokenCreditPurchaseDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="permissions" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="reportTokenCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="APLImageToDataTransformer" allowsExternalBinaryDataStorage="YES">
             <userInfo/>
         </attribute>
@@ -543,6 +544,7 @@
             <userInfo/>
         </attribute>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="createdOnDeviceId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateOfBirth" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
@@ -1137,7 +1139,7 @@
         <memberEntity name="WMWoundType"/>
     </configuration>
     <elements>
-        <element name="IAPProduct" positionX="0" positionY="0" width="128" height="270"/>
+        <element name="IAPProduct" positionX="0" positionY="0" width="128" height="255"/>
         <element name="WMAddress" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMAmountQualifier" positionX="0" positionY="0" width="128" height="285"/>
         <element name="WMBradenCare" positionX="0" positionY="0" width="128" height="135"/>
@@ -1172,9 +1174,9 @@
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
-        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="328"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="358"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="448"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="463"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>

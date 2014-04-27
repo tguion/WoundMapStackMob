@@ -45,6 +45,11 @@ typedef enum {
     return [WMPatient MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
++ (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext onDevice:(NSString *)deviceId
+{
+    return [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMPatientAttributes.createdOnDeviceId, deviceId] inContext:managedObjectContext];
+}
+
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     return [WMPatient MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl] inContext:managedObjectContext];

@@ -7,6 +7,7 @@
 //
 
 #import "IAPBaseViewController.h"
+#import "MBProgressHUD.h"
 #import "IAPManager.h"
 #import "IAPProduct.h"
 #import "WMIAPProductTextTableViewCell.h"
@@ -120,7 +121,19 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 - (void)navigateToFeatureDetail
 {
     WMInstructionContentViewController *instructionContentViewController = self.instructionContentViewController;
-    instructionContentViewController.htmlString = self.iapProduct.descHTML;
+    NSString *htmlString = self.iapProduct.descHTML;
+    if ([htmlString hasSuffix:@"html"]) {
+        // it's a file
+        NSInteger index = [htmlString rangeOfString:@".html"].location;
+        htmlString = [htmlString substringToIndex:index];
+        NSURL *htmlURL = [[NSBundle mainBundle] URLForResource:htmlString withExtension:@"html"];
+        NSError *error = nil;
+        htmlString = [[NSString alloc] initWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    instructionContentViewController.htmlString = htmlString;
     instructionContentViewController.title = @"Feature Details";
 
     [self.navigationController pushViewController:instructionContentViewController animated:YES];
@@ -147,11 +160,6 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 
 #pragma mark - BaseViewController
 
-- (void)updateTitle
-{
-    // no
-}
-
 - (void)clearDataCache
 {
     [super clearDataCache];
@@ -176,7 +184,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     if (actionSheet.tag == kPurchaseConfirmActionSheetTag) {
         // else delete index patient
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
-            [self showProgressView];
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [[IAPManager sharedInstance] buyProduct:self.skProduct];
             return;
         }
@@ -312,12 +320,12 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 
 - (void)skProductforProductId:(NSString *)productId
 {
-    [self showProgressView];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;
     [[IAPManager sharedInstance] productWithProductId:productId
                                        successHandler:^(NSArray *products) {
                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                               [weakSelf hideProgressView];
+                                               [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                                                if ([products count] > 0) {
                                                    weakSelf.skProduct = [products objectAtIndex:0];
                                                    [weakSelf.iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
@@ -330,7 +338,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                                            });
                                        } failureHandler:^(NSError *error) {
                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                               [weakSelf hideProgressView];
+                                               [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                                                NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
                                                [weakSelf iapFailureAlert:message];
                                            });
@@ -357,7 +365,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
          usingBlock:^(NSNotification *notification) {
             NSString * notifiedProductId = notification.object;
             if ([notifiedProductId isEqualToString:weakSelf.skProduct.productIdentifier]) {
-                [weakSelf hideProgressView];
+                [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                 id errorObj = [notification.userInfo objectForKey:kIAPPurchaseError];
                 id cancelledTxnObj = [notification.userInfo objectForKey:kIAPTxnCancelled];
                 if (nil == errorObj && nil == cancelledTxnObj) {

@@ -11,8 +11,9 @@
 
 @class IAPProduct;
 
-typedef void (^IAPSuccessHandler)(NSArray* products);
-typedef void (^IAPFailureHandler)(NSError* error);
+typedef void (^IAPSuccessHandler)(NSArray *products);
+typedef void (^IAPFailureHandler)(NSError *error);
+typedef void (^IAPTokenCountHandler)(NSError *error, NSInteger tokenCount, NSDate *lastTokenCreditPurchaseDate);
 
 extern NSString *const kIAPManagerProductPurchasedNotification;
 extern NSString *const kIAPPurchaseError;
@@ -21,18 +22,21 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 
 @interface IAPManager : NSObject <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
-@property (readonly, nonatomic) BOOL hasSharePdfReportsAvailable;
-@property (readonly, nonatomic) NSDate *lastCreditPurchaseDate;
-@property (readonly, nonatomic) NSInteger pdfTokensAvailable;
-
 + (IAPManager *)sharedInstance;
+
+- (NSString *)getIAPDeviceGuid;
+
+- (void)pdfTokensAvailable:(IAPTokenCountHandler)completionHandler;
 
 - (BOOL)isProductPurchased:(IAPProduct *)iapProduct;
 - (void)buyProduct:(SKProduct *)product;
 
-- (void)productWithProductId:(NSString*)productId successHandler:(IAPSuccessHandler)successHandler
+- (void)productWithProductId:(NSString*)productId
+              successHandler:(IAPSuccessHandler)successHandler
               failureHandler:(IAPFailureHandler)failureHandler;
-- (void)productsWithProductIdSet:(NSSet*)productIdSet successHandler:(IAPSuccessHandler)successHandler failureHandler:(IAPFailureHandler)failureHandler;
+- (void)productsWithProductIdSet:(NSSet*)productIdSet
+                  successHandler:(IAPSuccessHandler)successHandler
+                  failureHandler:(IAPFailureHandler)failureHandler;
 
 - (void)sharePdfReportCreditHasBeenUsed;
 

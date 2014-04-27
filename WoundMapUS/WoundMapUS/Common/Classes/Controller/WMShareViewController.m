@@ -10,6 +10,7 @@
 #import "WMPrintConfigureViewController.h"
 #import "IAPNonConsumableViewController.h"
 #import "PrintConfiguration.h"
+#import "WMParticipant.h"
 #import "WMMedicationGroup.h"
 #import "WMDeviceGroup.h"
 #import "WMPsychoSocialGroup.h"
@@ -19,6 +20,7 @@
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMEmailManager.h"
+#import "WCAppDelegate.h"
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
@@ -74,33 +76,38 @@ CGFloat kCreditsMargin = 20;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self setCreditStatusText];
+    [self updateCreditStatusText];
 }
 
-- (void) setCreditStatusText
+- (void)updateCreditStatusText
 {
     IAPManager *iapManager = [IAPManager sharedInstance];
-    NSInteger creditsAvailable = iapManager.pdfTokensAvailable;
-    NSString *creditStatusText = [NSString stringWithFormat:@"CREDITS REMAINING: %d", creditsAvailable];
-    
-    NSDate *lastPurchasedDate = iapManager.lastCreditPurchaseDate;
-    if (nil != lastPurchasedDate) {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-        [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-        creditStatusText = [NSString stringWithFormat:@"%@\nCREDITS LAST PURCHASED: %@", creditStatusText,
-                            [dateFormatter stringFromDate:lastPurchasedDate]];
-    }
-    if (creditsAvailable < 0) {
-        creditStatusText =
-        [NSString stringWithFormat:@"%@\nCREDITS APPEAR TO HAVE BEEN USED ON ANOTHER iOS DEVICE. WoundMap CAN RESOLVE THIS WITH A SUBSEQUENT CREDIT PURCHASE.",
-         creditStatusText];
-    }
-    _creditStatus.text = creditStatusText;
-    [_creditStatus sizeToFit];
-    
-    [_selectPDFSectionFooterView updateConstraints];
-    [self.tableView reloadData];
+    WMParticipant *participant = self.appDelegate.participant;
+    IAPTokenCountHandler completionHandler = ^(NSError *error, NSInteger tokenCount, NSDate *lastTokenCreditPurchaseDate) {
+        NSInteger creditsAvailable = participant.reportTokenCountValue;
+        NSString *creditStatusText = [NSString stringWithFormat:@"CREDITS REMAINING: %d", creditsAvailable];
+        
+        NSDate *lastPurchasedDate = participant.lastTokenCreditPurchaseDate;
+        if (nil != lastPurchasedDate) {
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+            [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+            creditStatusText = [NSString stringWithFormat:@"%@\nCREDITS LAST PURCHASED: %@",
+                                creditStatusText,
+                                [dateFormatter stringFromDate:lastPurchasedDate]];
+        }
+        if (creditsAvailable < 0) {
+            creditStatusText =
+            [NSString stringWithFormat:@"%@\nCREDITS APPEAR TO HAVE BEEN USED ON ANOTHER iOS DEVICE. WoundMap CAN RESOLVE THIS WITH A SUBSEQUENT CREDIT PURCHASE.",
+             creditStatusText];
+        }
+        _creditStatus.text = creditStatusText;
+        [_creditStatus sizeToFit];
+        
+        [_selectPDFSectionFooterView updateConstraints];
+        [self.tableView reloadData];
+    };
+    [iapManager pdfTokensAvailable:completionHandler];
 }
 
 -(NSDictionary *)creditStatusTextAttributes
@@ -131,11 +138,11 @@ CGFloat kCreditsMargin = 20;
     [self.delegate shareViewControllerDidFinish:self];
 }
 
-- (IBAction) resetTokenAction:(id)sender
+- (IBAction)resetTokenAction:(id)sender
 {
     IAPManager *iapManager = [IAPManager sharedInstance];
     [iapManager resetTokenCount];
-    [self setCreditStatusText];
+    [self updateCreditStatusText];
 }
 
 - (IBAction) diagDumpAction:(id)sender
@@ -148,7 +155,7 @@ CGFloat kCreditsMargin = 20;
 {
     NSString *productIdentifier = @"pdf report aggregator";
     [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                       successSelector:@selector(setCreditStatusText)
+                                       successSelector:@selector(updateCreditStatusText)
                                             withObject:nil
                                          proceedAlways:YES];
 }
@@ -253,7 +260,7 @@ CGFloat kCreditsMargin = 20;
                         onPrintFinish:^(BOOL completed, NSError *error) {
                             if (completed && error == nil) {
                                 [iapManager sharePdfReportCreditHasBeenUsed];
-                                [weakSelf setCreditStatusText];
+                                [weakSelf updateCreditStatusText];
                             }
                             if (weakSelf.isIPadIdiom) {
                                 [weakSelf.tableView reloadData];
@@ -270,7 +277,7 @@ CGFloat kCreditsMargin = 20;
                                   onMailFinish:^(MFMailComposeResult result, NSError *error) {
                                       if (error == nil && (result == MFMailComposeResultSaved || result == MFMailComposeResultSent)) {
                                           [iapManager sharePdfReportCreditHasBeenUsed];
-                                          [weakSelf setCreditStatusText];
+                                          [weakSelf updateCreditStatusText];
                                       }
                                       if (weakSelf.isIPadIdiom) {
                                           [weakSelf.tableView reloadData];

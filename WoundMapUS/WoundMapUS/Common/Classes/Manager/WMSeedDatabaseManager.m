@@ -90,6 +90,7 @@
     [WMBradenCare seedDatabase:managedObjectContext];
     [WMDefinition seedDatabase:managedObjectContext];
     [WMInstruction seedDatabase:managedObjectContext];
+    [IAPProduct seedDatabase:managedObjectContext];
 }
 
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler

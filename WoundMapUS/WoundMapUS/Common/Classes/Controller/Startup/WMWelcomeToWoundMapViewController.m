@@ -34,6 +34,7 @@
 #import "WMConsultingGroup.h"
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
+#import "IAPProduct.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "KeychainItemWrapper.h"
@@ -52,7 +53,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,            // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPCreateTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPNonConsumableViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -204,7 +205,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         }
     }
     // else
-    return (nil != self.appDelegate.navigationCoordinator.patient);
+    WMPatient *patient = self.patient;
+    return [self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient];
 }
 
 - (WMSignInViewController *)signInViewController
@@ -230,7 +232,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (WMIAPCreateTeamViewController *)iapCreateTeamViewController
 {
-    WMIAPCreateTeamViewController *iapCreateTeamViewController = [[WMIAPCreateTeamViewController alloc] initWithNibName:@"WMIAPCreateTeamViewController" bundle:nil];
+    WMIAPCreateTeamViewController *iapCreateTeamViewController = [[WMIAPCreateTeamViewController alloc] initWithNibName:@"IAPNonConsumableViewController" bundle:nil];
     iapCreateTeamViewController.delegate = self;
     return iapCreateTeamViewController;
 }
@@ -312,12 +314,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentCreateTeamViewController
 {
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateTeamViewController];
-    [self presentViewController:navigationController
-                       animated:YES
-                     completion:^{
-                         // nothing
-                     }];
+    [self.navigationController pushViewController:self.createTeamViewController animated:YES];
+//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateTeamViewController];
+//    [self presentViewController:navigationController
+//                       animated:YES
+//                     completion:^{
+//                         // nothing
+//                     }];
 }
 
 - (void)presentTeamManagementController
@@ -516,7 +519,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         // else
                         [self presentCreateConsultingGroupViewController];
                     } else {
-                        [self presentCreateTeamViewController];
+//                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier successSelector:@selector(presentCreateTeamViewController) withObject:nil];
+//                        if (YES/*proceed*/) {
+                            [self presentCreateTeamViewController];
+//                        }
                     }
                     break;
                 }
@@ -530,7 +536,12 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         }
         case 3: {
             // patient
-            NSInteger patientCount = [WMPatient patientCount:self.managedObjectContext];
+            NSInteger patientCount = 0;
+            if (self.participant.team) {
+                patientCount = [WMPatient patientCount:self.managedObjectContext];
+            } else {
+                patientCount = [WMPatient patientCount:self.managedObjectContext onDevice:[[IAPManager sharedInstance] getIAPDeviceGuid]];
+            }
             if (0 == patientCount) {
                 [self presentAddPatientViewController];
             } else {
@@ -806,7 +817,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 }
                 case 3: {
                     title = @"Patient";
-                    value = self.patient.lastNameFirstName;
+                    WMPatient *patient = self.patient;
+                    if ([self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient]) {
+                        value = self.patient.lastNameFirstName;
+                    }
                     accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
@@ -872,7 +886,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 }
                 case 3: {
                     title = @"Patient";
-                    value = self.patient.lastNameFirstName;
+                    WMPatient *patient = self.patient;
+                    if ([self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient]) {
+                        value = self.patient.lastNameFirstName;
+                    }
                     accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
@@ -1064,19 +1081,20 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }];
 }
 
-#pragma mark - IAPCreateTeamViewControllerDelegate
+#pragma mark - IAPNonConsumableViewControllerDelegate
 
-- (void)iapCreateTeamViewControllerDidPurchase:(WMIAPCreateTeamViewController *)viewController
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.navigationController pushViewController:self.createTeamViewController animated:YES];
-    }];
-}
-
-- (void)iapCreateTeamViewControllerDidDecline:(WMIAPCreateTeamViewController *)viewController
+- (void)iapNonConsumableViewControllerDidCancel:(IAPNonConsumableViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
+    }];
+}
+
+- (void)iapNonConsumableViewControllerDidPurchaseFeature:(IAPNonConsumableViewController *)controller
+{
+    __weak __typeof(&*self)weakSelf = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        [weakSelf.navigationController pushViewController:weakSelf.createTeamViewController animated:YES];
     }];
 }
 

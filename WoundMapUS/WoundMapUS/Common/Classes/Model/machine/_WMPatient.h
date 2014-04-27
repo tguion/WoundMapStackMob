@@ -8,6 +8,7 @@ extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *acquiredByConsultant;
 	__unsafe_unretained NSString *archivedFlag;
 	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *createdOnDeviceId;
 	__unsafe_unretained NSString *dateOfBirth;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
@@ -54,6 +55,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMNavigationStage;
 @class WMTeam;
 @class WMWound;
+
 
 
 
@@ -115,6 +117,16 @@ extern const struct WMPatientFetchedProperties {
 
 
 //- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* createdOnDeviceId;
+
+
+
+//- (BOOL)validateCreatedOnDeviceId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -402,6 +414,12 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSDate*)primitiveCreatedAt;
 - (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveCreatedOnDeviceId;
+- (void)setPrimitiveCreatedOnDeviceId:(NSString*)value;
 
 
 

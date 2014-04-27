@@ -9,11 +9,13 @@
 //  This seeding needs to occur as soon as the local store has been initialized
 
 #import "IAPManager.h"
+#import "WMParticipant.h"
 #import "IAPProduct.h"
 #import "WMIAPTransaction.h"
 #import "IAPDeviceTransactionAggregate.h"
 #import "WMIAPCreditTransaction.h"
 #import "WMIAPTransaction.h"
+#import "WMFatFractal.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 #import "CoreDataHelper.h"
@@ -22,12 +24,14 @@ NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundcare.wound
 NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print10.token";
 NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print25.token";
 
+NSString *const kCreateTeamProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamLeader";
+
 NSString *const kIAPManagerProductPurchasedNotification = @"IAPHelperProductPurchasedNotification";
 NSString *const kIAPPurchaseError = @"IAPPurchaseError";
 NSString *const kIAPTxnCancelled = @"IAPTxnCancelled";
 
 NSString *const kIAPDeviceTransactionAggregate = @"IAPDeviceTransactionAggregate";
-int kStartupCreditAmount = 10000;
+int kStartupCreditAmount = 10000;   // DEPLOYMENT: set to 20 on deplay
 
 NSString *const kIAPDeviceId = @"iap-device-id.txt";
 
@@ -36,6 +40,7 @@ NSString *const kIAPDeviceId = @"iap-device-id.txt";
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSArray *sharedPDFReportProductIdentifiers;
 
 @end
 
@@ -56,6 +61,7 @@ NSString* _deviceId;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         SharedInstance = [[IAPManager alloc] init];
+        SharedInstance.sharedPDFReportProductIdentifiers = @[kSharePdfReport5Feature, kSharePdfReport10Feature, kSharePdfReport25Feature];
         __weak __typeof(SharedInstance) weakSelf = SharedInstance;
         [[NSNotificationCenter defaultCenter] addObserverForName:NSUbiquitousKeyValueStoreDidChangeExternallyNotification
                                                           object:nil
@@ -93,8 +99,8 @@ NSString* _deviceId;
 
 #pragma mark - SKProductsRequestDelegate
 
-- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response {
-    
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
+{
     DLog(@"Loaded list of products...");
     _productsRequest = nil;
     
@@ -111,7 +117,7 @@ NSString* _deviceId;
     _failureHandler = nil;
 }
 
-- (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
     
     DLog(@"Failed to load list of products. - error.description is - %@", error.description);
     _failureHandler(error);
@@ -144,37 +150,38 @@ NSString* _deviceId;
 {
     BOOL result = NO;
     if (iapProduct.aggregatorFlag) {
-        result = self.hasSharePdfReportsAvailable;
+        result = (self.appDelegate.participant.reportTokenCountValue > 0);
     } else {
         result = [iapProduct.purchasedFlag boolValue];
     }
     return result;
 }
 
-- (void)buyProduct:(SKProduct *)product {
-    
+- (void)buyProduct:(SKProduct *)product
+{
     DLog(@"Buying %@...", product.productIdentifier);
     SKMutablePayment *muty = [SKMutablePayment paymentWithProduct:product];
     [[SKPaymentQueue defaultQueue] addPayment:muty];
 }
 
-
-- (void)completeTransaction:(SKPaymentTransaction *)transaction {
+- (void)completeTransaction:(SKPaymentTransaction *)transaction
+{
     DLog(@"completeTransaction...");
     
     [self provideContentForProductIdentifier:transaction.payment.productIdentifier];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
-- (void)restoreTransaction:(SKPaymentTransaction *)transaction {
+- (void)restoreTransaction:(SKPaymentTransaction *)transaction
+{
     DLog(@"restoreTransaction...");
     
     [self provideContentForProductIdentifier:transaction.originalTransaction.payment.productIdentifier];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
-- (void)failedTransaction:(SKPaymentTransaction *)transaction {
-    
+- (void)failedTransaction:(SKPaymentTransaction *)transaction
+{
     DLog(@"failedTransaction...");
     NSDictionary *userErrorInfo = nil;
     if (transaction.error.code != SKErrorPaymentCancelled)
@@ -192,7 +199,8 @@ NSString* _deviceId;
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 }
 
-- (void) diagTranslateTxnErrorCode:(int)code {
+- (void) diagTranslateTxnErrorCode:(int)code
+{
     NSString *errorText = nil;
     switch (code) {
         case SKErrorUnknown:
@@ -220,26 +228,57 @@ NSString* _deviceId;
     DLog(@"SKPaymentTransaction.error.code xlates to %@", errorText);
 }
 
-- (void)provideContentForProductIdentifier:(NSString *)productIdentifier {
-    
+- (void)provideContentForPDFReportProductIdentifier:(NSString *)productIdentifier
+{
     NSNumber *creditsToAdd = nil;
     if ([productIdentifier isEqualToString:kSharePdfReport5Feature]) {
-        [self pdfTokensAvailable];
         creditsToAdd = @5;
     } else if ([productIdentifier isEqualToString:kSharePdfReport10Feature]) {
-        [self pdfTokensAvailable];
         creditsToAdd = @10;
     } else if ([productIdentifier isEqualToString:kSharePdfReport25Feature]) {
-        [self pdfTokensAvailable];
         creditsToAdd = @25;
     }
-    if (nil != creditsToAdd) {
-        [self addCreditTransaction:creditsToAdd];
-    }
-    [[NSUbiquitousKeyValueStore defaultStore] synchronize];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification object:productIdentifier userInfo:nil];
+    WMParticipant *participant = self.appDelegate.participant;
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [participant addReportTokens:[creditsToAdd integerValue]];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [ff updateObj:participant error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }];
 }
 
+- (void)provideContentForTeamLeaderProductIdentifier:(NSString *)productIdentifier
+{
+    WMParticipant *participant = self.appDelegate.participant;
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
+    // update from back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        participant.teamLeaderIAPPurchaseSuccessful = YES;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [ff updateObj:participant error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }];
+}
+
+// called when purchase of IAP has successfully completed on iTunes store kit server
+- (void)provideContentForProductIdentifier:(NSString *)productIdentifier
+{
+    if ([_sharedPDFReportProductIdentifiers containsObject:productIdentifier]) {
+        [self provideContentForPDFReportProductIdentifier:productIdentifier];
+    } else if ([productIdentifier isEqualToString:kCreateTeamProductIdentifier]) {
+        [self provideContentForTeamLeaderProductIdentifier:productIdentifier];
+    }
+}
 
 #pragma mark - IAP Management Methods
 
@@ -264,7 +303,7 @@ NSString* _deviceId;
 
 #pragma mark - Diagonstic methods
 
-- (void) resetTokenCount
+- (void)resetTokenCount
 {
     DLog(@"resetTokenCount called");
     
@@ -306,7 +345,7 @@ NSString* _deviceId;
     }
 }
 
-- (void) resetIAPAll
+- (void)resetIAPAll
 {
     // remove credit transactions in index key store
     __weak __typeof(self) weakSelf = self;
@@ -315,7 +354,7 @@ NSString* _deviceId;
     }];
 }
 
-- (void) resetIndexStoreAndKeyValueStores
+- (void)resetIndexStoreAndKeyValueStores
 {
     [WMIAPTransaction deleteAllTxns:self.managedObjectContext];
     NSUbiquitousKeyValueStore *ukvStore = [NSUbiquitousKeyValueStore defaultStore];
@@ -325,43 +364,27 @@ NSString* _deviceId;
 
 - (void)setCreditBalanceToZero
 {
-    NSInteger creditCount = self.pdfTokensAvailable;
-    creditCount *= -1;
-    [self addCreditTransaction:[[NSNumber alloc] initWithInteger:creditCount]];
-    NSUbiquitousKeyValueStore *ukvStore = [NSUbiquitousKeyValueStore defaultStore];
-    [ukvStore synchronize];
+    IAPTokenCountHandler completionHandler = ^(NSError *error, NSInteger tokenCount, NSDate *lastTokenCreditPurchaseDate) {
+        tokenCount *= -1;
+        [self addCreditTransaction:@(tokenCount)];
+        NSUbiquitousKeyValueStore *ukvStore = [NSUbiquitousKeyValueStore defaultStore];
+        [ukvStore synchronize];
+    };
+    [self pdfTokensAvailable:completionHandler];
 }
 
 #pragma mark - Credit Manipulation methods
 
-- (NSInteger) pdfTokensAvailable
+- (void)pdfTokensAvailable:(IAPTokenCountHandler)completionHandler
 {
-    __block NSInteger result = 0;
-    if ([self isStoreAvailable]) {
-        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-        __weak __typeof(self) weakSelf = self;
-        [managedObjectContext performBlockAndWait:^{
-            // gather values from indexed store
-            result = [[WMIAPTransaction sumTokens:managedObjectContext] integerValue];
-            NSString *deviceId = [weakSelf getIAPDeviceGuid];
-            // add in aggregated values from other devices
-            NSUbiquitousKeyValueStore *keyValueStore = [NSUbiquitousKeyValueStore defaultStore];
-            NSDictionary* txnHash = (NSDictionary*)[keyValueStore objectForKey:kIAPDeviceTransactionAggregate];
-            if (nil != txnHash) {
-                for (NSString *key in txnHash) {
-                    NSData *encodedTxn = [txnHash objectForKey:key];
-                    IAPDeviceTransactionAggregate *txn = [IAPDeviceTransactionAggregate unarchive:encodedTxn];
-                    // don't include your device id in the count
-                    if (![deviceId isEqualToString:[txn deviceId]]) {
-                        result = result + [[txn aggregatedCredits] integerValue];
-                    }
-                }
-            }
-            // add in startup credits
-            result = result + kStartupCreditAmount;
-        }];
-    }
-    return result;
+    // first update from back end
+    WMParticipant *participant = self.appDelegate.participant;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        completionHandler(error, participant.reportTokenCountValue, participant.lastTokenCreditPurchaseDate);
+    }];
 }
 
 - (NSDate *)lastCreditPurchaseDate
@@ -374,14 +397,17 @@ NSString* _deviceId;
     
     return resultDate;
 }
-
-- (BOOL)hasSharePdfReportsAvailable {
-    NSInteger creditsAvailable = self.pdfTokensAvailable;
-    return (creditsAvailable > 0);
-}
-
-- (void) sharePdfReportCreditHasBeenUsed {
-    [self addCreditTransaction:[[NSNumber alloc] initWithInteger:-1]];
+- (void)sharePdfReportCreditHasBeenUsed
+{
+    WMParticipant *participant = self.appDelegate.participant;
+    participant.reportTokenCountValue = (participant.reportTokenCountValue - 1);
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSError *error = nil;
+    [ff updateObj:participant error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
 }
 
 - (WMIAPTransaction *) addCreditTransaction:(NSNumber *)credits
@@ -411,7 +437,7 @@ NSString* _deviceId;
 {
     if ([self isStoreAvailable]) {
         NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         [managedObjectContext performBlockAndWait:^{
             NSNumber *numberOfCredits = [WMIAPTransaction sumTokens:managedObjectContext];
             NSString *deviceId = [weakSelf getIAPDeviceGuid];

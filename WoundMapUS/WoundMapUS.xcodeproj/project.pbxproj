@@ -337,6 +337,7 @@
 		7D6A58C6190C24E500D72800 /* WMCompassView_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A58C5190C24E500D72800 /* WMCompassView_iPad.m */; };
 		7D6A58CA190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */; };
 		7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */; };
+		7D6A58CD190D833800D72800 /* PatientReadOnlyExplanation.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -1123,6 +1124,7 @@
 		7D6A58C7190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWelcomeToWoundMapViewController_iPad.h; sourceTree = "<group>"; };
 		7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWelcomeToWoundMapViewController_iPad.m; sourceTree = "<group>"; };
 		7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWelcomeToWoundMapViewController_iPad.xib; sourceTree = "<group>"; };
+		7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = PatientReadOnlyExplanation.html; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -2929,6 +2931,7 @@
 			children = (
 				7DD3EA4418C00E120093E370 /* IAPProducts.plist */,
 				7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */,
+				7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */,
 			);
 			path = IAP;
 			sourceTree = "<group>";
@@ -3252,6 +3255,7 @@
 				5F6DE53C18B58BB000E87F7E /* InstructionsPolicy.html in Resources */,
 				7D68947819044427006DE509 /* WMWoundPhotoViewController.xib in Resources */,
 				7D39DB5A18B828630054DDC3 /* WMPsychoSocialGroupViewController.xib in Resources */,
+				7D6A58CD190D833800D72800 /* PatientReadOnlyExplanation.html in Resources */,
 				7D0F2F521905BD97009F8346 /* TemplateTwoColumnsTwoPhotosGraphs.xib in Resources */,
 				7D39DBBF18BAB4960054DDC3 /* WMPhotoMeasureViewController.xib in Resources */,
 				7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */,

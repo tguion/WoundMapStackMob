@@ -9,6 +9,7 @@
 //  So we switch to cache only fetch. However, the properties of WMPatient and WMPatientConsult are not being synched on local cache.
 
 #import "WMPatientTableViewController.h"
+#import "WMPatientSummaryContainerViewController.h"
 #import "WMPatientTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMPatient.h"
@@ -24,7 +25,7 @@
 
 #define kDeletePatientConfirmAlertTag 2004
 
-@interface WMPatientTableViewController () <UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface WMPatientTableViewController () <PatientSummaryContainerDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *patientTypeContainerView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *patientTypeSegmentedControl;
@@ -34,6 +35,10 @@
 
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) UIView *searchBarTextField;
+@property (strong, nonatomic) IBOutlet UIView *patientReadOnlyContainerView;
+@property (strong, nonatomic) IBOutlet UILabel *patientReadOnlyLabel;
+@property (strong, nonatomic) NSAttributedString *patientReadOnlyText;
+@property (readonly, nonatomic) WMPatientSummaryContainerViewController *patientSummaryContainerViewController;
 
 - (IBAction)patientTypeValueChangedAction:(id)sender;
 
@@ -122,17 +127,55 @@
     return _patientTypeSegmentedControl.selectedSegmentIndex == 0;
 }
 
+- (NSAttributedString *)patientReadOnlyText
+{
+    if (nil == _patientReadOnlyText) {
+        NSURL *htmlString = [[NSBundle mainBundle]
+                             URLForResource: @"PatientReadOnlyExplanation" withExtension:@"html"];
+        _patientReadOnlyText = [[NSAttributedString alloc] initWithFileURL:htmlString
+                                                                   options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType}
+                                                        documentAttributes:nil
+                                                                     error:NULL];
+    }
+    return _patientReadOnlyText;
+}
+
+- (WMPatientSummaryContainerViewController *)patientSummaryContainerViewController
+{
+    WMPatientSummaryContainerViewController *patientSummaryContainerViewController = [[WMPatientSummaryContainerViewController alloc] initWithNibName:@"WMPatientSummaryContainerViewController" bundle:nil];
+    patientSummaryContainerViewController.delegate = self;
+    return patientSummaryContainerViewController;
+}
+
 #pragma mark - Actions
 
 - (IBAction)doneAction:(id)sender
 {
-    [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
+    if ([self.appDelegate.navigationCoordinator canEditPatientOnDevice:_patientToOpen]) {
+        [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
+    } else {
+        _patientReadOnlyContainerView.frame = self.navigationController.view.bounds;
+        _patientReadOnlyLabel.attributedText = self.patientReadOnlyText;
+        [self.navigationController.view addSubview:_patientReadOnlyContainerView];
+    }
 }
 
 // WMPatientConsultant is fetched from server, but properties are not populated
 - (IBAction)patientTypeValueChangedAction:(id)sender
 {
     [self refetchDataForTableView];
+}
+
+- (IBAction)continueReadonlyPatientAction:(id)sender
+{
+    [_patientReadOnlyContainerView removeFromSuperview];
+    self.appDelegate.navigationCoordinator.patient = _patientToOpen;
+    [self.navigationController pushViewController:self.patientSummaryContainerViewController animated:YES];
+}
+
+- (IBAction)dismissReadonlyPatientViewAction:(id)sender
+{
+    [_patientReadOnlyContainerView removeFromSuperview];
 }
 
 #pragma mark - Notification handlers
@@ -172,6 +215,13 @@
                                                                                                target:self
                                                                                                action:@selector(doneAction:)];
     }
+}
+
+#pragma mark - PatientSummaryContainerDelegate
+
+- (void)patientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - UIActionSheetDelegate

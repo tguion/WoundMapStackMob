@@ -11,8 +11,10 @@ extern const struct WMParticipantAttributes {
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *guid;
+	__unsafe_unretained NSString *lastTokenCreditPurchaseDate;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *permissions;
+	__unsafe_unretained NSString *reportTokenCount;
 	__unsafe_unretained NSString *thumbnail;
 	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *userName;
@@ -40,6 +42,8 @@ extern const struct WMParticipantFetchedProperties {
 @class WMPerson;
 @class WMTeam;
 @class WMTeamInvitation;
+
+
 
 
 
@@ -130,6 +134,16 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* lastTokenCreditPurchaseDate;
+
+
+
+//- (BOOL)validateLastTokenCreditPurchaseDate:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* name;
 
 
@@ -149,6 +163,20 @@ extern const struct WMParticipantFetchedProperties {
 - (void)setPermissionsValue:(int32_t)value_;
 
 //- (BOOL)validatePermissions:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* reportTokenCount;
+
+
+
+@property int16_t reportTokenCountValue;
+- (int16_t)reportTokenCountValue;
+- (void)setReportTokenCountValue:(int16_t)value_;
+
+//- (BOOL)validateReportTokenCount:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -304,6 +332,12 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+- (NSDate*)primitiveLastTokenCreditPurchaseDate;
+- (void)setPrimitiveLastTokenCreditPurchaseDate:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
 
@@ -315,6 +349,15 @@ extern const struct WMParticipantFetchedProperties {
 
 - (int32_t)primitivePermissionsValue;
 - (void)setPrimitivePermissionsValue:(int32_t)value_;
+
+
+
+
+- (NSNumber*)primitiveReportTokenCount;
+- (void)setPrimitiveReportTokenCount:(NSNumber*)value;
+
+- (int16_t)primitiveReportTokenCountValue;
+- (void)setPrimitiveReportTokenCountValue:(int16_t)value_;
 
 
 

@@ -50,7 +50,7 @@ typedef enum {
 
 - (void)createPatient:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMObjectCallback)completionHandler;
 - (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler;
-
+- (BOOL)canEditPatientOnDevice:(WMPatient *)patient;
 
 @property (nonatomic) NavigationCoordinatorState state;
 @property (strong, nonatomic) UIViewController *initialMeasurePhotoViewController;

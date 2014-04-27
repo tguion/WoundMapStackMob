@@ -13,6 +13,7 @@ extern NSString * const kConsultantGroupName;
 @property (strong, nonatomic) FFUserGroup *consultantGroup;
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext;
++ (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext onDevice:(NSString *)deviceId;
 
 @property (readonly, nonatomic) UIImage *thumbnailImage;
 + (UIImage *)missingThumbnailImage;

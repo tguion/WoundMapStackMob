@@ -111,6 +111,20 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
+		<string>com.mobilehealthware.woundcare.woundmap.team.teamLeader</string>
+		<key>title</key>
+		<string>Create a Team</string>
+		<key>proposition</key>
+		<string>Creating a team allows you to manage patient records on any device, and allows any team members you add to the team to collaborate on patient care.</string>
+		<key>description</key>
+		<string>Your account will be charged a $99  monthly subscription fee.</string>
+		<key>descHTML</key>
+		<string>TeamMemberIAPDesc.html</string>
+		<key>aggregatorFlag</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>com.mobilehealthware.woundcare.woundmap.team.teamMember</string>
 		<key>title</key>
 		<string>Add a Team Member</string>

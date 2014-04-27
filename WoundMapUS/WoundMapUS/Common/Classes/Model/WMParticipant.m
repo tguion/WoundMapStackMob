@@ -7,6 +7,7 @@
 
 typedef NS_ENUM(int16_t, WMParticipantFlags) {
     ParticipantFlagsTeamLeader  = 0,
+    ParticipantFlagsTeamLeaderIAPSuccess  = 1,
 };
 
 @interface WMParticipant ()
@@ -109,6 +110,16 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     return [array componentsJoinedByString:@", "];
 }
 
+- (BOOL)teamLeaderIAPPurchaseSuccessful
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeaderIAPSuccess];
+}
+
+- (void)setTeamLeaderIAPPurchaseSuccessful:(BOOL)teamLeaderIAPPurchaseSuccessful
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeaderIAPSuccess to:teamLeaderIAPPurchaseSuccessful]);
+}
+
 - (BOOL)isTeamLeader
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader];
@@ -117,6 +128,13 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
 - (void)setIsTeamLeader:(BOOL)isTeamLeader
 {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader to:isTeamLeader]);
+}
+
+- (NSInteger)addReportTokens:(NSInteger)tokens
+{
+    self.reportTokenCountValue = (self.reportTokenCountValue + tokens);
+    self.lastTokenCreditPurchaseDate = [NSDate date];
+    return self.reportTokenCountValue;
 }
 
 #pragma mark - FatFractal
@@ -128,10 +146,11 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"permissionsValue",
+                                                            @"reportTokenCountValue",
                                                             @"firstName",
                                                             @"lastName",
                                                             @"lastNameFirstName",
-                                                            @"isTeamLeader"]];
+                                                            @"isTeamLeader", @"teamLeaderIAPPurchaseSuccessful"]];
     });
     return PropertyNamesNotToSerialize;
 }

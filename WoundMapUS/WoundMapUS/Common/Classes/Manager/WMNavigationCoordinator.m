@@ -23,6 +23,7 @@
 #import "CoreDataHelper.h"
 #import "WMPolicyManager.h"
 #import "WMUserDefaultsManager.h"
+#import "IAPManager.h"
 #import "WMFatFractal.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -137,12 +138,30 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     patient.participant = participant;
     patient.team = participant.team;
     patient.stage = [self.navigationTrack initialStage];
+    patient.createdOnDeviceId = [[IAPManager sharedInstance] getIAPDeviceGuid];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [ffm createPatient:patient ff:ff completionHandler:^(NSError *error, id object) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         completionHandler(error, object);
     }];
+}
+
+- (BOOL)canEditPatientOnDevice:(WMPatient *)patient
+{
+    if (nil == patient) {
+        patient = self.patient;
+    }
+    if (nil == patient) {
+        return NO;
+    }
+    // else must purchase IAP to edit a patient on a device that it was not created on
+    IAPManager *iapManager = [IAPManager sharedInstance];
+    if (self.participant.team) {
+        return YES;
+    }
+    // else
+    return [patient.createdOnDeviceId isEqualToString:[iapManager getIAPDeviceGuid]];
 }
 
 - (void)setWound:(WMWound *)wound

@@ -10,8 +10,10 @@ const struct WMParticipantAttributes WMParticipantAttributes = {
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.guid = @"guid",
+	.lastTokenCreditPurchaseDate = @"lastTokenCreditPurchaseDate",
 	.name = @"name",
 	.permissions = @"permissions",
+	.reportTokenCount = @"reportTokenCount",
 	.thumbnail = @"thumbnail",
 	.updatedAt = @"updatedAt",
 	.userName = @"userName",
@@ -64,6 +66,11 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 	}
 	if ([key isEqualToString:@"permissionsValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"permissions"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"reportTokenCountValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"reportTokenCount"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -135,6 +142,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
+@dynamic lastTokenCreditPurchaseDate;
+
+
+
+
+
+
 @dynamic name;
 
 
@@ -162,6 +176,32 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 - (void)setPrimitivePermissionsValue:(int32_t)value_ {
 	[self setPrimitivePermissions:[NSNumber numberWithInt:value_]];
+}
+
+
+
+
+
+@dynamic reportTokenCount;
+
+
+
+- (int16_t)reportTokenCountValue {
+	NSNumber *result = [self reportTokenCount];
+	return [result shortValue];
+}
+
+- (void)setReportTokenCountValue:(int16_t)value_ {
+	[self setReportTokenCount:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveReportTokenCountValue {
+	NSNumber *result = [self primitiveReportTokenCount];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveReportTokenCountValue:(int16_t)value_ {
+	[self setPrimitiveReportTokenCount:[NSNumber numberWithShort:value_]];
 }
 
 
