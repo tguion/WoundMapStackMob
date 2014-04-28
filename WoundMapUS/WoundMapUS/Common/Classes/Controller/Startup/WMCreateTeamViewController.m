@@ -175,6 +175,38 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     return createTeamInvitationViewController;
 }
 
+- (void)createTeam:(WMErrorCallback)completionHandler
+{
+    if (self.team.ffUrl) {
+        completionHandler(nil);
+    }
+    // else
+    self.team.name = _teamNameTextInput;
+    WMParticipant *participant = self.participant;
+    participant.isTeamLeader = YES;
+    participant.team = _team;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Team...";
+    __weak __typeof(&*self)weakSelf = self;
+    [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+            completionHandler(error);
+        } else {
+            [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                completionHandler(error);
+            }];
+        }
+    }];
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToCreateInvitationViewController
@@ -192,13 +224,18 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (IBAction)createTeamAction:(id)sender
 {
-    self.team.name = _teamNameTextInput;
-    [self.delegate createTeamViewController:self didCreateTeam:self.team];
+    __weak __typeof(&*self)weakSelf = self;
+    [self createTeam:^(NSError *error) {
+        [weakSelf.delegate createTeamViewController:weakSelf didCreateTeam:weakSelf.team];
+    }];
 }
 
 - (IBAction)createInvitationAction:(id)sender
 {
-    [self navigateToCreateInvitationViewController];
+    __weak __typeof(&*self)weakSelf = self;
+    [self createTeam:^(NSError *error) {
+        [weakSelf navigateToCreateInvitationViewController];
+    }];
 }
 
 #pragma mark - WMBaseViewController

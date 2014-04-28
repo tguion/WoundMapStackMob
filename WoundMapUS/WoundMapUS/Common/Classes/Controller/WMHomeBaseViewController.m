@@ -1453,6 +1453,8 @@
     switch (actionSheet.tag) {
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                self.appDelegate.participant = nil;
+                [self.appDelegate.navigationCoordinator clearPatientCache];
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
                 [ff logout];
                 __weak __typeof(self) weakSelf = self;

@@ -425,26 +425,21 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == kAddPatientToTeamActionSheetTag) {
-        WMTeam *team = self.participant.team;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMParticipant *participant = self.participant;
+        WMTeam *team = participant.team;
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         __block NSInteger counter = 0;
         __weak __typeof(&*self)weakSelf = self;
-        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            --counter;
-            if (counter == 0) {
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-            }
-        };
         NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
         NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
         counter = [patients count];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
-        for (WMPatient *patient in patients) {
-            [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:completionHandler];
-        }
+        [ffm movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        }];
     }
 }
 
@@ -472,6 +467,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         WMFatFractal *ff = [WMFatFractal sharedInstance];
                         [ff logout];
                         self.appDelegate.participant = nil;
+                        [self.appDelegate.navigationCoordinator clearPatientCache];
                         _welcomeState = WMWelcomeStateInitial;
                         _enterWoundMapButton.enabled = NO;
                         [tableView reloadData];
@@ -1102,41 +1098,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
 {
-    NSParameterAssert(nil != team);
-    WMParticipant *participant = self.participant;
-    participant.isTeamLeader = YES;
-    participant.team = team;
-    [self.navigationController popViewControllerAnimated:YES];
+    self.welcomeState = WMWelcomeStateTeamSelected;
+    [self.tableView reloadData];
+    // check if team leader wants to add current patients to team
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Team...";
-    __weak __typeof(&*self)weakSelf = self;
-    [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-                    [weakSelf.tableView reloadData];
-                    // check if team leader wants to add current patients to team
-                    if ([WMPatient patientCount:managedObjectContext]) {
-                        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
-                                                                                 delegate:self
-                                                                        cancelButtonTitle:@"Not now"
-                                                                   destructiveButtonTitle:@"Add all patients to Team"
-                                                                        otherButtonTitles:nil];
-                        actionSheet.tag = kAddPatientToTeamActionSheetTag;
-                        [actionSheet showInView:weakSelf.view];
-                    }
-                }
-            }];
-        }
-    }];
+    if ([WMPatient patientCount:managedObjectContext]) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Not now"
+                                                   destructiveButtonTitle:@"Add all patients to Team"
+                                                        otherButtonTitles:nil];
+        actionSheet.tag = kAddPatientToTeamActionSheetTag;
+        [actionSheet showInView:self.view];
+    }
 }
 
 - (void)createTeamViewControllerDidCancel:(WMCreateTeamViewController *)viewController

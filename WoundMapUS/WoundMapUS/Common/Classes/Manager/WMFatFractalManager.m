@@ -167,6 +167,7 @@
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
         NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
@@ -183,8 +184,9 @@
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    // move any patients track to team track
-                    if (participant.isTeamLeader) {
+                    // get patients
+                    [ffm fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
+                        // move any patients track to team track
                         [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
                             if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
                                 // may have been deleted on back end
@@ -196,17 +198,7 @@
                                 completionHandler(error);
                             }
                         }];
-                    } else {
-                        if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
-                            // may have been deleted on back end
-                            participant.teamInvitation = nil;
-                            [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                            [managedObjectContext MR_saveToPersistentStoreAndWait];
-                            completionHandler(error);
-                        } else {
-                            completionHandler(error);
-                        }
-                    }
+                    }];
                 }];
             } else if (teamInvitation) {
                 NSParameterAssert(teamInvitation.ffUrl);
@@ -299,7 +291,7 @@
         lastRefreshTime = @(0);
     }
     NSMutableSet *localPatients = [NSMutableSet setWithArray:[WMPatient MR_findAllInContext:managedObjectContext]];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@)?depthGb=1&depthRef=1", collection, lastRefreshTime];
+    NSString *queryString = [NSString stringWithFormat:@"/%@?depthGb=1&depthRef=1", collection];
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
         if (response.error) {
             completionHandler(response.error);
@@ -530,66 +522,65 @@
     // create FFUserGroup that will hold the FFUser instance in team
     ++counter;// 1
     [ff createObj:participantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        // add participant (user) to FFUserGroup
+        [participantGroup addUser:user error:&error];
         if (error) {
             block(error);
         } else {
-            NSAssert([object isKindOfClass:[FFUserGroup class]], @"Expected FFUserGroup but got %@", object);
             // create team
             [ff createObj:team atUri:[NSString stringWithFormat:@"/%@", [WMTeam entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 // 1
                 if (error) {
                     block(error);
                 } else {
-                    NSAssert([object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
-                    // add participant (user) to FFUserGroup
-                    [team.participantGroup addUser:user error:&error];
-                    if (error) {
-                        block(error);
-                    } else {
-                        // update participant
-                        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            // 1
-                            if (error) {
-                                block(error);
-                            } else {
-                                // add to grab bag
+                    // update participant
+                    [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        // 1
+                        if (error) {
+                            block(error);
+                        } else {
+                            // add to grab bag
+                            ++counter; // 2
+                            [ff grabBagAddItemAtFfUrl:participant.ffUrl
+                                         toObjAtFfUrl:team.ffUrl
+                                          grabBagName:WMTeamRelationships.participants
+                                           onComplete:httpMethodCompletion];
+                            // add invitations 1
+                            for (WMTeamInvitation *invitation in team.invitations) {
                                 ++counter; // 2
-                                [ff grabBagAddItemAtFfUrl:participant.ffUrl
-                                             toObjAtFfUrl:team.ffUrl
-                                              grabBagName:WMTeamRelationships.participants
-                                               onComplete:httpMethodCompletion];
-                                // add invitations 1
-                                for (WMTeamInvitation *invitation in team.invitations) {
-                                    ++counter; // 2
-                                    [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                        NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
-                                        WMTeamInvitation *teamInvitation = (WMTeamInvitation *)object;
-                                        [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
-                                                     toObjAtFfUrl:team.ffUrl
-                                                      grabBagName:WMTeamRelationships.invitations
-                                                       onComplete:httpMethodCompletion];
-                                    }];
-                                }
-                                // seed team with navigation track, stage, node 1
-                                [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
-                                    // update backend
-                                    NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
-                                    for (NSManagedObjectID *objectID in objectIDs) {
-                                        NSManagedObject *object = [managedObjectContext objectWithID:objectID];
-                                        NSLog(@"*** WoundMap: Will create collection backend: %@", object);
-                                        [ff createObj:object atUri:ffUrl];
-                                        [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                    }
-                                    if (callBack) {
-                                        callBack();
-                                    }
-                                    block(nil); // 0
+                                [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                    NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
+                                    WMTeamInvitation *teamInvitation = (WMTeamInvitation *)object;
+                                    [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
+                                                 toObjAtFfUrl:team.ffUrl
+                                                  grabBagName:WMTeamRelationships.invitations
+                                                   onComplete:httpMethodCompletion];
                                 }];
                             }
-                        }];
-                    }
+                            // seed team with navigation track, stage, node 1
+                            [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
+                                // update backend
+                                NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+                                for (NSManagedObjectID *objectID in objectIDs) {
+                                    NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+                                    NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+                                    [ff createObj:object atUri:ffUrl];
+                                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                }
+                                if (callBack) {
+                                    callBack();
+                                }
+                                block(nil); // 0
+                            }];
+                        }
+                    }];
+
                 }
             }];
+        }
+        if (error) {
+            block(error);
+        } else {
         }
     }];
 }
@@ -831,7 +822,11 @@
             WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, patient.stage.title] inContext:managedObjectContext];
             patient.stage = stage;
             patient.team = team;
-            [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
+            [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
+            }];
         }
     }
 }

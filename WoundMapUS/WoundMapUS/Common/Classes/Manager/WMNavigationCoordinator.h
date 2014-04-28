@@ -48,6 +48,8 @@ typedef enum {
 @property (nonatomic) WMNavigationTrack *navigationTrack;   // active track
 @property (nonatomic) WMNavigationStage *navigationStage;   // active stage
 
+- (void)clearPatientCache;
+
 - (void)createPatient:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMObjectCallback)completionHandler;
 - (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler;
 - (BOOL)canEditPatientOnDevice:(WMPatient *)patient;
