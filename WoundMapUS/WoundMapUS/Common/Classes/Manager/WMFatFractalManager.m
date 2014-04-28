@@ -522,69 +522,69 @@
     // create FFUserGroup that will hold the FFUser instance in team
     ++counter;// 1
     [ff createObj:participantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        // add participant (user) to FFUserGroup
-        [participantGroup addUser:user error:&error];
         if (error) {
             block(error);
         } else {
+            NSAssert([object isKindOfClass:[FFUserGroup class]], @"Expected FFUserGroup but got %@", object);
             // create team
             [ff createObj:team atUri:[NSString stringWithFormat:@"/%@", [WMTeam entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 // 1
                 if (error) {
                     block(error);
                 } else {
-                    // update participant
-                    [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        // 1
-                        if (error) {
-                            block(error);
-                        } else {
-                            // add to grab bag
-                            ++counter; // 2
-                            [ff grabBagAddItemAtFfUrl:participant.ffUrl
-                                         toObjAtFfUrl:team.ffUrl
-                                          grabBagName:WMTeamRelationships.participants
-                                           onComplete:httpMethodCompletion];
-                            // add invitations 1
-                            for (WMTeamInvitation *invitation in team.invitations) {
+                    NSAssert([object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
+                    // add participant (user) to FFUserGroup
+                    [team.participantGroup addUser:user error:&error];
+                    if (error) {
+                        block(error);
+                    } else {
+                        // update participant
+                        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            // 1
+                            if (error) {
+                                block(error);
+                            } else {
+                                // add to grab bag
                                 ++counter; // 2
-                                [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                    NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
-                                    WMTeamInvitation *teamInvitation = (WMTeamInvitation *)object;
-                                    [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
-                                                 toObjAtFfUrl:team.ffUrl
-                                                  grabBagName:WMTeamRelationships.invitations
-                                                   onComplete:httpMethodCompletion];
+                                [ff grabBagAddItemAtFfUrl:participant.ffUrl
+                                             toObjAtFfUrl:team.ffUrl
+                                              grabBagName:WMTeamRelationships.participants
+                                               onComplete:httpMethodCompletion];
+                                // add invitations 1
+                                for (WMTeamInvitation *invitation in team.invitations) {
+                                    ++counter; // 2
+                                    [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                        NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
+                                        WMTeamInvitation *teamInvitation = (WMTeamInvitation *)object;
+                                        [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
+                                                     toObjAtFfUrl:team.ffUrl
+                                                      grabBagName:WMTeamRelationships.invitations
+                                                       onComplete:httpMethodCompletion];
+                                    }];
+                                }
+                                // seed team with navigation track, stage, node 1
+                                [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
+                                    // update backend
+                                    NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+                                    for (NSManagedObjectID *objectID in objectIDs) {
+                                        NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+                                        NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+                                        [ff createObj:object atUri:ffUrl];
+                                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                    }
+                                    if (callBack) {
+                                        callBack();
+                                    }
+                                    block(nil); // 0
                                 }];
                             }
-                            // seed team with navigation track, stage, node 1
-                            [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
-                                // update backend
-                                NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
-                                for (NSManagedObjectID *objectID in objectIDs) {
-                                    NSManagedObject *object = [managedObjectContext objectWithID:objectID];
-                                    NSLog(@"*** WoundMap: Will create collection backend: %@", object);
-                                    [ff createObj:object atUri:ffUrl];
-                                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                }
-                                if (callBack) {
-                                    callBack();
-                                }
-                                block(nil); // 0
-                            }];
-                        }
-                    }];
-
+                        }];
+                    }
                 }
             }];
         }
-        if (error) {
-            block(error);
-        } else {
-        }
     }];
 }
-
 - (void)updateOrganization:(WMOrganization *)organization ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     __block NSInteger counter = 0;
