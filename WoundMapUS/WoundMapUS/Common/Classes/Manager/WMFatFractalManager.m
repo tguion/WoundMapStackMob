@@ -175,6 +175,7 @@
         } else {
             // update team
             WMTeam *team = participant.team;
+            WMTeamInvitation *teamInvitation = participant.teamInvitation;
             if (team) {
                 NSParameterAssert(team.ffUrl);
                 NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
@@ -182,6 +183,42 @@
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    // move any patients track to team track
+                    if (participant.isTeamLeader) {
+                        [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
+                            if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
+                                // may have been deleted on back end
+                                participant.teamInvitation = nil;
+                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                completionHandler(error);
+                            } else {
+                                completionHandler(error);
+                            }
+                        }];
+                    } else {
+                        if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
+                            // may have been deleted on back end
+                            participant.teamInvitation = nil;
+                            [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                            [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            completionHandler(error);
+                        } else {
+                            completionHandler(error);
+                        }
+                    }
+                }];
+            } else if (teamInvitation) {
+                NSParameterAssert(teamInvitation.ffUrl);
+                NSString *queryString = [NSString stringWithFormat:@"/%@/%@",[WMTeamInvitation entityName], [teamInvitation.ffUrl lastPathComponent]];
+                [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    // may have been deleted on back end
+                    if (response.statusCode == 404) {
+                        // it was deleted
+                        participant.teamInvitation = nil;
+                        [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    }
                     completionHandler(error);
                 }];
             } else {
@@ -664,6 +701,7 @@
     NSParameterAssert(participantGroup);
     NSError *error = nil;
     [participantGroup addUser:user error:&error];
+    __weak __typeof(&*self)weakSelf = self;
     [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [ff grabBagAddItemAtFfUrl:invitee.ffUrl
                      toObjAtFfUrl:team.ffUrl
@@ -671,8 +709,10 @@
                        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                            [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                               [managedObjectContext MR_saveToPersistentStoreAndWait];
-                               completionHandler(error);
+                               // fetch patients
+                               [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   [weakSelf movePatientsForParticipant:invitee toTeam:team completionHandler:completionHandler];
+                               }];
                            }];
                        }];
     }];
@@ -764,6 +804,36 @@
     [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         localCompletionHandler(error);
     }];
+}
+
+- (void)movePatientsForParticipant:(WMParticipant *)participant toTeam:(WMTeam *)team completionHandler:(WMErrorCallback)completionHandler
+{
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
+    NSParameterAssert(managedObjectContext == [team managedObjectContext]);
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        --counter;
+        if (counter == 0) {
+            completionHandler(error);
+        }
+    };
+    NSArray *patients = [WMPatient MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team = nil"] inContext:managedObjectContext];
+    counter = [patients count];
+    if (counter == 0) {
+        completionHandler(nil);
+    } else {
+        for (WMPatient *patient in patients) {
+            WMNavigationTrack *track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, patient.stage.track.title] inContext:managedObjectContext];
+            WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, patient.stage.title] inContext:managedObjectContext];
+            patient.stage = stage;
+            patient.team = team;
+            [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
+        }
+    }
 }
 
 #pragma mark - Inserts and Updates
