@@ -1098,6 +1098,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
 {
+    [self.navigationController popViewControllerAnimated:YES];
     self.welcomeState = WMWelcomeStateTeamSelected;
     [self.tableView reloadData];
     // check if team leader wants to add current patients to team
