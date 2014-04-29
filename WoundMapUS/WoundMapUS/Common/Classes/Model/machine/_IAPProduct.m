@@ -7,7 +7,6 @@ const struct IAPProductAttributes IAPProductAttributes = {
 	.desc = @"desc",
 	.descHTML = @"descHTML",
 	.flags = @"flags",
-	.iapproduct_id = @"iapproduct_id",
 	.identifier = @"identifier",
 	.price = @"price",
 	.proposition = @"proposition",
@@ -115,13 +114,6 @@ const struct IAPProductFetchedProperties IAPProductFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
-
-
-
-
-
-@dynamic iapproduct_id;
-
 
 
 

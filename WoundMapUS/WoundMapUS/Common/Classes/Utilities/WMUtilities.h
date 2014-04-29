@@ -38,6 +38,7 @@ extern NSTimeInterval kOneDayTimeInterval;
 + (void)removeBarButtonItemWithTag:(NSInteger)tag inToolbar:(UIToolbar *)toolbar;
 
 + (NSDate *)roundDateToBeginningOfDay:(NSDate *)date;
++ (NSDate *)dateByAddingMonthToDate:(NSDate *)date;
 
 + (BOOL)NSStringIsValidEmail:(NSString *)checkString;
 

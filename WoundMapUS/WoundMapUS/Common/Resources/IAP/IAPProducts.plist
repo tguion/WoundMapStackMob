@@ -137,5 +137,19 @@
 		<key>aggregatorFlag</key>
 		<false/>
 	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>com.mobilehealthware.woundcare.woundmap.consultGroup.create</string>
+		<key>title</key>
+		<string>Create a WoundMap Consulting Group</string>
+		<key>proposition</key>
+		<string>Get listed on every WoundMap user&apos;s device as a WoundMap Consulting Group.</string>
+		<key>description</key>
+		<string>You will have full read/write access to a patient&apos;s record when you accept a consult.</string>
+		<key>descHTML</key>
+		<string>ConsultantGroupIAPDesc.html</string>
+		<key>aggregatorFlag</key>
+		<false/>
+	</dict>
 </array>
 </plist>

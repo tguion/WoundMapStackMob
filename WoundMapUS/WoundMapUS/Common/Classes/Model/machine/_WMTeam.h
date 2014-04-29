@@ -8,6 +8,7 @@ extern const struct WMTeamAttributes {
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *iapTeamMemberSuccessCount;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *updatedAt;
 } WMTeamAttributes;
@@ -28,6 +29,7 @@ extern const struct WMTeamFetchedProperties {
 @class WMNavigationTrack;
 @class WMParticipant;
 @class WMPatient;
+
 
 
 
@@ -77,6 +79,20 @@ extern const struct WMTeamFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* iapTeamMemberSuccessCount;
+
+
+
+@property int16_t iapTeamMemberSuccessCountValue;
+- (int16_t)iapTeamMemberSuccessCountValue;
+- (void)setIapTeamMemberSuccessCountValue:(int16_t)value_;
+
+//- (BOOL)validateIapTeamMemberSuccessCount:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -184,6 +200,15 @@ extern const struct WMTeamFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
+
+
+
+
+- (NSNumber*)primitiveIapTeamMemberSuccessCount;
+- (void)setPrimitiveIapTeamMemberSuccessCount:(NSNumber*)value;
+
+- (int16_t)primitiveIapTeamMemberSuccessCountValue;
+- (void)setPrimitiveIapTeamMemberSuccessCountValue:(int16_t)value_;
 
 
 

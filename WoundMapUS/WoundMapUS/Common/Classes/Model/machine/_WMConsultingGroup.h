@@ -10,6 +10,7 @@ extern const struct WMConsultingGroupAttributes {
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *updatedAt;
+	__unsafe_unretained NSString *webURL;
 } WMConsultingGroupAttributes;
 
 extern const struct WMConsultingGroupRelationships {
@@ -20,6 +21,7 @@ extern const struct WMConsultingGroupFetchedProperties {
 } WMConsultingGroupFetchedProperties;
 
 @class WMTeam;
+
 
 
 
@@ -94,6 +96,16 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* webURL;
+
+
+
+//- (BOOL)validateWebURL:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) WMTeam *team;
 
 //- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
@@ -140,6 +152,12 @@ extern const struct WMConsultingGroupFetchedProperties {
 
 - (NSDate*)primitiveUpdatedAt;
 - (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveWebURL;
+- (void)setPrimitiveWebURL:(NSString*)value;
 
 
 

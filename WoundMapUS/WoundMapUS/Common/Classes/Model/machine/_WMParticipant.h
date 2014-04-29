@@ -5,8 +5,11 @@
 
 
 extern const struct WMParticipantAttributes {
+	__unsafe_unretained NSString *bio;
 	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *dateAddedToTeam;
 	__unsafe_unretained NSString *dateLastSignin;
+	__unsafe_unretained NSString *dateTeamSubscriptionExpires;
 	__unsafe_unretained NSString *email;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
@@ -53,6 +56,9 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+
+
+
 @class NSObject;
 
 
@@ -70,6 +76,16 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* bio;
+
+
+
+//- (BOOL)validateBio:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSDate* createdAt;
 
 
@@ -80,11 +96,31 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* dateAddedToTeam;
+
+
+
+//- (BOOL)validateDateAddedToTeam:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSDate* dateLastSignin;
 
 
 
 //- (BOOL)validateDateLastSignin:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* dateTeamSubscriptionExpires;
+
+
+
+//- (BOOL)validateDateTeamSubscriptionExpires:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -293,14 +329,32 @@ extern const struct WMParticipantFetchedProperties {
 @interface _WMParticipant (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSString*)primitiveBio;
+- (void)setPrimitiveBio:(NSString*)value;
+
+
+
+
 - (NSDate*)primitiveCreatedAt;
 - (void)setPrimitiveCreatedAt:(NSDate*)value;
 
 
 
 
+- (NSDate*)primitiveDateAddedToTeam;
+- (void)setPrimitiveDateAddedToTeam:(NSDate*)value;
+
+
+
+
 - (NSDate*)primitiveDateLastSignin;
 - (void)setPrimitiveDateLastSignin:(NSDate*)value;
+
+
+
+
+- (NSDate*)primitiveDateTeamSubscriptionExpires;
+- (void)setPrimitiveDateTeamSubscriptionExpires:(NSDate*)value;
 
 
 

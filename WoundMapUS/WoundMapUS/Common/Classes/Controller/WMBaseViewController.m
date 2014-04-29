@@ -705,17 +705,17 @@
 #pragma mark - IAP proceedAlways
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                     successSelector:(SEL)selector
+                                        successBlock:(dispatch_block_t)successBlock
                                           withObject:(id)object
 {
     return [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                              successSelector:selector
+                                                 successBlock:(dispatch_block_t)successBlock
                                                    withObject:object
                                                 proceedAlways:NO];
 }
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                     successSelector:(SEL)selector
+                                        successBlock:(dispatch_block_t)successBlock
                                           withObject:(id)object
                                        proceedAlways:(BOOL)proceedAlways
 {
@@ -763,13 +763,12 @@
                     if (nil != _iapPopoverController) {
                         [_iapPopoverController dismissPopoverAnimated:YES];
                         _iapPopoverController = nil;
-                        // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
-                        SuppressPerformSelectorLeakWarning([weakSelf performSelector:selector withObject:object]);
+                        successBlock();
                         [weakViewController clearAllReferences];
                     } else {
                         [weakSelf dismissViewControllerAnimated:YES completion:^{
                             // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
-                            SuppressPerformSelectorLeakWarning([weakSelf performSelector:selector withObject:object]);
+                            successBlock();
                             [weakViewController clearAllReferences];
                         }];
                     }

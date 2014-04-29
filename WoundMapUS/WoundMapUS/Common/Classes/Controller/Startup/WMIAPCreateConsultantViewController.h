@@ -6,19 +6,8 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "IAPNonConsumableViewController.h"
 
-@class WMIAPCreateConsultantViewController;
-
-@protocol IAPCreateConsultantViewControllerDelegate <NSObject>
-
-- (void)iapCreateConsultantViewControllerDidPurchase:(WMIAPCreateConsultantViewController *)viewController;
-- (void)iapCreateConsultantViewControllerDidDecline:(WMIAPCreateConsultantViewController *)viewController;
-
-@end
-
-@interface WMIAPCreateConsultantViewController : UIViewController
-
-@property (weak, nonatomic) id<IAPCreateConsultantViewControllerDelegate> delegate;
+@interface WMIAPCreateConsultantViewController : IAPNonConsumableViewController
 
 @end

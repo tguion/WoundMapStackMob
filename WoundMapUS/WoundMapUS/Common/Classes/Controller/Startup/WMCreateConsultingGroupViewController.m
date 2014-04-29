@@ -1,20 +1,18 @@
 //
-//  WMIAPCreateConsultantViewController.m
+//  WMCreateConsultingGroupViewController.m
 //  WoundMapUS
 //
-//  Created by Todd Guion on 2/19/14.
+//  Created by Todd Guion on 4/29/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMIAPCreateConsultantViewController.h"
-#import "IAPProduct.h"
-#import "WMUtilities.h"
+#import "WMCreateConsultingGroupViewController.h"
 
-@interface WMIAPCreateConsultantViewController ()
+@interface WMCreateConsultingGroupViewController ()
 
 @end
 
-@implementation WMIAPCreateConsultantViewController
+@implementation WMCreateConsultingGroupViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,10 +27,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Consulting Group";
-    self.iapProduct = [IAPProduct productForIdentifier:kCreateConsultingGroupProductIdentifier
-                                                create:YES
-                                  managedObjectContext:self.managedObjectContext];
 }
 
 - (void)didReceiveMemoryWarning

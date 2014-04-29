@@ -15,6 +15,14 @@ typedef void (^IAPSuccessHandler)(NSArray *products);
 typedef void (^IAPFailureHandler)(NSError *error);
 typedef void (^IAPTokenCountHandler)(NSError *error, NSInteger tokenCount, NSDate *lastTokenCreditPurchaseDate);
 
+extern NSString *const kSharePdfReport5Feature;
+extern NSString *const kSharePdfReport10Feature;
+extern NSString *const kSharePdfReport25Feature;
+
+extern NSString *const kCreateTeamProductIdentifier;
+extern NSString *const kAddTeamMemberProductIdentifier;
+extern NSString *const kCreateConsultingGroupProductIdentifier;
+
 extern NSString *const kIAPManagerProductPurchasedNotification;
 extern NSString *const kIAPPurchaseError;
 extern NSString *const kIAPTxnCancelled;
@@ -31,10 +39,10 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 - (BOOL)isProductPurchased:(IAPProduct *)iapProduct;
 - (void)buyProduct:(SKProduct *)product;
 
-- (void)productWithProductId:(NSString*)productId
+- (void)productWithProductId:(NSString *)productId
               successHandler:(IAPSuccessHandler)successHandler
               failureHandler:(IAPFailureHandler)failureHandler;
-- (void)productsWithProductIdSet:(NSSet*)productIdSet
+- (void)productsWithProductIdSet:(NSSet *)productIdSet
                   successHandler:(IAPSuccessHandler)successHandler
                   failureHandler:(IAPFailureHandler)failureHandler;
 

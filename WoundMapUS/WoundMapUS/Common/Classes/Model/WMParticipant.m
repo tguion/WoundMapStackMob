@@ -8,6 +8,7 @@
 typedef NS_ENUM(int16_t, WMParticipantFlags) {
     ParticipantFlagsTeamLeader  = 0,
     ParticipantFlagsTeamLeaderIAPSuccess  = 1,
+    ParticipantFlagsTeamAddedIAPSuccess  = 2,
 };
 
 @interface WMParticipant ()
@@ -21,6 +22,7 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
 
 @synthesize user=_user;
 @dynamic firstName, lastName;
+@dynamic teamLeaderIAPPurchaseSuccessful, teamAddedIAPPurchaseSuccessful;
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                        persistentStore:(NSPersistentStore *)store
@@ -120,6 +122,16 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeaderIAPSuccess to:teamLeaderIAPPurchaseSuccessful]);
 }
 
+- (BOOL)teamAddedIAPPurchaseSuccessful
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamAddedIAPSuccess];
+}
+
+- (void)setTeamAddedIAPPurchaseSuccessful:(BOOL)teamAddedIAPPurchaseSuccessful
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamAddedIAPSuccess to:teamAddedIAPPurchaseSuccessful]);
+}
+
 - (BOOL)isTeamLeader
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader];
@@ -150,7 +162,9 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
                                                             @"firstName",
                                                             @"lastName",
                                                             @"lastNameFirstName",
-                                                            @"isTeamLeader", @"teamLeaderIAPPurchaseSuccessful"]];
+                                                            @"isTeamLeader",
+                                                            @"teamLeaderIAPPurchaseSuccessful",
+                                                            @"teamAddedIAPPurchaseSuccessful"]];
     });
     return PropertyNamesNotToSerialize;
 }

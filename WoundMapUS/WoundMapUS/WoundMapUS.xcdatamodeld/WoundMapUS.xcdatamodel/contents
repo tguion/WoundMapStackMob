@@ -157,6 +157,7 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <attribute name="webURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="consultingGroup" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
     <entity name="WMDefinition" representedClassName="WMDefinition" syncable="YES">
@@ -501,8 +502,11 @@
         </userInfo>
     </entity>
     <entity name="WMParticipant" representedClassName="WMParticipant" syncable="YES">
+        <attribute name="bio" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateAddedToTeam" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateLastSignin" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateTeamSubscriptionExpires" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -740,6 +744,7 @@
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="iapTeamMemberSuccessCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="team" inverseEntity="WMConsultingGroup" syncable="YES"/>
@@ -1149,7 +1154,7 @@
         <element name="WMCarePlanCategory" positionX="0" positionY="0" width="128" height="345"/>
         <element name="WMCarePlanGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMCarePlanValue" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="133"/>
+        <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="148"/>
         <element name="WMDefinition" positionX="0" positionY="0" width="128" height="120"/>
         <element name="WMDefinitionKeyword" positionX="0" positionY="0" width="128" height="90"/>
         <element name="WMDevice" positionX="0" positionY="0" width="128" height="285"/>
@@ -1174,7 +1179,7 @@
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
-        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="358"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="403"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="463"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
@@ -1187,7 +1192,7 @@
         <element name="WMSkinAssessmentCategory" positionX="0" positionY="0" width="128" height="255"/>
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="208"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="195"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="208"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="178"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>

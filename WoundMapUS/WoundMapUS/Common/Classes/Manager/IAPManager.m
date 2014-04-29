@@ -9,6 +9,7 @@
 //  This seeding needs to occur as soon as the local store has been initialized
 
 #import "IAPManager.h"
+#import "WMTeam.h"
 #import "WMParticipant.h"
 #import "IAPProduct.h"
 #import "WMIAPTransaction.h"
@@ -25,6 +26,8 @@ NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundcare.woun
 NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print25.token";
 
 NSString *const kCreateTeamProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamLeader";
+NSString *const kAddTeamMemberProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamMember";
+NSString *const kCreateConsultingGroupProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.consultGroup.create";
 
 NSString *const kIAPManagerProductPurchasedNotification = @"IAPHelperProductPurchasedNotification";
 NSString *const kIAPPurchaseError = @"IAPPurchaseError";
@@ -270,6 +273,40 @@ NSString* _deviceId;
     }];
 }
 
+- (void)provideContentForTeamAddedProductIdentifier:(NSString *)productIdentifier
+{
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
+    // update from back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff getObjFromUri:team.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        team.iapTeamMemberSuccessCountValue = (team.iapTeamMemberSuccessCountValue + 1);
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [ff updateObj:team error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            if (nil == participant.dateAddedToTeam) {
+                participant.dateAddedToTeam = [NSDate date];
+            }
+            participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [ff updateObj:participant error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        }];
+    }];
+}
+
 // called when purchase of IAP has successfully completed on iTunes store kit server
 - (void)provideContentForProductIdentifier:(NSString *)productIdentifier
 {
@@ -277,12 +314,14 @@ NSString* _deviceId;
         [self provideContentForPDFReportProductIdentifier:productIdentifier];
     } else if ([productIdentifier isEqualToString:kCreateTeamProductIdentifier]) {
         [self provideContentForTeamLeaderProductIdentifier:productIdentifier];
+    } else if ([productIdentifier isEqualToString:kAddTeamMemberProductIdentifier]) {
+        [self provideContentForTeamAddedProductIdentifier:productIdentifier];
     }
 }
 
 #pragma mark - IAP Management Methods
 
-- (void)productWithProductId:(NSString*)productId
+- (void)productWithProductId:(NSString *)productId
               successHandler:(IAPSuccessHandler)successHandler
               failureHandler:(IAPFailureHandler)failureHandler
 {
@@ -299,6 +338,38 @@ NSString* _deviceId;
     SKProductsRequest* request = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdSet];
     request.delegate = self;
     [request start];
+}
+
+#pragma mark - Utilities
+
+- (NSString *)updatePriceInString:(NSString *)string skProducts:(NSArray *)products
+{
+    NSInteger stringLength = [string length];
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    NSRange range0 = NSMakeRange(0, stringLength);
+    NSMutableArray *substrings = [NSMutableArray array];
+    for (SKProduct *product in products) {
+        [numberFormatter setLocale:product.priceLocale];
+        NSRange range1 = [string rangeOfString:@"|" options:0 range:range0];
+        if (range1.location == NSNotFound) {
+            break;
+        }
+        // else
+        NSRange substringRange = NSMakeRange(range0.location, range1.location - range0.location);
+        [substrings addObject:[string substringWithRange:substringRange]];
+        NSString *formattedPrice = [numberFormatter stringFromNumber:product.price];
+        [substrings addObject:formattedPrice];
+        range0.location = range1.location + 1;
+        range0.length = (stringLength - range0.location);
+        range1 = [string rangeOfString:@"|" options:0 range:range0];
+        range0.location = range1.location + 1;
+        range0.length = (stringLength - range0.location);
+    }
+    // append remaining part of string
+    [substrings addObject:[string substringWithRange:range0]];
+    return [substrings componentsJoinedByString:@" "];;
 }
 
 #pragma mark - Diagonstic methods

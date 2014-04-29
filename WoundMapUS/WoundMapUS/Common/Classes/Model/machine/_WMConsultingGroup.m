@@ -9,6 +9,7 @@ const struct WMConsultingGroupAttributes WMConsultingGroupAttributes = {
 	.flags = @"flags",
 	.name = @"name",
 	.updatedAt = @"updatedAt",
+	.webURL = @"webURL",
 };
 
 const struct WMConsultingGroupRelationships WMConsultingGroupRelationships = {
@@ -104,6 +105,13 @@ const struct WMConsultingGroupFetchedProperties WMConsultingGroupFetchedProperti
 
 
 @dynamic updatedAt;
+
+
+
+
+
+
+@dynamic webURL;
 
 
 

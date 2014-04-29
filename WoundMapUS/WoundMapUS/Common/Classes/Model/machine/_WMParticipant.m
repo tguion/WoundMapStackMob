@@ -4,8 +4,11 @@
 #import "_WMParticipant.h"
 
 const struct WMParticipantAttributes WMParticipantAttributes = {
+	.bio = @"bio",
 	.createdAt = @"createdAt",
+	.dateAddedToTeam = @"dateAddedToTeam",
 	.dateLastSignin = @"dateLastSignin",
+	.dateTeamSubscriptionExpires = @"dateTeamSubscriptionExpires",
 	.email = @"email",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
@@ -81,6 +84,13 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
+@dynamic bio;
+
+
+
+
+
+
 @dynamic createdAt;
 
 
@@ -88,7 +98,21 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 
 
+@dynamic dateAddedToTeam;
+
+
+
+
+
+
 @dynamic dateLastSignin;
+
+
+
+
+
+
+@dynamic dateTeamSubscriptionExpires;
 
 
 

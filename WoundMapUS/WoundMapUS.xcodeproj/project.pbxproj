@@ -338,6 +338,9 @@
 		7D6A58CA190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */; };
 		7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */; };
 		7D6A58CD190D833800D72800 /* PatientReadOnlyExplanation.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */; };
+		7D6A58CF1910043400D72800 /* ConsultantGroupIAPDesc.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58CE1910043400D72800 /* ConsultantGroupIAPDesc.html */; };
+		7D6A58D31910081200D72800 /* WMCreateConsultingGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A58D11910081200D72800 /* WMCreateConsultingGroupViewController.m */; };
+		7D6A58D41910081200D72800 /* WMCreateConsultingGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6A58D21910081200D72800 /* WMCreateConsultingGroupViewController.xib */; };
 		7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */; };
 		7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */; };
 		7D9A94D518E892F600D92E95 /* WMOrganizationEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A94D318E892F600D92E95 /* WMOrganizationEditorViewController.m */; };
@@ -351,8 +354,6 @@
 		7D9AA27118AFF73E00C1B698 /* _WMConsultingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27018AFF73E00C1B698 /* _WMConsultingGroup.m */; };
 		7D9AA27418AFF74C00C1B698 /* WMConsultingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27318AFF74C00C1B698 /* WMConsultingGroup.m */; };
 		7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA27618B003D600C1B698 /* NavigationTracks.plist */; };
-		7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */; };
-		7D9AA27C18B1038400C1B698 /* WMIAPCreateTeamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */; };
 		7D9AA27F18B1106500C1B698 /* _WMPatientConsultant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */; };
 		7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */; };
 		7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */; };
@@ -439,7 +440,6 @@
 		7DD8376418C7A5080028C2D3 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */; };
 		7DD8376818C8B3980028C2D3 /* WMNetworkReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */; };
 		7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */; };
-		7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
 		7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */; };
 		7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */; };
@@ -1125,6 +1125,10 @@
 		7D6A58C8190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMWelcomeToWoundMapViewController_iPad.m; sourceTree = "<group>"; };
 		7D6A58C9190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMWelcomeToWoundMapViewController_iPad.xib; sourceTree = "<group>"; };
 		7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = PatientReadOnlyExplanation.html; sourceTree = "<group>"; };
+		7D6A58CE1910043400D72800 /* ConsultantGroupIAPDesc.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ConsultantGroupIAPDesc.html; sourceTree = "<group>"; };
+		7D6A58D01910081200D72800 /* WMCreateConsultingGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCreateConsultingGroupViewController.h; sourceTree = "<group>"; };
+		7D6A58D11910081200D72800 /* WMCreateConsultingGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCreateConsultingGroupViewController.m; sourceTree = "<group>"; };
+		7D6A58D21910081200D72800 /* WMCreateConsultingGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCreateConsultingGroupViewController.xib; sourceTree = "<group>"; };
 		7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMOrganizationListViewController.h; sourceTree = "<group>"; };
 		7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMOrganizationListViewController.m; sourceTree = "<group>"; };
 		7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMOrganizationListViewController.xib; sourceTree = "<group>"; };
@@ -1149,9 +1153,6 @@
 		7D9AA27218AFF74C00C1B698 /* WMConsultingGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMConsultingGroup.h; sourceTree = "<group>"; };
 		7D9AA27318AFF74C00C1B698 /* WMConsultingGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMConsultingGroup.m; sourceTree = "<group>"; };
 		7D9AA27618B003D600C1B698 /* NavigationTracks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NavigationTracks.plist; sourceTree = "<group>"; };
-		7D9AA27818B1038400C1B698 /* WMIAPCreateTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateTeamViewController.h; sourceTree = "<group>"; };
-		7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateTeamViewController.m; sourceTree = "<group>"; };
-		7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPCreateTeamViewController.xib; sourceTree = "<group>"; };
 		7D9AA27D18B1106500C1B698 /* _WMPatientConsultant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMPatientConsultant.h; sourceTree = "<group>"; };
 		7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPatientConsultant.m; sourceTree = "<group>"; };
 		7D9AA28018B1107200C1B698 /* WMPatientConsultant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientConsultant.h; sourceTree = "<group>"; };
@@ -1307,7 +1308,6 @@
 		7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNetworkReachability.m; sourceTree = "<group>"; };
 		7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateConsultantViewController.h; sourceTree = "<group>"; };
 		7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateConsultantViewController.m; sourceTree = "<group>"; };
-		7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMIAPCreateConsultantViewController.xib; sourceTree = "<group>"; };
 		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
 		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
 		7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressEditorViewController.h; sourceTree = "<group>"; };
@@ -1574,10 +1574,6 @@
 				7D0150FE18EB5BA400D5C0A9 /* WMCreateTeamViewController.xib */,
 				7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */,
 				7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */,
-				7DDAFAEA18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib */,
-				7D9AA27818B1038400C1B698 /* WMIAPCreateTeamViewController.h */,
-				7D9AA27918B1038400C1B698 /* WMIAPCreateTeamViewController.m */,
-				7D9AA27A18B1038400C1B698 /* WMIAPCreateTeamViewController.xib */,
 				5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */,
 				5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */,
 				5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */,
@@ -1587,6 +1583,9 @@
 				5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */,
 				5F67D1B118AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m */,
 				5F67D1B218AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib */,
+				7D6A58D01910081200D72800 /* WMCreateConsultingGroupViewController.h */,
+				7D6A58D11910081200D72800 /* WMCreateConsultingGroupViewController.m */,
+				7D6A58D21910081200D72800 /* WMCreateConsultingGroupViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -2932,6 +2931,7 @@
 				7DD3EA4418C00E120093E370 /* IAPProducts.plist */,
 				7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */,
 				7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */,
+				7D6A58CE1910043400D72800 /* ConsultantGroupIAPDesc.html */,
 			);
 			path = IAP;
 			sourceTree = "<group>";
@@ -3135,6 +3135,7 @@
 				7D39DBAD18BA97A70054DDC3 /* IAPAggregatorViewController.xib in Resources */,
 				7D39DBB018BA97A70054DDC3 /* IAPNonConsumableViewController.xib in Resources */,
 				7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */,
+				7D6A58D41910081200D72800 /* WMCreateConsultingGroupViewController.xib in Resources */,
 				7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
 				7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */,
@@ -3201,6 +3202,7 @@
 				7D39DAF218B7E6130054DDC3 /* WMChooseStageViewController.xib in Resources */,
 				7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */,
 				5F6DE53818B58BB000E87F7E /* InstructionsAuditTrail.html in Resources */,
+				7D6A58CF1910043400D72800 /* ConsultantGroupIAPDesc.html in Resources */,
 				5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
 				5F67D20018AC3BE000460C37 /* WCInterventionEventType.plist in Resources */,
@@ -3242,7 +3244,6 @@
 				5F6DE51118B586F600E87F7E /* WMInstructionsViewController.xib in Resources */,
 				7DDFD68B18B7C0B900041927 /* WMHomeBaseViewController_iPad.xib in Resources */,
 				7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */,
-				7DDAFAEC18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.xib in Resources */,
 				7D39DB0E18B7FA080054DDC3 /* WMSelectWoundTypeViewController.xib in Resources */,
 				7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */,
 				7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */,
@@ -3261,7 +3262,6 @@
 				7D39DBC918BAB5540054DDC3 /* WMUndermineTunnelViewController.xib in Resources */,
 				7D10CD8918D7721A00AD43E3 /* WMWoundMeasurementGroupViewController.xib in Resources */,
 				7D39DB1318B7FA750054DDC3 /* WMSelectWoundLocationViewController.xib in Resources */,
-				7D9AA27C18B1038400C1B698 /* WMIAPCreateTeamViewController.xib in Resources */,
 				5F67D20B18AC3BE000460C37 /* WoundTypeDefinitions.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3335,7 +3335,6 @@
 				7DF4E93318C22F27000A3F5B /* WMSkinAssessmentValue.m in Sources */,
 				7DF4E93418C22F27000A3F5B /* WMWoundLocation.m in Sources */,
 				7D0F2F5A1906DA12009F8346 /* WMNormalizingView.m in Sources */,
-				7D9AA27B18B1038400C1B698 /* WMIAPCreateTeamViewController.m in Sources */,
 				5F6DE50318B2CC2200E87F7E /* WMPersonEditorViewController.m in Sources */,
 				7D10CDF818DB269100AD43E3 /* WMSkinAssessmentGroupHistoryViewController.m in Sources */,
 				7D68949E190445D8006DE509 /* KalDataSource.m in Sources */,
@@ -3446,6 +3445,7 @@
 				7D39DB2818B821920054DDC3 /* WMPhoto.m in Sources */,
 				7DD8373C18C78A3A0028C2D3 /* NSPersistentStore+MagicalRecord.m in Sources */,
 				7D39DACB18B7CB9B0054DDC3 /* _WMWound.m in Sources */,
+				7D6A58D31910081200D72800 /* WMCreateConsultingGroupViewController.m in Sources */,
 				7D6894601902F8D9006DE509 /* WMPsychoSocialGroupTableViewCell.m in Sources */,
 				7D39DB8918B94FEB0054DDC3 /* _WMDevice.m in Sources */,
 				7D10CD6618D24D5100AD43E3 /* WMUnderlayToolbar.m in Sources */,

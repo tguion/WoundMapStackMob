@@ -9,6 +9,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="IAPNonConsumableViewController">
             <connections>
                 <outlet property="actionContainerView" destination="Ftc-9a-Gq3" id="bse-cr-sV2"/>
+                <outlet property="descHTMLContainerView" destination="XeR-RS-dpm" id="Ccf-Bs-MHw"/>
+                <outlet property="descHTMLLabel" destination="hz1-7O-bOc" id="EXM-xB-jox"/>
                 <outlet property="purchaseButton" destination="tSR-DA-MjV" id="Qfb-nj-HNG"/>
                 <outlet property="view" destination="2Nt-23-b1g" id="WQ8-of-1Ki"/>
             </connections>
@@ -40,6 +42,59 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+        <view contentMode="scaleToFill" id="XeR-RS-dpm">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="hz1-7O-bOc">
+                    <rect key="frame" x="20" y="20" width="280" height="490"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7h-iW-QL7">
+                    <rect key="frame" x="20" y="518" width="137" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="haY-DC-ZQn"/>
+                        <constraint firstAttribute="width" constant="137" id="iXM-8W-QMT"/>
+                    </constraints>
+                    <state key="normal" title="Decline">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="raq-gg-Y27"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SrS-yl-xMl">
+                    <rect key="frame" x="163" y="518" width="137" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="lxS-Jn-kwL"/>
+                    </constraints>
+                    <state key="normal" title="Purchase">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="purchaseAction:" destination="-1" eventType="touchUpInside" id="pu7-9z-ftl"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="SrS-yl-xMl" secondAttribute="bottom" constant="20" id="9y8-Mb-h51"/>
+                <constraint firstItem="hz1-7O-bOc" firstAttribute="leading" secondItem="XeR-RS-dpm" secondAttribute="leading" constant="20" symbolic="YES" id="Apy-W4-Kwy"/>
+                <constraint firstItem="L7h-iW-QL7" firstAttribute="leading" secondItem="XeR-RS-dpm" secondAttribute="leading" constant="20" symbolic="YES" id="KEc-AC-qQl"/>
+                <constraint firstItem="SrS-yl-xMl" firstAttribute="leading" secondItem="L7h-iW-QL7" secondAttribute="trailing" constant="6" id="ReK-Fc-aB8"/>
+                <constraint firstAttribute="trailing" secondItem="SrS-yl-xMl" secondAttribute="trailing" constant="20" symbolic="YES" id="S3u-J9-kgR"/>
+                <constraint firstAttribute="trailing" secondItem="hz1-7O-bOc" secondAttribute="trailing" constant="20" symbolic="YES" id="Zon-gd-XXj"/>
+                <constraint firstAttribute="bottom" secondItem="L7h-iW-QL7" secondAttribute="bottom" constant="20" id="hH9-ws-RfZ"/>
+                <constraint firstItem="SrS-yl-xMl" firstAttribute="top" secondItem="hz1-7O-bOc" secondAttribute="bottom" constant="8" symbolic="YES" id="huJ-45-AUG"/>
+                <constraint firstItem="hz1-7O-bOc" firstAttribute="top" secondItem="XeR-RS-dpm" secondAttribute="top" constant="20" symbolic="YES" id="jtX-nT-TQa"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>
 </document>

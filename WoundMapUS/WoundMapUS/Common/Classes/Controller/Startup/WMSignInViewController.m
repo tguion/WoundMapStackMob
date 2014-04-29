@@ -20,7 +20,9 @@
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
 
-@interface WMSignInViewController () <UITextFieldDelegate>
+#define kSubscriptionExpiredAlertViewTag 1000
+
+@interface WMSignInViewController () <UITextFieldDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSString *userNameTextInput;
 @property (strong, nonatomic) NSString *passwordTextInput;
@@ -144,28 +146,43 @@
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 // handle team invitation confirmation
-                __block WMTeamInvitation *teamInvitation = participant.teamInvitation;
-                if (nil == teamInvitation) {
-                    // look for team invitation
-                    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], participant.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if ([object count]) {
-                            // invitation is for this participant
-                            object = [object firstObject];
-                            NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
-                            teamInvitation = object;
-                            participant.teamInvitation = teamInvitation;
-                            [managedObjectContext MR_saveToPersistentStoreAndWait];
-                            teamInvitation.invitee = participant;
-                            [managedObjectContext MR_saveToPersistentStoreAndWait];
-                            NSError *error = nil;
-                            [ff updateObj:teamInvitation error:&error];
-                            NSAssert(nil == error, @"Unable to update teamInvitation: %@, error: %@", teamInvitation, error);
-                            [ff updateObj:participant error:&error];
-                            NSAssert(nil == error, @"Unable to update participant: %@, error: %@", participant, error);
-                        }
-                    }];
+                WMTeam *team = participant.team;
+                if (team) {
+                    // check if subscription has expired
+                    if ([participant.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedDescending) {
+                        // times up
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Subscription Expired"
+                                                                            message:@"Your team leader must purchase additional access time to continue to use WoundMap"
+                                                                           delegate:self
+                                                                  cancelButtonTitle:@"Dismiss"
+                                                                  otherButtonTitles:nil];
+                        alertView.tag = kSubscriptionExpiredAlertViewTag;
+                        [alertView show];
+                    }
+                } else {
+                    __block WMTeamInvitation *teamInvitation = participant.teamInvitation;
+                    if (nil == teamInvitation) {
+                        // look for team invitation
+                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], participant.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if ([object count]) {
+                                // invitation is for this participant
+                                object = [object firstObject];
+                                NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
+                                teamInvitation = object;
+                                participant.teamInvitation = teamInvitation;
+                                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                teamInvitation.invitee = participant;
+                                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                NSError *error = nil;
+                                [ff updateObj:teamInvitation error:&error];
+                                NSAssert(nil == error, @"Unable to update teamInvitation: %@, error: %@", teamInvitation, error);
+                                [ff updateObj:participant error:&error];
+                                NSAssert(nil == error, @"Unable to update participant: %@, error: %@", participant, error);
+                            }
+                        }];
+                    }
+                    [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                 }
-                [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
             };
             dispatch_block_t participantBlock = ^{
                 if (nil == participant) {
@@ -197,6 +214,17 @@
             }
         }
     }];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kSubscriptionExpiredAlertViewTag) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff logout];
+        self.appDelegate.participant = nil;
+    }
 }
 
 #pragma mark - UITextFieldDelegate

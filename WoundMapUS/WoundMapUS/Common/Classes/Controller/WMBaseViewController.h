@@ -86,11 +86,11 @@
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                     successSelector:(SEL)selector
-                                          withObject:(id)object
-                                       proceedAlways:(BOOL)proceedAlways;
+                                        successBlock:(dispatch_block_t)successBlock
+                                       proceedAlways:(BOOL)proceedAlways
+                                          withObject:(id)object;
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                     successSelector:(SEL)selector
+                                        successBlock:(dispatch_block_t)successBlock
                                           withObject:(id)object;
 
 @end

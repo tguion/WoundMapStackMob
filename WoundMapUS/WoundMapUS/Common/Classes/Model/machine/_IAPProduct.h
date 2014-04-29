@@ -8,7 +8,6 @@ extern const struct IAPProductAttributes {
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *descHTML;
 	__unsafe_unretained NSString *flags;
-	__unsafe_unretained NSString *iapproduct_id;
 	__unsafe_unretained NSString *identifier;
 	__unsafe_unretained NSString *price;
 	__unsafe_unretained NSString *proposition;
@@ -31,7 +30,6 @@ extern const struct IAPProductFetchedProperties {
 @class IAPProduct;
 @class IAPProduct;
 @class WMWoundType;
-
 
 
 
@@ -87,16 +85,6 @@ extern const struct IAPProductFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* iapproduct_id;
-
-
-
-//- (BOOL)validateIapproduct_id:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -247,12 +235,6 @@ extern const struct IAPProductFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
-
-
-
-
-- (NSString*)primitiveIapproduct_id;
-- (void)setPrimitiveIapproduct_id:(NSString*)value;
 
 
 

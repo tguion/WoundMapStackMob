@@ -7,6 +7,7 @@ const struct WMTeamAttributes WMTeamAttributes = {
 	.createdAt = @"createdAt",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
+	.iapTeamMemberSuccessCount = @"iapTeamMemberSuccessCount",
 	.name = @"name",
 	.updatedAt = @"updatedAt",
 };
@@ -53,6 +54,11 @@ const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
+	if ([key isEqualToString:@"iapTeamMemberSuccessCountValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"iapTeamMemberSuccessCount"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -94,6 +100,32 @@ const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
 
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
+}
+
+
+
+
+
+@dynamic iapTeamMemberSuccessCount;
+
+
+
+- (int16_t)iapTeamMemberSuccessCountValue {
+	NSNumber *result = [self iapTeamMemberSuccessCount];
+	return [result shortValue];
+}
+
+- (void)setIapTeamMemberSuccessCountValue:(int16_t)value_ {
+	[self setIapTeamMemberSuccessCount:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveIapTeamMemberSuccessCountValue {
+	NSNumber *result = [self primitiveIapTeamMemberSuccessCount];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveIapTeamMemberSuccessCountValue:(int16_t)value_ {
+	[self setPrimitiveIapTeamMemberSuccessCount:[NSNumber numberWithShort:value_]];
 }
 
 

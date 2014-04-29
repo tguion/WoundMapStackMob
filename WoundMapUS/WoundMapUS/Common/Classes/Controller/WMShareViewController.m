@@ -154,10 +154,12 @@ CGFloat kCreditsMargin = 20;
 - (IBAction)purchaseMoreTokens:(id)sender
 {
     NSString *productIdentifier = @"pdf report aggregator";
+    __weak __typeof(self) weakSelf = self;
     [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                       successSelector:@selector(updateCreditStatusText)
-                                            withObject:nil
-                                         proceedAlways:YES];
+                                          successBlock:^{
+                                              [weakSelf updateCreditStatusText];
+                                          } proceedAlways:YES
+                                            withObject:sender];
 }
 
 #pragma mark - View Controllers
@@ -309,14 +311,16 @@ CGFloat kCreditsMargin = 20;
 
 #pragma mark - IAPManager support
 
-- (void) navigateToSharePdfReportView {
+- (void)navigateToSharePdfReportView {
     // Do not navigate to Share Record view if no wounds or missing photos on wounds.
     if ([self hasAdequateWoundInformation]) {
         // not coming from navigation node so hardcoding
         NSString *productIdentifier = @"pdf report aggregator";
+        __weak __typeof(self) weakSelf = self;
         BOOL proceed = [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                                          successSelector:@selector(navigateToPrintConfigureViewController)
-                                                               withObject:self.selectPDFSectionFooterView];
+                                                             successBlock:^{
+                                                                 [weakSelf navigateToPrintConfigureViewController];
+                                                             } withObject:self.selectPDFSectionFooterView];
         // self.shareButton.superview
         if (proceed) {
             [self navigateToPrintConfigureViewController];

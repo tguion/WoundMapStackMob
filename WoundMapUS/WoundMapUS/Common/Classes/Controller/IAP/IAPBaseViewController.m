@@ -22,6 +22,8 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 @interface IAPBaseViewController () <UIActionSheetDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *actionContainerView;
+@property (strong, nonatomic) IBOutlet UIView *descHTMLContainerView;
+@property (strong, nonatomic) IBOutlet UILabel *descHTMLLabel;
 @property (readonly, nonatomic) WMInstructionContentViewController *instructionContentViewController;
 
 - (void)navigateToFeatureDetail;
@@ -41,6 +43,17 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     _actionContainerView = nil;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    NSAttributedString *attributedString = self.iapProduct.descHTMLAttributedString;
+    if (attributedString) {
+        _descHTMLContainerView.frame = self.navigationController.view.bounds;
+        _descHTMLLabel.attributedText = attributedString;
+        [self.navigationController.view addSubview:_descHTMLContainerView];
+    }
 }
 
 - (void)setSelectedIapProduct:(IAPProduct *)selectedIapProduct
@@ -121,21 +134,9 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 - (void)navigateToFeatureDetail
 {
     WMInstructionContentViewController *instructionContentViewController = self.instructionContentViewController;
-    NSString *htmlString = self.iapProduct.descHTML;
-    if ([htmlString hasSuffix:@"html"]) {
-        // it's a file
-        NSInteger index = [htmlString rangeOfString:@".html"].location;
-        htmlString = [htmlString substringToIndex:index];
-        NSURL *htmlURL = [[NSBundle mainBundle] URLForResource:htmlString withExtension:@"html"];
-        NSError *error = nil;
-        htmlString = [[NSString alloc] initWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:&error];
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    }
+    NSString *htmlString = self.iapProduct.descHTMLValue;
     instructionContentViewController.htmlString = htmlString;
     instructionContentViewController.title = @"Feature Details";
-
     [self.navigationController pushViewController:instructionContentViewController animated:YES];
 }
 

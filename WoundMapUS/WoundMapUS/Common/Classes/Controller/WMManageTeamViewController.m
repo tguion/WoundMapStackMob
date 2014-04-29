@@ -15,6 +15,7 @@
 #import "WMTeamInvitation.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
+#import "IAPManager.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -38,6 +39,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 @property (strong, nonatomic) WMTeamInvitation *teamInvitationToDeleteOrConfirm;
 @property (strong, nonatomic) WMParticipant *teamMemberToDelete;
+@property (strong, nonatomic) WMParticipant *teamMemberToUpdateSubscription;
 
 @end
 
@@ -136,6 +138,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                     otherButtonTitles:nil];
     actionSheet.tag = kRevokeInvitationActionSheetTag;
     [actionSheet showInView:self.view];
+}
+
+- (void)initiateUpdateSubscriptionTeamMember:(UIView *)view
+{
+    __weak __typeof(&*self)weakSelf = self;
+    [self presentIAPViewControllerForProductIdentifier:kAddTeamMemberProductIdentifier
+                                                         successBlock:^{
+                                                             [weakSelf.tableView reloadData];
+                                                         } withObject:view];
 }
 
 - (void)initiateConfirmInvitation
@@ -360,13 +371,9 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             break;
         }
         case 2: {
-            // participants - remove from team
-            _teamMemberToDelete = [self.teamMembers objectAtIndex:indexPath.row];
-            if (_teamMemberToDelete.isTeamLeader) {
-                _teamMemberToDelete = nil;
-            } else {
-                [self initiateRemoveTeamMember];
-            }
+            // participants - update
+            _teamMemberToUpdateSubscription = [self.teamMembers objectAtIndex:indexPath.row];
+            [self initiateUpdateSubscriptionTeamMember:[tableView cellForRowAtIndexPath:indexPath]];
             break;
         }
     }
@@ -472,6 +479,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             // team members
             WMParticipant *teamMember = [self.teamMembers objectAtIndex:indexPath.row];
             cell.textLabel.text = teamMember.name;
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"Expires %@", [NSDateFormatter localizedStringFromDate:teamMember.dateTeamSubscriptionExpires dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
             break;
         }
     }

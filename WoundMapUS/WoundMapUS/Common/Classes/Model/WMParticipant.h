@@ -24,6 +24,7 @@
 @property (readonly, nonatomic) NSString *lastNameFirstName;
 @property (nonatomic) BOOL teamLeaderIAPPurchaseSuccessful;
 @property (nonatomic) BOOL isTeamLeader;
+@property (nonatomic) BOOL teamAddedIAPPurchaseSuccessful;
 
 - (NSInteger)addReportTokens:(NSInteger)tokens;
 

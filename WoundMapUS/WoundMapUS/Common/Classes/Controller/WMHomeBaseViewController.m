@@ -939,7 +939,7 @@
                                            completionHandler:block];
     } else {
         // no team, sign out
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Sign Out"
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Sign Out %@", self.appDelegate.participant.userName]
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"
                                                    destructiveButtonTitle:@"Sign Out"
@@ -1147,7 +1147,10 @@
             navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             if (nil != navigationNodeButton.navigationNode.iapIdentifier) {
-                BOOL proceed = [weakSelf presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier successSelector:@selector(navigateToMedicationAssessment:) withObject:navigationNodeButton];
+                BOOL proceed = [self presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier
+                                                      successBlock:^{
+                                                          [weakSelf navigateToMedicationAssessment:navigationNodeButton];
+                                                      } withObject:navigationNodeButton];
                 if (!proceed) {
                     return;
                 }
@@ -1181,7 +1184,7 @@
         }
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.deviceGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
                                        completionHandler:block];
@@ -1205,7 +1208,7 @@
         }
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.psychosocialGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
                                        completionHandler:block];

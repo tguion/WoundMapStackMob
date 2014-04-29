@@ -102,6 +102,54 @@ typedef enum {
     return iapProduct;
 }
 
+- (BOOL)descHTMLIsFile
+{
+    return [self.descHTML hasSuffix:@".html"];
+}
+
+- (NSString *)descHTMLValue
+{
+    NSString *htmlString = self.descHTML;
+    if (self.descHTMLIsFile) {
+        NSInteger index = [htmlString rangeOfString:@".html"].location;
+        htmlString = [htmlString substringToIndex:index];
+        NSURL *htmlURL = [[NSBundle mainBundle] URLForResource:htmlString withExtension:@"html"];
+        NSError *error = nil;
+        htmlString = [[NSString alloc] initWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    return htmlString;
+}
+- (NSAttributedString *)descHTMLAttributedString
+{
+    NSAttributedString *attributedString = nil;
+    NSString *htmlString = self.descHTML;
+    NSError *error = nil;
+    if (self.descHTMLIsFile) {
+        NSInteger index = [htmlString rangeOfString:@".html"].location;
+        htmlString = [htmlString substringToIndex:index];
+        NSURL *htmlURL = [[NSBundle mainBundle] URLForResource:htmlString withExtension:@"html"];
+        attributedString = [[NSAttributedString alloc] initWithFileURL:htmlURL
+                                                               options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType}
+                                                    documentAttributes:nil
+                                                                 error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    } else {
+        attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding]
+                                                            options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType}
+                                                 documentAttributes:NULL
+                                                              error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    return attributedString;
+}
+
 - (void)updateIAProductWithSkProduct:(SKProduct *)skProduct
 {
     if (nil == skProduct) {

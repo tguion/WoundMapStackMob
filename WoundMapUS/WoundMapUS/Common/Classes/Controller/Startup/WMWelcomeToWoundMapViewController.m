@@ -13,9 +13,9 @@
 #import "WMOrganizationEditorViewController.h"
 #import "WMManageTeamViewController.h"
 #import "WMIAPJoinTeamViewController.h"
-#import "WMIAPCreateTeamViewController.h"
 #import "WMCreateTeamViewController.h"
 #import "WMIAPCreateConsultantViewController.h"
+#import "WMCreateConsultingGroupViewController.h"
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
 #import "WMPatientTableViewController.h"
@@ -60,8 +60,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMSignInViewController *signInViewController;
 @property (readonly, nonatomic) WMCreateAccountViewController *createAccountViewController;
 @property (readonly, nonatomic) WMIAPJoinTeamViewController *iapJoinTeamViewController;
-@property (readonly, nonatomic) WMIAPCreateTeamViewController *iapCreateTeamViewController;
 @property (readonly, nonatomic) WMCreateTeamViewController *createTeamViewController;
+@property (readonly, nonatomic) WMCreateConsultingGroupViewController *createConsultingGroupViewController;
 @property (readonly, nonatomic) WMManageTeamViewController *manageTeamViewController;
 @property (readonly, nonatomic) WMPersonEditorViewController *personEditorViewController;
 @property (readonly, nonatomic) WMOrganizationEditorViewController *organizationEditorViewController;
@@ -230,18 +230,18 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return iapJoinTeamViewController;
 }
 
-- (WMIAPCreateTeamViewController *)iapCreateTeamViewController
-{
-    WMIAPCreateTeamViewController *iapCreateTeamViewController = [[WMIAPCreateTeamViewController alloc] initWithNibName:@"IAPNonConsumableViewController" bundle:nil];
-    iapCreateTeamViewController.delegate = self;
-    return iapCreateTeamViewController;
-}
-
 - (WMCreateTeamViewController *)createTeamViewController
 {
     WMCreateTeamViewController *createTeamViewController = [[WMCreateTeamViewController alloc] initWithNibName:@"WMCreateTeamViewController" bundle:nil];
     createTeamViewController.delegate = self;
     return createTeamViewController;
+}
+
+- (WMCreateConsultingGroupViewController *)createConsultingGroupViewController
+{
+    WMCreateConsultingGroupViewController *createConsultingGroupViewController = [[WMCreateConsultingGroupViewController alloc] initWithNibName:@"WMCreateConsultingGroupViewController" bundle:nil];
+    createConsultingGroupViewController.delegate = self;
+    return createConsultingGroupViewController;
 }
 
 - (WMManageTeamViewController *)manageTeamViewController
@@ -507,17 +507,32 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
+                    __weak __typeof(&*self)weakSelf = self;
                     if (self.participant.isTeamLeader) {
                         // is the team already a consultant
                         if (self.connectedTeamIsConsultingGroup) {
                             break;
                         }
                         // else
-                        [self presentCreateConsultingGroupViewController];
+                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
+                                                                             successBlock:^{
+                                                                                 [weakSelf presentCreateConsultingGroupViewController];
+                                                                             } withObject:self.view];
+                        if (!proceed) {
+                            return;
+                        }
+//                        [self presentCreateConsultingGroupViewController];
                     } else {
+                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier
+                                                                             successBlock:^{
+                                                                                 [weakSelf presentCreateTeamViewController];
+                                                                             } withObject:self.view];
+                        if (!proceed) {
+                            return;
+                        }
 //                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier successSelector:@selector(presentCreateTeamViewController) withObject:nil];
 //                        if (YES/*proceed*/) {
-                            [self presentCreateTeamViewController];
+//                            [self presentCreateTeamViewController];
 //                        }
                     }
                     break;
@@ -1089,9 +1104,18 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)iapNonConsumableViewControllerDidPurchaseFeature:(IAPNonConsumableViewController *)controller
 {
     __weak __typeof(&*self)weakSelf = self;
-    [self dismissViewControllerAnimated:YES completion:^{
-        [weakSelf.navigationController pushViewController:weakSelf.createTeamViewController animated:YES];
-    }];
+    IAPProduct *iapProduct = controller.iapProduct;
+    if ([iapProduct.identifier isEqualToString:kCreateTeamProductIdentifier]) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            [weakSelf.navigationController pushViewController:weakSelf.createTeamViewController animated:YES];
+        }];
+    } else if ([iapProduct.identifier isEqualToString:kAddTeamMemberProductIdentifier]) {
+        // TODO figure out where this goes
+    } else if ([iapProduct.identifier isEqualToString:kCreateConsultingGroupProductIdentifier]) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            [weakSelf.navigationController pushViewController:weakSelf.createConsultingGroupViewController animated:YES];
+        }];
+    }
 }
 
 #pragma mark - CreateTeamViewControllerDelegate
@@ -1134,6 +1158,18 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];
+}
+
+#pragma mark - IAPCreateConsultantViewControllerDelegate
+
+- (void)createConsultantViewControllerDidPurchase:(WMCreateConsultingGroupViewController *)viewController
+{
+    
+}
+
+- (void)createConsultantViewControllerDidDecline:(WMCreateConsultingGroupViewController *)viewController
+{
+    
 }
 
 #pragma mark - ChooseTrackDelegate

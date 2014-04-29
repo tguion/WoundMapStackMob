@@ -12,6 +12,7 @@
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
+#import "IAPManager.h"
 #import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -76,6 +77,11 @@
 - (WMParticipant *)participant
 {
     return self.appDelegate.participant;
+}
+
+- (void)presentIAPNonConsumableViewController
+{
+    [self presentIAPNonConsumableViewController];
 }
 
 - (BOOL)validateInput
@@ -180,21 +186,31 @@
             [alertView show];
         } else {
             _invitee = object;
-            _teamInvitation = [WMTeamInvitation MR_createInContext:weakSelf.managedObjectContext];
-            _teamInvitation.team = weakSelf.participant.team;
-            _teamInvitation.invitee = _invitee;
-            _teamInvitation.inviteeUserName = _userNameTextInput;
-            _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
-            // else handle undo
-            if (weakSelf.managedObjectContext.undoManager.groupingLevel > 0) {
-                [weakSelf.managedObjectContext.undoManager endUndoGrouping];
-            }
-            if (_removeUndoManagerWhenDone) {
-                weakSelf.managedObjectContext.undoManager = nil;
-            }
-            [weakSelf.delegate createTeamInvitationViewController:weakSelf didCreateInvitation:_teamInvitation];
+            // present IAP
+            [self presentIAPViewControllerForProductIdentifier:kAddTeamMemberProductIdentifier
+                                                  successBlock:^{
+                                                      [weakSelf completeTeamInvitation];
+                                                  } proceedAlways:NO
+                                                    withObject:sender];
         }
     }];
+}
+
+- (void)completeTeamInvitation
+{
+    _teamInvitation = [WMTeamInvitation MR_createInContext:self.managedObjectContext];
+    _teamInvitation.team = self.participant.team;
+    _teamInvitation.invitee = _invitee;
+    _teamInvitation.inviteeUserName = _userNameTextInput;
+    _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
+    // handle undo
+    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
+        [self.managedObjectContext.undoManager endUndoGrouping];
+    }
+    if (_removeUndoManagerWhenDone) {
+        self.managedObjectContext.undoManager = nil;
+    }
+    [self.delegate createTeamInvitationViewController:self didCreateInvitation:_teamInvitation];
 }
 
 #pragma mark - BaseViewController

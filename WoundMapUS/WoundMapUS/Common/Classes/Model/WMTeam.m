@@ -45,7 +45,8 @@ NSString * const kParticipantGroupName = @"participantGroup";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
-                                                            @"teamLeader"]];
+                                                            @"teamLeader",
+                                                            @"iapTeamMemberSuccessCountValue"]];
     });
     return PropertyNamesNotToSerialize;
 }
