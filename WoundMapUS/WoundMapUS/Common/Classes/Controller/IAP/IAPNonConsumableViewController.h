@@ -27,6 +27,7 @@
 @interface IAPNonConsumableViewController : IAPBaseViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *purchaseButton;
+@property (strong, nonatomic) IBOutlet UIButton *purchaseButtonDescView;
 @property (weak, nonatomic) id<IAPNonConsumableViewControllerDelegate> delegate;
 
 @end

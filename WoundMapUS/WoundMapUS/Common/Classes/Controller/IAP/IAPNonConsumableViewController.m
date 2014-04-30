@@ -41,6 +41,7 @@
     [super viewWillAppear:animated];
     if (nil == self.skProduct) {
         self.purchaseButton.enabled = NO;
+        self.purchaseButtonDescView.enabled = NO;
     }
 }
 
@@ -63,6 +64,7 @@
     [super reloadData];
     if (nil != self.skProduct) {
         self.purchaseButton.enabled = YES;
+        self.purchaseButtonDescView.enabled = YES;
     }
 }
 

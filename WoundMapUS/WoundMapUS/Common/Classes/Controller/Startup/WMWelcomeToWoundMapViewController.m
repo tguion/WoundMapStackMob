@@ -1205,6 +1205,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }
     self.appDelegate.navigationCoordinator.patient = patient;
     _enterWoundMapButton.enabled = self.setupConfigurationComplete;
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController

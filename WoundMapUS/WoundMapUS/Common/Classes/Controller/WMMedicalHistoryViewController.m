@@ -204,7 +204,9 @@
         } else {
             [ff createObj:medicalHistoryValue
                     atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryValue entityName]]
-               onComplete:block];
+               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                   [ff grabBagAddItemAtFfUrl:medicalHistoryValue.ffUrl toObjAtFfUrl:_medicalHistoryGroup.ffUrl grabBagName:WMMedicalHistoryGroupRelationships.values onComplete:block];
+               }];
         }
     }
 }

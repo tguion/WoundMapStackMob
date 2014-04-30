@@ -321,29 +321,34 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 
 - (void)skProductforProductId:(NSString *)productId
 {
+    IAPManager *iapManager = [IAPManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;
-    [[IAPManager sharedInstance] productWithProductId:productId
-                                       successHandler:^(NSArray *products) {
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-                                               if ([products count] > 0) {
-                                                   weakSelf.skProduct = [products objectAtIndex:0];
-                                                   [weakSelf.iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
-                                                   [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
-                                                   [weakSelf reloadData];
-                                               } else {
-                                                   NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
-                                                   [weakSelf iapFailureAlert:message];
-                                               }
-                                           });
-                                       } failureHandler:^(NSError *error) {
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-                                               NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
-                                               [weakSelf iapFailureAlert:message];
-                                           });
-                                       }
+    [iapManager productWithProductId:productId
+                      successHandler:^(NSArray *products) {
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                              if ([products count] > 0) {
+                                  weakSelf.skProduct = [products objectAtIndex:0];
+                                  [weakSelf.iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
+//                                  if (_descHTMLContainerView.superview) {
+//                                      [iapManager updatePriceInString:_descHTMLLabel.attributedText skProducts:weakSelf.skProduct];
+//                                  }
+                                  [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
+                              } else {
+                                  NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
+                                  [weakSelf iapFailureAlert:message];
+                              }
+                              [weakSelf reloadData];
+                          });
+                      } failureHandler:^(NSError *error) {
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                              NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
+                              [weakSelf iapFailureAlert:message];
+                              [weakSelf reloadData];
+                          });
+                      }
      ];
 }
 

@@ -32,6 +32,8 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 
 + (IAPManager *)sharedInstance;
 
+- (NSString *)updatePriceInString:(NSString *)string skProducts:(NSArray *)products;
+
 - (NSString *)getIAPDeviceGuid;
 
 - (void)pdfTokensAvailable:(IAPTokenCountHandler)completionHandler;
