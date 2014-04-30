@@ -25,6 +25,13 @@
                                             inContext:managedObjectContext];
 }
 
++ (WMCarePlanGroup *)carePlanGroupForPatient:(WMPatient *)patient
+{
+    WMCarePlanGroup *carePlanGroup = [WMCarePlanGroup MR_createInContext:[patient managedObjectContext]];
+    carePlanGroup.patient = patient;
+    return carePlanGroup;
+}
+
 + (WMCarePlanGroup *)mostRecentOrActiveCarePlanGroup:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
@@ -65,7 +72,7 @@
 
 + (NSSet *)carePlanValuesForCarePlanGroup:(WMCarePlanGroup *)carePlanGroup
 {
-    return [NSSet setWithArray:[WMCarePlanGroup MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"group == %@", carePlanGroup] inContext:[carePlanGroup managedObjectContext]]];
+    return [NSSet setWithArray:[WMCarePlanValue MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"group == %@", carePlanGroup] inContext:[carePlanGroup managedObjectContext]]];
 }
 
 + (BOOL)carePlanGroupsHaveHistory:(WMPatient *)patient
@@ -152,7 +159,7 @@
     return [set intersectsSet:categories];
 }
 
-- (void)removeCarePlanValuesForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
+- (NSArray *)removeCarePlanValuesForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category == %@", carePlanCategory];
@@ -161,6 +168,7 @@
         [self removeValuesObject:value];
         [managedObjectContext deleteObject:value];
     }
+    return values;
 }
 
 - (NSInteger)valuesCountForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory
@@ -309,11 +317,13 @@
                                                             @"continueCountValue",
                                                             @"flagsValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents",
+                                                            @"objectID",
                                                             @"hasInterventionEvents",
                                                             @"sortedCarePlanValues",
                                                             @"isClosed",
@@ -328,8 +338,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMCarePlanGroupRelationships.interventionEvents,
-                                                            WMCarePlanGroupRelationships.values]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

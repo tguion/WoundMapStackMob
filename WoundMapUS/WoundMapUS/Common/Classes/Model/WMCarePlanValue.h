@@ -5,4 +5,6 @@
 @property (readonly, nonatomic) NSArray *categoryPathToValue;
 @property (readonly, nonatomic) NSString *pathToValue;
 
++ (NSInteger)valueCountForCarePlanGroup:(WMCarePlanGroup *)carePlanGroup;
+
 @end

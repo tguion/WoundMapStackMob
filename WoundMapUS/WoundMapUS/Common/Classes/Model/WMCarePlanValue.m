@@ -1,5 +1,6 @@
 #import "WMCarePlanValue.h"
 #import "WMCarePlanCategory.h"
+#import "WMCarePlanGroup.h"
 
 @interface WMCarePlanValue ()
 
@@ -9,6 +10,16 @@
 
 
 @implementation WMCarePlanValue
+
++ (NSInteger)valueCountForCarePlanGroup:(WMCarePlanGroup *)carePlanGroup
+{
+    if (nil == carePlanGroup) {
+        return 0;
+    }
+    // else
+    NSManagedObjectContext *managedObjectContext = [carePlanGroup managedObjectContext];
+    return [WMCarePlanValue MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"group == %@", carePlanGroup] inContext:managedObjectContext];
+}
 
 - (void)awakeFromInsert
 {
@@ -47,6 +58,48 @@
 - (NSString *)pathToValue
 {
     return [self.categoryPathToValue componentsJoinedByString:@","];
+}
+
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
+                                                            @"revisedFlagValue",
+                                                            @"categoryPathToValue",
+                                                            @"pathToValue"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMCarePlanValue attributeNamesNotToSerialize] containsObject:propertyName] || [[WMCarePlanValue relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMCarePlanValue relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
 }
 
 @end

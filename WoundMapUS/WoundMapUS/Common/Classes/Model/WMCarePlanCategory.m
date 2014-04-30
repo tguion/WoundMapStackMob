@@ -117,6 +117,7 @@ typedef enum {
 + (WMCarePlanCategory *)updateCarePlanCategoryFromDictionary:(NSDictionary *)dictionary
                                                       parent:(WMCarePlanCategory *)parent
                                         managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                                                   objectIDs:(NSMutableArray *)objectIDs
 {
     id title = [dictionary objectForKey:@"title"];
     WMCarePlanCategory *carePlanCategory = [self carePlanCategoryForTitle:title
@@ -146,12 +147,15 @@ typedef enum {
         }
         [carePlanCategory setWoundTypes:set];
     }
+    [managedObjectContext MR_saveOnlySelfAndWait];
+    [objectIDs addObject:[carePlanCategory objectID]];
     // now subcategories
     id subcategories = [dictionary objectForKey:@"subcategories"];
     for (NSDictionary *d in subcategories) {
         [self updateCarePlanCategoryFromDictionary:d
                                             parent:carePlanCategory
-                              managedObjectContext:managedObjectContext];
+                              managedObjectContext:managedObjectContext
+                                         objectIDs:objectIDs];
     }
     // now options
     id options = [dictionary objectForKey:@"options"];
@@ -159,7 +163,8 @@ typedef enum {
         // check if we are at the leaf of the tree
         [self updateCarePlanCategoryFromDictionary:d
                                             parent:carePlanCategory
-                              managedObjectContext:managedObjectContext];
+                              managedObjectContext:managedObjectContext
+                                         objectIDs:objectIDs];
     }
     return carePlanCategory;
 }
@@ -187,7 +192,10 @@ typedef enum {
         NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an array, class was %@", NSStringFromClass([propertyList class]));
         NSMutableArray *objectIDs = [[NSMutableArray alloc] init];
         for (NSDictionary *dictionary in propertyList) {
-            WMCarePlanCategory *carePlanCategory = [self updateCarePlanCategoryFromDictionary:dictionary parent:nil managedObjectContext:managedObjectContext];
+            WMCarePlanCategory *carePlanCategory = [self updateCarePlanCategoryFromDictionary:dictionary
+                                                                                       parent:nil
+                                                                         managedObjectContext:managedObjectContext
+                                                                                    objectIDs:objectIDs];
             [managedObjectContext MR_saveOnlySelfAndWait];
             NSAssert(![[carePlanCategory objectID] isTemporaryID], @"Expect a permanent objectID");
             [objectIDs addObject:[carePlanCategory objectID]];
@@ -221,11 +229,13 @@ typedef enum {
                                                             @"sortRankValue",
                                                             @"valueTypeCodeValue",
                                                             @"groupValueTypeCode",
-                                                            @"unit",
+                                                            @"title",
                                                             @"value",
+                                                            @"placeHolder",
+                                                            @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents",
+                                                            @"objectID",
                                                             @"combineKeyAndValue",
                                                             @"inputValueInline",
                                                             @"allowMultipleChildSelection",
@@ -241,8 +251,7 @@ typedef enum {
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMCarePlanCategoryRelationships.subcategories,
-                                                            WMCarePlanCategoryRelationships.values]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMCarePlanCategoryRelationships.subcategories]];
     });
     return PropertyNamesNotToSerialize;
 }

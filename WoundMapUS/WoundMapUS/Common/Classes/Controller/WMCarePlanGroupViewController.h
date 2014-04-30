@@ -21,5 +21,6 @@
 @interface WMCarePlanGroupViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<CarePlanGroupViewControllerDelegate> delegate;
+@property (strong, nonatomic) WMCarePlanGroup *carePlanGroup;
 
 @end

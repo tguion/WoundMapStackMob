@@ -469,6 +469,9 @@
 		7DDBEDEE18BEA96C00FEF3FA /* WMBradenCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDE818BEA96C00FEF3FA /* WMBradenCell.m */; };
 		7DDBEDEF18BEA96C00FEF3FA /* WMBradenScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDEA18BEA96C00FEF3FA /* WMBradenScale.m */; };
 		7DDBEDF018BEA96C00FEF3FA /* WMBradenSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBEDEC18BEA96C00FEF3FA /* WMBradenSection.m */; };
+		7DDE40C1191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE40BF191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.m */; };
+		7DDE40C2191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDE40C0191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.xib */; };
+		7DDE40C719115276008DDA3E /* WMCarePlanGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE40C619115276008DDA3E /* WMCarePlanGroupTableViewCell.m */; };
 		7DDE525818E36AC100AB2D31 /* FFEF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */; };
 		7DDE754818CE42AA00B15C77 /* WMCorePlotManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754718CE42AA00B15C77 /* WMCorePlotManager.m */; };
 		7DDE755018CE456800B15C77 /* WoundAreaPlotDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDE754B18CE456800B15C77 /* WoundAreaPlotDataSource.m */; };
@@ -1363,6 +1366,11 @@
 		7DDBEDEA18BEA96C00FEF3FA /* WMBradenScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMBradenScale.m; sourceTree = "<group>"; };
 		7DDBEDEB18BEA96C00FEF3FA /* WMBradenSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMBradenSection.h; sourceTree = "<group>"; };
 		7DDBEDEC18BEA96C00FEF3FA /* WMBradenSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMBradenSection.m; sourceTree = "<group>"; };
+		7DDE40BE191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanGroupHistoryViewController.h; sourceTree = "<group>"; };
+		7DDE40BF191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanGroupHistoryViewController.m; sourceTree = "<group>"; };
+		7DDE40C0191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCarePlanGroupHistoryViewController.xib; sourceTree = "<group>"; };
+		7DDE40C519115276008DDA3E /* WMCarePlanGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanGroupTableViewCell.h; sourceTree = "<group>"; };
+		7DDE40C619115276008DDA3E /* WMCarePlanGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanGroupTableViewCell.m; sourceTree = "<group>"; };
 		7DDE754618CE42AA00B15C77 /* WMCorePlotManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCorePlotManager.h; sourceTree = "<group>"; };
 		7DDE754718CE42AA00B15C77 /* WMCorePlotManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCorePlotManager.m; sourceTree = "<group>"; };
 		7DDE754A18CE456800B15C77 /* WoundAreaPlotDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WoundAreaPlotDataSource.h; sourceTree = "<group>"; };
@@ -2018,6 +2026,9 @@
 				7D10CE0F18DCE01900AD43E3 /* WMBradenSectionSelectCellViewController.xib */,
 				7D39DB3918B824510054DDC3 /* WMBuildGroupViewController.h */,
 				7D39DB3A18B824510054DDC3 /* WMBuildGroupViewController.m */,
+				7DDE40BE191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.h */,
+				7DDE40BF191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.m */,
+				7DDE40C0191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.xib */,
 				7D39DB4118B826620054DDC3 /* WMCarePlanGroupViewController.h */,
 				7D39DB4218B826620054DDC3 /* WMCarePlanGroupViewController.m */,
 				7D39DB4318B826620054DDC3 /* WMCarePlanGroupViewController.xib */,
@@ -2092,6 +2103,9 @@
 				7D39DB5118B828000054DDC3 /* WMPatientSummaryContainerViewController.h */,
 				7D39DB5218B828000054DDC3 /* WMPatientSummaryContainerViewController.m */,
 				7D39DB5318B828000054DDC3 /* WMPatientSummaryContainerViewController.xib */,
+				7D0F2F531905C120009F8346 /* WMPatientSummaryViewController.h */,
+				7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */,
+				7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */,
 				7D9AA28318B13B2D00C1B698 /* WMPatientTableViewController.h */,
 				7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */,
 				7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */,
@@ -2225,9 +2239,6 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
-				7D0F2F531905C120009F8346 /* WMPatientSummaryViewController.h */,
-				7D0F2F541905C120009F8346 /* WMPatientSummaryViewController.m */,
-				7D0F2F551905C120009F8346 /* WMPatientSummaryViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2245,6 +2256,10 @@
 				7DDE754718CE42AA00B15C77 /* WMCorePlotManager.m */,
 				7DF4E9A818C4B76B000A3F5B /* WMEmailManager.h */,
 				7DF4E9A918C4B76B000A3F5B /* WMEmailManager.m */,
+				7D01510818EEEF7500D5C0A9 /* WMFatFractal.h */,
+				7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */,
+				7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */,
+				7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */,
 				7D9AA26018AEC0D400C1B698 /* WMNavigationCoordinator.h */,
 				7D9AA26118AEC0D400C1B698 /* WMNavigationCoordinator.m */,
 				7DD8376618C8B3980028C2D3 /* WMNetworkReachability.h */,
@@ -2259,10 +2274,6 @@
 				7D9AA26D18AFD35F00C1B698 /* WMSeedDatabaseManager.m */,
 				5F67D20C18AC447400460C37 /* WMUserDefaultsManager.h */,
 				5F67D20D18AC447400460C37 /* WMUserDefaultsManager.m */,
-				7D10CD5418D1F35C00AD43E3 /* WMFatFractalManager.h */,
-				7D10CD5518D1F35C00AD43E3 /* WMFatFractalManager.m */,
-				7D01510818EEEF7500D5C0A9 /* WMFatFractal.h */,
-				7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -2428,6 +2439,8 @@
 		7DB2069E18A7D6950004DC32 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7DDE40C519115276008DDA3E /* WMCarePlanGroupTableViewCell.h */,
+				7DDE40C619115276008DDA3E /* WMCarePlanGroupTableViewCell.m */,
 				7D0F2F6A1906F2FB009F8346 /* WMUndermineTunnelContainerView.h */,
 				7D0F2F6B1906F2FB009F8346 /* WMUndermineTunnelContainerView.m */,
 				7D0F2F671906EA1F009F8346 /* WMThumbImageView.h */,
@@ -3233,6 +3246,7 @@
 				7D10CDEC18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib in Resources */,
 				5F67D20618AC3BE000460C37 /* WoundOdor.plist in Resources */,
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
+				7DDE40C2191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.xib in Resources */,
 				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,
 				5F6DE4F118AEDF2400E87F7E /* WMChooseTrackViewController.xib in Resources */,
 				7D1BA8BD18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.xib in Resources */,
@@ -3304,6 +3318,7 @@
 				7DF4E8F518C22EEC000A3F5B /* _WMWoundPosition.m in Sources */,
 				7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */,
 				7D10CDCD18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.m in Sources */,
+				7DDE40C719115276008DDA3E /* WMCarePlanGroupTableViewCell.m in Sources */,
 				7DDBEDD718BEA6E700FEF3FA /* WMBradenScaleInputViewController.m in Sources */,
 				7DB206B118A7D6950004DC32 /* Thumbnailer.m in Sources */,
 				5F67D22D18AD8DF000460C37 /* WMNavigationStage.m in Sources */,
@@ -3647,6 +3662,7 @@
 				7DF4E92918C22F27000A3F5B /* WMCarePlanValue.m in Sources */,
 				7DF4E8ED18C22EEC000A3F5B /* _WMPsychoSocialValue.m in Sources */,
 				7D39DB6218B921EE0054DDC3 /* WMPhotosContainerViewController.m in Sources */,
+				7DDE40C1191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.m in Sources */,
 				7D1BA8BC18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m in Sources */,
 				7DD8372F18C78A390028C2D3 /* NSObject+MagicalDataImport.m in Sources */,
 				5F67D22418AD8DE200460C37 /* _WMNavigationStage.m in Sources */,

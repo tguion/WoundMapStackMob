@@ -2,7 +2,7 @@
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
 
-@class WMPatient, WMCarePlanValue, WMCarePlanCategory, WMCarePlanInterventionEvent, WMParticipant, WMInterventionEventType;
+@class WMPatient, WMCarePlanValue, WMCarePlanCategory, WMInterventionEvent, WMParticipant, WMInterventionEventType;
 
 @interface WMCarePlanGroup : _WMCarePlanGroup <AssessmentGroup> {}
 
@@ -14,6 +14,7 @@
 @property (readonly, nonatomic) NSArray *carePlanValuesRemoved;
 
 + (WMCarePlanGroup *)activeCarePlanGroup:(WMPatient *)patient;
++ (WMCarePlanGroup *)carePlanGroupForPatient:(WMPatient *)patient;
 + (WMCarePlanGroup *)mostRecentOrActiveCarePlanGroup:(WMPatient *)patient;
 + (NSDate *)mostRecentOrActiveCarePlanGroupDateModified:(WMPatient *)patient;
 + (NSInteger)closeCarePlanGroupsCreatedBefore:(NSDate *)date
@@ -32,17 +33,17 @@
 
 - (WMCarePlanCategory *)carePlanCategoryForParentCategory:(WMCarePlanCategory *)parentCategory;
 - (BOOL)hasValueForCategoryOrDescendants:(WMCarePlanCategory *)carePlanCategory;
-- (void)removeCarePlanValuesForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory;
+- (NSArray *)removeCarePlanValuesForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory;
 
-- (WMCarePlanInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
-                                                           path:(NSString *)path
-                                                          title:(NSString *)title
-                                                      valueFrom:(id)valueFrom
-                                                        valueTo:(id)valueTo
-                                                           type:(WMInterventionEventType *)type
-                                                    participant:(WMParticipant *)participant
-                                                         create:(BOOL)create
-                                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
+                                                   path:(NSString *)path
+                                                  title:(NSString *)title
+                                              valueFrom:(id)valueFrom
+                                                valueTo:(id)valueTo
+                                                   type:(WMInterventionEventType *)type
+                                            participant:(WMParticipant *)participant
+                                                 create:(BOOL)create
+                                   managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 - (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant;
 - (void)incrementContinueCount;
 

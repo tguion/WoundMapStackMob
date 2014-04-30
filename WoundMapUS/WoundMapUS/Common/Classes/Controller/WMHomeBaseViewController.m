@@ -20,6 +20,8 @@
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMPhoto.h"
+#import "WMCarePlanGroup.h"
+#import "WMCarePlanValue.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
@@ -2053,13 +2055,12 @@
 
 - (void)carePlanGroupViewControllerDidSave:(WMCarePlanGroupViewController *)viewController
 {
-    BOOL hasChanges = self.managedObjectContext.hasChanges;
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         // post notification if some values were added
-        if (hasChanges) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
-        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
+        NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:self.carePlanCell];
+        [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
 }
 
@@ -2268,6 +2269,8 @@
         cell.textLabel.text = @"Clinical Setting";
         cell.detailTextLabel.text = self.patient.stage.track.displayTitle;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else if (cell == self.carePlanCell) {
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%d items", [WMCarePlanValue valueCountForCarePlanGroup:[WMCarePlanGroup activeCarePlanGroup:self.patient]]];
     }
 }
 
