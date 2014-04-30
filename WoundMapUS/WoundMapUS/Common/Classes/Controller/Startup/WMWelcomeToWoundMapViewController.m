@@ -14,7 +14,6 @@
 #import "WMManageTeamViewController.h"
 #import "WMIAPJoinTeamViewController.h"
 #import "WMCreateTeamViewController.h"
-#import "WMIAPCreateConsultantViewController.h"
 #import "WMCreateConsultingGroupViewController.h"
 #import "WMChooseTrackViewController.h"
 #import "WMPatientDetailViewController.h"
@@ -38,6 +37,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "KeychainItemWrapper.h"
+#import "IAPManager.h"
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,            // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, IAPNonConsumableViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -264,13 +264,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return organizationEditorViewController;
 }
 
-- (WMIAPCreateConsultantViewController *)iapCreateConsultantViewController
-{
-    WMIAPCreateConsultantViewController *iapCreateConsultantViewController = [[WMIAPCreateConsultantViewController alloc] initWithNibName:@"WMIAPCreateConsultantViewController" bundle:nil];
-    iapCreateConsultantViewController.delegate = self;
-    return iapCreateConsultantViewController;
-}
-
 - (WMChooseTrackViewController *)chooseTrackViewController
 {
     WMChooseTrackViewController *chooseTrackViewController = [[WMChooseTrackViewController alloc] initWithNibName:@"WMChooseTrackViewController" bundle:nil];
@@ -335,12 +328,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentCreateConsultingGroupViewController
 {
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateConsultantViewController];
-    [self presentViewController:navigationController
-                       animated:YES
-                     completion:^{
-                         // nothing
-                     }];
+    [self.navigationController pushViewController:self.createConsultingGroupViewController animated:YES];
 }
 
 - (WMPatientDetailViewController *)patientDetailViewController
@@ -514,26 +502,29 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             break;
                         }
                         // else
-                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
-                                                                             successBlock:^{
-                                                                                 [weakSelf presentCreateConsultingGroupViewController];
-                                                                             } withObject:self.view];
-                        if (!proceed) {
-                            return;
+                        if (NO) {
+                            BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
+                                                                                 successBlock:^{
+                                                                                     [weakSelf presentCreateConsultingGroupViewController];
+                                                                                 } withObject:self.view];
+                            if (proceed) {
+                                [self presentCreateConsultingGroupViewController];
+                            }
+                        } else {
+                            [self presentCreateConsultingGroupViewController];
                         }
-//                        [self presentCreateConsultingGroupViewController];
                     } else {
-                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier
-                                                                             successBlock:^{
-                                                                                 [weakSelf presentCreateTeamViewController];
-                                                                             } withObject:self.view];
-                        if (!proceed) {
-                            return;
+                        if (NO) {
+                            BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier
+                                                                                 successBlock:^{
+                                                                                     [weakSelf presentCreateTeamViewController];
+                                                                                 } withObject:self.view];
+                            if (proceed) {
+                                [self presentCreateTeamViewController];
+                            }
+                        } else {
+                            [self presentCreateTeamViewController];
                         }
-//                        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier successSelector:@selector(presentCreateTeamViewController) withObject:nil];
-//                        if (YES/*proceed*/) {
-//                            [self presentCreateTeamViewController];
-//                        }
                     }
                     break;
                 }
@@ -1092,37 +1083,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }];
 }
 
-#pragma mark - IAPNonConsumableViewControllerDelegate
-
-- (void)iapNonConsumableViewControllerDidCancel:(IAPNonConsumableViewController *)controller
-{
-    [self dismissViewControllerAnimated:YES completion:^{
-        // nothing
-    }];
-}
-
-- (void)iapNonConsumableViewControllerDidPurchaseFeature:(IAPNonConsumableViewController *)controller
-{
-    __weak __typeof(&*self)weakSelf = self;
-    IAPProduct *iapProduct = controller.iapProduct;
-    if ([iapProduct.identifier isEqualToString:kCreateTeamProductIdentifier]) {
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakSelf.navigationController pushViewController:weakSelf.createTeamViewController animated:YES];
-        }];
-    } else if ([iapProduct.identifier isEqualToString:kAddTeamMemberProductIdentifier]) {
-        // TODO figure out where this goes
-    } else if ([iapProduct.identifier isEqualToString:kCreateConsultingGroupProductIdentifier]) {
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakSelf.navigationController pushViewController:weakSelf.createConsultingGroupViewController animated:YES];
-        }];
-    }
-}
-
 #pragma mark - CreateTeamViewControllerDelegate
 
 - (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
     self.welcomeState = WMWelcomeStateTeamSelected;
     [self.tableView reloadData];
     // check if team leader wants to add current patients to team
@@ -1144,32 +1109,17 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [viewController clearAllReferences];
 }
 
-#pragma mark - IAPCreateConsultantViewControllerDelegate
+#pragma mark - CreateConsultantViewControllerDelegate
 
-- (void)iapCreateConsultantViewControllerDidPurchase:(WMIAPCreateConsultantViewController *)viewController
+- (void)createConsultantViewControllerDidFinish:(WMCreateConsultingGroupViewController *)viewController
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        // TODO finish
-    }];
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (void)iapCreateConsultantViewControllerDidDecline:(WMIAPCreateConsultantViewController *)viewController
+- (void)createConsultantViewControllerDidCancel:(WMCreateConsultingGroupViewController *)viewController
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        // nothing
-    }];
-}
-
-#pragma mark - IAPCreateConsultantViewControllerDelegate
-
-- (void)createConsultantViewControllerDidPurchase:(WMCreateConsultingGroupViewController *)viewController
-{
-    
-}
-
-- (void)createConsultantViewControllerDidDecline:(WMCreateConsultingGroupViewController *)viewController
-{
-    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - ChooseTrackDelegate

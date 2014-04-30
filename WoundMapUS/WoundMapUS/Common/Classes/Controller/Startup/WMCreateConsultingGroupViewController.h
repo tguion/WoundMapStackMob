@@ -12,8 +12,8 @@
 
 @protocol IAPCreateConsultantViewControllerDelegate <NSObject>
 
-- (void)createConsultantViewControllerDidPurchase:(WMCreateConsultingGroupViewController *)viewController;
-- (void)createConsultantViewControllerDidDecline:(WMCreateConsultingGroupViewController *)viewController;
+- (void)createConsultantViewControllerDidFinish:(WMCreateConsultingGroupViewController *)viewController;
+- (void)createConsultantViewControllerDidCancel:(WMCreateConsultingGroupViewController *)viewController;
 
 @end
 

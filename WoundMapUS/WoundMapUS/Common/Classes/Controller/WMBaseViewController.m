@@ -710,14 +710,14 @@
 {
     return [self presentIAPViewControllerForProductIdentifier:productIdentifier
                                                  successBlock:(dispatch_block_t)successBlock
-                                                   withObject:object
-                                                proceedAlways:NO];
+                                                proceedAlways:NO
+                                                   withObject:object];
 }
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
                                         successBlock:(dispatch_block_t)successBlock
-                                          withObject:(id)object
                                        proceedAlways:(BOOL)proceedAlways
+                                          withObject:(id)object
 {
     // check if this is constrained to wound type
     IAPProduct *iapProduct = [IAPProduct productForIdentifier:productIdentifier

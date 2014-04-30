@@ -187,11 +187,15 @@
         } else {
             _invitee = object;
             // present IAP
-            [self presentIAPViewControllerForProductIdentifier:kAddTeamMemberProductIdentifier
-                                                  successBlock:^{
-                                                      [weakSelf completeTeamInvitation];
-                                                  } proceedAlways:NO
-                                                    withObject:sender];
+            if (NO) {
+                [self presentIAPViewControllerForProductIdentifier:kAddTeamMemberProductIdentifier
+                                                      successBlock:^{
+                                                          [weakSelf completeTeamInvitation];
+                                                      } proceedAlways:NO
+                                                        withObject:sender];
+            } else {
+                [weakSelf completeTeamInvitation];
+            }
         }
     }];
 }

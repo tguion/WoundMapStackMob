@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
@@ -157,7 +157,7 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
-        <attribute name="webURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webURL" optional="YES" attributeType="String" defaultValueString="http://" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="consultingGroup" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
     <entity name="WMDefinition" representedClassName="WMDefinition" syncable="YES">
@@ -1154,7 +1154,7 @@
         <element name="WMCarePlanCategory" positionX="0" positionY="0" width="128" height="345"/>
         <element name="WMCarePlanGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMCarePlanValue" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="148"/>
+        <element name="WMConsultingGroup" positionX="0" positionY="0" width="128" height="150"/>
         <element name="WMDefinition" positionX="0" positionY="0" width="128" height="120"/>
         <element name="WMDefinitionKeyword" positionX="0" positionY="0" width="128" height="90"/>
         <element name="WMDevice" positionX="0" positionY="0" width="128" height="285"/>

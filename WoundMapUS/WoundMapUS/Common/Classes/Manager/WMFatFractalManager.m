@@ -688,6 +688,10 @@
     WMTeam *team = teamInvitation.team;
     // only team leader can do this
     invitee.team = team;
+    if (nil == invitee.dateAddedToTeam) {
+        invitee.dateAddedToTeam = [NSDate date];
+    }
+    invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:invitee.dateTeamSubscriptionExpires];
     FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
     NSParameterAssert(participantGroup);
     NSError *error = nil;

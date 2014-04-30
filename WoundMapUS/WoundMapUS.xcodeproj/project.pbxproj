@@ -439,7 +439,6 @@
 		7DD8376318C7A5080028C2D3 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375918C7A5080028C2D3 /* AFXMLRequestOperation.m */; };
 		7DD8376418C7A5080028C2D3 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */; };
 		7DD8376818C8B3980028C2D3 /* WMNetworkReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */; };
-		7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
 		7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */; };
 		7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */; };
@@ -1309,8 +1308,6 @@
 		7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		7DD8376618C8B3980028C2D3 /* WMNetworkReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNetworkReachability.h; sourceTree = "<group>"; };
 		7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNetworkReachability.m; sourceTree = "<group>"; };
-		7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMIAPCreateConsultantViewController.h; sourceTree = "<group>"; };
-		7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMIAPCreateConsultantViewController.m; sourceTree = "<group>"; };
 		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
 		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
 		7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressEditorViewController.h; sourceTree = "<group>"; };
@@ -1574,14 +1571,15 @@
 				7D10CD6D18D4EA9E00AD43E3 /* WMCreateAccountViewController.h */,
 				7D10CD6E18D4EA9E00AD43E3 /* WMCreateAccountViewController.m */,
 				7D10CD6F18D4EA9E00AD43E3 /* WMCreateAccountViewController.xib */,
+				7D6A58D01910081200D72800 /* WMCreateConsultingGroupViewController.h */,
+				7D6A58D11910081200D72800 /* WMCreateConsultingGroupViewController.m */,
+				7D6A58D21910081200D72800 /* WMCreateConsultingGroupViewController.xib */,
 				7D01510318EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.h */,
 				7D01510418EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m */,
 				7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */,
 				7D0150FC18EB5BA400D5C0A9 /* WMCreateTeamViewController.h */,
 				7D0150FD18EB5BA400D5C0A9 /* WMCreateTeamViewController.m */,
 				7D0150FE18EB5BA400D5C0A9 /* WMCreateTeamViewController.xib */,
-				7DDAFAE818B4E76A00A05F5D /* WMIAPCreateConsultantViewController.h */,
-				7DDAFAE918B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m */,
 				5F6DE4FB18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.h */,
 				5F6DE4FC18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.m */,
 				5F6DE4FD18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib */,
@@ -1591,9 +1589,6 @@
 				5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */,
 				5F67D1B118AC2FF000460C37 /* WMWelcomeToWoundMapViewController.m */,
 				5F67D1B218AC2FF000460C37 /* WMWelcomeToWoundMapViewController.xib */,
-				7D6A58D01910081200D72800 /* WMCreateConsultingGroupViewController.h */,
-				7D6A58D11910081200D72800 /* WMCreateConsultingGroupViewController.m */,
-				7D6A58D21910081200D72800 /* WMCreateConsultingGroupViewController.xib */,
 			);
 			path = Startup;
 			sourceTree = "<group>";
@@ -3608,7 +3603,6 @@
 				7DD8373F18C78A3A0028C2D3 /* MagicalRecord+ErrorHandling.m in Sources */,
 				7D39DB2D18B8230F0054DDC3 /* WMBradenScaleViewController.m in Sources */,
 				7DDBEDCA18BC0DED00FEF3FA /* WMAmountQualifier.m in Sources */,
-				7DDAFAEB18B4E76A00A05F5D /* WMIAPCreateConsultantViewController.m in Sources */,
 				7D39DAEC18B7E5F80054DDC3 /* WMWoundDetailViewController.m in Sources */,
 				7D39DB4418B826620054DDC3 /* WMCarePlanGroupViewController.m in Sources */,
 				7D39DB2218B8217A0054DDC3 /* _WMPhoto.m in Sources */,

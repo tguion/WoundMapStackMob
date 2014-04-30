@@ -290,20 +290,6 @@ NSString* _deviceId;
         if (error) {
             [WMUtilities logError:error];
         }
-        [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            if (nil == participant.dateAddedToTeam) {
-                participant.dateAddedToTeam = [NSDate date];
-            }
-            participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [ff updateObj:participant error:&error];
-            if (error) {
-                [WMUtilities logError:error];
-            }
-        }];
     }];
 }
 

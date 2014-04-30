@@ -713,6 +713,20 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSString *)ffQuery
+{
+    if (self.didCreateGroup) {
+        return nil;
+    }
+    // else
+    return [NSString stringWithFormat:@"%@/%@", self.carePlanGroup.ffUrl, WMCarePlanGroupRelationships.values];
+}
+
+- (NSString *)backendSeedEntityName
+{
+    return [WMCarePlanCategory entityName];
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
     if (self.isSearchActive) {

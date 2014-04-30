@@ -14,20 +14,9 @@
 #import "IAPBaseViewController.h"
 #import "IAPManager.h"
 
-@class IAPNonConsumableViewController;
-
-@protocol IAPNonConsumableViewControllerDelegate <NSObject>
-
-- (void)iapNonConsumableViewControllerDidCancel:(IAPNonConsumableViewController *)controller;
-- (void)iapNonConsumableViewControllerDidPurchaseFeature:(IAPNonConsumableViewController *)controller;
-
-@end
-
-
 @interface IAPNonConsumableViewController : IAPBaseViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *purchaseButton;
 @property (strong, nonatomic) IBOutlet UIButton *purchaseButtonDescView;
-@property (weak, nonatomic) id<IAPNonConsumableViewControllerDelegate> delegate;
 
 @end

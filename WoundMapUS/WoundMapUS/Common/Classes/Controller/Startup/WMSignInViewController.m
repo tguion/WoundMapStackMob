@@ -158,6 +158,8 @@
                                                                   otherButtonTitles:nil];
                         alertView.tag = kSubscriptionExpiredAlertViewTag;
                         [alertView show];
+                    } else {
+                        [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                     }
                 } else {
                     __block WMTeamInvitation *teamInvitation = participant.teamInvitation;

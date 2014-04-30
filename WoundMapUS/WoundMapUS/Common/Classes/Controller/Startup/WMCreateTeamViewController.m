@@ -224,6 +224,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (IBAction)createTeamAction:(id)sender
 {
+    [self.view endEditing:YES];
     __weak __typeof(&*self)weakSelf = self;
     [self createTeam:^(NSError *error) {
         [weakSelf.delegate createTeamViewController:weakSelf didCreateTeam:weakSelf.team];
@@ -232,6 +233,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (IBAction)createInvitationAction:(id)sender
 {
+    [self.view endEditing:YES];
     __weak __typeof(&*self)weakSelf = self;
     [self createTeam:^(NSError *error) {
         [weakSelf navigateToCreateInvitationViewController];
