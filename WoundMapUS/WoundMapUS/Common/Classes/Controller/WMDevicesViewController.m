@@ -526,9 +526,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.deviceGroup.ffUrl, WMDeviceGroupRelationships.values];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMDevice entityName];
+    return @[[WMDevice entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

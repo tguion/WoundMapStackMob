@@ -758,9 +758,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.woundTreatmentGroup.ffUrl, WMWoundTreatmentGroupRelationships.values];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMWoundTreatment entityName];
+    return @[[WMWoundTreatment entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

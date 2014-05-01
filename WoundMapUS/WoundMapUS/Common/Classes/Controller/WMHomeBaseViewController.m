@@ -15,6 +15,7 @@
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "WMPatient.h"
+#import "WMWoundMeasurement.h"
 #import "WMBradenScale.h"
 #import "WMMedicationGroup.h"
 #import "WMWound.h"
@@ -133,9 +134,9 @@
     return  [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.patient.ffUrl];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMNavigationNode entityName];
+    return @[[WMNavigationNode entityName], [WMWoundMeasurement entityName]];
 }
 
 - (BOOL)shouldShowSelectTrackTableViewCell
@@ -1260,7 +1261,7 @@
         }
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups,WMWoundRelationships.photos]
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]
                                               aggregator:self.wound
                                                       ff:[WMFatFractal sharedInstance]
                                        completionHandler:block];
@@ -2270,7 +2271,7 @@
         cell.detailTextLabel.text = self.patient.stage.track.displayTitle;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (cell == self.carePlanCell) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%d items", [WMCarePlanValue valueCountForCarePlanGroup:[WMCarePlanGroup activeCarePlanGroup:self.patient]]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld items", (long)[WMCarePlanValue valueCountForCarePlanGroup:[WMCarePlanGroup activeCarePlanGroup:self.patient]]];
     }
 }
 

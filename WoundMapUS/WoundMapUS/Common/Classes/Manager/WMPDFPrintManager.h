@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, PrintTemplate) {
     kPrintTemplateTwoColumnsSOAP,
     kPrintTemplateTwoColumnsTwoPhotos,
-} PrintTemplate;
+};
 
 typedef void (^OnPrintFinish)(BOOL completed, NSError *error);
 

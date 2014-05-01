@@ -507,9 +507,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.skinAssessmentGroup.ffUrl, WMSkinAssessmentGroupRelationships.values];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMSkinAssessmentCategory entityName];
+    return @[[WMSkinAssessmentCategory entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

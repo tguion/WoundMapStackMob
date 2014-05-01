@@ -10,6 +10,7 @@
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMWoundPhotoCollectionViewCell.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 
 @interface WMPhotoGridViewController ()
@@ -52,6 +53,8 @@
     UICollectionViewFlowLayout *myLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     myLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     myLayout.minimumInteritemSpacing = 1.0;
+    // need measurement from back end
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

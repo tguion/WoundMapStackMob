@@ -108,7 +108,7 @@
     [super viewDidAppear:animated];
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
-                                                            message:[NSString stringWithFormat:@"Your Policy has closed %d open Care Plan records. A new Care Plan has been created for you.", self.recentlyClosedCount]
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Care Plan records. A new Care Plan has been created for you.", (long)self.recentlyClosedCount]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
@@ -722,9 +722,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.carePlanGroup.ffUrl, WMCarePlanGroupRelationships.values];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMCarePlanCategory entityName];
+    return @[[WMCarePlanCategory entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

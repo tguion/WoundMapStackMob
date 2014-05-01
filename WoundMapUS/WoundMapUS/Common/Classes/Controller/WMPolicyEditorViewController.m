@@ -324,7 +324,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     NSInteger sortRank = 0;
     for (NSManagedObjectID *objectID in self.sortOrdering) {
         WMNavigationNode *node = (WMNavigationNode *)[self.managedObjectContext objectWithID:objectID];
-        node.sortRank = [NSNumber numberWithInt:sortRank++];
+        node.sortRank = @(sortRank++);
     }
 }
 
@@ -489,9 +489,9 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     indexPath = [self indexPathTableToFetchedResultsController:indexPath];
     WMNavigationNode *navigationNode = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (textField.tag == kFrequencyUnitTextFieldTag) {
-        navigationNode.frequencyValue = [NSNumber numberWithInt:[textField.text integerValue]];
+        navigationNode.frequencyValue = @([textField.text integerValue]);
     } else if (textField.tag == kCloseUnitTextFieldTag) {
-        navigationNode.closeValue = [NSNumber numberWithInt:[textField.text integerValue]];
+        navigationNode.closeValue = @([textField.text integerValue]);
     }
 }
 
@@ -724,7 +724,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     // else
     if ([navigationNode.subnodes count] > 0) {
         cell.textLabel.text = navigationNode.title;
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%d tasks", [navigationNode.subnodes count]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu tasks", (unsigned long)[navigationNode.subnodes count]];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         return;
     }
@@ -813,9 +813,9 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     return ffQuery;
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMNavigationNode entityName];
+    return @[[WMNavigationNode entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

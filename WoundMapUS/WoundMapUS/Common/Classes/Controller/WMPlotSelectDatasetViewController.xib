@@ -20,11 +20,11 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </tableView>
         <view contentMode="scaleToFill" id="Bne-yT-IfW">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="There is not enough data to generate a plot. Try again tomorrow." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="288" translatesAutoresizingMaskIntoConstraints="NO" id="JEf-Oq-qhJ">
-                    <rect key="frame" x="16" y="200" width="288" height="64"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There is not enough data to generate a plot. Try again tomorrow." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="JEf-Oq-qhJ">
+                    <rect key="frame" x="20" y="40" width="280" height="41"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -32,7 +32,13 @@
                 </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="JEf-Oq-qhJ" secondAttribute="centerX" id="Ebz-ly-QCx"/>
+                <constraint firstItem="JEf-Oq-qhJ" firstAttribute="leading" secondItem="Bne-yT-IfW" secondAttribute="leading" constant="20" symbolic="YES" id="GhA-UF-moV"/>
+                <constraint firstAttribute="centerY" secondItem="JEf-Oq-qhJ" secondAttribute="centerY" id="Loh-H2-dYQ"/>
+                <constraint firstAttribute="trailing" secondItem="JEf-Oq-qhJ" secondAttribute="trailing" constant="20" symbolic="YES" id="bIr-aI-Uen"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
         </view>
     </objects>
 </document>

@@ -67,21 +67,20 @@ NSInteger kMinimumPointsForGraph = 2;
 
 - (void)showInsufficientPlotDataView
 {
-    if (nil != self.insufficientPlotDataView.superview) {
+    if (nil != self.tableView.tableHeaderView) {
         return;
     }
     // else
-    self.insufficientPlotDataView.frame = self.view.bounds;
-    [self.tableView addSubview:self.insufficientPlotDataView];
+    self.tableView.tableHeaderView = self.insufficientPlotDataView;
 }
 
 - (void)hideInsufficientPlotDataView
 {
-    if (nil == self.insufficientPlotDataView.superview) {
+    if (nil == self.tableView.tableHeaderView) {
         return;
     }
     // else
-    [self.insufficientPlotDataView removeFromSuperview];
+    self.tableView.tableHeaderView = nil;
 }
 
 @end
@@ -283,7 +282,7 @@ NSInteger kMinimumPointsForGraph = 2;
     NSInteger numberMeasurements = [self numberMeasurementsForIndexPath:indexPath];
     cell.textLabel.text = woundStatusMeasurementTitle;
     cell.textLabel.textColor = (numberMeasurements == 0 ? [UIColor lightGrayColor]:[UIColor blackColor]);
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d plots", numberMeasurements];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld plots", (long)numberMeasurements];
     if ([self.selectedValues containsObject:woundStatusMeasurementTitle]) {
         cell.imageView.image = [UIImage imageNamed:@"ui_checkmark"];
     } else {

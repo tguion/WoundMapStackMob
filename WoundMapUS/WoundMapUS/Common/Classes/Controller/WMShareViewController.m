@@ -85,7 +85,7 @@ CGFloat kCreditsMargin = 20;
     WMParticipant *participant = self.appDelegate.participant;
     IAPTokenCountHandler completionHandler = ^(NSError *error, NSInteger tokenCount, NSDate *lastTokenCreditPurchaseDate) {
         NSInteger creditsAvailable = participant.reportTokenCountValue;
-        NSString *creditStatusText = [NSString stringWithFormat:@"CREDITS REMAINING: %d", creditsAvailable];
+        NSString *creditStatusText = [NSString stringWithFormat:@"CREDITS REMAINING: %ld", (long)creditsAvailable];
         
         NSDate *lastPurchasedDate = participant.lastTokenCreditPurchaseDate;
         if (nil != lastPurchasedDate) {

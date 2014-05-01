@@ -202,7 +202,7 @@ NSString* _deviceId;
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 }
 
-- (void) diagTranslateTxnErrorCode:(int)code
+- (void) diagTranslateTxnErrorCode:(NSInteger)code
 {
     NSString *errorText = nil;
     switch (code) {

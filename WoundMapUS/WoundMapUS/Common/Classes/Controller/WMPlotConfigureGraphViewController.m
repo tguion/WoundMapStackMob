@@ -18,6 +18,8 @@
 #import "WMPlotConfigureGraphViewController.h"
 #import "WMPlotSelectDatasetViewController.h"
 #import "WMPlotGraphViewController.h"
+#import "WMTextFieldTableViewCell.h"
+#import "WMValue1TableViewCell.h"
 #import "WoundStatusMeasurementRollup.h"
 #import "WMWound.h"
 #import "WMBradenScale.h"
@@ -34,79 +36,34 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 @property (strong, nonatomic) NSArray *rollups;                         // sorted rollups
 @property (strong, nonatomic) NSDate *dateMinimum;                      // minimum date in all rollups
 @property (strong, nonatomic) NSDate *dateMaximum;                      // maximum date in all rollups
-@property (strong, nonatomic) IBOutlet UIView *datePickerContainer;     // container with date picker and toolbar
-@property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;          // date picker
+@property (strong, nonatomic) UIDatePicker *datePicker;                 // date picker
+@property (strong, nonatomic) UIToolbar *inputAccessoryView;
 @property (nonatomic) BOOL updatingDateStart;                           // YES if updating dateStart
 @property (readonly, nonatomic) WMPlotGraphViewController *plotGraphViewController;
 
 - (WoundStatusMeasurementRollup *)woundStatusRollupForIndexPath:(NSIndexPath *)indexPath;
 - (IBAction)datePickerDidChangeValueAction:(id)sender;
-- (IBAction)dismissDatePickerAction:(id)sender;
 - (IBAction)previousNextAction:(id)sender;
 
 @end
 
 @interface WMPlotConfigureGraphViewController (PrivateMethods)
-- (void)showDatePickerForCell:(UITableViewCell *)cell;
-- (void)hideDatePicker;
 - (void)selectDateCell;
 - (void)updateUIForSelection;
 @end
 
 @implementation WMPlotConfigureGraphViewController (PrivateMethods)
 
-- (void)showDatePickerForCell:(UITableViewCell *)cell
-{
-    if (nil != self.datePickerContainer.superview) {
-        return;
-    }
-    // else
-    [self.view addSubview:self.datePickerContainer];
-    __block CGRect aFrame = self.datePickerContainer.frame;
-    aFrame.origin.y = CGRectGetMaxY(self.view.bounds);
-    self.datePickerContainer.frame = aFrame;
-    __weak __typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.5 animations:^{
-        aFrame.origin.y -= CGRectGetHeight(weakSelf.datePickerContainer.frame);
-        weakSelf.datePickerContainer.frame = aFrame;
-    } completion:^(BOOL finished) {
-        // translate table
-        weakSelf.keyboardMinY = CGRectGetHeight(weakSelf.view.bounds) - CGRectGetHeight(weakSelf.datePickerContainer.frame);
-    }];
-}
-
-- (void)hideDatePicker
-{
-    if (nil == self.datePickerContainer.superview) {
-        return;
-    }
-    // else
-    __weak __typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.25 animations:^{
-        CGRect aFrame = weakSelf.datePickerContainer.frame;
-        aFrame.origin.y = CGRectGetMaxY(weakSelf.view.bounds);
-        weakSelf.datePickerContainer.frame = aFrame;
-        // restore tableView transform
-        weakSelf.tableView.transform = CGAffineTransformIdentity;
-    } completion:^(BOOL finished) {
-        [weakSelf.tableView deselectRowAtIndexPath:[weakSelf.tableView indexPathForSelectedRow] animated:NO];
-        [weakSelf.datePickerContainer removeFromSuperview];
-    }];
-}
-
 - (void)selectDateCell
 {
-    if (nil == self.datePickerContainer.superview) {
-        return;
-    }
-    // else
     NSIndexPath *indexPath = nil;
     if (self.updatingDateStart) {
         indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     } else {
         indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
     }
-    [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    WMTextFieldTableViewCell *cell = (WMTextFieldTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    [cell.textField becomeFirstResponder];
 }
 
 - (void)updateUIForSelection
@@ -117,6 +74,8 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 @end
 
 @implementation WMPlotConfigureGraphViewController
+
+@synthesize inputAccessoryView=_inputAccessoryView;
 
 #pragma mark - View
 
@@ -136,6 +95,8 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
     self.title = @"Configure";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleBordered target:self action:@selector(nextAction:)];
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -156,26 +117,61 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
     _dateMaximum = nil;
 }
 
-// save data in any view before view goes away
-- (void)preserveDataInViews
-{
-}
-
-// clear any strong references to views
-- (void)clearViewReferences
-{
-    [super clearViewReferences];
-    _datePickerContainer = nil;
-}
-
-// TODO: fixme
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    _datePickerContainer = nil;
-}
-
 #pragma mark - Core
+
+- (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellIdentifier = nil;
+    switch (indexPath.section) {
+        case 0: {
+            cellIdentifier = @"ValueCell";
+            break;
+        }
+        case 1: {
+            cellIdentifier = @"TextCell";
+            break;
+        }
+    }
+    return cellIdentifier;
+}
+
+- (UIDatePicker *)datePicker
+{
+    if (nil == _datePicker) {
+        _datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
+    }
+    return _datePicker;
+}
+
+- (UIToolbar *)inputAccessoryView
+{
+    if (nil == _inputAccessoryView) {
+        // load the next/previous buttons
+        _inputAccessoryView = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), 44.0)];
+        UIBarButtonItem *fixedWidthBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+                                                                                                 target:nil
+                                                                                                 action:NULL];
+        fixedWidthBarButtonItem.width = 20.0;
+        NSArray *barButtonItems = @[[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"keyboard_back"]
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(previousNextAction:)],
+                                    fixedWidthBarButtonItem,
+                                    [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"keyboard_forward"]
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(previousNextAction:)],
+                                    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                  target:nil
+                                                                                  action:NULL],
+                                    [[UIBarButtonItem alloc] initWithTitle:@"Dismiss"
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(dismissAction:)]];
+        _inputAccessoryView.items = barButtonItems;
+    }
+    return _inputAccessoryView;
+}
 
 - (BOOL)isSelectionBradenScales
 {
@@ -257,7 +253,7 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
         self.dateEnd = self.datePicker.date;
         indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
     }
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     [self performSelector:@selector(selectDateCell) withObject:nil afterDelay:0.0];
 }
 
@@ -274,9 +270,9 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
     [self performSelector:@selector(selectDateCell) withObject:nil afterDelay:0.0];
 }
 
-- (IBAction)dismissDatePickerAction:(id)sender
+- (IBAction)dismissAction:(id)sender
 {
-    [self hideDatePicker];
+    [self.view endEditing:YES];
 }
 
 // TODO: make sure self.plotGraphViewController is purged when done
@@ -333,13 +329,11 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
                 case 0: {
                     self.updatingDateStart = YES;
                     self.datePicker.date = self.dateStart;
-                    [self showDatePickerForCell:[tableView cellForRowAtIndexPath:indexPath]];
                     break;
                 }
                 case 1: {
                     self.updatingDateStart = NO;
                     self.datePicker.date = self.dateEnd;
-                    [self showDatePickerForCell:[tableView cellForRowAtIndexPath:indexPath]];
                     break;
                 }
             }
@@ -348,17 +342,12 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
     }
     [self updateUIForSelection];
     [self.tableView reloadData];
-    [self performSelector:@selector(selectDateCell) withObject:nil afterDelay:0.0];
 }
 
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (nil == self.managedObjectContext) {
-        return 0;
-    }
-    // else
     return 2;
 }
 
@@ -393,11 +382,7 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = @"RollupKeyCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-    }
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIdentifierForIndexPath:indexPath]];
     // Configure the cell...
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
@@ -417,27 +402,33 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
                 cell.textLabel.textColor = [UIColor blackColor];
                 NSString *minimumDateString = [NSDateFormatter localizedStringFromDate:woundStatusMeasurementRollup.dateMinimum dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
                 NSString *maximumDateString = [NSDateFormatter localizedStringFromDate:woundStatusMeasurementRollup.dateMaximum dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%d values, (%@-%@)", woundStatusMeasurementRollup.valueCount, minimumDateString, maximumDateString];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld values, (%@-%@)", (long)woundStatusMeasurementRollup.valueCount, minimumDateString, maximumDateString];
             }
             if ([self.selectedValues containsObject:woundStatusMeasurementRollup]) {
-                cell.imageView.image = [UIImage imageNamed:@"ui_checkmark.png"];
+                cell.imageView.image = [UIImage imageNamed:@"ui_checkmark"];
             } else {
-                cell.imageView.image = [UIImage imageNamed:@"ui_circle.png"];
+                cell.imageView.image = [UIImage imageNamed:@"ui_circle"];
             }
             break;
         }
         case 1: {
+            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            UITextField *textField = myCell.textField;
+            textField.inputView = self.datePicker;
+            textField.inputAccessoryView = self.inputAccessoryView;
             switch (indexPath.row) {
                 case 0: {
                     // date start
-                    cell.textLabel.text = @"Start Date";
-                    cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:self.dateStart dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
+                    [myCell updateWithLabelText:@"Start Date"
+                                      valueText:[NSDateFormatter localizedStringFromDate:self.dateStart dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle]
+                                    valuePrompt:@"Enter Start Date"];
                     break;
                 }
                 case 1: {
                     // date end
-                    cell.textLabel.text = @"End Date";
-                    cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:self.dateEnd dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle];
+                    [myCell updateWithLabelText:@"Start Date"
+                                      valueText:[NSDateFormatter localizedStringFromDate:self.dateEnd dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle]
+                                    valuePrompt:@"Enter Start Date"];
                     break;
                 }
             }

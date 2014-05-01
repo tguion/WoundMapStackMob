@@ -42,6 +42,7 @@
 
 @property (strong, nonatomic) UIPopoverController *iapPopoverController;
 
+- (void)acquireBackendDataForEntityNames:(NSArray *)entityNames;
 - (void)acquireBackendDataForEntityName:(NSString *)entityName;
 
 @end
@@ -88,7 +89,7 @@
     // listen for stuff
     [self registerForNotifications];
     // make sure we have any seed data from back end
-    [self acquireBackendDataForEntityName:self.backendSeedEntityName];
+    [self acquireBackendDataForEntityNames:self.backendSeedEntityNames];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -642,9 +643,16 @@
     return self.appDelegate.coreDataHelper.store;
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return nil;
+    return [NSArray array];
+}
+
+- (void)acquireBackendDataForEntityNames:(NSArray *)entityNames
+{
+    for (NSString *entityName in entityNames) {
+        [self acquireBackendDataForEntityName:entityName];
+    }
 }
 
 - (void)acquireBackendDataForEntityName:(NSString *)backendSeedEntityName

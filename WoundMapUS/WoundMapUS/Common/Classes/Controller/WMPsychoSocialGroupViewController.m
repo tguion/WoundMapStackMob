@@ -116,7 +116,7 @@
     [super viewDidAppear:animated];
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
-                                                            message:[NSString stringWithFormat:@"Your Policy has closed %d open Psychosocial records.", self.recentlyClosedCount]
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Psychosocial records.", (long)self.recentlyClosedCount]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
@@ -208,7 +208,7 @@
             return nil;
         }
         // else
-        return [NSString stringWithFormat:@"%d", [self.psychoSocialGroup updatedScoreForPsychoSocialItem:psychoSocialItem]];
+        return [NSString stringWithFormat:@"%ld", (long)[self.psychoSocialGroup updatedScoreForPsychoSocialItem:psychoSocialItem]];
     }
     // else
     psychoSocialValue = [self.psychoSocialGroup psychoSocialValueForPsychoSocialGroup:self.psychoSocialGroup
@@ -692,9 +692,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.psychoSocialGroup.ffUrl, WMPsychoSocialGroupRelationships.values];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMPsychoSocialItem entityName];
+    return @[[WMPsychoSocialItem entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

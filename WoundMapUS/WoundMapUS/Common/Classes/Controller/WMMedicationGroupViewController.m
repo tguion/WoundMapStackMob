@@ -483,9 +483,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.medicationGroup.ffUrl, WMMedicationGroupRelationships.medications];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMMedication entityName];
+    return @[[WMMedication entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

@@ -72,7 +72,7 @@
     date = [WMUtilities roundDateToBeginningOfDay:date];
     NSInteger dayNumber = [date timeIntervalSinceReferenceDate]/kOneDayTimeInterval;
     [self.data addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                          [NSNumber numberWithInt:dayNumber], self.xKey,
+                          @(dayNumber), self.xKey,
                           value, self.yKey,
                           nil]];
     if (0 == _dayCountMinimum || dayNumber < _dayCountMinimum) {
@@ -106,7 +106,7 @@
     NSMutableArray *data = [[NSMutableArray alloc] initWithCapacity:self.valueCount];
     for (NSDictionary *dictionary in self.data) {
         NSNumber *dayNumber = [dictionary objectForKey:self.xKey];
-        dayNumber = [NSNumber numberWithInt:([dayNumber intValue] - referenceDayNumber)];
+        dayNumber = @([dayNumber intValue] - referenceDayNumber);
         id value = [dictionary objectForKey:self.yKey];
         [data addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                          dayNumber, self.xKey,
@@ -118,7 +118,7 @@
 
 - (NSDate *)dateForDayNumber:(NSInteger)dayNumber
 {
-    id dn0 = [NSNumber numberWithInt:dayNumber];
+    id dn0 = @(dayNumber);
     NSInteger index = 0;
     BOOL found = NO;
     for (NSDictionary *dictionary in self.data) {

@@ -148,9 +148,9 @@
     return ffQuery;
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMNavigationNode entityName];
+    return @[[WMNavigationNode entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

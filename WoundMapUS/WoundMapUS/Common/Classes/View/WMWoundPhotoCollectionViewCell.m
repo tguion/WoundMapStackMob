@@ -106,6 +106,18 @@
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [activityIndicatorView removeFromSuperview];
+                id data = woundPhoto.thumbnail;
+                if ([data isKindOfClass:[NSData class]]) {
+                    woundPhoto.thumbnail = [UIImage imageWithData:data];
+                }
+                data = woundPhoto.thumbnailLarge;
+                if ([data isKindOfClass:[NSData class]]) {
+                    woundPhoto.thumbnailLarge = [UIImage imageWithData:data];
+                }
+                data = woundPhoto.thumbnailMini;
+                if ([data isKindOfClass:[NSData class]]) {
+                    woundPhoto.thumbnailMini = [UIImage imageWithData:data];
+                }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 block();
             }];

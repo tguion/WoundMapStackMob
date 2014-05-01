@@ -13,8 +13,8 @@
 
 @protocol PlotViewControllerDelegate <SimpleTableViewControllerDelegate>
 
-- (void)plotViewControllerDidCancel:(WMBaseViewController *)viewController;
-- (void)plotViewControllerDidFinish:(WMBaseViewController *)viewController;
+- (void)plotViewControllerDidCancel:(UIViewController *)viewController;
+- (void)plotViewControllerDidFinish:(UIViewController *)viewController;
 
 @end
 

@@ -230,9 +230,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMInterventionStatus entityName];
+    return @[[WMInterventionStatus entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

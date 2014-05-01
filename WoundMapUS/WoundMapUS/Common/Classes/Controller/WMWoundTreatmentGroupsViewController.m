@@ -151,9 +151,9 @@
     cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
     NSInteger count = [woundTreatmentGroup.values count];
     NSString *treatmentSuffix = (count == 1 ? @"treatment":@"treatments");
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ - %d %@",
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ - %ld %@",
                            [NSDateFormatter localizedStringFromDate:woundTreatmentGroup.createdAt dateStyle:NSDateFormatterLongStyle timeStyle:NSDateFormatterNoStyle],
-                           count,
+                           (long)count,
                            treatmentSuffix];
     if (woundTreatmentGroup.isClosed) {
         cell.detailTextLabel.text = @"closed";

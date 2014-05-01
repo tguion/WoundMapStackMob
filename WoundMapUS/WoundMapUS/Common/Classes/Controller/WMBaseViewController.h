@@ -28,7 +28,7 @@
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSPersistentStore *store;
 
-@property (readonly, nonatomic) NSString *backendSeedEntityName;            // implement for each view controller to make sure we have the seed data from back end
+@property (readonly, nonatomic) NSArray *backendSeedEntityNames;            // implement for each view controller to make sure we have the seed data from back end
 
 @property (strong, nonatomic) NSMutableArray *opaqueNotificationObservers;  // observers that do away when the view dissappears
 @property (strong, nonatomic) NSMutableArray *persistantObservers;          // observers that do no go away when the view controller disappears

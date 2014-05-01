@@ -14,6 +14,7 @@
 #import "WMPhotoZoomViewController.h"
 #import "WMTransformPhotoViewController.h"
 #import "WMSelectWoundPhotoForDateController.h"
+#import "MBProgressHUD.h"
 #import "WMImageScrollView.h"
 #import "WMWoundMeasurementLabel.h"
 #import "WMPatient.h"
@@ -1053,7 +1054,8 @@
 - (void)handleWoundPhotoObjectIDSelection:(NSManagedObjectID *)woundPhotoObjectID atFrame:(CGRect)aFrame
 {
     BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-    WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[self.managedObjectContext objectWithID:woundPhotoObjectID];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:woundPhotoObjectID];
     if (self.isStateDateCompare) {
         // take no action if iPhone and landscape
         if (!isPad && UIDeviceOrientationIsLandscape(self.interfaceOrientation)) {
@@ -1081,11 +1083,31 @@
         }
         return;
     }
-    // else
-    self.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
-    self.photoZoomViewController.initialFrame = aFrame; // aFrame is in window coordinates
-    self.gridScrollSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment;
-    [self installPhotoZoomViewController:NO];
+    // else make sure we have photo data
+    __weak __typeof(self) weakSelf = self;
+    dispatch_block_t block = ^{
+        weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
+        weakSelf.photoZoomViewController.initialFrame = aFrame; // aFrame is in window coordinates
+        weakSelf.gridScrollSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment;
+        [weakSelf installPhotoZoomViewController:NO];
+    };
+    WMPhoto *photo = woundPhoto.photo;
+    if (nil == photo.photo) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Downloading photo";
+        [ff loadBlobsForObj:photo onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                photo.photo = [[UIImage alloc] initWithData:photo.photo];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                block();
+            }
+        }];
+    } else {
+        block();
+    }
 }
 
 // aFrame is in window coordinates

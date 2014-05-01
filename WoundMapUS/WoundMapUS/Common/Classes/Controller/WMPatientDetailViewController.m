@@ -786,7 +786,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     // identifier
                     cell.textLabel.text = @"Identifiers";
                     NSString *string = ([patient.ids count] == 1 ? @"Identifier":@"Identifiers");
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", [patient.ids count], string];
+                    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[patient.ids count], string];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;
                 }
@@ -798,7 +798,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                 case 0: {
                     cell.textLabel.text = @"Medical History";
                     WMMedicalHistoryGroup *medicationGroup = self.patient.lastActiveMedicalHistoryGroup;
-                    NSString *detailText = (medicationGroup ? [NSString stringWithFormat:@"%d entries", medicationGroup.valueCount]:@"");
+                    NSString *detailText = (medicationGroup ? [NSString stringWithFormat:@"%ld entries", (long)medicationGroup.valueCount]:@"");
                     cell.detailTextLabel.text = detailText;
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     break;

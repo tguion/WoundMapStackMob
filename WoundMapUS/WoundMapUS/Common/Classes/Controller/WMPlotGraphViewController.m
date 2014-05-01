@@ -7,23 +7,26 @@
 //
 
 #import "WMPlotGraphViewController.h"
-#import "WCWound+Custom.h"
-#import "WCWoundMeasurementGroup+Custom.h"
-#import "WCWoundMeasurement+Custom.h"
-#import "WCWoundMeasurementValue+Custom.h"
-#import "WCBradenScale+Custom.h"
-#import "WCWoundPhoto+Custom.h"
+#import "WMWound.h"
+#import "WMWoundMeasurementGroup.h"
+#import "WMWoundMeasurement.h"
+#import "WMWoundMeasurementValue.h"
+#import "WMBradenScale.h"
+#import "WMWoundPhoto.h"
 #import "WoundStatusMeasurementRollup.h"
 #import "WoundAreaPlotDataSource.h"
-#import "CorePlotManager.h"
-#import "WCUtilities.h"
+#import "WMCorePlotManager.h"
+#import "WMFatFractal.h"
+#import "WMUtilities.h"
 
 @interface WMPlotGraphViewController ()
+
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (weak, nonatomic) IBOutlet CPTGraphHostingView *hostingView;  // view hosting the graph
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;            // imageView to show woundPhoto
 @property (readonly, nonatomic) CPTXYGraph *hostedGraph;                // hosted graph in hostingView
-@property (strong, nonatomic) NSArray *plotDataSources;                 // one for each key of WCWoundMeasurement
+@property (strong, nonatomic) NSArray *plotDataSources;                 // one for each key of WMWoundMeasurement
 @property (readonly, nonatomic) NSArray *keyColors;                     // colors for each key
 @property (readonly, nonatomic) NSArray *keySymbols;                    // symbols for each key
 @property (strong, nonatomic) NSArray *dateStrings;                     // possible x-axis labels
@@ -39,8 +42,7 @@
 @property (strong, nonatomic) NSString *yUnits;                         // units of y-axis
 @property (strong, nonatomic) CPTLegend *legend;                        // graph legend
 @property (nonatomic) CGPoint pointDragBegan;                           // y value of drag begin
-@property (strong, nonatomic) WCWoundPhoto *woundPhoto;                 // woundPhoto for current touch event
-@property (strong, nonatomic) NSManagedObjectID *woundPhotoObjectID;
+@property (strong, nonatomic) WMWoundPhoto *woundPhoto;                 // woundPhoto for current touch event
 
 @end
 
@@ -51,7 +53,7 @@
 - (void)configurePlots;
 - (void)configureAxes;
 - (void)configureLegend;
-- (WCWoundPhoto *)woundPhotoForIndex:(NSInteger)index;
+- (WMWoundPhoto *)woundPhotoForIndex:(NSInteger)index;
 - (void)updateWoundPhotoImageViewForPlotSpace:(CPTPlotSpace *)space dragAtPoint:(CGPoint)point event:(CPTNativeEvent *)event;
 - (void)updateWoundPhotoForPlotSpace:(CPTPlotSpace *)space point:(CGPoint)point event:(CPTNativeEvent *)event;
 @end
@@ -277,7 +279,7 @@
 	for (NSInteger j = minorIncrement; j <= yMaximum; j += minorIncrement) {
 		NSUInteger mod = j % majorIncrement;
 		if (mod == 0) {
-			CPTAxisLabel *label = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"%i", j] textStyle:y.labelTextStyle];
+			CPTAxisLabel *label = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"%li", (long)j] textStyle:y.labelTextStyle];
 			NSDecimal location = CPTDecimalFromInteger(j);
 			label.tickLocation = location;
 			label.offset = -y.majorTickLength - y.labelOffset;
@@ -316,10 +318,10 @@
 	graph.legendDisplacement = CGPointMake(legendPaddingWidth, legendPaddingHeight);
 }
 
-- (WCWoundPhoto *)woundPhotoForIndex:(NSInteger)index
+- (WMWoundPhoto *)woundPhotoForIndex:(NSInteger)index
 {
     WoundStatusMeasurementRollup *rollup = [self.woundStatusMeasurementRollups lastObject];
-    WCWoundMeasurementGroup *woundMeasurementGroup = (WCWoundMeasurementGroup *)[self.managedObjectContext objectWithID:[rollup.woundMeasurementGroupObjectIDs objectAtIndex:index]];
+    WMWoundMeasurementGroup *woundMeasurementGroup = (WMWoundMeasurementGroup *)[self.managedObjectContext objectWithID:[rollup.woundMeasurementGroupObjectIDs objectAtIndex:index]];
     return woundMeasurementGroup.woundPhoto;
 }
 
@@ -348,7 +350,7 @@
         xDataPoint = 0;
     }
     NSDate *woundPhotoDate = nil;
-    WCWoundMeasurementGroup *woundMeasurementGroup = nil;
+    WMWoundMeasurementGroup *woundMeasurementGroup = nil;
     for (WoundStatusMeasurementRollup *rollup in self.woundStatusMeasurementRollups) {
         if (0 == [rollup.woundMeasurementGroupObjectIDs count]) {
             continue;
@@ -358,12 +360,12 @@
         if (nil != woundPhotoDate) {
             // found one
             NSManagedObjectID *objectID = [rollup.woundMeasurementGroupObjectIDs objectAtIndex:[rollup.dates indexOfObject:woundPhotoDate]];
-            woundMeasurementGroup = (WCWoundMeasurementGroup *)[self.managedObjectContext objectWithID:objectID];
+            woundMeasurementGroup = (WMWoundMeasurementGroup *)[self.managedObjectContext objectWithID:objectID];
             break;
         }
     }
     if (nil != woundMeasurementGroup) {
-        // date is for a WCWoundStatus
+        // date is for a WMWoundStatus
         self.woundPhoto = woundMeasurementGroup.woundPhoto;
         //DLog(@"Found woundPhoto %@ for date %@", self.woundPhoto, woundPhotoDate);
     }
@@ -372,6 +374,8 @@
 @end
 
 @implementation WMPlotGraphViewController
+
+@synthesize woundPhoto=_woundPhoto;
 
 #pragma mark - View
 
@@ -425,16 +429,8 @@
 {
 }
 
-// clear any strong references to views
-- (void)clearViewReferences
-{
-    [super clearViewReferences];
-    _legend = nil;
-}
-
 - (void)clearDataCache
 {
-    [super clearDataCache];
     _woundStatusMeasurementRollups = nil;
     _woundPhoto = nil;
     _dateStart = nil;
@@ -448,7 +444,12 @@
     _dateMaximum = nil;
 }
 
-#pragma mark - BaseViewController
+#pragma mark - Accessors
+
+- (NSManagedObjectContext *)managedObjectContext
+{
+    return [NSManagedObjectContext MR_defaultContext];
+}
 
 #pragma mark - Rotation
 
@@ -559,7 +560,7 @@
 
 - (CGFloat)yMinimum
 {
-    return [WCWoundMeasurement graphableRangeForMeasurementTitle:_woundStatusMeasurementTitle].location;
+    return [WMWoundMeasurement graphableRangeForMeasurementTitle:_woundStatusMeasurementTitle].location;
 }
 
 - (CGFloat)yMaximum
@@ -568,7 +569,7 @@
         if (self.isBradenScale) {
             _yMaximum = 24.0;
         } else {
-            _yMaximum = NSMaxRange([WCWoundMeasurement graphableRangeForMeasurementTitle:_woundStatusMeasurementTitle]);
+            _yMaximum = NSMaxRange([WMWoundMeasurement graphableRangeForMeasurementTitle:_woundStatusMeasurementTitle]);
         }
     }
     return _yMaximum;
@@ -605,15 +606,7 @@
 
 // end move to refactor
 
-- (WCWoundPhoto *)woundPhoto
-{
-    if (nil == _woundPhoto && nil != _woundPhotoObjectID) {
-        _woundPhoto = (WCWoundPhoto *)[self.managedObjectContext objectWithID:_woundPhotoObjectID];
-    }
-    return _woundPhoto;
-}
-
-- (void)setWoundPhoto:(WCWoundPhoto *)woundPhoto
+- (void)setWoundPhoto:(WMWoundPhoto *)woundPhoto
 {
     if (_woundPhoto == woundPhoto) {
         return;
@@ -622,8 +615,28 @@
     [self willChangeValueForKey:@"woundPhoto"];
     _woundPhoto = woundPhoto;
     [self didChangeValueForKey:@"woundPhoto"];
-    _woundPhotoObjectID = [woundPhoto objectID];
-    self.imageView.image = woundPhoto.thumbnail;
+    // update from back end
+    if (woundPhoto && nil == woundPhoto.thumbnail) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            id data = woundPhoto.thumbnail;
+            if ([data isKindOfClass:[NSData class]]) {
+                woundPhoto.thumbnail = [UIImage imageWithData:data];
+            }
+            data = woundPhoto.thumbnailLarge;
+            if ([data isKindOfClass:[NSData class]]) {
+                woundPhoto.thumbnailLarge = [UIImage imageWithData:data];
+            }
+            data = woundPhoto.thumbnailMini;
+            if ([data isKindOfClass:[NSData class]]) {
+                woundPhoto.thumbnailMini = [UIImage imageWithData:data];
+            }
+            [[woundPhoto managedObjectContext] MR_saveToPersistentStoreAndWait];
+            _imageView.image = woundPhoto.thumbnail;
+        }];
+    } else {
+        _imageView.image = woundPhoto.thumbnail;
+    }
 }
 
 #pragma mark - Actions

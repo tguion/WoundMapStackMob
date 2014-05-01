@@ -100,13 +100,13 @@
     NSString *valueText = nil;
     if (self.isEditingTunneling) {
         WMWoundMeasurementValue *tunnelValue = (WMWoundMeasurementValue *)self.valueUnderEdit;
-        tunnelValue.fromOClockValue = [NSNumber numberWithInt:[self.fromPickerView selectedRowInComponent:0]];
+        tunnelValue.fromOClockValue = @([self.fromPickerView selectedRowInComponent:0]);
         tunnelValue.value = self.depthTextField.text;
         valueText = tunnelValue.valueText;
     } else {
         WMWoundMeasurementValue *undermineValue = (WMWoundMeasurementValue *)self.valueUnderEdit;
-        undermineValue.fromOClockValue = [NSNumber numberWithInt:[self.fromPickerView selectedRowInComponent:0]];
-        undermineValue.toOClockValue = [NSNumber numberWithInt:[self.toPickerView selectedRowInComponent:0]];
+        undermineValue.fromOClockValue = @([self.fromPickerView selectedRowInComponent:0]);
+        undermineValue.toOClockValue = @([self.toPickerView selectedRowInComponent:0]);
         undermineValue.value = self.depthTextField.text;
         valueText = undermineValue.valueText;
     }
@@ -391,7 +391,7 @@
     if (row == 0) {
         title = @"12:00";
     } else {
-        title = [NSString stringWithFormat:@"%02d:00", row];
+        title = [NSString stringWithFormat:@"%02ld:00", (long)row];
     }
     return title;
 }
@@ -492,7 +492,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     BOOL underminingFlag = [self isUnderminingForIndexPath:indexPath];
-    NSString *cellIdentifier =[NSString stringWithFormat:@"%@-%d", underminingFlag ? @"UnderminingCell":@"TunnelingCell", indexPath.row];
+    NSString *cellIdentifier =[NSString stringWithFormat:@"%@-%ld", underminingFlag ? @"UnderminingCell":@"TunnelingCell", (long)indexPath.row];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
@@ -561,10 +561,10 @@
     WMWoundMeasurementValue *value = nil;
     if (underminingFlag) {
         value = [WMWoundMeasurementValue undermineWoundMeasurementValue:self.managedObjectContext];
-        value.sortRank = [NSNumber numberWithInt:self.woundMeasurementGroup.tunnelingValueCount];
+        value.sortRank = @(self.woundMeasurementGroup.tunnelingValueCount);
     } else {
         value = [WMWoundMeasurementValue tunnelWoundMeasurementValue:self.managedObjectContext];
-        value.sortRank = [NSNumber numberWithInt:self.woundMeasurementGroup.underminingValueCount];
+        value.sortRank = @(self.woundMeasurementGroup.underminingValueCount);
     }
     value.woundMeasurement = self.woundMeasurement;
     [self.woundMeasurementGroup addValuesObject:value];

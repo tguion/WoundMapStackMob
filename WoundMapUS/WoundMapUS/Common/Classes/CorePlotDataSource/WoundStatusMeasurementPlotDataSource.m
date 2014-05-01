@@ -36,7 +36,7 @@
  **/
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-    return [[_woundStatusMeasurementRollup.data objectAtIndex:index] objectForKey:[NSNumber numberWithInt:fieldEnum]];
+    return [[_woundStatusMeasurementRollup.data objectAtIndex:index] objectForKey:@(fieldEnum)];
 }
 
 -(NSString *)legendTitleForPieChart:(CPTPieChart *)pieChart recordIndex:(NSUInteger)index {

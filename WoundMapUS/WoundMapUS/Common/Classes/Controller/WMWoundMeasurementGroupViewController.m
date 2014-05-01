@@ -829,9 +829,9 @@
     return [NSString stringWithFormat:@"%@/%@", self.woundMeasurementGroup.ffUrl, WMWoundMeasurementGroupRelationships.values];
 }
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMWoundMeasurement entityName];
+    return @[[WMWoundMeasurement entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

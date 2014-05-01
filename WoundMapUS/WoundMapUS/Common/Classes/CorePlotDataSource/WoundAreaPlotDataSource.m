@@ -96,7 +96,7 @@
  **/
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-    return [[_plotData objectAtIndex:index] objectForKey:[NSNumber numberWithInt:fieldEnum]];
+    return [[_plotData objectAtIndex:index] objectForKey:@(fieldEnum)];
 }
 
 @end

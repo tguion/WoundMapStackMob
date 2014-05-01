@@ -605,7 +605,7 @@ typedef enum {
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationNodeRelationships.subnodes]];
     });
     return PropertyNamesNotToSerialize;
 }

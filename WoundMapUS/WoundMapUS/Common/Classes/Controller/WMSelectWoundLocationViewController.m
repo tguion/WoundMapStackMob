@@ -268,9 +268,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return [WMWoundLocation entityName];
+    return @[[WMWoundLocation entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

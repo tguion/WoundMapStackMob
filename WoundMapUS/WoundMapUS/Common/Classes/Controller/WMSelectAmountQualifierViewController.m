@@ -102,9 +102,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)backendSeedEntityName
+- (NSArray *)backendSeedEntityNames
 {
-    return self.fetchedResultsControllerEntityName;
+    return @[self.fetchedResultsControllerEntityName];
 }
 
 - (NSString *)fetchedResultsControllerEntityName
