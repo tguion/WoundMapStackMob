@@ -144,6 +144,7 @@
                                                                                   participant:participant
                                                                                        create:create
                                                                          managedObjectContext:managedObjectContext];
+    event.skinAssessmentGroup = self;
     return event;
 }
 

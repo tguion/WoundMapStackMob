@@ -164,6 +164,7 @@
                                                                                   participant:participant
                                                                                        create:create
                                                                          managedObjectContext:managedObjectContext];
+    event.treatmentGroup = self;
     return event;
 }
 

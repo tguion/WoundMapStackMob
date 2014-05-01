@@ -217,6 +217,7 @@
                                                                             participant:participant
                                                                                  create:create
                                                                    managedObjectContext:managedObjectContext];
+    event.carePlanGroup = self;
     return event;
 }
 

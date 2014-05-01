@@ -418,6 +418,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                                                     participant:participant
                                                                                          create:create
                                                                            managedObjectContext:managedObjectContext];
+    event.measurementGroup = self;
     return event;
 }
 

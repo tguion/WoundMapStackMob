@@ -247,6 +247,7 @@
                                                                                 participant:participant
                                                                                      create:create
                                                                        managedObjectContext:managedObjectContext];
+    event.psychoSocialGroup = self;
     return event;
 }
 

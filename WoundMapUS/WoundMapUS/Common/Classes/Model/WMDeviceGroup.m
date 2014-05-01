@@ -157,6 +157,7 @@
                                                                           participant:participant
                                                                                create:create
                                                                  managedObjectContext:managedObjectContext];
+    event.deviceGroup = self;
     return event;
 }
 

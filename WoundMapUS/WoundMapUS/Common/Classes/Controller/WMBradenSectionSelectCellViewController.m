@@ -54,12 +54,8 @@
     // Do any additional setup after loading the view from its nib.
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    if (_newBradenScaleFlag) {
+    if ([_bradenSection.cells count] == 0) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        // create and save to back end
-        NSParameterAssert(_bradenSection);
-        NSParameterAssert(_bradenSection.ffUrl);
-        NSParameterAssert([_bradenSection.cells count] == 0);
         [WMBradenScale populateBradenSectionCells:_bradenSection];
         __block NSInteger counter = [_bradenSection.cells count];
         FFHttpMethodCompletion handler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -72,23 +68,30 @@
                 }
             }
         };
+        FFHttpMethodCompletion createHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:[object valueForKey:WMBradenCellAttributes.ffUrl]
+                             toObjAtFfUrl:_bradenSection.ffUrl
+                              grabBagName:WMBradenSectionRelationships.cells
+                               onComplete:handler];
+            }
+        };
         for (WMBradenCell *bradenCell in _bradenSection.cells) {
             [ff createObj:bradenCell
                     atUri:[NSString stringWithFormat:@"/%@", [WMBradenCell entityName]]
-               onComplete:handler
-                onOffline:handler];
+               onComplete:createHandler
+                onOffline:createHandler];
         }
-    } else {
-        // make sure we have the data from back end will be handled by fetchedResultsControllerDidFetch
-        if ([_bradenSection.cells count]) {
-            [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-            // we want to support cancel, so make sure we have an undoManager
-            if (nil == self.managedObjectContext.undoManager) {
-                self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                _removeUndoManagerWhenDone = YES;
-            }
-            [self.managedObjectContext.undoManager beginUndoGrouping];
+    }
+    if (!_newBradenScaleFlag) {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
         }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
     }
 }
 

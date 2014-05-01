@@ -139,23 +139,30 @@
                 }
             }
         };
+        FFHttpMethodCompletion grabBagHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
+                             toObjAtFfUrl:_bradenScale.ffUrl
+                              grabBagName:WMBradenScaleRelationships.sections
+                               onComplete:handler];
+            }
+        };
         for (WMBradenSection *bradenSection in _bradenScale.sections) {
             [ff createObj:bradenSection
                     atUri:[NSString stringWithFormat:@"/%@", [WMBradenSection entityName]]
-               onComplete:handler
-                onOffline:handler];
+               onComplete:grabBagHandler
+                onOffline:grabBagHandler];
         }
     } else {
         // make sure we have the data from back end will be handled by fetchedResultsControllerDidFetch
-        if ([_bradenScale.sections count]) {
-            [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-            // we want to support cancel, so make sure we have an undoManager
-            if (nil == self.managedObjectContext.undoManager) {
-                self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                _removeUndoManagerWhenDone = YES;
-            }
-            [self.managedObjectContext.undoManager beginUndoGrouping];
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == self.managedObjectContext.undoManager) {
+            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
         }
+        [self.managedObjectContext.undoManager beginUndoGrouping];
     }
 }
 

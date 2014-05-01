@@ -146,6 +146,7 @@
                                                                               participant:participant
                                                                                    create:create
                                                                      managedObjectContext:managedObjectContext];
+    event.medicationGroup = self;
     return event;
 }
 

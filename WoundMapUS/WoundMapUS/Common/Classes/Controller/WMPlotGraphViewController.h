@@ -6,8 +6,15 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import "WMBaseViewController.h"
+#import "WMPlotSelectDatasetViewController.h"
+#import "CorePlot-CocoaTouch.h"
 
-@interface WMPlotGraphViewController : WMBaseViewController
+@interface WMPlotGraphViewController : UIViewController <CPTPlotSpaceDelegate, CPTScatterPlotDelegate>
+
+@property (weak, nonatomic) id<PlotViewControllerDelegate> delegate;
+@property (strong, nonatomic) NSString *woundStatusMeasurementTitle;
+@property (strong, nonatomic) NSArray *woundStatusMeasurementRollups;
+@property (strong, nonatomic) NSDate *dateStart;
+@property (strong, nonatomic) NSDate *dateEnd;
 
 @end
