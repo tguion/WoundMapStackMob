@@ -14,7 +14,6 @@
 #import "WMPatient.h"
 #import "WMPerson.h"
 #import "WMPatientConsultant.h"
-#import "WMPatientReferral.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
@@ -25,7 +24,6 @@
 
 @property (weak, nonatomic) UIActivityIndicatorView *activityView;
 @property (weak, nonatomic) WMPatientPhotoImageView *thumbnailImageView;
-@property (weak, nonatomic) UIButton *referralButton;
 
 @property (readonly, nonatomic) NSDictionary *titleAttributes;
 @property (readonly, nonatomic) NSDictionary *identifierAttributes;
@@ -33,8 +31,6 @@
 @property (readonly, nonatomic) NSDictionary *titleSelectedAttributes;
 @property (readonly, nonatomic) NSDictionary *identifierSelectedAttributes;
 @property (readonly, nonatomic) NSDictionary *statusSelectedAttributes;
-
-- (IBAction)showPatientReferralAction:(id)sender;
 
 @end
 
@@ -57,8 +53,6 @@
     _patientReferral = nil;
     [_activityView stopAnimating];
     _thumbnailImageView.image = nil;
-    [_referralButton removeFromSuperview];
-    _referralButton = nil;
 }
 
 #pragma mark - Text Attributes
@@ -180,7 +174,6 @@
     // set new value
     [self willChangeValueForKey:@"patient"];
     _patient = patient;
-    _patientReferral = nil;
     [self didChangeValueForKey:@"patient"];
     // update view
     [_thumbnailImageView updateForPatient:patient];
@@ -197,15 +190,6 @@
     _patientConsultant = patientConsultant;
     [self didChangeValueForKey:@"patientConsultant"];
     self.patient = patientConsultant.patient;
-}
-
-- (WMPatientReferral *)patientReferral
-{
-    if (nil == _patientReferral) {
-        WMParticipant *participant = self.appDelegate.participant;
-        _patientReferral = [_patient patientReferralForReferree:participant];
-    }
-    return _patientReferral;
 }
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -245,13 +229,6 @@
     return _thumbnailImageView;
 }
 
-#pragma mark - Actions
-
-- (IBAction)showPatientReferralAction:(id)sender
-{
-    [self.delegate patientTableViewCellPatientReferralSelected:_patientReferral];
-}
-
 #pragma mark - Manage notifications
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -267,15 +244,6 @@
 {
     [super didMoveToSuperview];
     [self.thumbnailImageView updateForPatient:_patient];
-    // access to referral
-    WMPatientReferral *patientReferral = self.patientReferral;
-    if (patientReferral) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        [button setTitle:@"Referral" forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(showPatientReferralAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self.customContentView addSubview:button];
-        _referralButton = button;
-    }
 }
 
 #pragma mark - Layout
