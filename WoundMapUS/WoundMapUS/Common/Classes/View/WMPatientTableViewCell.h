@@ -8,9 +8,17 @@
 
 #import "APTableViewCell.h"
 
-@class WMPatient, WMPatientConsultant;
+@class WMPatient, WMPatientConsultant, WMPatientReferral;
+
+@protocol PatientTableViewCellDelegate <NSObject>
+
+- (void)patientTableViewCellPatientReferralSelected:(WMPatientReferral *)patientReferral;
+
+@end
 
 @interface WMPatientTableViewCell : APTableViewCell
+
+@property (weak, nonatomic) id<PatientTableViewCellDelegate> delegate;
 
 @property (strong, nonatomic) WMPatient *patient;
 @property (strong, nonatomic) WMPatientConsultant *patientConsultant;

@@ -5,6 +5,7 @@
 #import "WMId.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
+#import "WMPatientReferral.h"
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 
@@ -215,6 +216,15 @@ typedef enum {
 - (BOOL)hasPatientDetails
 {
     return ([self.person.addresses count] || [self.person.telecoms count] || [self.medicalHistoryGroups count] || self.surgicalHistory || self.relevantMedications);
+}
+
+- (WMPatientReferral *)patientReferralForReferree:(WMParticipant *)referee
+{
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    return [WMPatientReferral MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@ AND %K = nil", WMPatientReferralRelationships.patient, self, WMPatientReferralRelationships.referree, referee, WMPatientReferralAttributes.dateAccepted]
+                                               sortedBy:WMPatientReferralAttributes.createdAt
+                                              ascending:NO
+                                              inContext:managedObjectContext];
 }
 
 #pragma mark - FatFractal

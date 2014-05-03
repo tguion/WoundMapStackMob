@@ -10,10 +10,12 @@
 
 #import "WMPatientTableViewController.h"
 #import "WMPatientSummaryContainerViewController.h"
+#import "WMPatientReferralViewController.h"
 #import "WMPatientTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
+#import "WMPatientReferral.h"
 #import "CoreDataHelper.h"
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
@@ -25,7 +27,7 @@
 
 #define kDeletePatientConfirmAlertTag 2004
 
-@interface WMPatientTableViewController () <PatientSummaryContainerDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface WMPatientTableViewController () <PatientSummaryContainerDelegate, PatientTableViewCellDelegate, PatientReferralDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *patientTypeContainerView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *patientTypeSegmentedControl;
@@ -39,6 +41,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *patientReadOnlyLabel;
 @property (strong, nonatomic) NSAttributedString *patientReadOnlyText;
 @property (readonly, nonatomic) WMPatientSummaryContainerViewController *patientSummaryContainerViewController;
+@property (readonly, nonatomic) WMPatientReferralViewController *patientReferralViewController;
 
 - (IBAction)patientTypeValueChangedAction:(id)sender;
 
@@ -147,6 +150,13 @@
     return patientSummaryContainerViewController;
 }
 
+- (WMPatientReferralViewController *)patientReferralViewController
+{
+    WMPatientReferralViewController *patientReferralViewController = [[WMPatientReferralViewController alloc] initWithNibName:@"WMPatientReferralViewController" bundle:nil];
+    patientReferralViewController.delegate = self;
+    return patientReferralViewController;
+}
+
 #pragma mark - Actions
 
 - (IBAction)doneAction:(id)sender
@@ -220,6 +230,30 @@
 #pragma mark - PatientSummaryContainerDelegate
 
 - (void)patientSummaryContainerViewControllerDidFinish:(WMPatientSummaryContainerViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - PatientTableViewCellDelegate
+
+- (void)patientTableViewCellPatientReferralSelected:(WMPatientReferral *)patientReferral
+{
+    WMPatientReferralViewController *patientReferralViewController = self.patientReferralViewController;
+    patientReferralViewController.patientReferral = patientReferral;
+    [self.navigationController pushViewController:patientReferralViewController animated:YES];
+}
+
+#pragma mark - PatientReferralDelegate
+
+- (void)patientReferralViewControllerDidFinish:(WMPatientReferralViewController *)viewController
+{
+    WMPatientReferral *patientReferral = viewController.patientReferral;
+    [self.navigationController popViewControllerAnimated:YES];
+    NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:patientReferral.patient];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)patientReferralViewControllerDidCancel:(WMPatientReferralViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -359,6 +393,7 @@
     WMPatient *patient = [self patientAtIndexPath:indexPath];
     cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
     WMPatientTableViewCell *myCell = (WMPatientTableViewCell *)cell;
+    myCell.delegate = self;
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (self.isShowingTeamPatients) {
         myCell.patient = object;

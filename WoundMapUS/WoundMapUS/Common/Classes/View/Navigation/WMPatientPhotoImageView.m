@@ -33,8 +33,8 @@
         // attempt to read from back end
         if (patient.facePhotoTaken) {
             UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-            [self addSubview:activityIndicatorView];
             activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+            [self addSubview:activityIndicatorView];
             [activityIndicatorView startAnimating];
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             __weak __typeof(&*self)weakSelf = self;
@@ -44,15 +44,17 @@
                 if ([patient.thumbnail isKindOfClass:[NSData class]]) {
                     NSData *data = patient.thumbnail;
                     patient.thumbnail = [UIImage imageWithData:data];
-                    [weakSelf setNeedsDisplay];
                 }
                 weakSelf.image = patient.thumbnail;
+                [weakSelf setNeedsDisplay];
             }];
         } else {
             thumbnail = [WMPatient missingThumbnailImage];
+            self.image = thumbnail;
         }
+    } else {
+        self.image = thumbnail;
     }
-    self.image = thumbnail;
 }
 
 - (void)installClippingPath

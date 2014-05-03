@@ -65,7 +65,9 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(_promptLabel, _textView);
     NSDictionary *metrics = @{
                               @"Left" : @(self.separatorInset.left),
-                              @"Right" : @(self.separatorInset.right),
+                              @"Right" : @(8),
+                              @"Top" : @(8),
+                              @"Bottom" : @(8)
                               };
 
     NSMutableArray *constraints = [NSMutableArray array];
@@ -74,7 +76,7 @@
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_promptLabel]-(>=8)-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_textView]-Right-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
     } else {
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_textView]-|" options:NSLayoutFormatAlignAllLeft metrics:metrics views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-Top-[_textView]-Bottom-|" options:NSLayoutFormatAlignAllLeft metrics:metrics views:views]];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_textView]-Right-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
     }
     [contentView addConstraints:constraints];

@@ -14,12 +14,18 @@
 #import "WMPatient.h"
 #import "WMPerson.h"
 #import "WMPatientConsultant.h"
+#import "WMPatientReferral.h"
+#import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
 @interface WMPatientTableViewCell()
 
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
+@property (strong, nonatomic) WMPatientReferral *patientReferral;
+
 @property (weak, nonatomic) UIActivityIndicatorView *activityView;
 @property (weak, nonatomic) WMPatientPhotoImageView *thumbnailImageView;
+@property (weak, nonatomic) UIButton *referralButton;
 
 @property (readonly, nonatomic) NSDictionary *titleAttributes;
 @property (readonly, nonatomic) NSDictionary *identifierAttributes;
@@ -27,6 +33,8 @@
 @property (readonly, nonatomic) NSDictionary *titleSelectedAttributes;
 @property (readonly, nonatomic) NSDictionary *identifierSelectedAttributes;
 @property (readonly, nonatomic) NSDictionary *statusSelectedAttributes;
+
+- (IBAction)showPatientReferralAction:(id)sender;
 
 @end
 
@@ -46,8 +54,11 @@
     [super prepareForReuse];
     _patient = nil;
     _patientConsultant = nil;
+    _patientReferral = nil;
     [_activityView stopAnimating];
     _thumbnailImageView.image = nil;
+    [_referralButton removeFromSuperview];
+    _referralButton = nil;
 }
 
 #pragma mark - Text Attributes
@@ -156,6 +167,11 @@
 
 #pragma mark - Core
 
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
 - (void)setPatient:(WMPatient *)patient
 {
     if (_patient == patient) {
@@ -164,6 +180,7 @@
     // set new value
     [self willChangeValueForKey:@"patient"];
     _patient = patient;
+    _patientReferral = nil;
     [self didChangeValueForKey:@"patient"];
     // update view
     [_thumbnailImageView updateForPatient:patient];
@@ -180,6 +197,15 @@
     _patientConsultant = patientConsultant;
     [self didChangeValueForKey:@"patientConsultant"];
     self.patient = patientConsultant.patient;
+}
+
+- (WMPatientReferral *)patientReferral
+{
+    if (nil == _patientReferral) {
+        WMParticipant *participant = self.appDelegate.participant;
+        _patientReferral = [_patient patientReferralForReferree:participant];
+    }
+    return _patientReferral;
 }
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -203,7 +229,7 @@
     return _activityView;
 }
 
-- (UIImageView *)thumbnailImageView
+- (WMPatientPhotoImageView *)thumbnailImageView
 {
     if (nil == _thumbnailImageView) {
         CGFloat x = 8.0;
@@ -219,6 +245,13 @@
     return _thumbnailImageView;
 }
 
+#pragma mark - Actions
+
+- (IBAction)showPatientReferralAction:(id)sender
+{
+    [self.delegate patientTableViewCellPatientReferralSelected:_patientReferral];
+}
+
 #pragma mark - Manage notifications
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -227,8 +260,21 @@
     if (nil == newSuperview) {
         _patient = nil;
         _patientConsultant = nil;
-    } else {
-        [self.thumbnailImageView updateForPatient:_patient];
+    }
+}
+
+- (void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    [self.thumbnailImageView updateForPatient:_patient];
+    // access to referral
+    WMPatientReferral *patientReferral = self.patientReferral;
+    if (patientReferral) {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        [button setTitle:@"Referral" forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(showPatientReferralAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self.customContentView addSubview:button];
+        _referralButton = button;
     }
 }
 

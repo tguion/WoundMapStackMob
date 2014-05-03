@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMPatientReferralViewController">
             <connections>
+                <outlet property="deletePatientReferralContainerView" destination="NRU-lO-Zqz" id="d5N-hV-zci"/>
                 <outlet property="view" destination="GDE-yf-pjl" id="pHq-Hm-btv"/>
             </connections>
         </placeholder>
@@ -18,5 +19,30 @@
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </tableView>
+        <view contentMode="scaleToFill" id="NRU-lO-Zqz">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6eo-te-Upl">
+                    <rect key="frame" x="20" y="0.0" width="280" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Delete Referral">
+                        <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="deletePatientReferral:" destination="-1" eventType="touchUpInside" id="DnQ-PJ-DPL"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="6eo-te-Upl" secondAttribute="trailing" constant="20" symbolic="YES" id="3UH-LM-rcd"/>
+                <constraint firstAttribute="bottom" secondItem="6eo-te-Upl" secondAttribute="bottom" id="3zH-lK-oKC"/>
+                <constraint firstItem="6eo-te-Upl" firstAttribute="top" secondItem="NRU-lO-Zqz" secondAttribute="top" id="Y0H-7g-fan"/>
+                <constraint firstItem="6eo-te-Upl" firstAttribute="leading" secondItem="NRU-lO-Zqz" secondAttribute="leading" constant="20" symbolic="YES" id="YrE-cF-ze6"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
     </objects>
 </document>

@@ -24,14 +24,19 @@
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (nonatomic) BOOL didCreateReferral;
+@property (nonatomic) BOOL didAddPatientToReferral;
+@property (nonatomic) BOOL didChangeReferree;
 
 @property (strong, nonatomic) WMParticipant *referree;
 @property (strong, nonatomic) WMPatient *patient;
 @property (readonly, nonatomic) NSString *messageTextViewText;
 @property (strong, nonatomic) NSArray *messageHistory;
 
+@property (strong, nonatomic) IBOutlet UIView *deletePatientReferralContainerView;
+
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)doneAction:(id)sender;
+- (IBAction)deletePatientReferral:(id)sender;
 
 @end
 
@@ -66,6 +71,7 @@
             _removeUndoManagerWhenDone = YES;
         }
         [self.managedObjectContext.undoManager beginUndoGrouping];
+        self.tableView.tableFooterView = _deletePatientReferralContainerView;
     } else {
         WMParticipant *participant = self.appDelegate.participant;
         _patientReferral = [WMPatientReferral MR_createInContext:self.managedObjectContext];
@@ -115,6 +121,20 @@
 }
 
 #pragma mark - Core
+
+- (void)setPatientReferral:(WMPatientReferral *)patientReferral
+{
+    if (_patientReferral == patientReferral) {
+        return;
+    }
+    // else
+    _patientReferral = patientReferral;
+    _patient = patientReferral.patient;
+    _referree = patientReferral.referree;
+    if (nil == patientReferral.dateAccepted) {
+        patientReferral.dateAccepted = [NSDate date];
+    }
+}
 
 - (WMPatient *)patient
 {
@@ -249,9 +269,9 @@
     if (_removeUndoManagerWhenDone) {
         managedObjectContext.undoManager = nil;
     }
-    _patientReferral.referree = _referree;
     [_patientReferral prependMessage:message from:participant];
     // wait for back end calls to complete
+    __block NSInteger counter = 0;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -259,10 +279,31 @@
         if (error) {
             [WMUtilities logError:error];
         } else {
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
+            if (--counter == 0) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
+            }
         }
     };
+    if (_didChangeReferree) {
+        ++counter;
+        _patientReferral.dateAccepted = nil;
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.referree.ffUrl
+                      fromObjAtFfUrl:_patientReferral.ffUrl
+                         grabBagName:WMParticipantRelationships.targetReferrals
+                          onComplete:completionHandler];
+    }
+    _patientReferral.referree = _referree;
+    if (_didAddPatientToReferral) {
+        ++counter;
+        self.patientReferral.patient = _patient;
+        [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                     toObjAtFfUrl:_patient.ffUrl
+                      grabBagName:WMPatientRelationships.referrals
+                       onComplete:completionHandler];
+    }
+    ++counter;
     [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
                  toObjAtFfUrl:_referree.ffUrl
                   grabBagName:WMParticipantRelationships.targetReferrals
@@ -275,13 +316,64 @@
     }];
 }
 
+- (IBAction)deletePatientReferral:(id)sender
+{
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    __block NSInteger counter = 0;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            if (--counter == 0) {
+                [managedObjectContext MR_deleteObjects:@[_patientReferral]];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                _patientReferral = nil;
+                [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
+            }
+        }
+    };
+    if (_patientReferral.referrer) {
+        ++counter;
+        [_patientReferral.referrer removeSourceReferralsObject:_patientReferral];
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.referrer.ffUrl
+                         grabBagName:WMParticipantRelationships.sourceReferrals
+                          onComplete:completionHandler];
+    }
+    if (_patientReferral.referree) {
+        ++counter;
+        [_patientReferral.referree removeTargetReferralsObject:_patientReferral];
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.referree.ffUrl
+                         grabBagName:WMParticipantRelationships.targetReferrals
+                          onComplete:completionHandler];
+    }
+    if (_patientReferral.patient) {
+        ++counter;
+        [_patientReferral.patient removeReferralsObject:_patientReferral];
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.patient.ffUrl
+                         grabBagName:WMPatientRelationships.referrals
+                          onComplete:completionHandler];
+    }
+    ++counter;
+    [ff deleteObj:_patientReferral
+       onComplete:completionHandler
+        onOffline:completionHandler];
+}
+
 #pragma mark - PatientTableViewControllerDelegate
 
 - (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient
 {
     // update our reference to current patient
     if (nil != patient) {
-        self.patientReferral.patient = patient;
+        _didAddPatientToReferral = YES;
+        _patient = patient;
     }
     [self.navigationController popViewControllerAnimated:YES];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
@@ -297,7 +389,8 @@
 
 - (NSPredicate *)participantPredicate
 {
-    return [NSPredicate predicateWithFormat:@"team == %@", self.appDelegate.participant.team];
+    WMParticipant *participant = self.appDelegate.participant;
+    return [NSPredicate predicateWithFormat:@"%K == %@ AND %K != %@", WMParticipantRelationships.team, participant.team, WMParticipantAttributes.userName, participant.userName];
 }
 
 - (void)participantTableViewControllerDidCancel:(WMParticipantTableViewController *)viewController
@@ -307,6 +400,9 @@
 
 - (void)participantTableViewController:(WMParticipantTableViewController *)viewController didSelectParticipant:(WMParticipant *)participant
 {
+    if (_referree && participant != _referree) {
+        _didChangeReferree = YES;
+    }
     _referree = participant;
     [self.navigationController popViewControllerAnimated:YES];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
