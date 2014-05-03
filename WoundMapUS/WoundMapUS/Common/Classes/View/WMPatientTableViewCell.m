@@ -212,9 +212,6 @@
         WMPatientPhotoImageView *anImageView = [[WMPatientPhotoImageView alloc] initWithFrame:CGRectMake(x, y, 57.0, 57.0)];
         anImageView.contentScaleFactor = [[UIScreen mainScreen] scale];
         anImageView.clipsToBounds = YES;
-        if (nil != _patient) {
-            [anImageView updateForPatient:_patient];
-        }
         anImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.customContentView addSubview:anImageView];
         _thumbnailImageView = anImageView;
@@ -229,8 +226,9 @@
     [super willMoveToSuperview:newSuperview];
     if (nil == newSuperview) {
         _patient = nil;
+        _patientConsultant = nil;
     } else {
-        [_thumbnailImageView updateForPatient:_patient];
+        [self.thumbnailImageView updateForPatient:_patient];
     }
 }
 

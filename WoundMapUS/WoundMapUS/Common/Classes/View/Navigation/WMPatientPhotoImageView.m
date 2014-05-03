@@ -44,6 +44,7 @@
                 if ([patient.thumbnail isKindOfClass:[NSData class]]) {
                     NSData *data = patient.thumbnail;
                     patient.thumbnail = [UIImage imageWithData:data];
+                    [weakSelf setNeedsDisplay];
                 }
                 weakSelf.image = patient.thumbnail;
             }];

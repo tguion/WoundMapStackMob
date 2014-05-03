@@ -1099,7 +1099,8 @@
             if (error) {
                 [WMUtilities logError:error];
             } else {
-                photo.photo = [[UIImage alloc] initWithData:photo.photo];
+                NSData *data = photo.photo;
+                photo.photo = [[UIImage alloc] initWithData:data];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                 block();

@@ -30,6 +30,8 @@ extern const struct WMParticipantRelationships {
 	__unsafe_unretained NSString *participantType;
 	__unsafe_unretained NSString *patients;
 	__unsafe_unretained NSString *person;
+	__unsafe_unretained NSString *sourceReferrals;
+	__unsafe_unretained NSString *targetReferrals;
 	__unsafe_unretained NSString *team;
 	__unsafe_unretained NSString *teamInvitation;
 } WMParticipantRelationships;
@@ -43,6 +45,8 @@ extern const struct WMParticipantFetchedProperties {
 @class WMParticipantType;
 @class WMPatient;
 @class WMPerson;
+@class WMPatientReferral;
+@class WMPatientReferral;
 @class WMTeam;
 @class WMTeamInvitation;
 
@@ -290,6 +294,20 @@ extern const struct WMParticipantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *sourceReferrals;
+
+- (NSMutableSet*)sourceReferralsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *targetReferrals;
+
+- (NSMutableSet*)targetReferralsSet;
+
+
+
+
 @property (nonatomic, strong) WMTeam *team;
 
 //- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
@@ -323,6 +341,16 @@ extern const struct WMParticipantFetchedProperties {
 - (void)removePatients:(NSSet*)value_;
 - (void)addPatientsObject:(WMPatient*)value_;
 - (void)removePatientsObject:(WMPatient*)value_;
+
+- (void)addSourceReferrals:(NSSet*)value_;
+- (void)removeSourceReferrals:(NSSet*)value_;
+- (void)addSourceReferralsObject:(WMPatientReferral*)value_;
+- (void)removeSourceReferralsObject:(WMPatientReferral*)value_;
+
+- (void)addTargetReferrals:(NSSet*)value_;
+- (void)removeTargetReferrals:(NSSet*)value_;
+- (void)addTargetReferralsObject:(WMPatientReferral*)value_;
+- (void)removeTargetReferralsObject:(WMPatientReferral*)value_;
 
 @end
 
@@ -462,6 +490,16 @@ extern const struct WMParticipantFetchedProperties {
 
 - (WMPerson*)primitivePerson;
 - (void)setPrimitivePerson:(WMPerson*)value;
+
+
+
+- (NSMutableSet*)primitiveSourceReferrals;
+- (void)setPrimitiveSourceReferrals:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveTargetReferrals;
+- (void)setPrimitiveTargetReferrals:(NSMutableSet*)value;
 
 
 

@@ -570,7 +570,6 @@
                                         NSManagedObject *object = [managedObjectContext objectWithID:objectID];
                                         NSLog(@"*** WoundMap: Will create collection backend: %@", object);
                                         [ff createObj:object atUri:ffUrl];
-                                        [managedObjectContext MR_saveToPersistentStoreAndWait];
                                     }
                                     if (callBack) {
                                         callBack();

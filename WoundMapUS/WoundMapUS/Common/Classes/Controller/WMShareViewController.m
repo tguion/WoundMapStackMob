@@ -9,6 +9,7 @@
 #import "WMShareViewController.h"
 #import "WMPrintConfigureViewController.h"
 #import "IAPNonConsumableViewController.h"
+#import "WMPatientReferralViewController.h"
 #import "PrintConfiguration.h"
 #import "WMParticipant.h"
 #import "WMMedicationGroup.h"
@@ -16,6 +17,7 @@
 #import "WMPsychoSocialGroup.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMCarePlanGroup.h"
+#import "WMPatientReferral.h"
 #import "IAPManager.h"
 #import "WMPatient.h"
 #import "WMWound.h"
@@ -24,7 +26,7 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@interface WMShareViewController () <PrintConfigureViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface WMShareViewController () <PrintConfigureViewControllerDelegate, MFMailComposeViewControllerDelegate, PatientReferralDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *creditStatus;
 @property (weak, nonatomic) IBOutlet UIButton *purchaseMoreTokensButton;
@@ -33,7 +35,9 @@
 @property (nonatomic) SelectWoundAndActionShareOption shareOption;
 
 @property (readonly, nonatomic) WMPrintConfigureViewController *printConfigureViewController;
+@property (readonly, nonatomic) WMPatientReferralViewController *patientReferralViewController;
 
+@property (strong, nonatomic) WMPatientReferral *patientReferral;
 
 - (void)navigateToEmailClinicalAssessmentDocument;
 - (void)navigateToPrintClinicalAssessmentDocument;
@@ -171,6 +175,13 @@ CGFloat kCreditsMargin = 20;
     return printConfigureViewController;
 }
 
+- (WMPatientReferralViewController *)patientReferralViewController
+{
+    WMPatientReferralViewController *patientReferralViewController = [[WMPatientReferralViewController alloc] initWithNibName:@"WMPatientReferralViewController" bundle:nil];
+    patientReferralViewController.delegate = self;
+    return patientReferralViewController;
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToEmailClinicalAssessmentDocument
@@ -188,11 +199,9 @@ CGFloat kCreditsMargin = 20;
     // TODO finish navigate to push EMR
 }
 
-#pragma mark - BaseViewController
-
-- (void)updateTitle
+- (void)navigateToPatientReferral
 {
-    // nothing, allow title
+    [self.navigationController pushViewController:self.patientReferralViewController animated:YES];
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate
@@ -309,6 +318,21 @@ CGFloat kCreditsMargin = 20;
     [controller clearAllReferences];
 }
 
+#pragma mark - PatientReferralDelegate
+
+- (void)patientReferralViewControllerDidFinish:(WMPatientReferralViewController *)viewController
+{
+    _patientReferral = viewController.patientReferral;
+    [self.navigationController popViewControllerAnimated:YES];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)patientReferralViewControllerDidCancel:(WMPatientReferralViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - IAPManager support
 
 - (void)navigateToSharePdfReportView {
@@ -367,32 +391,52 @@ CGFloat kCreditsMargin = 20;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    switch (indexPath.row) {
+    switch (indexPath.section) {
         case 0: {
-            // Print - should navigate to a print configure view controller ???
-            self.shareOption = SelectWoundAndActionShareOption_Print;
-            [self navigateToSharePdfReportView];
+            switch (indexPath.row) {
+                case 0: {
+                    // Print - should navigate to a print configure view controller ???
+                    self.shareOption = SelectWoundAndActionShareOption_Print;
+                    [self navigateToSharePdfReportView];
+                    break;
+                }
+                case 1: {
+                    // Email
+                    self.shareOption = SelectWoundAndActionShareOption_Email;
+                    [self navigateToSharePdfReportView];
+                    break;
+                }
+                case 2: {
+                    // FTP
+                    self.shareOption = SelectWoundAndActionShareOption_FTP;
+                    break;
+                }
+                case 3: {
+                    // EMR
+                    self.shareOption = SelectWoundAndActionShareOption_EMR;
+                    break;
+                }
+                case 4: {
+                    // iCloud
+                    self.shareOption = SelectWoundAndActionShareOption_iCloud;
+                    break;
+                }
+            }
             break;
         }
         case 1: {
-            // Email
-            self.shareOption = SelectWoundAndActionShareOption_Email;
-            [self navigateToSharePdfReportView];
-            break;
-        }
-        case 2: {
-            // FTP
-            self.shareOption = SelectWoundAndActionShareOption_FTP;
-            break;
-        }
-        case 3: {
-            // EMR
-            self.shareOption = SelectWoundAndActionShareOption_EMR;
-            break;
-        }
-        case 4: {
-            // iCloud
-            self.shareOption = SelectWoundAndActionShareOption_iCloud;
+            switch (indexPath.row) {
+                case 0: {
+                    // Consult
+                    
+                    break;
+                }
+                case 1: {
+                    // Referral
+                    [self navigateToPatientReferral];
+                    break;
+                }
+            }
             break;
         }
     }
@@ -426,12 +470,16 @@ CGFloat kCreditsMargin = 20;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    NSInteger count = 3;
+    if (section == 1) {
+        count = (self.appDelegate.participant.team ? 2:1);
+    }
+    return count;
 }
 
 // Customize the appearance of table view cells.
@@ -449,35 +497,56 @@ CGFloat kCreditsMargin = 20;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.row) {
+    switch (indexPath.section) {
         case 0: {
-            // Print
-            cell.imageView.image = [UIImage imageNamed:@"ui_print"];
-            cell.textLabel.text = @"Print";
+            switch (indexPath.row) {
+                case 0: {
+                    // Print
+                    cell.imageView.image = [UIImage imageNamed:@"ui_print"];
+                    cell.textLabel.text = @"Print";
+                    break;
+                }
+                case 1: {
+                    // Send Email
+                    cell.imageView.image = [UIImage imageNamed:@"ui_email"];
+                    cell.textLabel.text = @"Email with Attachment";
+                    break;
+                }
+                case 2: {
+                    // Send by sftp
+                    cell.imageView.image = [UIImage imageNamed:@"ui_emed_record"];
+                    cell.textLabel.text = @"Send by FTP";
+                    break;
+                }
+                case 3: {
+                    // Push to EMR
+                    cell.imageView.image = [UIImage imageNamed:@"ui_emed_record"];
+                    cell.textLabel.text = @"Push to EMR";
+                    break;
+                }
+                case 4: {
+                    // Share using iCloud
+                    cell.imageView.image = [UIImage imageNamed:@"ui_icloud"];
+                    cell.textLabel.text = @"Share using iCloud";
+                    break;
+                }
+            }
             break;
         }
         case 1: {
-            // Send Email
-            cell.imageView.image = [UIImage imageNamed:@"ui_email"];
-            cell.textLabel.text = @"Email with Attachment";
-            break;
-        }
-        case 2: {
-            // Send by sftp
-            cell.imageView.image = [UIImage imageNamed:@"ui_emed_record"];
-            cell.textLabel.text = @"Send by FTP";
-            break;
-        }
-        case 3: {
-            // Push to EMR
-            cell.imageView.image = [UIImage imageNamed:@"ui_emed_record"];
-            cell.textLabel.text = @"Push to EMR";
-            break;
-        }
-        case 4: {
-            // Share using iCloud
-            cell.imageView.image = [UIImage imageNamed:@"ui_icloud"];
-            cell.textLabel.text = @"Share using iCloud";
+            switch (indexPath.row) {
+                case 0: {
+                    // Consultant
+                    cell.textLabel.text = @"Request Consult";
+                    break;
+                }
+                case 1: {
+                    // Referral
+                    cell.textLabel.text = @"Refer to Team Member";
+                    cell.detailTextLabel.text = _patientReferral.referree.name;
+                    break;
+                }
+            }
             break;
         }
     }

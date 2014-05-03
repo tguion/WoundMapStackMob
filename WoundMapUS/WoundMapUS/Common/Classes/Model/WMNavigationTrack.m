@@ -204,7 +204,7 @@ typedef enum {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         // else now gather the objectIDs
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+        NSArray *navigationTracks = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
         NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
         completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], ^{
             [managedObjectContext MR_saveToPersistentStoreAndWait];

@@ -29,6 +29,8 @@ const struct WMParticipantRelationships WMParticipantRelationships = {
 	.participantType = @"participantType",
 	.patients = @"patients",
 	.person = @"person",
+	.sourceReferrals = @"sourceReferrals",
+	.targetReferrals = @"targetReferrals",
 	.team = @"team",
 	.teamInvitation = @"teamInvitation",
 };
@@ -302,6 +304,32 @@ const struct WMParticipantFetchedProperties WMParticipantFetchedProperties = {
 
 @dynamic person;
 
+	
+
+@dynamic sourceReferrals;
+
+	
+- (NSMutableSet*)sourceReferralsSet {
+	[self willAccessValueForKey:@"sourceReferrals"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"sourceReferrals"];
+  
+	[self didAccessValueForKey:@"sourceReferrals"];
+	return result;
+}
+	
+
+@dynamic targetReferrals;
+
+	
+- (NSMutableSet*)targetReferralsSet {
+	[self willAccessValueForKey:@"targetReferrals"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"targetReferrals"];
+  
+	[self didAccessValueForKey:@"targetReferrals"];
+	return result;
+}
 	
 
 @dynamic team;

@@ -526,6 +526,8 @@
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="participant" inverseEntity="WMPatient" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="participant" inverseEntity="WMPerson" syncable="YES"/>
+        <relationship name="sourceReferrals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientReferral" inverseName="referrer" inverseEntity="WMPatientReferral" syncable="YES"/>
+        <relationship name="targetReferrals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientReferral" inverseName="referree" inverseEntity="WMPatientReferral" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="participants" inverseEntity="WMTeam" syncable="YES"/>
         <relationship name="teamInvitation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeamInvitation" inverseName="invitee" inverseEntity="WMTeamInvitation" syncable="YES"/>
     </entity>
@@ -573,6 +575,7 @@
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="patient" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="psychosocialGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPsychoSocialGroup" inverseName="patient" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
+        <relationship name="referrals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientReferral" inverseName="patient" inverseEntity="WMPatientReferral" syncable="YES"/>
         <relationship name="skinAssessmentGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMSkinAssessmentGroup" inverseName="patient" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="patients" inverseEntity="WMNavigationStage" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="patients" inverseEntity="WMTeam" syncable="YES"/>
@@ -587,6 +590,17 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="acquiredConsults" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="patientConsultants" inverseEntity="WMPatient" syncable="YES"/>
+    </entity>
+    <entity name="WMPatientReferral" representedClassName="WMPatientReferral" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateAccepted" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="referrals" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="referree" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="targetReferrals" inverseEntity="WMParticipant" syncable="YES"/>
+        <relationship name="referrer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="sourceReferrals" inverseEntity="WMParticipant" syncable="YES"/>
     </entity>
     <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -1179,9 +1193,9 @@
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
-        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="403"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="463"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="480"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
@@ -1211,5 +1225,6 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
+        <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
     </elements>
 </model>

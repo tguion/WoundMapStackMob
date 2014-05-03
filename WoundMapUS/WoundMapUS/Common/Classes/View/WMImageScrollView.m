@@ -230,9 +230,10 @@
     // reset our zoomScale to 1.0 before doing any further calculations
     self.zoomScale = 1.0;
     // make sure the data is local
+    WMWoundPhoto *woundPhoto = self.woundPhoto;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    WMPhoto *photo = self.woundPhoto.photo;
-    NSManagedObjectID *woundPhotoID = [self.woundPhoto objectID];
+    WMPhoto *photo = woundPhoto.photo;
+    NSManagedObjectID *woundPhotoID = [woundPhoto objectID];
     NSManagedObjectID *photoID = [photo objectID];
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
@@ -273,7 +274,8 @@
     // make views to display the new image
     _zoomView = [[UIImageView alloc] initWithFrame:(CGRect){ CGPointZero, imageSize }];
     BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-    [_zoomView setImage:(isPad ? self.woundPhoto.thumbnailLarge:self.woundPhoto.thumbnail)];
+    WMWoundPhoto *woundPhoto = self.woundPhoto;
+    [_zoomView setImage:(isPad ? woundPhoto.thumbnailLarge:woundPhoto.thumbnail)];
     [self addSubview:_zoomView];
     _tilingView = [[WMTilingView alloc] initWithFrame:CGRectMake(0.0, 0.0, imageSize.width, imageSize.height)];
     _tilingView.delegate = self;

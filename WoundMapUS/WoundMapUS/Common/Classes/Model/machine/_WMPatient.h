@@ -32,6 +32,7 @@ extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *patientConsultants;
 	__unsafe_unretained NSString *person;
 	__unsafe_unretained NSString *psychosocialGroups;
+	__unsafe_unretained NSString *referrals;
 	__unsafe_unretained NSString *skinAssessmentGroups;
 	__unsafe_unretained NSString *stage;
 	__unsafe_unretained NSString *team;
@@ -51,6 +52,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMPatientConsultant;
 @class WMPerson;
 @class WMPsychoSocialGroup;
+@class WMPatientReferral;
 @class WMSkinAssessmentGroup;
 @class WMNavigationStage;
 @class WMTeam;
@@ -306,6 +308,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *referrals;
+
+- (NSMutableSet*)referralsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *skinAssessmentGroups;
 
 - (NSMutableSet*)skinAssessmentGroupsSet;
@@ -378,6 +387,11 @@ extern const struct WMPatientFetchedProperties {
 - (void)removePsychosocialGroups:(NSSet*)value_;
 - (void)addPsychosocialGroupsObject:(WMPsychoSocialGroup*)value_;
 - (void)removePsychosocialGroupsObject:(WMPsychoSocialGroup*)value_;
+
+- (void)addReferrals:(NSSet*)value_;
+- (void)removeReferrals:(NSSet*)value_;
+- (void)addReferralsObject:(WMPatientReferral*)value_;
+- (void)removeReferralsObject:(WMPatientReferral*)value_;
 
 - (void)addSkinAssessmentGroups:(NSSet*)value_;
 - (void)removeSkinAssessmentGroups:(NSSet*)value_;
@@ -535,6 +549,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSMutableSet*)primitivePsychosocialGroups;
 - (void)setPrimitivePsychosocialGroups:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveReferrals;
+- (void)setPrimitiveReferrals:(NSMutableSet*)value;
 
 
 

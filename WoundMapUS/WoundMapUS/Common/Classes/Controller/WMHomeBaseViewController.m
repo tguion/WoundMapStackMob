@@ -1397,21 +1397,40 @@
         return;
     }
     // else update from back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    WMWound *wound = self.wound;
+    NSSet *woundPhotos = wound.photos;
+    __block NSInteger counter = [woundPhotos count];
     __weak __typeof(self) weakSelf = self;
-    WMErrorCallback block = ^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+    WMErrorCallback block1 = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
+        }
+        if (--counter == 0) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf navigateToBrowsePhotos:sender];
         }
     };
+    WMErrorCallback block0 = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            // update woundPhoto grab bags
+            for (WMWoundPhoto *woundPhoto in woundPhotos) {
+                [ffm updateGrabBags:@[WMWoundPhotoRelationships.photos]
+                         aggregator:woundPhoto
+                                 ff:ff
+                  completionHandler:block1];
+            }
+        }
+    };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]
-                                              aggregator:self.wound
-                                                      ff:[WMFatFractal sharedInstance]
-                                       completionHandler:block];
+    [ffm updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]
+             aggregator:wound
+                     ff:ff
+      completionHandler:block0];
 }
 
 - (IBAction)viewGraphsAction:(id)sender
@@ -1943,6 +1962,7 @@
             NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
             MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             progressHUD.labelText = @"Processing Photo";
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
             // have photoManager start the process
             FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
@@ -1956,7 +1976,8 @@
                 } else {
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
-                    WMFatFractal *ff = [WMFatFractal sharedInstance];
+                    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                     [ff updateBlob:UIImagePNGRepresentation(photo.photo)
                       withMimeType:@"image/png"
                             forObj:photo
@@ -1974,8 +1995,10 @@
                 }
                 WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                 WMPhoto *photo = (WMPhoto *)object1;
+                NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+                // readd the photo
                 [woundPhoto addPhotosObject:photo];
-                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [ff createObj:photo
                         atUri:[NSString stringWithFormat:@"/%@", [WMPhoto entityName]]
                    onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -2024,9 +2047,7 @@
                                 [weakSelf updateToolbar];
                                 // notify interface of completed task
                                 [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
-                                // save to back end
-                                WMFatFractal *ff = [WMFatFractal sharedInstance];
-                                // break the relationship
+                                // save to back end - first break the relationship
                                 [woundPhoto removePhotosObject:photo];
                                 [ff createObj:woundPhoto
                                         atUri:[NSString stringWithFormat:@"/%@", [WMWoundPhoto entityName]]
