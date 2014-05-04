@@ -24,6 +24,9 @@
 #import "WMValue1TableViewCell.h"
 #import "WMButtonCell.h"
 #import "MBProgressHUD.h"
+#import "WMInterventionStatusJoin.h"
+#import "WMTelecomType.h"
+#import "WMWoundType.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMOrganization.h"
@@ -964,6 +967,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             block();
         }
     } else {
+        // make sure we have some data
+        [self acquireBackendDataForEntityNames:@[[WMInterventionStatusJoin entityName], [WMTelecomType entityName], [WMWoundType entityName]]];
         block();
     }
 }

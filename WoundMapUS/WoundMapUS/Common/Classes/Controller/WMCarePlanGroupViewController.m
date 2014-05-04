@@ -602,34 +602,28 @@
     }
     // else
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    id itemOrCategory = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    WMCarePlanCategory *carePlanCategory = [self.fetchedResultsController objectAtIndexPath:indexPath];
     // if parentCategory has subcategories, just go to subcategories
-    if ([itemOrCategory isKindOfClass:[WMCarePlanCategory class]]) {
-        WMCarePlanCategory *carePlanCategory = (WMCarePlanCategory *)itemOrCategory;
-        if (carePlanCategory.hasSubcategories) {
-            // select and navigate
-            self.selectedCarePlanCategory = carePlanCategory;
-            [self navigateToSubcategories];
-            return;
-        }
+    if (carePlanCategory.hasSubcategories) {
+        // select and navigate
+        self.selectedCarePlanCategory = carePlanCategory;
+        [self navigateToSubcategories];
+        return;
     }
     // else save current selection if needed
     WMCarePlanCategory * previousCarePlanCategory = [self.carePlanGroup carePlanCategoryForParentCategory:self.parentCategory];
     WMCarePlanValue *previousCarePlanValue = nil;
     NSIndexPath *previousIndexPath = nil;
-    if (nil != previousCarePlanCategory && itemOrCategory != previousCarePlanCategory && !self.parentCategory.allowMultipleChildSelection) {
+    if (nil != previousCarePlanCategory && carePlanCategory != previousCarePlanCategory && !self.parentCategory.allowMultipleChildSelection) {
         previousCarePlanValue = [self.carePlanGroup carePlanValueForCarePlanCategory:previousCarePlanCategory
                                                                               create:NO
                                                                                value:nil];
         previousIndexPath = [self.fetchedResultsController indexPathForObject:previousCarePlanCategory];
     }
     // else this is item or (category without items) level, so select
-    WMCarePlanValue *carePlanValue = nil;
-    if ([itemOrCategory isKindOfClass:[WMCarePlanCategory class]]) {
-        carePlanValue = [self.carePlanGroup carePlanValueForCarePlanCategory:itemOrCategory
-                                                                      create:NO
-                                                                       value:nil];
-    }
+    WMCarePlanValue *carePlanValue = [self.carePlanGroup carePlanValueForCarePlanCategory:carePlanCategory
+                                                                                   create:NO
+                                                                                    value:nil];
     BOOL refreshRow = YES;
     if (nil == carePlanValue) {
         // no carePlanValue for this item or category - add one or make control first responder
@@ -645,17 +639,17 @@
                     return;
                 }
                 // else go ahead and select
-                [self.carePlanGroup carePlanValueForCarePlanCategory:itemOrCategory
+                [self.carePlanGroup carePlanValueForCarePlanCategory:carePlanCategory
                                                               create:YES
                                                                value:nil];
             } else if (nil != aSwitch) {
                 // else go ahead and select
-                [self.carePlanGroup carePlanValueForCarePlanCategory:itemOrCategory
+                [self.carePlanGroup carePlanValueForCarePlanCategory:carePlanCategory
                                                               create:YES
                                                                value:nil];
             } else {
                 // else go ahead and select
-                [self.carePlanGroup carePlanValueForCarePlanCategory:itemOrCategory
+                [self.carePlanGroup carePlanValueForCarePlanCategory:carePlanCategory
                                                               create:YES
                                                                value:nil];
                 if (nil != previousCarePlanValue) {
@@ -676,7 +670,7 @@
         [self grabBagRemoveCarePlanValues:@[carePlanValue]];
     }
     if (refreshRow) {
-        [self reloadRowsForSelectedCarePlanItem:itemOrCategory previousIndexPath:previousIndexPath];
+        [self reloadRowsForSelectedCarePlanItem:carePlanCategory previousIndexPath:previousIndexPath];
     }
     // update remaining UI
     [self updateUIForDataChange];

@@ -13,8 +13,10 @@
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundType.h"
+#import "WMWoundPosition.h"
 #import "WMWoundLocation.h"
 #import "WMWoundLocationValue.h"
+#import "WMWoundLocationPositionJoin.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMNavigationCoordinator.h"
@@ -97,7 +99,6 @@
                                                                                            target:self
                                                                                            action:@selector(saveAction:)];
     if (!_newWoundFlag) {
-        NSParameterAssert(_wound);
         // we want to support cancel, so make sure we have an undoManager
         if (nil == self.managedObjectContext.undoManager) {
             self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
@@ -168,6 +169,11 @@
 }
 
 #pragma mark - Core
+
+- (NSArray *)backendSeedEntityNames
+{
+    return @[[WMWoundPosition entityName], [WMWoundLocation entityName], [WMWoundLocationPositionJoin entityName], [WMWoundType entityName]];
+}
 
 #pragma mark - Actions
 

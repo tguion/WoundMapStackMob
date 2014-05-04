@@ -42,9 +42,6 @@
 
 @property (strong, nonatomic) UIPopoverController *iapPopoverController;
 
-- (void)acquireBackendDataForEntityNames:(NSArray *)entityNames;
-- (void)acquireBackendDataForEntityName:(NSString *)entityName;
-
 @end
 
 @implementation WMBaseViewController
@@ -661,7 +658,7 @@
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(self) weakSelf = self;
-        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", backendSeedEntityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=1", backendSeedEntityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.coreDataHelper markBackendDataAcquiredForEntityName:backendSeedEntityName];
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];

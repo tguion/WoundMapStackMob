@@ -32,6 +32,7 @@
     if (nil == thumbnail) {
         // attempt to read from back end
         if (patient.facePhotoTaken) {
+            NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
             UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
             activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
             [self addSubview:activityIndicatorView];
@@ -44,6 +45,7 @@
                 if ([patient.thumbnail isKindOfClass:[NSData class]]) {
                     NSData *data = patient.thumbnail;
                     patient.thumbnail = [UIImage imageWithData:data];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }
                 weakSelf.image = patient.thumbnail;
                 [weakSelf setNeedsDisplay];

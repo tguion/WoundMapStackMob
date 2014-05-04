@@ -35,19 +35,13 @@
     // Do any additional setup after loading the view from its nib.
     self.title = @"Assessment Summary";
     // load text view
-    UITextView* tv = [[UITextView alloc] initWithFrame:self.view.bounds];
+    UITextView *tv = [[UITextView alloc] initWithFrame:self.view.bounds];
     tv.editable = NO;
     [self.view addSubview:tv];
     self.textView = tv;
     // add constraints
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
-    id topGuide = self.topLayoutGuide;
-    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings (tv, topGuide);
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-0-[tv]"
-                                                                      options:0
-                                                                      metrics:nil
-                                                                        views:viewsDictionary]];
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
 }
 

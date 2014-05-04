@@ -509,7 +509,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMSkinAssessmentCategory entityName]];
+    return @[[WMSkinAssessment entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

@@ -8,6 +8,7 @@
 
 #import "WMInterventionStatusViewController.h"
 #import "WMInterventionStatus.h"
+#import "WMInterventionStatusJoin.h"
 #import "WMDesignUtilities.h"
 
 @interface WMInterventionStatusViewController ()
@@ -232,7 +233,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMInterventionStatus entityName]];
+    return @[[WMInterventionStatusJoin entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName
