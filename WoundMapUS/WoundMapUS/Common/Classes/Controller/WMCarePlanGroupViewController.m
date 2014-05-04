@@ -413,22 +413,18 @@
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
-        WM_ASSERT_MAIN_THREAD;
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate carePlanGroupViewControllerDidSave:weakSelf];
     };
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error && counter) {
-            counter = 0;
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             block();
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
         }
     };
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
@@ -444,14 +440,14 @@
         }];
     }
     for (WMCarePlanValue *value in _carePlanGroup.values) {
-        if (value.ffUrl) {
-            continue;
-        }
-        // else
         ++counter;
-        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_carePlanGroup.ffUrl grabBagName:WMCarePlanGroupRelationships.values onComplete:completionHandler];
-        }];
+        if (value.ffUrl) {
+            [ff updateObj:value onComplete:completionHandler onOffline:completionHandler];
+        } else {
+            [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_carePlanGroup.ffUrl grabBagName:WMCarePlanGroupRelationships.values onComplete:completionHandler];
+            }];
+        }
     }
     ++counter;
     [ff updateObj:_carePlanGroup onComplete:completionHandler];
@@ -524,7 +520,9 @@
 
 - (void)carePlanGroupViewControllerDidSave:(WMCarePlanGroupViewController *)viewController
 {
+    NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:_selectedCarePlanCategory];
     [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)carePlanGroupViewControllerDidCancel:(WMCarePlanGroupViewController *)viewController

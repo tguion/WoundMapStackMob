@@ -367,11 +367,12 @@
 
 - (IBAction)saveAction:(id)sender
 {
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
     }
     if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
+        managedObjectContext.undoManager = nil;
     }
     [super saveAction:sender];
     // create intervention events after super
@@ -383,7 +384,7 @@
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
         if (nil == _parentWoundTreatment) {
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
         }
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate woundTreatmentViewControllerDidFinish:weakSelf];
@@ -391,14 +392,11 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error && counter) {
-            counter = 0;
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             block();
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
@@ -415,14 +413,16 @@
         }];
     }
     for (WMWoundTreatmentValue *value in _woundTreatmentGroup.values) {
-        if (value.ffUrl) {
-            continue;
-        }
-        // else
         ++counter;
-        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values onComplete:completionHandler];
-        }];
+        if (value.ffUrl) {
+            [ff updateObj:value
+               onComplete:completionHandler
+                onOffline:completionHandler];
+        } else {
+            [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values onComplete:completionHandler];
+            }];
+        }
     }
     ++counter;
     [ff updateObj:_woundTreatmentGroup onComplete:completionHandler];

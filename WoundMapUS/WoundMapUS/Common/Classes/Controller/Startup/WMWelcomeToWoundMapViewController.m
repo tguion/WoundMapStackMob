@@ -1090,6 +1090,17 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - CreateTeamViewControllerDelegate
 
+- (void)delayedInquireAddPatientsToTeam
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Not now"
+                                               destructiveButtonTitle:@"Add all patients to Team"
+                                                    otherButtonTitles:nil];
+    actionSheet.tag = kAddPatientToTeamActionSheetTag;
+    [actionSheet showInView:self.view];
+}
+
 - (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
 {
     [self.navigationController popViewControllerAnimated:NO];
@@ -1098,13 +1109,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     // check if team leader wants to add current patients to team
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if ([WMPatient patientCount:managedObjectContext]) {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Not now"
-                                                   destructiveButtonTitle:@"Add all patients to Team"
-                                                        otherButtonTitles:nil];
-        actionSheet.tag = kAddPatientToTeamActionSheetTag;
-        [actionSheet showInView:self.view];
+        /**
+         2014-05-04 14:45:27.387 WoundMapUS[55746:60b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Sheet can not be presented because the view is not in a window: <UITableView: 0xdd1ee00; frame = (0 0; 320 480); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x1806af40>; layer = <CALayer: 0x18068c80>; contentOffset: {0, 0}>'
+         */
+        [self performSelector:@selector(delayedInquireAddPatientsToTeam) withObject:nil afterDelay:0.0];
     }
 }
 
