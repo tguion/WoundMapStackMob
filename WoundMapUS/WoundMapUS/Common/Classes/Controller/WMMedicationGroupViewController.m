@@ -52,7 +52,7 @@
         self.modalInPopover = YES;
         self.preferredContentSize = CGSizeMake(320.0, 380.0);
         __weak __typeof(&*self)weakSelf = self;
-        self.refreshCompletionHandler = ^{
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
             if (!weakSelf.didCreateGroup) {
                 // we want to support cancel, so make sure we have an undoManager
                 if (nil == weakSelf.managedObjectContext.undoManager) {

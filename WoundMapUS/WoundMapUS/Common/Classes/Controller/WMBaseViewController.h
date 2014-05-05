@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //  NS_DESIGNATED_INITIALIZER
 
+#import "WMFatFractalManager.h"
+
 @class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager;
 @class WMPatient, WMWound, WMWoundPhoto, WMNavigationTrack, WMNavigationStage;
 @class WMProgressViewHUD;
@@ -60,7 +62,7 @@
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
 - (void)refreshTable;                                                       // refetch using FatFractal
 @property (readonly, nonatomic) NSString *ffQuery;                          // query string that fetches same as predicate from FatFractal
-@property (strong, nonatomic) dispatch_block_t refreshCompletionHandler;    // block to call after table auto refreshes
+@property (strong, nonatomic) WMObjectCallback refreshCompletionHandler;    // block to call after table auto refreshes
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource
 - (NSIndexPath *)indexPathTableToFetchedResultsController:(NSIndexPath *)indexPath;

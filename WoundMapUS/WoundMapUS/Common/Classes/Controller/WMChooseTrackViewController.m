@@ -8,12 +8,14 @@
 
 #import "WMChooseTrackViewController.h"
 #import "WMNavigationTrackTableViewCell.h"
+#import "MBProgressHUD.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationNode.h"
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "CoreDataHelper.h"
 #import "WMUserDefaultsManager.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
@@ -22,11 +24,52 @@
 @property (readonly, nonatomic) WMParticipant *participant;
 @property (strong, nonatomic) WMNavigationTrack *navigationTrack;
 
+@property (nonatomic) BOOL buildingAccountFlag;
+
 @end
 
 @implementation WMChooseTrackViewController
 
 #pragma mark - View
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        __weak __typeof(&*self)weakSelf = self;
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
+            if ([[WMNavigationTrack entityName] isEqualToString:object]) {
+                // we may need to seed, since tracks, stages, and nodes are scoped to participant or team
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                dispatch_block_t block = ^{
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                };
+                WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
+                    // update backend from main thread
+                    NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+                    for (NSManagedObjectID *objectID in objectIDs) {
+                        NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+                        NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+                        [ff createObj:object atUri:ffUrl];
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    }
+                    if (callBack) {
+                        callBack();
+                    }
+                    block();
+                };
+                WMParticipant *participant = weakSelf.participant;
+                if (!weakSelf.buildingAccountFlag && nil == participant.team && [WMNavigationTrack MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"team = nil"] inContext:weakSelf.managedObjectContext] == 0) {
+                    weakSelf.buildingAccountFlag = YES;
+                    [MBProgressHUD showHUDAddedTo:weakSelf.view animated:NO].labelText = @"Building account on device";
+                    [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
+                }
+            }
+        };
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -139,13 +182,7 @@
 
 - (NSString *)ffQuery
 {
-    NSString *ffQuery = nil;
-    if (self.participant.team) {
-        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks", [WMTeam entityName], [self.participant.team.ffUrl lastPathComponent]];
-    } else {
-        ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
-    }
-    return ffQuery;
+    return nil;
 }
 
 - (NSArray *)backendSeedEntityNames

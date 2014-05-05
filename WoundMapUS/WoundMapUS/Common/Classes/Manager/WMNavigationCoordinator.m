@@ -233,6 +233,11 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     WM_ASSERT_MAIN_THREAD;
     NSAssert(nil != navigationTrack, @"Do not set navigationTrack to nil");
     BOOL patientNavigationTrackDidChange = NO;
+    // navigationTrack may not be on back end if participant team nil
+    if (nil == navigationTrack.ffUrl) {
+        navigationTrack.ffUrl = @"No Team";
+        [[navigationTrack managedObjectContext] MR_saveToPersistentStoreAndWait];
+    }
     [[WMUserDefaultsManager sharedInstance] setDefaultNavigationTrackFFURL:navigationTrack.ffUrl];
     WMPatient *patient = self.patient;
     if (nil != patient) {

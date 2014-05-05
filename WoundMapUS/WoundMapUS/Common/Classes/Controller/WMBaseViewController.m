@@ -332,7 +332,7 @@
         [weakSelf.refreshControl endRefreshing];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (weakSelf.refreshCompletionHandler) {
-            weakSelf.refreshCompletionHandler();
+            weakSelf.refreshCompletionHandler(error, nil);
         }
     }];
 }
@@ -663,7 +663,7 @@
             [weakSelf.coreDataHelper markBackendDataAcquiredForEntityName:backendSeedEntityName];
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             if (weakSelf.refreshCompletionHandler) {
-                weakSelf.refreshCompletionHandler();
+                weakSelf.refreshCompletionHandler(error, backendSeedEntityName);
             }
         }];
     }

@@ -79,7 +79,7 @@
     if (self) {
         // Custom initialization
         __weak __typeof(&*self)weakSelf = self;
-        self.refreshCompletionHandler = ^{
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
             if (!weakSelf.didCreateGroup) {
                 [weakSelf.tableView reloadData];
             }

@@ -120,12 +120,12 @@ typedef enum {
         // create patient and wound nodes
         [WMNavigationNode seedPatientNodes:managedObjectContext];
         [WMNavigationNode seedWoundNodes:managedObjectContext];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (!completionHandler) {
             return;
         }
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         // else now gather the objectIDs
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
         NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
         NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
         completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], ^{
@@ -143,12 +143,23 @@ typedef enum {
                 __block NSArray *navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
                 __block NSArray *navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
                 completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                    NSError *error = nil;
+                    for (WMNavigationNode *node in navigationNodes) {
+                        if (node.stage) {
+                            [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                        }
+                    }
                     navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", navigationNodes] inContext:managedObjectContext];
                     navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
                     completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
                         NSError *error = nil;
                         for (WMNavigationNode *node in navigationNodes) {
-                            [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                            if (node.stage) {
+                                [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                            }
+                            if (node.parentNode) {
+                                [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                            }
                         }
                         [managedObjectContext MR_saveToPersistentStoreAndWait];
                         while (YES) {
@@ -161,7 +172,12 @@ typedef enum {
                             completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
                                 NSError *error = nil;
                                 for (WMNavigationNode *node in navigationNodes) {
-                                    [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                    if (node.stage) {
+                                        [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                                    }
+                                    if (node.parentNode) {
+                                        [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                    }
                                 }
                                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                             });
@@ -226,12 +242,23 @@ typedef enum {
                 __block NSArray *navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
                 __block NSArray *navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
                 completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                    NSError *error = nil;
+                    for (WMNavigationNode *node in navigationNodes) {
+                        if (node.stage) {
+                            [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                        }
+                    }
                     navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", navigationNodes] inContext:managedObjectContext];
                     navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
                     completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
                         NSError *error = nil;
                         for (WMNavigationNode *node in navigationNodes) {
-                            [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                            if (node.stage) {
+                                [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                            }
+                            if (node.parentNode) {
+                                [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                            }
                         }
                         [managedObjectContext MR_saveToPersistentStoreAndWait];
                         while (YES) {
@@ -244,7 +271,12 @@ typedef enum {
                             completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
                                 NSError *error = nil;
                                 for (WMNavigationNode *node in navigationNodes) {
-                                    [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                    if (node.stage) {
+                                        [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                                    }
+                                    if (node.parentNode) {
+                                        [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                    }
                                 }
                                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                             });

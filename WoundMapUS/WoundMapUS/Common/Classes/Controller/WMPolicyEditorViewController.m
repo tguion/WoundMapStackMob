@@ -204,7 +204,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         __weak __typeof(&*self)weakSelf = self;
-        self.refreshCompletionHandler = ^{
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         };
     }
@@ -437,42 +437,47 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
         }
         // else
         [self reorderNodesFromSortOrderings];
-        // update back end
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        __weak __typeof(&*self)weakSelf = self;
-        __block NSInteger counter = 0;
-        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
+        // update back end if participant has team
+        WMParticipant *participant = self.appDelegate.participant;
+        if (participant.team) {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            __weak __typeof(&*self)weakSelf = self;
+            __block NSInteger counter = 0;
+            FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                --counter;
+                if (counter == 0) {
+                    [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                    [weakSelf.delegate policyEditorViewControllerDidSave:weakSelf];
+                }
+            };
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            for (id updatedObject in self.managedObjectContext.updatedObjects) {
+                if (![updatedObject respondsToSelector:@selector(ffUrl)]) {
+                    continue;
+                }
+                // else
+                ++counter;
+                [ff updateObj:updatedObject
+                   onComplete:block
+                    onOffline:block];
             }
-            --counter;
-            if (counter == 0) {
-                [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                [weakSelf.delegate policyEditorViewControllerDidSave:weakSelf];
+            // else delete index patient
+            if (actionSheet.destructiveButtonIndex == buttonIndex) {
+                // update only current patient
+                self.updateCurrentPatientFlag = YES;
+            } else {
+                // update current and future patients
+                self.updateCurrentPatientFlag = NO;
             }
-        };
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        for (id updatedObject in self.managedObjectContext.updatedObjects) {
-            if (![updatedObject respondsToSelector:@selector(ffUrl)]) {
-                continue;
-            }
-            // else
-            ++counter;
-            [ff updateObj:updatedObject
-               onComplete:block
-                onOffline:block];
-        }
-        // else delete index patient
-        if (actionSheet.destructiveButtonIndex == buttonIndex) {
-            // update only current patient
-            self.updateCurrentPatientFlag = YES;
+            _navigationTrack = nil;
+            _navigationStage = nil;
         } else {
-            // update current and future patients
-            self.updateCurrentPatientFlag = NO;
+            [self.delegate policyEditorViewControllerDidSave:self];
         }
-        _navigationTrack = nil;
-        _navigationStage = nil;
     } else if (actionSheet.tag == kChangeTrackConfirmAlertTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [self.delegate policyEditorViewController:self didChangeTrack:_navigationTrack];

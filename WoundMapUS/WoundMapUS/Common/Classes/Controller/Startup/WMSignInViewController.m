@@ -149,7 +149,7 @@
                 WMTeam *team = participant.team;
                 if (team) {
                     // check if subscription has expired
-                    if ([participant.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedDescending) {
+                    if ([participant.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedAscending) {
                         // times up
                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Subscription Expired"
                                                                             message:@"Your team leader must purchase additional access time to continue to use WoundMap"

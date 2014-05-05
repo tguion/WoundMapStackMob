@@ -36,7 +36,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         __weak __typeof(&*self)weakSelf = self;
-        self.refreshCompletionHandler = ^{
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.tableView reloadData];
         };
     }
