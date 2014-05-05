@@ -27,7 +27,7 @@
 
 #define kDeletePatientConfirmAlertTag 2004
 
-@interface WMPatientTableViewController () <PatientSummaryContainerDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface WMPatientTableViewController () <PatientSummaryContainerDelegate, PatientReferralDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *patientTypeContainerView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *patientTypeSegmentedControl;

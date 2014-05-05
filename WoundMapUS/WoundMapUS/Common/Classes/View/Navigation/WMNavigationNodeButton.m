@@ -21,7 +21,6 @@
 @property (weak, nonatomic) UIImageView *iconImageView;
 @property (weak, nonatomic) UILabel *nodeTitleLabel;
 @property (readonly, nonatomic) UIFont *titleFont;
-@property (weak, nonatomic) UIImageView *statusImageView;
 @property (readonly, nonatomic) NSDictionary *titleAttributes;
 @property (readonly, nonatomic) NSDictionary *titleSelectedAttributes;
 @property (readonly, nonatomic) NSString *iconImageName;

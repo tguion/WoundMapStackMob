@@ -150,7 +150,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMNavigationNode entityName]];
+    return @[[WMNavigationTrack entityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

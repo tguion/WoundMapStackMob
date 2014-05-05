@@ -8,6 +8,7 @@
 
 #import "WMManageTeamViewController.h"
 #import "WMCreateTeamInvitationViewController.h"
+#import "WMWelcomeToWoundMapViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
@@ -17,12 +18,14 @@
 #import "WMFatFractalManager.h"
 #import "IAPManager.h"
 #import "WMUtilities.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 
 typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRevokeInvitationActionSheetTag,
     kConfirmInvitationActionSheetTag,
     kRemoveParticipantActionSheetTag,
+    kSignOutActionSheetTag
 };
 
 @interface WMManageTeamViewController () <CreateTeamInvitationViewControllerDelegate, UIActionSheetDelegate>
@@ -59,6 +62,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Manage Team";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(signOutAction:)];
     // update from back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
@@ -178,6 +182,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     return createTeamInvitationViewController;
 }
 
+- (WMWelcomeToWoundMapViewController *)welcomeToWoundMapViewController
+{
+    return [[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil];
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToCreateInvitationViewController
@@ -186,6 +195,17 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 }
 
 #pragma mark - Actions
+
+- (IBAction)signOutAction:(id)sender
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Sign Out %@", self.appDelegate.participant.userName]
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Sign Out"
+                                                    otherButtonTitles:nil];
+    actionSheet.tag = kSignOutActionSheetTag;
+    [actionSheet showInView:self.view];
+}
 
 #pragma mark - WMBaseViewController
 
@@ -280,6 +300,26 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                         [weakSelf.tableView reloadData];
                     }
                 }];
+            }
+            break;
+        }
+        case kSignOutActionSheetTag: {
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                self.appDelegate.participant = nil;
+                [self.appDelegate.navigationCoordinator clearPatientCache];
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                [ff logout];
+                __weak __typeof(self) weakSelf = self;
+                [UIView transitionWithView:self.appDelegate.window
+                                  duration:0.5
+                                   options:UIViewAnimationOptionTransitionFlipFromLeft
+                                animations:^{
+                                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:weakSelf.welcomeToWoundMapViewController];
+                                    navigationController.delegate = weakSelf.appDelegate;
+                                    self.appDelegate.window.rootViewController = navigationController;
+                                } completion:^(BOOL finished) {
+                                    // nothing
+                                }];
             }
             break;
         }
@@ -479,6 +519,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             // team members
             WMParticipant *teamMember = [self.teamMembers objectAtIndex:indexPath.row];
             cell.textLabel.text = teamMember.name;
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
             cell.detailTextLabel.text = [NSString stringWithFormat:@"Expires %@", [NSDateFormatter localizedStringFromDate:teamMember.dateTeamSubscriptionExpires dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
             break;
         }

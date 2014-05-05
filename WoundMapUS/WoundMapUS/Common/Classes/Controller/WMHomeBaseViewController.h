@@ -94,6 +94,7 @@ typedef enum {
 @property (readonly, nonatomic) MapBaseRotationDirection rotationState; // W, N, E, S current compass needle rotation position
 
 @property (weak, nonatomic) IBOutlet UIButton *shareButton;             // button to show email, print, etc.
+@property (readonly, nonatomic) UIImage *openReferralStatusImage;
 
 @property (weak, nonatomic) UIBarButtonItem *reviewPhotosBarButtonItem;
 @property (weak, nonatomic) UIBarButtonItem *reviewGraphsBarButtonItem;

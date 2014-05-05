@@ -2,6 +2,7 @@
 #import "WMParticipantType.h"
 #import "WMPerson.h"
 #import "WMTeamInvitation.h"
+#import "WMPatientReferral.h"
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
@@ -148,6 +149,18 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     self.reportTokenCountValue = (self.reportTokenCountValue + tokens);
     self.lastTokenCreditPurchaseDate = [NSDate date];
     return self.reportTokenCountValue;
+}
+
+- (NSArray *)targetPatientReferrals:(BOOL)showOnlyOpenReferrals
+{
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSPredicate *predicate = nil;
+    if (showOnlyOpenReferrals) {
+        predicate = [NSPredicate predicateWithFormat:@"%K == %@ AND %K = nil", WMPatientReferralRelationships.referree, self, WMPatientReferralAttributes.dateAccepted];
+    } else {
+        predicate = [NSPredicate predicateWithFormat:@"%K == %@", WMPatientReferralRelationships.referree, self];
+    }
+    return [WMPatientReferral MR_findAllSortedBy:WMPatientReferralAttributes.createdAt ascending:NO withPredicate:predicate inContext:managedObjectContext];
 }
 
 #pragma mark - FatFractal

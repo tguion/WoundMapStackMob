@@ -1095,12 +1095,12 @@
     if (nil == photo.photo) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Downloading photo";
-        [ff loadBlobsForObj:photo onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
+        [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", photo.ffUrl, WMPhotoAttributes.photo]] executeAsyncWithBlock:^(FFReadResponse *response) {
+            NSData *photoData = [response rawResponseData];
+            if (response.httpResponse.statusCode > 300) {
+                DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
             } else {
-                NSData *data = photo.photo;
-                photo.photo = [[UIImage alloc] initWithData:data];
+                photo.photo = [[UIImage alloc] initWithData:photoData];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                 block();

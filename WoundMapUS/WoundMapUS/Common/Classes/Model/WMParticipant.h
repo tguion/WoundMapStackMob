@@ -28,4 +28,6 @@
 
 - (NSInteger)addReportTokens:(NSInteger)tokens;
 
+- (NSArray *)targetPatientReferrals:(BOOL)showOnlyOpenReferrals;
+
 @end

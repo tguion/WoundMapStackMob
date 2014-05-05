@@ -752,6 +752,13 @@
     [self updateTaskNodeControls];
 }
 
+- (UIImage *)openReferralStatusImage
+{
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    NSString *imageName = (isPad ? @"alert_yellow_iPad":@"alert_yellow_iPhone");
+    return [UIImage imageNamed:imageName];
+}
+
 // we need to adjust for
 //  1. No patients (no documents)
 //  2. Patients, but document not selected
@@ -797,6 +804,14 @@
     }
     // edit
     self.editWoundButton.enabled = (nil != wound);
+    // handle referrals
+    WMParticipant *participant = self.appDelegate.participant;
+    NSArray *referrals = [participant targetPatientReferrals:YES];
+    if ([referrals count]) {
+        self.selectPatientButton.statusImageView.image = self.openReferralStatusImage;
+    } else {
+        self.selectPatientButton.statusImageView.image = nil;
+    }
 }
 
 - (void)updateTaskNodeControls
@@ -1834,7 +1849,14 @@
 
 #pragma mark - PatientTableViewControllerDelegate
 
-- (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient {}
+- (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient
+{
+    // update our reference to current patient
+    if (nil != patient) {
+        self.appDelegate.navigationCoordinator.patient = patient;
+    }
+}
+
 - (void)patientTableViewControllerDidCancel:(WMPatientTableViewController *)viewController {}
 
 #pragma mark - SelectWoundViewControllerDelegate

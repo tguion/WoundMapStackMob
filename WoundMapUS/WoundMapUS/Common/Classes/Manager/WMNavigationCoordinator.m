@@ -127,6 +127,8 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     }
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
+        // attempt to set a wound
+        self.wound = self.lastWoundForPatient;
     }
 }
 

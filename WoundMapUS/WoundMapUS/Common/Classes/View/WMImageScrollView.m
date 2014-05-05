@@ -235,32 +235,14 @@
     WMPhoto *photo = woundPhoto.photo;
     NSManagedObjectID *woundPhotoID = [woundPhoto objectID];
     NSManagedObjectID *photoID = [photo objectID];
-    __weak __typeof(&*self)weakSelf = self;
-    dispatch_block_t block = ^{
-        // make a new UIImageView for the new image
-        UIImage *image = photo.photo;
-        _zoomView = [[UIImageView alloc] initWithImage:image];
-        [weakSelf addSubview:_zoomView];
-        [weakSelf configureForImageSize:image.size];
-        // fault our cache
-        [Faulter faultObjectWithID:photoID inContext:managedObjectContext];
-        [Faulter faultObjectWithID:woundPhotoID inContext:managedObjectContext];
-    };
-    if (nil == photo.photo) {
-        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-        [self addSubview:activityIndicatorView];
-        [activityIndicatorView startAnimating];
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff loadBlobsForObj:photo onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [activityIndicatorView removeFromSuperview];
-            photo.photo = [[UIImage alloc] initWithData:photo.photo];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            block();
-        }];
-    } else {
-        block();
-    }
+    // make a new UIImageView for the new image
+    UIImage *image = photo.photo;
+    _zoomView = [[UIImageView alloc] initWithImage:image];
+    [self addSubview:_zoomView];
+    [self configureForImageSize:image.size];
+    // fault our cache
+    [Faulter faultObjectWithID:photoID inContext:managedObjectContext];
+    [Faulter faultObjectWithID:woundPhotoID inContext:managedObjectContext];
 }
 
 - (void)displayTiledImageOfSize:(CGSize)imageSize

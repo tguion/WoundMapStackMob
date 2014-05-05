@@ -231,10 +231,7 @@
 
 - (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient
 {
-    // update our reference to current patient
-    if (nil != patient) {
-        self.appDelegate.navigationCoordinator.patient = patient;
-    }
+    [super patientTableViewController:viewController didSelectPatient:patient];
     [_navigationNodePopoverController dismissPopoverAnimated:YES];
     [viewController clearAllReferences];
     _navigationNodePopoverController = nil;

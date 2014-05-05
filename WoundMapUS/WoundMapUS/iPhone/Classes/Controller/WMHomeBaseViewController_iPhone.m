@@ -329,10 +329,7 @@
 
 - (void)patientTableViewController:(WMPatientTableViewController *)viewController didSelectPatient:(WMPatient *)patient
 {
-    // update our reference to current patient
-    if (nil != patient) {
-        self.appDelegate.navigationCoordinator.patient = patient;
-    }
+    [super patientTableViewController:viewController didSelectPatient:patient];
     __weak __typeof(viewController) weakViewController = viewController;
     [self dismissViewControllerAnimated:YES completion:^{
         // new document will update the UI from registerForNotifications
