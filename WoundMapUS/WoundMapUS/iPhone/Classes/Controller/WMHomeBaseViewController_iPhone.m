@@ -239,20 +239,6 @@
                      }];
 }
 
-- (void)navigateToSkinAssessment:(WMNavigationNodeButton *)navigationNodeButton
-{
-    WMSkinAssessmentGroupViewController *skinAssessmentGroupViewController = self.skinAssessmentGroupViewController;
-    skinAssessmentGroupViewController.navigationNode = navigationNodeButton.navigationNode;
-    skinAssessmentGroupViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:skinAssessmentGroupViewController];
-    navigationController.delegate = self.appDelegate;
-    [self presentViewController:navigationController
-                       animated:YES
-                     completion:^{
-                         // nothing
-                     }];
-}
-
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMPhotoManager * photoManager = [WMPhotoManager sharedInstance];
@@ -279,19 +265,11 @@
 
 - (void)navigateToWoundTreatment:(WMNavigationNodeButton *)navigationNodeButton
 {
+//    WMWoundTreatmentGroupsViewController *woundTreatmentGroupsViewController = self.woundTreatmentGroupsViewController;
+//    woundTreatmentGroupsViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount; TODO: need this???
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.woundTreatmentGroupsViewController];
     navigationController.delegate = self.appDelegate;
     [self presentViewController:navigationController
-                       animated:YES
-                     completion:^{
-                         // nothing
-                     }];
-}
-
-- (void)navigateToBrowsePhotos:(id)sender
-{
-    // Browse Photos - inactive if no photos
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:self.photosContainerViewController]
                        animated:YES
                      completion:^{
                          // nothing

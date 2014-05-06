@@ -1528,12 +1528,21 @@
 - (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
-- (void)navigateToSkinAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToWoundAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToWoundTreatment:(WMNavigationNodeButton *)navigationNodeButton {}
-- (void)navigateToBrowsePhotos:(id)sender {}
+
+- (void)navigateToBrowsePhotos:(id)sender
+{
+    // Browse Photos - inactive if no photos
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:self.photosContainerViewController]
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
+}
+
 - (void)navigateToViewGraphs:(id)sender {}
 - (void)navigateToPatientSummary:(id)sender {}
 - (void)navigateToShare:(id)sender {}

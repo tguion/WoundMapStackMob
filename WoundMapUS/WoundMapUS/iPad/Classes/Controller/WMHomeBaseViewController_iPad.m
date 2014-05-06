@@ -112,7 +112,6 @@
 // the action depends on parentNavigationNode
 - (IBAction)takePatientPhotoAction:(id)sender
 {
-    [super takePatientPhotoAction:sender];
     if (nil == self.parentNavigationNode) {
         // we are home, so take photo
         self.photoAcquisitionState = PhotoAcquisitionStateAcquirePatientPhoto;
@@ -124,9 +123,88 @@
                          permittedArrowDirections:UIPopoverArrowDirectionAny
                                          animated:YES];
     }
+    [super takePatientPhotoAction:sender];
+
 }
 
 #pragma mark - Navigation
+
+- (void)navigateToManageTeam:(UIBarButtonItem *)barButtonItem
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.manageTeamViewController];
+    [popoverController presentPopoverFromBarButtonItem:barButtonItem
+                              permittedArrowDirections:UIPopoverArrowDirectionAny
+                                              animated:YES];
+
+}
+
+- (void)navigateToPatientDetail:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMPatientDetailViewController *patientDetailViewController = self.patientDetailViewController;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:patientDetailViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToPatientDetailViewControllerForNewPatient:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMPatientDetailViewController *patientDetailViewController = self.patientDetailViewController;
+    patientDetailViewController.newPatientFlag = YES;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:patientDetailViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToSelectPatient:(WMNavigationNodeButton *)navigationNodeButton
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.patientTableViewController];
+    CGRect rect = [self.view convertRect:self.selectPatientButton.frame fromView:self.selectPatientButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToWoundDetail:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMWoundDetailViewController *woundDetailViewController = self.woundDetailViewController;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:woundDetailViewController];
+    CGRect buttonRect = navigationNodeButton.frame;
+    CGRect rect = [self.view convertRect:buttonRect fromView:self.addWoundButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToWoundDetailViewControllerForNewWound:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMWoundDetailViewController *woundDetailViewController = self.woundDetailViewController;
+    woundDetailViewController.newWoundFlag = YES;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:woundDetailViewController];
+    CGRect buttonRect = navigationNodeButton.frame;
+    CGRect rect = [self.view convertRect:buttonRect fromView:self.addWoundButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToSelectWound:(WMNavigationNodeButton *)navigationNodeButton
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.selectWoundViewController];
+    CGRect rect = [self.view convertRect:self.selectWoundButton.frame fromView:self.selectWoundButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
 
 - (void)navigateToSkinAssessmentForNavigationNode:(WMNavigationNodeButton *)navigationNodeButton
 {
@@ -134,6 +212,52 @@
     skinAssessmentGroupViewController.navigationNode = navigationNodeButton.navigationNode;
     skinAssessmentGroupViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
     UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:skinAssessmentGroupViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToBradenScaleAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.bradenScaleViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMMedicationGroupViewController *medicationsViewController = self.medicationsViewController;
+    medicationsViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:medicationsViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMDevicesViewController *devicesViewController = self.devicesViewController;
+    devicesViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:devicesViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMPsychoSocialGroupViewController *viewController = self.psychoSocialGroupViewController;
+    viewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:viewController];
     CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
     [popoverController presentPopoverFromRect:rect
                                        inView:self.view
@@ -159,6 +283,61 @@
             }
         }];
     }
+}
+
+- (void)navigateToWoundAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMWoundMeasurementGroupViewController *woundMeasurementGroupViewController = self.woundMeasurementGroupViewController;
+    woundMeasurementGroupViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:woundMeasurementGroupViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToWoundTreatment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.woundTreatmentGroupsViewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
+- (void)navigateToViewGraphs:(id)sender
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.plotSelectDatasetViewController];
+    if ([sender isKindOfClass:[UIBarButtonItem class]]) {
+        [popoverController presentPopoverFromBarButtonItem:sender
+                                  permittedArrowDirections:UIPopoverArrowDirectionAny
+                                                  animated:YES];
+    } else {
+        WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
+        CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+        [popoverController presentPopoverFromRect:rect
+                                           inView:self.view
+                         permittedArrowDirections:UIPopoverArrowDirectionAny
+                                         animated:YES];
+    }
+}
+
+- (void)navigateToPatientSummary:(id)sender
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.patientSummaryContainerViewController];
+    [popoverController presentPopoverFromBarButtonItem:self.patientSummaryBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void)navigateToShare:(id)sender
+{
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:self.shareViewController];
+    CGRect rect = [self.view convertRect:self.shareButton.frame fromView:self.shareButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
 }
 
 #pragma mark - Notification handlers

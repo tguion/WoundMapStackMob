@@ -161,7 +161,6 @@ typedef enum {
 - (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton;
-- (void)navigateToSkinAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToPhoto:(WMNavigationNode *)navigationNode;
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton;

@@ -296,6 +296,7 @@
 		7D40BFBC18F9560200DB2BCD /* TeamMemberIAPDesc.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */; };
 		7D40BFC118FD4CF000DB2BCD /* WMPatientPhotoImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D40BFC018FD4CF000DB2BCD /* WMPatientPhotoImageView.m */; };
 		7D40BFC418FD6FEF00DB2BCD /* DictionaryToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D40BFC318FD6FEF00DB2BCD /* DictionaryToDataTransformer.m */; };
+		7D4A3BE2191960F900D7CE03 /* WMStageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A3BE1191960F900D7CE03 /* WMStageCell.m */; };
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
@@ -1059,6 +1060,8 @@
 		7D40BFC018FD4CF000DB2BCD /* WMPatientPhotoImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientPhotoImageView.m; sourceTree = "<group>"; };
 		7D40BFC218FD6FEF00DB2BCD /* DictionaryToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DictionaryToDataTransformer.h; sourceTree = "<group>"; };
 		7D40BFC318FD6FEF00DB2BCD /* DictionaryToDataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DictionaryToDataTransformer.m; sourceTree = "<group>"; };
+		7D4A3BE0191960F900D7CE03 /* WMStageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMStageCell.h; sourceTree = "<group>"; };
+		7D4A3BE1191960F900D7CE03 /* WMStageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMStageCell.m; sourceTree = "<group>"; };
 		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
 		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
@@ -3020,8 +3023,6 @@
 		7DDFD68C18B7C2C000041927 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
-				7D40BFBF18FD4CF000DB2BCD /* WMPatientPhotoImageView.h */,
-				7D40BFC018FD4CF000DB2BCD /* WMPatientPhotoImageView.m */,
 				7D39DB0718B7EFE30054DDC3 /* WMCarePlanTableViewCell.h */,
 				7D39DB0818B7EFE30054DDC3 /* WMCarePlanTableViewCell.m */,
 				7D39DAD518B7CE6E0054DDC3 /* WMCompassView.h */,
@@ -3034,6 +3035,10 @@
 				7DDFD68E18B7C2C000041927 /* WMNavigationPatientWoundContainerView.m */,
 				7DDFD68F18B7C2C000041927 /* WMNavigationPatientWoundView.h */,
 				7DDFD69018B7C2C000041927 /* WMNavigationPatientWoundView.m */,
+				7D40BFBF18FD4CF000DB2BCD /* WMPatientPhotoImageView.h */,
+				7D40BFC018FD4CF000DB2BCD /* WMPatientPhotoImageView.m */,
+				7D4A3BE0191960F900D7CE03 /* WMStageCell.h */,
+				7D4A3BE1191960F900D7CE03 /* WMStageCell.m */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -3448,6 +3453,7 @@
 				7DD8374318C78A3A0028C2D3 /* MagicalRecord+ShorthandSupport.m in Sources */,
 				7D10CDC218DA352800AD43E3 /* ConstraintUtilities-Description.m in Sources */,
 				7DF4E93E18C2550F000A3F5B /* SearchUtilities.m in Sources */,
+				7D4A3BE2191960F900D7CE03 /* WMStageCell.m in Sources */,
 				7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */,
 				7DF4E93718C22F27000A3F5B /* WMWoundPosition.m in Sources */,
 				7DD8375C18C7A5080028C2D3 /* AFHTTPClient.m in Sources */,

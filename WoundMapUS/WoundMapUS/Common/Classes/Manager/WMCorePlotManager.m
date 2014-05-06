@@ -17,6 +17,7 @@
 #import "WoundStatusMeasurementRollup.h"
 #import "WoundStatusMeasurementPlotDataSource.h"
 #import "WMNavigationCoordinator.h"
+#import "WCAppDelegate.h"
 
 NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
 
@@ -69,7 +70,8 @@ NSInteger kXOffset = 0; // emperical offset to place data to right of y-axis
 
 - (WMPatient *)patient
 {
-    return [[WMNavigationCoordinator sharedInstance] patient];
+    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    return appDelegate.navigationCoordinator.patient;
 }
 
 #pragma mark - Plot Helper Methods

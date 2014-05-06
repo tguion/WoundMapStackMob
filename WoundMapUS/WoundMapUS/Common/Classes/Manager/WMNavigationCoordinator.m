@@ -43,7 +43,6 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 
 @interface WMNavigationCoordinator ()
 
-@property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) WMUserDefaultsManager *userDefaultsManager;
