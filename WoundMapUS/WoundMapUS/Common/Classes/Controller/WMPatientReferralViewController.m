@@ -536,6 +536,7 @@
         }
         case 1: {
             NSAttributedString *message = [self.messageHistory objectAtIndex:indexPath.row];
+            cell.textLabel.numberOfLines = 0;
             cell.textLabel.attributedText = message;
             break;
         }
