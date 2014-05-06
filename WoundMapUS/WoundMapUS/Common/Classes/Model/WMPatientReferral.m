@@ -21,6 +21,18 @@ NSString *const kPatientReferralMessageDelimiter = @"^^^^";
     self.updatedAt = [NSDate date];
 }
 
++ (NSArray *)patientReferrals:(BOOL)openFlag managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    if (openFlag) {
+        return [WMPatientReferral MR_findAllSortedBy:WMPatientReferralAttributes.updatedAt
+                                           ascending:NO
+                                       withPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientReferralAttributes.dateAccepted]
+                                           inContext:managedObjectContext];
+    }
+    // else
+    return [WMPatientReferral MR_findAllSortedBy:WMPatientReferralAttributes.updatedAt ascending:NO inContext:managedObjectContext];
+}
+
 - (NSArray *)messageHistory
 {
     NSString *message = self.message;

@@ -58,6 +58,7 @@
     NSParameterAssert(self.patient);
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.title = @"Referral";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
     [self.tableView registerClass:[WMTextViewTableViewCell class] forCellReuseIdentifier:@"TextCell"];
@@ -289,10 +290,15 @@
     if (_didChangeReferree) {
         ++counter;
         _patientReferral.dateAccepted = nil;
-        [ff grabBagRemoveItemAtFfUrl:_patientReferral.referree.ffUrl
-                      fromObjAtFfUrl:_patientReferral.ffUrl
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.referree.ffUrl
                          grabBagName:WMParticipantRelationships.targetReferrals
                           onComplete:completionHandler];
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                     toObjAtFfUrl:participant.ffUrl
+                      grabBagName:WMParticipantRelationships.sourceReferrals
+                       onComplete:completionHandler];
     }
     _patientReferral.referree = _referree;
     if (_didAddPatientToReferral) {
@@ -310,9 +316,8 @@
                    onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [ff updateObj:_patientReferral onComplete:completionHandler onOffline:completionHandler];
         }
+       [ff updateObj:_patientReferral onComplete:completionHandler onOffline:completionHandler];
     }];
 }
 
@@ -429,7 +434,7 @@
             CGFloat width = CGRectGetWidth(self.view.bounds) - self.tableView.separatorInset.left - self.tableView.separatorInset.right;
             NSAttributedString *message = [self.messageHistory objectAtIndex:indexPath.row];
             CGRect rect = [message boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
-            height = CGRectGetHeight(rect);
+            height = MAX(CGRectGetHeight(rect), 88.0);
             break;
         }
     }

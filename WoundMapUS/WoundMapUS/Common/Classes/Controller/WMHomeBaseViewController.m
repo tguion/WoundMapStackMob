@@ -26,6 +26,7 @@
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
+#import "WMPatientReferral.h"
 #import "WMPhotoManager.h"
 #import "WMPolicyManager.h"
 #import "WMNavigationCoordinator.h"
@@ -778,6 +779,14 @@
     } else {
         // patient not nil, so patient is selected - at least one patient exists
         self.selectPatientButton.enabled = (patientCount > 1 ? YES:NO);
+        // handle referrals
+        WMParticipant *participant = self.appDelegate.participant;
+        NSArray *referrals = [participant targetPatientReferrals:YES];
+        if ([referrals count]) {
+            self.selectPatientButton.statusImageView.image = self.openReferralStatusImage;
+        } else {
+            self.selectPatientButton.statusImageView.image = nil;
+        }
     }
     // edit
     self.editPatientButton.enabled = (nil != patient);
@@ -804,14 +813,6 @@
     }
     // edit
     self.editWoundButton.enabled = (nil != wound);
-    // handle referrals
-    WMParticipant *participant = self.appDelegate.participant;
-    NSArray *referrals = [participant targetPatientReferrals:YES];
-    if ([referrals count]) {
-        self.selectPatientButton.statusImageView.image = self.openReferralStatusImage;
-    } else {
-        self.selectPatientButton.statusImageView.image = nil;
-    }
 }
 
 - (void)updateTaskNodeControls

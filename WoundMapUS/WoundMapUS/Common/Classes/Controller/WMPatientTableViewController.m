@@ -401,11 +401,15 @@
             button.tag = indexPath.row;
             [button setTitle:@"Referral" forState:UIControlStateNormal];
             [button addTarget:self action:@selector(navigateToPatientReferral:) forControlEvents:UIControlEventTouchUpInside];
+            [button sizeToFit];
             accessoryView = button;
         }
     }
-    cell.accessoryView = accessoryView;
-    cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
+    if (accessoryView) {
+        cell.accessoryView = accessoryView;
+    } else {
+        cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
+    }
     WMPatientTableViewCell *myCell = (WMPatientTableViewCell *)cell;
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (self.isShowingTeamPatients) {

@@ -224,7 +224,7 @@ typedef enum {
     navigationNode.taskIdentifier = [NSNumber numberWithInt:kSelectPatientNode];
     navigationNode.title = @"Select";
     navigationNode.woundFlag = @NO;
-    navigationNode.hidesStatusIndicator = YES;
+    navigationNode.hidesStatusIndicator = NO;
     // edit
     navigationNode = [WMNavigationNode MR_createInContext:managedObjectContext];
     navigationNode.activeFlag = @YES;
