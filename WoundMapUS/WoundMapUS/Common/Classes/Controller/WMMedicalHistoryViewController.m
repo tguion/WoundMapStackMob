@@ -104,16 +104,33 @@
 - (WMMedicalHistoryGroup *)medicalHistoryGroup
 {
     if (nil == _medicalHistoryGroup) {
-        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-        _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:self.patient];
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        _medicalHistoryGroupWasCreated = YES;
-        [ff createObj:_medicalHistoryGroup
-                atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
-           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-               NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
-               [managedObjectContext MR_saveToPersistentStoreAndWait];
-           }];
+        WMPatient *patient = self.patient;
+        NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+        _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:patient];
+        if (nil == _medicalHistoryGroup) {
+            _medicalHistoryGroup = [WMMedicalHistoryGroup MR_createInContext:managedObjectContext];
+            _medicalHistoryGroup.patient = self.patient;
+            _medicalHistoryGroupWasCreated = YES;
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [ff grabBagAddItemAtFfUrl:_medicalHistoryGroup.ffUrl
+                             toObjAtFfUrl:patient.ffUrl
+                              grabBagName:WMPatientRelationships.medicalHistoryGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            };
+            [ff createObj:_medicalHistoryGroup
+                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
+               onComplete:createCompletionHandler];
+        }
     }
     return _medicalHistoryGroup;
 }
