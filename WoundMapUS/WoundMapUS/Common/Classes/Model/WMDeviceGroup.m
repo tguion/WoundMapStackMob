@@ -72,8 +72,10 @@
 
 + (WMDeviceGroup *)deviceGroupForPatient:(WMPatient *)patient
 {
-    WMDeviceGroup *deviceGroup = [WMDeviceGroup MR_createInContext:[patient managedObjectContext]];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMDeviceGroup *deviceGroup = [WMDeviceGroup MR_createInContext:managedObjectContext];
     deviceGroup.patient = patient;
+    deviceGroup.status = [WMInterventionStatus initialInterventionStatus:managedObjectContext];
     return deviceGroup;
 }
 

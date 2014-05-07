@@ -75,9 +75,11 @@
     DLog(@"%@ %@.viewDidLoad:", self, NSStringFromClass([self class]));
     [super viewDidLoad];
     // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated.
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl = refreshControl;
+    if (self.ffQuery) {
+        UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+        [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+        self.refreshControl = refreshControl;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

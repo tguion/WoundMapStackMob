@@ -350,8 +350,9 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 {
     [super layoutSubviews];
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    self.compassNeedleImage.center = center;
-    self.patientPhotoView.center = center;
+    _compassNeedleImage.center = center;
+    _patientPhotoView.center = center;
+    _patientImageView.center = center;
     [self recalculateDimensions];
 }
 

@@ -556,7 +556,7 @@
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
             <userInfo/>
         </attribute>
-        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" defaultValueString="U" syncable="YES"/>
         <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="relevantMedications" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ssn" optional="YES" attributeType="String" syncable="YES"/>
@@ -772,6 +772,7 @@
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="invitationMessage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="inviteeUserName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="passcode" optional="YES" attributeType="Integer 16" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
@@ -1195,8 +1196,9 @@
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="480"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="478"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
+        <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="128" height="195"/>
@@ -1207,7 +1209,7 @@
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="208"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTeam" positionX="9" positionY="153" width="128" height="208"/>
-        <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="178"/>
+        <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="195"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMWound" positionX="0" positionY="0" width="128" height="285"/>
@@ -1225,6 +1227,5 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
     </elements>
 </model>

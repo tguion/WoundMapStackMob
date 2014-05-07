@@ -8,6 +8,7 @@ const struct WMTeamInvitationAttributes WMTeamInvitationAttributes = {
 	.createdAt = @"createdAt",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
+	.invitationMessage = @"invitationMessage",
 	.inviteeUserName = @"inviteeUserName",
 	.passcode = @"passcode",
 	.updatedAt = @"updatedAt",
@@ -130,6 +131,13 @@ const struct WMTeamInvitationFetchedProperties WMTeamInvitationFetchedProperties
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
+
+
+
+
+
+@dynamic invitationMessage;
+
 
 
 

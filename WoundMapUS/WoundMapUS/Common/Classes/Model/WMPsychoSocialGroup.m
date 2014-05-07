@@ -17,8 +17,10 @@
 
 + (WMPsychoSocialGroup *)psychoSocialGroupForPatient:(WMPatient *)patient
 {
-    WMPsychoSocialGroup *psychoSocialGroup = [WMPsychoSocialGroup MR_createInContext:[patient managedObjectContext]];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMPsychoSocialGroup *psychoSocialGroup = [WMPsychoSocialGroup MR_createInContext:managedObjectContext];
     psychoSocialGroup.patient = patient;
+    psychoSocialGroup.status = [WMInterventionStatus initialInterventionStatus:managedObjectContext];
     return psychoSocialGroup;
 }
 

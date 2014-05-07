@@ -39,6 +39,9 @@
 
 @interface WMWoundMeasurementGroupViewController () <AdjustAlpaViewDelegate, WoundMeasurementGroupViewControllerDelegate, SelectAmountQualifierViewControllerDelegate, SelectWoundOdorViewControllerDelegate, UndermineTunnelViewControllerDelegate, NoteViewControllerDelegate>
 
+@property (strong, nonatomic) WMWoundMeasurementGroup *woundMeasurementGroup;       // associated with woundPhoto if possible
+@property (strong, nonatomic) WMWoundMeasurement *parentWoundMeasurement;           // set when navigating to children woundMeasurements
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (weak, nonatomic) WMAdjustAlpaView *adjustAlpaView;
@@ -132,16 +135,65 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (nil == _woundMeasurementGroup) {
-        _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:self.woundPhoto];
-    }
+    WMWoundPhoto *woundPhoto = self.woundPhoto;
+    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     if (_woundMeasurementGroup) {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             _removeUndoManagerWhenDone = YES;
         }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
+        [managedObjectContext.undoManager beginUndoGrouping];
+    } else {
+        _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:woundPhoto];
+        if (nil == _woundMeasurementGroup) {
+            _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:woundPhoto];
+            self.didCreateGroup = YES;
+            // create on back end
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMWound *wound = self.wound;
+            WMWoundPhoto *woundPhoto = self.woundPhoto;
+            __block NSInteger counter = 0;
+            __weak __typeof(&*self)weakSelf = self;
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    --counter;
+                    if (counter == 0) {
+                        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                    }
+                }
+            };
+            [ff createObj:_woundMeasurementGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                } else {
+                    ++counter;
+                    [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
+                                 toObjAtFfUrl:wound.ffUrl
+                                  grabBagName:WMWoundRelationships.measurementGroups
+                                   onComplete:completionHandler];
+                    ++counter;
+                    [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
+                                 toObjAtFfUrl:woundPhoto.ffUrl
+                                  grabBagName:WMWoundPhotoRelationships.measurementGroups
+                                   onComplete:completionHandler];
+                }
+            }];
+            WMInterventionEvent *event = [_woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                          title:nil
+                                                                                      valueFrom:nil
+                                                                                        valueTo:nil
+                                                                                           type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                                create:YES
+                                                                                                                                  managedObjectContext:managedObjectContext]
+                                                                                    participant:self.appDelegate.participant
+                                                                                         create:YES
+                                                                           managedObjectContext:managedObjectContext];
+            DLog(@"Created event %@", event.eventType.title);
+        }
     }
 }
 
@@ -207,59 +259,6 @@
 }
 
 #pragma mark - Core
-
-- (WMWoundMeasurementGroup *)woundMeasurementGroup
-{
-    if (nil == _woundMeasurementGroup) {
-        _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:self.woundPhoto];
-        self.didCreateGroup = YES;
-        // create on back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMWound *wound = self.wound;
-        WMWoundPhoto *woundPhoto = self.woundPhoto;
-        __block NSInteger counter = 0;
-        __weak __typeof(&*self)weakSelf = self;
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                --counter;
-                if (counter == 0) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                }
-            }
-        };
-        [ff createObj:_woundMeasurementGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                ++counter;
-                [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
-                             toObjAtFfUrl:wound.ffUrl
-                              grabBagName:WMWoundRelationships.measurementGroups
-                               onComplete:completionHandler];
-                ++counter;
-                [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
-                             toObjAtFfUrl:woundPhoto.ffUrl
-                              grabBagName:WMWoundPhotoRelationships.measurementGroups
-                               onComplete:completionHandler];
-            }
-        }];
-        WMInterventionEvent *event = [_woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                      title:nil
-                                                                                  valueFrom:nil
-                                                                                    valueTo:nil
-                                                                                       type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                            create:YES
-                                                                                                                              managedObjectContext:self.managedObjectContext]
-                                                                                participant:self.appDelegate.participant
-                                                                                     create:YES
-                                                                       managedObjectContext:self.managedObjectContext];
-        DLog(@"Created event %@", event.eventType.title);
-    }
-    return _woundMeasurementGroup;
-}
 
 - (WMWoundMeasurementGroupViewController *)woundMeasurementViewController
 {
@@ -422,7 +421,10 @@
                     }
                 };
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
-                [ff grabBagRemoveItemAtFfUrl:woundMeasurementValue.ffUrl fromObjAtFfUrl:_woundMeasurementGroup.ffUrl grabBagName:WMWoundMeasurementGroupRelationships.values onComplete:completionHandler];
+                [ff grabBagRemoveItemAtFfUrl:woundMeasurementValue.ffUrl
+                              fromObjAtFfUrl:_woundMeasurementGroup.ffUrl
+                                 grabBagName:WMWoundMeasurementGroupRelationships.values
+                                  onComplete:completionHandler];
                 [ff deleteObj:woundMeasurementValue onComplete:completionHandler];
             }
         }
@@ -472,6 +474,11 @@
 
 - (IBAction)saveAction:(id)sender
 {
+    if ([_woundMeasurementGroup.values count] == 0) {
+        [self cancelAction:sender];
+        return;
+    }
+    // else
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext.undoManager.groupingLevel > 0) {
         [managedObjectContext.undoManager endUndoGrouping];

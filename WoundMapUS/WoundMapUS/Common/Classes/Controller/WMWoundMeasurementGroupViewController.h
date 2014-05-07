@@ -21,7 +21,4 @@
 
 @property (weak, nonatomic) id<WoundMeasurementGroupViewControllerDelegate> delegate;
 
-@property (strong, nonatomic) WMWoundMeasurementGroup *woundMeasurementGroup;       // associated with woundPhoto if possible
-@property (strong, nonatomic) WMWoundMeasurement *parentWoundMeasurement;           // set when navigating to children woundMeasurements
-
 @end

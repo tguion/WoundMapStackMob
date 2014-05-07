@@ -381,7 +381,13 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             __weak __typeof(&*self)weakSelf = self;
             [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                NSParameterAssert([object isKindOfClass:[WMPerson class]]);
+                // request could have timed-out
+                if (error) {
+                    [WMUtilities logError:error];
+                    if ([error.domain isEqualToString:@"FatFractal"] && error.code == 0) {
+                        // what to do
+                    }
+                }
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }];
         }

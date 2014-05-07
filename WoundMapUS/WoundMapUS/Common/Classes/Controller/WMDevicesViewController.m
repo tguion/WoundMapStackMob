@@ -27,6 +27,8 @@
 
 @interface WMDevicesViewController ()
 
+@property (strong, nonatomic) WMDeviceGroup *deviceGroup;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (readonly, nonatomic) WMDevicesGroupHistoryViewContoller *devicesGroupHistoryViewContoller;
@@ -55,13 +57,51 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Devices";
+    WMPatient *patient = self.patient;
+    _deviceGroup = [WMDeviceGroup activeDeviceGroup:patient];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     if (_deviceGroup) {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             self.removeUndoManagerWhenDone = YES;
         }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
+        [managedObjectContext.undoManager beginUndoGrouping];
+    } else {
+        _deviceGroup = [WMDeviceGroup deviceGroupForPatient:patient];
+        self.didCreateGroup = YES;
+        WMInterventionEvent *event = [_deviceGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                           title:nil
+                                                                       valueFrom:nil
+                                                                         valueTo:nil
+                                                                            type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                 create:YES
+                                                                                                                   managedObjectContext:managedObjectContext]
+                                                                     participant:self.appDelegate.participant
+                                                                          create:YES
+                                                            managedObjectContext:managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        __weak __typeof(&*self)weakSelf = self;
+        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:_deviceGroup.ffUrl
+                             toObjAtFfUrl:weakSelf.patient.ffUrl
+                              grabBagName:WMPatientRelationships.deviceGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            }
+        };
+        [ff createObj:_deviceGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMDeviceGroup entityName]]
+           onComplete:block
+            onOffline:block];
     }
 }
 
@@ -523,6 +563,10 @@
 
 - (NSString *)ffQuery
 {
+    if (self.didCreateGroup) {
+        return nil;
+    }
+    // else
     return [NSString stringWithFormat:@"%@/%@", self.deviceGroup.ffUrl, WMDeviceGroupRelationships.values];
 }
 

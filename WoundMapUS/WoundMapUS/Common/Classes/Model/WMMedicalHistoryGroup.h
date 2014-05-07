@@ -9,6 +9,7 @@
 @property (readonly, nonatomic) NSInteger valueCount;
 
 + (WMMedicalHistoryGroup *)activeMedicalHistoryGroup:(WMPatient *)patient;
++ (WMMedicalHistoryGroup *)medicalHistoryGroupForPatient:(WMPatient *)patient;
 
 + (NSSet *)medicalHistoryValuesForMedicalHistoryGroup:(WMMedicalHistoryGroup *)medicalHistoryGroup;
 + (NSInteger)medicalHistoryGroupsCount:(WMPatient *)patient;

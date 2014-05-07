@@ -16,8 +16,10 @@
 
 + (WMMedicationGroup *)medicationGroupForPatient:(WMPatient *)patient
 {
-    WMMedicationGroup *medicationGroup = [WMMedicationGroup MR_createInContext:[patient managedObjectContext]];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMMedicationGroup *medicationGroup = [WMMedicationGroup MR_createInContext:managedObjectContext];
     medicationGroup.patient = patient;
+    medicationGroup.status = [WMInterventionStatus initialInterventionStatus:managedObjectContext];
     return medicationGroup;
 }
 

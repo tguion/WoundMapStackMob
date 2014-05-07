@@ -20,6 +20,5 @@
 @interface WMPsychoSocialGroupViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<PsychoSocialGroupViewControllerDelegate> delegate;
-@property (strong, nonatomic) WMPsychoSocialGroup *psychoSocialGroup;
 
 @end

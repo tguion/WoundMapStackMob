@@ -207,6 +207,7 @@
     _teamInvitation.invitee = _invitee;
     _teamInvitation.inviteeUserName = _userNameTextInput;
     _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
+    _teamInvitation.invitationMessage = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", self.participant.name, self.participant.team.name, self.participant.name];
     // handle undo
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
         [self.managedObjectContext.undoManager endUndoGrouping];

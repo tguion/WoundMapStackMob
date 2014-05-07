@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Create Account";
+    self.title = @"Account";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
                                                                                           action:@selector(cancelAction:)];
@@ -263,7 +263,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     switch (self.state) {
         case CreateAccountInitial: {
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Sign In"
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Create Account"
                                                                                       style:UIBarButtonItemStyleBordered
                                                                                      target:self
                                                                                      action:@selector(createAccountAction:)];

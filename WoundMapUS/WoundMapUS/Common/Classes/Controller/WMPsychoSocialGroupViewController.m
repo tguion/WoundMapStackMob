@@ -31,6 +31,8 @@
 
 @interface WMPsychoSocialGroupViewController () <PsychoSocialGroupViewControllerDelegate>
 
+@property (strong, nonatomic) WMPsychoSocialGroup *psychoSocialGroup;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (strong, nonatomic) WMPsychoSocialItem *parentPsychoSocialItem;                   // WMPsychoSocialItem that has subcategories or items
@@ -88,13 +90,52 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    _psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:patient];
     if (_psychoSocialGroup.ffUrl || self.parentPsychoSocialItem.hasSubItems) {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             self.removeUndoManagerWhenDone = YES;
         }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
+        [managedObjectContext.undoManager beginUndoGrouping];
+    } else if (nil == _psychoSocialGroup) {
+        _psychoSocialGroup = [WMPsychoSocialGroup psychoSocialGroupForPatient:self.patient];
+        self.didCreateGroup = YES;
+        WMInterventionEvent *event = [_psychoSocialGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                  path:nil
+                                                                                 title:nil
+                                                                             valueFrom:nil
+                                                                               valueTo:nil
+                                                                                  type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                       create:YES
+                                                                                                                         managedObjectContext:managedObjectContext]
+                                                                           participant:self.appDelegate.participant
+                                                                                create:YES
+                                                                  managedObjectContext:managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        __weak __typeof(&*self)weakSelf = self;
+        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:_psychoSocialGroup.ffUrl
+                             toObjAtFfUrl:weakSelf.patient.ffUrl
+                              grabBagName:WMPatientRelationships.psychosocialGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            }
+        };
+        [ff createObj:_psychoSocialGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialGroup entityName]]
+           onComplete:block
+            onOffline:block];
     }
 }
 
@@ -261,52 +302,6 @@
 - (UILabel *)tableHeaderViewLabel
 {
     return (UILabel *)[self.tableHeaderView viewWithTag:1000];
-}
-
-- (WMPsychoSocialGroup *)psychoSocialGroup
-{
-    if (nil == _psychoSocialGroup) {
-        WMPsychoSocialGroup *psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:self.patient];
-        if (nil == psychoSocialGroup) {
-            psychoSocialGroup = [WMPsychoSocialGroup psychoSocialGroupForPatient:self.patient];
-            self.didCreateGroup = YES;
-            WMInterventionEvent *event = [psychoSocialGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                      path:nil
-                                                                                     title:nil
-                                                                                 valueFrom:nil
-                                                                                   valueTo:nil
-                                                                                      type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                           create:YES
-                                                                                                                             managedObjectContext:self.managedObjectContext]
-                                                                               participant:self.appDelegate.participant
-                                                                                    create:YES
-                                                                      managedObjectContext:self.managedObjectContext];
-            DLog(@"Created event %@", event.eventType.title);
-            // update backend
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            __weak __typeof(&*self)weakSelf = self;
-            FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    [ff grabBagAddItemAtFfUrl:psychoSocialGroup.ffUrl
-                                 toObjAtFfUrl:weakSelf.patient.ffUrl
-                                  grabBagName:WMPatientRelationships.psychosocialGroups
-                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                       if (error) {
-                                           [WMUtilities logError:error];
-                                       }
-                                   }];
-                }
-            };
-            [ff createObj:psychoSocialGroup
-                    atUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialGroup entityName]]
-               onComplete:block
-                onOffline:block];
-        }
-        self.psychoSocialGroup = psychoSocialGroup;
-    }
-    return _psychoSocialGroup;
 }
 
 - (void)grabBagRemovePsychoSocialValues:(NSArray *)values

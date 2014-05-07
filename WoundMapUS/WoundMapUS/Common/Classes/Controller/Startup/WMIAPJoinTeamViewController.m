@@ -21,7 +21,6 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 
 @property (readonly, nonatomic) WMParticipant *participant;
-@property (readonly, nonatomic) WMTeam *team;
 @property (readonly, nonatomic) WMTeamInvitation *teamInvitation;
 
 @property (strong, nonatomic) IBOutlet UILabel *messageLabel;
@@ -49,8 +48,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Team Invitation";
-    WMParticipant *teamLeader = self.teamInvitation.team.teamLeader;
-    self.messageLabel.text = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", teamLeader.name, self.team.name, teamLeader.name];
+    self.messageLabel.text = self.teamInvitation.invitationMessage;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Decline" style:UIBarButtonItemStylePlain target:self action:@selector(declineAction:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Accept" style:UIBarButtonItemStylePlain target:self action:@selector(acceptAction:)];
 }

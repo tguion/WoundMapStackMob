@@ -65,11 +65,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Welcome to WoundMap";
+//    [self setEdgesForExtendedLayout:UIRectEdgeNone];    // don't understand why need this
     
-    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.view.backgroundColor = [UIColor redColor];//DEBUG
     
     UINavigationController *viewController = [[UINavigationController alloc] initWithRootViewController:self.welcomeViewController];
     [viewController setNavigationBarHidden:YES animated:NO];
+    viewController.view.backgroundColor = [UIColor greenColor];//DEBUG
 
     [self addChildViewController:viewController];
     [self.view addSubview:viewController.view];
@@ -79,12 +82,15 @@
     id topGuide = self.topLayoutGuide;
     _padLeftView = [[UIView alloc] initWithFrame:CGRectZero];
     _padLeftView.translatesAutoresizingMaskIntoConstraints = NO;
+    _padLeftView.backgroundColor = [UIColor yellowColor];//DEBUG
     [self.view addSubview:_padLeftView];
     _padRightView = [[UIView alloc] initWithFrame:CGRectZero];
+    _padRightView.backgroundColor = [UIColor yellowColor];//DEBUG
     _padRightView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_padRightView];
     _bottomView = [[UIView alloc] initWithFrame:CGRectZero];
     _bottomView.translatesAutoresizingMaskIntoConstraints = NO;
+    _padRightView.backgroundColor = [UIColor blueColor];//DEBUG
     [self.view addSubview:_bottomView];
     
     UIView *padLeftView = _padLeftView;
@@ -99,12 +105,13 @@
                                                                   toItem:nil
                                                                attribute:NSLayoutAttributeNotAnAttribute
                                                               multiplier:1.0
-                                                                constant:120.0];
+                                                                constant:380];
+    _bottomViewHeightConstraint.priority = UILayoutPriorityRequired;
     [bottomView addConstraint:_bottomViewHeightConstraint];
     
     NSMutableArray *constraints = [NSMutableArray array];
-    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topGuide][childView(>=420)]-(>=8)-[bottomView]|" options:NSLayoutFormatAlignAllLeading metrics:nil views:views]];
-    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[padLeftView][childView(320)][padRightView(==padLeftView)]|" options:NSLayoutFormatAlignAllTop metrics:nil views:views]];
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topGuide]-[childView(>=480@1)]-(>=8)-[bottomView]|" options:NSLayoutFormatAlignAllCenterX metrics:nil views:views]];
+    [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[padLeftView][childView(320)][padRightView(==padLeftView)]|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
     [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[bottomView]|" options:NSLayoutFormatAlignAllBottom metrics:nil views:views]];
 
     [self.view addConstraints:constraints];
@@ -140,7 +147,13 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    [self updateViewsForRotation:toInterfaceOrientation];
+    // Trigger a call to -viewWillLayoutSubviews inside the animation block
+    BOOL isLandscape = !UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation);
+    self.bottomViewHeightConstraint.constant = (isLandscape ? 120.0:380.0);
+    [self.view setNeedsLayout];
+    [UIView animateWithDuration:duration animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark - Keyboard
@@ -171,7 +184,7 @@
         return;
     
     // else adjust the bottom view height
-    self.bottomViewHeightConstraint.constant = CGRectGetHeight(keyboardRect);
+    self.bottomViewHeightConstraint.constant = CGRectGetHeight(keyboardRect) + height;
     
     // Trigger a call to -viewWillLayoutSubviews inside the animation block
     [self.view setNeedsLayout];

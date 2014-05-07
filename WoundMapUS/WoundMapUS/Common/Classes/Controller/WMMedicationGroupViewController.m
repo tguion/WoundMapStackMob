@@ -31,6 +31,8 @@
 
 @interface WMMedicationGroupViewController ()
 
+@property (strong, nonatomic) WMMedicationGroup *medicationGroup;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (readonly, nonatomic) WMMedicationSummaryViewController *medicationSummaryViewController;
@@ -70,6 +72,52 @@
 {
     [super viewDidLoad];
     self.title = @"Medications";
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    _medicationGroup = [WMMedicationGroup activeMedicationGroup:patient];
+    if (nil == _medicationGroup) {
+        _medicationGroup = [WMMedicationGroup medicationGroupForPatient:patient];
+        self.didCreateGroup = YES;
+        WMInterventionEvent *event = [_medicationGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                               title:nil
+                                                                           valueFrom:nil
+                                                                             valueTo:nil
+                                                                                type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                     create:YES
+                                                                                                                       managedObjectContext:managedObjectContext]
+                                                                         participant:self.appDelegate.participant
+                                                                              create:YES
+                                                                managedObjectContext:managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        __weak __typeof(&*self)weakSelf = self;
+        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:_medicationGroup.ffUrl
+                             toObjAtFfUrl:weakSelf.patient.ffUrl
+                              grabBagName:WMPatientRelationships.medicationGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            }
+        };
+        [ff createObj:_medicationGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMMedicationGroup entityName]]
+           onComplete:block
+            onOffline:block];
+    } else {
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [managedObjectContext.undoManager beginUndoGrouping];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -172,51 +220,6 @@
 - (WMMedicationGroupHistoryViewController *)medicationGroupHistoryViewController
 {
     return [[WMMedicationGroupHistoryViewController alloc] initWithNibName:@"WMMedicationGroupHistoryViewController" bundle:nil];
-}
-
-- (WMMedicationGroup *)medicationGroup
-{
-    if (nil == _medicationGroup) {
-        WMMedicationGroup *medicationGroup = [WMMedicationGroup activeMedicationGroup:self.patient];
-        if (nil == medicationGroup) {
-            medicationGroup = [WMMedicationGroup medicationGroupForPatient:self.patient];
-            self.didCreateGroup = YES;
-            WMInterventionEvent *event = [medicationGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                   title:nil
-                                                                               valueFrom:nil
-                                                                                 valueTo:nil
-                                                                                    type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                         create:YES
-                                                                                                                           managedObjectContext:self.managedObjectContext]
-                                                                             participant:self.appDelegate.participant
-                                                                                  create:YES
-                                                                    managedObjectContext:self.managedObjectContext];
-            DLog(@"Created event %@", event.eventType.title);
-            // update backend
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            __weak __typeof(&*self)weakSelf = self;
-            FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    [ff grabBagAddItemAtFfUrl:medicationGroup.ffUrl
-                                 toObjAtFfUrl:weakSelf.patient.ffUrl
-                                  grabBagName:WMPatientRelationships.medicationGroups
-                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                       if (error) {
-                                           [WMUtilities logError:error];
-                                       }
-                                   }];
-                }
-            };
-            [ff createObj:medicationGroup
-                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicationGroup entityName]]
-               onComplete:block
-                onOffline:block];
-        }
-        self.medicationGroup = medicationGroup;
-    }
-    return _medicationGroup;
 }
 
 - (void)grabBagRemoveMedications:(NSArray *)medications
@@ -480,6 +483,10 @@
 
 - (NSString *)ffQuery
 {
+    if (self.didCreateGroup) {
+        return nil;
+    }
+    // else
     return [NSString stringWithFormat:@"%@/%@", self.medicationGroup.ffUrl, WMMedicationGroupRelationships.medications];
 }
 

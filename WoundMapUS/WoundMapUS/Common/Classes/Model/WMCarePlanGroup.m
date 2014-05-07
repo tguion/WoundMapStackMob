@@ -27,8 +27,10 @@
 
 + (WMCarePlanGroup *)carePlanGroupForPatient:(WMPatient *)patient
 {
-    WMCarePlanGroup *carePlanGroup = [WMCarePlanGroup MR_createInContext:[patient managedObjectContext]];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMCarePlanGroup *carePlanGroup = [WMCarePlanGroup MR_createInContext:managedObjectContext];
     carePlanGroup.patient = patient;
+    carePlanGroup.status = [WMInterventionStatus initialInterventionStatus:managedObjectContext];
     return carePlanGroup;
 }
 

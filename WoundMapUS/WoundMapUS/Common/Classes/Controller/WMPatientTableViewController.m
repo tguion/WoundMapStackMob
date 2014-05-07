@@ -250,8 +250,13 @@
 {
     WMPatientReferral *patientReferral = viewController.patientReferral;
     [self.navigationController popViewControllerAnimated:YES];
-    NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:patientReferral.patient];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    // patientReferral may have been deleted
+    if (nil == patientReferral) {
+        [self.tableView reloadData];
+    } else {
+        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:patientReferral.patient];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (void)patientReferralViewControllerDidCancel:(WMPatientReferralViewController *)viewController
@@ -359,7 +364,11 @@
     } else {
         _patientToOpen = [[self.fetchedResultsController objectAtIndexPath:indexPath] valueForKey:WMPatientConsultantRelationships.patient];
     }
-    [tableView reloadData];
+    if (self.navigationController.isNavigationBarHidden) {
+        [self doneAction:nil];
+    } else {
+        [tableView reloadData];
+    }
 }
 
 #pragma mark - UITableViewDataSource

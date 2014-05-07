@@ -331,39 +331,38 @@
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            if (--counter == 0) {
-                [managedObjectContext MR_deleteObjects:@[_patientReferral]];
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                _patientReferral = nil;
-                [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
-            }
+        }
+        if (--counter == 0) {
+            [managedObjectContext MR_deleteObjects:@[_patientReferral]];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            _patientReferral = nil;
+            [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
         }
     };
     if (_patientReferral.referrer) {
         ++counter;
-        [_patientReferral.referrer removeSourceReferralsObject:_patientReferral];
         [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
                       fromObjAtFfUrl:_patientReferral.referrer.ffUrl
                          grabBagName:WMParticipantRelationships.sourceReferrals
                           onComplete:completionHandler];
+        [_patientReferral.referrer removeSourceReferralsObject:_patientReferral];
     }
     if (_patientReferral.referree) {
         ++counter;
-        [_patientReferral.referree removeTargetReferralsObject:_patientReferral];
         [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
                       fromObjAtFfUrl:_patientReferral.referree.ffUrl
                          grabBagName:WMParticipantRelationships.targetReferrals
                           onComplete:completionHandler];
+        [_patientReferral.referree removeTargetReferralsObject:_patientReferral];
     }
     if (_patientReferral.patient) {
         ++counter;
-        [_patientReferral.patient removeReferralsObject:_patientReferral];
         [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
                       fromObjAtFfUrl:_patientReferral.patient.ffUrl
                          grabBagName:WMPatientRelationships.referrals
                           onComplete:completionHandler];
+        [_patientReferral.patient removeReferralsObject:_patientReferral];
     }
     ++counter;
     [ff deleteObj:_patientReferral
@@ -434,7 +433,7 @@
             CGFloat width = CGRectGetWidth(self.view.bounds) - self.tableView.separatorInset.left - self.tableView.separatorInset.right;
             NSAttributedString *message = [self.messageHistory objectAtIndex:indexPath.row];
             CGRect rect = [message boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
-            height = MAX(CGRectGetHeight(rect), 88.0);
+            height = MAX(CGRectGetHeight(rect), 44.0);
             break;
         }
     }

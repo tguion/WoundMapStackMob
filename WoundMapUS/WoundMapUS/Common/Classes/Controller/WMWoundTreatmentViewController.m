@@ -84,16 +84,72 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (nil == _parentWoundTreatment && nil == _woundTreatmentGroup) {
-        _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:self.wound];
+    WMWound *wound = self.wound;
+    NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
+    if (nil == _woundTreatmentGroup) {
+        _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:wound];
     }
     if (_parentWoundTreatment || _woundTreatmentGroup) {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             _removeUndoManagerWhenDone = YES;
         }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
+        [managedObjectContext.undoManager beginUndoGrouping];
+    } else if (nil == _woundTreatmentGroup) {
+        _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
+        self.didCreateGroup = YES;
+        // create on back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMWound *wound = self.wound;
+        __block NSInteger counter = 0;
+        __weak __typeof(&*self)weakSelf = self;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            if (--counter == 0) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            }
+        };
+        [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                ++counter;
+                [ff grabBagAddItemAtFfUrl:_woundTreatmentGroup.ffUrl
+                             toObjAtFfUrl:wound.ffUrl
+                              grabBagName:WMWoundRelationships.treatmentGroups
+                               onComplete:completionHandler];
+            }
+        }];
+        
+        WMInterventionEvent *event = [_woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                                    title:nil
+                                                                                valueFrom:nil
+                                                                                  valueTo:nil
+                                                                                     type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                          create:YES
+                                                                                                                            managedObjectContext:self.managedObjectContext]
+                                                                              participant:self.appDelegate.participant
+                                                                                   create:YES
+                                                                     managedObjectContext:self.managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.recentlyClosedCount > 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
+                                                            message:[NSString stringWithFormat:@"Your Policy has closed %ld open Wound Treatment records.", (long)self.recentlyClosedCount]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        self.recentlyClosedCount = 0;
     }
 }
 
@@ -128,54 +184,6 @@
 }
 
 #pragma mark - Core
-
-- (WMWoundTreatmentGroup *)woundTreatmentGroup
-{
-    if (nil == _woundTreatmentGroup) {
-        _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
-        self.didCreateGroup = YES;
-        // create on back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMWound *wound = self.wound;
-        __block NSInteger counter = 0;
-        __weak __typeof(&*self)weakSelf = self;
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                --counter;
-                if (counter == 0) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                }
-            }
-        };
-        [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                ++counter;
-                [ff grabBagAddItemAtFfUrl:_woundTreatmentGroup.ffUrl
-                             toObjAtFfUrl:wound.ffUrl
-                              grabBagName:WMWoundRelationships.treatmentGroups
-                               onComplete:completionHandler];
-            }
-        }];
-        
-        WMInterventionEvent *event = [_woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                    title:nil
-                                                                                valueFrom:nil
-                                                                                  valueTo:nil
-                                                                                     type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                          create:YES
-                                                                                                                            managedObjectContext:self.managedObjectContext]
-                                                                              participant:self.appDelegate.participant
-                                                                                   create:YES
-                                                                     managedObjectContext:self.managedObjectContext];
-        DLog(@"Created event %@", event.eventType.title);
-    }
-    return _woundTreatmentGroup;
-}
 
 - (WMWoundTreatmentViewController *)woundTreatmentViewController
 {

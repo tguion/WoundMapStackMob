@@ -56,30 +56,43 @@
                                                                                            action:@selector(doneAction:)];
     [self.tableView registerClass:[WMSwitchTableViewCell class] forCellReuseIdentifier:@"SwitchCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
-    // make sure we have data
-    __weak __typeof(&*self)weakSelf = self;
-    dispatch_block_t block = ^{
+    // make sure we have a group
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:patient];
+    if (nil == _medicalHistoryGroup) {
+        __weak __typeof(&*self)weakSelf = self;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        _medicalHistoryGroup = [WMMedicalHistoryGroup medicalHistoryGroupForPatient:patient];
+        _medicalHistoryGroup.patient = self.patient;
+        _medicalHistoryGroupWasCreated = YES;
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [ff grabBagAddItemAtFfUrl:_medicalHistoryGroup.ffUrl
+                         toObjAtFfUrl:patient.ffUrl
+                          grabBagName:WMPatientRelationships.medicalHistoryGroups
+                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
+                               [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                           }];
+        };
+        [ff createObj:_medicalHistoryGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
+           onComplete:createCompletionHandler];
+    } else {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == weakSelf.managedObjectContext.undoManager) {
-            weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             _removeUndoManagerWhenDone = YES;
         }
-        [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
-    };
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if ([WMMedicalHistoryItem MR_countOfEntitiesWithContext:managedObjectContext] == 0) {
-        // fetch from back end
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        NSString *query = [NSString stringWithFormat:@"/%@", [WMMedicalHistoryItem entityName]];
-        [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            block();
-            [weakSelf.tableView reloadData];
-        }];
-    } else {
-        block();
+        [managedObjectContext.undoManager beginUndoGrouping];
     }
 }
 
@@ -99,40 +112,6 @@
 - (NSManagedObjectContext *)managedObjectContext
 {
     return [self.patient managedObjectContext];
-}
-
-- (WMMedicalHistoryGroup *)medicalHistoryGroup
-{
-    if (nil == _medicalHistoryGroup) {
-        WMPatient *patient = self.patient;
-        NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-        _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:patient];
-        if (nil == _medicalHistoryGroup) {
-            _medicalHistoryGroup = [WMMedicalHistoryGroup MR_createInContext:managedObjectContext];
-            _medicalHistoryGroup.patient = self.patient;
-            _medicalHistoryGroupWasCreated = YES;
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [ff grabBagAddItemAtFfUrl:_medicalHistoryGroup.ffUrl
-                             toObjAtFfUrl:patient.ffUrl
-                              grabBagName:WMPatientRelationships.medicalHistoryGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
-            };
-            [ff createObj:_medicalHistoryGroup
-                    atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
-               onComplete:createCompletionHandler];
-        }
-    }
-    return _medicalHistoryGroup;
 }
 
 - (BOOL)indexPathIsOther:(NSIndexPath *)indexPath
@@ -200,7 +179,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSArray *medicalHistoryValues = [self.fetchedResultsController fetchedObjects];
     __weak __typeof(&*self)weakSelf = self;
-    NSParameterAssert([self.medicalHistoryGroup.ffUrl length]);
+    NSParameterAssert([_medicalHistoryGroup.ffUrl length]);
     __block NSInteger callbackCount = 0;
     NSInteger callbacksTotal = [medicalHistoryValues count];
     FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -314,8 +293,17 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSArray *)backendSeedEntityNames
+{
+    return @[[WMMedicalHistoryItem entityName]];
+}
+
 - (NSString *)ffQuery
 {
+    if (_medicalHistoryGroupWasCreated) {
+        return nil;
+    }
+    // else
     return [NSString stringWithFormat:@"%@/%@", self.medicalHistoryGroup.ffUrl, WMMedicalHistoryGroupRelationships.values];
 }
 

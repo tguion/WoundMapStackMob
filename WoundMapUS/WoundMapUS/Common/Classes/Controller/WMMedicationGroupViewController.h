@@ -21,6 +21,5 @@
 @interface WMMedicationGroupViewController : WMBuildGroupViewController
 
 @property (weak, nonatomic) id<MedicationGroupViewControllerDelegate> delegate;
-@property (strong, nonatomic) WMMedicationGroup *medicationGroup;
 
 @end

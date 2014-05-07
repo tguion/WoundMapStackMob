@@ -31,6 +31,8 @@
 
 @interface WMCarePlanGroupViewController () <CarePlanGroupViewControllerDelegate>
 
+@property (strong, nonatomic) WMCarePlanGroup *carePlanGroup;
+
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (strong, nonatomic) WMCarePlanCategory *parentCategory;                   // category that has subcategories or items
@@ -93,13 +95,52 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    _carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
     if (_carePlanGroup.ffUrl || _parentCategory) {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             self.removeUndoManagerWhenDone = YES;
         }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
+        [managedObjectContext.undoManager beginUndoGrouping];
+    } else if (nil == _carePlanGroup) {
+        _carePlanGroup = [WMCarePlanGroup carePlanGroupForPatient:patient];
+        self.didCreateGroup = YES;
+        WMInterventionEvent *event = [_carePlanGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
+                                                                              path:nil
+                                                                             title:nil
+                                                                         valueFrom:nil
+                                                                           valueTo:nil
+                                                                              type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
+                                                                                                                                   create:YES
+                                                                                                                     managedObjectContext:managedObjectContext]
+                                                                       participant:self.appDelegate.participant
+                                                                            create:YES
+                                                              managedObjectContext:managedObjectContext];
+        DLog(@"Created event %@", event.eventType.title);
+        // update backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        __weak __typeof(&*self)weakSelf = self;
+        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            } else {
+                [ff grabBagAddItemAtFfUrl:_carePlanGroup.ffUrl
+                             toObjAtFfUrl:weakSelf.patient.ffUrl
+                              grabBagName:WMPatientRelationships.carePlanGroups
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
+                               }];
+            }
+        };
+        [ff createObj:_carePlanGroup
+                atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanGroup entityName]]
+           onComplete:block
+            onOffline:block];
     }
 }
 
@@ -269,54 +310,6 @@
                               }];
         }
     }
-}
-
-- (WMCarePlanGroup *)carePlanGroup
-{
-    if (nil == _carePlanGroup) {
-        WMPatient *patient = self.patient;
-        WMCarePlanGroup *carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
-        if (nil == carePlanGroup) {
-            // Marta: do not copy over previous data, so pass nil for carePlanGroupByRevising
-            carePlanGroup = [WMCarePlanGroup carePlanGroupForPatient:patient];
-            self.didCreateGroup = YES;
-            WMInterventionEvent *event = [carePlanGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                                  path:nil
-                                                                                 title:nil
-                                                                             valueFrom:nil
-                                                                               valueTo:nil
-                                                                                  type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                       create:YES
-                                                                                                                         managedObjectContext:self.managedObjectContext]
-                                                                           participant:self.appDelegate.participant
-                                                                                create:YES
-                                                                  managedObjectContext:self.managedObjectContext];
-            DLog(@"Created event %@", event.eventType.title);
-            // update backend
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            __weak __typeof(&*self)weakSelf = self;
-            FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                } else {
-                    [ff grabBagAddItemAtFfUrl:carePlanGroup.ffUrl
-                                 toObjAtFfUrl:weakSelf.patient.ffUrl
-                                  grabBagName:WMPatientRelationships.carePlanGroups
-                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                       if (error) {
-                                           [WMUtilities logError:error];
-                                       }
-                                   }];
-                }
-            };
-            [ff createObj:carePlanGroup
-                    atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanGroup entityName]]
-               onComplete:block
-                onOffline:block];
-        }
-        _carePlanGroup = carePlanGroup;
-    }
-    return _carePlanGroup;
 }
 
 - (WMCarePlanGroupViewController *)subcategoriesViewController

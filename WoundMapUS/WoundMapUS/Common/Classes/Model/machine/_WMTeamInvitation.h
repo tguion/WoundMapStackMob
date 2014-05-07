@@ -9,6 +9,7 @@ extern const struct WMTeamInvitationAttributes {
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *invitationMessage;
 	__unsafe_unretained NSString *inviteeUserName;
 	__unsafe_unretained NSString *passcode;
 	__unsafe_unretained NSString *updatedAt;
@@ -24,6 +25,7 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 @class WMParticipant;
 @class WMTeam;
+
 
 
 
@@ -89,6 +91,16 @@ extern const struct WMTeamInvitationFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* invitationMessage;
+
+
+
+//- (BOOL)validateInvitationMessage:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -178,6 +190,12 @@ extern const struct WMTeamInvitationFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
+
+
+
+
+- (NSString*)primitiveInvitationMessage;
+- (void)setPrimitiveInvitationMessage:(NSString*)value;
 
 
 

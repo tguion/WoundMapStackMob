@@ -216,7 +216,6 @@
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMDevicesViewController *devicesViewController = self.devicesViewController;
-    devicesViewController.deviceGroup = [WMDeviceGroup activeDeviceGroup:self.patient];
     devicesViewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:devicesViewController];
     navigationController.delegate = self.appDelegate;
@@ -228,7 +227,6 @@
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMPsychoSocialGroupViewController *viewController = self.psychoSocialGroupViewController;
-    viewController.psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:self.patient];
     viewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     navigationController.delegate = self.appDelegate;

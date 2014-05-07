@@ -2114,9 +2114,15 @@
 				7D9A94CB18E88FAE00D92E95 /* WMOrganizationListViewController.h */,
 				7D9A94CC18E88FAE00D92E95 /* WMOrganizationListViewController.m */,
 				7D9A94CD18E88FAE00D92E95 /* WMOrganizationListViewController.xib */,
+				7DDE40D6191532C4008DDA3E /* WMParticipantTableViewController.h */,
+				7DDE40D7191532C4008DDA3E /* WMParticipantTableViewController.m */,
+				7DDE40D8191532C4008DDA3E /* WMParticipantTableViewController.xib */,
 				5F67D22F18AD901600460C37 /* WMPatientDetailViewController.h */,
 				5F67D23018AD901600460C37 /* WMPatientDetailViewController.m */,
 				5F67D23118AD901600460C37 /* WMPatientDetailViewController.xib */,
+				7DDE40CE19142B15008DDA3E /* WMPatientReferralViewController.h */,
+				7DDE40CF19142B15008DDA3E /* WMPatientReferralViewController.m */,
+				7DDE40D019142B15008DDA3E /* WMPatientReferralViewController.xib */,
 				7D39DB5118B828000054DDC3 /* WMPatientSummaryContainerViewController.h */,
 				7D39DB5218B828000054DDC3 /* WMPatientSummaryContainerViewController.m */,
 				7D39DB5318B828000054DDC3 /* WMPatientSummaryContainerViewController.xib */,
@@ -2256,12 +2262,6 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
-				7DDE40CE19142B15008DDA3E /* WMPatientReferralViewController.h */,
-				7DDE40CF19142B15008DDA3E /* WMPatientReferralViewController.m */,
-				7DDE40D019142B15008DDA3E /* WMPatientReferralViewController.xib */,
-				7DDE40D6191532C4008DDA3E /* WMParticipantTableViewController.h */,
-				7DDE40D7191532C4008DDA3E /* WMParticipantTableViewController.m */,
-				7DDE40D8191532C4008DDA3E /* WMParticipantTableViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

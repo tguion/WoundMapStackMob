@@ -22,6 +22,5 @@
 
 @property (weak, nonatomic) id<SkinAssessmentGroupViewControllerDelegate> delegate;
 @property (strong, nonatomic) WMNavigationNode *navigationNode;
-@property (strong, nonatomic) WMSkinAssessmentGroup *skinAssessmentGroup;
 
 @end
