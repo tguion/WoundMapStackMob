@@ -39,6 +39,7 @@ extern NSTimeInterval kOneDayTimeInterval;
 
 + (NSDate *)roundDateToBeginningOfDay:(NSDate *)date;
 + (NSDate *)dateByAddingMonthToDate:(NSDate *)date;
++ (NSDate *)dateByAddingMonths:(NSInteger)numberMonths toDate:(NSDate *)date;
 
 + (BOOL)NSStringIsValidEmail:(NSString *)checkString;
 

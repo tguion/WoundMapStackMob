@@ -270,6 +270,11 @@
 	[self.delegate undermineTunnelViewControllerDidCancel:self];
 }
 
+- (void)delayedSaveAction:(id)sender
+{
+    [self.delegate undermineTunnelViewControllerDidDone:self];
+}
+
 - (IBAction)saveAction:(id)sender
 {
     if (self.managedObjectContext.undoManager.groupingLevel > 0) {
@@ -295,27 +300,25 @@
             [[woundMeasurementGroup managedObjectContext] MR_saveToPersistentStoreAndWait];
         }
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-        [weakSelf.delegate undermineTunnelViewControllerDidDone:weakSelf];
+        // delay the execution to allow updates to self
+        [weakSelf performSelector:@selector(delayedSaveAction:) withObject:sender afterDelay:0.0];
     };
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
+        }
+        if (--counter == 0) {
+            block();
         }
     };
     FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [ff grabBagAddItemAtFfUrl:[object valueForKey:WMWoundMeasurementValueAttributes.ffUrl]
-                         toObjAtFfUrl:woundMeasurementGroup.ffUrl
-                          grabBagName:WMWoundMeasurementGroupRelationships.values
-                           onComplete:completionHandler];
         }
+        [ff grabBagAddItemAtFfUrl:[object valueForKey:WMWoundMeasurementValueAttributes.ffUrl]
+                     toObjAtFfUrl:woundMeasurementGroup.ffUrl
+                      grabBagName:WMWoundMeasurementGroupRelationships.values
+                       onComplete:completionHandler];
     };
     // update back end now
     for (WMWoundMeasurementValue *value in woundMeasurementGroup.values) {

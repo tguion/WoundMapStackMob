@@ -65,6 +65,11 @@
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"MessageHistoryCell"];
     // data
+    WMParticipant *participant = self.appDelegate.participant;
+    if (nil == _patientReferral) {
+        // assume we have to see if there is one
+        _patientReferral = [self.patient patientReferralForReferree:participant];
+    }
     if (_patientReferral) {
         // we want to support cancel, so make sure we have an undoManager
         if (nil == self.managedObjectContext.undoManager) {
@@ -74,7 +79,6 @@
         [self.managedObjectContext.undoManager beginUndoGrouping];
         self.tableView.tableFooterView = _deletePatientReferralContainerView;
     } else {
-        WMParticipant *participant = self.appDelegate.participant;
         _patientReferral = [WMPatientReferral MR_createInContext:self.managedObjectContext];
         _patientReferral.patient = self.appDelegate.navigationCoordinator.patient;
         _patientReferral.referrer = participant;

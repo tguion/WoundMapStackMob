@@ -69,4 +69,10 @@
     [self.layer setMasksToBounds:YES];
 }
 
+//DEBUG
+//- (void)drawRect:(CGRect)rect
+//{
+//    NSLog(@"here");
+//}
+
 @end

@@ -276,6 +276,7 @@ NSString* _deviceId;
 - (void)provideContentForTeamAddedProductIdentifier:(NSString *)productIdentifier
 {
     WMParticipant *participant = self.appDelegate.participant;
+    participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
     WMTeam *team = participant.team;
     NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
     // update from back end

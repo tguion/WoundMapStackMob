@@ -110,11 +110,16 @@ NSTimeInterval kOneDayTimeInterval = 60.0 * 60 * 24.0;
 
 + (NSDate *)dateByAddingMonthToDate:(NSDate *)date
 {
+    return [self dateByAddingMonths:1 toDate:date];
+}
+
++ (NSDate *)dateByAddingMonths:(NSInteger)numberMonths toDate:(NSDate *)date
+{
     if (nil == date) {
         date = [NSDate date];
     }
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-    [dateComponents setMonth:1];
+    [dateComponents setMonth:numberMonths];
     NSCalendar *calendar = [NSCalendar currentCalendar];
     return [calendar dateByAddingComponents:dateComponents toDate:date options:0];
 }

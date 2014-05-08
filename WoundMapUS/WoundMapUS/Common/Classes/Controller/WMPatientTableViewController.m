@@ -12,6 +12,7 @@
 #import "WMPatientSummaryContainerViewController.h"
 #import "WMPatientReferralViewController.h"
 #import "WMPatientTableViewCell.h"
+#import "WMPatientAutoTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
@@ -98,7 +99,8 @@
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
     self.navigationItem.hidesBackButton = YES;
-    [self.tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"Cell"];
+//    [self.tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:[WMPatientAutoTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
     _patientToOpen = self.patient;
     // show progress
@@ -400,32 +402,35 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
+//    UIView *accessoryView = nil;
+//    if (self.isShowingTeamPatients) {
+//        WMParticipant *participant = self.appDelegate.participant;
+//        WMPatientReferral *patientReferral = [patient patientReferralForReferree:participant];
+//        if (patientReferral) {
+//            UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+//            button.tag = indexPath.row;
+//            [button setTitle:@"Referral" forState:UIControlStateNormal];
+//            [button addTarget:self action:@selector(navigateToPatientReferral:) forControlEvents:UIControlEventTouchUpInside];
+//            [button sizeToFit];
+//            accessoryView = button;
+//        }
+//    }
+//    if (accessoryView) {
+//        cell.accessoryView = accessoryView;
+//    } else {
+//        cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
+//    }
     WMPatient *patient = [self patientAtIndexPath:indexPath];
-    UIView *accessoryView = nil;
+    WMPatientAutoTableViewCell *myCell = (WMPatientAutoTableViewCell *)cell;
+    id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (self.isShowingTeamPatients) {
         WMParticipant *participant = self.appDelegate.participant;
         WMPatientReferral *patientReferral = [patient patientReferralForReferree:participant];
-        if (patientReferral) {
-            UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-            button.tag = indexPath.row;
-            [button setTitle:@"Referral" forState:UIControlStateNormal];
-            [button addTarget:self action:@selector(navigateToPatientReferral:) forControlEvents:UIControlEventTouchUpInside];
-            [button sizeToFit];
-            accessoryView = button;
-        }
-    }
-    if (accessoryView) {
-        cell.accessoryView = accessoryView;
+        [myCell updateForPatient:object patientReferral:patientReferral];
     } else {
-        cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
+        [myCell updateForPatientConsultant:object];
     }
-    WMPatientTableViewCell *myCell = (WMPatientTableViewCell *)cell;
-    id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    if (self.isShowingTeamPatients) {
-        myCell.patient = object;
-    } else {
-        myCell.patientConsultant = object;
-    }
+    cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
 }
 
 #pragma mark - NSFetchedResultsController

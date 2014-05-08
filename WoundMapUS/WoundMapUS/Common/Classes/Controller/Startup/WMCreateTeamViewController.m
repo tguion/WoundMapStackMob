@@ -27,6 +27,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 @interface WMCreateTeamViewController () <UITextFieldDelegate, UIActionSheetDelegate, CreateTeamInvitationViewControllerDelegate>
 
+@property (nonatomic) BOOL teamCreatedFlag;
+
 @property (readonly, nonatomic) WMParticipant *participant;
 @property (strong, nonatomic) NSArray *teamInvitations;
 @property (strong, nonatomic) NSArray *teamMembers;
@@ -179,13 +181,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     if (self.team.ffUrl) {
         completionHandler(nil);
+        return;
     }
     // else
+    _teamCreatedFlag = YES;
     self.team.name = _teamNameTextInput;
     WMParticipant *participant = self.participant;
     participant.isTeamLeader = YES;
     participant.team = _team;
-    participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
+    participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:2 toDate:participant.dateTeamSubscriptionExpires];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
@@ -315,18 +319,20 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     switch (actionSheet.tag) {
         case kRevokeInvitationActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_teamInvitations indexOfObject:_teamInvitationToDelete] inSection:1];
+                if (_teamInvitationToDelete.ffUrl) {
+                    [ff deleteObj:_teamInvitationToDelete];
+                }
                 [self.managedObjectContext deleteObject:_teamInvitationToDelete];
                 _teamInvitations = nil;
                 _teamInvitationToDelete = nil;
                 [self.tableView beginUpdates];
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
                 [self.tableView endUpdates];
-                // update back end
-
             }
             break;
         }
@@ -472,7 +478,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             } else {
                 WMTeamInvitation *teamInvitation = [self.teamInvitations objectAtIndex:indexPath.row];
                 cell.textLabel.text = teamInvitation.invitee.name;
-                cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+                cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"Invited %@", [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
             }
             break;
         }

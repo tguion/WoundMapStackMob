@@ -25,6 +25,7 @@
 @property (nonatomic) BOOL teamLeaderIAPPurchaseSuccessful;
 @property (nonatomic) BOOL isTeamLeader;
 @property (nonatomic) BOOL teamAddedIAPPurchaseSuccessful;
+@property (readonly, nonatomic) BOOL isIntroductoryTeamPricing;
 
 - (NSInteger)addReportTokens:(NSInteger)tokens;
 

@@ -6,6 +6,8 @@
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
+#define kNumberOfMonthsIntroductoryPrice 3
+
 typedef NS_ENUM(int16_t, WMParticipantFlags) {
     ParticipantFlagsTeamLeader  = 0,
     ParticipantFlagsTeamLeaderIAPSuccess  = 1,
@@ -144,6 +146,13 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:ParticipantFlagsTeamLeader to:isTeamLeader]);
 }
 
+- (BOOL)isIntroductoryTeamPricing
+{
+    NSDate *threeMonths = [WMUtilities dateByAddingMonths:kNumberOfMonthsIntroductoryPrice toDate:self.dateAddedToTeam];
+    NSDate *now = [NSDate date];
+    return [threeMonths compare:now] == NSOrderedAscending;
+}
+
 - (NSInteger)addReportTokens:(NSInteger)tokens
 {
     self.reportTokenCountValue = (self.reportTokenCountValue + tokens);
@@ -178,7 +187,8 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
                                                             @"lastNameFirstName",
                                                             @"isTeamLeader",
                                                             @"teamLeaderIAPPurchaseSuccessful",
-                                                            @"teamAddedIAPPurchaseSuccessful"]];
+                                                            @"teamAddedIAPPurchaseSuccessful",
+                                                            @"isIntroductoryTeamPricing"]];
     });
     return PropertyNamesNotToSerialize;
 }

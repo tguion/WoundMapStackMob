@@ -690,7 +690,8 @@
     if (nil == invitee.dateAddedToTeam) {
         invitee.dateAddedToTeam = [NSDate date];
     }
-    invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:invitee.dateTeamSubscriptionExpires];
+    invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:2 toDate:invitee.dateTeamSubscriptionExpires];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
     FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
     NSParameterAssert(participantGroup);
     NSError *error = nil;
@@ -812,6 +813,7 @@
         }
         --counter;
         if (counter == 0) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             completionHandler(error);
         }
     };

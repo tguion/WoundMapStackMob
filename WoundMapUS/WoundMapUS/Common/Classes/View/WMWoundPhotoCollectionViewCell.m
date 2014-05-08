@@ -99,10 +99,12 @@
         };
         UIImage *image = woundPhoto.thumbnail;
         if (nil == image) {
+            // put in temp image
             UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
             activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
             [self addSubview:activityIndicatorView];
             [activityIndicatorView startAnimating];
+            self.imageView.image = [UIImage imageNamed:@"user_iPad"];// TODO replace with placeholder image
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [activityIndicatorView removeFromSuperview];

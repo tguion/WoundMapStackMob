@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     }];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView setEditing:YES];
+    [self.navigationController setToolbarHidden:YES];
 }
 
 - (void)didReceiveMemoryWarning

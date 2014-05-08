@@ -201,9 +201,8 @@
                     [ffm updateParticipant:participant completionHandler:^(NSError *error) {
                         if (error) {
                             [WMUtilities logError:error];
-                        } else {
-                            block();
                         }
+                        block();
                     }];
                 }
             };
