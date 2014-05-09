@@ -1997,15 +1997,19 @@
         case PhotoAcquisitionStateAcquireWoundPhoto: {
             WMWound *wound = self.wound;
             NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-            MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            progressHUD.labelText = @"Processing Photo";
+            __weak __typeof(&*self)weakSelf = self;
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Processing Photo";
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             // have photoManager start the process
+            __block NSInteger counter = 2;
             FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
+                if (--counter == 0) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                }
             };
             WMObjectsCallback createPhotoComplete = ^(NSError *error, id object0, id object1) {
                 if (error) {
@@ -2013,7 +2017,6 @@
                 } else {
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
-                    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                     [ff updateBlob:UIImagePNGRepresentation(photo.photo)
                       withMimeType:@"image/png"
@@ -2073,13 +2076,11 @@
                             WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object;
                             WMPhoto *photo = [woundPhoto.photos anyObject];
                             // save the photo
-                            __weak __typeof(&*self)weakSelf = self;
                             NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
                             [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                                 if (error) {
                                     [WMUtilities logError:error];
                                 }
-                                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                                 weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
                                 [weakSelf updateToolbar];
                                 // notify interface of completed task

@@ -27,7 +27,7 @@
 
 NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 
-@interface WMPlotConfigureGraphViewController ()
+@interface WMPlotConfigureGraphViewController () <UITextFieldDelegate>
 
 @property (readonly, nonatomic) BOOL isSelectionBradenScales;
 @property (strong, nonatomic) NSDate *dateStart;
@@ -48,7 +48,6 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 @end
 
 @interface WMPlotConfigureGraphViewController (PrivateMethods)
-- (void)selectDateCell;
 - (void)updateUIForSelection;
 @end
 
@@ -139,6 +138,7 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 {
     if (nil == _datePicker) {
         _datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
+        [_datePicker addTarget:self action:@selector(datePickerDidChangeValueAction:) forControlEvents:UIControlEventValueChanged];
     }
     return _datePicker;
 }
@@ -253,8 +253,7 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
         self.dateEnd = self.datePicker.date;
         indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
     }
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-    [self performSelector:@selector(selectDateCell) withObject:nil afterDelay:0.0];
+    [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
 }
 
 - (IBAction)previousNextAction:(id)sender
@@ -294,6 +293,16 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 - (IBAction)cancelAction:(id)sender
 {
     [self.delegate plotViewControllerDidCancel:self];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    UITableViewCell *cell = [self cellForView:textField];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    self.updatingDateStart = (indexPath.row == 0);
+    self.datePicker.date = (self.updatingDateStart ? self.dateStart:self.dateEnd);
 }
 
 #pragma mark - UITableViewDelegate
@@ -410,6 +419,7 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
             UITextField *textField = myCell.textField;
             textField.inputView = self.datePicker;
             textField.inputAccessoryView = self.inputAccessoryView;
+            textField.delegate = self;
             switch (indexPath.row) {
                 case 0: {
                     // date start
@@ -420,9 +430,9 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
                 }
                 case 1: {
                     // date end
-                    [myCell updateWithLabelText:@"Start Date"
+                    [myCell updateWithLabelText:@"End Date"
                                       valueText:[NSDateFormatter localizedStringFromDate:self.dateEnd dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterNoStyle]
-                                    valuePrompt:@"Enter Start Date"];
+                                    valuePrompt:@"Enter End Date"];
                     break;
                 }
             }
