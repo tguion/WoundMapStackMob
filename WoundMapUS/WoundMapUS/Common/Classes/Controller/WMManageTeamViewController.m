@@ -310,6 +310,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self.appDelegate.navigationCoordinator clearPatientCache];
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
                 [ff logout];
+                [ff forgetAllObjs];
                 __weak __typeof(self) weakSelf = self;
                 [UIView transitionWithView:self.appDelegate.window
                                   duration:0.5

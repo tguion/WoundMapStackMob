@@ -54,6 +54,7 @@
 
 #pragma mark - FILES
 
+NSString *storeFilenameWithoutExtension = @"WoundMap";
 NSString *storeFilename = @"WoundMap.sqlite";
 NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 
@@ -127,9 +128,36 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
-    
+    [self moveStoreFromBundle];
     [MagicalRecord setupCoreDataStackWithStoreNamed:[NSPersistentStore MR_urlForStoreName:storeFilename]];
 //    [[NSManagedObjectContext MR_defaultContext] MR_observeContext:[NSManagedObjectContext MR_rootSavingContext]];
+}
+
+- (void)moveStoreFromBundle
+{
+    NSURL *destinationURL = [NSPersistentStore MR_urlForStoreName:storeFilename];
+    NSString *destinationPath = destinationURL.path;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    // If the expected store doesn't exist, copy the default store.
+    NSArray *extensions = @[@"sqlite", @"sqlite-shm", @"sqlite-wal"];
+    for (NSString *extension in extensions) {
+        destinationPath = [[destinationPath stringByDeletingPathExtension] stringByAppendingPathExtension:extension];
+        if (![fileManager fileExistsAtPath:destinationPath]) {
+            [fileManager createDirectoryAtPath:[destinationPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            NSURL *sourceURL = [[NSBundle mainBundle] URLForResource:storeFilenameWithoutExtension withExtension:extension];
+            NSString *sourcePath = sourceURL.path;
+            if (sourceURL) {
+                [fileManager copyItemAtPath:sourcePath toPath:destinationPath error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+        }
+    }
 }
 
 #pragma mark - Store metadata

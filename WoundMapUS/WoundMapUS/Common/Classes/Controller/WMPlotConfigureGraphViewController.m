@@ -261,12 +261,6 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 {
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
     self.updatingDateStart = !self.updatingDateStart;
-    NSIndexPath *indexPath = nil;
-    if (self.updatingDateStart) {
-        indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
-    } else {
-        indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
-    }
     [self performSelector:@selector(selectDateCell) withObject:nil afterDelay:0.0];
 }
 

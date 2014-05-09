@@ -8,6 +8,8 @@
 
 #import "WMFatFractalManager.h"
 #import "WMNavigationTrack.h"
+#import "WMNavigationNode.h"
+#import "WMMedicalHistoryItem.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
 #import "WMOrganization.h"
@@ -85,7 +87,7 @@
 
 - (void)handleRootManagedObjectContextDidSave:(NSNotification *)notification
 {
-    WMFatFractal *ff = [WMFatFractal instance];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -165,7 +167,8 @@
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+//    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -179,7 +182,8 @@
             WMTeamInvitation *teamInvitation = participant.teamInvitation;
             if (team) {
                 NSParameterAssert(team.ffUrl);
-                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+//                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                 [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
@@ -224,12 +228,35 @@
 - (void)acquireParticipantForUser:(FFUser *)user completionHandler:(WMObjectCallback)completionHandler
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
+    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
+//    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        WM_ASSERT_MAIN_THREAD;
-        NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
-        if (completionHandler) {
-            completionHandler(error, object);
+        id participant = object;
+        __block NSInteger counter = 0;
+        WMErrorCallback errorCallback = ^(NSError *error) {
+            if (--counter == 0) {
+                [coreDataHelper.context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                    completionHandler(error, participant);
+                }];
+            }
+        };
+        // acquire nodes now and medical history items
+        NSString *backendSeedEntityName = [WMNavigationNode entityName];
+        if (![coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
+            ++counter;
+            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+                errorCallback(error);
+            }];
+        }
+        backendSeedEntityName = [WMMedicalHistoryItem entityName];
+        if (![coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
+            ++counter;
+            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1", [WMMedicalHistoryItem entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+                errorCallback(error);
+            }];
         }
     }];
 }
@@ -238,7 +265,8 @@
 {
     NSParameterAssert(team.ffUrl);
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+//    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
     [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
         FFUserGroup *participantGroup = team.participantGroup;

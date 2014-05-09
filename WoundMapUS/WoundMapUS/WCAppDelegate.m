@@ -66,6 +66,13 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
 }
 
+#pragma mark - Memory
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    [self.ff forgetAllObjs];
+}
+
 #pragma mark - Backend
 
 + (BOOL)checkForAuthentication

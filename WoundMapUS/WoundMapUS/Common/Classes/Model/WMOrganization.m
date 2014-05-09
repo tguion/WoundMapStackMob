@@ -27,7 +27,7 @@
     WM_ASSERT_MAIN_THREAD;
     // update from back end
     if (self.ffUrl) {
-        [[WMFatFractal instance] grabBagGetAllForObj:self
+        [[WMFatFractal sharedInstance] grabBagGetAllForObj:self
                                          grabBagName:WMOrganizationRelationships.addresses
                                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                               WM_ASSERT_MAIN_THREAD;

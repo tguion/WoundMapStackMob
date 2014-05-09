@@ -137,7 +137,9 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMNavigationNode entityName], [WMWoundMeasurement entityName]];
+//    return @[[WMNavigationNode entityName], [WMWoundMeasurement entityName]];
+    // getting WMNavigationNode on sign in
+    return @[[WMWoundMeasurement entityName]];
 }
 
 - (BOOL)shouldShowSelectTrackTableViewCell
@@ -939,6 +941,8 @@
 
 - (IBAction)editUserOrTeamAction:(id)sender
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMTeam *team = self.appDelegate.participant.team;
     if (team && self.appDelegate.participant.isTeamLeader) {
         __weak __typeof(self) weakSelf = self;
@@ -952,10 +956,10 @@
             }
         };
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMTeamRelationships.invitations, WMTeamRelationships.participants, WMTeamRelationships.patients]
-                                                  aggregator:team
-                                                          ff:[WMFatFractal sharedInstance]
-                                           completionHandler:block];
+        [ffm updateGrabBags:@[WMTeamRelationships.invitations, WMTeamRelationships.participants, WMTeamRelationships.patients]
+                 aggregator:team
+                         ff:[WMFatFractal sharedInstance]
+          completionHandler:block];
     } else {
         // no team, sign out
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Sign Out %@", self.appDelegate.participant.userName]
@@ -1494,6 +1498,7 @@
     switch (actionSheet.tag) {
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                [[WMFatFractal sharedInstance] forgetAllObjs];
                 self.appDelegate.participant = nil;
                 [self.appDelegate.navigationCoordinator clearPatientCache];
                 WMFatFractal *ff = [WMFatFractal sharedInstance];

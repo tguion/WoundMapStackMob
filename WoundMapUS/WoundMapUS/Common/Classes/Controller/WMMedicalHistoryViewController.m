@@ -181,7 +181,7 @@
     __weak __typeof(&*self)weakSelf = self;
     NSParameterAssert([_medicalHistoryGroup.ffUrl length]);
     __block NSInteger callbackCount = 0;
-    NSInteger callbacksTotal = [medicalHistoryValues count];
+    NSInteger callbacksTotal = [medicalHistoryValues count] * 2;
     FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -202,6 +202,7 @@
                     atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryValue entityName]]
                onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                    [ff grabBagAddItemAtFfUrl:medicalHistoryValue.ffUrl toObjAtFfUrl:_medicalHistoryGroup.ffUrl grabBagName:WMMedicalHistoryGroupRelationships.values onComplete:block];
+                   [ff grabBagAddItemAtFfUrl:medicalHistoryValue.ffUrl toObjAtFfUrl:medicalHistoryValue.medicalHistoryItem.ffUrl grabBagName:WMMedicalHistoryItemRelationships.values onComplete:block];
                }];
         }
     }
@@ -295,7 +296,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMMedicalHistoryItem entityName]];
+    return @[]; // WMMedicalHistoryItem fetched on sign in
 }
 
 - (NSString *)ffQuery
