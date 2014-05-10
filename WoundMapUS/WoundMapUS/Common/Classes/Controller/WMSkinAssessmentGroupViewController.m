@@ -41,26 +41,52 @@
 
 #pragma mark - View
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+        };
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     _skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroup:patient];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     if (_skinAssessmentGroup) {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        if ([_skinAssessmentGroup.values count] == 0) {
+            [ffm updateGrabBags:@[WMSkinAssessmentGroupRelationships.values] aggregator:_skinAssessmentGroup ff:ff completionHandler:^(NSError *error) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                block();
+            }];
+        } else {
+            block();
         }
-        [managedObjectContext.undoManager beginUndoGrouping];
     } else {
         _skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:managedObjectContext];
         _skinAssessmentGroup.patient = patient;
         _skinAssessmentGroup.status = [WMInterventionStatus initialInterventionStatus:managedObjectContext];
         self.didCreateGroup = YES;
         // create on back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
         [ff createObj:_skinAssessmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -320,14 +346,11 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error && counter) {
-            counter = 0;
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             block();
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
         }
     };
     WMParticipant *participant = self.appDelegate.participant;

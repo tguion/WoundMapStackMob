@@ -78,10 +78,27 @@
 
 - (void)navigateToBradenScaleEditor:(BOOL)animated
 {
-    WMBradenScaleInputViewController *bradenScaleInputViewController = self.bradenScaleInputViewController;
-    bradenScaleInputViewController.newBradenScaleFlag = self.didCreateBradenScale;
-    bradenScaleInputViewController.bradenScale = self.bradenScale;
-	[self.navigationController pushViewController:bradenScaleInputViewController animated:animated];
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        WMBradenScaleInputViewController *bradenScaleInputViewController = weakSelf.bradenScaleInputViewController;
+        bradenScaleInputViewController.newBradenScaleFlag = weakSelf.didCreateBradenScale;
+        bradenScaleInputViewController.bradenScale = weakSelf.bradenScale;
+        [weakSelf.navigationController pushViewController:bradenScaleInputViewController animated:animated];
+    };
+    // must make sure the sections and cells are downloaded
+    if (self.bradenScale.ffUrl && [self.bradenScale.sections count] == 0) {
+        NSManagedObjectContext *managedObjectContext = [self.bradenScale managedObjectContext];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        __weak __typeof(&*self)weakSelf = self;
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthGb=2", self.bradenScale.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            block();
+        }];
+    } else {
+        block();
+    }
 }
 
 #pragma mark - Actions
@@ -239,7 +256,7 @@
         string = [string stringByAppendingFormat:@" (closed)"];
     }
 	cell.textLabel.text = string;
-	cell.detailTextLabel.text = (bradenScale.isScoredCalculated ?[NSString stringWithFormat:@"Score: %@", bradenScale.score]:@"Incomplete");
+	cell.detailTextLabel.text = (bradenScale.completeFlagValue ?[NSString stringWithFormat:@"Score: %@", bradenScale.score]:@"Incomplete");
     cell.accessoryType = (bradenScale.isClosed ? UITableViewCellAccessoryNone:UITableViewCellAccessoryDisclosureIndicator);
 }
 
@@ -262,8 +279,6 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	self.bradenScale = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (!self.bradenScale.isClosed) {
-        // prepare back end
-
         [self navigateToBradenScaleEditor:YES];
     }
 }

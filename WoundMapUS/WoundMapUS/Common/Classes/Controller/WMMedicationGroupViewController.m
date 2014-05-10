@@ -75,6 +75,8 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     _medicationGroup = [WMMedicationGroup activeMedicationGroup:patient];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     if (nil == _medicationGroup) {
         _medicationGroup = [WMMedicationGroup medicationGroupForPatient:patient];
         self.didCreateGroup = YES;
@@ -90,14 +92,13 @@
                                                                 managedObjectContext:managedObjectContext];
         DLog(@"Created event %@", event.eventType.title);
         // update backend
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        __weak __typeof(&*self)weakSelf = self;
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             } else {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [ff grabBagAddItemAtFfUrl:_medicationGroup.ffUrl
-                             toObjAtFfUrl:weakSelf.patient.ffUrl
+                             toObjAtFfUrl:patient.ffUrl
                               grabBagName:WMPatientRelationships.medicationGroups
                                onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                    if (error) {
@@ -111,12 +112,23 @@
            onComplete:block
             onOffline:block];
     } else {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        if ([_medicationGroup.medications count] == 0) {
+            [ffm updateGrabBags:@[WMMedicationGroupRelationships.medications] aggregator:_medicationGroup ff:ff completionHandler:^(NSError *error) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                block();
+            }];
+        } else {
+            block();
         }
-        [managedObjectContext.undoManager beginUndoGrouping];
     }
 }
 

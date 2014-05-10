@@ -328,11 +328,9 @@
     // else
     query = [query stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;
     [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [weakSelf.refreshControl endRefreshing];
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (weakSelf.refreshCompletionHandler) {
             weakSelf.refreshCompletionHandler(error, nil);
         }

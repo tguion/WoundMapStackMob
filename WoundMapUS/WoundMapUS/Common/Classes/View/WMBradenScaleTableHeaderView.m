@@ -63,7 +63,7 @@
                        context:(void *)context
 {
 	self.scoreLabel.text = [NSString stringWithFormat:@"Score: %@", self.bradenScale.score];
-    if (self.bradenScale.isScoredCalculated) {
+    if (self.bradenScale.completeFlagValue) {
         self.messageLabel.text = self.bradenScale.scoreMessage;
     } else {
         self.messageLabel.text = @"incomplete";
