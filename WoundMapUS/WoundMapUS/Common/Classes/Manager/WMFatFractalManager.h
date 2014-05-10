@@ -16,6 +16,7 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 @class WMFatFractal;
 @class WMParticipant, WMPatient, WMPerson, WMOrganization;
 @class WMTeamInvitation, WMTeam;
+@class WMWoundPhoto, WMPhoto;
 
 @interface WMFatFractalManager : NSObject <FFQueueDelegate>
 
@@ -54,6 +55,8 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 - (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)removeParticipantFromTeam:(WMParticipant *)teamMember ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)movePatientsForParticipant:(WMParticipant *)participant toTeam:(WMTeam *)team completionHandler:(WMErrorCallback)completionHandler;
+
+- (void)uploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo;
 
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler;
 - (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;

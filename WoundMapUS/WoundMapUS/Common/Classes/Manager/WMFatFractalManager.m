@@ -46,6 +46,7 @@
 #import "WMTelecomType.h"
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
+#import "Faulter.h"
 #import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
@@ -751,6 +752,52 @@
     NSError *error = nil;
     [participantGroup removeUser:user error:&error];
     completionHandler(error);
+}
+
+#pragma mark - Blobs
+
+- (void)uploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+    NSParameterAssert(managedObjectContext == [photo managedObjectContext]);
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [Faulter faultObjectWithID:[woundPhoto objectID] inContext:managedObjectContext];
+        [Faulter faultObjectWithID:[photo objectID] inContext:managedObjectContext];
+    };
+    FFHttpMethodCompletion uploadWoundPhotoComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
+            [ff updateBlob:UIImagePNGRepresentation(photo.photo)
+              withMimeType:@"image/png"
+                    forObj:photo
+                memberName:WMPhotoAttributes.photo
+                onComplete:onComplete onOffline:onComplete];
+        }
+    };
+    counter = 3;
+    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnail)
+      withMimeType:@"image/png"
+            forObj:woundPhoto
+        memberName:WMWoundPhotoAttributes.thumbnail
+        onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
+    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailLarge)
+      withMimeType:@"image/png"
+            forObj:woundPhoto
+        memberName:WMWoundPhotoAttributes.thumbnailLarge
+        onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
+    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailMini)
+      withMimeType:@"image/png"
+            forObj:woundPhoto
+        memberName:WMWoundPhotoAttributes.thumbnailMini
+        onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
 }
 
 #pragma mark - Patient

@@ -1995,6 +1995,7 @@
             __weak __typeof(&*self)weakSelf = self;
             [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Processing Photo";
             WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             // have photoManager start the process
             __block NSInteger counter = 2;
             FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -2013,11 +2014,7 @@
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    [ff updateBlob:UIImagePNGRepresentation(photo.photo)
-                      withMimeType:@"image/png"
-                            forObj:photo
-                        memberName:WMPhotoAttributes.photo
-                        onComplete:onComplete onOffline:onComplete];
+                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
                     [ff grabBagAddItemAtFfUrl:photo.ffUrl
                                  toObjAtFfUrl:woundPhoto.ffUrl
                                   grabBagName:WMWoundPhotoRelationships.photos
@@ -2031,7 +2028,7 @@
                 WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                 WMPhoto *photo = (WMPhoto *)object1;
                 NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
-                // readd the photo
+                // re-add the photo
                 [woundPhoto addPhotosObject:photo];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [ff createObj:photo
@@ -2041,21 +2038,6 @@
                    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                        createPhotoComplete(error, woundPhoto, photo);
                    }];
-                [ff updateBlob:UIImagePNGRepresentation(image)
-                  withMimeType:@"image/png"
-                        forObj:woundPhoto
-                    memberName:WMWoundPhotoAttributes.thumbnail
-                    onComplete:onComplete onOffline:onComplete];
-                [ff updateBlob:UIImagePNGRepresentation(image)
-                  withMimeType:@"image/png"
-                        forObj:woundPhoto
-                    memberName:WMWoundPhotoAttributes.thumbnailLarge
-                    onComplete:onComplete onOffline:onComplete];
-                [ff updateBlob:UIImagePNGRepresentation(image)
-                  withMimeType:@"image/png"
-                        forObj:woundPhoto
-                    memberName:WMWoundPhotoAttributes.thumbnailMini
-                    onComplete:onComplete onOffline:onComplete];
                 [ff grabBagAddItemAtFfUrl:woundPhoto.ffUrl
                              toObjAtFfUrl:wound.ffUrl
                               grabBagName:WMWoundRelationships.photos
