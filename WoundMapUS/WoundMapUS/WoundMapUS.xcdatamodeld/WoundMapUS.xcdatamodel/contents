@@ -556,7 +556,7 @@
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
             <userInfo/>
         </attribute>
-        <attribute name="gender" optional="YES" attributeType="String" defaultValueString="U" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" defaultValueString="X" syncable="YES"/>
         <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="relevantMedications" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ssn" optional="YES" attributeType="String" syncable="YES"/>
