@@ -182,7 +182,17 @@
 {
     [_patientReadOnlyContainerView removeFromSuperview];
     self.appDelegate.navigationCoordinator.patient = _patientToOpen;
-    [self.navigationController pushViewController:self.patientSummaryContainerViewController animated:YES];
+    // get data from back end
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Loading Patient Data...";
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSManagedObjectContext *managedObjectContext = [_patientToOpen managedObjectContext];
+    __weak __typeof(self) weakSelf = self;
+    NSString *queryString = [NSString stringWithFormat:@"%@?depthGb=2&depthRef=2", _patientToOpen.ffUrl];
+    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf.navigationController pushViewController:weakSelf.patientSummaryContainerViewController animated:YES];
+    }];
 }
 
 - (IBAction)dismissReadonlyPatientViewAction:(id)sender

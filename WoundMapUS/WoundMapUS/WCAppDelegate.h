@@ -28,4 +28,6 @@
 
 @property (nonatomic, strong) WMParticipant *participant;           // clinician using the app
 
+- (void)signOut;
+
 @end

@@ -941,7 +941,6 @@
 
 - (IBAction)editUserOrTeamAction:(id)sender
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMTeam *team = self.appDelegate.participant.team;
     if (team && self.appDelegate.participant.isTeamLeader) {
@@ -1498,11 +1497,7 @@
     switch (actionSheet.tag) {
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                [[WMFatFractal sharedInstance] forgetAllObjs];
-                self.appDelegate.participant = nil;
-                [self.appDelegate.navigationCoordinator clearPatientCache];
-                WMFatFractal *ff = [WMFatFractal sharedInstance];
-                [ff logout];
+                [self.appDelegate signOut];
                 __weak __typeof(self) weakSelf = self;
                 [UIView transitionWithView:self.appDelegate.window
                                   duration:0.5

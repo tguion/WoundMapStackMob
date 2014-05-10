@@ -66,6 +66,17 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
 }
 
+- (void)signOut
+{
+    WMFatFractal *ff = self.ff;
+    self.participant = nil;
+    [self.navigationCoordinator clearPatientCache];
+    [ff forgetAllObjs];
+    [ff logout];
+    [[NSManagedObjectContext MR_defaultContext] reset];
+    [[NSManagedObjectContext MR_rootSavingContext] reset];
+}
+
 #pragma mark - Memory
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application

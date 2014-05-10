@@ -455,10 +455,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         [self.navigationController pushViewController:self.signInViewController animated:YES];
                     } else {
                         // sign out
-                        WMFatFractal *ff = [WMFatFractal sharedInstance];
-                        [ff logout];
-                        self.appDelegate.participant = nil;
-                        [self.appDelegate.navigationCoordinator clearPatientCache];
+                        [self.appDelegate signOut];
                         _welcomeState = WMWelcomeStateInitial;
                         _enterWoundMapButton.enabled = NO;
                         [tableView reloadData];

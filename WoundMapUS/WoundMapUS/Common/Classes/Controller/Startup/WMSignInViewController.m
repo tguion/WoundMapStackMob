@@ -222,9 +222,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kSubscriptionExpiredAlertViewTag) {
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff logout];
-        self.appDelegate.participant = nil;
+        [self.appDelegate signOut];
     }
 }
 

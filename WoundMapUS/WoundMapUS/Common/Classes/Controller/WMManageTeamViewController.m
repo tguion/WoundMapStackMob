@@ -306,11 +306,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                self.appDelegate.participant = nil;
-                [self.appDelegate.navigationCoordinator clearPatientCache];
-                WMFatFractal *ff = [WMFatFractal sharedInstance];
-                [ff logout];
-                [ff forgetAllObjs];
+                [self.appDelegate signOut];
                 __weak __typeof(self) weakSelf = self;
                 [UIView transitionWithView:self.appDelegate.window
                                   duration:0.5
