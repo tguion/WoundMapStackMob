@@ -97,14 +97,38 @@
     [super viewDidLoad];
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     _carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
     if (_carePlanGroup.ffUrl || _parentCategory) {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            self.removeUndoManagerWhenDone = YES;
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        if (_parentCategory) {
+            if ([_parentCategory.values count] == 0) {
+                [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_parentCategory ff:ff completionHandler:^(NSError *error) {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    block();
+                }];
+            } else {
+                block();
+            }
+        } else {
+            if ([_carePlanGroup.values count] == 0) {
+                [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_carePlanGroup ff:ff completionHandler:^(NSError *error) {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    block();
+                }];
+            } else {
+                block();
+            }
         }
-        [managedObjectContext.undoManager beginUndoGrouping];
     } else if (nil == _carePlanGroup) {
         _carePlanGroup = [WMCarePlanGroup carePlanGroupForPatient:patient];
         self.didCreateGroup = YES;
@@ -121,7 +145,6 @@
                                                               managedObjectContext:managedObjectContext];
         DLog(@"Created event %@", event.eventType.title);
         // update backend
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
         __weak __typeof(&*self)weakSelf = self;
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {

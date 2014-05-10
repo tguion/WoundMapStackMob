@@ -137,20 +137,32 @@
     [super viewDidLoad];
     WMWoundPhoto *woundPhoto = self.woundPhoto;
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     if (_woundMeasurementGroup) {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        if ([_woundMeasurementGroup.values count] == 0) {
+            [ffm updateGrabBags:@[WMWoundMeasurementGroupRelationships.values] aggregator:_woundMeasurementGroup ff:ff completionHandler:^(NSError *error) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                block();
+            }];
+        } else {
+            block();
         }
-        [managedObjectContext.undoManager beginUndoGrouping];
     } else {
         _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:woundPhoto];
         if (nil == _woundMeasurementGroup) {
             _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:woundPhoto];
             self.didCreateGroup = YES;
             // create on back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMWound *wound = self.wound;
             WMWoundPhoto *woundPhoto = self.woundPhoto;
             __block NSInteger counter = 0;

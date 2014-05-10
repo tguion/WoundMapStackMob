@@ -89,18 +89,41 @@
     if (nil == _woundTreatmentGroup) {
         _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:wound];
     }
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     if (_parentWoundTreatment || _woundTreatmentGroup) {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        if (_parentWoundTreatment) {
+            if ([_parentWoundTreatment.values count] == 0) {
+                [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_parentWoundTreatment ff:ff completionHandler:^(NSError *error) {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    block();
+                }];
+            } else {
+                block();
+            }
+        } else {
+            if ([_woundTreatmentGroup.values count] == 0) {
+                [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_woundTreatmentGroup ff:ff completionHandler:^(NSError *error) {
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    block();
+                }];
+            } else {
+                block();
+            }
         }
-        [managedObjectContext.undoManager beginUndoGrouping];
     } else if (nil == _woundTreatmentGroup) {
         _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
         self.didCreateGroup = YES;
         // create on back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
         WMWound *wound = self.wound;
         __block NSInteger counter = 0;
         __weak __typeof(&*self)weakSelf = self;

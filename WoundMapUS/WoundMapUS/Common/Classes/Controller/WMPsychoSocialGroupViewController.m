@@ -93,13 +93,26 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     _psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:patient];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     if (_psychoSocialGroup.ffUrl || self.parentPsychoSocialItem.hasSubItems) {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            self.removeUndoManagerWhenDone = YES;
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        if ([_psychoSocialGroup.values count] == 0) {
+            [ffm updateGrabBags:@[WMPsychoSocialGroupRelationships.values] aggregator:_psychoSocialGroup ff:ff completionHandler:^(NSError *error) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                block();
+            }];
+        } else {
+            block();
         }
-        [managedObjectContext.undoManager beginUndoGrouping];
     } else if (nil == _psychoSocialGroup) {
         _psychoSocialGroup = [WMPsychoSocialGroup psychoSocialGroupForPatient:self.patient];
         self.didCreateGroup = YES;
@@ -116,7 +129,6 @@
                                                                   managedObjectContext:managedObjectContext];
         DLog(@"Created event %@", event.eventType.title);
         // update backend
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
         __weak __typeof(&*self)weakSelf = self;
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
