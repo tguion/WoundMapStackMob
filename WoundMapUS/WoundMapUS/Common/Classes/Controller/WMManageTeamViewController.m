@@ -506,7 +506,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 if (teamInvitation.isAccepted) {
                     message = @"Accepted, tap to confirm";
                 } else {
-                    message = [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+                    message = [NSString stringWithFormat:@"invited %@", [NSDateFormatter localizedStringFromDate:teamInvitation.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
                 }
                 cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
                 cell.detailTextLabel.text = message;

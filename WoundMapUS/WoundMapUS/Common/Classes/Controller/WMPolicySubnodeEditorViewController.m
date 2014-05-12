@@ -89,7 +89,7 @@
             WMNavigationNode *navigationNode = [self.fetchedResultsController objectAtIndexPath:indexPath];
             if ([navigationNode.subnodes count] > 0) {
                 // subnodes
-                WMPolicySubnodeEditorViewController *viewController = [[WMPolicySubnodeEditorViewController alloc] initWithNibName:@"WMPolicySubnodeEditorViewController" bundle:nil];
+                WMPolicySubnodeEditorViewController *viewController = [[WMPolicySubnodeEditorViewController alloc] initWithNibName:@"WMPolicyEditorViewController" bundle:nil];
                 viewController.parentNavigationNode = navigationNode;
                 viewController.delegate = self;
                 [self.navigationController pushViewController:viewController animated:YES];

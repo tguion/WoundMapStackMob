@@ -1,4 +1,6 @@
 #import "WMPatient.h"
+#import "WMNavigationTrack.h"
+#import "WMNavigationStage.h"
 #import "WMMedicalHistoryGroup.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
@@ -225,6 +227,24 @@ typedef enum {
                                                sortedBy:WMPatientReferralAttributes.createdAt
                                               ascending:NO
                                               inContext:managedObjectContext];
+}
+
+- (BOOL)updateNavigationToTeam:(WMTeam *)team
+{
+    NSParameterAssert(team);
+    NSParameterAssert(self.stage);
+    if (nil == self.stage.track.team) {
+        NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+        WMNavigationTrack *track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, self.stage.track.title] inContext:managedObjectContext];
+        NSParameterAssert(track);
+        WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, self.stage.title] inContext:managedObjectContext];
+        NSParameterAssert(stage);
+        self.stage = stage;
+        self.team = team;
+        return YES;
+    }
+    // else
+    return NO;
 }
 
 #pragma mark - FatFractal

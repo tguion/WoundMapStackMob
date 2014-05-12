@@ -14,6 +14,7 @@
 #import "WMFatFractal.h"
 #import "Faulter.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define LABEL_WIDTH 160.0
@@ -92,39 +93,54 @@
         self.dateLabel.text = [NSDateFormatter localizedStringFromDate:woundPhoto.createdAt
                                                              dateStyle:NSDateFormatterMediumStyle
                                                              timeStyle:NSDateFormatterMediumStyle];
+        __block NSInteger counter = 3;
+        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         __weak __typeof(&*self)weakSelf = self;
         dispatch_block_t block = ^{
-            weakSelf.imageView.image = woundPhoto.thumbnail;
-            [Faulter faultObjectWithID:woundPhotoObjectID inContext:managedObjectContext];
+            if (--counter == 0) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [activityIndicatorView removeFromSuperview];
+                weakSelf.imageView.image = woundPhoto.thumbnail;
+                [Faulter faultObjectWithID:woundPhotoObjectID inContext:managedObjectContext];
+            }
         };
-        UIImage *image = woundPhoto.thumbnail;
-        if (nil == image) {
+        if (nil == woundPhoto.thumbnail) {
             // put in temp image
-            UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
             activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
             [self addSubview:activityIndicatorView];
             [activityIndicatorView startAnimating];
             self.imageView.image = [UIImage imageNamed:@"user_iPad"];// TODO replace with placeholder image
             WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [activityIndicatorView removeFromSuperview];
-                id data = woundPhoto.thumbnail;
-                if ([data isKindOfClass:[NSData class]]) {
-                    woundPhoto.thumbnail = [UIImage imageWithData:data];
+            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                NSData *photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                } else {
+                    woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
+                    block();
                 }
-                data = woundPhoto.thumbnailLarge;
-                if ([data isKindOfClass:[NSData class]]) {
-                    woundPhoto.thumbnailLarge = [UIImage imageWithData:data];
+            }];
+            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                NSData *photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                } else {
+                    woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                    block();
                 }
-                data = woundPhoto.thumbnailMini;
-                if ([data isKindOfClass:[NSData class]]) {
-                    woundPhoto.thumbnailMini = [UIImage imageWithData:data];
+            }];
+            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailMini]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                NSData *photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                } else {
+                    woundPhoto.thumbnailMini = [[UIImage alloc] initWithData:photoData];
+                    block();
                 }
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                block();
             }];
         } else {
-            block();
+            self.imageView.image = woundPhoto.thumbnail;
+            [Faulter faultObjectWithID:woundPhotoObjectID inContext:managedObjectContext];
         }
     }
     [self setNeedsDisplay];

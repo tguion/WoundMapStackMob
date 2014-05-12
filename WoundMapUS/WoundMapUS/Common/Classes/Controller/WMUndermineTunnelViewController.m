@@ -162,6 +162,7 @@
                                                                                            action:@selector(saveAction:)];
     [self.view addSubview:_inputTextField];
     CGRect frame = _inputTextField.frame;
+    frame.origin.x = -CGRectGetWidth(frame);
     frame.origin.y = -44.0;
     _inputTextField.frame = frame;
     _inputTextField.inputView = self.pickerViewContainer;

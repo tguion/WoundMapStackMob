@@ -496,6 +496,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
            onComplete:completionHandler
             onOffline:completionHandler];
     }
+    [ff updateObj:self.woundPhoto];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 

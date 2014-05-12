@@ -331,14 +331,11 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error && counter) {
-            counter = 0;
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             block();
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
         }
     };
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {

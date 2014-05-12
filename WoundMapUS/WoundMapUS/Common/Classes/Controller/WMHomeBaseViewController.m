@@ -880,12 +880,19 @@
 - (void)handlePatientChanged:(WMPatient *)patient
 {
     [super handlePatientChanged:patient];
+    [self clearNavigationCache];
     [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
 }
 
 - (void)handleWoundChanged:(WMWound *)wound
 {
     [super handleWoundChanged:wound];
+    // don't update interface if wound was added from compass view
+    WMNavigationNode *parentNavigationNode = _parentNavigationNode;
+    [self clearNavigationCache];
+    if (parentNavigationNode.taskIdentifierValue == kWoundsNode) {
+        _parentNavigationNode = parentNavigationNode;
+    }
     [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
 }
 
@@ -899,6 +906,7 @@
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack
 {
     [super handleNavigationTrackChanged:navigationTrack];
+    [self clearNavigationCache];
     [self performSelector:@selector(updateToolbar) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }
@@ -907,6 +915,7 @@
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage
 {
     [super handleNavigationStageChanged:navigationStage];
+    [self clearNavigationCache];
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }
 
@@ -1781,6 +1790,7 @@
 
 - (void)policyEditorViewControllerDidSave:(WMPolicyEditorViewController *)viewController
 {
+    self.parentNavigationNode = nil;
     self.navigationNodes = nil;
     self.navigationNodeControls = nil;
     self.navigationUIRequiresUpdate = YES;

@@ -189,21 +189,36 @@
                     WM_ASSERT_MAIN_THREAD;
                     NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    // get patients
-                    [ffm fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
-                        // move any patients track to team track
-                        [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
-                            if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
-                                // may have been deleted on back end
-                                participant.teamInvitation = nil;
-                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                completionHandler(error);
-                            } else {
-                                completionHandler(error);
-                            }
+                    dispatch_block_t block = ^{
+                        // get patients
+                        [ffm fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
+                            // move any patients track to team track
+                            [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
+                                if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
+                                    // may have been deleted on back end
+                                    participant.teamInvitation = nil;
+                                    [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                    completionHandler(error);
+                                } else {
+                                    completionHandler(error);
+                                }
+                            }];
                         }];
-                    }];
+                    };
+                    // make sure we have the team nodes
+                    NSInteger stageCountNoTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team = nil"] inContext:managedObjectContext];
+                    NSInteger stageCountTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team == %@", team] inContext:managedObjectContext];
+                    if (stageCountTeam < stageCountNoTeam) {
+                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
+                            block();
+                        }];
+                    } else {
+                        block();
+                    }
                 }];
             } else if (teamInvitation) {
                 NSParameterAssert(teamInvitation.ffUrl);
@@ -761,6 +776,10 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     NSParameterAssert(managedObjectContext == [photo managedObjectContext]);
+    NSData *thumbnail = UIImagePNGRepresentation(woundPhoto.thumbnail);
+    NSData *thumbnailLarge = UIImagePNGRepresentation(woundPhoto.thumbnailLarge);
+    NSData *thumbnailMini = UIImagePNGRepresentation(woundPhoto.thumbnailMini);
+    NSData *photoData = UIImagePNGRepresentation(photo.photo);
     __block NSInteger counter = 0;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
@@ -775,29 +794,31 @@
             [WMUtilities logError:error];
         }
         if (--counter == 0) {
-            [ff updateBlob:UIImagePNGRepresentation(photo.photo)
+            [ff updateBlob:photoData
               withMimeType:@"image/png"
                     forObj:photo
                 memberName:WMPhotoAttributes.photo
                 onComplete:onComplete onOffline:onComplete];
         }
     };
-    counter = 3;
-    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnail)
-      withMimeType:@"image/png"
-            forObj:woundPhoto
-        memberName:WMWoundPhotoAttributes.thumbnail
-        onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
-    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailLarge)
-      withMimeType:@"image/png"
-            forObj:woundPhoto
-        memberName:WMWoundPhotoAttributes.thumbnailLarge
-        onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
-    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailMini)
-      withMimeType:@"image/png"
-            forObj:woundPhoto
-        memberName:WMWoundPhotoAttributes.thumbnailMini
-        onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        counter = 3;
+        [ff updateBlob:thumbnail
+          withMimeType:@"image/png"
+                forObj:woundPhoto
+            memberName:WMWoundPhotoAttributes.thumbnail
+            onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
+        [ff updateBlob:thumbnailLarge
+          withMimeType:@"image/png"
+                forObj:woundPhoto
+            memberName:WMWoundPhotoAttributes.thumbnailLarge
+            onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
+        [ff updateBlob:thumbnailMini
+          withMimeType:@"image/png"
+                forObj:woundPhoto
+            memberName:WMWoundPhotoAttributes.thumbnailMini
+            onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
+    });
 }
 
 #pragma mark - Patient
@@ -886,8 +907,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        --counter;
-        if (counter == 0) {
+        if (--counter == 0) {
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             completionHandler(error);
         }
@@ -898,10 +918,7 @@
         completionHandler(nil);
     } else {
         for (WMPatient *patient in patients) {
-            WMNavigationTrack *track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, patient.stage.track.title] inContext:managedObjectContext];
-            WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, patient.stage.title] inContext:managedObjectContext];
-            patient.stage = stage;
-            patient.team = team;
+            [patient updateNavigationToTeam:team];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {

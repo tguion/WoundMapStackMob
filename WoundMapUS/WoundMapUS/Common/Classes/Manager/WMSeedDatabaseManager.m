@@ -96,11 +96,6 @@
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler
 {
     WM_ASSERT_MAIN_THREAD;
-    if (self.databaseSeedHasCompleted) {
-        handler(nil);
-        return;
-    }
-    // else
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     __block NSInteger counter = 0;
@@ -128,6 +123,21 @@
         }
     };
     DLog(@"reading plists and seeding database start");
+    // *** WMNavigationTrack *** first attempt to acquire data from backend
+    ++counter;
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (![object count]) {
+            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
+        } else {
+            counterHandler();
+        }
+    }];
+    if (self.databaseSeedHasCompleted) {
+        handler(nil);
+        return;
+    }
+    // else
     [self seedLocalData:managedObjectContext];
     // *** WMWoundType *** first attempt to acquire data from backend
     ++counter;
@@ -145,16 +155,6 @@
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
             [WMMedicalHistoryItem seedDatabase:managedObjectContext completionHandler:completionHandler];
-        } else {
-            counterHandler();
-        }
-    }];
-    // *** WMNavigationTrack *** first attempt to acquire data from backend
-    ++counter;
-    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
-        if (![object count]) {
-            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
         } else {
             counterHandler();
         }

@@ -633,7 +633,7 @@
     NSManagedObjectContext *managedObjectContext = [[wound managedObjectContext] parentContext];
     __block WMWoundPhoto *woundPhoto = nil;
     [managedObjectContext performBlockAndWait:^{
-        WMWound *wound0 = (WMWound *)[managedObjectContext objectWithID:[wound objectID]];
+        WMWound *wound0 = (WMWound *)[wound MR_inContext:managedObjectContext];
         woundPhoto = [WMWoundPhoto createWoundPhotoForWound:wound0];
         [managedObjectContext save:NULL];
     }];
@@ -642,9 +642,9 @@
         [managedObjectContext performBlock:^{
             WMPhoto *originalPhoto = [woundPhoto fetchOrCreatePhotoForType:PhotoTypeOriginal];
             originalPhoto.photo = image;
-            woundPhoto.imageWidth = [NSNumber numberWithFloat:image.size.width];
-            woundPhoto.imageHeight = [NSNumber numberWithFloat:image.size.height];
-            woundPhoto.imageOrientation = [NSNumber numberWithInt:image.imageOrientation];
+            woundPhoto.imageWidth = @(image.size.width);
+            woundPhoto.imageHeight = @(image.size.height);
+            woundPhoto.imageOrientation = @(image.imageOrientation);
             woundPhoto.metadata = [[NSString alloc] initWithData:[transformer transformedValue:metadata]
                                                         encoding:NSUTF8StringEncoding];
             woundPhoto.landscapeOrientation = ([woundPhoto.imageWidth floatValue] > [woundPhoto.imageHeight floatValue]);

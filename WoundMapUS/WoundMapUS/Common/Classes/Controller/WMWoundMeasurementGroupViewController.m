@@ -139,6 +139,10 @@
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    if (nil == _woundMeasurementGroup) {
+        _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:woundPhoto];
+    }
     if (_woundMeasurementGroup) {
         dispatch_block_t block = ^{
             // we want to support cancel, so make sure we have an undoManager
@@ -152,13 +156,13 @@
         if ([_woundMeasurementGroup.values count] == 0) {
             [ffm updateGrabBags:@[WMWoundMeasurementGroupRelationships.values] aggregator:_woundMeasurementGroup ff:ff completionHandler:^(NSError *error) {
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [weakSelf.tableView reloadData];
                 block();
             }];
         } else {
             block();
         }
     } else {
-        _woundMeasurementGroup = [WMWoundMeasurementGroup activeWoundMeasurementGroupForWoundPhoto:woundPhoto];
         if (nil == _woundMeasurementGroup) {
             _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:woundPhoto];
             self.didCreateGroup = YES;
