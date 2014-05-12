@@ -183,15 +183,11 @@
             WMTeamInvitation *teamInvitation = participant.teamInvitation;
             if (team) {
                 NSParameterAssert(team.ffUrl);
-//                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-                [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    WM_ASSERT_MAIN_THREAD;
-                    NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    dispatch_block_t block = ^{
-                        // get patients
-                        [ffm fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
+                dispatch_block_t block = ^{
+                    // get patients
+                    [ffm fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
+                        // check that participant is still on team
+                        if (nil != participant.team) {
                             // move any patients track to team track
                             [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
                                 if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
@@ -204,20 +200,33 @@
                                     completionHandler(error);
                                 }
                             }];
-                        }];
-                    };
-                    // make sure we have the team nodes
-                    NSInteger stageCountNoTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team = nil"] inContext:managedObjectContext];
-                    NSInteger stageCountTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team == %@", team] inContext:managedObjectContext];
-                    if (stageCountTeam < stageCountNoTeam) {
-                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                            block();
-                        }];
-                    } else {
+                        } else {
+                            completionHandler(error);
+                        }
+                    }];
+                };
+//                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    // if we did not resolve team, we may have been removed from team
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    if (nil == object && response.statusCode == 403) {
+                        participant.team = nil;
                         block();
+                    } else {
+                        // make sure we have the team nodes
+                        NSInteger stageCountNoTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team = nil"] inContext:managedObjectContext];
+                        NSInteger stageCountTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team == %@", team] inContext:managedObjectContext];
+                        if (stageCountTeam < stageCountNoTeam) {
+                            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                if (error) {
+                                    [WMUtilities logError:error];
+                                }
+                                block();
+                            }];
+                        } else {
+                            block();
+                        }
                     }
                 }];
             } else if (teamInvitation) {
@@ -760,13 +769,21 @@
 - (void)removeParticipantFromTeam:(WMParticipant *)teamMember ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSParameterAssert([teamMember.ffUrl length]);
-    FFUser *user = teamMember.user;
-    NSParameterAssert(user);
-    FFUserGroup *participantGroup = teamMember.team.participantGroup;
-    NSParameterAssert(participantGroup);
-    NSError *error = nil;
-    [participantGroup removeUser:user error:&error];
-    completionHandler(error);
+    WMTeam *team = teamMember.team;
+    NSParameterAssert([team.ffUrl length]);
+    [ff grabBagRemoveItemAtFfUrl:teamMember.ffUrl
+                  fromObjAtFfUrl:team.ffUrl
+                     grabBagName:WMTeamRelationships.participants
+                      onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                          FFUser *user = teamMember.user;
+                          NSParameterAssert(user);
+                          FFUserGroup *participantGroup = teamMember.team.participantGroup;
+                          NSParameterAssert(participantGroup);
+                          NSError *localError = nil;
+                          [participantGroup removeUser:user error:&localError];
+                          [team removeParticipantsObject:teamMember];
+                          completionHandler(error);
+                      }];
 }
 
 #pragma mark - Blobs

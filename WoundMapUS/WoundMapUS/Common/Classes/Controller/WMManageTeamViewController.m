@@ -170,7 +170,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Remove %@ from Team", _teamMemberToDelete.name]
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:@"Revoke"
+                                               destructiveButtonTitle:@"Remove"
                                                     otherButtonTitles:nil];
     actionSheet.tag = kRemoveParticipantActionSheetTag;
     [actionSheet showInView:self.view];
@@ -542,6 +542,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case 2: {
             // remove participant - use UIActionSheet
+            _teamMemberToDelete = [_teamMembers objectAtIndex:indexPath.row];
             [self initiateRemoveTeamMember];
             break;
         }
