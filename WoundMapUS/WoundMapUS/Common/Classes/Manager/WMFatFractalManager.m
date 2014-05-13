@@ -172,12 +172,20 @@
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __block WMPerson *person = participant.person;
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
         NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
         if (error) {
             completionHandler(error);
         } else {
+            // check for lost person - might happen when added to team by team leader
+            if (nil == participant.person) {
+                if (nil == person) {
+                    person = [WMPerson MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil AND %K = nil", WMPersonRelationships.patient, WMPersonRelationships.patient] inContext:managedObjectContext];
+                }
+                participant.person = person;
+            }
             // update team
             WMTeam *team = participant.team;
             WMTeamInvitation *teamInvitation = participant.teamInvitation;
@@ -766,10 +774,9 @@
     }];
 }
 
-- (void)removeParticipantFromTeam:(WMParticipant *)teamMember ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+- (void)removeParticipant:(WMParticipant *)teamMember fromTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSParameterAssert([teamMember.ffUrl length]);
-    WMTeam *team = teamMember.team;
     NSParameterAssert([team.ffUrl length]);
     [ff grabBagRemoveItemAtFfUrl:teamMember.ffUrl
                   fromObjAtFfUrl:team.ffUrl
@@ -781,7 +788,6 @@
                           NSParameterAssert(participantGroup);
                           NSError *localError = nil;
                           [participantGroup removeUser:user error:&localError];
-                          [team removeParticipantsObject:teamMember];
                           completionHandler(error);
                       }];
 }

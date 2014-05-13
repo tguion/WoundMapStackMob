@@ -683,6 +683,7 @@
             thumbnail = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             woundPhoto.thumbnailMini = thumbnail;
+            // TODO call back on main thread
             completionHandler(nil, [woundPhoto MR_inContext:[wound managedObjectContext]]);
         }];
     });

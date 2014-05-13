@@ -11,6 +11,7 @@
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
 #import "MBProgressHUD.h"
+#import "WMNavigationTrack.h"
 #import "WMParticipant.h"
 #import "WMTeamInvitation.h"
 #import "WMTeam.h"
@@ -200,6 +201,10 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             [WMUtilities logError:error];
             completionHandler(error);
         } else {
+            // delete local tracks
+            NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+            [managedObjectContext MR_deleteObjects:navigationTracks];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

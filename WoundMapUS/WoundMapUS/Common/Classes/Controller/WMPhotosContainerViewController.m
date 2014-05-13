@@ -1102,9 +1102,9 @@
             } else {
                 photo.photo = [[UIImage alloc] initWithData:photoData];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                 block();
             }
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         }];
     } else {
         block();

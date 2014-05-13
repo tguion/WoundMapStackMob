@@ -19,6 +19,7 @@ extern const struct WMTeamRelationships {
 	__unsafe_unretained NSString *navigationTracks;
 	__unsafe_unretained NSString *participants;
 	__unsafe_unretained NSString *patients;
+	__unsafe_unretained NSString *teamPolicy;
 } WMTeamRelationships;
 
 extern const struct WMTeamFetchedProperties {
@@ -29,6 +30,7 @@ extern const struct WMTeamFetchedProperties {
 @class WMNavigationTrack;
 @class WMParticipant;
 @class WMPatient;
+@class WMTeamPolicy;
 
 
 
@@ -153,6 +155,13 @@ extern const struct WMTeamFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMTeamPolicy *teamPolicy;
+
+//- (BOOL)validateTeamPolicy:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -248,6 +257,11 @@ extern const struct WMTeamFetchedProperties {
 
 - (NSMutableSet*)primitivePatients;
 - (void)setPrimitivePatients:(NSMutableSet*)value;
+
+
+
+- (WMTeamPolicy*)primitiveTeamPolicy;
+- (void)setPrimitiveTeamPolicy:(WMTeamPolicy*)value;
 
 
 @end

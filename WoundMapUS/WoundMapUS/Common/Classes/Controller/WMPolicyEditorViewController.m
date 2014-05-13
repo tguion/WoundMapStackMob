@@ -8,9 +8,12 @@
 
 #import "WMPolicyEditorViewController.h"
 #import "WMPolicySubnodeEditorViewController.h"
+#import "WMSwitchTableViewCell.h"
+#import "WMTextFieldTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMTeam.h"
+#import "WMTeamPolicy.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
@@ -26,6 +29,8 @@ NSString * const kSubnodeCellIdentifier = @"SubnodeCell";
 NSString * const kChooseTrackCellIdentifier = @"ChooseTrackCell";
 NSString * const kChooseStageCellIdentifier = @"ChooseStageCell";
 NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
+NSString * const kSwitchCellIdentifier = @"SwitchCell";
+NSString * const kTextCellIdentifier = @"TextCell";
 
 #define kTitleLabelTag 1000
 #define kDescriptionLabelTag 1001
@@ -38,12 +43,16 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 #define kCloseUnitTextFieldTag 1010
 #define kCloseValueSegmentedControlTag 1011
 
+#define kNumberMonthsDeleteBlobTextFieldTag 2000
+
 #define kSavePolicyAlertTag 2000
 #define kChangeTrackConfirmAlertTag 2001
 
 @interface WMPolicyEditorViewController () <ChooseTrackDelegate, ChooseStageDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
+
+@property (readonly, nonatomic) WMTeam *team;
 
 @property (strong, nonatomic) WMNavigationTrack *navigationTrack;
 @property (strong, nonatomic) WMNavigationStage *navigationStage;
@@ -58,6 +67,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 - (IBAction)doneEditingAction:(id)sender;
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)saveAction:(id)sender;
+- (IBAction)deletePhotoBlobsValueChanged:(id)sender;
 
 @end
 
@@ -144,6 +154,18 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
         } else if ([navigationNode.subnodes count] > 0) {
             cellIdentifier = kSubnodeCellIdentifier;
         }
+    } else if (indexPath.section == 3) {
+        // team policy
+        switch (indexPath.row) {
+            case 0: {
+                cellIdentifier = kSwitchCellIdentifier;
+                break;
+            }
+            case 1: {
+                cellIdentifier = kTextCellIdentifier;
+                break;
+            }
+        };
     }
     return cellIdentifier;
 }
@@ -219,12 +241,36 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     self.navigationItem.hidesBackButton = YES;
     [self updateNavigation];
     [self.tableView registerNib:[UINib nibWithNibName:kEditNodeCellIdentifier bundle:nil] forCellReuseIdentifier:kEditNodeCellIdentifier];
-    // we want to support cancel, so make sure we have an undoManager
-    if (nil == self.managedObjectContext.undoManager) {
-        self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-        self.removeUndoManagerWhenDone = YES;
+    [self.tableView registerClass:[WMSwitchTableViewCell class] forCellReuseIdentifier:kSwitchCellIdentifier];
+    [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:kTextCellIdentifier];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            self.removeUndoManagerWhenDone = YES;
+        }
+        [managedObjectContext.undoManager beginUndoGrouping];
+    };
+    // make sure we have a team policy
+    WMTeam *team = self.team;
+    if (team && nil == team.teamPolicy) {
+        WMTeamPolicy *teamPolicy = [WMTeamPolicy teamPolicyForTeam:team];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            block();
+        };
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [ff createObj:teamPolicy
+                atUri:[NSString stringWithFormat:@"/%@", [WMTeamPolicy entityName]]
+           onComplete:onComplete onOffline:onComplete];
     }
-    [self.managedObjectContext.undoManager beginUndoGrouping];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -250,6 +296,11 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 }
 
 #pragma mark - Core
+
+- (WMTeam *)team
+{
+    return self.appDelegate.participant.team;
+}
 
 - (WMNavigationTrack *)navigationTrack
 {
@@ -381,19 +432,20 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 
 - (IBAction)saveAction:(id)sender
 {
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    [self.view endEditing:YES];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
         if (_removeUndoManagerWhenDone) {
-            self.managedObjectContext.undoManager = nil;
+            managedObjectContext.undoManager = nil;
         }
     }
-    [[self.view findFirstResponder] resignFirstResponder];
     if (nil == self.parentNavigationNode) {
         // show action sheet
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Save Policy"
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel Changes"
-                                                   destructiveButtonTitle:@"Update Current Patient"
+                                                   destructiveButtonTitle:@"Save Policy for all Patients"
                                                         otherButtonTitles:nil];
         actionSheet.tag = kSavePolicyAlertTag;
         [actionSheet showInView:self.view];
@@ -423,6 +475,13 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
     [self.delegate policyEditorViewControllerDidCancel:self];
     _navigationTrack = nil;
     _navigationStage = nil;
+}
+
+- (IBAction)deletePhotoBlobsValueChanged:(id)sender
+{
+    UISwitch *aSwitch = (UISwitch *)sender;
+    NSParameterAssert([aSwitch isKindOfClass:[UISwitch class]]);
+    self.team.teamPolicy.deletePhotoBlobsValue = aSwitch.on;
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -491,12 +550,20 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 {
     UITableViewCell *cell = [self cellForView:textField];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    indexPath = [self indexPathTableToFetchedResultsController:indexPath];
-    WMNavigationNode *navigationNode = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    if (textField.tag == kFrequencyUnitTextFieldTag) {
-        navigationNode.frequencyValue = @([textField.text integerValue]);
-    } else if (textField.tag == kCloseUnitTextFieldTag) {
-        navigationNode.closeValue = @([textField.text integerValue]);
+    if (indexPath.section == 2) {
+        indexPath = [self indexPathTableToFetchedResultsController:indexPath];
+        WMNavigationNode *navigationNode = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        if (textField.tag == kFrequencyUnitTextFieldTag) {
+            navigationNode.frequencyValue = @([textField.text integerValue]);
+        } else if (textField.tag == kCloseUnitTextFieldTag) {
+            navigationNode.closeValue = @([textField.text integerValue]);
+        } else if (textField.tag == kNumberMonthsDeleteBlobTextFieldTag) {
+            self.team.teamPolicy.numberOfMonthsToDeletePhotoBlobsValue = [textField.text integerValue];
+        }
+    } else {
+        if (textField.tag == kNumberMonthsDeleteBlobTextFieldTag) {
+            self.team.teamPolicy.numberOfMonthsToDeletePhotoBlobsValue = [textField.text integerValue];
+        }
     }
 }
 
@@ -630,7 +697,7 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return (self.team ? 4:3);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -652,19 +719,21 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
             count = [super tableView:tableView numberOfRowsInSection:section];
             break;
         }
+        case 3: {
+            count = 2;
+            break;
+        }
     }
     return count;
 }
 
-
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section < 2) {
-        return NO;
+    if (indexPath.section == 2) {
+        return YES;
     }
     // else
-    return YES;
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
@@ -713,6 +782,36 @@ NSString * const kReorderNodeCellIdentifier = @"ReorderNodeCell";
             indexPath = [self indexPathTableToFetchedResultsController:indexPath];
             WMNavigationNode *navigationNode = [self.fetchedResultsController objectAtIndexPath:indexPath];
             [self configureNavigationNodeCell:cell forNavigationNode:navigationNode];
+            break;
+        }
+        case 3: {
+            WMTeamPolicy *teamPolicy = self.team.teamPolicy;
+            switch (indexPath.row) {
+                case 0: {
+                    WMSwitchTableViewCell *myCell = (WMSwitchTableViewCell *)cell;
+                    [myCell updateWithLabelText:@"Auto Delete Photos"
+                                          value:teamPolicy.deletePhotoBlobsValue
+                                         target:self
+                                         action:@selector(deletePhotoBlobsValueChanged:)
+                                            tag:1000];
+                    break;
+                }
+                case 1: {
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.keyboardType = UIKeyboardTypeNumberPad;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
+                    textField.inputAccessoryView = self.inputAccessoryView;
+                    [myCell updateWithLabelText:@"Number of Months"
+                                      valueText:[NSString stringWithFormat:@"%@", teamPolicy.numberOfMonthsToDeletePhotoBlobs]
+                                    valuePrompt:@"Enter number months"];
+                    break;
+                }
+            }
             break;
         }
     }

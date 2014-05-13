@@ -18,6 +18,7 @@ const struct WMTeamRelationships WMTeamRelationships = {
 	.navigationTracks = @"navigationTracks",
 	.participants = @"participants",
 	.patients = @"patients",
+	.teamPolicy = @"teamPolicy",
 };
 
 const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
@@ -200,6 +201,10 @@ const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
 	[self didAccessValueForKey:@"patients"];
 	return result;
 }
+	
+
+@dynamic teamPolicy;
+
 	
 
 

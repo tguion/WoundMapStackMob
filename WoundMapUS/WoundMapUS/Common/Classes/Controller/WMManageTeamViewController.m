@@ -291,16 +291,27 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case kRemoveParticipantActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                [ffm removeParticipantFromTeam:_teamMemberToDelete ff:ff completionHandler:^(NSError *error) {
+                WMTeam *team = _teamMemberToDelete.team;
+                _teamMemberToDelete.team = nil;
+                [managedObjetContext MR_saveToPersistentStoreAndWait];
+                FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
                     if (error) {
                         [WMUtilities logError:error];
-                    } else {
-                        [managedObjetContext MR_saveToPersistentStoreAndWait];
-                        _teamMembers = nil;
-                        _teamMemberToDelete = nil;
-                        [weakSelf.tableView reloadData];
                     }
-                }];
+                    [ffm removeParticipant:_teamMemberToDelete fromTeam:team ff:ff completionHandler:^(NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        } else {
+                            [managedObjetContext MR_saveToPersistentStoreAndWait];
+                            _teamMembers = nil;
+                            _teamMemberToDelete = nil;
+                            [weakSelf.tableView reloadData];
+                        }
+                    }];
+                };
+                [ff updateObj:_teamMemberToDelete
+                   onComplete:onComplete
+                    onOffline:onComplete];
             }
             break;
         }

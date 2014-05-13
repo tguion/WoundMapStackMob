@@ -98,6 +98,7 @@
     WM_ASSERT_MAIN_THREAD;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
     __block NSInteger counter = 0;
     WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
         // update backend from main thread
@@ -106,6 +107,7 @@
             NSManagedObject *object = [managedObjectContext objectWithID:objectID];
             NSLog(@"*** WoundMap: Will create collection backend: %@", object);
             [ff createObj:object atUri:ffUrl];
+            [coreDataHelper markBackendDataAcquiredForEntityName:collection];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }
         if (callBack) {

@@ -181,9 +181,11 @@
                                 [ff updateObj:participant error:&error];
                                 NSAssert(nil == error, @"Unable to update participant: %@, error: %@", participant, error);
                             }
+                            [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                         }];
+                    } else {
+                        [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                     }
-                    [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                 }
             };
             dispatch_block_t participantBlock = ^{

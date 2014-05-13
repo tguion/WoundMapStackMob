@@ -766,6 +766,7 @@
         <relationship name="navigationTracks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationTrack" inverseName="team" inverseEntity="WMNavigationTrack" syncable="YES"/>
         <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="team" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatient" inverseName="team" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="teamPolicy" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMTeamPolicy" inverseName="team" inverseEntity="WMTeamPolicy" syncable="YES"/>
     </entity>
     <entity name="WMTeamInvitation" representedClassName="WMTeamInvitation" syncable="YES">
         <attribute name="acceptedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -778,6 +779,15 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="invitee" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="teamInvitation" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="invitations" inverseEntity="WMTeam" syncable="YES"/>
+    </entity>
+    <entity name="WMTeamPolicy" representedClassName="WMTeamPolicy" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="deletePhotoBlobs" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="numberOfMonthsToDeletePhotoBlobs" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="teamPolicy" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
     <entity name="WMTelecom" representedClassName="WMTelecom" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -1208,7 +1218,7 @@
         <element name="WMSkinAssessmentCategory" positionX="0" positionY="0" width="128" height="255"/>
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="208"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="208"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="223"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="195"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
@@ -1227,5 +1237,6 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
+        <element name="WMTeamPolicy" positionX="18" positionY="153" width="128" height="148"/>
     </elements>
 </model>
