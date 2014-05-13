@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMTeam.h"
+#import "WMTeamPolicy.h"
 #import "WMTeamInvitation.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
@@ -159,6 +160,13 @@
                         alertView.tag = kSubscriptionExpiredAlertViewTag;
                         [alertView show];
                     } else {
+                        // delete photos
+                        if (participant.isTeamLeader) {
+                            WMTeamPolicy *teamPolicy = team.teamPolicy;
+                            if (teamPolicy.deletePhotoBlobsValue) {
+                                [ffm deleteExpiredPhotos:teamPolicy];
+                            }
+                        }
                         [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                     }
                 } else {

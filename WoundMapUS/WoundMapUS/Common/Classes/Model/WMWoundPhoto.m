@@ -13,6 +13,7 @@ typedef enum {
     WoundPhotoFlagsTilesCreatedTrueSee              = 1,
     WoundPhotoFlagsDeviceLandscape                  = 2,
     WoundPhotoFlagsTilingHasStarted                 = 3,
+    WoundPhotoFlagsPhotoDeletedPerPolicy            = 4
 } WoundPhotoFlags;
 
 @interface WMWoundPhoto ()
@@ -57,6 +58,16 @@ typedef enum {
 - (BOOL)waitingForTilingToFinish
 {
     return self.tilingHasStarted && !self.tilesCreatedForOriginalImage;
+}
+
+- (BOOL)photoDeletedPerTeamPolicy
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:WoundPhotoFlagsPhotoDeletedPerPolicy];
+}
+
+- (void)setPhotoDeletedPerTeamPolicy:(BOOL)photoDeletedPerTeamPolicy
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundPhotoFlagsPhotoDeletedPerPolicy to:photoDeletedPerTeamPolicy]);
 }
 
 - (WMWoundMeasurementGroup *)measurementGroup
@@ -317,7 +328,8 @@ typedef enum {
                                                             @"hasTransform",
                                                             @"isTransformIdentity",
                                                             @"transformBoundsSize",
-                                                            @"tilesCreatedForOriginalImage"]];
+                                                            @"tilesCreatedForOriginalImage",
+                                                            @"photoDeletedPerTeamPolicy"]];
     });
     return PropertyNamesNotToSerialize;
 }

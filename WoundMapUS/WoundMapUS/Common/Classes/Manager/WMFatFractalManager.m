@@ -14,6 +14,7 @@
 #import "WMPerson.h"
 #import "WMOrganization.h"
 #import "WMTeam.h"
+#import "WMTeamPolicy.h"
 #import "WMTeamInvitation.h"
 #import "WMAddress.h"
 #import "WMTelecom.h"
@@ -842,6 +843,44 @@
             memberName:WMWoundPhotoAttributes.thumbnailMini
             onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
     });
+}
+
+- (NSInteger)deleteExpiredPhotos:(WMTeamPolicy *)teamPolicy
+{
+    NSManagedObjectContext *managedObjectContext = [teamPolicy managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    NSDate *dateExpires = [WMUtilities dateByAddingMonths:-teamPolicy.numberOfMonthsToDeletePhotoBlobsValue toDate:nil];
+    NSArray *woundPhotos = [WMWoundPhoto MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K < %@", WMWoundPhotoAttributes.createdAt, dateExpires] inContext:managedObjectContext];
+    for (WMWoundPhoto *woundPhoto in woundPhotos) {
+        woundPhoto.photoDeletedPerTeamPolicy = YES;
+        [ff deleteBlobForObj:woundPhoto
+                  memberName:WMWoundPhotoAttributes.thumbnail
+                  onComplete:onComplete onOffline:onComplete];
+        woundPhoto.thumbnail = nil;
+        [ff deleteBlobForObj:woundPhoto
+                  memberName:WMWoundPhotoAttributes.thumbnailLarge
+                  onComplete:onComplete onOffline:onComplete];
+        woundPhoto.thumbnailLarge = nil;
+        [ff deleteBlobForObj:woundPhoto
+                  memberName:WMWoundPhotoAttributes.thumbnailMini
+                  onComplete:onComplete onOffline:onComplete];
+        woundPhoto.thumbnailMini = nil;
+        WMPhoto *photo = woundPhoto.photo;
+        if (photo) {
+            [ff deleteBlobForObj:photo
+                      memberName:WMPhotoAttributes.photo
+                      onComplete:onComplete onOffline:onComplete];
+            photo.photo = nil;
+        }
+        [ff updateObj:woundPhoto onComplete:onComplete onOffline:onComplete];
+    }
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    return [woundPhotos count];
 }
 
 #pragma mark - Patient

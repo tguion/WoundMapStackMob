@@ -73,6 +73,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
 
 @interface WMPolicyEditorViewController (PrivateMethods)
 - (BOOL)sectionIsNavigationNodeSection:(NSInteger)section;
+- (BOOL)sectionIsTeamPolicySection:(NSInteger)section;
 - (void)updateNavigation;
 - (void)reloadSortOrderings;
 - (void)moveNodeOrdering:(NSInteger)sourceRow to:(NSInteger)destinationRow;
@@ -93,6 +94,11 @@ NSString * const kTextCellIdentifier = @"TextCell";
 - (BOOL)sectionIsNavigationNodeSection:(NSInteger)section
 {
     return (section == 2);
+}
+
+- (BOOL)sectionIsTeamPolicySection:(NSInteger)section
+{
+    return (section == 3);
 }
 
 - (void)updateNavigation
@@ -441,7 +447,18 @@ NSString * const kTextCellIdentifier = @"TextCell";
         }
     }
     if (nil == self.parentNavigationNode) {
-        // show action sheet
+        // check team policy
+        WMTeamPolicy *teamPolicy = self.team.teamPolicy;
+        if (teamPolicy.deletePhotoBlobs && teamPolicy.numberOfMonthsToDeletePhotoBlobsValue == 0) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Entry"
+                                                                message:@"You must set a number of months greater than zero for deleting photos"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            return;
+        }
+        // else show action sheet
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Save Policy"
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel Changes"
@@ -626,6 +643,10 @@ NSString * const kTextCellIdentifier = @"TextCell";
         return [NSString stringWithFormat:@"Tasks for %@/%@", self.navigationTrack.title, self.navigationStage.title];
     }
     // else
+    if ([self sectionIsTeamPolicySection:section]) {
+        return @"Team Policies";
+    }
+    // else
     return nil;
 }
 
@@ -799,6 +820,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
                 case 1: {
                     WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
                     UITextField *textField = myCell.textField;
+                    textField.tag = kNumberMonthsDeleteBlobTextFieldTag;
                     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     textField.autocorrectionType = UITextAutocorrectionTypeNo;
                     textField.spellCheckingType = UITextSpellCheckingTypeNo;

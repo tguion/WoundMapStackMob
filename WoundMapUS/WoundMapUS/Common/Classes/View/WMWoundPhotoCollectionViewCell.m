@@ -105,39 +105,44 @@
             }
         };
         if (nil == woundPhoto.thumbnail) {
-            // put in temp image
-            activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-            [self addSubview:activityIndicatorView];
-            [activityIndicatorView startAnimating];
-            self.imageView.image = [UIImage imageNamed:@"user_iPad"];// TODO replace with placeholder image
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
-                NSData *photoData = [response rawResponseData];
-                if (response.httpResponse.statusCode > 300) {
-                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
-                } else {
-                    woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
-                    block();
-                }
-            }];
-            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
-                NSData *photoData = [response rawResponseData];
-                if (response.httpResponse.statusCode > 300) {
-                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
-                } else {
-                    woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
-                    block();
-                }
-            }];
-            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailMini]] executeAsyncWithBlock:^(FFReadResponse *response) {
-                NSData *photoData = [response rawResponseData];
-                if (response.httpResponse.statusCode > 300) {
-                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
-                } else {
-                    woundPhoto.thumbnailMini = [[UIImage alloc] initWithData:photoData];
-                    block();
-                }
-            }];
+            if (woundPhoto.photoDeletedPerTeamPolicy) {
+                // show placeholder
+                self.imageView.image = [UIImage imageNamed:@"user_iPad"];// TODO replace with placeholder image
+            } else {
+                // put in temp image
+                activityIndicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+                [self addSubview:activityIndicatorView];
+                [activityIndicatorView startAnimating];
+                self.imageView.image = [UIImage imageNamed:@"user_iPad"];// TODO replace with placeholder image
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                    NSData *photoData = [response rawResponseData];
+                    if (response.httpResponse.statusCode > 300) {
+                        DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                    } else {
+                        woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
+                        block();
+                    }
+                }];
+                [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                    NSData *photoData = [response rawResponseData];
+                    if (response.httpResponse.statusCode > 300) {
+                        DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                    } else {
+                        woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                        block();
+                    }
+                }];
+                [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailMini]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                    NSData *photoData = [response rawResponseData];
+                    if (response.httpResponse.statusCode > 300) {
+                        DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                    } else {
+                        woundPhoto.thumbnailMini = [[UIImage alloc] initWithData:photoData];
+                        block();
+                    }
+                }];
+            }
         } else {
             self.imageView.image = woundPhoto.thumbnail;
             [Faulter faultObjectWithID:woundPhotoObjectID inContext:managedObjectContext];

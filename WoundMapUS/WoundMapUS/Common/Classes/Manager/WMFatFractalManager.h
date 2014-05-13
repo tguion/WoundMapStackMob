@@ -15,7 +15,7 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 
 @class WMFatFractal;
 @class WMParticipant, WMPatient, WMPerson, WMOrganization;
-@class WMTeamInvitation, WMTeam;
+@class WMTeamInvitation, WMTeam, WMTeamPolicy;
 @class WMWoundPhoto, WMPhoto;
 
 @interface WMFatFractalManager : NSObject <FFQueueDelegate>
@@ -64,5 +64,6 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 - (BOOL)updateTelecomType:(WMFatFractal *)ff managedObjectContext:(NSManagedObjectContext *)managedObjectContext completionHandler:(FFHttpMethodCompletion)completionHandler;
 - (BOOL)updateMedication:(WMFatFractal *)ff managedObjectContext:(NSManagedObjectContext *)managedObjectContext completionHandler:(FFHttpMethodCompletion)completionHandler;
 
+- (NSInteger)deleteExpiredPhotos:(WMTeamPolicy *)teamPolicy;
 
 @end

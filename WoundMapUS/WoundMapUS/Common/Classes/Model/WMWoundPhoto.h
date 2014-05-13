@@ -33,6 +33,7 @@ typedef enum {
 @property (readonly, nonatomic) BOOL isTransformIdentity;
 @property (nonatomic) CGSize transformBoundsSize;
 @property (nonatomic) BOOL tilesCreatedForOriginalImage;
+@property (nonatomic) BOOL photoDeletedPerTeamPolicy;
 
 - (WMPhoto *)fetchOrCreatePhotoForType:(PhotoType)photoType;
 - (UIImage *)tileImageForScale:(NSInteger)scale row:(NSInteger)row column:(NSInteger)column;
