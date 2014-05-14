@@ -175,7 +175,7 @@
     }
     _statusLabel.text = patient.patientStatusMessages;
     [self setNeedsUpdateConstraints];
-    [self performSelector:@selector(debugSubviews) withObject:nil afterDelay:1.0];
+//    [self performSelector:@selector(debugSubviews) withObject:nil afterDelay:1.0];
     _referralCallback = [referralCallback copy];
     _unarchiveCallback = [unarchiveCallback copy];
 }
