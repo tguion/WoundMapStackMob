@@ -11,7 +11,6 @@
 #import "WMPatientTableViewController.h"
 #import "WMPatientSummaryContainerViewController.h"
 #import "WMPatientReferralViewController.h"
-#import "WMPatientTableViewCell.h"
 #import "WMPatientAutoTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "WMPatient.h"
@@ -99,9 +98,8 @@
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
     self.navigationItem.hidesBackButton = YES;
-//    [self.tableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.tableView registerClass:[WMPatientAutoTableViewCell class] forCellReuseIdentifier:@"Cell"];
-    [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
+    [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientAutoTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
     _patientToOpen = self.patient;
     // show progress
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -200,14 +198,26 @@
     [_patientReadOnlyContainerView removeFromSuperview];
 }
 
-- (IBAction)navigateToPatientReferral:(id)sender
+- (IBAction)navigateToPatientReferral:(WMPatient *)patient
 {
-    NSInteger index = [sender tag];
-    WMPatient *patient = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
     WMPatientReferral *patientReferral = [patient patientReferralForReferree:self.appDelegate.participant];
     WMPatientReferralViewController *patientReferralViewController = self.patientReferralViewController;
     patientReferralViewController.patientReferral = patientReferral;
     [self.navigationController pushViewController:patientReferralViewController animated:YES];
+}
+
+- (IBAction)unarchivePatient:(WMPatient *)patient
+{
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    patient.archivedFlagValue = NO;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    [ff updateObj:patient onComplete:onComplete onOffline:onComplete];
 }
 
 #pragma mark - Notification handlers
@@ -284,9 +294,37 @@
     if (actionSheet.tag == kDeletePatientConfirmAlertTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [self deletePatient:_patientToDelete];
-            _patientToDelete = nil;
-            [self.tableView reloadData];
+        } else {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            };
+            NSManagedObjectContext *managedObjectContext = [_patientToDelete managedObjectContext];
+            NSInteger firstOtherButtonIndex = actionSheet.firstOtherButtonIndex;
+            NSInteger otherButtonIndex = buttonIndex - firstOtherButtonIndex;
+            switch (otherButtonIndex) {
+                case 0: {
+                    // Archive Patient
+                    _patientToDelete.archivedFlagValue = YES;
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    [ff updateObj:_patientToDelete onComplete:onComplete onOffline:onComplete];
+                    break;
+                }
+                case 1: {
+                    // Archive & Delete Photos
+                    _patientToDelete.archivedFlagValue = YES;
+                    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+                    [ffm deletePhotosForPatient:_patientToDelete];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    [ff updateObj:_patientToDelete onComplete:onComplete onOffline:onComplete];
+                    break;
+                }
+            }
         }
+        _patientToDelete = nil;
+        [self.tableView reloadData];
     }
 }
 
@@ -361,7 +399,7 @@
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"
                                                    destructiveButtonTitle:@"Delete Patient"
-                                                        otherButtonTitles:nil];
+                                                        otherButtonTitles:@"Archive Patient", @"Archive & Delete Photos", nil];
         actionSheet.tag = kDeletePatientConfirmAlertTag;
         [actionSheet showFromToolbar:self.navigationController.toolbar];
     }
@@ -436,7 +474,16 @@
     if (self.isShowingTeamPatients) {
         WMParticipant *participant = self.appDelegate.participant;
         WMPatientReferral *patientReferral = [patient patientReferralForReferree:participant];
-        [myCell updateForPatient:object patientReferral:patientReferral];
+        __weak __typeof(self) weakSelf = self;
+        [myCell updateForPatient:object patientReferral:patientReferral referralCallback:^(WMPatientAutoTableViewCell *myCell) {
+            if (myCell == cell) {
+                [weakSelf navigateToPatientReferral:patient];
+            }
+        } unarchiveCallback:^(WMPatientAutoTableViewCell *myCell) {
+            if (myCell == cell) {
+                [weakSelf unarchivePatient:patient];
+            }
+        }];
     } else {
         [myCell updateForPatientConsultant:object];
     }
@@ -470,6 +517,8 @@
                                                                            [NSPredicate predicateWithFormat:@"person.nameGiven CONTAINS[cd] %@", searchText],
                                                                            [NSPredicate predicateWithFormat:@"ids.extension CONTAINS[cd] %@", searchText],
                                                                            nil]];
+        } else {
+            predicate = [NSPredicate predicateWithFormat:@"%K == NO", WMPatientAttributes.archivedFlag];
         }
     }
     return predicate;

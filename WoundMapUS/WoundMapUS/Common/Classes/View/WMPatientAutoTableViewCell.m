@@ -21,6 +21,10 @@
 @property (strong, nonatomic) UILabel *identifierLabel;
 @property (strong, nonatomic) UILabel *statusLabel;
 @property (strong, nonatomic) UIButton *referralButton;
+@property (strong, nonatomic) UIButton *unarchiveButton;
+
+@property (strong, nonatomic) WMPatientReferralCallback referralCallback;
+@property (strong, nonatomic) WMPatientUnarchiveCallback unarchiveCallback;
 
 @property (nonatomic, strong) NSMutableArray *constraints;
 
@@ -60,10 +64,23 @@
         
         _referralButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _referralButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [_referralButton addTarget:self action:@selector(referralAction:) forControlEvents:UIControlEventTouchUpInside];
         [contentView addSubview:_referralButton];
+        
+        _unarchiveButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _unarchiveButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [_unarchiveButton addTarget:self action:@selector(unarchiveAction:) forControlEvents:UIControlEventTouchUpInside];
+        [contentView addSubview:_unarchiveButton];
         
     }
     return self;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    _referralCallback = nil;
+    _unarchiveCallback = nil;
 }
 
 - (void)updateConstraints
@@ -75,7 +92,7 @@
     
     UIView *contentView = self.contentView;
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_thumbnailImageView, _titleLabel, _identifierLabel, _statusLabel, _referralButton);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_thumbnailImageView, _titleLabel, _identifierLabel, _statusLabel, _referralButton, _unarchiveButton);
     NSDictionary *metrics = @{
                               @"Left" : @(self.separatorInset.left),
                               @"Right" : @(8),
@@ -94,6 +111,12 @@
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_statusLabel]-[_referralButton]-Right-|" options:NSLayoutFormatAlignAllBottom metrics:metrics views:views]];
         [constraints addObject:[NSLayoutConstraint constraintWithItem:_referralButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_titleLabel]-[_identifierLabel]-[_statusLabel]" options:NSLayoutFormatAlignAllLeft metrics:metrics views:views]];
+    } else if (_unarchiveButton.superview) {
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_titleLabel]-[_unarchiveButton]-Right-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_identifierLabel]-[_unarchiveButton]-Right-|" options:NSLayoutFormatAlignAllBottom metrics:metrics views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_statusLabel]-[_unarchiveButton]-Right-|" options:NSLayoutFormatAlignAllBottom metrics:metrics views:views]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:_unarchiveButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_titleLabel]-[_identifierLabel]-[_statusLabel]" options:NSLayoutFormatAlignAllLeft metrics:metrics views:views]];
     } else {
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_titleLabel]-Right-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_identifierLabel]-Right-|" options:NSLayoutFormatDirectionLeftToRight metrics:metrics views:views]];
@@ -105,7 +128,10 @@
     [_thumbnailImageView setNeedsDisplay];
 }
 
-- (void)updateForPatient:(WMPatient *)patient patientReferral:(WMPatientReferral *)patientReferral
+- (void)updateForPatient:(WMPatient *)patient
+         patientReferral:(WMPatientReferral *)patientReferral
+        referralCallback:(WMPatientReferralCallback)referralCallback
+       unarchiveCallback:(WMPatientUnarchiveCallback)unarchiveCallback
 {
     _constraints = nil;
     UIView *contentView = self.contentView;
@@ -119,6 +145,16 @@
     } else {
         [_referralButton removeFromSuperview];
     }
+    if (patient.archivedFlagValue) {
+        if (nil == _unarchiveButton.superview) {
+            [contentView addSubview:_unarchiveButton];
+            // update button image
+            [_unarchiveButton setTitle:@"Unarchive" forState:UIControlStateNormal];
+            [_unarchiveButton sizeToFit];
+        }
+    } else {
+        [_unarchiveButton removeFromSuperview];
+    }
     [_thumbnailImageView updateForPatient:patient];
     _titleLabel.text = patient.lastNameFirstName;
     if ([patient.identifierEMR length]) {
@@ -129,11 +165,29 @@
     _statusLabel.text = patient.patientStatusMessages;
     [self updateConstraintsIfNeeded];
 //    [self performSelector:@selector(debugSubviews) withObject:nil afterDelay:1.0];
+    _referralCallback = [referralCallback copy];
+    _unarchiveCallback = [unarchiveCallback copy];
 }
 
 - (void)updateForPatientConsultant:(WMPatientConsultant *)patientConsultant
 {
-    [self updateForPatient:patientConsultant.patient patientReferral:nil];
+    [self updateForPatient:patientConsultant.patient patientReferral:nil referralCallback:nil unarchiveCallback:nil];
+}
+
+#pragma mark - Actions
+
+- (IBAction)referralAction:(id)sender
+{
+    if (_referralCallback) {
+        _referralCallback(self);
+    }
+}
+
+- (IBAction)unarchiveAction:(id)sender
+{
+    if (_unarchiveCallback) {
+        _unarchiveCallback(self);
+    }
 }
 
 // DEBUG

@@ -8,11 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class WMPatientAutoTableViewCell;
 @class WMPatient, WMPatientConsultant, WMPatientReferral;
+
+typedef void (^WMPatientReferralCallback)(WMPatientAutoTableViewCell *cell);
+typedef void (^WMPatientUnarchiveCallback)(WMPatientAutoTableViewCell *cell);
 
 @interface WMPatientAutoTableViewCell : UITableViewCell
 
-- (void)updateForPatient:(WMPatient *)patient patientReferral:(WMPatientReferral *)patientReferral;
+- (void)updateForPatient:(WMPatient *)patient
+         patientReferral:(WMPatientReferral *)patientReferral
+        referralCallback:(WMPatientReferralCallback)referralCallback
+       unarchiveCallback:(WMPatientUnarchiveCallback)unarchiveCallback;
+
 - (void)updateForPatientConsultant:(WMPatientConsultant *)patientConsultant;
 
 

@@ -848,7 +848,6 @@
 - (NSInteger)deleteExpiredPhotos:(WMTeamPolicy *)teamPolicy
 {
     NSManagedObjectContext *managedObjectContext = [teamPolicy managedObjectContext];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -856,6 +855,27 @@
     };
     NSDate *dateExpires = [WMUtilities dateByAddingMonths:-teamPolicy.numberOfMonthsToDeletePhotoBlobsValue toDate:nil];
     NSArray *woundPhotos = [WMWoundPhoto MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K < %@", WMWoundPhotoAttributes.createdAt, dateExpires] inContext:managedObjectContext];
+    [self deletePhotosForWoundPhotos:woundPhotos onComplete:onComplete];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    return [woundPhotos count];
+}
+
+- (void)deletePhotosForPatient:(WMPatient *)patient
+{
+    NSArray *woundPhotos = [patient valueForKeyPath:[NSString stringWithFormat:@"%@.@distinctUnionOfSets.%@", WMPatientRelationships.wounds, WMWoundRelationships.photos]];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    [self deletePhotosForWoundPhotos:woundPhotos onComplete:onComplete];
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+}
+
+- (void)deletePhotosForWoundPhotos:(NSArray *)woundPhotos onComplete:(FFHttpMethodCompletion)onComplete
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     for (WMWoundPhoto *woundPhoto in woundPhotos) {
         woundPhoto.photoDeletedPerTeamPolicy = YES;
         [ff deleteBlobForObj:woundPhoto
@@ -876,11 +896,10 @@
                       memberName:WMPhotoAttributes.photo
                       onComplete:onComplete onOffline:onComplete];
             photo.photo = nil;
+            [ff updateObj:photo onComplete:onComplete onOffline:onComplete];
         }
         [ff updateObj:woundPhoto onComplete:onComplete onOffline:onComplete];
     }
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
-    return [woundPhotos count];
 }
 
 #pragma mark - Patient

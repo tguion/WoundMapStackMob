@@ -65,5 +65,6 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 - (BOOL)updateMedication:(WMFatFractal *)ff managedObjectContext:(NSManagedObjectContext *)managedObjectContext completionHandler:(FFHttpMethodCompletion)completionHandler;
 
 - (NSInteger)deleteExpiredPhotos:(WMTeamPolicy *)teamPolicy;
+- (void)deletePhotosForPatient:(WMPatient *)patient;
 
 @end
