@@ -10,6 +10,7 @@
 #import "WMIdEditorViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "WMId.h"
+#import "WMUserDefaultsManager.h"
 
 @interface WMIdListViewController () <idEditorViewControllerDelegate>
 
@@ -106,6 +107,10 @@
 {
     WMIdEditorViewController *idEditorViewController = self.idEditorViewController;
     idEditorViewController.anId = anId;
+    if (nil == anId.root) {
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        anId.root = userDefaultsManager.defaultIdRoot;
+    }
     [self.navigationController pushViewController:idEditorViewController animated:YES];
 }
 
@@ -161,6 +166,11 @@
     [self.navigationController popViewControllerAnimated:YES];
     _ids = nil;
     [self.tableView reloadData];
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    NSString *defaultIdRoot = userDefaultsManager.defaultIdRoot;
+    if (nil == defaultIdRoot && nil != anId.root) {
+        userDefaultsManager.defaultIdRoot = anId.root;
+    }
 }
 
 - (void)idEditorViewControllerDidCancel:(WMIdEditorViewController *)viewController

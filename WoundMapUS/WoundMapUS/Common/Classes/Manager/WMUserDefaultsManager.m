@@ -146,6 +146,18 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSString *)defaultIdRoot
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.defaultIdRoot"];
+}
+
+- (void)setDefaultIdRoot:(NSString *)defaultIdRoot
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:defaultIdRoot forKey:@"com.mobilehealthware.woundmap.defaultIdRoot"];
+    [userDefaults synchronize];
+}
+
 #pragma mark - FF
 
 - (NSDictionary *)lastRefreshTimeMap

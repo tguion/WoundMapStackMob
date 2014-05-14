@@ -332,6 +332,7 @@
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
 {
+    [self setEditing:NO];
     self.navigationItem.leftBarButtonItem = nil;
     if (self.navigationItem.rightBarButtonItem.target == self) {
         self.navigationItem.rightBarButtonItem = nil;
@@ -349,9 +350,14 @@
                                                                                            action:@selector(doneAction:)];
 }
 
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [self refetchDataForTableView];
+}
+
 #pragma mark - UISearchDisplayDelegate
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView
+- (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
 {
     [self refetchDataForTableView];
 }

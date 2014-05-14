@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import "UIView+Custom.h"
 #import "WMPatient.h"
+#import "WMId.h"
 #import "WMMedicalHistoryGroup.h"
 #import "WMPerson.h"
 #import "WMNavigationTrack.h"
@@ -27,6 +28,7 @@
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
+#import <AVFoundation/AVFoundation.h>
 
 typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     None,
@@ -34,7 +36,17 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     RelevantMedications
 };
 
-@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate, MedicalHistoryViewControllerDelegate, NoteViewControllerDelegate>
+@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate, MedicalHistoryViewControllerDelegate, NoteViewControllerDelegate, AVCaptureMetadataOutputObjectsDelegate>
+{
+    AVCaptureSession *_session;
+    AVCaptureDevice *_device;
+    AVCaptureDeviceInput *_input;
+    AVCaptureMetadataOutput *_output;
+    AVCaptureVideoPreviewLayer *_prevLayer;
+    
+    UIView *_highlightView;
+    UILabel *_label;
+}
 
 // data
 @property (strong, nonatomic) WMPatient *patient;       // create patient if new patient, otherwise we hold a strong reference to the active patient (held by navigationCoordinator)
@@ -57,6 +69,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 - (IBAction)dateOfBirthChangedValueAction:(id)sender;
 - (IBAction)dismissDatePickerAction:(id)sender;
 - (IBAction)previousNextAction:(id)sender;
+
+- (IBAction)readBarCodeAction:(id)sender;
 
 @end
 
@@ -273,6 +287,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             [ffm updatePatient:_patient ff:[WMFatFractal sharedInstance] completionHandler:completionHandler];
         }
     }
+    // support for bar code reading http://www.infragistics.com/community/blogs/torrey-betts/archive/2013/10/10/scanning-barcodes-with-ios-7-objective-c.aspx
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -469,6 +484,112 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
     }];
+}
+
+- (IBAction)readBarCodeAction:(id)sender
+{
+    _highlightView = [[UIView alloc] init];
+    _highlightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
+    _highlightView.layer.borderColor = [UIColor greenColor].CGColor;
+    _highlightView.layer.borderWidth = 3;
+    [self.view addSubview:_highlightView];
+    
+    _label = [[UILabel alloc] init];
+    _label.frame = CGRectMake(0, self.view.bounds.size.height - 40, self.view.bounds.size.width, 40);
+    _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    _label.backgroundColor = [UIColor colorWithWhite:0.15 alpha:0.65];
+    _label.textColor = [UIColor whiteColor];
+    _label.textAlignment = NSTextAlignmentCenter;
+    _label.text = @"(none)";
+    [self.view addSubview:_label];
+    
+    _session = [[AVCaptureSession alloc] init];
+    _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSError *error = nil;
+    
+    _input = [AVCaptureDeviceInput deviceInputWithDevice:_device error:&error];
+    if (_input) {
+        [_session addInput:_input];
+    } else {
+        NSLog(@"Error: %@", error);
+    }
+    
+    _output = [[AVCaptureMetadataOutput alloc] init];
+    [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+    [_session addOutput:_output];
+    
+    _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
+    
+    _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
+    _prevLayer.frame = self.view.bounds;
+    _prevLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.view.layer addSublayer:_prevLayer];
+    
+    [_session startRunning];
+    
+    [self.view bringSubviewToFront:_highlightView];
+    [self.view bringSubviewToFront:_label];
+}
+
+#pragma mark - AVCaptureMetadataOutputObjectsDelegate
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+{
+    CGRect highlightViewRect = CGRectZero;
+    AVMetadataMachineReadableCodeObject *barCodeObject;
+    NSString *detectionString = nil;
+    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
+                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
+                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
+    
+    for (AVMetadataObject *metadata in metadataObjects) {
+        for (NSString *type in barCodeTypes) {
+            if ([metadata.type isEqualToString:type])
+            {
+                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
+                highlightViewRect = barCodeObject.bounds;
+                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
+                break;
+            }
+        }
+        
+        if (detectionString != nil)
+        {
+            _label.text = detectionString;
+            break;
+        }
+        else
+            _label.text = @"(none)";
+    }
+    
+    _highlightView.frame = highlightViewRect;
+    
+    [_session stopRunning];
+    [_highlightView removeFromSuperview];
+    [_label removeFromSuperview];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    WMId *anId = [WMId MR_createInContext:managedObjectContext];
+    anId.extension = detectionString;
+    [patient addIdsObject:anId];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff grabBagAddItemAtFfUrl:anId.ffUrl
+                     toObjAtFfUrl:patient.ffUrl
+                      grabBagName:WMPatientRelationships.ids
+                       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                           if (error) {
+                               [WMUtilities logError:error];
+                           }
+                           WMIdListViewController *idListViewController = weakSelf.idListViewController;
+                           [weakSelf.navigationController pushViewController:idListViewController animated:YES];
+                       }];
+    };
+    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:onComplete onOffline:onComplete];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -794,6 +915,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     NSString *string = ([patient.ids count] == 1 ? @"Identifier":@"Identifiers");
                     cell.detailTextLabel.text = [NSString stringWithFormat:@"%lu %@", (unsigned long)[patient.ids count], string];
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+                    [button setImage:[UIImage imageNamed:@"ui_rabbit"] forState:UIControlStateNormal];
+                    [button addTarget:self action:@selector(readBarCodeAction:) forControlEvents:UIControlEventTouchUpInside];
+                    cell.accessoryView = button;
                     break;
                 }
             }
