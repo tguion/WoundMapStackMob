@@ -59,13 +59,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     return _ff;
 }
 
-- (void)demo
-{
-    if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-    }
-}
-
 - (void)signOut
 {
     WMFatFractal *ff = self.ff;
@@ -154,6 +147,10 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 //        // initialize UI
 //        [self initializeInterface];
 //    }
+    // Register the preference defaults early.
+    NSDictionary *appDefaults = @{@"com.mobilehealthware.woundmap.defaultIdRoot": @"2.16.840.1.113883.3.933"};
+    [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
+
     [self initializeInterface];
     return YES;
 }
@@ -205,7 +202,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [self demo];
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

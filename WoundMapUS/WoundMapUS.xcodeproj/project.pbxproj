@@ -446,6 +446,11 @@
 		7DD8376318C7A5080028C2D3 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375918C7A5080028C2D3 /* AFXMLRequestOperation.m */; };
 		7DD8376418C7A5080028C2D3 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */; };
 		7DD8376818C8B3980028C2D3 /* WMNetworkReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */; };
+		7DDA8D96192550B000A1AFB7 /* NMSSH.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D95192550B000A1AFB7 /* NMSSH.framework */; };
+		7DDA8D9A1925511000A1AFB7 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D991925511000A1AFB7 /* libz.dylib */; };
+		7DDA8D9C1925511B00A1AFB7 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */; };
+		7DDA8DA01925544C00A1AFB7 /* WMFTPConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDA8D9E1925544C00A1AFB7 /* WMFTPConfigurationViewController.m */; };
+		7DDA8DA11925544C00A1AFB7 /* WMFTPConfigurationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA8D9F1925544C00A1AFB7 /* WMFTPConfigurationViewController.xib */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
 		7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */; };
 		7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */; };
@@ -1333,6 +1338,12 @@
 		7DD8375B18C7A5080028C2D3 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		7DD8376618C8B3980028C2D3 /* WMNetworkReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNetworkReachability.h; sourceTree = "<group>"; };
 		7DD8376718C8B3980028C2D3 /* WMNetworkReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNetworkReachability.m; sourceTree = "<group>"; };
+		7DDA8D95192550B000A1AFB7 /* NMSSH.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NMSSH.framework; sourceTree = "<group>"; };
+		7DDA8D991925511000A1AFB7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		7DDA8D9D1925544C00A1AFB7 /* WMFTPConfigurationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFTPConfigurationViewController.h; sourceTree = "<group>"; };
+		7DDA8D9E1925544C00A1AFB7 /* WMFTPConfigurationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFTPConfigurationViewController.m; sourceTree = "<group>"; };
+		7DDA8D9F1925544C00A1AFB7 /* WMFTPConfigurationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMFTPConfigurationViewController.xib; sourceTree = "<group>"; };
 		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
 		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
 		7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressEditorViewController.h; sourceTree = "<group>"; };
@@ -1574,6 +1585,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DDA8D9C1925511B00A1AFB7 /* CFNetwork.framework in Frameworks */,
+				7DDA8D9A1925511000A1AFB7 /* libz.dylib in Frameworks */,
+				7DDA8D96192550B000A1AFB7 /* NMSSH.framework in Frameworks */,
 				7D10CE3418E0CFBD00AD43E3 /* FFEF.framework in Frameworks */,
 				7DF4E9D918C4CF58000A3F5B /* libCorePlot-CocoaTouch.a in Frameworks */,
 				7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */,
@@ -1956,6 +1970,9 @@
 		7DB2060718A7D3400004DC32 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */,
+				7DDA8D991925511000A1AFB7 /* libz.dylib */,
+				7DDA8D95192550B000A1AFB7 /* NMSSH.framework */,
 				7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */,
 				7DB2068418A7D4320004DC32 /* CoreLocation.framework */,
 				7DB2068518A7D4320004DC32 /* MobileCoreServices.framework */,
@@ -2287,6 +2304,9 @@
 				7D39DB1418B7FBA10054DDC3 /* WMWoundTreatmentViewController.h */,
 				7D39DB1518B7FBA10054DDC3 /* WMWoundTreatmentViewController.m */,
 				7D39DB1618B7FBA10054DDC3 /* WMWoundTreatmentViewController.xib */,
+				7DDA8D9D1925544C00A1AFB7 /* WMFTPConfigurationViewController.h */,
+				7DDA8D9E1925544C00A1AFB7 /* WMFTPConfigurationViewController.m */,
+				7DDA8D9F1925544C00A1AFB7 /* WMFTPConfigurationViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3260,6 +3280,7 @@
 				7D10CE2418DDF26300AD43E3 /* WMMedicationSummaryViewController.xib in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
 				7D10CD7C18D63B1600AD43E3 /* WMTelecomListViewController.xib in Resources */,
+				7DDA8DA11925544C00A1AFB7 /* WMFTPConfigurationViewController.xib in Resources */,
 				7D39DB5018B827AB0054DDC3 /* WMTakePatientPhotoViewController.xib in Resources */,
 				7DDBEDD818BEA6E700FEF3FA /* WMBradenScaleInputViewController.xib in Resources */,
 				7D68946519043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib in Resources */,
@@ -3511,6 +3532,7 @@
 				7D68947719044427006DE509 /* WMWoundPhotoViewController.m in Sources */,
 				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
 				7DF4E93618C22F27000A3F5B /* WMWoundLocationValue.m in Sources */,
+				7DDA8DA01925544C00A1AFB7 /* WMFTPConfigurationViewController.m in Sources */,
 				7DDEE28818F49E5500AF9FC6 /* WMMedicalHistoryViewController.m in Sources */,
 				7D13027E18D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m in Sources */,
 				7D10CD7718D618CD00AD43E3 /* WMTeamInvitation.m in Sources */,

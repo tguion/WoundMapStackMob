@@ -53,7 +53,7 @@
 {
     self.textLabel.text = labelText;
     [self.textLabel sizeToFit];
-    _textField.text = valueText;
+    _textField.text = (valueText ? valueText:@"");
     _textField.placeholder = promptText;
     [self updateConstraintsIfNeeded];
 }

@@ -29,6 +29,11 @@
 @property (nonatomic) NSString *woundPositionTermKey;           // key used to display wound position (Left, Right, etc)
 @property (nonatomic) NSString *defaultIdRoot;
 
+@property (nonatomic) NSString *lastFTPHost;
+@property (nonatomic) NSString *lastFTPPath;
+@property (nonatomic) NSString *lastFTPUserName;
+@property (nonatomic) NSString *lastFTPPassword;
+
 - (WMNavigationTrack *)defaultNavigationTrack:(NSManagedObjectContext *)managedObjectContext;
 
 - (NSString *)lastWoundFFURLOnDeviceForPatientFFURL:(NSString *)ffUrl;

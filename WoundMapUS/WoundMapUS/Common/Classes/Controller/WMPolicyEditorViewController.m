@@ -829,7 +829,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
                     textField.delegate = self;
                     textField.inputAccessoryView = self.inputAccessoryView;
                     [myCell updateWithLabelText:@"Number of Months"
-                                      valueText:[NSString stringWithFormat:@"%@", teamPolicy.numberOfMonthsToDeletePhotoBlobs]
+                                      valueText:(teamPolicy.numberOfMonthsToDeletePhotoBlobs ? [NSString stringWithFormat:@"%@", teamPolicy.numberOfMonthsToDeletePhotoBlobs]:nil)
                                     valuePrompt:@"Enter number months"];
                     break;
                 }

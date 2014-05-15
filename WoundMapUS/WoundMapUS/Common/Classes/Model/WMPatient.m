@@ -165,12 +165,12 @@ typedef enum {
             }
         }
         if (nil == date1) {
-            [strings addObject:[NSString stringWithFormat:@"Wounds: %d, photos: none", [wounds count]]];
+            [strings addObject:[NSString stringWithFormat:@"Wounds: %lu, photos: none", (unsigned long)[wounds count]]];
             
         } else {
-            [strings addObject:[NSString stringWithFormat:@"Wounds: %d, photos: %d (%@-%@)",
-                                [wounds count],
-                                woundPhotoCount,
+            [strings addObject:[NSString stringWithFormat:@"Wounds: %lu, photos: %ld (%@-%@)",
+                                (unsigned long)[wounds count],
+                                (long)woundPhotoCount,
                                 [NSDateFormatter localizedStringFromDate:date1
                                                                dateStyle:NSDateFormatterShortStyle
                                                                timeStyle:NSDateFormatterNoStyle],
@@ -192,9 +192,9 @@ typedef enum {
         } else {
             NSDate *date1 = minimumMaximumDates[@"minDate"];//[woundPhotos valueForKeyPath:@"@min.dateCreated"];
             NSDate *date2 = minimumMaximumDates[@"maxDate"];//[woundPhotos valueForKeyPath:@"@max.dateCreated"];
-            [strings addObject:[NSString stringWithFormat:@"%@ %d photos (%@-%@)",
+            [strings addObject:[NSString stringWithFormat:@"%@ %ld photos (%@-%@)",
                                 wound.shortName,
-                                count,
+                                (long)count,
                                 [NSDateFormatter localizedStringFromDate:date1
                                                                dateStyle:NSDateFormatterShortStyle
                                                                timeStyle:NSDateFormatterNoStyle],

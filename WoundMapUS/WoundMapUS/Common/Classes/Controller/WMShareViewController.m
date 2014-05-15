@@ -10,6 +10,7 @@
 #import "WMPrintConfigureViewController.h"
 #import "IAPNonConsumableViewController.h"
 #import "WMPatientReferralViewController.h"
+#import "WMFTPConfigurationViewController.h"
 #import "PrintConfiguration.h"
 #import "WMParticipant.h"
 #import "WMMedicationGroup.h"
@@ -26,7 +27,7 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@interface WMShareViewController () <PrintConfigureViewControllerDelegate, MFMailComposeViewControllerDelegate, PatientReferralDelegate>
+@interface WMShareViewController () <PrintConfigureViewControllerDelegate, MFMailComposeViewControllerDelegate, PatientReferralDelegate, FTPConfigurationDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *creditStatus;
 @property (weak, nonatomic) IBOutlet UIButton *purchaseMoreTokensButton;
@@ -36,6 +37,7 @@
 
 @property (readonly, nonatomic) WMPrintConfigureViewController *printConfigureViewController;
 @property (readonly, nonatomic) WMPatientReferralViewController *patientReferralViewController;
+@property (readonly, nonatomic) WMFTPConfigurationViewController *ftpConfigurationViewController;
 
 @property (strong, nonatomic) WMPatientReferral *patientReferral;
 
@@ -182,6 +184,13 @@ CGFloat kCreditsMargin = 20;
     return patientReferralViewController;
 }
 
+- (WMFTPConfigurationViewController *)ftpConfigurationViewController
+{
+    WMFTPConfigurationViewController *viewController = [[WMFTPConfigurationViewController alloc] initWithNibName:@"WMFTPConfigurationViewController" bundle:nil];
+    viewController.delegate = self;
+    return viewController;
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToEmailClinicalAssessmentDocument
@@ -297,10 +306,18 @@ CGFloat kCreditsMargin = 20;
             break;
         }
         case SelectWoundAndActionShareOption_FTP: {
+            NSURL *url = [pdfPrintManager pdfURLForPatient:controller.patient];
+            [pdfPrintManager drawPDFToURL:url forPatient:controller.patient printConfiguration:printConfiguration];
+            WMFTPConfigurationViewController *viewController = self.ftpConfigurationViewController;
+            viewController.url = url;
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            navigationController.delegate = self.appDelegate;
+            [self presentViewController:navigationController animated:YES completion:^{
+                // nothing
+            }];
             break;
         }
         case SelectWoundAndActionShareOption_EMR: {
-            // TODO: send via sftp and burn a credit
             break;
         }
         case SelectWoundAndActionShareOption_iCloud: {
@@ -333,29 +350,45 @@ CGFloat kCreditsMargin = 20;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark - FTPConfigurationDelegate
+
+- (void)ftpConfigurationViewControllerDidFinish:(WMFTPConfigurationViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
 #pragma mark - IAPManager support
 
-- (void)navigateToSharePdfReportView {
-    // Do not navigate to Share Record view if no wounds or missing photos on wounds.
-    if ([self hasAdequateWoundInformation]) {
-        // not coming from navigation node so hardcoding
-        NSString *productIdentifier = @"pdf report aggregator";
-        __weak __typeof(self) weakSelf = self;
-        BOOL proceed = [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                                             successBlock:^{
-                                                                 [weakSelf navigateToPrintConfigureViewController];
-                                                             } withObject:self.selectPDFSectionFooterView];
-        // self.shareButton.superview
-        if (proceed) {
-            [self navigateToPrintConfigureViewController];
-        }
+- (void)navigateToSharePdfReportView
+{
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    if (team) {
+        [self navigateToPrintConfigureViewController];
     } else {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Wound Information"
-                                                            message:@"At least one wound must exist and all wounds must have photos in order to share documents."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        // Do not navigate to Share Record view if no wounds or missing photos on wounds.
+        if ([self hasAdequateWoundInformation]) {
+            // not coming from navigation node so hardcoding
+            NSString *productIdentifier = @"pdf report aggregator";
+            __weak __typeof(self) weakSelf = self;
+            BOOL proceed = [self presentIAPViewControllerForProductIdentifier:productIdentifier
+                                                                 successBlock:^{
+                                                                     [weakSelf navigateToPrintConfigureViewController];
+                                                                 } withObject:self.selectPDFSectionFooterView];
+            // self.shareButton.superview
+            if (proceed) {
+                [self navigateToPrintConfigureViewController];
+            }
+        } else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Wound Information"
+                                                                message:@"At least one wound must exist and all wounds must have photos in order to share documents."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }
     }
 }
 
@@ -397,13 +430,11 @@ CGFloat kCreditsMargin = 20;
                 case 0: {
                     // Print - should navigate to a print configure view controller ???
                     self.shareOption = SelectWoundAndActionShareOption_Print;
-                    [self navigateToSharePdfReportView];
                     break;
                 }
                 case 1: {
                     // Email
                     self.shareOption = SelectWoundAndActionShareOption_Email;
-                    [self navigateToSharePdfReportView];
                     break;
                 }
                 case 2: {
@@ -422,6 +453,7 @@ CGFloat kCreditsMargin = 20;
                     break;
                 }
             }
+            [self navigateToSharePdfReportView];
             break;
         }
         case 1: {
@@ -445,6 +477,11 @@ CGFloat kCreditsMargin = 20;
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     CGFloat height = 0.0;
+    WMParticipant *participant = self.appDelegate.participant;
+    if (participant.team) {
+        return height;
+    }
+    // else
     switch (section) {
         case 0: {
             height = 20.0 + CGRectGetHeight(_creditStatus.frame) + 8.0 + CGRectGetHeight(_purchaseMoreTokensButton.frame) + 20.0;
@@ -456,6 +493,11 @@ CGFloat kCreditsMargin = 20;
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    WMParticipant *participant = self.appDelegate.participant;
+    if (participant.team) {
+        return nil;
+    }
+    // else
     UIView *view = nil;
     switch (section) {
         case 0: {

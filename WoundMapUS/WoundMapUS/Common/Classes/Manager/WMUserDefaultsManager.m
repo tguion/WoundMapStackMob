@@ -259,5 +259,54 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+#pragma mark - FTP
+
+- (NSString *)lastFTPHost
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.ftpHost"];
+}
+
+- (void)setLastFTPHost:(NSString *)lastFTPHost
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastFTPHost forKey:@"com.mobilehealthware.woundmap.ftpHost"];
+    [userDefaults synchronize];
+}
+
+- (NSString *)lastFTPPath
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.ftpPath"];
+}
+
+- (void)setLastFTPPath:(NSString *)lastFTPPath
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastFTPPath forKey:@"com.mobilehealthware.woundmap.ftpPath"];
+    [userDefaults synchronize];
+}
+
+- (NSString *)lastFTPUserName
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.ftpUserName"];
+}
+
+- (void)setLastFTPUserName:(NSString *)lastFTPUserName
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastFTPUserName forKey:@"com.mobilehealthware.woundmap.ftpUserName"];
+    [userDefaults synchronize];
+}
+
+- (NSString *)lastFTPPassword
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.ftpPassword"];
+}
+
+- (void)setLastFTPPassword:(NSString *)lastFTPPassword
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setValue:lastFTPPassword forKey:@"com.mobilehealthware.woundmap.ftpPassword"];
+    [userDefaults synchronize];
+}
 
 @end
