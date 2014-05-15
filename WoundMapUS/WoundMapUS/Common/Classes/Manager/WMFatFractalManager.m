@@ -359,6 +359,7 @@
             completionHandler(response.error);
         } else {
             NSSet *patients = [NSSet setWithArray:response.objs];
+            [patients makeObjectsPerformSelector:@selector(updatePatientStatusMessages)];
             [localPatients minusSet:patients];
             [managedObjectContext MR_deleteObjects:localPatients];
             [managedObjectContext MR_saveToPersistentStoreAndWait];

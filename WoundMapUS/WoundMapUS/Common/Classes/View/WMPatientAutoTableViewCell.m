@@ -30,6 +30,7 @@
 @property (strong, nonatomic) WMPatientUnarchiveCallback unarchiveCallback;
 
 @property (nonatomic, strong) NSMutableArray *constraints;
+@property (nonatomic, strong) NSMutableArray *labelsConstraints;
 
 @end
 
@@ -94,13 +95,6 @@
         [_thumbnailImageView addConstraint:[NSLayoutConstraint constraintWithItem:_thumbnailImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:57.0]];
         [_thumbnailImageView addConstraint:[NSLayoutConstraint constraintWithItem:_thumbnailImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:57.0]];
 
-        NSMutableArray *constraints = [NSMutableArray array];
-        NSDictionary *views = NSDictionaryOfVariableBindings(_titleLabel, _identifierLabel, _statusLabel);
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_titleLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_identifierLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_statusLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleLabel]-(>=8)-[_identifierLabel]-(>=8)-[_statusLabel]|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-        [_labelContainerView addConstraints:constraints];
     }
     return self;
 }
@@ -115,9 +109,12 @@
 
 - (void)setNeedsUpdateConstraints
 {
-    if (_constraints)
+    if (_constraints) {
         [self.contentView removeConstraints:_constraints];
+        [_labelContainerView removeConstraints:_labelsConstraints];
+    }
     _constraints = nil;
+    _labelsConstraints = nil;
     [super setNeedsUpdateConstraints];
 }
 
@@ -142,10 +139,20 @@
 
     [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topSpacerView]|" options:NSLayoutFormatAlignAllTop metrics:nil views:views]];
     [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomSpacerView]|" options:NSLayoutFormatAlignAllTop metrics:nil views:views]];
-    [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView]-[_labelContainerView]|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
+    [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView][_labelContainerView]|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
     [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topSpacerView][_labelContainerView][_bottomSpacerView(_topSpacerView)]|" options:NSLayoutFormatAlignAllRight metrics:metrics views:views]];
     
     [contentView addConstraints:_constraints];
+    
+    _labelsConstraints = [NSMutableArray array];
+    
+    views = NSDictionaryOfVariableBindings(_titleLabel, _identifierLabel, _statusLabel);
+    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_titleLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_identifierLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_statusLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleLabel][_identifierLabel][_statusLabel]-(>=8)-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+    [_labelContainerView addConstraints:_labelsConstraints];
+
     
     [super updateConstraints];
     [_thumbnailImageView setNeedsDisplay];

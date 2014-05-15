@@ -143,6 +143,72 @@ typedef enum {
     return [WMPatient missingThumbnailImage];
 }
 
+- (NSString *)updatePatientStatusMessages
+{
+    NSMutableArray *strings = [[NSMutableArray alloc] initWithCapacity:4];
+    // wounds/photos
+    NSArray *wounds = self.sortedWounds;
+    if ([wounds count] > 1) {
+        NSDate *date1 = nil;
+        NSDate *date2 = nil;
+        NSInteger woundPhotoCount = 0;
+        for (WMWound *wound in wounds) {
+            woundPhotoCount += wound.woundPhotosCount;
+            NSDictionary *minimumMaximumDates = wound.minimumAndMaximumWoundPhotoDates;
+            NSDate *date = minimumMaximumDates[@"minDate"];
+            if (nil == date1 || [date compare:date1] == NSOrderedAscending) {
+                date1 = date;
+            }
+            date = minimumMaximumDates[@"maxDate"];
+            if (nil == date2 || [date compare:date2] == NSOrderedDescending) {
+                date2 = date;
+            }
+        }
+        if (nil == date1) {
+            [strings addObject:[NSString stringWithFormat:@"Wounds: %d, photos: none", [wounds count]]];
+            
+        } else {
+            [strings addObject:[NSString stringWithFormat:@"Wounds: %d, photos: %d (%@-%@)",
+                                [wounds count],
+                                woundPhotoCount,
+                                [NSDateFormatter localizedStringFromDate:date1
+                                                               dateStyle:NSDateFormatterShortStyle
+                                                               timeStyle:NSDateFormatterNoStyle],
+                                [NSDateFormatter localizedStringFromDate:date2
+                                                               dateStyle:NSDateFormatterShortStyle
+                                                               timeStyle:NSDateFormatterNoStyle]]];
+        }
+    } else if ([wounds count] == 1) {
+        WMWound *wound = [wounds lastObject];
+        NSInteger count = wound.woundPhotosCount;
+        NSDictionary *minimumMaximumDates = wound.minimumAndMaximumWoundPhotoDates;
+        if (0 == count) {
+            [strings addObject:[NSString stringWithFormat:@"Wound %@ 0 photos", wound.shortName]];
+        } else if (1 == count) {
+            NSDate *date = minimumMaximumDates[@"minDate"];
+            [strings addObject:[NSString stringWithFormat:@"%@ 1 photo (%@)", wound.shortName, [NSDateFormatter localizedStringFromDate:date
+                                                                                                                              dateStyle:NSDateFormatterShortStyle
+                                                                                                                              timeStyle:NSDateFormatterNoStyle]]];
+        } else {
+            NSDate *date1 = minimumMaximumDates[@"minDate"];//[woundPhotos valueForKeyPath:@"@min.dateCreated"];
+            NSDate *date2 = minimumMaximumDates[@"maxDate"];//[woundPhotos valueForKeyPath:@"@max.dateCreated"];
+            [strings addObject:[NSString stringWithFormat:@"%@ %d photos (%@-%@)",
+                                wound.shortName,
+                                count,
+                                [NSDateFormatter localizedStringFromDate:date1
+                                                               dateStyle:NSDateFormatterShortStyle
+                                                               timeStyle:NSDateFormatterNoStyle],
+                                [NSDateFormatter localizedStringFromDate:date2
+                                                               dateStyle:NSDateFormatterShortStyle
+                                                               timeStyle:NSDateFormatterNoStyle]]];
+        }
+    } else {
+        [strings addObject:@"No wounds identified"];
+    }
+    self.patientStatusMessages = [strings componentsJoinedByString:@"|"];
+    return self.patientStatusMessages;
+}
+
 + (UIImage *)missingThumbnailImage
 {
     NSString *avitarFileName = @"user_";

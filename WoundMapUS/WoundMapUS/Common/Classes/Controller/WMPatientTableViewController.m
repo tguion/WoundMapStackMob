@@ -357,10 +357,15 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    [self refetchDataForCoreTableView];
+    [self performSelector:@selector(refetchDataForCoreTableView) withObject:nil afterDelay:0.1];
 }
 
 #pragma mark - UISearchDisplayDelegate
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView
+{
+    [self refetchDataForCoreTableView];
+}
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
 {
@@ -461,24 +466,6 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-//    UIView *accessoryView = nil;
-//    if (self.isShowingTeamPatients) {
-//        WMParticipant *participant = self.appDelegate.participant;
-//        WMPatientReferral *patientReferral = [patient patientReferralForReferree:participant];
-//        if (patientReferral) {
-//            UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-//            button.tag = indexPath.row;
-//            [button setTitle:@"Referral" forState:UIControlStateNormal];
-//            [button addTarget:self action:@selector(navigateToPatientReferral:) forControlEvents:UIControlEventTouchUpInside];
-//            [button sizeToFit];
-//            accessoryView = button;
-//        }
-//    }
-//    if (accessoryView) {
-//        cell.accessoryView = accessoryView;
-//    } else {
-//        cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
-//    }
     WMPatient *patient = [self patientAtIndexPath:indexPath];
     WMPatientAutoTableViewCell *myCell = (WMPatientAutoTableViewCell *)cell;
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];

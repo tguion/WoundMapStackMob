@@ -38,6 +38,7 @@ extern NSString * const kConsultantGroupName;
 
 - (WMPatientReferral *)patientReferralForReferree:(WMParticipant *)referee;
 - (BOOL)updateNavigationToTeam:(WMTeam *)team;
+- (NSString *)updatePatientStatusMessages;
 
 + (WMPatient *)lastModifiedActivePatient:(NSManagedObjectContext *)managedObjectContext;
 
