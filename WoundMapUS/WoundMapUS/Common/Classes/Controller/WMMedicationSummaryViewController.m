@@ -7,8 +7,11 @@
 //
 
 #import "WMMedicationSummaryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMPatient.h"
 #import "WMMedicationGroup.h"
 #import "WMMedicationGroup+CoreText.h"
+#import "WMFatFractal.h"
 #import "ConstraintPack.h"
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
@@ -41,12 +44,43 @@
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
+    // make sure we have data
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicalHistoryGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf updateText];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self clearDataCache];
+}
+
+- (WMPatient *)patient
+{
+    return self.appDelegate.navigationCoordinator.patient;
+}
+
+- (void)clearDataCache
+{
+    _medicationGroup = nil;
+}
+
+- (void)updateText
+{
     NSMutableAttributedString *descriptionAsMutableAttributedStringWithBaseFontSize = [[NSMutableAttributedString alloc] init];
     if (_drawFullHistory) {
         NSArray *medicationGroups = [WMMedicationGroup sortedMedicationGroups:self.appDelegate.navigationCoordinator.patient];
@@ -63,17 +97,6 @@
         [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[self.medicationGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
     }
     self.textView.attributedText = descriptionAsMutableAttributedStringWithBaseFontSize;
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    [self clearDataCache];
-}
-
-- (void)clearDataCache
-{
-    _medicationGroup = nil;
 }
 
 @end

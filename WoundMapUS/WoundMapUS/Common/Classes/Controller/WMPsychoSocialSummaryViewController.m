@@ -7,10 +7,12 @@
 //
 
 #import "WMPsychoSocialSummaryViewController.h"
+#import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMPsychoSocialGroup.h"
 #import "WMPsychoSocialGroup+CoreText.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "ConstraintPack.h"
 
@@ -36,12 +38,33 @@
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
+    // make sure we have data
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.psychosocialGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf updateText];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
+- (WMPatient *)patient
+{
+    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    return appDelegate.navigationCoordinator.patient;
+}
+
+- (void)updateText
+{
     NSMutableAttributedString *descriptionAsMutableAttributedStringWithBaseFontSize = [[NSMutableAttributedString alloc] init];
     WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
     WMPatient *patient = appDelegate.navigationCoordinator.patient;

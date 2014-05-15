@@ -7,10 +7,13 @@
 //
 
 #import "WMPatientSummaryViewController.h"
+#import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMPatient+CoreText.h"
+#import "WMMedicalHistoryGroup.h"
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
+#import "WMFatFractal.h"
 #import "ConstraintPack.h"
 
 @interface WMPatientSummaryViewController ()
@@ -34,13 +37,23 @@
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
+    // make sure we have data
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicalHistoryGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        weakSelf.textView.attributedText = [patient descriptionAsMutableAttributedStringWithBaseFontSize:12];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:YES animated:YES];
-    self.textView.attributedText = [self.patient descriptionAsMutableAttributedStringWithBaseFontSize:12];
 }
 
 - (WMPatient *)patient

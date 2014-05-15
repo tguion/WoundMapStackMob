@@ -7,10 +7,15 @@
 //
 
 #import "WMWoundMeasurementSummaryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurementGroup+CoreText.h"
+#import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
 #import "ConstraintPack.h"
+#import "WCAppDelegate.h"
 
 #define kWoundMeasurementGroupMaximumRecords 3
 
@@ -35,12 +40,49 @@
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
+    // make sure we have data
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (counter == 0 || --counter == 0) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            [weakSelf updateText];
+        }
+    };
+    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.wounds] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        counter = [patient.wounds count];
+        for (WMWound *wound in patient.wounds) {
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.measurementGroups] onComplete:onComplete];
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    _selectedWound = nil;
+    _woundMeasurementGroup = nil;
+}
+
+- (WMPatient *)patient
+{
+    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+    return appDelegate.navigationCoordinator.patient;
+}
+
+- (void)updateText
+{
     NSMutableAttributedString *descriptionAsMutableAttributedStringWithBaseFontSize = [[NSMutableAttributedString alloc] init];
     BOOL drawFullHistory = (nil != self.selectedWound);
     if (drawFullHistory) {
@@ -55,17 +97,10 @@
             [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
             [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
         }
-    } else {
+    } else if (self.woundMeasurementGroup) {
         [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[self.woundMeasurementGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
     }
     self.textView.attributedText = descriptionAsMutableAttributedStringWithBaseFontSize;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    _selectedWound = nil;
-    _woundMeasurementGroup = nil;
 }
 
 @end

@@ -7,10 +7,13 @@
 //
 
 #import "WMSkinAssessmentSummaryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMPatient.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMSkinAssessmentGroup+CoreText.h"
 #import "ConstraintPack.h"
 #import "WMNavigationCoordinator.h"
+#import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 
 #define kSkinAssessentGroupMaximumRecords 3
@@ -43,12 +46,45 @@
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
+    // make sure we have data
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.skinAssessmentGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf updateText];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self clearDataCache];
+}
+
+#pragma mark - Core
+
+- (WMPatient *)patient
+{
+    return self.appDelegate.navigationCoordinator.patient;
+}
+
+- (void)clearDataCache
+{
+    _skinAssessmentGroup = nil;
+}
+
+- (void)updateText
+{
     NSMutableAttributedString *descriptionAsMutableAttributedStringWithBaseFontSize = [[NSMutableAttributedString alloc] init];
     if (_drawFullHistory) {
         NSArray *skinAssessmentGroups = [WMSkinAssessmentGroup sortedSkinAssessmentGroups:self.appDelegate.navigationCoordinator.patient];
@@ -65,19 +101,6 @@
         [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[self.skinAssessmentGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
     }
     self.textView.attributedText = descriptionAsMutableAttributedStringWithBaseFontSize;
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    [self clearDataCache];
-}
-
-#pragma mark - Core
-
-- (void)clearDataCache
-{
-    _skinAssessmentGroup = nil;
 }
 
 @end

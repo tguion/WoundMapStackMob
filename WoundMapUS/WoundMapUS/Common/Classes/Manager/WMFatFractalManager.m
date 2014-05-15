@@ -292,6 +292,10 @@
                 errorCallback(error);
             }];
         }
+        if (counter == 0) {
+            ++counter;
+            errorCallback(nil);
+        }
     }];
 }
 

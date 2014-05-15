@@ -7,6 +7,9 @@
 //
 
 #import "CoreDataHelper.h"
+#import "WMNavigationTrack.h"
+#import "WMNavigationStage.h"
+#import "WMNavigationNode.h"
 #import "Faulter.h"
 #import "WMUtilities.h"
 #import "WMNetworkReachability.h"
@@ -128,13 +131,19 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     if (debug==1) {
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
-    [self moveStoreFromBundle];
+    BOOL didMoveDatabase = [self moveStoreFromBundle];
     [MagicalRecord setupCoreDataStackWithStoreNamed:[NSPersistentStore MR_urlForStoreName:storeFilename]];
-//    [[NSManagedObjectContext MR_defaultContext] MR_observeContext:[NSManagedObjectContext MR_rootSavingContext]];
+    if (didMoveDatabase) {
+        // must remove that we have navigation entities
+        [self unmarkBackendDataAcquiredForEntityName:[WMNavigationTrack entityName]];
+        [self unmarkBackendDataAcquiredForEntityName:[WMNavigationStage entityName]];
+        [self unmarkBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+    }
 }
 
-- (void)moveStoreFromBundle
+- (BOOL)moveStoreFromBundle
 {
+    BOOL didMoveDatabase = NO;
     NSURL *destinationURL = [NSPersistentStore MR_urlForStoreName:storeFilename];
     NSString *destinationPath = destinationURL.path;
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -154,10 +163,13 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
                 [fileManager copyItemAtPath:sourcePath toPath:destinationPath error:&error];
                 if (error) {
                     [WMUtilities logError:error];
+                } else {
+                    didMoveDatabase = YES;
                 }
             }
         }
     }
+    return didMoveDatabase;
 }
 
 #pragma mark - Store metadata
@@ -166,6 +178,13 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 {
     NSMutableDictionary *metadata = [[self.coordinator metadataForPersistentStore:self.store] mutableCopy];
     metadata[entityName] = @YES;
+    [self.coordinator setMetadata:metadata forPersistentStore:self.store];
+}
+
+- (void)unmarkBackendDataAcquiredForEntityName:(NSString *)entityName
+{
+    NSMutableDictionary *metadata = [[self.coordinator metadataForPersistentStore:self.store] mutableCopy];
+    [metadata removeObjectForKey:entityName];
     [self.coordinator setMetadata:metadata forPersistentStore:self.store];
 }
 
