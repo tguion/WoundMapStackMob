@@ -281,12 +281,6 @@
     [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
-- (void)updateUIForSearch
-{
-    [super updateUIForSearch];
-    self.title = @"Search Definitions";
-}
-
 - (void)deleteWoundTreatmentValue:(WMWoundTreatmentValue *)woundTreatmentValue
 {
     if (_woundTreatmentGroup.ffUrl) {

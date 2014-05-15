@@ -222,7 +222,6 @@
     } else {
         self.tableView.tableFooterView = nil;
     }
-    self.tableView.backgroundColor = [UIColor whiteColor];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:self.woundMeasurementGroup.woundPhoto.thumbnail];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.tableView.backgroundView = imageView;
@@ -368,12 +367,6 @@
         self.title = @"Wound Assessment";
     }
     [self.navigationController setToolbarHidden:NO animated:YES];
-}
-
-- (void)updateUIForSearch
-{
-    [super updateUIForSearch];
-    self.title = @"Search Definitions";
 }
 
 - (id)valueForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup

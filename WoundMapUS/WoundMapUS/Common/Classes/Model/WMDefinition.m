@@ -21,7 +21,7 @@ static NSMutableCharacterSet *keywordDelimiters;
                                         @"WoundTypeDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundType],
                                         @"WoundAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundAssessment],
                                         @"MedicationsDefinitions", [NSNumber numberWithInt:WoundPUMPScopeMedications],
-                                        @"SkinAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeMedications],
+                                        @"SkinAssessmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeSkinAssessment],
                                         @"WoundMeasurementDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundMeasurement],
                                         @"WoundTreatmentDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundTreatment],
                                         @"PsychoSocialDefinitions", [NSNumber numberWithInt:WoundPUMPScopeWoundPsychSocial],

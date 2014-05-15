@@ -30,7 +30,6 @@
 
 - (void)updateToolbarItems;
 - (void)updateUIForDataChange;
-- (void)updateUIForSearch;
 
 - (IBAction)cancelAction:(id)sender;
 - (IBAction)saveAction:(id)sender;

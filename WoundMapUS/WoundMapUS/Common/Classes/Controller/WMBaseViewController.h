@@ -59,6 +59,7 @@
 - (void)updateFetchRequest:(NSFetchRequest *)request;                       // update specific properties of fetch request
 - (void)fetchedResultsControllerDidFetch;                                   // called when frc finishes fetching Core Data
 - (void)nilFetchedResultsController;                                        // nil the reference _fetchedResultsController
+- (void)refetchDataForCoreTableView;                                        // nil the reference _fetchedResultsController and reload tableView
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
 - (void)refreshTable;                                                       // refetch using FatFractal
 @property (readonly, nonatomic) NSString *ffQuery;                          // query string that fetches same as predicate from FatFractal

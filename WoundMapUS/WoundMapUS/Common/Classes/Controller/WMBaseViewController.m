@@ -53,6 +53,7 @@
 - (void)dealloc
 {
     DLog(@"%@.dealloc", self);
+    _fetchedResultsController.delegate = nil;
     for (id observer in self.opaqueNotificationObservers) {
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
     }
@@ -943,6 +944,12 @@
 - (void)nilFetchedResultsController
 {
     _fetchedResultsController = nil;
+}
+
+- (void)refetchDataForCoreTableView
+{
+    _fetchedResultsController = nil;
+    [self.tableView reloadData];
 }
 
 - (void)refetchDataForTableView

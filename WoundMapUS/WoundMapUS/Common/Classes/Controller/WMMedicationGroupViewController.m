@@ -205,12 +205,6 @@
     [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
-- (void)updateUIForSearch
-{
-    [super updateUIForSearch];
-    self.title = @"Search Definitions";
-}
-
 - (id)valueForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
     id value = nil;

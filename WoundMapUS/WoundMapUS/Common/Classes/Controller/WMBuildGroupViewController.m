@@ -20,7 +20,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 
 @interface WMBuildGroupViewController ()
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *previousNextSegmentedControl;
 @property (readonly, nonatomic) WMInterventionStatusViewController *interventionStatusViewController;
 @property (readonly, nonatomic) WMInterventionEventViewController *interventionEventViewController;
 @property (strong, nonatomic) WMDefinition *selectedDefinition;
@@ -209,11 +208,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 {
     self.indexPathForDelayedFirstResponder = nil;
     [self.view endEditing:YES];
-}
-
-- (IBAction)initiateSearchAction:(id)sender
-{
-    [self updateUIForSearch];
 }
 
 // delay to avoid popping two view controllers before animation finishes
@@ -921,24 +915,23 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
     if (!self.navigationController.toolbarHidden) {
-        self.tableView.delegate = nil;
-        self.tableView.dataSource = nil;
+//        self.tableView.delegate = nil;
+//        self.tableView.dataSource = nil;
         [self.navigationController setToolbarHidden:YES animated:NO];
     }
 }
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller
 {
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+//    self.tableView.delegate = self;
+//    self.tableView.dataSource = self;
     [self.navigationController setToolbarHidden:!self.shouldShowToolbar animated:NO];
 }
 
-- (void)searchDisplayController:(UISearchDisplayController *)viewController willShowSearchResultsTableView:(UITableView *)tableView
-{
-    [tableView registerClass:[WMDefinitionTableViewCell class] forCellReuseIdentifier:@"DefinitionCell"];
-//    self.tableView.hidden = YES;
-}
+//- (void)searchDisplayController:(UISearchDisplayController *)viewController willShowSearchResultsTableView:(UITableView *)tableView
+//{
+//    [tableView registerClass:[WMDefinitionTableViewCell class] forCellReuseIdentifier:@"DefinitionCell"];
+//}
 
 // return YES to reload table. called when search string/option changes. convenience methods on top UISearchBar delegate methods
 - (BOOL)searchDisplayController:(UISearchDisplayController *)viewController shouldReloadTableForSearchString:(NSString *)searchString

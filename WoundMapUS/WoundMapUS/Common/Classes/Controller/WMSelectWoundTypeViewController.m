@@ -124,13 +124,6 @@
     [self.navigationController setToolbarHidden:YES animated:YES];
 }
 
-- (void)updateUIForSearch
-{
-    [super updateUIForSearch];
-    self.title = @"Search Definitions";
-    [self.navigationController setToolbarHidden:YES animated:YES];
-}
-
 - (id)valueForAssessmentGroup:(id<AssessmentGroup>)assessmentGroup
 {
     WMWoundType *woundType = (WMWoundType *)assessmentGroup;

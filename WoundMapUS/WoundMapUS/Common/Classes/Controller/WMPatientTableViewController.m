@@ -330,13 +330,18 @@
 
 #pragma mark - UISearchBarDelegate
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
     [self setEditing:NO];
     self.navigationItem.leftBarButtonItem = nil;
     if (self.navigationItem.rightBarButtonItem.target == self) {
         self.navigationItem.rightBarButtonItem = nil;
     }
+    return YES;
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
     searchBar.showsCancelButton = YES;
     self.navigationItem.hidesBackButton = YES;
 }
@@ -352,14 +357,14 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    [self refetchDataForTableView];
+    [self refetchDataForCoreTableView];
 }
 
 #pragma mark - UISearchDisplayDelegate
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
 {
-    [self refetchDataForTableView];
+    [self refetchDataForCoreTableView];
 }
 
 - (void) searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller
