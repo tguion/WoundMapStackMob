@@ -7,6 +7,8 @@
 //
 
 #import "WMPrintConfigureViewController.h"
+#import "MBProgressHUD.h"
+#import "WMParticipant.h"
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
@@ -14,7 +16,9 @@
 #import "PrintConfiguration.h"
 #import "WMPDFPrintManager.h"
 #import "WMUserDefaultsManager.h"
+#import "WMFatFractal.h"
 #import "WMDesignUtilities.h"
+#import "WCAppDelegate.h"
 
 @interface WMPrintConfigureViewController ()
 @property (readonly, nonatomic) BOOL hasSelectedWounds;
@@ -100,6 +104,16 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleBordered target:self action:@selector(nextAction:)];
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    // get wounds
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.wounds] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -280,18 +294,71 @@
         [alertView show];
         return;
     }
-    // else
-    PrintConfiguration *printConfiguration = [[PrintConfiguration alloc] init];
-    printConfiguration.printTemplate = self.printTemplate;
-    printConfiguration.selectedWoundPhotosMap = self.selectedWoundPhotosMap;
-    printConfiguration.managedObjectContext = self.managedObjectContext;
-    printConfiguration.password = self.password;
-    printConfiguration.printRiskAssessment = self.printRiskAssessment;
-    printConfiguration.printSkinAssessment = self.printSkinAssessment;
-    printConfiguration.printCarePlan = self.printCarePlan;
-    [self.delegate printConfigureViewController:self
-            didConfigurePrintWithConfigureation:printConfiguration
-                              fromBarButtonItem:nil];
+    // else make sure we have the data from back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Updating Patient Data";
+    WMPatient *patient = self.patient;
+    WMParticipant *participant = self.appDelegate.participant;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (counter == 0 || --counter == 0) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            PrintConfiguration *printConfiguration = [[PrintConfiguration alloc] init];
+            printConfiguration.printTemplate = weakSelf.printTemplate;
+            printConfiguration.selectedWoundPhotosMap = weakSelf.selectedWoundPhotosMap;
+            printConfiguration.managedObjectContext = weakSelf.managedObjectContext;
+            printConfiguration.password = weakSelf.password;
+            printConfiguration.printRiskAssessment = weakSelf.printRiskAssessment;
+            printConfiguration.printSkinAssessment = weakSelf.printSkinAssessment;
+            printConfiguration.printCarePlan = weakSelf.printCarePlan;
+            [weakSelf.delegate printConfigureViewController:weakSelf
+                    didConfigurePrintWithConfigureation:printConfiguration
+                                      fromBarButtonItem:nil];
+        }
+    };
+    if (nil == participant.team) {
+        onComplete(nil, nil, nil);
+    } else {
+        ++counter;
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicalHistoryGroups] onComplete:onComplete];
+        if (self.printSkinAssessment) {
+            ++counter;
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.skinAssessmentGroups] onComplete:onComplete];
+        }
+        if (self.printRiskAssessment) {
+            counter += 4;
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.bradenScales] onComplete:onComplete];
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.medicationGroups] onComplete:onComplete];
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.deviceGroups] onComplete:onComplete];
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.psychosocialGroups] onComplete:onComplete];
+        }
+        if (self.printCarePlan) {
+            ++counter;
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=4&depthRef=1", patient.ffUrl, WMPatientRelationships.carePlanGroups] onComplete:onComplete];
+        }
+        NSSet *selectedWounds = self.selectedWounds;
+        counter += [selectedWounds count] * 2;
+        for (WMWound *wound in selectedWounds) {
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.measurementGroups] onComplete:onComplete];
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.treatmentGroups] onComplete:onComplete];
+        }
+        NSArray *woundPhotoSets = [self.selectedWoundPhotosMap allValues];
+        for (NSSet *woundPhotoSet in woundPhotoSets) {
+            for (WMWoundPhoto *woundPhoto in woundPhotoSet) {
+                if (nil == woundPhoto.thumbnailLarge) {
+                    ++counter;
+                    [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                        NSData *photoData = [response rawResponseData];
+                        woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                        onComplete(nil, nil, nil);
+                    }];
+                }
+            }
+        }
+    }
 }
 
 #pragma mark - SelectWoundPhotoViewControllerDelegate
