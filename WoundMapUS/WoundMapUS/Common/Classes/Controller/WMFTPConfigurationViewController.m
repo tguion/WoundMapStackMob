@@ -9,6 +9,7 @@
 #import "WMFTPConfigurationViewController.h"
 #import "MBProgressHUD.h"
 #import "WMTextFieldTableViewCell.h"
+#import "WMSwitchTableViewCell.h"
 #import "WMUserDefaultsManager.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -22,6 +23,9 @@
 @property (strong, nonatomic) NSString *pathTextInput;
 @property (strong, nonatomic) NSString *userNameTextInput;
 @property (strong, nonatomic) NSString *passwordTextInput;
+@property (nonatomic) BOOL useSFTP;
+
+- (IBAction)useSFTPValueChangedAction:(id)sender;
 
 @end
 
@@ -48,6 +52,7 @@
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self action:@selector(sendFileAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
+    [self.tableView registerClass:[WMSwitchTableViewCell class] forCellReuseIdentifier:@"SwitchCell"];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     _hostTextInput = userDefaultsManager.lastFTPHost;
     _pathTextInput = userDefaultsManager.lastFTPPath;
@@ -64,6 +69,24 @@
 
 #pragma mark - Core
 
+- (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
+{
+    NSString *cellReuseIdentifier = @"TextCell";
+    switch (indexPath.section) {
+        case 0: {
+            switch (indexPath.row) {
+                case 2: {
+                    // use
+                    cellReuseIdentifier = @"SwitchCell";
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return cellReuseIdentifier;
+}
+
 - (BOOL)hasSufficientInput
 {
     return ([_hostTextInput length] && [_pathTextInput length] && [_userNameTextInput length] && [_passwordTextInput length]);
@@ -75,6 +98,12 @@
 }
 
 #pragma mark - Actions
+
+- (IBAction)useSFTPValueChangedAction:(id)sender
+{
+    UISwitch *aSwitch = (UISwitch *)sender;
+    _useSFTP = aSwitch.isOn;
+}
 
 - (IBAction)cancelAction:(id)sender
 {
@@ -97,10 +126,16 @@
     if (_passwordTextInput) {
         userDefaultsManager.lastFTPPassword = _passwordTextInput;
     }
-    NMSSHSession *session = [NMSSHSession connectToHost:_hostTextInput
-                                           withUsername:_userNameTextInput];
+    NMSSHSession *session = [NMSSHSession connectToHost:_hostTextInput withUsername:_userNameTextInput];
     if (session.isConnected) {
-        [session authenticateByPassword:_passwordTextInput];
+        [session authenticateByKeyboardInteractiveUsingBlock:^NSString *(NSString *request) {
+            return _passwordTextInput;
+        }];
+//        NSString *publicKey = [[NSBundle mainBundle] pathForResource:@"key.pub" ofType:nil];
+//        [session authenticateByPublicKey:publicKey
+//                              privateKey:[publicKey stringByDeletingPathExtension]
+//                             andPassword:@"password"];
+//        [session authenticateByPassword:_passwordTextInput];
         if (session.isAuthorized) {
             NSLog(@"Authentication succeeded");
         } else {
@@ -122,28 +157,20 @@
         return;
     }
     
-    NSError *error = nil;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSDictionary *fileAttributes = [fileManager attributesOfFileSystemForPath:[self.url path] error:&error];
-    long long fileSize = 0;
-    if (nil == error) {
-        fileSize = fileAttributes.fileSize;
-        NSLog(@"File size: %lld bytes", fileSize);
+    NSString *sourcePath = [self.url path];
+    NSString *destinationFilePath = [_pathTextInput stringByAppendingPathComponent:[sourcePath lastPathComponent]];
+
+    BOOL success = NO;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Uploading file...";
+    if (_useSFTP) {
+        NMSFTP *sftp = [NMSFTP connectWithSession:session];
+        success = [sftp writeFileAtPath:sourcePath toFileAtPath:destinationFilePath];
+    } else {
+        success = [session.channel uploadFile:sourcePath to:destinationFilePath];
     }
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = @"Uploading file...";
-    BOOL success = [session.channel uploadFile:[self.url path]
-                                            to:_pathTextInput
-                                      progress:^BOOL(NSUInteger progress) {
-                                          hud.labelText = [NSString stringWithFormat:@"%d bytes", progress];
-                                          if (progress >= fileSize) {
-                                              [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
-                                          }
-                                          return YES;
-                                      }];
     [session disconnect];
-
+    
     if (success) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Upload Finished"
                                                             message:@"The patient file uploaded successfully."
@@ -160,6 +187,37 @@
                                                   otherButtonTitles:nil];
         [alertView show];
     }
+    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+
+//    NSArray *remoteFileList = [session.sftp contentsOfDirectoryAtPath:@"/"];
+//    for (NMSFTPFile *file in remoteFileList) {
+//        NSLog(@"%@", file.filename);
+//    }
+//    remoteFileList = [session.sftp contentsOfDirectoryAtPath:@"/htdocs"];
+//    for (NMSFTPFile *file in remoteFileList) {
+//        NSLog(@"%@", file.filename);
+//    }
+//    remoteFileList = [session.sftp contentsOfDirectoryAtPath:@"/htdocs/woundmap"];
+//    for (NMSFTPFile *file in remoteFileList) {
+//        NSLog(@"%@", file.filename);
+//    }
+//    
+//    NMSFTP *sftp = [NMSFTP connectWithSession:session];
+//    if (sftp.isConnected) {
+//        NSError *error = nil;
+//        NSString *response = [session.channel execute:@"ls -l" error:&error];
+//        NSLog(@"List of my sites: %@", response);
+//        
+//        NSArray *contents = [sftp contentsOfDirectoryAtPath:_pathTextInput];
+//        NSLog(@"List of my sites: %@", contents);
+//        BOOL directoryExists = [sftp directoryExistsAtPath:_pathTextInput];
+//        NSLog(@"directoryExists: %d", directoryExists);
+//        if (!directoryExists) {
+//            BOOL directoryCreated = [sftp createDirectoryAtPath:_pathTextInput];
+//            NSLog(@"directoryCreated: %d", directoryCreated);
+//        }
+//    }
+    
 }
 
 #pragma mark UIAlertViewDelegate
@@ -242,7 +300,7 @@
     NSInteger count = 0;
     switch (section) {
         case 0:
-            count = 2;
+            count = 3;
             break;
         case 1:
             count = 2;
@@ -254,33 +312,49 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextCell"];
+    NSString *cellReuseIdentifier = [self cellReuseIdentifier:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-    UITextField *textField = myCell.textField;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.spellCheckingType = UITextSpellCheckingTypeNo;
-    textField.returnKeyType = UIReturnKeyDefault;
-    textField.delegate = self;
     switch (indexPath.section) {
         case 0: {
             // host/path
             switch (indexPath.row) {
                 case 0: {
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
                     textField.tag = 1000;
                     [myCell updateWithLabelText:@"Host" valueText:_hostTextInput valuePrompt:@"Enter host"];
                     break;
                 }
                 case 1: {
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
                     textField.tag = 1001;
                     textField.delegate = self;
                     [myCell updateWithLabelText:@"Path" valueText:_pathTextInput valuePrompt:@"Enter path"];
+                    break;
+                }
+                case 2: {
+                    // use SFTP
+                    WMSwitchTableViewCell *myCell = (WMSwitchTableViewCell *)cell;
+                    cell.tag = (3000 + indexPath.row);
+                    [myCell updateWithLabelText:@"Use SFTP" value:_useSFTP target:self action:@selector(useSFTPValueChangedAction:) tag:(3000 + indexPath.row)];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
                     break;
                 }
             }
@@ -290,11 +364,25 @@
             // userName/password
             switch (indexPath.row) {
                 case 0: {
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
                     textField.tag = 2000;
                     [myCell updateWithLabelText:@"User Name" valueText:_userNameTextInput valuePrompt:@"Enter user name"];
                     break;
                 }
                 case 1: {
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
                     textField.tag = 2001;
                     textField.delegate = self;
                     textField.secureTextEntry = YES;

@@ -16,17 +16,27 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wme-kq-mub" customClass="CPTGraphHostingView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wme-kq-mub" customClass="CPTGraphHostingView">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                 </view>
-                <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d66-vZ-6CI">
+                <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="d66-vZ-6CI">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="wme-kq-mub" secondAttribute="bottom" id="05f-Ch-Vgh"/>
+                <constraint firstItem="wme-kq-mub" firstAttribute="leading" secondItem="7iL-d0-sVz" secondAttribute="leading" id="3fg-TQ-Qgj"/>
+                <constraint firstAttribute="trailing" secondItem="wme-kq-mub" secondAttribute="trailing" id="Ifh-n9-oLu"/>
+                <constraint firstAttribute="trailing" secondItem="d66-vZ-6CI" secondAttribute="trailing" id="Snw-YV-BA4"/>
+                <constraint firstAttribute="bottom" secondItem="d66-vZ-6CI" secondAttribute="bottom" id="WKu-3T-d0H"/>
+                <constraint firstItem="d66-vZ-6CI" firstAttribute="top" secondItem="7iL-d0-sVz" secondAttribute="top" id="ftl-fI-0yW"/>
+                <constraint firstItem="wme-kq-mub" firstAttribute="top" secondItem="7iL-d0-sVz" secondAttribute="top" id="gjL-zB-AS8"/>
+                <constraint firstItem="d66-vZ-6CI" firstAttribute="leading" secondItem="7iL-d0-sVz" secondAttribute="leading" id="oCc-Pe-Lm7"/>
+            </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>

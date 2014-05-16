@@ -44,7 +44,7 @@
     PREPCONSTRAINTS(tv);
     StretchToSuperview(tv, 0.0, 500);
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
-    // make sure we have data
+    // make sure we have data TODO consider asking user if need to update from cloud
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMPatient *patient = self.patient;
