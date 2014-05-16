@@ -356,6 +356,15 @@
     if (nil == lastRefreshTime) {
         lastRefreshTime = @(0);
     }
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
+            completionHandler(error);
+        }
+    };
     NSMutableSet *localPatients = [NSMutableSet setWithArray:[WMPatient MR_findAllInContext:managedObjectContext]];
     NSString *queryString = [NSString stringWithFormat:@"/%@?depthGb=1&depthRef=1", collection];
     [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
@@ -367,7 +376,11 @@
             [localPatients minusSet:patients];
             [managedObjectContext MR_deleteObjects:localPatients];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
-            completionHandler(nil);
+            // may need to get consultingGroup
+            counter = [patients count];
+            for (WMPatient *patient in patients) {
+                [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] onComplete:onComplete];
+            }
         }
     }];
 }
@@ -915,13 +928,10 @@
     __block NSInteger counter = 0;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
-            counter = 0;
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             completionHandler(error, patient);
-        } else {
-            --counter;
-            if (counter == 0) {
-                completionHandler(error, patient);
-            }
         }
     };
     FFUserGroup *consultantGroup = patient.consultantGroup;
@@ -958,12 +968,10 @@
     WMErrorCallback localCompletionHandler = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            --counter;
-            if (counter == 0) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                completionHandler(error);
-            }
+        }
+        if (--counter == 0) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            completionHandler(error);
         }
     };
     for (NSString *relationshipName in [WMPatient toManyRelationshipNames]) {

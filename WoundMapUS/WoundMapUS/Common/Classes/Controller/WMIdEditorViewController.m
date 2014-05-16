@@ -222,7 +222,14 @@
     [_session stopRunning];
     [_highlightView removeFromSuperview];
     [_label removeFromSuperview];
+    if ([detectionString length]) {
+        self.anId.extension = detectionString;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }
     self.anId.extension = detectionString;
+    [_prevLayer removeFromSuperlayer];
+    [_highlightView removeFromSuperview];
+    [_label removeFromSuperview];
 }
 
 #pragma mark - UITextFieldDelegate

@@ -270,8 +270,14 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                 }
                 [weakSelf.tableView reloadData];
             };
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updatePatient:_patient ff:[WMFatFractal sharedInstance] completionHandler:completionHandler];
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", _patient.ffUrl, @"consultantGroup"] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [ffm updatePatient:_patient ff:ff completionHandler:completionHandler];
+            }];
         }
     }
     // support for bar code reading http://www.infragistics.com/community/blogs/torrey-betts/archive/2013/10/10/scanning-barcodes-with-ios-7-objective-c.aspx
