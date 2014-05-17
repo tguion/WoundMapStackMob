@@ -9,6 +9,7 @@
 @property (readonly, nonatomic) NSAttributedString *descHTMLAttributedString;
 
 - (void)updateIAProductWithSkProduct:(SKProduct *)skProduct;
+- (NSAttributedString *)descHTMLAttributedStringUpdatedWithSKProduct:(SKProduct *)product;
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext;
 

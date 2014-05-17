@@ -188,7 +188,7 @@
             _invitee = object;
             // present IAP
             if (NO) {
-                [self presentIAPViewControllerForProductIdentifier:kAddTeamMemberProductIdentifier
+                [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                       successBlock:^{
                                                           [weakSelf completeTeamInvitation];
                                                       } proceedAlways:NO

@@ -320,12 +320,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)presentCreateTeamViewController
 {
     [self.navigationController pushViewController:self.createTeamViewController animated:YES];
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapCreateTeamViewController];
-//    [self presentViewController:navigationController
-//                       animated:YES
-//                     completion:^{
-//                         // nothing
-//                     }];
 }
 
 - (void)presentTeamManagementController
@@ -524,7 +518,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         }
                     } else {
                         if (NO) {
-                            BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateTeamProductIdentifier
+                            BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                                                  successBlock:^{
                                                                                      [weakSelf presentCreateTeamViewController];
                                                                                  } withObject:self.view];

@@ -55,6 +55,44 @@
                                                                                           action:@selector(cancelAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
+    // handle back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    __weak __typeof(&*self)weakSelf = self;
+    if (nil == _organization) {
+        _organization = [WMOrganization MR_createInContext:managedObjectContext];
+        _organizationCreated = YES;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        // create on back end before GRABBAG addresses and ids
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSParameterAssert([object isKindOfClass:[WMOrganization class]]);
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        }];
+    } else {
+        WMErrorCallback completionHandler = ^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            [weakSelf.tableView reloadData];
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // make sure we have addresses and ids
+        if ([_organization.addresses count] == 0 && [_organization.ids count] == 0) {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [ffm updateGrabBags:@[WMOrganizationRelationships.addresses, WMOrganizationRelationships.ids]
+                     aggregator:_organization
+                             ff:ff
+              completionHandler:completionHandler];
+        } else {
+            completionHandler(nil);
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,31 +109,6 @@
         _moc = self.delegate.managedObjectContext;
     }
     return _moc;
-}
-
-- (WMOrganization *)organization
-{
-    if (nil == _organization) {
-        _organization = [WMOrganization MR_createInContext:self.managedObjectContext];
-        _organizationCreated = YES;
-        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-        // create on back end before GRABBAG addresses and ids
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        __weak __typeof(&*self)weakSelf = self;
-        [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            NSParameterAssert([object isKindOfClass:[WMOrganization class]]);
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-        }];
-    } else {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
-        }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
-    }
-    return _organization;
 }
 
 - (WMAddressListViewController *)addressListViewController

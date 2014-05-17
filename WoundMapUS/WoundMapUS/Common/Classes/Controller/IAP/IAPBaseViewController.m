@@ -24,6 +24,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 @property (strong, nonatomic) IBOutlet UIView *actionContainerView;
 @property (strong, nonatomic) IBOutlet UIView *descHTMLContainerView;
 @property (strong, nonatomic) IBOutlet UILabel *descHTMLLabel;
+@property (strong, nonatomic) IBOutlet UITextView *descTextView;
 @property (readonly, nonatomic) WMInstructionContentViewController *instructionContentViewController;
 
 - (void)navigateToFeatureDetail;
@@ -322,23 +323,25 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 - (void)skProductforProductId:(NSString *)productId
 {
     IAPManager *iapManager = [IAPManager sharedInstance];
+    IAPProduct *iapProduct = self.iapProduct;
+    NSManagedObjectContext *managedObjectContext = [iapProduct managedObjectContext];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(self) weakSelf = self;
     [iapManager productWithProductId:productId
                       successHandler:^(NSArray *products) {
                           dispatch_async(dispatch_get_main_queue(), ^{
-                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                               if ([products count] > 0) {
                                   weakSelf.skProduct = [products objectAtIndex:0];
-                                  [weakSelf.iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
-//                                  if (_descHTMLContainerView.superview) {
-//                                      [iapManager updatePriceInString:_descHTMLLabel.attributedText skProducts:weakSelf.skProduct];
-//                                  }
-                                  [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
+                                  [iapProduct updateIAProductWithSkProduct:weakSelf.skProduct];
+                                  if (_descHTMLContainerView.superview) {
+                                      _descTextView.attributedText = [weakSelf.iapProduct descHTMLAttributedStringUpdatedWithSKProduct:weakSelf.skProduct];
+                                  }
+                                  [managedObjectContext MR_saveToPersistentStoreAndWait];
                               } else {
                                   NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
                                   [weakSelf iapFailureAlert:message];
                               }
+                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                               [weakSelf reloadData];
                           });
                       } failureHandler:^(NSError *error) {

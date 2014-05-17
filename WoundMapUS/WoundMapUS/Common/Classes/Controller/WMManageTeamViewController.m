@@ -148,8 +148,25 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)initiateUpdateSubscriptionTeamMember:(UIView *)view
 {
     __weak __typeof(&*self)weakSelf = self;
-    [self presentIAPViewControllerForProductIdentifier:kAddTeamMemberProductIdentifier
+    [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                          successBlock:^{
+                                                             WMParticipant *participant = _teamMemberToUpdateSubscription;
+                                                             participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
+                                                             WMTeam *team = participant.team;
+                                                             NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
+                                                             // update from back end
+                                                             WMFatFractal *ff = [WMFatFractal sharedInstance];
+                                                             [ff getObjFromUri:team.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                                 if (error) {
+                                                                     [WMUtilities logError:error];
+                                                                 }
+                                                                 team.iapTeamMemberSuccessCountValue = (team.iapTeamMemberSuccessCountValue + 1);
+                                                                 [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                                 [ff updateObj:team error:&error];
+                                                                 if (error) {
+                                                                     [WMUtilities logError:error];
+                                                                 }
+                                                             }];
                                                              [weakSelf.tableView reloadData];
                                                          } withObject:view];
 }

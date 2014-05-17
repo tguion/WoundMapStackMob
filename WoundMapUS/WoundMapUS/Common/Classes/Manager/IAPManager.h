@@ -19,8 +19,7 @@ extern NSString *const kSharePdfReport5Feature;
 extern NSString *const kSharePdfReport10Feature;
 extern NSString *const kSharePdfReport25Feature;
 
-extern NSString *const kCreateTeamProductIdentifier;
-extern NSString *const kAddTeamMemberProductIdentifier;
+extern NSString *const kTeamMemberProductIdentifier;
 extern NSString *const kCreateConsultingGroupProductIdentifier;
 
 extern NSString *const kIAPManagerProductPurchasedNotification;

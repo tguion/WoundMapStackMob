@@ -438,11 +438,7 @@
     } else {
         _patientToOpen = [[self.fetchedResultsController objectAtIndexPath:indexPath] valueForKey:WMPatientConsultantRelationships.patient];
     }
-    if (self.navigationController.isNavigationBarHidden) {
-        [self doneAction:nil];
-    } else {
-        [tableView reloadData];
-    }
+    [tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -475,6 +471,7 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     WMPatient *patient = [self patientAtIndexPath:indexPath];
+    cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
     WMPatientAutoTableViewCell *myCell = (WMPatientAutoTableViewCell *)cell;
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if (self.isShowingTeamPatients) {
@@ -493,7 +490,6 @@
     } else {
         [myCell updateForPatientConsultant:object];
     }
-    cell.accessoryType = ([patient isEqual:_patientToOpen] ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone);
 }
 
 #pragma mark - NSFetchedResultsController

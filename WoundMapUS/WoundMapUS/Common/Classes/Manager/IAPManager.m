@@ -25,8 +25,7 @@ NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundcare.wound
 NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print10.token";
 NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print25.token";
 
-NSString *const kCreateTeamProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamLeader";
-NSString *const kAddTeamMemberProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamMember";
+NSString *const kTeamMemberProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamMember";
 NSString *const kCreateConsultingGroupProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.consultGroup.create";
 
 NSString *const kIAPManagerProductPurchasedNotification = @"IAPHelperProductPurchasedNotification";
@@ -180,6 +179,9 @@ NSString* _deviceId;
     DLog(@"restoreTransaction...");
     
     [self provideContentForProductIdentifier:transaction.originalTransaction.payment.productIdentifier];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
+                                                        object:transaction.payment.productIdentifier
+                                                      userInfo:nil];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
@@ -254,44 +256,9 @@ NSString* _deviceId;
     }];
 }
 
-- (void)provideContentForTeamLeaderProductIdentifier:(NSString *)productIdentifier
-{
-    WMParticipant *participant = self.appDelegate.participant;
-    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
-    // update from back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        participant.teamLeaderIAPPurchaseSuccessful = YES;
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
-        [ff updateObj:participant error:&error];
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    }];
-}
-
 - (void)provideContentForTeamAddedProductIdentifier:(NSString *)productIdentifier
 {
-    WMParticipant *participant = self.appDelegate.participant;
-    participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
-    WMTeam *team = participant.team;
-    NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
-    // update from back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff getObjFromUri:team.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        team.iapTeamMemberSuccessCountValue = (team.iapTeamMemberSuccessCountValue + 1);
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
-        [ff updateObj:team error:&error];
-        if (error) {
-            [WMUtilities logError:error];
-        }
-    }];
+    // handled in succss callback
 }
 
 // called when purchase of IAP has successfully completed on iTunes store kit server
@@ -299,9 +266,7 @@ NSString* _deviceId;
 {
     if ([_sharedPDFReportProductIdentifiers containsObject:productIdentifier]) {
         [self provideContentForPDFReportProductIdentifier:productIdentifier];
-    } else if ([productIdentifier isEqualToString:kCreateTeamProductIdentifier]) {
-        [self provideContentForTeamLeaderProductIdentifier:productIdentifier];
-    } else if ([productIdentifier isEqualToString:kAddTeamMemberProductIdentifier]) {
+    } else if ([productIdentifier isEqualToString:kTeamMemberProductIdentifier]) {
         [self provideContentForTeamAddedProductIdentifier:productIdentifier];
     }
 }

@@ -122,6 +122,7 @@ typedef enum {
     }
     return htmlString;
 }
+
 - (NSAttributedString *)descHTMLAttributedString
 {
     NSAttributedString *attributedString = nil;
@@ -146,6 +147,53 @@ typedef enum {
         if (error) {
             [WMUtilities logError:error];
         }
+    }
+    return attributedString;
+}
+
+- (NSAttributedString *)descHTMLAttributedStringUpdatedWithSKProduct:(SKProduct *)product
+{
+    // first get the string
+    NSString *string = self.descHTML;
+    NSError *error = nil;
+    if (self.descHTMLIsFile) {
+        NSInteger index = [string rangeOfString:@".html"].location;
+        string = [string substringToIndex:index];
+        NSURL *htmlURL = [[NSBundle mainBundle] URLForResource:string withExtension:@"html"];
+        string = [NSString stringWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    }
+    // now look for price in string
+    NSInteger stringLength = [string length];
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [numberFormatter setLocale:product.priceLocale];
+    NSRange range0 = NSMakeRange(0, stringLength);
+    NSMutableArray *substrings = [NSMutableArray array];
+    NSRange range1 = [string rangeOfString:@"|" options:0 range:range0];
+    if (range1.location != NSNotFound) {
+        NSRange substringRange = NSMakeRange(range0.location, range1.location - range0.location);
+        [substrings addObject:[string substringWithRange:substringRange]];
+        NSString *formattedPrice = [numberFormatter stringFromNumber:product.price];
+        [substrings addObject:formattedPrice];
+        range0.location = range1.location + 1;
+        range0.length = (stringLength - range0.location);
+        range1 = [string rangeOfString:@"|" options:0 range:range0];
+        range0.location = range1.location + 1;
+        range0.length = (stringLength - range0.location);
+        // append remaining part of string
+        [substrings addObject:[string substringWithRange:range0]];
+    }
+    string = [substrings componentsJoinedByString:@" "];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[string dataUsingEncoding:NSUTF8StringEncoding]
+                                                                            options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType}
+                                                                 documentAttributes:NULL
+                                                                              error:&error];
+    if (error) {
+        [WMUtilities logError:error];
     }
     return attributedString;
 }
