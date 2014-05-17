@@ -7,36 +7,29 @@
 //
 
 #import "WMIdEditorViewController.h"
+#import "WMBarScanViewController.h"
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
 #import "WMId.h"
 #import "CoreDataHelper.h"
 #import "WMFatFractal.h"
 #import "WMUtilities.h"
-#import <AVFoundation/AVFoundation.h>
 
-@interface WMIdEditorViewController () <UITextFieldDelegate, AVCaptureMetadataOutputObjectsDelegate>
-{
-    AVCaptureSession *_session;
-    AVCaptureDevice *_device;
-    AVCaptureDeviceInput *_input;
-    AVCaptureMetadataOutput *_output;
-    AVCaptureVideoPreviewLayer *_prevLayer;
-    
-    UIView *_highlightView;
-    UILabel *_label;
-}
+@interface WMIdEditorViewController () <UITextFieldDelegate, BarScanViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *tableHeaderView;
 
 @property (weak, nonatomic) NSManagedObjectContext *moc;
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
+@property (readonly, nonatomic) WMBarScanViewController *barScanViewController;
+
 - (IBAction)readBarCodeAction:(id)sender;
 
 @end
 
 @implementation WMIdEditorViewController
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -103,6 +96,13 @@
     return cellReuseIdentifier;
 }
 
+- (WMBarScanViewController *)barScanViewController
+{
+    WMBarScanViewController *viewController = [[WMBarScanViewController alloc] initWithNibName:@"WMBarScanViewController" bundle:nil];
+    viewController.delegate = self;
+    return viewController;
+}
+
 #pragma mark - Actions
 
 - (IBAction)doneAction:(id)sender
@@ -135,47 +135,9 @@
 
 - (IBAction)readBarCodeAction:(id)sender
 {
-    _highlightView = [[UIView alloc] init];
-    _highlightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
-    _highlightView.layer.borderColor = [UIColor greenColor].CGColor;
-    _highlightView.layer.borderWidth = 3;
-    [self.view addSubview:_highlightView];
-    
-    _label = [[UILabel alloc] init];
-    _label.frame = CGRectMake(0, self.view.bounds.size.height - 40, self.view.bounds.size.width, 40);
-    _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    _label.backgroundColor = [UIColor colorWithWhite:0.15 alpha:0.65];
-    _label.textColor = [UIColor whiteColor];
-    _label.textAlignment = NSTextAlignmentCenter;
-    _label.text = @"(none)";
-    [self.view addSubview:_label];
-    
-    _session = [[AVCaptureSession alloc] init];
-    _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    NSError *error = nil;
-    
-    _input = [AVCaptureDeviceInput deviceInputWithDevice:_device error:&error];
-    if (_input) {
-        [_session addInput:_input];
-    } else {
-        NSLog(@"Error: %@", error);
-    }
-    
-    _output = [[AVCaptureMetadataOutput alloc] init];
-    [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-    [_session addOutput:_output];
-    
-    _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
-    
-    _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
-    _prevLayer.frame = self.view.bounds;
-    _prevLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer:_prevLayer];
-    
-    [_session startRunning];
-    
-    [self.view bringSubviewToFront:_highlightView];
-    [self.view bringSubviewToFront:_label];
+    [self presentViewController:self.barScanViewController animated:YES completion:^{
+        // nothing
+    }];
 }
 
 #pragma mark - WMBaseViewController
@@ -186,50 +148,22 @@
     _anId = nil;
 }
 
-#pragma mark - AVCaptureMetadataOutputObjectsDelegate
+#pragma mark - BarScanViewControllerDelegate
 
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+- (void)barScanViewController:(WMBarScanViewController *)viewController didCaptureBarScan:(NSString *)barScanValue
 {
-    CGRect highlightViewRect = CGRectZero;
-    AVMetadataMachineReadableCodeObject *barCodeObject;
-    NSString *detectionString = nil;
-    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
-                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
-                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
-    
-    for (AVMetadataObject *metadata in metadataObjects) {
-        for (NSString *type in barCodeTypes) {
-            if ([metadata.type isEqualToString:type])
-            {
-                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
-                highlightViewRect = barCodeObject.bounds;
-                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
-                break;
-            }
-        }
-        
-        if (detectionString != nil)
-        {
-            _label.text = detectionString;
-            break;
-        }
-        else
-            _label.text = @"(none)";
-    }
-    
-    _highlightView.frame = highlightViewRect;
-    
-    [_session stopRunning];
-    [_highlightView removeFromSuperview];
-    [_label removeFromSuperview];
-    if ([detectionString length]) {
-        self.anId.extension = detectionString;
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    }
-    self.anId.extension = detectionString;
-    [_prevLayer removeFromSuperlayer];
-    [_highlightView removeFromSuperview];
-    [_label removeFromSuperview];
+    __weak __typeof(&*self)weakSelf = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        weakSelf.anId.extension = barScanValue;
+        [weakSelf.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }];
+}
+
+- (void)barScanViewControllerDidCancel:(WMBarScanViewController *)viewController
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
 }
 
 #pragma mark - UITextFieldDelegate

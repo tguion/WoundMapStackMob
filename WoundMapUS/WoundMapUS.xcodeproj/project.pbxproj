@@ -451,6 +451,8 @@
 		7DDA8DA5192662B300A1AFB7 /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA8DA2192662B300A1AFB7 /* WoundMap.sqlite */; };
 		7DDA8DA6192662B300A1AFB7 /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA8DA3192662B300A1AFB7 /* WoundMap.sqlite-shm */; };
 		7DDA8DA7192662B300A1AFB7 /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA8DA4192662B300A1AFB7 /* WoundMap.sqlite-wal */; };
+		7DDA8DAB1927852300A1AFB7 /* WMBarScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDA8DA91927852300A1AFB7 /* WMBarScanViewController.m */; };
+		7DDA8DAC1927852300A1AFB7 /* WMBarScanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA8DAA1927852300A1AFB7 /* WMBarScanViewController.xib */; };
 		7DDAFAF218B50AB000A05F5D /* WMButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */; };
 		7DDAFAF618B6117E00A05F5D /* WMAddressEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF418B6117E00A05F5D /* WMAddressEditorViewController.m */; };
 		7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDAFAF518B6117E00A05F5D /* WMAddressEditorViewController.xib */; };
@@ -1344,6 +1346,9 @@
 		7DDA8DA2192662B300A1AFB7 /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
 		7DDA8DA3192662B300A1AFB7 /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
 		7DDA8DA4192662B300A1AFB7 /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
+		7DDA8DA81927852300A1AFB7 /* WMBarScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMBarScanViewController.h; sourceTree = "<group>"; };
+		7DDA8DA91927852300A1AFB7 /* WMBarScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMBarScanViewController.m; sourceTree = "<group>"; };
+		7DDA8DAA1927852300A1AFB7 /* WMBarScanViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMBarScanViewController.xib; sourceTree = "<group>"; };
 		7DDAFAF018B50AB000A05F5D /* WMButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMButtonCell.h; sourceTree = "<group>"; };
 		7DDAFAF118B50AB000A05F5D /* WMButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMButtonCell.m; sourceTree = "<group>"; };
 		7DDAFAF318B6117E00A05F5D /* WMAddressEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMAddressEditorViewController.h; sourceTree = "<group>"; };
@@ -2307,6 +2312,9 @@
 				7DDA8D9D1925544C00A1AFB7 /* WMFTPConfigurationViewController.h */,
 				7DDA8D9E1925544C00A1AFB7 /* WMFTPConfigurationViewController.m */,
 				7DDA8D9F1925544C00A1AFB7 /* WMFTPConfigurationViewController.xib */,
+				7DDA8DA81927852300A1AFB7 /* WMBarScanViewController.h */,
+				7DDA8DA91927852300A1AFB7 /* WMBarScanViewController.m */,
+				7DDA8DAA1927852300A1AFB7 /* WMBarScanViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3352,6 +3360,7 @@
 				5F67D1F218AC3BE000460C37 /* CarePlan.plist in Resources */,
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
 				7DDEE26E18F1919D00AF9FC6 /* WMManageTeamViewController.xib in Resources */,
+				7DDA8DAC1927852300A1AFB7 /* WMBarScanViewController.xib in Resources */,
 				7DDE40DA191532C4008DDA3E /* WMParticipantTableViewController.xib in Resources */,
 				5F67D1FB18AC3BE000460C37 /* PsychoSocialDefinitions.plist in Resources */,
 				7DB2061518A7D3400004DC32 /* InfoPlist.strings in Resources */,
@@ -3513,6 +3522,7 @@
 				7D4A3BE2191960F900D7CE03 /* WMStageCell.m in Sources */,
 				7DDBEDCF18BC0DED00FEF3FA /* WMWoundMeasurementValue.m in Sources */,
 				7DF4E93718C22F27000A3F5B /* WMWoundPosition.m in Sources */,
+				7DDA8DAB1927852300A1AFB7 /* WMBarScanViewController.m in Sources */,
 				7DD8375C18C7A5080028C2D3 /* AFHTTPClient.m in Sources */,
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
 				7D10CDDA18DA3DB800AD43E3 /* WMInterventionEventViewController.m in Sources */,
