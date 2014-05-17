@@ -7,6 +7,7 @@
 //
 
 #import "WMHomeBaseViewController_iPad.h"
+#import "WMWelcomeToWoundMapViewController_iPad.h"
 #import "WMPatientTableViewController.h"
 #import "WMPatientDetailViewController.h"
 #import "WMPhotosContainerViewController_iPad.h"
@@ -61,6 +62,11 @@
 }
 
 #pragma mark - View Controllers
+
+- (WMWelcomeToWoundMapViewController_iPad *)welcomeToWoundMapViewController
+{
+    return [[WMWelcomeToWoundMapViewController_iPad alloc] initWithNibName:@"WMWelcomeToWoundMapViewController_iPad" bundle:nil];
+}
 
 - (WMPhotosContainerViewController *)photosContainerViewController
 {

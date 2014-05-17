@@ -65,14 +65,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Welcome to WoundMap";
-//    [self setEdgesForExtendedLayout:UIRectEdgeNone];    // don't understand why need this
-    
-//    self.view.translatesAutoresizingMaskIntoConstraints = NO;
-    self.view.backgroundColor = [UIColor redColor];//DEBUG
+    self.view.backgroundColor = [UIColor blackColor];
     
     UINavigationController *viewController = [[UINavigationController alloc] initWithRootViewController:self.welcomeViewController];
     [viewController setNavigationBarHidden:YES animated:NO];
-    viewController.view.backgroundColor = [UIColor greenColor];//DEBUG
 
     [self addChildViewController:viewController];
     [self.view addSubview:viewController.view];
@@ -82,15 +78,12 @@
     id topGuide = self.topLayoutGuide;
     _padLeftView = [[UIView alloc] initWithFrame:CGRectZero];
     _padLeftView.translatesAutoresizingMaskIntoConstraints = NO;
-    _padLeftView.backgroundColor = [UIColor yellowColor];//DEBUG
     [self.view addSubview:_padLeftView];
     _padRightView = [[UIView alloc] initWithFrame:CGRectZero];
-    _padRightView.backgroundColor = [UIColor yellowColor];//DEBUG
     _padRightView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_padRightView];
     _bottomView = [[UIView alloc] initWithFrame:CGRectZero];
     _bottomView.translatesAutoresizingMaskIntoConstraints = NO;
-    _padRightView.backgroundColor = [UIColor blueColor];//DEBUG
     [self.view addSubview:_bottomView];
     
     UIView *padLeftView = _padLeftView;

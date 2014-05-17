@@ -109,6 +109,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     _enterWoundMapButton.enabled = self.setupConfigurationComplete;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    if (isPad && !self.navigationController.navigationBarHidden) {
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

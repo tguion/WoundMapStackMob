@@ -101,7 +101,7 @@ typedef enum {
 @property (weak, nonatomic) UIBarButtonItem *patientSummaryBarButtonItem;
 
 @property (readonly, nonatomic) WMManageTeamViewController *manageTeamViewController;
-@property (readonly, nonatomic) WMWelcomeToWoundMapViewController *welcomeToWoundMapViewController;
+@property (readonly, nonatomic) UIViewController *welcomeToWoundMapViewController;
 
 @property (readonly, nonatomic) WMPatientTableViewController *patientTableViewController;
 @property (readonly, nonatomic) WMPatientDetailViewController *patientDetailViewController;

@@ -266,7 +266,17 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
         WMNavigationStage *patientNavigationStage = patient.stage;
         if (![patientNavigationStage isEqual:navigationStage]) {
             patient.stage = navigationStage;
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNavigationStageChangedNotification object:[navigationStage objectID]];
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNavigationStageChangedNotification object:[navigationStage objectID]];
+            };
+            [ff updateObj:patient
+               onComplete:completionHandler
+                onOffline:completionHandler];
         }
     }
 }

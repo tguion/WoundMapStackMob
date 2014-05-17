@@ -43,7 +43,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.modalInPopover = YES;
-        self.preferredContentSize = CGSizeMake(320.0, 380.0);
+        self.preferredContentSize = CGSizeMake(320.0, 880.0);
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.tableView reloadData];

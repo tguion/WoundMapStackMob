@@ -97,7 +97,7 @@
                             <segment title="Discharge"/>
                         </segments>
                         <connections>
-                            <action selector="selectStageAction:" destination="-1" eventType="touchUpInside" id="9SL-Jp-MNU"/>
+                            <action selector="selectStageAction:" destination="-1" eventType="valueChanged" id="e32-15-pbj"/>
                         </connections>
                     </segmentedControl>
                 </subviews>

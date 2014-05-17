@@ -90,10 +90,9 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (self.isIPadIdiom) {
+    if (self.navigationController.navigationBarHidden) {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
-    [self.navigationController setToolbarHidden:YES animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
