@@ -291,7 +291,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case kConfirmInvitationActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
                 // add to team
-                [ffm addParticipantToTeamFromTeamInvitation:_teamInvitationToDeleteOrConfirm ff:ff completionHandler:^(NSError *error) {
+                [ffm addParticipantToTeamFromTeamInvitation:_teamInvitationToDeleteOrConfirm team:self.team ff:ff completionHandler:^(NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];
                     }

@@ -1457,14 +1457,13 @@
     WMErrorCallback block0 = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            // update woundPhoto grab bags
-            for (WMWoundPhoto *woundPhoto in woundPhotos) {
-                [ffm updateGrabBags:@[WMWoundPhotoRelationships.photos]
-                         aggregator:woundPhoto
-                                 ff:ff
-                  completionHandler:block1];
-            }
+        }
+        // update woundPhoto grab bags
+        for (WMWoundPhoto *woundPhoto in woundPhotos) {
+            [ffm updateGrabBags:@[WMWoundPhotoRelationships.photos]
+                     aggregator:woundPhoto
+                             ff:ff
+              completionHandler:block1];
         }
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];

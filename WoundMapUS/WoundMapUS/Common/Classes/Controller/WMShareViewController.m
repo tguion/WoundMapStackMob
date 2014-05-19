@@ -11,6 +11,7 @@
 #import "IAPNonConsumableViewController.h"
 #import "WMPatientReferralViewController.h"
 #import "WMFTPConfigurationViewController.h"
+#import "WMRequestConsultViewController.h"
 #import "PrintConfiguration.h"
 #import "WMParticipant.h"
 #import "WMMedicationGroup.h"
@@ -27,7 +28,7 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@interface WMShareViewController () <PrintConfigureViewControllerDelegate, MFMailComposeViewControllerDelegate, PatientReferralDelegate, FTPConfigurationDelegate>
+@interface WMShareViewController () <PrintConfigureViewControllerDelegate, MFMailComposeViewControllerDelegate, PatientReferralDelegate, FTPConfigurationDelegate, RequestConsultDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *creditStatus;
 @property (weak, nonatomic) IBOutlet UIButton *purchaseMoreTokensButton;
@@ -38,6 +39,7 @@
 @property (readonly, nonatomic) WMPrintConfigureViewController *printConfigureViewController;
 @property (readonly, nonatomic) WMPatientReferralViewController *patientReferralViewController;
 @property (readonly, nonatomic) WMFTPConfigurationViewController *ftpConfigurationViewController;
+@property (readonly, nonatomic) WMRequestConsultViewController *requestConsultViewController;
 
 @property (strong, nonatomic) WMPatientReferral *patientReferral;
 
@@ -191,6 +193,13 @@ CGFloat kCreditsMargin = 20;
     return viewController;
 }
 
+- (WMRequestConsultViewController *)requestConsultViewController
+{
+    WMRequestConsultViewController *viewController = [[WMRequestConsultViewController alloc] initWithNibName:@"WMRequestConsultViewController" bundle:nil];
+    viewController.delegate = self;
+    return viewController;
+}
+
 #pragma mark - Navigation
 
 - (void)navigateToEmailClinicalAssessmentDocument
@@ -211,6 +220,11 @@ CGFloat kCreditsMargin = 20;
 - (void)navigateToPatientReferral
 {
     [self.navigationController pushViewController:self.patientReferralViewController animated:YES];
+}
+
+- (void)navigateToRequestConsult
+{
+    [self.navigationController pushViewController:self.requestConsultViewController animated:YES];
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate
@@ -359,6 +373,13 @@ CGFloat kCreditsMargin = 20;
     }];
 }
 
+#pragma mark - RequestConsultDelegate
+
+- (void)requestConsultViewControllerDidFinish:(WMRequestConsultViewController *)viewController
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - IAPManager support
 
 - (void)navigateToSharePdfReportView
@@ -460,7 +481,7 @@ CGFloat kCreditsMargin = 20;
             switch (indexPath.row) {
                 case 0: {
                     // Consult
-                    
+                    [self navigateToRequestConsult];
                     break;
                 }
                 case 1: {

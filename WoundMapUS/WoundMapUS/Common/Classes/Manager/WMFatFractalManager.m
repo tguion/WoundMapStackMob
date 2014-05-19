@@ -756,7 +756,7 @@
     }];
 }
 
-- (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+- (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation team:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = teamInvitation.managedObjectContext;
     NSParameterAssert([teamInvitation.ffUrl length]);
@@ -764,7 +764,6 @@
     NSParameterAssert([invitee isKindOfClass:[WMParticipant class]]);
     FFUser *user = teamInvitation.invitee.user;
     NSParameterAssert([user isKindOfClass:[FFUser class]]);
-    WMTeam *team = teamInvitation.team;
     // only team leader can do this
     invitee.team = team;
     if (nil == invitee.dateAddedToTeam) {

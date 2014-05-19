@@ -297,6 +297,9 @@
 		7D40BFC418FD6FEF00DB2BCD /* DictionaryToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D40BFC318FD6FEF00DB2BCD /* DictionaryToDataTransformer.m */; };
 		7D4A3BE2191960F900D7CE03 /* WMStageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A3BE1191960F900D7CE03 /* WMStageCell.m */; };
 		7D4A3BE7191BC30D00D7CE03 /* WMPatientAutoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A3BE6191BC30D00D7CE03 /* WMPatientAutoTableViewCell.m */; };
+		7D67412A192A46E6007DBD1A /* WMRequestConsultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674128192A46E6007DBD1A /* WMRequestConsultViewController.m */; };
+		7D67412B192A46E6007DBD1A /* WMRequestConsultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D674129192A46E6007DBD1A /* WMRequestConsultViewController.xib */; };
+		7D67412D192A48AB007DBD1A /* RequestConsultIntroduction.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D67412C192A48AB007DBD1A /* RequestConsultIntroduction.html */; };
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
@@ -1075,6 +1078,10 @@
 		7D4A3BE1191960F900D7CE03 /* WMStageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMStageCell.m; sourceTree = "<group>"; };
 		7D4A3BE5191BC30D00D7CE03 /* WMPatientAutoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientAutoTableViewCell.h; sourceTree = "<group>"; };
 		7D4A3BE6191BC30D00D7CE03 /* WMPatientAutoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientAutoTableViewCell.m; sourceTree = "<group>"; };
+		7D674127192A46E6007DBD1A /* WMRequestConsultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMRequestConsultViewController.h; sourceTree = "<group>"; };
+		7D674128192A46E6007DBD1A /* WMRequestConsultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMRequestConsultViewController.m; sourceTree = "<group>"; };
+		7D674129192A46E6007DBD1A /* WMRequestConsultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMRequestConsultViewController.xib; sourceTree = "<group>"; };
+		7D67412C192A48AB007DBD1A /* RequestConsultIntroduction.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = RequestConsultIntroduction.html; sourceTree = "<group>"; };
 		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
 		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
@@ -2312,6 +2319,9 @@
 				7DDA8DA81927852300A1AFB7 /* WMBarScanViewController.h */,
 				7DDA8DA91927852300A1AFB7 /* WMBarScanViewController.m */,
 				7DDA8DAA1927852300A1AFB7 /* WMBarScanViewController.xib */,
+				7D674127192A46E6007DBD1A /* WMRequestConsultViewController.h */,
+				7D674128192A46E6007DBD1A /* WMRequestConsultViewController.m */,
+				7D674129192A46E6007DBD1A /* WMRequestConsultViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3031,6 +3041,7 @@
 				7D40BFBB18F9560200DB2BCD /* TeamMemberIAPDesc.html */,
 				7D6A58CC190D833800D72800 /* PatientReadOnlyExplanation.html */,
 				7D6A58CE1910043400D72800 /* ConsultantGroupIAPDesc.html */,
+				7D67412C192A48AB007DBD1A /* RequestConsultIntroduction.html */,
 			);
 			path = IAP;
 			sourceTree = "<group>";
@@ -3239,6 +3250,8 @@
 				7D6A58D41910081200D72800 /* WMCreateConsultingGroupViewController.xib in Resources */,
 				7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */,
 				7DDA8DA5192662B300A1AFB7 /* WoundMap.sqlite in Resources */,
+				7D67412B192A46E6007DBD1A /* WMRequestConsultViewController.xib in Resources */,
+				7D67412D192A48AB007DBD1A /* RequestConsultIntroduction.html in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
 				7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */,
 				7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */,
@@ -3652,6 +3665,7 @@
 				7D10CDE718DA431200AD43E3 /* WMDefinitionTableViewCell.m in Sources */,
 				7D10CD5C18D2146000AD43E3 /* ImageToDataTransformer.m in Sources */,
 				7D39DAD118B7CD480054DDC3 /* WMNavigationNodeButton.m in Sources */,
+				7D67412A192A46E6007DBD1A /* WMRequestConsultViewController.m in Sources */,
 				7DF4E97318C29A07000A3F5B /* WMInterventionEvent.m in Sources */,
 				7D10CE3218DF5ED100AD43E3 /* MBProgressHUD.m in Sources */,
 				7DF4E9C218C4CAAE000A3F5B /* PDFRendererTwoColumnsTwoPhotos.m in Sources */,
