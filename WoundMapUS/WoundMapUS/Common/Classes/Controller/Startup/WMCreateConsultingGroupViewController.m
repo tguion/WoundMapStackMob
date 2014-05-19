@@ -136,17 +136,15 @@
     FFHttpMethodCompletion onCompleteUpdate = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf.delegate createConsultantViewControllerDidFinish:weakSelf];
         }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf.delegate createConsultantViewControllerDidFinish:weakSelf];
     };
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [ff updateObj:team onComplete:onCompleteUpdate onOffline:onCompleteUpdate];
         }
+        [ff updateObj:team onComplete:onCompleteUpdate onOffline:onCompleteUpdate];
     };
     [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {

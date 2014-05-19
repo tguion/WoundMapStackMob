@@ -21,6 +21,7 @@
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMNavigationCoordinator.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 
 #define kPatientTableViewCellHeight 76.0
@@ -101,13 +102,17 @@
     [self.tableView registerClass:[WMPatientAutoTableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.searchDisplayController.searchResultsTableView registerClass:[WMPatientAutoTableViewCell class] forCellReuseIdentifier:@"SearchCell"];
     _patientToOpen = self.patient;
-    // show progress
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    // show progress only if 24 hours has passed
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    NSInteger hoursSinceLastPatientListUpdate = userDefaultsManager.hoursSinceLastPatientListUpdate;
+    if (hoursSinceLastPatientListUpdate > 24) {
+        [userDefaultsManager patientListUpdated];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(self) weakSelf = self;
     [ffm fetchPatients:self.managedObjectContext ff:ff completionHandler:^(NSError *error) {
-        [weakSelf hideProgressView];
         if (error) {
             [WMUtilities logError:error];
         } else {

@@ -714,7 +714,7 @@
     self.compassView.patientPhotoView.navigationNodeTitle = self.parentNavigationNode.displayTitle;
     NSString *iconSuffix = (self.isIPadIdiom ? @"_iPad":@"_iPhone");
     self.compassView.patientPhotoView.navigationNodeIconName = [self.parentNavigationNode.icon stringByAppendingString:iconSuffix];
-    self.compassView.actionState = (nil == self.parentNavigationNode ? CompassViewActionStateHome:CompassViewActionStateNone);
+    self.compassView.actionState = (nil == self.parentNavigationNode ? CompassViewActionStateHome:CompassViewActionStateLevel1);
     WMNavigationStage *navigationStage = self.appDelegate.navigationCoordinator.navigationStage;
     NSInteger index = [[WMNavigationStage sortedStagesForTrack:self.appDelegate.navigationCoordinator.navigationTrack] indexOfObject:navigationStage];
     self.stageSegmentedControl.selectedSegmentIndex = index;

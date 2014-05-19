@@ -124,6 +124,17 @@ NSTimeInterval kOneDayTimeInterval = 60.0 * 60 * 24.0;
     return [calendar dateByAddingComponents:dateComponents toDate:date options:0];
 }
 
++ (NSDate *)dateByAddingDays:(NSInteger)numberDays toDate:(NSDate *)date
+{
+    if (nil == date) {
+        date = [NSDate date];
+    }
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    [dateComponents setDay:numberDays];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    return [calendar dateByAddingComponents:dateComponents toDate:date options:0];
+}
+
 #pragma mark - Validation
 
 + (BOOL)NSStringIsValidEmail:(NSString *)checkString

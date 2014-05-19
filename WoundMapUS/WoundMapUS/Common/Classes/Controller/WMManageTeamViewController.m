@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 @property (nonatomic) BOOL acquiringTeamInvitations;
 @property (nonatomic) BOOL acquiringTeamMembers;
 
+@property (strong, nonatomic) NSDate *fiveDaysAgo;
+
 @property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
 @property (strong, nonatomic) WMTeamInvitation *teamInvitationToDeleteOrConfirm;
@@ -70,6 +72,16 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     _acquiringTeamInvitations = YES;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/invitations", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if ([object isKindOfClass:[NSArray class]]) {
+            // make sure we didn't loose the team reference
+            NSArray *teamInvitations = (NSArray *)object;
+            for (WMTeamInvitation *teamInvitation in teamInvitations) {
+                if (nil == teamInvitation.team) {
+                    teamInvitation.team = self.team;
+                    [ff updateObj:teamInvitation];
+                }
+            }
+        }
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         _acquiringTeamInvitations = NO;
         _teamInvitations = object;
@@ -88,6 +100,27 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [self.tableView registerClass:[WMValue1TableViewCell class] forCellReuseIdentifier:@"ValueCell"];
     [self.tableView setEditing:YES];
     [self.navigationController setToolbarHidden:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // check if team members are close to needed re-up
+    NSMutableArray *namesExpiring = [NSMutableArray array];
+    NSDate *fiveDaysAgo = self.fiveDaysAgo;
+    for (WMParticipant *participant in self.teamMembers) {
+        if ([participant.dateTeamSubscriptionExpires compare:fiveDaysAgo] == NSOrderedDescending) {
+            [namesExpiring addObject:participant.firstName];
+        }
+    }
+    if ([namesExpiring count]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Members Expiring"
+                                                            message:[NSString stringWithFormat:@"The following team member's membership may needed to be extended: %@", [namesExpiring componentsJoinedByString:@","]]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -128,6 +161,14 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                inContext:self.managedObjectContext];
     }
     return _teamMembers;
+}
+
+- (NSDate *)fiveDaysAgo
+{
+    if (nil == _fiveDaysAgo) {
+        _fiveDaysAgo = [WMUtilities dateByAddingDays:-5 toDate:nil];
+    }
+    return _fiveDaysAgo;
 }
 
 - (BOOL)indexPathIsAddInvitation:(NSIndexPath *)indexPath
@@ -537,6 +578,16 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             cell.textLabel.text = teamMember.name;
             cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
             cell.detailTextLabel.text = [NSString stringWithFormat:@"Expires %@", [NSDateFormatter localizedStringFromDate:teamMember.dateTeamSubscriptionExpires dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
+            NSDate *fiveDaysAgo = self.fiveDaysAgo;
+            if ([teamMember.dateTeamSubscriptionExpires compare:fiveDaysAgo] == NSOrderedDescending) {
+                NSString *imageName = @"alert_yellow_iPhone";
+                if ([teamMember.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedDescending) {
+                    imageName = @"alert_red_iPhone";
+                }
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+            } else {
+                cell.accessoryView = nil;
+            }
             break;
         }
     }

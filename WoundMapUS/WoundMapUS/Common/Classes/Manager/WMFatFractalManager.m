@@ -867,11 +867,6 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     NSParameterAssert(managedObjectContext == [photo managedObjectContext]);
-    NSData *thumbnail = UIImagePNGRepresentation(woundPhoto.thumbnail);
-    NSData *thumbnailLarge = UIImagePNGRepresentation(woundPhoto.thumbnailLarge);
-    NSData *thumbnailMini = UIImagePNGRepresentation(woundPhoto.thumbnailMini);
-    NSData *photoData = UIImagePNGRepresentation(photo.photo);
-    __block NSInteger counter = 0;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -884,32 +879,37 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
-            [ff updateBlob:photoData
-              withMimeType:@"image/png"
-                    forObj:photo
-                memberName:WMPhotoAttributes.photo
-                onComplete:onComplete onOffline:onComplete];
-        }
+        [ff updateBlob:UIImagePNGRepresentation(photo.photo)
+          withMimeType:@"image/png"
+                forObj:photo
+            memberName:WMPhotoAttributes.photo
+            onComplete:onComplete onOffline:onComplete];
     };
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        counter = 3;
-        [ff updateBlob:thumbnail
-          withMimeType:@"image/png"
-                forObj:woundPhoto
-            memberName:WMWoundPhotoAttributes.thumbnail
-            onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
-        [ff updateBlob:thumbnailLarge
-          withMimeType:@"image/png"
-                forObj:woundPhoto
-            memberName:WMWoundPhotoAttributes.thumbnailLarge
-            onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
-        [ff updateBlob:thumbnailMini
+    FFHttpMethodCompletion onCompleteThumbnailLarge = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailMini)
           withMimeType:@"image/png"
                 forObj:woundPhoto
             memberName:WMWoundPhotoAttributes.thumbnailMini
             onComplete:uploadWoundPhotoComplete onOffline:uploadWoundPhotoComplete];
-    });
+    };
+    FFHttpMethodCompletion onCompleteThumbnail = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailLarge)
+          withMimeType:@"image/png"
+                forObj:woundPhoto
+            memberName:WMWoundPhotoAttributes.thumbnailLarge
+            onComplete:onCompleteThumbnailLarge onOffline:onCompleteThumbnailLarge];
+    };
+    [ff updateBlob:UIImagePNGRepresentation(woundPhoto.thumbnail)
+      withMimeType:@"image/png"
+            forObj:woundPhoto
+        memberName:WMWoundPhotoAttributes.thumbnail
+        onComplete:onCompleteThumbnail onOffline:onCompleteThumbnail];
 }
 
 - (NSInteger)deleteExpiredPhotos:(WMTeamPolicy *)teamPolicy

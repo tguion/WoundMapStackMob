@@ -10,6 +10,9 @@
 
 @interface WMPatientPhotoImageView : UIImageView
 
+@property (strong, nonatomic) UIView *returnToPreviousLevelView;
+
 - (void)updateForPatient:(WMPatient *)patient;
+- (void)flashReturnToPreviousLevelView;
 
 @end

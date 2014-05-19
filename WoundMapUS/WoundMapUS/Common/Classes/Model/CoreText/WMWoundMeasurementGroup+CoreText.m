@@ -22,6 +22,9 @@
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     WCModelTextKitAtrributes *modelTextKitAtrributes = [WCModelTextKitAtrributes sharedInstance];
     NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] init];
+    if (nil == self.wound) {
+        return mutableAttributedString;
+    }
     CGFloat currentFontSize = fontSize;
     NSAttributedString *paragraphAttributedString = [modelTextKitAtrributes paragraphAttributedString];
     // heading

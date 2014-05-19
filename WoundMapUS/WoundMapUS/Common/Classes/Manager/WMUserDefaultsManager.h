@@ -28,6 +28,8 @@
 @property (nonatomic) NSDictionary *lastRefreshTimeMap;
 @property (nonatomic) NSString *woundPositionTermKey;           // key used to display wound position (Left, Right, etc)
 @property (nonatomic) NSString *defaultIdRoot;
+@property (readonly, nonatomic) NSInteger hoursSinceLastPatientListUpdate;
+- (void)patientListUpdated;
 
 @property (nonatomic) NSString *lastFTPHost;
 @property (nonatomic) NSString *lastFTPPath;

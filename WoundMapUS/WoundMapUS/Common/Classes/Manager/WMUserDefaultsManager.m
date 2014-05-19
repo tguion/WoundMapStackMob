@@ -158,6 +158,23 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSInteger)hoursSinceLastPatientListUpdate
+{
+    double lastDateUpdated = [[NSUserDefaults standardUserDefaults] doubleForKey:@"com.mobilehealthware.woundmap.lastPatientListUpdate"];
+    if (lastDateUpdated == 0.0) {
+        return NSIntegerMax;
+    }
+    // else
+    NSTimeInterval nowTimeInterval = [NSDate timeIntervalSinceReferenceDate];
+    return (nowTimeInterval - lastDateUpdated)/24.0 + 1;
+}
+
+- (void)patientListUpdated
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setDouble:[NSDate timeIntervalSinceReferenceDate] forKey:@"com.mobilehealthware.woundmap.lastPatientListUpdate"];
+}
+
 #pragma mark - FF
 
 - (NSDictionary *)lastRefreshTimeMap

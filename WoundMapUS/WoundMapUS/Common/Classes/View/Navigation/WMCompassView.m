@@ -36,6 +36,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 @property (assign, nonatomic) BOOL navigationNodeControlsActiveFlag;            // YES is nav controls are in active position
 @property (weak, nonatomic) WMPatientPhotoImageView *patientImageView;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicatorView;
+@property (strong, nonatomic) IBOutlet UILabel *returnToPreviousLevelView;
 
 @property (nonatomic) CGRect compassImageViewFrame;                             // acquire before transforms
 @property (nonatomic) CGRect clippingRect;
@@ -65,6 +66,8 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
     WMPatientPhotoImageView *patientImageView = [[WMPatientPhotoImageView alloc] initWithFrame:CGRectInset(self.patientPhotoView.frame, 10.0, 10.0)];
     [self insertSubview:patientImageView belowSubview:self.patientPhotoView];
     _patientImageView = patientImageView;
+    _returnToPreviousLevelView.textColor = [UIColor whiteColor];
+    _patientImageView.returnToPreviousLevelView = _returnToPreviousLevelView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -284,6 +287,9 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
     _actionState = actionState;
     [self didChangeValueForKey:@"actionState"];
     self.patientPhotoView.actionState = actionState;
+    if (actionState > CompassViewActionStateHome) {
+        [_patientImageView performSelector:@selector(flashReturnToPreviousLevelView) withObject:nil afterDelay:1.0];
+    }
 }
 
 #pragma mark - Actions

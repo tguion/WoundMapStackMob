@@ -54,7 +54,7 @@
         paragraphStyle.alignment = NSTextAlignmentCenter;
         paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         _navigationNodeTitleAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          [UIFont boldSystemFontOfSize:15.0], NSFontAttributeName,
+                                          [UIFont boldSystemFontOfSize:14.0], NSFontAttributeName,
                                           [UIColor colorWithWhite:0.1 alpha:0.8], NSForegroundColorAttributeName,
                                           paragraphStyle, NSParagraphStyleAttributeName,
                                           nil];
@@ -134,16 +134,9 @@
             imageName = (self.isIPadIdiom ? @"camera_iPad":@"camera_iPhone");
             break;
         }
-        case CompassViewActionStateLevel1: {
-            // one step from home
-            imageName = (self.isIPadIdiom ? @"home_iPad":@"home_iPhone");
-            overlayAlpha = 1.0;
-            break;
-        }
+        case CompassViewActionStateLevel1:
         case CompassViewActionStateLevel2:
         case CompassViewActionStateLevel3: {
-            // more than one step from home
-            imageName = (self.isIPadIdiom ? @"homeback_iPad":@"homeback_iPhone");
             overlayAlpha = 1.0;
             break;
         }

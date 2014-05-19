@@ -59,6 +59,19 @@
     }
 }
 
+- (void)flashReturnToPreviousLevelView
+{
+//    [self addSubview:_returnToPreviousLevelView];
+//    [UIView animateWithDuration:4.0
+//                     animations:^{
+//                         _returnToPreviousLevelView.alpha = 0.0;
+//                     } completion:^(BOOL finished) {
+//                         [_returnToPreviousLevelView removeFromSuperview];
+//                         _returnToPreviousLevelView.alpha = 1.0;
+//                     }];
+}
+
+
 - (void)installClippingPath
 {
     UIBezierPath *clipPath = [UIBezierPath bezierPathWithOvalInRect:self.bounds];
