@@ -29,13 +29,15 @@
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
+#define kDeletePhotosActionSheetTag 1000
+
 typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     None,
     SurgicalHistory,
     RelevantMedications
 };
 
-@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate, MedicalHistoryViewControllerDelegate, NoteViewControllerDelegate>
+@interface WMPatientDetailViewController () <PersonEditorViewControllerDelegate, IdListViewControllerDelegate, MedicalHistoryViewControllerDelegate, NoteViewControllerDelegate, UIActionSheetDelegate>
 
 // data
 @property (strong, nonatomic) WMPatient *patient;       // create patient if new patient, otherwise we hold a strong reference to the active patient (held by navigationCoordinator)
@@ -332,6 +334,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             cellReuseIdentifier = @"ValueCell";
             break;
         }
+        case 3: {
+            cellReuseIdentifier = @"ValueCell";
+            break;
+        }
     }
     return cellReuseIdentifier;
 }
@@ -374,6 +380,17 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     WMNoteViewController *noteViewController = [[WMNoteViewController alloc] initWithNibName:@"WMNoteViewController" bundle:nil];
     noteViewController.delegate = self;
     return noteViewController;
+}
+
+- (void)deletePhotoBlobs
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Delete Photos"
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Delete Photos"
+                                                    otherButtonTitles:nil];
+    actionSheet.tag = kDeletePhotosActionSheetTag;
+    [actionSheet showInView:self.view];
 }
 
 #pragma mark - BaseViewController
@@ -478,6 +495,25 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
     }];
 }
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet.tag == kDeletePhotosActionSheetTag) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            [ffm deletePhotosForPatient:self.patient];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Deleting Photos"
+                                                                message:@"All wound photos are being deleted."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }
+    }
+}
+
 
 #pragma mark - UITextFieldDelegate
 
@@ -678,9 +714,12 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     [self.navigationController pushViewController:self.noteViewController animated:YES];
                     break;
                 }
-                default:
-                    break;
             }
+            break;
+        }
+        case 3: {
+            [self deletePhotoBlobs];
+            break;
         }
     }
 }
@@ -689,7 +728,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return (self.patient.photoBlobCount ? 4:3);
 }
 
 // fixed font style. use custom view (UILabel) if you want something different
@@ -707,6 +746,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         }
         case 2: {
             title = @"Patient Status";
+            break;
+        }
+        case 3: {
+            title = @"Photos";
             break;
         }
     }
@@ -727,6 +770,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         }
         case 2: {
             count = 3;
+            break;
+        }
+        case 3: {
+            count = 1;
             break;
         }
     }
@@ -832,6 +879,12 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     break;
                 }
             }
+            break;
+        }
+        case 3: {
+            cell.textLabel.text = @"Delete Photos";
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d photos", self.patient.photosCount];
+            cell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }
     }

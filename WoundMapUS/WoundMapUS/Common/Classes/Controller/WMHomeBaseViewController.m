@@ -39,6 +39,8 @@
 
 #define kSignOutActionSheetTag 1000
 
+#define kMaximumNumberOfNonTeamPatients 5
+
 @interface WMHomeBaseViewController () <UIActionSheetDelegate>
 
 @property (readonly, nonatomic) WMChooseTrackViewController *chooseTrackViewController;
@@ -1016,7 +1018,18 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    // create patient
+    // create patient if team, or if not exceed maximum number of patients
+    WMTeam *team = self.appDelegate.participant.team;
+    if (nil == team && [WMPatient patientCount:self.managedObjectContext] >= kMaximumNumberOfNonTeamPatients) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action not Allowed"
+                                                            message:@"The maximum number of patients for non-team members has been reached. This restriction will be removed when you create or join a team. You may delete patients from the 'Select Patient' view."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    // else
     [self navigateToPatientDetailViewControllerForNewPatient:navigationNodeButton];
 }
 

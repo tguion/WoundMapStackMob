@@ -11,6 +11,7 @@
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMValue1TableViewCell.h"
 #import "MBProgressHUD.h"
+#import "WMPatient.h"
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
@@ -308,27 +309,16 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case kRemoveParticipantActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                WMTeam *team = _teamMemberToDelete.team;
-                _teamMemberToDelete.team = nil;
-                [managedObjetContext MR_saveToPersistentStoreAndWait];
-                FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                [ffm removeParticipant:_teamMemberToDelete fromTeam:_teamMemberToDelete.team ff:ff completionHandler:^(NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];
                     }
-                    [ffm removeParticipant:_teamMemberToDelete fromTeam:team ff:ff completionHandler:^(NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        } else {
-                            [managedObjetContext MR_saveToPersistentStoreAndWait];
-                            _teamMembers = nil;
-                            _teamMemberToDelete = nil;
-                            [weakSelf.tableView reloadData];
-                        }
-                    }];
-                };
-                [ff updateObj:_teamMemberToDelete
-                   onComplete:onComplete
-                    onOffline:onComplete];
+                    _teamMembers = nil;
+                    _teamMemberToDelete = nil;
+                    [weakSelf.tableView reloadData];
+                    [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                }];
             }
             break;
         }

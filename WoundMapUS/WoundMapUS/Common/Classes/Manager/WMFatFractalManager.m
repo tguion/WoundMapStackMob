@@ -797,18 +797,68 @@
 {
     NSParameterAssert([teamMember.ffUrl length]);
     NSParameterAssert([team.ffUrl length]);
+    FFUserGroup *participantGroup = team.participantGroup;
+    NSParameterAssert(participantGroup);
+    FFUser *user = teamMember.user;
+    NSParameterAssert(user);
+
+    NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
+    WMParticipant *teamLeader = team.teamLeader;
+    
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
+            [ff forgetObj:teamMember];
+            [managedObjectContext MR_deleteObjects:@[teamMember]];
+            DLog(@"deleted objects:%@", managedObjectContext.deletedObjects);
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            completionHandler(error);
+        }
+    };
+    // move the patients to team leader (signed in participant)
+    NSArray *patients = [WMPatient MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMPatientRelationships.participant, teamMember]
+                                                 inContext:managedObjectContext];
+    counter = 3 * [patients count];
+    for (WMPatient *patient in patients) {
+        [ff grabBagRemoveItemAtFfUrl:patient.ffUrl
+                      fromObjAtFfUrl:teamMember.ffUrl
+                         grabBagName:WMParticipantRelationships.patients
+                          onComplete:onComplete];
+        patient.participant = teamLeader;
+        [ff grabBagAddItemAtFfUrl:patient.ffUrl
+                     toObjAtFfUrl:teamLeader.ffUrl
+                      grabBagName:WMParticipantRelationships.patients
+                       onComplete:onComplete];
+        [ff updateObj:patient
+           onComplete:onComplete
+            onOffline:onComplete];
+    }
+
+    FFHttpMethodCompletion onRemoveFromTeam = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        NSError *localError = nil;
+        [participantGroup removeUser:user error:&localError];
+        if (localError) {
+            [WMUtilities logError:localError];
+        }
+        onComplete(error, object, response);
+    };
+    
+    ++counter;
+    teamMember.team = nil;
+    [ff updateObj:teamMember
+       onComplete:onRemoveFromTeam
+        onOffline:onRemoveFromTeam];
+    ++counter;
     [ff grabBagRemoveItemAtFfUrl:teamMember.ffUrl
                   fromObjAtFfUrl:team.ffUrl
                      grabBagName:WMTeamRelationships.participants
-                      onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                          FFUser *user = teamMember.user;
-                          NSParameterAssert(user);
-                          FFUserGroup *participantGroup = teamMember.team.participantGroup;
-                          NSParameterAssert(participantGroup);
-                          NSError *localError = nil;
-                          [participantGroup removeUser:user error:&localError];
-                          completionHandler(error);
-                      }];
+                      onComplete:onComplete];
 }
 
 #pragma mark - Blobs

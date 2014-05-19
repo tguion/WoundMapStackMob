@@ -253,6 +253,11 @@ typedef enum {
     return [WMWoundPhoto MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound.patient == %@", self] inContext:[self managedObjectContext]];
 }
 
+- (NSInteger)photoBlobCount
+{
+    return [WMWoundPhoto MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"wound.patient == %@ AND %K != nil", self, WMWoundPhotoAttributes.thumbnailMini] inContext:[self managedObjectContext]];
+}
+
 - (BOOL)faceDetectionFailed
 {
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:PatientFlagsFaceDetectionFailed];
@@ -340,7 +345,8 @@ typedef enum {
                                                             @"photosCount",
                                                             @"dayOrMoreSinceCreated",
                                                             @"lastActiveMedicalHistoryGroup",
-                                                            @"hasPatientDetails"]];
+                                                            @"hasPatientDetails",
+                                                            @"photoBlobCount"]];
     });
     return PropertyNamesNotToSerialize;
 }

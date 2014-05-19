@@ -166,28 +166,26 @@
 - (IBAction)doneAction:(id)sender
 {
     [self.view endEditing:YES];
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
     }
     if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
+        managedObjectContext.undoManager = nil;
     }
     // save locally
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     // update back end
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSArray *medicalHistoryValues = [self.fetchedResultsController fetchedObjects];
     __weak __typeof(&*self)weakSelf = self;
     NSParameterAssert([_medicalHistoryGroup.ffUrl length]);
-    __block NSInteger callbackCount = 0;
-    NSInteger callbacksTotal = [medicalHistoryValues count] * 2;
+    __block NSInteger counter = 0;
     FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
-        ++callbackCount;
-        if (callbackCount == callbacksTotal) {
+        if (--counter == 0) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.delegate medicalHistoryViewControllerDidFinish:weakSelf];
@@ -196,8 +194,11 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     for (WMMedicalHistoryValue *medicalHistoryValue in medicalHistoryValues) {
         if (medicalHistoryValue.ffUrl) {
+            ++counter;
             [ff updateObj:medicalHistoryValue onComplete:block];
         } else {
+            ++counter;
+            ++counter;
             [ff createObj:medicalHistoryValue
                     atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryValue entityName]]
                onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {

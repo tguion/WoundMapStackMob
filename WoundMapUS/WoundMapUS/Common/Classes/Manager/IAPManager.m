@@ -21,11 +21,11 @@
 #import "WCAppDelegate.h"
 #import "CoreDataHelper.h"
 
-NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print5.token";
-NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print10.token";
-NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundcare.woundmap.cad.print25.token";
+NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundmap.cad.print5.token";
+NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundmap.cad.print10.token";
+NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundmap.cad.print25.token";
 
-NSString *const kTeamMemberProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.team.teamMember";
+NSString *const kTeamMemberProductIdentifier = @"com.mobilehealthware.woundmap.team.teamMember";
 NSString *const kCreateConsultingGroupProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.consultGroup.create";
 
 NSString *const kIAPManagerProductPurchasedNotification = @"IAPHelperProductPurchasedNotification";
@@ -154,7 +154,7 @@ NSString* _deviceId;
     if (iapProduct.aggregatorFlag) {
         result = (self.appDelegate.participant.reportTokenCountValue > 0);
     } else {
-        result = [iapProduct.purchasedFlag boolValue];
+        result = iapProduct.purchasedFlagValue;
     }
     return result;
 }

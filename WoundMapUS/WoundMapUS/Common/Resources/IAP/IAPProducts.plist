@@ -21,7 +21,7 @@
 		<array>
 			<dict>
 				<key>identifier</key>
-				<string>com.mobilehealthware.woundcare.woundmap.cad.print5.token</string>
+				<string>com.mobilehealthware.woundmap.cad.print5.token</string>
 				<key>title</key>
 				<string>Purchase 5 Credits</string>
 				<key>proposition</key>
@@ -39,7 +39,7 @@
 			</dict>
 			<dict>
 				<key>identifier</key>
-				<string>com.mobilehealthware.woundcare.woundmap.cad.print10.token</string>
+				<string>com.mobilehealthware.woundmap.cad.print10.token</string>
 				<key>title</key>
 				<string>Purchase 10 Credits</string>
 				<key>proposition</key>
@@ -57,7 +57,7 @@
 			</dict>
 			<dict>
 				<key>identifier</key>
-				<string>com.mobilehealthware.woundcare.woundmap.cad.print25.token</string>
+				<string>com.mobilehealthware.woundmap.cad.print25.token</string>
 				<key>title</key>
 				<string>Purchase 25 Credits</string>
 				<key>proposition</key>
@@ -111,7 +111,7 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
-		<string>com.mobilehealthware.woundcare.woundmap.team.teamLeader</string>
+		<string>com.mobilehealthware.woundmap.team.teamMember</string>
 		<key>title</key>
 		<string>Create a Team</string>
 		<key>proposition</key>
@@ -120,20 +120,6 @@
 		<string>Your account will be charged a $99  monthly subscription fee.</string>
 		<key>descHTML</key>
 		<string>TeamMemberIAPDesc.html</string>
-		<key>aggregatorFlag</key>
-		<false/>
-	</dict>
-	<dict>
-		<key>identifier</key>
-		<string>com.mobilehealthware.woundcare.woundmap.team.teamMember</string>
-		<key>title</key>
-		<string>Add a Team Member</string>
-		<key>proposition</key>
-		<string>Each new team member will be able to collaborate with wound care for team patients.</string>
-		<key>description</key>
-		<string>Your account will be charged a  monthly subscription fee for each team member.</string>
-		<key>descHTML</key>
-		<string>&lt;p&gt;A new &lt;strong&gt;Team Member&lt;/strong&gt; will be added to your team after an invitation is accepted by the invitee and confirmed by you.&lt;/p&gt;</string>
 		<key>aggregatorFlag</key>
 		<false/>
 	</dict>

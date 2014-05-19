@@ -23,7 +23,6 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 
 @property (strong, nonatomic) IBOutlet UIView *actionContainerView;
 @property (strong, nonatomic) IBOutlet UIView *descHTMLContainerView;
-@property (strong, nonatomic) IBOutlet UILabel *descHTMLLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descTextView;
 @property (readonly, nonatomic) WMInstructionContentViewController *instructionContentViewController;
 
@@ -52,7 +51,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     NSAttributedString *attributedString = self.iapProduct.descHTMLAttributedString;
     if (attributedString) {
         _descHTMLContainerView.frame = self.navigationController.view.bounds;
-        _descHTMLLabel.attributedText = attributedString;
+        _descTextView.attributedText = attributedString;
         [self.navigationController.view addSubview:_descHTMLContainerView];
     }
 }

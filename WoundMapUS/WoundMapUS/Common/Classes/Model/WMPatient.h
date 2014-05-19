@@ -29,6 +29,7 @@ extern NSString * const kConsultantGroupName;
 @property (readonly, nonatomic) NSArray *sortedWounds;
 @property (readonly, nonatomic) NSInteger woundCount;
 @property (readonly, nonatomic) NSInteger photosCount;
+@property (readonly, nonatomic) NSInteger photoBlobCount;
 @property (readonly, nonatomic) BOOL dayOrMoreSinceCreated;
 @property (readonly, nonatomic) WMMedicalHistoryGroup *lastActiveMedicalHistoryGroup;
 @property (readonly, nonatomic) BOOL hasPatientDetails;

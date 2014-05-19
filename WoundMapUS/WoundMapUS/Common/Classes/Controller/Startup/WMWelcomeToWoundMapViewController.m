@@ -517,11 +517,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             [self presentCreateConsultingGroupViewController];
                         }
                     } else {
-                        if (NO) {
+                        if (YES) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                                                  successBlock:^{
                                                                                      [weakSelf presentCreateTeamViewController];
-                                                                                 } withObject:self.view];
+                                                                                 } proceedAlways:YES withObject:self.view];
                             if (proceed) {
                                 [self presentCreateTeamViewController];
                             }

@@ -77,7 +77,7 @@
     if (nil == _woundTextAttributes) {
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.alignment = NSTextAlignmentCenter;
-        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         _woundTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                 [UIFont systemFontOfSize:(self.isIPadIdiom ? 17.0:13.0)], NSFontAttributeName,
                                 [UIColor darkGrayColor], NSForegroundColorAttributeName,
@@ -204,6 +204,11 @@
          } else if ([woundTypeForDisplay length] > 0) {
              string = [string stringByAppendingString:[NSString stringWithFormat:@" - %@", woundTypeForDisplay]];
          }
+         NSString *woundLocationAndPositionForDisplay = wound.woundLocationAndPositionForDisplay;
+         if ([woundLocationAndPositionForDisplay length]) {
+             string = [string stringByAppendingString:@"\n"];
+             string = [string stringByAppendingString:woundLocationAndPositionForDisplay];
+         }
          textRect = [string boundingRectWithSize:CGSizeMake(width, height)
                                          options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                       attributes:self.woundTextAttributes
@@ -214,12 +219,6 @@
          textRect = CGRectIntegral(textRect);
          [string drawInRect:textRect withAttributes:self.woundTextAttributes];
          textRect.origin.y += textRect.size.height;
-         // wound location TODO finish
-//         string = wound.location.title;
-//         if (0 == [string length]) {
-//             string = @"Unspecified Wound";
-//         }
-//         [string drawInRect:textRect withAttributes:self.woundTextAttributes];
      }
  }
 

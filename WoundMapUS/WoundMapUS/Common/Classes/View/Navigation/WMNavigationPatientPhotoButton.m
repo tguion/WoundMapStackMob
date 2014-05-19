@@ -52,7 +52,7 @@
     if (nil == _navigationNodeTitleAttributes) {
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.alignment = NSTextAlignmentCenter;
-        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         _navigationNodeTitleAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                           [UIFont boldSystemFontOfSize:15.0], NSFontAttributeName,
                                           [UIColor colorWithWhite:0.1 alpha:0.8], NSForegroundColorAttributeName,
@@ -101,10 +101,14 @@
 {
     CGRect rect = self.bounds;
     CGRect imageRect = CGRectInset(rect, kNavigationImageInset, kNavigationImageInset);
-    CGSize aSize = [title sizeWithAttributes:self.navigationNodeTitleAttributes];
+    CGFloat width = CGRectGetWidth(imageRect);
+    CGRect textRect = [self.navigationNodeTitle boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
+                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                          attributes:self.navigationNodeTitleAttributes
+                                                             context:nil];
     UIImage *icon = [UIImage imageNamed:imageName];
     CGFloat x = CGRectGetMinX(imageRect) + roundf((CGRectGetWidth(imageRect) - icon.size.width)/2.0);
-    CGFloat totalHeight = ceilf(icon.size.height + 4.0 + aSize.height);
+    CGFloat totalHeight = ceilf(icon.size.height + 4.0 + CGRectGetHeight(textRect));
     CGFloat y = CGRectGetMinY(imageRect) + roundf((CGRectGetHeight(imageRect) - totalHeight)/2.0);
     CGRect frame = CGRectMake(x, y, icon.size.width, icon.size.height);
     if (nil != view) {
@@ -153,15 +157,22 @@
         [image drawAtPoint:CGPointMake(x, y) blendMode:kCGBlendModeLighten alpha:overlayAlpha];
     }
     if ([self.navigationNodeTitle length] > 0) {
-        CGFloat width = CGRectGetWidth(imageRect) - 8.0;
+        CGFloat width = CGRectGetWidth(imageRect);
         CGRect iconRect = [self navigationImageFrameForImageName:self.navigationNodeIconName title:self.navigationNodeTitle inView:nil];
         UIImage *icon = [UIImage imageNamed:self.navigationNodeIconName];
         CGFloat x = iconRect.origin.x;
         CGFloat y = iconRect.origin.y;
         [icon drawAtPoint:CGPointMake(x, y) blendMode:kCGBlendModeNormal alpha:0.8];
-        x = CGRectGetMinX(imageRect) + 4.0;
+        CGRect textRect = [self.navigationNodeTitle boundingRectWithSize:CGSizeMake(width, MAXFLOAT)
+                                                                 options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                              attributes:self.navigationNodeTitleAttributes
+                                                                 context:nil];
+        textRect = CGRectIntegral(textRect);
+        x = CGRectGetMinX(imageRect) + roundf((width - CGRectGetWidth(textRect))/2.0);
         y += icon.size.height + 4.0;
-        [self.navigationNodeTitle drawInRect:CGRectMake(x, y, width, ceilf([self.navigationNodeTitle sizeWithAttributes:self.navigationNodeTitleAttributes].height)) withAttributes:self.navigationNodeTitleAttributes];
+        textRect.origin.x = x;
+        textRect.origin.y = y;
+        [self.navigationNodeTitle drawInRect:textRect withAttributes:self.navigationNodeTitleAttributes];
     }
 }
 

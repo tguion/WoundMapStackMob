@@ -144,6 +144,15 @@
                                                                                 create:NO
                                                                   managedObjectContext:managedObjectContext];
             dispatch_block_t block = ^{
+                // make sure we didn't loose the user when removed from team
+                if (nil == participant.user) {
+                    participant.user = user;
+                    NSError *localError = nil;
+                    [ff updateObj:participant error:&localError];
+                    if (localError) {
+                        [WMUtilities logError:localError];
+                    }
+                }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 // handle team invitation confirmation
