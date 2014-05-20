@@ -9,6 +9,7 @@
 #import "WMWoundDetailViewController.h"
 #import "WMSelectWoundTypeViewController.h"
 #import "WMSelectWoundLocationViewController.h"
+#import "WMNoteViewController.h"
 #import "MBProgressHUD.h"
 #import "WMPatient.h"
 #import "WMWound.h"
@@ -25,7 +26,7 @@
 
 #define kDeleteWoundActionSheetTag 1000
 
-@interface WMWoundDetailViewController () <UITextFieldDelegate, UIActionSheetDelegate, SelectWoundTypeViewControllerDelegate, SelectWoundLocationViewControllerDelegate>
+@interface WMWoundDetailViewController () <UITextFieldDelegate, UIActionSheetDelegate, SelectWoundTypeViewControllerDelegate, SelectWoundLocationViewControllerDelegate, NoteViewControllerDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
@@ -33,6 +34,7 @@
 @property (strong, nonatomic) IBOutlet UIView *deleteWoundContainerView;
 @property (readonly, nonatomic) WMSelectWoundTypeViewController *selectWoundTypeViewController;
 @property (readonly, nonatomic) WMSelectWoundLocationViewController *selectWoundLocationViewController;
+@property (readonly, nonatomic) WMNoteViewController *noteViewController;
 
 @property (nonatomic) BOOL didCancel;
 
@@ -58,6 +60,13 @@
     selectWoundLocationViewController.delegate = self;
     selectWoundLocationViewController.wound = self.wound;
     return selectWoundLocationViewController;
+}
+
+- (WMNoteViewController *)noteViewController
+{
+    WMNoteViewController *noteViewController = [[WMNoteViewController alloc] initWithNibName:@"WMNoteViewController" bundle:nil];
+    noteViewController.delegate = self;
+    return noteViewController;
 }
 
 #pragma mark - Memory
@@ -304,6 +313,30 @@
     [viewController clearAllReferences];
 }
 
+#pragma mark - NoteViewControllerDelegate
+
+- (NSString *)note
+{
+    return self.wound.history;
+}
+
+- (NSString *)label
+{
+    return @"Wound History";;
+}
+
+- (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note
+{
+    self.wound.history = note;
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:3 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)noteViewControllerDidCancel:(WMNoteViewController *)viewController withNote:(NSString *)note
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -330,6 +363,12 @@
             [self.navigationController pushViewController:self.selectWoundLocationViewController animated:YES];
             break;
         }
+        case 3: {
+            // wound history
+            [self.managedObjectContext.undoManager setActionName:@"EditWoundHistory"];
+            [self.navigationController pushViewController:self.noteViewController animated:YES];
+            break;
+        }
     }
 }
 
@@ -348,7 +387,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 4;
 }
 
 // Customize the appearance of table view cells.
@@ -393,6 +432,14 @@
                 string = [string stringByAppendingFormat:@":%@", self.wound.positionValuesForDisplay];
             }
             cell.detailTextLabel.text = string;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            break;
+        }
+        case 3: {
+            // wound history
+            cell.textLabel.text = @"History";
+            NSString *string = self.wound.history;
+            cell.detailTextLabel.text = self.wound.history;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }

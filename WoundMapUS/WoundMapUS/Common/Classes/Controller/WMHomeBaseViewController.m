@@ -1192,7 +1192,7 @@
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             if (nil != navigationNodeButton.navigationNode.iapIdentifier) {
                 BOOL proceed = [self presentIAPViewControllerForProductIdentifier:navigationNodeButton.navigationNode.iapIdentifier
-                                                      successBlock:^{
+                                                      successBlock:^(SKPaymentTransaction *transaction) {
                                                           [weakSelf navigateToMedicationAssessment:navigationNodeButton];
                                                       } withObject:navigationNodeButton];
                 if (!proceed) {

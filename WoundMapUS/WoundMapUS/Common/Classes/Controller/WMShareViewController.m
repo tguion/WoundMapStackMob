@@ -164,7 +164,7 @@ CGFloat kCreditsMargin = 20;
     NSString *productIdentifier = @"pdf report aggregator";
     __weak __typeof(self) weakSelf = self;
     [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                          successBlock:^{
+                                          successBlock:^(SKPaymentTransaction *transaction) {
                                               [weakSelf updateCreditStatusText];
                                           } proceedAlways:YES
                                             withObject:sender];
@@ -395,7 +395,7 @@ CGFloat kCreditsMargin = 20;
             NSString *productIdentifier = @"pdf report aggregator";
             __weak __typeof(self) weakSelf = self;
             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                                                 successBlock:^{
+                                                                 successBlock:^(SKPaymentTransaction *transaction) {
                                                                      [weakSelf navigateToPrintConfigureViewController];
                                                                  } withObject:self.selectPDFSectionFooterView];
             // self.shareButton.superview

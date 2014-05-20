@@ -508,7 +508,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         // else IAP for creating a consulting group
                         if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
-                                                                                 successBlock:^{
+                                                                                 successBlock:^(SKPaymentTransaction *transaction) {
                                                                                      [weakSelf presentCreateConsultingGroupViewController];
                                                                                  } withObject:self.view];
                             if (proceed) {
@@ -521,7 +521,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         // IAP for creating a team, and the team leader (the signed-in participant) will be the first team member
                         if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
-                                                                                 successBlock:^{
+                                                                                 successBlock:^(SKPaymentTransaction *transaction) {
                                                                                      [weakSelf presentCreateTeamViewController];
                                                                                  } proceedAlways:YES withObject:self.view];
                             if (proceed) {

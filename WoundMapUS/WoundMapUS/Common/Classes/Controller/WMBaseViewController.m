@@ -7,7 +7,6 @@
 //
 
 #import "WMBaseViewController.h"
-#import "IAPBaseViewController.h"
 #import "IAPAggregatorViewController.h"
 #import "IAPNonConsumableViewController.h"
 #import "MBProgressHUD.h"
@@ -711,17 +710,17 @@
 #pragma mark - IAP proceedAlways
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                        successBlock:(dispatch_block_t)successBlock
+                                        successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
                                           withObject:(id)object
 {
     return [self presentIAPViewControllerForProductIdentifier:productIdentifier
-                                                 successBlock:(dispatch_block_t)successBlock
+                                                 successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
                                                 proceedAlways:NO
                                                    withObject:object];
 }
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                        successBlock:(dispatch_block_t)successBlock
+                                        successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
                                        proceedAlways:(BOOL)proceedAlways
                                           withObject:(id)object
 {
@@ -762,20 +761,16 @@
             viewController.iapProduct = iapProduct;
             
             __weak __typeof(self) weakSelf = self;
-            __weak __typeof(viewController) weakViewController = viewController;
-            viewController.acceptHandler = ^{
+            viewController.acceptHandler = ^(SKPaymentTransaction *transaction) {
                 // make sure this is called on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (nil != _iapPopoverController) {
                         [_iapPopoverController dismissPopoverAnimated:YES];
                         _iapPopoverController = nil;
-                        successBlock();
-                        [weakViewController clearAllReferences];
+                        successBlock(transaction);
                     } else {
                         [weakSelf dismissViewControllerAnimated:YES completion:^{
-                            // NOTE: supressing warning: see http://alwawee.com/wordpress/2013/02/08/performselector-may-cause-a-leak-because-its-selector-is-unknown/
-                            successBlock();
-                            [weakViewController clearAllReferences];
+                            successBlock(transaction);
                         }];
                     }
                 });
@@ -786,10 +781,9 @@
                     if (weakSelf.isIPadIdiom && nil != _iapPopoverController) {
                         [_iapPopoverController dismissPopoverAnimated:YES];
                         _iapPopoverController = nil;
-                        [weakViewController clearAllReferences];
                     } else {
                         [weakSelf dismissViewControllerAnimated:YES completion:^{
-                            [weakViewController clearAllReferences];
+                            // nothing
                         }];
                     }
                 });

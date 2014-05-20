@@ -170,7 +170,7 @@
 		<key>definition</key>
 		<string>some definition</string>
 		<key>sortRank</key>
-		<integer>50</integer>
+		<integer>0</integer>
 		<key>Medications</key>
 		<array>
 			<dict>

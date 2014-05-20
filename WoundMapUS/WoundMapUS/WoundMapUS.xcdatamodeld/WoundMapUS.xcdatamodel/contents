@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13D65" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
@@ -482,6 +482,40 @@
         <relationship name="stages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationStage" inverseName="track" inverseEntity="WMNavigationStage" syncable="YES"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="navigationTracks" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
+    <entity name="WMNutritionGroup" representedClassName="WMNutritionGroup" syncable="YES">
+        <attribute name="closedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="continueCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="datePushed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNutritionValue" inverseName="nutritionGroup" inverseEntity="WMNutritionValue" syncable="YES"/>
+    </entity>
+    <entity name="WMNutritionItem" representedClassName="WMNutritionItem" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNutritionValue" inverseName="item" inverseEntity="WMNutritionValue" syncable="YES"/>
+    </entity>
+    <entity name="WMNutritionValue" representedClassName="WMNutritionValue" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNutritionItem" inverseName="values" inverseEntity="WMNutritionItem" syncable="YES"/>
+        <relationship name="nutritionGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNutritionGroup" inverseName="values" inverseEntity="WMNutritionGroup" syncable="YES"/>
+    </entity>
     <entity name="WMOrganization" representedClassName="WMOrganization" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -824,6 +858,7 @@
         <attribute name="flags" attributeType="Integer 32" defaultValueString="0">
             <userInfo/>
         </attribute>
+        <attribute name="history" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String">
             <userInfo/>
         </attribute>
@@ -1220,9 +1255,10 @@
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTeam" positionX="9" positionY="153" width="128" height="223"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="195"/>
+        <element name="WMTeamPolicy" positionX="18" positionY="153" width="128" height="148"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="WMWound" positionX="0" positionY="0" width="128" height="285"/>
+        <element name="WMWound" positionX="0" positionY="0" width="128" height="300"/>
         <element name="WMWoundLocation" positionX="0" positionY="0" width="128" height="270"/>
         <element name="WMWoundLocationPositionJoin" positionX="0" positionY="0" width="128" height="148"/>
         <element name="WMWoundLocationValue" positionX="0" positionY="0" width="128" height="150"/>
@@ -1237,6 +1273,8 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMTeamPolicy" positionX="18" positionY="153" width="128" height="148"/>
+        <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="178"/>
+        <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
+        <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="208"/>
     </elements>
 </model>

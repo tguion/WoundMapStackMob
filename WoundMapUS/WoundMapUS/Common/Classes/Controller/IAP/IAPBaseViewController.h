@@ -9,10 +9,6 @@
 //  content that is included in an IAP and has not purchased that IAP
 
 #import "WMBaseViewController.h"
-#import <StoreKit/StoreKit.h>
-
-typedef void (^IAPPresentViewControllerAcceptHandler)(void);
-typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 
 enum {
     kIAPProductTitleRow = 0,

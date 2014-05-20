@@ -132,8 +132,7 @@ NSString* _deviceId;
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
 {
     for (SKPaymentTransaction * transaction in transactions) {
-        switch (transaction.transactionState)
-        {
+        switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchased:
                 [self completeTransaction:transaction];
                 break;
@@ -170,9 +169,9 @@ NSString* _deviceId;
 {
     DLog(@"completeTransaction...");
     
-    [self provideContentForProductIdentifier:transaction.payment.productIdentifier];
+    [self provideContentForProductIdentifier:transaction];
     [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
-                                                        object:transaction.payment.productIdentifier
+                                                        object:transaction
                                                       userInfo:nil];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
@@ -181,9 +180,9 @@ NSString* _deviceId;
 {
     DLog(@"restoreTransaction...");
     
-    [self provideContentForProductIdentifier:transaction.originalTransaction.payment.productIdentifier];
+    [self provideContentForProductIdentifier:transaction.originalTransaction];
     [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
-                                                        object:transaction.payment.productIdentifier
+                                                        object:transaction
                                                       userInfo:nil];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
@@ -202,7 +201,7 @@ NSString* _deviceId;
         userErrorInfo = [NSDictionary dictionaryWithObjectsAndKeys:transaction.error, kIAPTxnCancelled, nil];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
-                                                        object:transaction.payment.productIdentifier
+                                                        object:transaction
                                                       userInfo:userErrorInfo];
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 }
@@ -236,8 +235,9 @@ NSString* _deviceId;
     DLog(@"SKPaymentTransaction.error.code xlates to %@", errorText);
 }
 
-- (void)provideContentForPDFReportProductIdentifier:(NSString *)productIdentifier
+- (void)provideContentForPDFReportProductIdentifier:(SKPaymentTransaction *)transaction
 {
+    NSString *productIdentifier = transaction.payment.productIdentifier;
     NSNumber *creditsToAdd = nil;
     if ([productIdentifier isEqualToString:kSharePdfReport5Feature]) {
         creditsToAdd = @5;
@@ -259,19 +259,20 @@ NSString* _deviceId;
     }];
 }
 
-// John: is this correct? Could it happen that the app does not make it to success/failure, and later a transaction comes in ???
-- (void)provideContentForTeamAddedProductIdentifier:(NSString *)productIdentifier
+- (void)provideContentForTeamAddedProductIdentifier:(SKPaymentTransaction *)transaction
 {
-    // handled in succss callback
+    // need to determine if the purchase has been applied, persist the transaction
+
 }
 
 // called when purchase of IAP has successfully completed on iTunes store kit server
-- (void)provideContentForProductIdentifier:(NSString *)productIdentifier
+- (void)provideContentForProductIdentifier:(SKPaymentTransaction *)transaction
 {
+    NSString *productIdentifier = transaction.payment.productIdentifier;
     if ([_sharedPDFReportProductIdentifiers containsObject:productIdentifier]) {
-        [self provideContentForPDFReportProductIdentifier:productIdentifier];
+        [self provideContentForPDFReportProductIdentifier:transaction];
     } else if ([productIdentifier isEqualToString:kTeamMemberProductIdentifier]) {
-        [self provideContentForTeamAddedProductIdentifier:productIdentifier];
+        [self provideContentForTeamAddedProductIdentifier:transaction];
     }
 }
 

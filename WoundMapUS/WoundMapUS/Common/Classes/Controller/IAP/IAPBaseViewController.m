@@ -373,7 +373,8 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
          object:nil
          queue:[NSOperationQueue mainQueue]
          usingBlock:^(NSNotification *notification) {
-            NSString * notifiedProductId = notification.object;
+             SKPaymentTransaction *transaction = notification.object;
+            NSString * notifiedProductId = transaction.payment.productIdentifier;
             if ([notifiedProductId isEqualToString:weakSelf.skProduct.productIdentifier]) {
                 [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                 id errorObj = [notification.userInfo objectForKey:kIAPPurchaseError];
@@ -381,7 +382,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                 if (nil == errorObj && nil == cancelledTxnObj) {
                     weakSelf.iapProduct.purchasedFlag = @YES;
                     [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
-                    [weakSelf acceptHandler]();
+                    [weakSelf acceptHandler](transaction);
                     [weakSelf clearAllReferences];
                 } else if (nil != errorObj) {
                     NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [errorObj localizedDescription]];

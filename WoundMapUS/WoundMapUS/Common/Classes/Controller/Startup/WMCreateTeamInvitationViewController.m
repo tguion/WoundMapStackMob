@@ -189,7 +189,7 @@
             // present IAP
             if (NO) {
                 [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
-                                                      successBlock:^{
+                                                      successBlock:^(SKPaymentTransaction *transaction) {
                                                           [weakSelf completeTeamInvitation];
                                                       } proceedAlways:YES
                                                         withObject:sender];

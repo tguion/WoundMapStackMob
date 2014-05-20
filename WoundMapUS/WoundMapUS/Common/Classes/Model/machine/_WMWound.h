@@ -9,6 +9,7 @@ extern const struct WMWoundAttributes {
 	__unsafe_unretained NSString *desc;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *history;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *updatedAt;
@@ -36,6 +37,7 @@ extern const struct WMWoundFetchedProperties {
 @class WMWoundPositionValue;
 @class WMWoundTreatmentGroup;
 @class WMWoundType;
+
 
 
 
@@ -99,6 +101,16 @@ extern const struct WMWoundFetchedProperties {
 - (void)setFlagsValue:(int32_t)value_;
 
 //- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* history;
+
+
+
+//- (BOOL)validateHistory:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -260,6 +272,12 @@ extern const struct WMWoundFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
+
+
+
+
+- (NSString*)primitiveHistory;
+- (void)setPrimitiveHistory:(NSString*)value;
 
 
 

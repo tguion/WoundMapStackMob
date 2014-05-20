@@ -17,6 +17,7 @@
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMWoundType.h"
+#import "IAPManager.h"
 #import "WMUtilities.h"
 #import "KeychainItemWrapper.h"
 
@@ -150,7 +151,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // Register the preference defaults early.
     NSDictionary *appDefaults = @{@"com.mobilehealthware.woundmap.defaultIdRoot": @"2.16.840.1.113883.3.933"};
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
-
+    // set up IAP so it hears notifications
+    [IAPManager sharedInstance];
     [self initializeInterface];
     return YES;
 }

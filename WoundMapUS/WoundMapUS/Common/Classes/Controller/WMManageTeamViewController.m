@@ -182,7 +182,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     __weak __typeof(&*self)weakSelf = self;
     [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
-                                                         successBlock:^{
+                                                         successBlock:^(SKPaymentTransaction *transaction) {
                                                              WMParticipant *participant = _teamMemberToUpdateSubscription;
                                                              participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
                                                              WMTeam *team = participant.team;

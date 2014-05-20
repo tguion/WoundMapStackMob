@@ -8,6 +8,7 @@ const struct WMWoundAttributes WMWoundAttributes = {
 	.desc = @"desc",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
+	.history = @"history",
 	.name = @"name",
 	.sortRank = @"sortRank",
 	.updatedAt = @"updatedAt",
@@ -113,6 +114,13 @@ const struct WMWoundFetchedProperties WMWoundFetchedProperties = {
 - (void)setPrimitiveFlagsValue:(int32_t)value_ {
 	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
 }
+
+
+
+
+
+@dynamic history;
+
 
 
 

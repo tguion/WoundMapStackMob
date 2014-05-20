@@ -7,6 +7,11 @@
 //  NS_DESIGNATED_INITIALIZER
 
 #import "WMFatFractalManager.h"
+#import <StoreKit/StoreKit.h>
+
+typedef void (^IAPPresentViewControllerAcceptHandler)(SKPaymentTransaction *transaction);
+typedef void (^IAPPresentViewControllerDeclineHandler)(void);
+
 
 @class WCAppDelegate, CoreDataHelper, WMUserDefaultsManager;
 @class WMPatient, WMWound, WMWoundPhoto, WMNavigationTrack, WMNavigationStage;
@@ -92,11 +97,11 @@
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                        successBlock:(dispatch_block_t)successBlock
+                                        successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
                                        proceedAlways:(BOOL)proceedAlways
                                           withObject:(id)object;
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
-                                        successBlock:(dispatch_block_t)successBlock
+                                        successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
                                           withObject:(id)object;
 
 @end

@@ -300,6 +300,17 @@
 		7D67412A192A46E6007DBD1A /* WMRequestConsultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674128192A46E6007DBD1A /* WMRequestConsultViewController.m */; };
 		7D67412B192A46E6007DBD1A /* WMRequestConsultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D674129192A46E6007DBD1A /* WMRequestConsultViewController.xib */; };
 		7D67412D192A48AB007DBD1A /* RequestConsultIntroduction.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D67412C192A48AB007DBD1A /* RequestConsultIntroduction.html */; };
+		7D674133192BF0F3007DBD1A /* DevicesAU.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D67412F192BF0F3007DBD1A /* DevicesAU.plist */; };
+		7D674134192BF0F3007DBD1A /* WoundMeasurementAU.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D674130192BF0F3007DBD1A /* WoundMeasurementAU.plist */; };
+		7D674135192BF0F3007DBD1A /* WoundTreatmentAU.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D674131192BF0F3007DBD1A /* WoundTreatmentAU.plist */; };
+		7D674136192BF0F3007DBD1A /* Nutrition.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D674132192BF0F3007DBD1A /* Nutrition.plist */; };
+		7D67413D192BF311007DBD1A /* _WMNutritionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674138192BF311007DBD1A /* _WMNutritionGroup.m */; };
+		7D67413E192BF311007DBD1A /* _WMNutritionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D67413A192BF311007DBD1A /* _WMNutritionItem.m */; };
+		7D67413F192BF311007DBD1A /* _WMNutritionValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D67413C192BF311007DBD1A /* _WMNutritionValue.m */; };
+		7D674146192BF320007DBD1A /* WMNutritionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674141192BF320007DBD1A /* WMNutritionGroup.m */; };
+		7D674147192BF320007DBD1A /* WMNutritionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674143192BF320007DBD1A /* WMNutritionItem.m */; };
+		7D674148192BF320007DBD1A /* WMNutritionValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674145192BF320007DBD1A /* WMNutritionValue.m */; };
+		7D67414B192BF34B007DBD1A /* WMNutritionGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D67414A192BF34B007DBD1A /* WMNutritionGroup+CoreText.m */; };
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
@@ -1076,6 +1087,24 @@
 		7D674128192A46E6007DBD1A /* WMRequestConsultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMRequestConsultViewController.m; sourceTree = "<group>"; };
 		7D674129192A46E6007DBD1A /* WMRequestConsultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMRequestConsultViewController.xib; sourceTree = "<group>"; };
 		7D67412C192A48AB007DBD1A /* RequestConsultIntroduction.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = RequestConsultIntroduction.html; sourceTree = "<group>"; };
+		7D67412F192BF0F3007DBD1A /* DevicesAU.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DevicesAU.plist; sourceTree = "<group>"; };
+		7D674130192BF0F3007DBD1A /* WoundMeasurementAU.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = WoundMeasurementAU.plist; sourceTree = "<group>"; };
+		7D674131192BF0F3007DBD1A /* WoundTreatmentAU.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = WoundTreatmentAU.plist; sourceTree = "<group>"; };
+		7D674132192BF0F3007DBD1A /* Nutrition.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Nutrition.plist; sourceTree = "<group>"; };
+		7D674137192BF311007DBD1A /* _WMNutritionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMNutritionGroup.h; sourceTree = "<group>"; };
+		7D674138192BF311007DBD1A /* _WMNutritionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMNutritionGroup.m; sourceTree = "<group>"; };
+		7D674139192BF311007DBD1A /* _WMNutritionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMNutritionItem.h; sourceTree = "<group>"; };
+		7D67413A192BF311007DBD1A /* _WMNutritionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMNutritionItem.m; sourceTree = "<group>"; };
+		7D67413B192BF311007DBD1A /* _WMNutritionValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMNutritionValue.h; sourceTree = "<group>"; };
+		7D67413C192BF311007DBD1A /* _WMNutritionValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMNutritionValue.m; sourceTree = "<group>"; };
+		7D674140192BF320007DBD1A /* WMNutritionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNutritionGroup.h; sourceTree = "<group>"; };
+		7D674141192BF320007DBD1A /* WMNutritionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNutritionGroup.m; sourceTree = "<group>"; };
+		7D674142192BF320007DBD1A /* WMNutritionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNutritionItem.h; sourceTree = "<group>"; };
+		7D674143192BF320007DBD1A /* WMNutritionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNutritionItem.m; sourceTree = "<group>"; };
+		7D674144192BF320007DBD1A /* WMNutritionValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNutritionValue.h; sourceTree = "<group>"; };
+		7D674145192BF320007DBD1A /* WMNutritionValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNutritionValue.m; sourceTree = "<group>"; };
+		7D674149192BF34B007DBD1A /* WMNutritionGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMNutritionGroup+CoreText.h"; sourceTree = "<group>"; };
+		7D67414A192BF34B007DBD1A /* WMNutritionGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMNutritionGroup+CoreText.m"; sourceTree = "<group>"; };
 		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
 		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
@@ -1666,6 +1695,8 @@
 		5F67D1CF18AC3BE000460C37 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				7D67412E192BF0F3007DBD1A /* AU */,
+				7D674132192BF0F3007DBD1A /* Nutrition.plist */,
 				5F67D1D018AC3BE000460C37 /* AmountQualifier.plist */,
 				5F67D1D118AC3BE000460C37 /* AnatomicLocation.plist */,
 				5F67D1D218AC3BE000460C37 /* BradenCare.plist */,
@@ -1853,6 +1884,16 @@
 				7D39DBAB18BA97A70054DDC3 /* IAPNonConsumableViewController.xib */,
 			);
 			path = IAP;
+			sourceTree = "<group>";
+		};
+		7D67412E192BF0F3007DBD1A /* AU */ = {
+			isa = PBXGroup;
+			children = (
+				7D67412F192BF0F3007DBD1A /* DevicesAU.plist */,
+				7D674130192BF0F3007DBD1A /* WoundMeasurementAU.plist */,
+				7D674131192BF0F3007DBD1A /* WoundTreatmentAU.plist */,
+			);
+			path = AU;
 			sourceTree = "<group>";
 		};
 		7D6894511902EC6B006DE509 /* Nibs */ = {
@@ -2434,6 +2475,12 @@
 				5F67D22918AD8DF000460C37 /* WMNavigationStage.m */,
 				5F67D22A18AD8DF000460C37 /* WMNavigationTrack.h */,
 				5F67D22B18AD8DF000460C37 /* WMNavigationTrack.m */,
+				7D674140192BF320007DBD1A /* WMNutritionGroup.h */,
+				7D674141192BF320007DBD1A /* WMNutritionGroup.m */,
+				7D674142192BF320007DBD1A /* WMNutritionItem.h */,
+				7D674143192BF320007DBD1A /* WMNutritionItem.m */,
+				7D674144192BF320007DBD1A /* WMNutritionValue.h */,
+				7D674145192BF320007DBD1A /* WMNutritionValue.m */,
 				7DB206C718A839180004DC32 /* WMOrganization.h */,
 				7DB206C818A839180004DC32 /* WMOrganization.m */,
 				5F67D1BF18AC39B800460C37 /* WMParticipant.h */,
@@ -2807,6 +2854,12 @@
 				5F67D22018AD8DE200460C37 /* _WMNavigationStage.m */,
 				5F67D22118AD8DE200460C37 /* _WMNavigationTrack.h */,
 				5F67D22218AD8DE200460C37 /* _WMNavigationTrack.m */,
+				7D674137192BF311007DBD1A /* _WMNutritionGroup.h */,
+				7D674138192BF311007DBD1A /* _WMNutritionGroup.m */,
+				7D674139192BF311007DBD1A /* _WMNutritionItem.h */,
+				7D67413A192BF311007DBD1A /* _WMNutritionItem.m */,
+				7D67413B192BF311007DBD1A /* _WMNutritionValue.h */,
+				7D67413C192BF311007DBD1A /* _WMNutritionValue.m */,
 				7DB206DF18A839240004DC32 /* _WMOrganization.h */,
 				7DB206E018A839240004DC32 /* _WMOrganization.m */,
 				5F67D1C518AC39C600460C37 /* _WMParticipant.h */,
@@ -3031,28 +3084,30 @@
 		7DDAFAFD18B62C9C00A05F5D /* CoreText */ = {
 			isa = PBXGroup;
 			children = (
+				7DDAFAFE18B62C9C00A05F5D /* WCModelTextKitAtrributes.h */,
+				7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */,
+				7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */,
+				7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */,
 				7D13026D18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.h */,
 				7D13026E18D08AD500AE33B2 /* WMCarePlanGroup+CoreText.m */,
 				7D13026F18D08AD500AE33B2 /* WMDeviceGroup+CoreText.h */,
 				7D13027018D08AD500AE33B2 /* WMDeviceGroup+CoreText.m */,
 				7D13027118D08AD500AE33B2 /* WMMedicationGroup+CoreText.h */,
 				7D13027218D08AD500AE33B2 /* WMMedicationGroup+CoreText.m */,
+				7D674149192BF34B007DBD1A /* WMNutritionGroup+CoreText.h */,
+				7D67414A192BF34B007DBD1A /* WMNutritionGroup+CoreText.m */,
+				7D0F2F481905B747009F8346 /* WMPatient+CoreText.h */,
+				7D0F2F491905B747009F8346 /* WMPatient+CoreText.m */,
 				7D13027318D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.h */,
 				7D13027418D08AD500AE33B2 /* WMPsychoSocialGroup+CoreText.m */,
 				7D13027518D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.h */,
 				7D13027618D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m */,
+				7D10CD8218D63C1900AD43E3 /* WMTelecom+CoreText.h */,
+				7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */,
 				7D13027718D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.h */,
 				7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */,
 				7D13027918D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.h */,
 				7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */,
-				7DDAFAFE18B62C9C00A05F5D /* WCModelTextKitAtrributes.h */,
-				7DDAFAFF18B62C9C00A05F5D /* WCModelTextKitAtrributes.m */,
-				7DDAFB0118B62CE700A05F5D /* WMAddress+CoreText.h */,
-				7DDAFB0218B62CE700A05F5D /* WMAddress+CoreText.m */,
-				7D10CD8218D63C1900AD43E3 /* WMTelecom+CoreText.h */,
-				7D10CD8318D63C1900AD43E3 /* WMTelecom+CoreText.m */,
-				7D0F2F481905B747009F8346 /* WMPatient+CoreText.h */,
-				7D0F2F491905B747009F8346 /* WMPatient+CoreText.m */,
 			);
 			path = CoreText;
 			sourceTree = "<group>";
@@ -3232,6 +3287,7 @@
 				7D01510018EB5BA500D5C0A9 /* WMCreateTeamViewController.xib in Resources */,
 				7D67412B192A46E6007DBD1A /* WMRequestConsultViewController.xib in Resources */,
 				7D67412D192A48AB007DBD1A /* RequestConsultIntroduction.html in Resources */,
+				7D674135192BF0F3007DBD1A /* WoundTreatmentAU.plist in Resources */,
 				5F67D21318AC4A2800460C37 /* WMSignInViewController.xib in Resources */,
 				7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */,
 				7DDEE28918F49E5500AF9FC6 /* WMMedicalHistoryViewController.xib in Resources */,
@@ -3295,6 +3351,7 @@
 				5F67D1FE18AC3BE000460C37 /* SkinAssessmentDefinitions.plist in Resources */,
 				5F6DE54118B58BB000E87F7E /* InstructionsWoundTreatment.html in Resources */,
 				7D39DAF218B7E6130054DDC3 /* WMChooseStageViewController.xib in Resources */,
+				7D674133192BF0F3007DBD1A /* DevicesAU.plist in Resources */,
 				7DDAFAF718B6117E00A05F5D /* WMAddressEditorViewController.xib in Resources */,
 				5F6DE53818B58BB000E87F7E /* InstructionsAuditTrail.html in Resources */,
 				7D6A58CF1910043400D72800 /* ConsultantGroupIAPDesc.html in Resources */,
@@ -3305,6 +3362,7 @@
 				7DB2062C18A7D3400004DC32 /* Images.xcassets in Resources */,
 				7D39DAE818B7E5DD0054DDC3 /* WMSelectWoundViewController.xib in Resources */,
 				5F67D20818AC3BE000460C37 /* WoundTreatment.plist in Resources */,
+				7D674136192BF0F3007DBD1A /* Nutrition.plist in Resources */,
 				5F67D1F718AC3BE000460C37 /* Medications.plist in Resources */,
 				7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
@@ -3322,6 +3380,7 @@
 				7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
 				7D39DBC418BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib in Resources */,
+				7D674134192BF0F3007DBD1A /* WoundMeasurementAU.plist in Resources */,
 				7D10CDD618DA3B5300AD43E3 /* WMInterventionStatusViewController.xib in Resources */,
 				7D39DB3818B824060054DDC3 /* WMDevicesViewController.xib in Resources */,
 				5F67D20418AC3BE000460C37 /* WoundMeasurementDefinitions.plist in Resources */,
@@ -3397,9 +3456,11 @@
 				7DDE40D519152380008DDA3E /* WMTextViewTableViewCell.m in Sources */,
 				5F67D1CE18AC3B5B00460C37 /* WMUtilities.m in Sources */,
 				7DF4E92C18C22F27000A3F5B /* WMIAPTransaction.m in Sources */,
+				7D674147192BF320007DBD1A /* WMNutritionItem.m in Sources */,
 				7D0F2F621906E8A3009F8346 /* WMDimensionView.m in Sources */,
 				7D9AA26B18AFBF3E00C1B698 /* BoxedButton.m in Sources */,
 				7DF4E8F518C22EEC000A3F5B /* _WMWoundPosition.m in Sources */,
+				7D67413F192BF311007DBD1A /* _WMNutritionValue.m in Sources */,
 				7D9AA28218B1107200C1B698 /* WMPatientConsultant.m in Sources */,
 				7D10CDCD18DA36FD00AD43E3 /* WMWoundMeasurementGroupHistoryViewController.m in Sources */,
 				7DDE40C719115276008DDA3E /* WMCarePlanGroupTableViewCell.m in Sources */,
@@ -3452,6 +3513,7 @@
 				7DD3EA4918C011A70093E370 /* IAPManager.m in Sources */,
 				7DB206EA18A839240004DC32 /* _WMAddress.m in Sources */,
 				7DDE755118CE456800B15C77 /* WoundStatusMeasurementPlotDataSource.m in Sources */,
+				7D67413D192BF311007DBD1A /* _WMNutritionGroup.m in Sources */,
 				7D0F2F691906EA1F009F8346 /* WMThumbImageView.m in Sources */,
 				7DDE40D9191532C4008DDA3E /* WMParticipantTableViewController.m in Sources */,
 				7D68946B19043E1B006DE509 /* WMRoundedSemitransparentLabel.m in Sources */,
@@ -3512,6 +3574,7 @@
 				7DDAFAFB18B61A4F00A05F5D /* WMAddressListViewController.m in Sources */,
 				7D10CDDA18DA3DB800AD43E3 /* WMInterventionEventViewController.m in Sources */,
 				7D39DB9818B94FFD0054DDC3 /* WMDeviceValue.m in Sources */,
+				7D67413E192BF311007DBD1A /* _WMNutritionItem.m in Sources */,
 				7D13027D18D08AD500AE33B2 /* WMMedicationGroup+CoreText.m in Sources */,
 				7D39DB7618B947250054DDC3 /* _WMMedicationCategory.m in Sources */,
 				7D39DAE318B7DC120054DDC3 /* WMPolicyManager.m in Sources */,
@@ -3594,6 +3657,7 @@
 				5F67D1CA18AC39C600460C37 /* _WMParticipantType.m in Sources */,
 				7DDBEDB218BC0DD300FEF3FA /* _WMAmountQualifier.m in Sources */,
 				7DF4E92718C22F27000A3F5B /* WMCarePlanGroup.m in Sources */,
+				7D67414B192BF34B007DBD1A /* WMNutritionGroup+CoreText.m in Sources */,
 				7D13026318CFA3F000AE33B2 /* NSObject+performBlockAfterDelay.m in Sources */,
 				7DF4E95618C299DC000A3F5B /* _WMInterventionEventType.m in Sources */,
 				7DDE40CD1914212B008DDA3E /* WMPatientReferral.m in Sources */,
@@ -3673,6 +3737,7 @@
 				5F67D1C918AC39C600460C37 /* _WMParticipant.m in Sources */,
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
 				7D10CDEB18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m in Sources */,
+				7D674146192BF320007DBD1A /* WMNutritionGroup.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7D0F2F561905C120009F8346 /* WMPatientSummaryViewController.m in Sources */,
@@ -3731,6 +3796,7 @@
 				5F6DE4FA18AEE58900E87F7E /* WMProgressViewHUD.m in Sources */,
 				7D39DB3718B824060054DDC3 /* WMDevicesViewController.m in Sources */,
 				7DF4E8EC18C22EEC000A3F5B /* _WMPsychoSocialItem.m in Sources */,
+				7D674148192BF320007DBD1A /* WMNutritionValue.m in Sources */,
 				7DB206D818A839180004DC32 /* WMTelecomType.m in Sources */,
 				7DDBEDC918BC0DED00FEF3FA /* IAPProduct.m in Sources */,
 				5F67D22518AD8DE200460C37 /* _WMNavigationTrack.m in Sources */,
