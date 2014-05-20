@@ -265,10 +265,13 @@
     CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
 //    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
-    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         id participant = object;
         __block NSInteger counter = 0;
         WMErrorCallback errorCallback = ^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             if (--counter == 0) {
                 [coreDataHelper.context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                     completionHandler(error, participant);
@@ -292,10 +295,11 @@
                 errorCallback(error);
             }];
         }
-        if (counter == 0) {
-            ++counter;
-            errorCallback(nil);
-        }
+        // explicite fetch patients - this appears to be needed since fetching the participant incurs some error
+        ++counter;
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            errorCallback(error);
+        }];
     }];
 }
 

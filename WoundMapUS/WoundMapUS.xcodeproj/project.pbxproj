@@ -402,9 +402,6 @@
 		7DB206EE18A839240004DC32 /* _WMPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB206E418A839240004DC32 /* _WMPerson.m */; };
 		7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB206E618A839240004DC32 /* _WMTelecom.m */; };
 		7DB206F018A839240004DC32 /* _WMTelecomType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB206E818A839240004DC32 /* _WMTelecomType.m */; };
-		7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7DB206F218AAC2730004DC32 /* CuriousFrog.jpg */; };
-		7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7DB206F318AAC2730004DC32 /* LeggyFrog.jpg */; };
-		7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7DB206F418AAC2730004DC32 /* PeeringFrog.jpg */; };
 		7DB2074718ABAB8E0004DC32 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074618ABAB8E0004DC32 /* AsyncImageView.m */; };
 		7DB2074D18ABC0850004DC32 /* WMBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2074C18ABC0850004DC32 /* WMBaseViewController.m */; };
 		7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DD3EA4418C00E120093E370 /* IAPProducts.plist */; };
@@ -1256,9 +1253,6 @@
 		7DB206E618A839240004DC32 /* _WMTelecom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMTelecom.m; sourceTree = "<group>"; };
 		7DB206E718A839240004DC32 /* _WMTelecomType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMTelecomType.h; sourceTree = "<group>"; };
 		7DB206E818A839240004DC32 /* _WMTelecomType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMTelecomType.m; sourceTree = "<group>"; };
-		7DB206F218AAC2730004DC32 /* CuriousFrog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = CuriousFrog.jpg; sourceTree = "<group>"; };
-		7DB206F318AAC2730004DC32 /* LeggyFrog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = LeggyFrog.jpg; sourceTree = "<group>"; };
-		7DB206F418AAC2730004DC32 /* PeeringFrog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = PeeringFrog.jpg; sourceTree = "<group>"; };
 		7DB2074518ABAB8E0004DC32 /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
 		7DB2074618ABAB8E0004DC32 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
 		7DB2074B18ABC0850004DC32 /* WMBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMBaseViewController.h; sourceTree = "<group>"; };
@@ -2899,9 +2893,6 @@
 		7DB206F118AAC2730004DC32 /* Test Images */ = {
 			isa = PBXGroup;
 			children = (
-				7DB206F218AAC2730004DC32 /* CuriousFrog.jpg */,
-				7DB206F318AAC2730004DC32 /* LeggyFrog.jpg */,
-				7DB206F418AAC2730004DC32 /* PeeringFrog.jpg */,
 			);
 			path = "Test Images";
 			sourceTree = "<group>";
@@ -3239,7 +3230,6 @@
 				7D10CE1118DCE01900AD43E3 /* WMBradenSectionSelectCellViewController.xib in Resources */,
 				7D10CDDB18DA3DB800AD43E3 /* WMInterventionEventViewController.xib in Resources */,
 				5F6DE54918B6FA4E00E87F7E /* WMIdListViewController.xib in Resources */,
-				7DB206F718AAC2730004DC32 /* PeeringFrog.jpg in Resources */,
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
 				5F67D1FF18AC3BE000460C37 /* SkinIntervention.plist in Resources */,
 				7D6894581902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib in Resources */,
@@ -3296,7 +3286,6 @@
 				5F6DE53D18B58BB000E87F7E /* InstructionsPolicyCompassNavigation.html in Resources */,
 				7D10CE0418DC634800AD43E3 /* WMDevicesGroupHistoryViewContoller.xib in Resources */,
 				7D39DAF718B7E62E0054DDC3 /* WMWoundTreatmentGroupsViewController.xib in Resources */,
-				7DB206F618AAC2730004DC32 /* LeggyFrog.jpg in Resources */,
 				7D10CE2418DDF26300AD43E3 /* WMMedicationSummaryViewController.xib in Resources */,
 				5F67D1F118AC3BE000460C37 /* BradenScale.plist in Resources */,
 				7D10CD7C18D63B1600AD43E3 /* WMTelecomListViewController.xib in Resources */,
@@ -3362,7 +3351,6 @@
 				7DDFD68618B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib in Resources */,
 				5F6DE51118B586F600E87F7E /* WMInstructionsViewController.xib in Resources */,
 				7DDFD68B18B7C0B900041927 /* WMHomeBaseViewController_iPad.xib in Resources */,
-				7DB206F518AAC2730004DC32 /* CuriousFrog.jpg in Resources */,
 				7D39DB0E18B7FA080054DDC3 /* WMSelectWoundTypeViewController.xib in Resources */,
 				7D9A94CF18E88FAE00D92E95 /* WMOrganizationListViewController.xib in Resources */,
 				7D10CD8118D63B3000AD43E3 /* WMTelecomEditorViewController.xib in Resources */,

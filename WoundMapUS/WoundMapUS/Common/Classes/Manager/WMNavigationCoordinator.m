@@ -362,77 +362,121 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 - (void)viewController:(UIViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto
 {
     // update wound measurements from back end
+    NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+    __block NSInteger counter = 0;
     __weak __typeof(self) weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
-        [MBProgressHUD hideHUDForView:viewController.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            // else proceed
-            [viewController.navigationController setNavigationBarHidden:NO];
-            weakSelf.state = addingPhoto ? NavigationCoordinatorStateMeasureNewPhoto:NavigationCoordinatorStateMeasureExistingPhoto;
-            weakSelf.woundPhoto = woundPhoto;
-            BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
-            if (isIPadIdiom) {
-                // subclass will finish
-                return;
-            }
-            // else
-            weakSelf.initialMeasurePhotoViewController = viewController;
-            // adjust image or scale
-            if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto]) {
-                // adjust image
-                WMTransformPhotoViewController *transformPhotoViewController = weakSelf.transformPhotoViewController;
-                switch (weakSelf.state) {
-                    case NavigationCoordinatorStateAuthenticating:
-                    case NavigationCoordinatorStatePasscode:
-                    case NavigationCoordinatorStateInitialized: {
-                        // nothing
-                        break;
-                    }
-                    case NavigationCoordinatorStateMeasureNewPhoto: {
-                        [viewController.navigationController pushViewController:transformPhotoViewController animated:YES];
-                        break;
-                    }
-                    case NavigationCoordinatorStateMeasureExistingPhoto: {
-                        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:transformPhotoViewController];
-                        [viewController presentViewController:navigationController animated:YES completion:^{
-                            // nothing
-                        }];
-                        break;
-                    }
+        }
+        if (--counter) {
+            return;
+        }
+        // else proceed
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:viewController.view animated:NO];
+        [viewController.navigationController setNavigationBarHidden:NO];
+        weakSelf.state = addingPhoto ? NavigationCoordinatorStateMeasureNewPhoto:NavigationCoordinatorStateMeasureExistingPhoto;
+        weakSelf.woundPhoto = woundPhoto;
+        BOOL isIPadIdiom = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+        if (isIPadIdiom) {
+            // subclass will finish
+            return;
+        }
+        // else
+        weakSelf.initialMeasurePhotoViewController = viewController;
+        // adjust image or scale
+        if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto]) {
+            // adjust image
+            WMTransformPhotoViewController *transformPhotoViewController = weakSelf.transformPhotoViewController;
+            switch (weakSelf.state) {
+                case NavigationCoordinatorStateAuthenticating:
+                case NavigationCoordinatorStatePasscode:
+                case NavigationCoordinatorStateInitialized: {
+                    // nothing
+                    break;
                 }
-            } else {
-                // set photo scale
-                WMPhotoScaleViewController *photoScaleViewController = weakSelf.photoScaleViewController;
-                switch (weakSelf.state) {
-                    case NavigationCoordinatorStateAuthenticating:
-                    case NavigationCoordinatorStatePasscode:
-                    case NavigationCoordinatorStateInitialized: {
+                case NavigationCoordinatorStateMeasureNewPhoto: {
+                    [viewController.navigationController pushViewController:transformPhotoViewController animated:YES];
+                    break;
+                }
+                case NavigationCoordinatorStateMeasureExistingPhoto: {
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:transformPhotoViewController];
+                    [viewController presentViewController:navigationController animated:YES completion:^{
                         // nothing
-                        break;
-                    }
-                    case NavigationCoordinatorStateMeasureNewPhoto: {
-                        [viewController.navigationController pushViewController:photoScaleViewController animated:YES];
-                        break;
-                    }
-                    case NavigationCoordinatorStateMeasureExistingPhoto: {
-                        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:photoScaleViewController];
-                        [viewController presentViewController:navigationController animated:YES completion:^{
-                            // nothing
-                        }];
-                        break;
-                    }
+                    }];
+                    break;
+                }
+            }
+        } else {
+            // set photo scale
+            WMPhotoScaleViewController *photoScaleViewController = weakSelf.photoScaleViewController;
+            switch (weakSelf.state) {
+                case NavigationCoordinatorStateAuthenticating:
+                case NavigationCoordinatorStatePasscode:
+                case NavigationCoordinatorStateInitialized: {
+                    // nothing
+                    break;
+                }
+                case NavigationCoordinatorStateMeasureNewPhoto: {
+                    [viewController.navigationController pushViewController:photoScaleViewController animated:YES];
+                    break;
+                }
+                case NavigationCoordinatorStateMeasureExistingPhoto: {
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:photoScaleViewController];
+                    [viewController presentViewController:navigationController animated:YES completion:^{
+                        // nothing
+                    }];
+                    break;
                 }
             }
         }
+
         [MBProgressHUD hideAllHUDsForView:viewController.view animated:NO];
     };
     [MBProgressHUD showHUDAddedTo:viewController.view animated:YES];
-    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundPhotoRelationships.measurementGroups]
-                                              aggregator:woundPhoto
-                                                      ff:[WMFatFractal sharedInstance]
-                                       completionHandler:block];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    ++counter;
+    ++counter;
+    ++counter;
+    [ffm updateGrabBags:@[WMWoundRelationships.photos]
+             aggregator:woundPhoto.wound
+                     ff:[WMFatFractal sharedInstance]
+      completionHandler:^(NSError *error) {
+          block(error);
+          if (error) {
+              [WMUtilities logError:error];
+          }
+          // make sure we have downloaded previous photo
+          WMWoundPhoto *referenceWoundPhoto = [woundPhoto.wound referenceWoundPhoto:woundPhoto];
+          if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto] && referenceWoundPhoto.thumbnail == nil && !woundPhoto.photoDeletedPerTeamPolicy) {
+              [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                  NSData *photoData = [response rawResponseData];
+                  if (response.httpResponse.statusCode > 300) {
+                      DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                  }
+                  referenceWoundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
+                  block(response.error);
+              }];
+              [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                  NSData *photoData = [response rawResponseData];
+                  if (response.httpResponse.statusCode > 300) {
+                      DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                  }
+                  referenceWoundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                  block(response.error);
+              }];
+          } else {
+              --counter;
+              block(error);
+          }
+      }];
+    ++counter;
+    [ffm updateGrabBags:@[WMWoundPhotoRelationships.measurementGroups]
+             aggregator:woundPhoto
+                     ff:[WMFatFractal sharedInstance]
+      completionHandler:block];
 }
 
 - (void)cancelWoundMeasurementNavigation:(UIViewController *)viewController

@@ -9,6 +9,7 @@
 //  So we switch to cache only fetch. However, the properties of WMPatient and WMPatientConsult are not being synched on local cache.
 
 #import "WMPatientTableViewController.h"
+#import "WMPatientDetailViewController.h"
 #import "WMPatientSummaryContainerViewController.h"
 #import "WMPatientReferralViewController.h"
 #import "WMPatientAutoTableViewCell.h"
@@ -28,7 +29,7 @@
 
 #define kDeletePatientConfirmAlertTag 2004
 
-@interface WMPatientTableViewController () <PatientSummaryContainerDelegate, PatientReferralDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface WMPatientTableViewController () <PatientDetailViewControllerDelegate, PatientSummaryContainerDelegate, PatientReferralDelegate, UISearchDisplayDelegate, UISearchBarDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *patientTypeContainerView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *patientTypeSegmentedControl;
@@ -41,6 +42,7 @@
 @property (strong, nonatomic) IBOutlet UIView *patientReadOnlyContainerView;
 @property (strong, nonatomic) IBOutlet UILabel *patientReadOnlyLabel;
 @property (strong, nonatomic) NSAttributedString *patientReadOnlyText;
+@property (readonly, nonatomic) WMPatientDetailViewController *patientDetailViewController;
 @property (readonly, nonatomic) WMPatientSummaryContainerViewController *patientSummaryContainerViewController;
 @property (readonly, nonatomic) WMPatientReferralViewController *patientReferralViewController;
 
@@ -68,8 +70,15 @@
 {
     __weak __typeof(self) weakSelf = self;
     [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
-        [weakSelf updateUIForPatientList];
-        [weakSelf.tableView reloadData];
+        // select a patient
+        self.patientToOpen = [WMPatient MR_findFirstOrderedByAttribute:WMPatientAttributes.createdAt ascending:NO inContext:self.managedObjectContext];
+        if (nil == self.patientToOpen) {
+            // need to create a patient
+            [weakSelf.navigationController pushViewController:weakSelf.patientDetailViewController animated:YES];
+        } else {
+            [weakSelf updateUIForPatientList];
+            [weakSelf.tableView reloadData];
+        }
     }];
 }
 
@@ -154,6 +163,13 @@
                                                                      error:NULL];
     }
     return _patientReadOnlyText;
+}
+
+- (WMPatientDetailViewController *)patientDetailViewController
+{
+    WMPatientDetailViewController *patientDetailViewController = [[WMPatientDetailViewController alloc] initWithNibName:@"WMPatientDetailViewController" bundle:nil];
+    patientDetailViewController.delegate = self;
+    return patientDetailViewController;
 }
 
 - (WMPatientSummaryContainerViewController *)patientSummaryContainerViewController
@@ -270,6 +286,19 @@
                                                                                                target:self
                                                                                                action:@selector(doneAction:)];
     }
+}
+
+#pragma mark - PatientDetailViewControllerDelegate
+
+- (void)patientDetailViewControllerDidUpdatePatient:(WMPatientDetailViewController *)viewController
+{
+    _patientToOpen = viewController.patient;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController
+{
+    // should not happen
 }
 
 #pragma mark - PatientSummaryContainerDelegate
