@@ -191,7 +191,7 @@
                 [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                       successBlock:^{
                                                           [weakSelf completeTeamInvitation];
-                                                      } proceedAlways:NO
+                                                      } proceedAlways:YES
                                                         withObject:sender];
             } else {
                 [weakSelf completeTeamInvitation];

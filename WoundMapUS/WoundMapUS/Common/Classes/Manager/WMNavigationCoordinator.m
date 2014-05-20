@@ -121,6 +121,16 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     _patient = patient;
     // save user defaults
     if ([patient.ffUrl length] > 0) {
+        if (nil == patient.participant) {
+            DLog(@"*** WARNING: patient without participant: %@", patient);
+            patient.participant = self.participant;
+            NSError *localError = nil;
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff updateObj:patient error:&localError];
+            if (localError) {
+                [WMUtilities logError:localError];
+            }
+        }
         NSParameterAssert(patient.participant.guid);
         [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
     }

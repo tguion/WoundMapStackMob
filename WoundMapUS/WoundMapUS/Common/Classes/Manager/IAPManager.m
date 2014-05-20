@@ -171,6 +171,9 @@ NSString* _deviceId;
     DLog(@"completeTransaction...");
     
     [self provideContentForProductIdentifier:transaction.payment.productIdentifier];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
+                                                        object:transaction.payment.productIdentifier
+                                                      userInfo:nil];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
@@ -256,6 +259,7 @@ NSString* _deviceId;
     }];
 }
 
+// John: is this correct? Could it happen that the app does not make it to success/failure, and later a transaction comes in ???
 - (void)provideContentForTeamAddedProductIdentifier:(NSString *)productIdentifier
 {
     // handled in succss callback

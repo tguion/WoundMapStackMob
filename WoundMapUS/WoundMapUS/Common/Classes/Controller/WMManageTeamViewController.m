@@ -39,8 +39,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 @property (nonatomic) BOOL acquiringTeamInvitations;
 @property (nonatomic) BOOL acquiringTeamMembers;
 
-@property (strong, nonatomic) NSDate *fiveDaysAgo;
-
 @property (readonly, nonatomic) WMCreateTeamInvitationViewController *createTeamInvitationViewController;
 
 @property (strong, nonatomic) WMTeamInvitation *teamInvitationToDeleteOrConfirm;
@@ -106,10 +104,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     [super viewDidAppear:animated];
     // check if team members are close to needed re-up
+    NSDate *now = [NSDate date];
     NSMutableArray *namesExpiring = [NSMutableArray array];
-    NSDate *fiveDaysAgo = self.fiveDaysAgo;
     for (WMParticipant *participant in self.teamMembers) {
-        if ([participant.dateTeamSubscriptionExpires compare:fiveDaysAgo] == NSOrderedDescending) {
+        NSDate *fiveDaysAgo = [WMUtilities dateByAddingDays:-5 toDate:participant.dateTeamSubscriptionExpires];
+        if ([now compare:fiveDaysAgo] == NSOrderedDescending) {
             [namesExpiring addObject:participant.firstName];
         }
     }
@@ -161,14 +160,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                inContext:self.managedObjectContext];
     }
     return _teamMembers;
-}
-
-- (NSDate *)fiveDaysAgo
-{
-    if (nil == _fiveDaysAgo) {
-        _fiveDaysAgo = [WMUtilities dateByAddingDays:-5 toDate:nil];
-    }
-    return _fiveDaysAgo;
 }
 
 - (BOOL)indexPathIsAddInvitation:(NSIndexPath *)indexPath
@@ -578,8 +569,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             cell.textLabel.text = teamMember.name;
             cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
             cell.detailTextLabel.text = [NSString stringWithFormat:@"Expires %@", [NSDateFormatter localizedStringFromDate:teamMember.dateTeamSubscriptionExpires dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
-            NSDate *fiveDaysAgo = self.fiveDaysAgo;
-            if ([teamMember.dateTeamSubscriptionExpires compare:fiveDaysAgo] == NSOrderedDescending) {
+            NSDate *fiveDaysAgo = [WMUtilities dateByAddingDays:-5 toDate:teamMember.dateTeamSubscriptionExpires];
+            if ([[NSDate date] compare:fiveDaysAgo] == NSOrderedDescending) {
                 NSString *imageName = @"alert_yellow_iPhone";
                 if ([teamMember.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedDescending) {
                     imageName = @"alert_red_iPhone";

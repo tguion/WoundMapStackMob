@@ -779,7 +779,7 @@
     NSParameterAssert(participantGroup);
     NSError *error = nil;
     [participantGroup addUser:user error:&error];
-    __weak __typeof(&*self)weakSelf = self;
+//    __weak __typeof(&*self)weakSelf = self;
     [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [ff grabBagAddItemAtFfUrl:invitee.ffUrl
                      toObjAtFfUrl:team.ffUrl
@@ -787,10 +787,11 @@
                        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                            [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                               // fetch patients
-                               [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   [weakSelf movePatientsForParticipant:invitee toTeam:team completionHandler:completionHandler];
-                               }];
+                               // do not move patients to team here - new team member will do on next sign in
+                               completionHandler(error);
+//                               [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=1", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+//                                   [weakSelf movePatientsForParticipant:invitee toTeam:team completionHandler:completionHandler];
+//                               }];
                            }];
                        }];
     }];
@@ -1065,6 +1066,14 @@
         completionHandler(nil);
     } else {
         for (WMPatient *patient in patients) {
+            // non-team navigation may have been deleted locally, so load here
+            if (nil == patient.stage) {
+                NSError *localError = nil;
+                [ff updateObj:patient error:&localError];
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
+            }
             [patient updateNavigationToTeam:team];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];

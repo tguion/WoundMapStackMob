@@ -46,7 +46,7 @@
 #import "WMFatFractalManager.h"
 #import "WCAppDelegate.h"
 
-#define kAddPatientToTeamActionSheetTag 1000
+//#define kAddPatientToTeamActionSheetTag 1000
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateInitial,              // Sign In, Create Account
@@ -300,6 +300,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                                       otherButtonTitles:nil];
             [alertView show];
         } else {
+            // present controller to enter pin code, and thus accept the team invitation
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
             [self presentViewController:navigationController
                                animated:YES
@@ -416,26 +417,26 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - UIActionSheetDelegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (actionSheet.tag == kAddPatientToTeamActionSheetTag) {
-        WMParticipant *participant = self.participant;
-        WMTeam *team = participant.team;
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        __block NSInteger counter = 0;
-        __weak __typeof(&*self)weakSelf = self;
-        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-        NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
-        counter = [patients count];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
-        [ffm movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-        }];
-    }
-}
+//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if (actionSheet.tag == kAddPatientToTeamActionSheetTag) {
+//        WMParticipant *participant = self.participant;
+//        WMTeam *team = participant.team;
+//        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+//        __block NSInteger counter = 0;
+//        __weak __typeof(&*self)weakSelf = self;
+//        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+//        NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
+//        counter = [patients count];
+//        [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
+//        [ffm movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
+//            if (error) {
+//                [WMUtilities logError:error];
+//            }
+//            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+//        }];
+//    }
+//}
 
 #pragma mark - UITableViewDelegate
 
@@ -504,7 +505,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         if (self.connectedTeamIsConsultingGroup) {
                             break;
                         }
-                        // else
+                        // else IAP for creating a consulting group
                         if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
                                                                                  successBlock:^{
@@ -517,7 +518,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             [self presentCreateConsultingGroupViewController];
                         }
                     } else {
-                        if (YES) {
+                        // IAP for creating a team, and the team leader (the signed-in participant) will be the first team member
+                        if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                                                  successBlock:^{
                                                                                      [weakSelf presentCreateTeamViewController];
@@ -1090,16 +1092,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - CreateTeamViewControllerDelegate
 
-- (void)delayedInquireAddPatientsToTeam
-{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Not now"
-                                               destructiveButtonTitle:@"Add all patients to Team"
-                                                    otherButtonTitles:nil];
-    actionSheet.tag = kAddPatientToTeamActionSheetTag;
-    [actionSheet showInView:self.view];
-}
+//- (void)delayedInquireAddPatientsToTeam
+//{
+//    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Add patients to team?"
+//                                                             delegate:self
+//                                                    cancelButtonTitle:@"Not now"
+//                                               destructiveButtonTitle:@"Add all patients to Team"
+//                                                    otherButtonTitles:nil];
+//    actionSheet.tag = kAddPatientToTeamActionSheetTag;
+//    [actionSheet showInView:self.view];
+//}
 
 - (void)createTeamViewController:(WMCreateTeamViewController *)viewController didCreateTeam:(WMTeam *)team
 {
@@ -1112,7 +1114,22 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         /**
          2014-05-04 14:45:27.387 WoundMapUS[55746:60b] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Sheet can not be presented because the view is not in a window: <UITableView: 0xdd1ee00; frame = (0 0; 320 480); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x1806af40>; layer = <CALayer: 0x18068c80>; contentOffset: {0, 0}>'
          */
-        [self performSelector:@selector(delayedInquireAddPatientsToTeam) withObject:nil afterDelay:0.0];
+//        [self performSelector:@selector(delayedInquireAddPatientsToTeam) withObject:nil afterDelay:0.0];
+        WMParticipant *participant = self.participant;
+        WMTeam *team = participant.team;
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        __block NSInteger counter = 0;
+        __weak __typeof(&*self)weakSelf = self;
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
+        counter = [patients count];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
+        [ffm movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        }];
     }
 }
 

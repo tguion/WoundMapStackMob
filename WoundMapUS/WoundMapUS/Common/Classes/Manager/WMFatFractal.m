@@ -10,10 +10,10 @@
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
 
-//static NSString *baseUrl = @"http://localhost:8080/WoundMapUS";
-//static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
-static NSString *baseUrl = @"http://mobilehealthware.fatfractal.com/WoundMapUS";
-static NSString *sslUrl = @"https://mobilehealthware.fatfractal.com/WoundMapUS";
+static NSString *baseUrl = @"http://localhost:8080/WoundMapUS";
+static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
+//static NSString *baseUrl = @"http://mobilehealthware.fatfractal.com/WoundMapUS";
+//static NSString *sslUrl = @"https://mobilehealthware.fatfractal.com/WoundMapUS";
 
 @implementation WMFatFractal
 

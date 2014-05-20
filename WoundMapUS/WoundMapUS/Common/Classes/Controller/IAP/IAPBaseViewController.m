@@ -78,6 +78,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     _iapProduct = iapProduct;
     [self didChangeValueForKey:@"iapProduct"];
     if (nil != iapProduct && !iapProduct.aggregatorFlag) {
+        // call into SK to get the corresponding SKProduct
         [self skProductforProductId:self.iapProduct.identifier];
     }
 }
@@ -186,6 +187,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
         // else delete index patient
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            // IAPManager will post notification with success or error for purchase
             [[IAPManager sharedInstance] buyProduct:self.skProduct];
             return;
         }
