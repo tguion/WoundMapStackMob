@@ -645,6 +645,21 @@
         <relationship name="referree" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="targetReferrals" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="referrer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="sourceReferrals" inverseEntity="WMParticipant" syncable="YES"/>
     </entity>
+    <entity name="WMPaymentTransaction" representedClassName="WMPaymentTransaction" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="errorCode" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="errorMessage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="originalTransactionIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="productIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="quantity" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="transactionDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="transactionIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transactionState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="WMPerson" representedClassName="WMPerson" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
@@ -1285,5 +1300,6 @@
         <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="223"/>
         <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
         <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>
+        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="238"/>
     </elements>
 </model>

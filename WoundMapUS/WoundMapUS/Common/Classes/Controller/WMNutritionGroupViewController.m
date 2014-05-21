@@ -317,7 +317,7 @@
 
 - (NSString *)label
 {
-    return _selectedNutritionItem.placeHolder;
+    return _selectedNutritionItem.title;
 }
 
 - (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note

@@ -9,6 +9,7 @@
 #import "WMDevicesViewController.h"
 #import "WMDevicesGroupHistoryViewContoller.h"
 #import "WMDevicesSummaryViewController.h"
+#import "WMNoteViewController.h"
 #import "MBProgressHUD.h"
 #import "WMParticipant.h"
 #import "WMPatient.h"
@@ -25,14 +26,16 @@
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
-@interface WMDevicesViewController ()
+@interface WMDevicesViewController () <NoteViewControllerDelegate>
 
 @property (strong, nonatomic) WMDeviceGroup *deviceGroup;
+@property (strong, nonatomic) WMDevice *selectedDevice;
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
 @property (readonly, nonatomic) WMDevicesGroupHistoryViewContoller *devicesGroupHistoryViewContoller;
 @property (readonly, nonatomic) WMDevicesSummaryViewController *devicesSummaryViewController;
+@property (readonly, nonatomic) WMNoteViewController *noteViewController;
 
 @end
 
@@ -235,6 +238,19 @@
 
 #pragma mark - Core
 
+- (void)navigateToNoteViewController:(WMDevice *)device
+{
+    self.selectedDevice = device;
+    [self.navigationController pushViewController:self.noteViewController animated:YES];
+}
+
+- (WMNoteViewController *)noteViewController
+{
+    WMNoteViewController *noteViewController = [[WMNoteViewController alloc] initWithNibName:@"WMNoteViewController" bundle:nil];
+    noteViewController.delegate = self;
+    return noteViewController;
+}
+
 - (void)deleteDeviceValuesFromBackEnd:(NSArray *)deviceValues
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -376,6 +392,37 @@
     [ff updateObj:_deviceGroup onComplete:completionHandler];
 }
 
+#pragma mark - NoteViewControllerDelegate
+
+- (NSString *)note
+{
+    WMDeviceValue *value = [_deviceGroup deviceValueForDevice:_selectedDevice create:NO value:nil];
+    return value.value;
+}
+
+- (NSString *)label
+{
+    return _selectedDevice.title;
+}
+
+- (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note
+{
+    WMDeviceValue *value = [_deviceGroup deviceValueForDevice:_selectedDevice create:NO value:nil];
+    value.value = note;
+    [self.navigationController popViewControllerAnimated:YES];
+    // reload the section if only one selection allowed
+    NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:_selectedDevice];
+    if (indexPath) {
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    _selectedDevice = nil;
+}
+
+- (void)noteViewControllerDidCancel:(WMNoteViewController *)viewController withNote:(NSString *)note
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - InterventionStatusViewControllerDelegate
 
 - (NSString *)summaryButtonTitle
@@ -445,6 +492,12 @@
     }
     // else
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    WMDevice *device = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if (device.groupValueTypeCode == GroupValueTypeCodeNavigateToNote) {
+        [self navigateToNoteViewController:device];
+        return;
+    }
+    // else
     if (nil != self.indexPathForDelayedFirstResponder && ![indexPath isEqual:self.indexPathForDelayedFirstResponder]) {
         self.indexPathForDelayedFirstResponder = nil;
     }
@@ -469,7 +522,6 @@
     // if not control, add or remove value
     if (refreshRow) {
         BOOL refreshTableView = NO;
-        WMDevice *device = [self.fetchedResultsController objectAtIndexPath:indexPath];
         WMDeviceValue *deviceValue = [self.deviceGroup deviceValueForDevice:device
                                                                      create:NO
                                                                       value:nil];

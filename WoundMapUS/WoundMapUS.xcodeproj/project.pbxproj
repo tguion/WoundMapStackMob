@@ -314,6 +314,8 @@
 		7D67414F192CD8EF007DBD1A /* WMNutritionGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D67414D192CD8EF007DBD1A /* WMNutritionGroupViewController.m */; };
 		7D674150192CD8EF007DBD1A /* WMNutritionGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D67414E192CD8EF007DBD1A /* WMNutritionGroupViewController.xib */; };
 		7D674153192CEEEE007DBD1A /* NavigationTracksAU.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D674152192CEEEE007DBD1A /* NavigationTracksAU.plist */; };
+		7D674156192D3BC2007DBD1A /* _WMPaymentTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674155192D3BC2007DBD1A /* _WMPaymentTransaction.m */; };
+		7D674159192D3BD9007DBD1A /* WMPaymentTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674158192D3BD9007DBD1A /* WMPaymentTransaction.m */; };
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
@@ -1112,6 +1114,10 @@
 		7D67414D192CD8EF007DBD1A /* WMNutritionGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNutritionGroupViewController.m; sourceTree = "<group>"; };
 		7D67414E192CD8EF007DBD1A /* WMNutritionGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMNutritionGroupViewController.xib; sourceTree = "<group>"; };
 		7D674152192CEEEE007DBD1A /* NavigationTracksAU.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NavigationTracksAU.plist; sourceTree = "<group>"; };
+		7D674154192D3BC2007DBD1A /* _WMPaymentTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMPaymentTransaction.h; sourceTree = "<group>"; };
+		7D674155192D3BC2007DBD1A /* _WMPaymentTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPaymentTransaction.m; sourceTree = "<group>"; };
+		7D674157192D3BD9007DBD1A /* WMPaymentTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPaymentTransaction.h; sourceTree = "<group>"; };
+		7D674158192D3BD9007DBD1A /* WMPaymentTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPaymentTransaction.m; sourceTree = "<group>"; };
 		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
 		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
@@ -2512,6 +2518,8 @@
 				7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */,
 				7DDE40CB1914212B008DDA3E /* WMPatientReferral.h */,
 				7DDE40CC1914212B008DDA3E /* WMPatientReferral.m */,
+				7D674157192D3BD9007DBD1A /* WMPaymentTransaction.h */,
+				7D674158192D3BD9007DBD1A /* WMPaymentTransaction.m */,
 				7DB206CB18A839180004DC32 /* WMPerson.h */,
 				7DB206CC18A839180004DC32 /* WMPerson.m */,
 				7D39DB2418B821920054DDC3 /* WMPhoto.h */,
@@ -2891,6 +2899,8 @@
 				7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */,
 				7DDE40C81914211C008DDA3E /* _WMPatientReferral.h */,
 				7DDE40C91914211C008DDA3E /* _WMPatientReferral.m */,
+				7D674154192D3BC2007DBD1A /* _WMPaymentTransaction.h */,
+				7D674155192D3BC2007DBD1A /* _WMPaymentTransaction.m */,
 				7DB206E318A839240004DC32 /* _WMPerson.h */,
 				7DB206E418A839240004DC32 /* _WMPerson.m */,
 				7D39DB1E18B8217A0054DDC3 /* _WMPhoto.h */,
@@ -3611,6 +3621,7 @@
 				7DD8373218C78A390028C2D3 /* NSManagedObject+MagicalAggregation.m in Sources */,
 				7D68947719044427006DE509 /* WMWoundPhotoViewController.m in Sources */,
 				7D39DB5E18B90DCE0054DDC3 /* WMNavigationCoordinator_iPad.m in Sources */,
+				7D674159192D3BD9007DBD1A /* WMPaymentTransaction.m in Sources */,
 				7DF4E93618C22F27000A3F5B /* WMWoundLocationValue.m in Sources */,
 				7DDA8DA01925544C00A1AFB7 /* WMFTPConfigurationViewController.m in Sources */,
 				7DDEE28818F49E5500AF9FC6 /* WMMedicalHistoryViewController.m in Sources */,
@@ -3651,6 +3662,7 @@
 				7D10CDC318DA352800AD43E3 /* ConstraintUtilities-Install.m in Sources */,
 				7D39DBB918BAB3BF0054DDC3 /* WMPhotoScaleViewController.m in Sources */,
 				7D39DB4F18B827AB0054DDC3 /* WMTakePatientPhotoViewController.m in Sources */,
+				7D674156192D3BC2007DBD1A /* _WMPaymentTransaction.m in Sources */,
 				7DDE40CA1914211C008DDA3E /* _WMPatientReferral.m in Sources */,
 				7DDBEDB118BC0DD300FEF3FA /* _IAPProduct.m in Sources */,
 				7DDBEDE318BEA95C00FEF3FA /* _WMBradenScale.m in Sources */,

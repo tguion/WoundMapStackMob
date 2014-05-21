@@ -9,6 +9,7 @@
 //  This seeding needs to occur as soon as the local store has been initialized
 
 #import "IAPManager.h"
+#import "WMPaymentTransaction.h"
 #import "WMTeam.h"
 #import "WMParticipant.h"
 #import "IAPProduct.h"
@@ -131,7 +132,9 @@ NSString* _deviceId;
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
 {
-    for (SKPaymentTransaction * transaction in transactions) {
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    NSString *username = self.appDelegate.participant.userName;
+    for (SKPaymentTransaction *transaction in transactions) {
         switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchased:
                 [self completeTransaction:transaction];
@@ -141,10 +144,55 @@ NSString* _deviceId;
                 break;
             case SKPaymentTransactionStateRestored:
                 [self restoreTransaction:transaction];
-            default:
-                break;
         }
-    };
+        // persist to back end
+        WM_ASSERT_MAIN_THREAD;
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMPaymentTransaction *originalPaymentTransaction = nil;
+        if (transaction.transactionState == SKPaymentTransactionStateRestored) {
+            SKPaymentTransaction *originalTransaction = transaction.originalTransaction;
+            if (originalTransaction) {
+                originalPaymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:originalTransaction
+                                                                                         originalTransaction:nil
+                                                                                                    username:username
+                                                                                                      create:NO
+                                                                                        managedObjectContext:managedObjectContext];
+                if (nil == originalPaymentTransaction) {
+                    // must get from back end first
+                    NSError *localError = nil;
+                    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPaymentTransaction entityName]] error:&localError];
+                    if (localError) {
+                        [WMUtilities logError:localError];
+                    }
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    originalPaymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:originalTransaction
+                                                                                             originalTransaction:nil
+                                                                                                        username:username
+                                                                                                          create:NO
+                                                                                            managedObjectContext:managedObjectContext];
+                }
+            }
+        }
+        WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
+                                                                                               originalTransaction:originalPaymentTransaction
+                                                                                                          username:self.appDelegate.participant.userName
+                                                                                                            create:YES
+                                                                                              managedObjectContext:managedObjectContext];
+        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        };
+        if (paymentTransaction.ffUrl) {
+            [ff updateObj:paymentTransaction
+               onComplete:onComplete onOffline:onComplete];
+        } else {
+            [ff createObj:paymentTransaction
+                    atUri:[NSString stringWithFormat:@"/%@", [WMPaymentTransaction entityName]]
+               onComplete:onComplete onOffline:onComplete];
+        }
+    }
 }
 
 - (BOOL)isProductPurchased:(IAPProduct *)iapProduct
