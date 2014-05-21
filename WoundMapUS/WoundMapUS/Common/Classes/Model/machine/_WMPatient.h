@@ -28,6 +28,7 @@ extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *ids;
 	__unsafe_unretained NSString *medicalHistoryGroups;
 	__unsafe_unretained NSString *medicationGroups;
+	__unsafe_unretained NSString *nutritionGroups;
 	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *patientConsultants;
 	__unsafe_unretained NSString *person;
@@ -48,6 +49,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMId;
 @class WMMedicalHistoryGroup;
 @class WMMedicationGroup;
+@class WMNutritionGroup;
 @class WMParticipant;
 @class WMPatientConsultant;
 @class WMPerson;
@@ -280,6 +282,13 @@ extern const struct WMPatientFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *nutritionGroups;
+
+- (NSMutableSet*)nutritionGroupsSet;
+
+
+
+
 @property (nonatomic, strong) WMParticipant *participant;
 
 //- (BOOL)validateParticipant:(id*)value_ error:(NSError**)error_;
@@ -377,6 +386,11 @@ extern const struct WMPatientFetchedProperties {
 - (void)removeMedicationGroups:(NSSet*)value_;
 - (void)addMedicationGroupsObject:(WMMedicationGroup*)value_;
 - (void)removeMedicationGroupsObject:(WMMedicationGroup*)value_;
+
+- (void)addNutritionGroups:(NSSet*)value_;
+- (void)removeNutritionGroups:(NSSet*)value_;
+- (void)addNutritionGroupsObject:(WMNutritionGroup*)value_;
+- (void)removeNutritionGroupsObject:(WMNutritionGroup*)value_;
 
 - (void)addPatientConsultants:(NSSet*)value_;
 - (void)removePatientConsultants:(NSSet*)value_;
@@ -529,6 +543,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSMutableSet*)primitiveMedicationGroups;
 - (void)setPrimitiveMedicationGroups:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveNutritionGroups;
+- (void)setPrimitiveNutritionGroups:(NSMutableSet*)value;
 
 
 

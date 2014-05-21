@@ -23,6 +23,7 @@ const struct WMInterventionStatusRelationships WMInterventionStatusRelationships
 	.fromStatusJoins = @"fromStatusJoins",
 	.measurementGroups = @"measurementGroups",
 	.medicationGroups = @"medicationGroups",
+	.nutritionGroups = @"nutritionGroups",
 	.psychoSocialGroups = @"psychoSocialGroups",
 	.skinAssessmentGroups = @"skinAssessmentGroups",
 	.toStatusJoins = @"toStatusJoins",
@@ -299,6 +300,19 @@ const struct WMInterventionStatusFetchedProperties WMInterventionStatusFetchedPr
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"medicationGroups"];
   
 	[self didAccessValueForKey:@"medicationGroups"];
+	return result;
+}
+	
+
+@dynamic nutritionGroups;
+
+	
+- (NSMutableSet*)nutritionGroupsSet {
+	[self willAccessValueForKey:@"nutritionGroups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"nutritionGroups"];
+  
+	[self didAccessValueForKey:@"nutritionGroups"];
 	return result;
 }
 	

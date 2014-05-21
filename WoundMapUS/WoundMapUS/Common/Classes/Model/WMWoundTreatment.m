@@ -166,7 +166,12 @@ typedef enum {
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
-	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundTreatment" withExtension:@"plist"];
+    NSString *filename = @"WoundTreatment";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
+    // read the plist
+	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
 	if (nil == fileURL) {
 		DLog(@"WoundTreatment.plist file not found");
 		return;

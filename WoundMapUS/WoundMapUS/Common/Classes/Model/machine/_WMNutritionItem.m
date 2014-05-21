@@ -5,13 +5,16 @@
 
 const struct WMNutritionItemAttributes WMNutritionItemAttributes = {
 	.createdAt = @"createdAt",
+	.definition = @"definition",
 	.ffUrl = @"ffUrl",
 	.flags = @"flags",
 	.loincCode = @"loincCode",
 	.snomedCID = @"snomedCID",
 	.snomedFSN = @"snomedFSN",
+	.sortRank = @"sortRank",
 	.title = @"title",
 	.updatedAt = @"updatedAt",
+	.valueTypeCode = @"valueTypeCode",
 };
 
 const struct WMNutritionItemRelationships WMNutritionItemRelationships = {
@@ -57,6 +60,16 @@ const struct WMNutritionItemFetchedProperties WMNutritionItemFetchedProperties =
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
+	if ([key isEqualToString:@"sortRankValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"sortRank"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"valueTypeCodeValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"valueTypeCode"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -65,6 +78,13 @@ const struct WMNutritionItemFetchedProperties WMNutritionItemFetchedProperties =
 
 
 @dynamic createdAt;
+
+
+
+
+
+
+@dynamic definition;
 
 
 
@@ -144,6 +164,32 @@ const struct WMNutritionItemFetchedProperties WMNutritionItemFetchedProperties =
 
 
 
+@dynamic sortRank;
+
+
+
+- (int16_t)sortRankValue {
+	NSNumber *result = [self sortRank];
+	return [result shortValue];
+}
+
+- (void)setSortRankValue:(int16_t)value_ {
+	[self setSortRank:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveSortRankValue {
+	NSNumber *result = [self primitiveSortRank];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveSortRankValue:(int16_t)value_ {
+	[self setPrimitiveSortRank:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
 @dynamic title;
 
 
@@ -153,6 +199,32 @@ const struct WMNutritionItemFetchedProperties WMNutritionItemFetchedProperties =
 
 @dynamic updatedAt;
 
+
+
+
+
+
+@dynamic valueTypeCode;
+
+
+
+- (int16_t)valueTypeCodeValue {
+	NSNumber *result = [self valueTypeCode];
+	return [result shortValue];
+}
+
+- (void)setValueTypeCodeValue:(int16_t)value_ {
+	[self setValueTypeCode:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveValueTypeCodeValue {
+	NSNumber *result = [self primitiveValueTypeCode];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveValueTypeCodeValue:(int16_t)value_ {
+	[self setPrimitiveValueTypeCode:[NSNumber numberWithShort:value_]];
+}
 
 
 

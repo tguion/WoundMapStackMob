@@ -95,8 +95,12 @@ typedef enum {
 // first attempt to find WMNavigationTrack data in index store
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
+    NSString *filename = @"NavigationTracks";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
     // read the plist
-    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
     if (nil == fileURL) {
         DLog(@"NavigationTracks.plist file not found");
         return;
@@ -191,6 +195,10 @@ typedef enum {
 
 + (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
+    NSString *filename = @"NavigationTracks";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
     // read the plist
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
     if (nil == fileURL) {

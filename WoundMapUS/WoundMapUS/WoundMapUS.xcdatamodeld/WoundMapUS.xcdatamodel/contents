@@ -299,6 +299,7 @@
         <relationship name="eventType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionEventType" inverseName="interventionEvents" inverseEntity="WMInterventionEventType" syncable="YES"/>
         <relationship name="measurementGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMWoundMeasurementGroup" inverseName="interventionEvents" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
         <relationship name="medicationGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMMedicationGroup" inverseName="interventionEvents" inverseEntity="WMMedicationGroup" syncable="YES"/>
+        <relationship name="nutritionGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNutritionGroup" inverseName="interventionEvents" inverseEntity="WMNutritionGroup" syncable="YES"/>
         <relationship name="participant" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="interventionEvents" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="psychoSocialGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPsychoSocialGroup" inverseName="interventionEvents" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
         <relationship name="skinAssessmentGroup" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMSkinAssessmentGroup" inverseName="interventionEvents" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
@@ -334,6 +335,7 @@
         <relationship name="fromStatusJoins" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionStatusJoin" inverseName="toStatus" inverseEntity="WMInterventionStatusJoin" syncable="YES"/>
         <relationship name="measurementGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMWoundMeasurementGroup" inverseName="status" inverseEntity="WMWoundMeasurementGroup" syncable="YES"/>
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMMedicationGroup" inverseName="status" inverseEntity="WMMedicationGroup" syncable="YES"/>
+        <relationship name="nutritionGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMNutritionGroup" inverseName="status" inverseEntity="WMNutritionGroup" syncable="YES"/>
         <relationship name="psychoSocialGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPsychoSocialGroup" inverseName="status" inverseEntity="WMPsychoSocialGroup" syncable="YES"/>
         <relationship name="skinAssessmentGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMSkinAssessmentGroup" inverseName="status" inverseEntity="WMSkinAssessmentGroup" syncable="YES"/>
         <relationship name="toStatusJoins" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionStatusJoin" inverseName="fromStatus" inverseEntity="WMInterventionStatusJoin" syncable="YES"/>
@@ -493,17 +495,23 @@
         <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="nutritionGroup" inverseEntity="WMInterventionEvent" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="nutritionGroups" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="status" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMInterventionStatus" inverseName="nutritionGroups" inverseEntity="WMInterventionStatus" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNutritionValue" inverseName="nutritionGroup" inverseEntity="WMNutritionValue" syncable="YES"/>
     </entity>
     <entity name="WMNutritionItem" representedClassName="WMNutritionItem" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="definition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="loincCode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="snomedCID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="snomedFSN" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <attribute name="valueTypeCode" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNutritionValue" inverseName="item" inverseEntity="WMNutritionValue" syncable="YES"/>
     </entity>
     <entity name="WMNutritionValue" representedClassName="WMNutritionValue" syncable="YES">
@@ -605,6 +613,7 @@
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
         <relationship name="medicalHistoryGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicalHistoryGroup" inverseName="patient" inverseEntity="WMMedicalHistoryGroup" syncable="YES"/>
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
+        <relationship name="nutritionGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNutritionGroup" inverseName="patient" inverseEntity="WMNutritionGroup" syncable="YES"/>
         <relationship name="participant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="patients" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patientConsultants" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="patient" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="patient" inverseEntity="WMPerson" syncable="YES"/>
@@ -1225,9 +1234,9 @@
         <element name="WMIAPTransaction" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMId" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMInstruction" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="WMInterventionEvent" positionX="0" positionY="0" width="128" height="330"/>
+        <element name="WMInterventionEvent" positionX="0" positionY="0" width="128" height="343"/>
         <element name="WMInterventionEventType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMInterventionStatus" positionX="0" positionY="0" width="128" height="345"/>
+        <element name="WMInterventionStatus" positionX="0" positionY="0" width="128" height="360"/>
         <element name="WMInterventionStatusJoin" positionX="0" positionY="0" width="128" height="120"/>
         <element name="WMMedicalHistoryGroup" positionX="27" positionY="171" width="128" height="133"/>
         <element name="WMMedicalHistoryItem" positionX="9" positionY="153" width="128" height="223"/>
@@ -1241,7 +1250,7 @@
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="478"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="495"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
@@ -1273,8 +1282,8 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="178"/>
+        <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="223"/>
         <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
-        <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="208"/>
+        <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>
     </elements>
 </model>

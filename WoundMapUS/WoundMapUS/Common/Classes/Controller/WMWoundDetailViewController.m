@@ -438,7 +438,6 @@
         case 3: {
             // wound history
             cell.textLabel.text = @"History";
-            NSString *string = self.wound.history;
             cell.detailTextLabel.text = self.wound.history;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;

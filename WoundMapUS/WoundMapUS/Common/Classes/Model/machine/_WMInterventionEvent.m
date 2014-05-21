@@ -22,6 +22,7 @@ const struct WMInterventionEventRelationships WMInterventionEventRelationships =
 	.eventType = @"eventType",
 	.measurementGroup = @"measurementGroup",
 	.medicationGroup = @"medicationGroup",
+	.nutritionGroup = @"nutritionGroup",
 	.participant = @"participant",
 	.psychoSocialGroup = @"psychoSocialGroup",
 	.skinAssessmentGroup = @"skinAssessmentGroup",
@@ -175,6 +176,10 @@ const struct WMInterventionEventFetchedProperties WMInterventionEventFetchedProp
 	
 
 @dynamic medicationGroup;
+
+	
+
+@dynamic nutritionGroup;
 
 	
 

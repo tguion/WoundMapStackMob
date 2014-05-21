@@ -166,6 +166,7 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                                                             WMInterventionStatusRelationships.deviceGroups,
                                                             WMInterventionStatusRelationships.measurementGroups,
                                                             WMInterventionStatusRelationships.medicationGroups,
+                                                            WMInterventionStatusRelationships.nutritionGroups,
                                                             WMInterventionStatusRelationships.psychoSocialGroups,
                                                             WMInterventionStatusRelationships.skinAssessmentGroups,
                                                             WMInterventionStatusRelationships.treatmentGroups]];

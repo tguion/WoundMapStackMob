@@ -2,7 +2,7 @@
 #import "WMInterventionEventType.h"
 
 @class WMParticipant, WMInterventionEventType;
-@class WMSkinAssessmentGroup, WMCarePlanGroup, WMDeviceGroup, WMMedicationGroup, WMPsychoSocialGroup, WMWoundMeasurementGroup, WMWoundTreatmentGroup;
+@class WMSkinAssessmentGroup, WMCarePlanGroup, WMDeviceGroup, WMMedicationGroup, WMPsychoSocialGroup, WMWoundMeasurementGroup, WMWoundTreatmentGroup, WMNutritionGroup;
 
 @interface WMInterventionEvent : _WMInterventionEvent {}
 
@@ -46,6 +46,16 @@
                                                    participant:(WMParticipant *)participant
                                                         create:(BOOL)create
                                           managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
++ (WMInterventionEvent *)interventionEventForNutritionGroup:(WMNutritionGroup *)nutritionGroup
+                                                 changeType:(InterventionEventChangeType)changeType
+                                                      title:(NSString *)title
+                                                  valueFrom:(id)valueFrom
+                                                    valueTo:(id)valueTo
+                                                       type:(WMInterventionEventType *)eventType
+                                                participant:(WMParticipant *)participant
+                                                     create:(BOOL)create
+                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 + (WMInterventionEvent *)interventionEventForWoundMeasurementGroup:(WMWoundMeasurementGroup *)woundMeasurementGroup
                                                         changeType:(InterventionEventChangeType)changeType

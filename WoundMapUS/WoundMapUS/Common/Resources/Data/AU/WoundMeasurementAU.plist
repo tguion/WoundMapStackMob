@@ -270,11 +270,27 @@
 				<key>LOINC Code</key>
 				<string></string>
 			</dict>
+			<dict>
+				<key>title</key>
+				<string>Other</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>90</integer>
+				<key>inputTypeCode</key>
+				<integer>16</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
 		</array>
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>Exudate</string>
+		<string>Drainage</string>
 		<key>sortRank</key>
 		<integer>30</integer>
 		<key>inputTypeCode</key>
@@ -291,7 +307,7 @@
 		<array>
 			<dict>
 				<key>title</key>
-				<string>Serous</string>
+				<string>Haemoserous</string>
 				<key>definition</key>
 				<string></string>
 				<key>sortRank</key>
@@ -299,15 +315,15 @@
 				<key>inputTypeCode</key>
 				<integer>13</integer>
 				<key>SNOMED CT FSN</key>
-				<string>serous discharge from wound(finding)</string>
+				<string></string>
 				<key>SNOMED CT CID</key>
-				<integer>447112000</integer>
+				<integer>0</integer>
 				<key>LOINC Code</key>
 				<string></string>
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Sanguinous</string>
+				<string>Pus</string>
 				<key>definition</key>
 				<string></string>
 				<key>sortRank</key>
@@ -315,15 +331,15 @@
 				<key>inputTypeCode</key>
 				<integer>13</integer>
 				<key>SNOMED CT FSN</key>
-				<string>sanguineous discharge from wound(finding)</string>
+				<string></string>
 				<key>SNOMED CT CID</key>
-				<integer>449762008</integer>
+				<integer>0</integer>
 				<key>LOINC Code</key>
 				<string></string>
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Serosanguinous</string>
+				<string>Haemopurulent</string>
 				<key>definition</key>
 				<string></string>
 				<key>sortRank</key>
@@ -331,15 +347,15 @@
 				<key>inputTypeCode</key>
 				<integer>13</integer>
 				<key>SNOMED CT FSN</key>
-				<string>serosanguineous discharge from wound(finding)</string>
+				<string></string>
 				<key>SNOMED CT CID</key>
-				<integer>449756003</integer>
+				<integer>0</integer>
 				<key>LOINC Code</key>
 				<string></string>
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Purulent</string>
+				<string>Offensive</string>
 				<key>definition</key>
 				<string></string>
 				<key>sortRank</key>
@@ -347,15 +363,15 @@
 				<key>inputTypeCode</key>
 				<integer>13</integer>
 				<key>SNOMED CT FSN</key>
-				<string>seropurulent discharge from wound(finding)</string>
+				<string></string>
 				<key>SNOMED CT CID</key>
-				<integer>449761001</integer>
+				<integer>0</integer>
 				<key>LOINC Code</key>
 				<string></string>
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Bloody</string>
+				<string>Green</string>
 				<key>definition</key>
 				<string></string>
 				<key>sortRank</key>
@@ -371,13 +387,13 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Odor</string>
+				<string>Other</string>
 				<key>definition</key>
 				<string></string>
 				<key>sortRank</key>
 				<integer>60</integer>
 				<key>inputTypeCode</key>
-				<integer>13</integer>
+				<integer>16</integer>
 				<key>SNOMED CT FSN</key>
 				<string></string>
 				<key>SNOMED CT CID</key>
@@ -389,7 +405,7 @@
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>Exudate Color</string>
+		<string>Drainage Color</string>
 		<key>sortRank</key>
 		<integer>35</integer>
 		<key>inputTypeCode</key>
@@ -1225,6 +1241,82 @@
 				<integer>16</integer>
 				<key>placeHolder</key>
 				<string>Specify Progress</string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Current Regime</string>
+		<key>sortRank</key>
+		<integer>100</integer>
+		<key>inputTypeCode</key>
+		<integer>5</integer>
+		<key>measurements</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Compression</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Tubigrip</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Other</string>
+				<key>inputTypeCode</key>
+				<integer>16</integer>
+				<key>sortRank</key>
+				<integer>30</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Proposed Diagnosis</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>inputTypeCode</key>
+				<integer>16</integer>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Recent Labs/Tests</string>
+		<key>sortRank</key>
+		<integer>110</integer>
+		<key>inputTypeCode</key>
+		<integer>5</integer>
+		<key>measurements</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>HB</string>
+				<key>sortRank</key>
+				<integer>10</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Serum Albumin</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>EST</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Other</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>inputTypeCode</key>
+				<integer>16</integer>
 			</dict>
 		</array>
 	</dict>

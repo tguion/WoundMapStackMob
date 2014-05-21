@@ -24,6 +24,7 @@ extern const struct WMInterventionStatusRelationships {
 	__unsafe_unretained NSString *fromStatusJoins;
 	__unsafe_unretained NSString *measurementGroups;
 	__unsafe_unretained NSString *medicationGroups;
+	__unsafe_unretained NSString *nutritionGroups;
 	__unsafe_unretained NSString *psychoSocialGroups;
 	__unsafe_unretained NSString *skinAssessmentGroups;
 	__unsafe_unretained NSString *toStatusJoins;
@@ -38,6 +39,7 @@ extern const struct WMInterventionStatusFetchedProperties {
 @class WMInterventionStatusJoin;
 @class WMWoundMeasurementGroup;
 @class WMMedicationGroup;
+@class WMNutritionGroup;
 @class WMPsychoSocialGroup;
 @class WMSkinAssessmentGroup;
 @class WMInterventionStatusJoin;
@@ -229,6 +231,13 @@ extern const struct WMInterventionStatusFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *nutritionGroups;
+
+- (NSMutableSet*)nutritionGroupsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *psychoSocialGroups;
 
 - (NSMutableSet*)psychoSocialGroupsSet;
@@ -286,6 +295,11 @@ extern const struct WMInterventionStatusFetchedProperties {
 - (void)removeMedicationGroups:(NSSet*)value_;
 - (void)addMedicationGroupsObject:(WMMedicationGroup*)value_;
 - (void)removeMedicationGroupsObject:(WMMedicationGroup*)value_;
+
+- (void)addNutritionGroups:(NSSet*)value_;
+- (void)removeNutritionGroups:(NSSet*)value_;
+- (void)addNutritionGroupsObject:(WMNutritionGroup*)value_;
+- (void)removeNutritionGroupsObject:(WMNutritionGroup*)value_;
 
 - (void)addPsychoSocialGroups:(NSSet*)value_;
 - (void)removePsychoSocialGroups:(NSSet*)value_;
@@ -413,6 +427,11 @@ extern const struct WMInterventionStatusFetchedProperties {
 
 - (NSMutableSet*)primitiveMedicationGroups;
 - (void)setPrimitiveMedicationGroups:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveNutritionGroups;
+- (void)setPrimitiveNutritionGroups:(NSMutableSet*)value;
 
 
 

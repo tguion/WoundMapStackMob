@@ -805,6 +805,266 @@
 	</dict>
 	<dict>
 		<key>title</key>
+		<string>Matresses</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>80</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>devices</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Air-Overlay</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Static</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Alternating</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Lower Extremity</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>90</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>devices</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Spendo Bootie</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Heel List Device</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Accessories</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>100</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>devices</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Bed Cradles</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Sheepskins</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Seating Devices</string>
+		<key>definition</key>
+		<string>some definition</string>
+		<key>sortRank</key>
+		<integer>110</integer>
+		<key>SNOMED CT FSN</key>
+		<string></string>
+		<key>SNOMED CT CID</key>
+		<integer>0</integer>
+		<key>LOINC Code</key>
+		<string></string>
+		<key>devices</key>
+		<array>
+			<dict>
+				<key>title</key>
+				<string>Wheelchair</string>
+				<key>definition</key>
+				<string></string>
+				<key>sortRank</key>
+				<integer>10</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Princess/Fallout Chair</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>20</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Legs Dependant</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>30</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Legs Elevated</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>40</integer>
+				<key>inputTypeCode</key>
+				<integer>0</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>title</key>
+				<string>Other</string>
+				<key>definition</key>
+				<string>some definition</string>
+				<key>sortRank</key>
+				<integer>50</integer>
+				<key>inputTypeCode</key>
+				<integer>16</integer>
+				<key>SNOMED CT FSN</key>
+				<string></string>
+				<key>SNOMED CT CID</key>
+				<integer>0</integer>
+				<key>LOINC Code</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+	<dict>
+		<key>title</key>
 		<string>None or Not Applicable</string>
 		<key>definition</key>
 		<string>some definition</string>

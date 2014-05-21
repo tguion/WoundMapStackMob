@@ -216,7 +216,12 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
-	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"WoundMeasurement" withExtension:@"plist"];
+    NSString *filename = @"WoundMeasurement";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
+    // read the plist
+	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
 	if (nil == fileURL) {
 		DLog(@"WoundMeasurement.plist file not found");
 		return;

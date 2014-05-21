@@ -89,7 +89,11 @@
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
 {
     // read the plist
-	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"Devices" withExtension:@"plist"];
+    NSString *filename = @"Devices";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
+	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
 	if (nil == fileURL) {
 		DLog(@"Devices.plist file not found");
 		return;

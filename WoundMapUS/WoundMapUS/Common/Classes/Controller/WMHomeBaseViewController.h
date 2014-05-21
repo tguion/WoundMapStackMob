@@ -21,6 +21,7 @@
 #import "WMMedicationGroupViewController.h"
 #import "WMDevicesViewController.h"
 #import "WMPsychoSocialGroupViewController.h"
+#import "WMNutritionGroupViewController.h"
 #import "WMTakePatientPhotoViewController.h"
 #import "WMWoundMeasurementGroupViewController.h"
 #import "WMPhotosContainerViewController.h"
@@ -43,12 +44,12 @@ typedef enum {
 
 @class WMNavigationNode;
 @class WMPatientTableViewController, WMPatientDetailViewController, WMSelectWoundViewController, WMWoundDetailViewController;
-@class WMSkinAssessmentGroupViewController, WMBradenScaleViewController, WMMedicationGroupViewController, WMDevicesViewController, WMPsychoSocialGroupViewController;
+@class WMSkinAssessmentGroupViewController, WMBradenScaleViewController, WMMedicationGroupViewController, WMDevicesViewController, WMPsychoSocialGroupViewController, WMNutritionGroupViewController;
 @class WMCarePlanGroupViewController, WMWoundTreatmentGroupsViewController, WMWoundMeasurementGroupViewController, WMTakePatientPhotoViewController;
 @class WMPhotosContainerViewController, WMPlotSelectDatasetViewController, WMPatientSummaryContainerViewController, WMShareViewController;
 
 @interface WMHomeBaseViewController : WMBaseViewController
-<PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate, OverlayViewControllerDelegate>
+<PolicyEditorDelegate, PatientTableViewControllerDelegate, SelectWoundViewControllerDelegate, WoundDetailViewControllerDelegate, NavigationPatientWoundViewDelegate, ChooseTrackDelegate, ChooseStageDelegate, WoundTreatmentGroupsDelegate, UIPopoverControllerDelegate, PlotViewControllerDelegate, ShareViewControllerDelegate, PatientDetailViewControllerDelegate, BradenScaleDelegate, MedicationGroupViewControllerDelegate, DevicesViewControllerDelegate, SkinAssessmentGroupViewControllerDelegate, CarePlanGroupViewControllerDelegate, WoundMeasurementGroupViewControllerDelegate, TakePatientPhotoDelegate, PatientSummaryContainerDelegate, PsychoSocialGroupViewControllerDelegate, OverlayViewControllerDelegate, NutritionGroupViewControllerDelegate>
 
 @property (nonatomic) PhotoAcquisitionState photoAcquisitionState;
 
@@ -113,6 +114,7 @@ typedef enum {
 @property (readonly, nonatomic) WMMedicationGroupViewController *medicationsViewController;
 @property (readonly, nonatomic) WMDevicesViewController *devicesViewController;
 @property (readonly, nonatomic) WMPsychoSocialGroupViewController *psychoSocialGroupViewController;
+@property (readonly, nonatomic) WMNutritionGroupViewController *nutritionGroupViewController;
 @property (readonly, nonatomic) WMCarePlanGroupViewController *carePlanGroupViewController;
 @property (readonly, nonatomic) WMWoundTreatmentGroupsViewController *woundTreatmentGroupsViewController;
 @property (readonly, nonatomic) WMWoundMeasurementGroupViewController *woundMeasurementGroupViewController;
@@ -161,6 +163,7 @@ typedef enum {
 - (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)navigateToNutritionAssessment:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToPhoto:(WMNavigationNode *)navigationNode;
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton;

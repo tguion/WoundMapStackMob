@@ -35,6 +35,7 @@
 #import "WMWoundMeasurement.h"
 #import "WMPsychoSocialItem.h"
 #import "WMTelecomType.h"
+#import "WMNutritionItem.h"
 #import "CoreDataHelper.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
@@ -296,6 +297,17 @@
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
             [WMTelecomType seedDatabase:managedObjectContext completionHandler:completionHandler];
+            DLog(@"reading plists and seeding database finished");
+        } else {
+            counterHandler();
+        }
+    }];
+    // *** WMNutritionItem *** first attempt to acquire data from backend
+    ++counter;
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNutritionItem entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (![object count]) {
+            [WMNutritionItem seedDatabase:managedObjectContext completionHandler:completionHandler];
             DLog(@"reading plists and seeding database finished");
         } else {
             counterHandler();

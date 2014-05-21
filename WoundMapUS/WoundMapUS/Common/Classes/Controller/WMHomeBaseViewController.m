@@ -400,6 +400,10 @@
             selector = @selector(psycoSocialAssessmentAction:);
             break;
         }
+        case kNutritionNode: {
+            selector = @selector(nutritionAssessmentAction:);
+            break;
+        }
         case kSkinAssessmentNode: {
             selector = @selector(skinAssessmentAction:);
             break;
@@ -1258,6 +1262,30 @@
                                        completionHandler:block];
 }
 
+- (IBAction)nutritionAssessmentAction:(id)sender
+{
+    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
+    NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
+    WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
+    // update from back end
+    __weak __typeof(self) weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        if (error) {
+            [WMUtilities logError:error];
+        } else {
+            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf navigateToNutritionAssessment:navigationNodeButton];
+        }
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.nutritionGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
+}
+
 - (IBAction)skinAssessmentAction:(id)sender
 {
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
@@ -1549,6 +1577,7 @@
 - (void)navigateToMedicationAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToDeviceAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToPsychoSocialAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
+- (void)navigateToNutritionAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToMeasurePhoto:(WMNavigationNodeButton *)navigationNodeButton {}
 - (void)navigateToWoundAssessment:(WMNavigationNodeButton *)navigationNodeButton {}
@@ -1692,6 +1721,13 @@
     WMPsychoSocialGroupViewController *psychoSocialGroupViewController = [[WMPsychoSocialGroupViewController alloc] initWithNibName:@"WMPsychoSocialGroupViewController" bundle:nil];
     psychoSocialGroupViewController.delegate = self;
     return psychoSocialGroupViewController;
+}
+
+- (WMNutritionGroupViewController *)nutritionGroupViewController
+{
+    WMNutritionGroupViewController *nutritionGroupViewController = [[WMNutritionGroupViewController alloc] initWithNibName:@"WMNutritionGroupViewController" bundle:nil];
+    nutritionGroupViewController.delegate = self;
+    return nutritionGroupViewController;
 }
 
 - (WMSkinAssessmentGroupViewController *)skinAssessmentGroupViewController
@@ -1991,6 +2027,18 @@
 
 - (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
 {
+}
+
+#pragma mark - NutritionGroupViewControllerDelegate
+
+- (void)nutritionGroupViewControllerDidSave:(WMNutritionGroupViewController *)viewController
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kNutritionNode]];
+}
+
+- (void)nutritionGroupViewControllerDidCancel:(WMNutritionGroupViewController *)viewController
+{
+    
 }
 
 #pragma mark - TakePatientPhotoDelegate

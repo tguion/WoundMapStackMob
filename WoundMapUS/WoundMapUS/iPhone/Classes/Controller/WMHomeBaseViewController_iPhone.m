@@ -237,6 +237,19 @@
                      }];
 }
 
+- (void)navigateToNutritionAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMNutritionGroupViewController *viewController = self.nutritionGroupViewController;
+    viewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    navigationController.delegate = self.appDelegate;
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:^{
+                         // nothing
+                     }];
+}
+
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMPhotoManager * photoManager = [WMPhotoManager sharedInstance];
@@ -464,6 +477,23 @@
 - (void)skinAssessmentGroupViewControllerDidCancel:(WMSkinAssessmentGroupViewController *)viewController
 {
     [super skinAssessmentGroupViewControllerDidCancel:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+#pragma mark - NutritionGroupViewControllerDelegate
+
+- (void)nutritionGroupViewControllerDidSave:(WMNutritionGroupViewController *)viewController
+{
+    [super nutritionGroupViewControllerDidSave:viewController];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // nothing
+    }];
+}
+
+- (void)nutritionGroupViewControllerDidCancel:(WMNutritionGroupViewController *)viewController
+{
     [self dismissViewControllerAnimated:YES completion:^{
         // nothing
     }];

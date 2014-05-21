@@ -20,6 +20,7 @@
 #import "WMMedicationGroup.h"
 #import "WMDeviceGroup.h"
 #import "WMPsychoSocialGroup.h"
+#import "WMNutritionGroup.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMNavigationNodeButton.h"
 #import "WMNavigationCoordinator.h"
@@ -76,6 +77,10 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
         }
         case kPsycoSocialNode: {
             dateModified = [WMPsychoSocialGroup mostRecentOrActivePsychoSocialGroupDateModified:self.patient];
+            break;
+        }
+        case kNutritionNode: {
+            dateModified = [WMNutritionGroup mostRecentOrActiveNutritionGroupDateModified:self.patient];
             break;
         }
         case kSkinAssessmentNode: {
@@ -211,6 +216,10 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
             complianceDelta = [WMPolicyManager complianceDeltaForFrequencyUnit:frequenceyUnit frequencyValue:frequenceValue dateModified:dateModified];
             break;
         }
+        case kNutritionNode: {
+            complianceDelta = [WMPolicyManager complianceDeltaForFrequencyUnit:frequenceyUnit frequencyValue:frequenceValue dateModified:dateModified];
+            break;
+        }
         case kSkinAssessmentNode: {
             complianceDelta = [WMPolicyManager complianceDeltaForFrequencyUnit:frequenceyUnit frequencyValue:frequenceValue dateModified:dateModified];
             break;
@@ -315,6 +324,12 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
             // fetch all WCPsychoSocialGroup where dateCreate > dateCreatedCutoff
             count = [WMPsychoSocialGroup closePsychoSocialGroupsCreatedBefore:dateCreatedCutoff
                                                                       patient:self.patient];
+            break;
+        }
+        case kNutritionNode: {
+            // fetch all WMNutritionGroup where dateCreate > dateCreatedCutoff
+            count = [WMNutritionGroup closeNutritionGroupsCreatedBefore:dateCreatedCutoff
+                                                                patient:self.patient];
             break;
         }
         case kSkinAssessmentNode: {

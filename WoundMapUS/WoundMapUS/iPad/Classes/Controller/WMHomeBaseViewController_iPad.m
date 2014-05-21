@@ -271,6 +271,18 @@
                                      animated:YES];
 }
 
+- (void)navigateToNutritionAssessment:(WMNavigationNodeButton *)navigationNodeButton
+{
+    WMNutritionGroupViewController *viewController = self.nutritionGroupViewController;
+    viewController.recentlyClosedCount = navigationNodeButton.recentlyClosedCount;
+    UIPopoverController *popoverController = [self navigationNodePopoverControllerForContentViewController:viewController];
+    CGRect rect = [self.view convertRect:navigationNodeButton.frame fromView:navigationNodeButton.superview];
+    [popoverController presentPopoverFromRect:rect
+                                       inView:self.view
+                     permittedArrowDirections:UIPopoverArrowDirectionAny
+                                     animated:YES];
+}
+
 - (void)navigateToTakePhoto:(WMNavigationNodeButton *)navigationNodeButton
 {
     WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
@@ -539,6 +551,21 @@
 - (void)psychoSocialGroupViewControllerDidCancel:(WMPsychoSocialGroupViewController *)viewController
 {
     [super psychoSocialGroupViewControllerDidCancel:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+#pragma mark - NutritionGroupViewControllerDelegate
+
+- (void)nutritionGroupViewControllerDidSave:(WMNutritionGroupViewController *)viewController
+{
+    [super nutritionGroupViewControllerDidSave:viewController];
+    [_navigationNodePopoverController dismissPopoverAnimated:YES];
+    _navigationNodePopoverController = nil;
+}
+
+- (void)nutritionGroupViewControllerDidCancel:(WMNutritionGroupViewController *)viewController
+{
     [_navigationNodePopoverController dismissPopoverAnimated:YES];
     _navigationNodePopoverController = nil;
 }

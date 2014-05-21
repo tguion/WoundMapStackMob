@@ -13,6 +13,8 @@
 
 #endif
 
+extern NSString * const kSeedFileSuffix;
+
 typedef void (^WMProcessCallback)(NSError *error, NSArray *objectIDs, NSString *collection);
 typedef void (^WMProcessCallbackWithCallback)(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack);
 
@@ -59,6 +61,7 @@ typedef enum {
     kMedicationsNode    = 82,
     kDevicesNode        = 83,
     kPsycoSocialNode    = 84,
+    kNutritionNode      = 85,
     kSkinAssessmentNode = 90,
     kPhotoNode          = 100,
     kTakePhotoNode      = 101,

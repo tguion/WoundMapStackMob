@@ -6,13 +6,16 @@
 
 extern const struct WMNutritionItemAttributes {
 	__unsafe_unretained NSString *createdAt;
+	__unsafe_unretained NSString *definition;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *loincCode;
 	__unsafe_unretained NSString *snomedCID;
 	__unsafe_unretained NSString *snomedFSN;
+	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *updatedAt;
+	__unsafe_unretained NSString *valueTypeCode;
 } WMNutritionItemAttributes;
 
 extern const struct WMNutritionItemRelationships {
@@ -23,6 +26,9 @@ extern const struct WMNutritionItemFetchedProperties {
 } WMNutritionItemFetchedProperties;
 
 @class WMNutritionValue;
+
+
+
 
 
 
@@ -51,6 +57,16 @@ extern const struct WMNutritionItemFetchedProperties {
 
 
 //- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* definition;
+
+
+
+//- (BOOL)validateDefinition:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -114,6 +130,20 @@ extern const struct WMNutritionItemFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* sortRank;
+
+
+
+@property int16_t sortRankValue;
+- (int16_t)sortRankValue;
+- (void)setSortRankValue:(int16_t)value_;
+
+//- (BOOL)validateSortRank:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* title;
 
 
@@ -129,6 +159,20 @@ extern const struct WMNutritionItemFetchedProperties {
 
 
 //- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* valueTypeCode;
+
+
+
+@property int16_t valueTypeCodeValue;
+- (int16_t)valueTypeCodeValue;
+- (void)setValueTypeCodeValue:(int16_t)value_;
+
+//- (BOOL)validateValueTypeCode:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -158,6 +202,12 @@ extern const struct WMNutritionItemFetchedProperties {
 
 - (NSDate*)primitiveCreatedAt;
 - (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
+- (NSString*)primitiveDefinition;
+- (void)setPrimitiveDefinition:(NSString*)value;
 
 
 
@@ -198,6 +248,15 @@ extern const struct WMNutritionItemFetchedProperties {
 
 
 
+- (NSNumber*)primitiveSortRank;
+- (void)setPrimitiveSortRank:(NSNumber*)value;
+
+- (int16_t)primitiveSortRankValue;
+- (void)setPrimitiveSortRankValue:(int16_t)value_;
+
+
+
+
 - (NSString*)primitiveTitle;
 - (void)setPrimitiveTitle:(NSString*)value;
 
@@ -206,6 +265,15 @@ extern const struct WMNutritionItemFetchedProperties {
 
 - (NSDate*)primitiveUpdatedAt;
 - (void)setPrimitiveUpdatedAt:(NSDate*)value;
+
+
+
+
+- (NSNumber*)primitiveValueTypeCode;
+- (void)setPrimitiveValueTypeCode:(NSNumber*)value;
+
+- (int16_t)primitiveValueTypeCodeValue;
+- (void)setPrimitiveValueTypeCodeValue:(int16_t)value_;
 
 
 

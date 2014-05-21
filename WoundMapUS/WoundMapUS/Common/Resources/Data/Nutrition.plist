@@ -9,7 +9,7 @@
 		<string>some definition</string>
 		<key>sortRank</key>
 		<integer>10</integer>
-		<key>inputTypeCode</key>
+		<key>valueTypeCode</key>
 		<integer>7</integer>
 		<key>SNOMED CT FSN</key>
 		<string></string>
@@ -25,7 +25,7 @@
 		<string>some definition</string>
 		<key>sortRank</key>
 		<integer>20</integer>
-		<key>inputTypeCode</key>
+		<key>valueTypeCode</key>
 		<integer>16</integer>
 		<key>SNOMED CT FSN</key>
 		<string></string>
@@ -41,7 +41,7 @@
 		<string>some definition</string>
 		<key>sortRank</key>
 		<integer>30</integer>
-		<key>inputTypeCode</key>
+		<key>valueTypeCode</key>
 		<integer>16</integer>
 		<key>SNOMED CT FSN</key>
 		<string></string>
@@ -57,7 +57,7 @@
 		<string>some definition</string>
 		<key>sortRank</key>
 		<integer>40</integer>
-		<key>inputTypeCode</key>
+		<key>valueTypeCode</key>
 		<integer>16</integer>
 		<key>SNOMED CT FSN</key>
 		<string></string>

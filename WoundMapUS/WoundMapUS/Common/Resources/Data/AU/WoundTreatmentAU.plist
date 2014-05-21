@@ -162,18 +162,6 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Whirlpool</string>
-				<key>sortRank</key>
-				<integer>50</integer>
-				<key>SNOMED CT FSN</key>
-				<string></string>
-				<key>SNOMED CT CID</key>
-				<integer>0</integer>
-				<key>LOINC Code</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>title</key>
 				<string>Other</string>
 				<key>sortRank</key>
 				<integer>60</integer>
@@ -296,30 +284,6 @@
 				<array>
 					<dict>
 						<key>title</key>
-						<string>Alginate</string>
-						<key>sortRank</key>
-						<integer>10</integer>
-						<key>SNOMED CT FSN</key>
-						<string></string>
-						<key>SNOMED CT CID</key>
-						<integer>0</integer>
-						<key>LOINC Code</key>
-						<string></string>
-					</dict>
-					<dict>
-						<key>title</key>
-						<string>Hydrocolloid</string>
-						<key>sortRank</key>
-						<integer>20</integer>
-						<key>SNOMED CT FSN</key>
-						<string></string>
-						<key>SNOMED CT CID</key>
-						<integer>0</integer>
-						<key>LOINC Code</key>
-						<string></string>
-					</dict>
-					<dict>
-						<key>title</key>
 						<string>Other</string>
 						<key>sortRank</key>
 						<integer>30</integer>
@@ -366,49 +330,9 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Composite Dressing</string>
-				<key>sortRank</key>
-				<integer>100</integer>
-				<key>SNOMED CT FSN</key>
-				<string></string>
-				<key>SNOMED CT CID</key>
-				<integer>0</integer>
-				<key>LOINC Code</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>title</key>
-				<string>Collagen</string>
-				<key>sortRank</key>
-				<integer>110</integer>
-				<key>SNOMED CT FSN</key>
-				<string></string>
-				<key>SNOMED CT CID</key>
-				<integer>0</integer>
-				<key>LOINC Code</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>title</key>
 				<string>Non-adherent Dressing</string>
 				<key>sortRank</key>
 				<integer>120</integer>
-				<key>inputTypeCode</key>
-				<integer>2</integer>
-				<key>placeHolder</key>
-				<string>Specify</string>
-				<key>SNOMED CT FSN</key>
-				<string></string>
-				<key>SNOMED CT CID</key>
-				<integer>0</integer>
-				<key>LOINC Code</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>title</key>
-				<string>Powder</string>
-				<key>sortRank</key>
-				<integer>130</integer>
 				<key>inputTypeCode</key>
 				<integer>2</integer>
 				<key>placeHolder</key>
@@ -614,18 +538,6 @@
 		<array>
 			<dict>
 				<key>title</key>
-				<string>ABD</string>
-				<key>sortRank</key>
-				<integer>40</integer>
-				<key>SNOMED CT FSN</key>
-				<string></string>
-				<key>SNOMED CT CID</key>
-				<integer>0</integer>
-				<key>LOINC Code</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>title</key>
 				<string>Foam</string>
 				<key>sortRank</key>
 				<integer>10</integer>
@@ -670,11 +582,11 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Compression Wrap</string>
+				<string>Compression Therapy</string>
 				<key>sortRank</key>
 				<integer>80</integer>
 				<key>inputTypeCode</key>
-				<integer>2</integer>
+				<integer>16</integer>
 				<key>placeHolder</key>
 				<string>Specify type</string>
 				<key>SNOMED CT FSN</key>
@@ -769,18 +681,6 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Gauze/Kerlex</string>
-				<key>sortRank</key>
-				<integer>50</integer>
-				<key>SNOMED CT FSN</key>
-				<string></string>
-				<key>SNOMED CT CID</key>
-				<integer>0</integer>
-				<key>LOINC Code</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>title</key>
 				<string>Fistula Management Device</string>
 				<key>sortRank</key>
 				<integer>90</integer>
@@ -830,7 +730,7 @@
 		<array>
 			<dict>
 				<key>title</key>
-				<string>Every Shift</string>
+				<string>Twice Daily</string>
 				<key>sortRank</key>
 				<integer>20</integer>
 				<key>SNOMED CT FSN</key>
@@ -842,7 +742,7 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Every Day</string>
+				<string>Second Daily</string>
 				<key>sortRank</key>
 				<integer>10</integer>
 				<key>SNOMED CT FSN</key>
@@ -854,17 +754,11 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Every _ days</string>
+				<string>Twice Weekly</string>
 				<key>sortRank</key>
 				<integer>30</integer>
 				<key>combineKeyAndValue</key>
 				<true/>
-				<key>inputTypeCode</key>
-				<integer>2</integer>
-				<key>placeHolder</key>
-				<string>Enter days</string>
-				<key>keyboardType</key>
-				<integer>8</integer>
 				<key>SNOMED CT FSN</key>
 				<string></string>
 				<key>SNOMED CT CID</key>
@@ -874,13 +768,9 @@
 			</dict>
 			<dict>
 				<key>title</key>
-				<string>Other</string>
+				<string>Weekly</string>
 				<key>sortRank</key>
 				<integer>40</integer>
-				<key>inputTypeCode</key>
-				<integer>2</integer>
-				<key>placeHolder</key>
-				<string>Specify Frequency</string>
 				<key>SNOMED CT FSN</key>
 				<string></string>
 				<key>SNOMED CT CID</key>

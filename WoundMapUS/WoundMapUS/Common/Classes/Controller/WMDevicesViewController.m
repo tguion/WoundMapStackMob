@@ -228,8 +228,8 @@
         [self.deviceGroup addValuesObject:deviceValue];
     } else if (nil != deviceValue) {
         [self.deviceGroup removeValuesObject:deviceValue];
-        [self.managedObjectContext deleteObject:deviceValue];
         [self deleteDeviceValuesFromBackEnd:@[deviceValue]];
+        [self.managedObjectContext deleteObject:deviceValue];
     }
 }
 
@@ -252,48 +252,6 @@
                }];
         }
     }
-}
-
-- (WMDeviceGroup *)deviceGroup
-{
-    if (nil == _deviceGroup) {
-        WMDeviceGroup *deviceGroup = [WMDeviceGroup deviceGroupForPatient:self.patient];
-        self.didCreateGroup = YES;
-        WMInterventionEvent *event = [deviceGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
-                                                                           title:nil
-                                                                       valueFrom:nil
-                                                                         valueTo:nil
-                                                                            type:[WMInterventionEventType interventionEventTypeForTitle:kInterventionEventTypePlan
-                                                                                                                                 create:YES
-                                                                                                                   managedObjectContext:self.managedObjectContext]
-                                                                     participant:self.appDelegate.participant
-                                                                          create:YES
-                                                            managedObjectContext:self.managedObjectContext];
-        DLog(@"Created event %@", event.eventType.title);
-        self.deviceGroup = deviceGroup;
-        // update backend
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        __weak __typeof(&*self)weakSelf = self;
-        FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:deviceGroup.ffUrl
-                             toObjAtFfUrl:weakSelf.patient.ffUrl
-                              grabBagName:WMPatientRelationships.deviceGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
-            }
-        };
-        [ff createObj:deviceGroup
-                atUri:[NSString stringWithFormat:@"/%@", [WMDeviceGroup entityName]]
-           onComplete:block
-            onOffline:block];
-    }
-    return _deviceGroup;
 }
 
 - (WMDevicesGroupHistoryViewContoller *)devicesGroupHistoryViewContoller
@@ -384,14 +342,11 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error && counter) {
-            counter = 0;
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             block();
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
         }
     };
     WMParticipant *participant = self.appDelegate.participant;

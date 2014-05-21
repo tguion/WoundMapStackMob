@@ -23,6 +23,7 @@ extern const struct WMInterventionEventRelationships {
 	__unsafe_unretained NSString *eventType;
 	__unsafe_unretained NSString *measurementGroup;
 	__unsafe_unretained NSString *medicationGroup;
+	__unsafe_unretained NSString *nutritionGroup;
 	__unsafe_unretained NSString *participant;
 	__unsafe_unretained NSString *psychoSocialGroup;
 	__unsafe_unretained NSString *skinAssessmentGroup;
@@ -37,6 +38,7 @@ extern const struct WMInterventionEventFetchedProperties {
 @class WMInterventionEventType;
 @class WMWoundMeasurementGroup;
 @class WMMedicationGroup;
+@class WMNutritionGroup;
 @class WMParticipant;
 @class WMPsychoSocialGroup;
 @class WMSkinAssessmentGroup;
@@ -205,6 +207,13 @@ extern const struct WMInterventionEventFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMNutritionGroup *nutritionGroup;
+
+//- (BOOL)validateNutritionGroup:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) WMParticipant *participant;
 
 //- (BOOL)validateParticipant:(id*)value_ error:(NSError**)error_;
@@ -329,6 +338,11 @@ extern const struct WMInterventionEventFetchedProperties {
 
 - (WMMedicationGroup*)primitiveMedicationGroup;
 - (void)setPrimitiveMedicationGroup:(WMMedicationGroup*)value;
+
+
+
+- (WMNutritionGroup*)primitiveNutritionGroup;
+- (void)setPrimitiveNutritionGroup:(WMNutritionGroup*)value;
 
 
 

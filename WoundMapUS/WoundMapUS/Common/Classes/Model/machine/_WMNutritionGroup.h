@@ -18,12 +18,18 @@ extern const struct WMNutritionGroupAttributes {
 } WMNutritionGroupAttributes;
 
 extern const struct WMNutritionGroupRelationships {
+	__unsafe_unretained NSString *interventionEvents;
+	__unsafe_unretained NSString *patient;
+	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *values;
 } WMNutritionGroupRelationships;
 
 extern const struct WMNutritionGroupFetchedProperties {
 } WMNutritionGroupFetchedProperties;
 
+@class WMInterventionEvent;
+@class WMPatient;
+@class WMInterventionStatus;
 @class WMNutritionValue;
 
 
@@ -166,6 +172,27 @@ extern const struct WMNutritionGroupFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *interventionEvents;
+
+- (NSMutableSet*)interventionEventsSet;
+
+
+
+
+@property (nonatomic, strong) WMPatient *patient;
+
+//- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
+
+
+
+
+@property (nonatomic, strong) WMInterventionStatus *status;
+
+//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
+
+
+
+
 @property (nonatomic, strong) NSSet *values;
 
 - (NSMutableSet*)valuesSet;
@@ -177,6 +204,11 @@ extern const struct WMNutritionGroupFetchedProperties {
 @end
 
 @interface _WMNutritionGroup (CoreDataGeneratedAccessors)
+
+- (void)addInterventionEvents:(NSSet*)value_;
+- (void)removeInterventionEvents:(NSSet*)value_;
+- (void)addInterventionEventsObject:(WMInterventionEvent*)value_;
+- (void)removeInterventionEventsObject:(WMInterventionEvent*)value_;
 
 - (void)addValues:(NSSet*)value_;
 - (void)removeValues:(NSSet*)value_;
@@ -258,6 +290,21 @@ extern const struct WMNutritionGroupFetchedProperties {
 - (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
+
+
+
+- (NSMutableSet*)primitiveInterventionEvents;
+- (void)setPrimitiveInterventionEvents:(NSMutableSet*)value;
+
+
+
+- (WMPatient*)primitivePatient;
+- (void)setPrimitivePatient:(WMPatient*)value;
+
+
+
+- (WMInterventionStatus*)primitiveStatus;
+- (void)setPrimitiveStatus:(WMInterventionStatus*)value;
 
 
 

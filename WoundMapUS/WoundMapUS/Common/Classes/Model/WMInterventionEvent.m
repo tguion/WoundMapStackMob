@@ -5,6 +5,7 @@
 #import "WMDeviceGroup.h"
 #import "WMMedicationGroup.h"
 #import "WMPsychoSocialGroup.h"
+#import "WMNutritionGroup.h"
 #import "WMWoundMeasurementGroup.h"
 #import "WMWoundTreatmentGroup.h"
 
@@ -190,6 +191,37 @@
         interventionEvent.psychoSocialGroup = psychoSocialGroup;
         interventionEvent.changeType = [NSNumber numberWithInt:changeType];
         interventionEvent.path = path;
+        interventionEvent.title = title;
+        interventionEvent.valueFrom = valueFrom;
+        interventionEvent.valueTo = valueTo;
+        interventionEvent.eventType = eventType;
+        interventionEvent.participant = participant;
+    }
+    return interventionEvent;
+}
+
++ (WMInterventionEvent *)interventionEventForNutritionGroup:(WMNutritionGroup *)nutritionGroup
+                                                 changeType:(InterventionEventChangeType)changeType
+                                                      title:(NSString *)title
+                                                  valueFrom:(id)valueFrom
+                                                    valueTo:(id)valueTo
+                                                       type:(WMInterventionEventType *)eventType
+                                                participant:(WMParticipant *)participant
+                                                     create:(BOOL)create
+                                       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    NSParameterAssert([nutritionGroup managedObjectContext] == managedObjectContext);
+    NSParameterAssert([participant managedObjectContext] == managedObjectContext);
+    if (nil != eventType) {
+        NSParameterAssert([eventType managedObjectContext] == managedObjectContext);
+    }
+    WMInterventionEvent *interventionEvent = [WMInterventionEvent MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:
+                                                                                             @"nutritionGroup == %@ AND changeType == %d AND title == %@ AND valueFrom == %@ AND valueTo == %@ AND eventType == %@ AND participant == %@",
+                                                                                             nutritionGroup, changeType, title, valueFrom, valueTo, eventType, participant] inContext:managedObjectContext];
+    if (create && nil == interventionEvent) {
+        interventionEvent = [WMInterventionEvent MR_createInContext:managedObjectContext];
+        interventionEvent.nutritionGroup = nutritionGroup;
+        interventionEvent.changeType = [NSNumber numberWithInt:changeType];
         interventionEvent.title = title;
         interventionEvent.valueFrom = valueFrom;
         interventionEvent.valueTo = valueTo;

@@ -53,17 +53,6 @@
     if (self) {
         self.modalInPopover = YES;
         self.preferredContentSize = CGSizeMake(320.0, 860.0);
-        __weak __typeof(&*self)weakSelf = self;
-        self.refreshCompletionHandler = ^(NSError *error, id object) {
-            if (!weakSelf.didCreateGroup) {
-                // we want to support cancel, so make sure we have an undoManager
-                if (nil == weakSelf.managedObjectContext.undoManager) {
-                    weakSelf.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                    weakSelf.removeUndoManagerWhenDone = YES;
-                }
-                [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
-            }
-        };
     }
     return self;
 }
