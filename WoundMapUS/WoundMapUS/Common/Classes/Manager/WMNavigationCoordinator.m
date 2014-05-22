@@ -116,23 +116,37 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     if ([_patient isEqual:patient]) {
         return;
     }
-    // else
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    // else update patient status
+    if (_patient) {
+        [_patient updatePatientStatusMessages];
+        [[_patient managedObjectContext] MR_saveToPersistentStoreAndWait];
+        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        };
+        [ff updateObj:_patient onComplete:onComplete onOffline:onComplete];
+    }
     [self clearPatientCache];
     _patient = patient;
     // save user defaults
     if ([patient.ffUrl length] > 0) {
         if (nil == patient.participant) {
             DLog(@"*** WARNING: patient without participant: %@", patient);
-            patient.participant = self.participant;
-            NSError *localError = nil;
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff updateObj:patient error:&localError];
-            if (localError) {
-                [WMUtilities logError:localError];
-            }
+            __weak __typeof(&*self)weakSelf = self;
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
+                if (patient.participant.guid) {
+                    [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
+                }
+            }];
+        } else {
+            [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
         }
-        NSParameterAssert(patient.participant.guid);
-        [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
     }
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
@@ -186,6 +200,16 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     if (nil != _wound) {
         [[WMUserDefaultsManager sharedInstance] setLastWoundFFURLOnDevice:wound.ffUrl forPatientFFURL:self.patient.ffUrl];
         [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[_wound objectID]];
+        WMErrorCallback block = ^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        };
+        [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups]
+                                                  aggregator:_wound
+                                                          ff:[WMFatFractal sharedInstance]
+                                           completionHandler:block];
+
     }
 }
 
@@ -264,7 +288,14 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 - (WMNavigationStage *)navigationStage
 {
     WM_ASSERT_MAIN_THREAD;
-    return self.patient.stage;
+    WMNavigationStage *stage = self.patient.stage;
+    // bug fix should make this unnecessary
+    if (nil == stage) {
+        stage = self.navigationTrack.initialStage;
+        self.patient.stage = stage;
+        [[WMFatFractal sharedInstance] updateObj:self.patient];
+    }
+    return stage;
 }
 
 - (void)setNavigationStage:(WMNavigationStage *)navigationStage
@@ -374,7 +405,7 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
     // update wound measurements from back end
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     __block NSInteger counter = 0;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
@@ -637,7 +668,10 @@ NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNo
 {
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
     [woundPhoto.wound removePhotosObject:woundPhoto];
-    [managedObjectContext deleteObject:woundPhoto];
+    if (_woundPhoto == woundPhoto) {
+        _woundPhoto = nil;
+    }
+    [managedObjectContext MR_deleteObjects:@[woundPhoto]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kWoundPhotoWillDeleteNotification object:woundPhoto];
 }
 

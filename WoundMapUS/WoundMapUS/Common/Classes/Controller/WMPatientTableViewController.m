@@ -388,17 +388,13 @@
     self.navigationItem.hidesBackButton = YES;
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     searchBar.showsCancelButton = NO;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
     [self performSelector:@selector(refetchDataForCoreTableView) withObject:nil afterDelay:0.1];
 }
 

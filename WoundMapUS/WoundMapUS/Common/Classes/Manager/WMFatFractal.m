@@ -37,7 +37,7 @@ static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
 
 + (void)initializeFatFractalInstance:(WMFatFractal *)ff
 {
-    ff.debug = NO;
+    ff.debug = YES;//DEPLOYMENT
     ff.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
     // must load blobs explicitely
     ff.autoLoadBlobs = NO;

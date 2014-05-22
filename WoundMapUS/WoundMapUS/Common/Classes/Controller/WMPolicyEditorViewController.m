@@ -264,13 +264,21 @@ NSString * const kTextCellIdentifier = @"TextCell";
     if (team && nil == team.teamPolicy) {
         WMTeamPolicy *teamPolicy = [WMTeamPolicy teamPolicyForTeam:team];
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        FFHttpMethodCompletion onComplete2 = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             }
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             block();
+        };
+        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [ff updateObj:team
+               onComplete:onComplete2
+                onOffline:onComplete2];
         };
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ff createObj:teamPolicy

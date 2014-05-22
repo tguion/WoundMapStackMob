@@ -175,6 +175,10 @@
 
 - (void)selectWoundTypeViewController:(WMSelectWoundTypeViewController *)viewController didSelectWoundType:(WMWoundType *)woundType
 {
+    NSIndexPath *indexPathToClear = nil;
+    if (self.selectedWoundType) {
+        indexPathToClear = [self.fetchedResultsController indexPathForObject:self.selectedWoundType];
+    }
     self.selectedWoundType = woundType;
     if (woundType.parent) {
         NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:woundType.parent];
@@ -183,6 +187,11 @@
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             [self.tableView endUpdates];
         }
+    }
+    if (indexPathToClear) {
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPathToClear] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
     }
     [self.navigationController popViewControllerAnimated:YES];
 }

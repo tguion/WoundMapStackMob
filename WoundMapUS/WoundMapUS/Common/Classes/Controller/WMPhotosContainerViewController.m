@@ -769,7 +769,7 @@
                                                                      queue:[NSOperationQueue mainQueue]
                                                                 usingBlock:^(NSNotification *notification) {
                                                                     NSManagedObjectID *objectID = [notification object];
-                                                                    DLog(@"tiling completed notification received for %@", objectID);
+                                                                    DLog(@"wound photo delete received for %@", objectID);
                                                                     // update image to show tiling completed - don't need to do anything
                                                                 }];
     [self.opaqueNotificationObservers addObject:observer];
@@ -920,21 +920,15 @@
 {
     if (actionSheet.tag == kDeletePhotoActionSheetTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+            ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+            NSManagedObjectContext *managedObjectContext = [self.woundPhoto managedObjectContext];
             [self.appDelegate.navigationCoordinator deleteWoundPhoto:self.woundPhoto];
-            NSSet *deletedObjects = self.managedObjectContext.deletedObjects;
-            [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-            // update back end
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            };
-            for (id object in deletedObjects) {
-                [ff deleteObj:object
-                   onComplete:onComplete
-                    onOffline:onComplete];
-            }
+            [managedObjectContext processPendingChanges];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
+            [self invalidateWoundPhotoCache];
+            [self installGridViewController];
         }
     }
 }

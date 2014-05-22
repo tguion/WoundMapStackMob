@@ -27,6 +27,7 @@
 @property (nonatomic, readonly) NSURL *applicationDocumentsDirectory;
 
 @property (nonatomic, strong) WMParticipant *participant;           // clinician using the app
+@property (nonatomic, strong) NSDictionary *patient2StageMap;       // used to move patients to team
 
 - (void)signOut;
 

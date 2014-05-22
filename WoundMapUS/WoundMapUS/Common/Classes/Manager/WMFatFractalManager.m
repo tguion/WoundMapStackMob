@@ -54,11 +54,18 @@
 
 @interface WMFatFractalManager ()
 
+@property (readonly, nonatomic) WCAppDelegate *appDelegate;
+
 @property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;      // map of objectID or collection to refresh times
 
 @end
 
 @implementation WMFatFractalManager
+
+- (WCAppDelegate *)appDelegate
+{
+    return (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
 
 + (WMFatFractalManager *)sharedInstance
 {
@@ -376,7 +383,6 @@
             completionHandler(response.error);
         } else {
             NSSet *patients = [NSSet setWithArray:response.objs];
-            [patients makeObjectsPerformSelector:@selector(updatePatientStatusMessages)];
             [localPatients minusSet:patients];
             [managedObjectContext MR_deleteObjects:localPatients];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -1087,15 +1093,7 @@
         completionHandler(nil);
     } else {
         for (WMPatient *patient in patients) {
-            // non-team navigation may have been deleted locally, so load here
-            if (nil == patient.stage) {
-                NSError *localError = nil;
-                [ff updateObj:patient error:&localError];
-                if (localError) {
-                    [WMUtilities logError:localError];
-                }
-            }
-            [patient updateNavigationToTeam:team];
+            [patient updateNavigationToTeam:team patient2StageMap:self.appDelegate.patient2StageMap];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {

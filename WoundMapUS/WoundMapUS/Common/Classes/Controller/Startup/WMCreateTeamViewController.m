@@ -11,7 +11,9 @@
 #import "WMTextFieldTableViewCell.h"
 #import "WMValue1TableViewCell.h"
 #import "MBProgressHUD.h"
+#import "WMPatient.h"
 #import "WMNavigationTrack.h"
+#import "WMNavigationStage.h"
 #import "WMParticipant.h"
 #import "WMTeamInvitation.h"
 #import "WMTeam.h"
@@ -210,6 +212,13 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             [WMUtilities logError:error];
             completionHandler(error);
         } else {
+            // hold onto stage/track for each patient
+            NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
+            NSMutableDictionary *map = [NSMutableDictionary dictionary];
+            for (WMPatient *patient in patients) {
+                map[patient.ffUrl] = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
+            }
+            self.appDelegate.patient2StageMap = map;
             // delete local tracks
             NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
             [managedObjectContext MR_deleteObjects:navigationTracks];

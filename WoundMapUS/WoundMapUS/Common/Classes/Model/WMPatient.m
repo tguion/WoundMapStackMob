@@ -300,15 +300,25 @@ typedef enum {
                                               inContext:managedObjectContext];
 }
 
-- (BOOL)updateNavigationToTeam:(WMTeam *)team
+- (BOOL)updateNavigationToTeam:(WMTeam *)team patient2StageMap:(NSDictionary *)patient2StageMap
 {
     NSParameterAssert(team);
-    NSParameterAssert(self.stage);
-    if (nil == self.stage.track.team) {
+    // when creating team, we may have deleted non-team track/stage/node
+    WMNavigationStage *stage = self.stage;
+    NSString *trackTitle = stage.track.title;
+    NSString *stageTitle = stage.title;
+    if (nil == stageTitle) {
+        NSString *string = patient2StageMap[self.ffUrl];
+        NSArray *trackStageArray = [string componentsSeparatedByString:@"|"];
+        trackTitle = trackStageArray[0];
+        stageTitle = trackStageArray[1];
+    }
+    NSParameterAssert(stageTitle);
+    if (nil == stage.track.team) {
         NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-        WMNavigationTrack *track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, self.stage.track.title] inContext:managedObjectContext];
+        WMNavigationTrack *track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, trackTitle] inContext:managedObjectContext];
         NSParameterAssert(track);
-        WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, self.stage.title] inContext:managedObjectContext];
+        WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, stageTitle] inContext:managedObjectContext];
         NSParameterAssert(stage);
         self.stage = stage;
         self.team = team;

@@ -21,7 +21,7 @@
 #import "WMUtilities.h"
 #import "KeychainItemWrapper.h"
 
-NSString * const kSeedFileSuffix = @"AU";
+NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
 
 // Instantiating KeychainItemWrapper class as a singleton through AppDelegate
 static KeychainItemWrapper *_keychainItem;

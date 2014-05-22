@@ -1079,7 +1079,6 @@
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     __weak __typeof(self) weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
         } else {
