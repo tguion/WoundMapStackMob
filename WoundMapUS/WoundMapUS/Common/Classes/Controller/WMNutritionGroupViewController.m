@@ -205,10 +205,11 @@
         return;
     }
     // else
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
         if (_removeUndoManagerWhenDone) {
-            self.managedObjectContext.undoManager = nil;
+            managedObjectContext.undoManager = nil;
         }
     }
     [super saveAction:sender];
@@ -235,8 +236,14 @@
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
+    NSSet *updatedObjects = managedObjectContext.updatedObjects;
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
         if (interventionEvent.ffUrl) {
+            if ([updatedObjects containsObject:interventionEvent]) {
+                ++counter;
+                [ff updateObj:interventionEvent
+                   onComplete:completionHandler onOffline:completionHandler];
+            }
             continue;
         }
         // else
@@ -249,6 +256,11 @@
     }
     for (WMNutritionValue *value in _nutritionGroup.values) {
         if (value.ffUrl) {
+            if ([updatedObjects containsObject:value]) {
+                ++counter;
+                [ff updateObj:value
+                   onComplete:completionHandler onOffline:completionHandler];
+            }
             continue;
         }
         // else

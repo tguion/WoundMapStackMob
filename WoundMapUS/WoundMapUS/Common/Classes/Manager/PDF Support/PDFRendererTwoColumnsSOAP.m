@@ -21,6 +21,10 @@
 #import "WMDeviceGroup+CoreText.h"
 #import "WMPsychoSocialGroup.h"
 #import "WMPsychoSocialGroup+CoreText.h"
+#import "WMNutritionGroup.h"
+#import "WMNutritionItem.h"
+#import "WMNutritionValue.h"
+#import "WMNutritionGroup+CoreText.h"
 #import "WMSkinAssessmentGroup.h"
 #import "WMSkinAssessmentGroup+CoreText.h"
 #import "WMCarePlanGroup.h"
@@ -272,6 +276,13 @@
         WMMedicationGroup *medicationGroup = [WMMedicationGroup mostRecentOrActiveMedicationGroup:self.patient];
         if (nil != medicationGroup) {
             [mutableAttributedString appendAttributedString:[medicationGroup descriptionAsMutableAttributedStringWithBaseFontSize:self.defaultFontSize]];
+        }
+        WMNutritionGroup *nutritionGroup = [WMNutritionGroup mostRecentOrActiveNutritionGroup:self.patient];
+        if (nil != nutritionGroup) {
+            if ([mutableAttributedString length] > 0) {
+                [mutableAttributedString appendAttributedString:paragraphAttributedString];
+            }
+            [mutableAttributedString appendAttributedString:[nutritionGroup descriptionAsMutableAttributedStringWithBaseFontSize:self.defaultFontSize]];
         }
         WMDeviceGroup *deviceGroup = [WMDeviceGroup mostRecentOrActiveDeviceGroup:self.patient];
         if (nil != deviceGroup) {

@@ -32,6 +32,18 @@
                                               inContext:[patient managedObjectContext]];
 }
 
++ (WMNutritionGroup *)mostRecentOrActiveNutritionGroup:(WMPatient *)patient
+{
+    WMNutritionGroup *nutritionGroup = [self activeNutritionGroup:patient];
+    if (nil == nutritionGroup) {
+        nutritionGroup = [WMNutritionGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"patient == %@", patient]
+                                                            sortedBy:@"updatedAt"
+                                                           ascending:NO
+                                                           inContext:[patient managedObjectContext]];
+    }
+    return nutritionGroup;
+}
+
 + (NSDate *)mostRecentOrActiveNutritionGroupDateModified:(WMPatient *)patient
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
@@ -91,6 +103,24 @@
         [self addValuesObject:nutritionValue];
     }
     return nutritionValue;
+}
+
+- (NSArray *)sortedValues
+{
+    return [WMNutritionValue MR_findAllSortedBy:@"item.sortRank"
+                                      ascending:YES
+                                  withPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMNutritionValueRelationships.nutritionGroup, self]
+                                      inContext:[self managedObjectContext]];
+}
+
++ (NSArray *)sortedNutritionGroups:(WMPatient *)patient
+{
+    return [WMNutritionGroup MR_findAllSortedBy:WMNutritionGroupAttributes.createdAt ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMNutritionGroupRelationships.patient, patient] inContext:[patient managedObjectContext]];
+}
+
++ (NSInteger)nutritionGroupsCount:(WMPatient *)patient
+{
+    return [WMNutritionGroup MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMNutritionGroupRelationships.patient, patient] inContext:[patient managedObjectContext]];
 }
 
 #pragma mark - Events
@@ -205,7 +235,9 @@
                                                             @"flagsValue",
                                                             @"snomedCIDValue",
                                                             @"nutritionValuesAdded",
-                                                            @"nutritionValuesRemoved"]];
+                                                            @"nutritionValuesRemoved",
+                                                            @"sortedValues",
+                                                            @"objectID"]];
     });
     return PropertyNamesNotToSerialize;
 }

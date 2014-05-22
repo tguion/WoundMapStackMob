@@ -318,22 +318,23 @@
         return;
     }
     // else
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
     }
     if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
+        managedObjectContext.undoManager = nil;
     }
     [super saveAction:sender];
     // create intervention events before super
     [self.skinAssessmentGroup createEditEventsForParticipant:self.appDelegate.participant];
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     // wait for back end calls to complete
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate skinAssessmentGroupViewControllerDidSave:weakSelf];
     };
@@ -348,8 +349,15 @@
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
+    NSSet *updatedObjects = managedObjectContext.updatedObjects;
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
         if (interventionEvent.ffUrl) {
+            if ([updatedObjects containsObject:interventionEvent]) {
+                ++counter;
+                [ff updateObj:interventionEvent
+                   onComplete:completionHandler
+                    onOffline:completionHandler];
+            }
             continue;
         }
         // else
@@ -362,6 +370,11 @@
     }
     for (WMSkinAssessmentValue *value in _skinAssessmentGroup.values) {
         if (value.ffUrl) {
+            if ([updatedObjects containsObject:value]) {
+                [ff updateObj:value
+                   onComplete:completionHandler
+                    onOffline:completionHandler];
+            }
             continue;
         }
         // else

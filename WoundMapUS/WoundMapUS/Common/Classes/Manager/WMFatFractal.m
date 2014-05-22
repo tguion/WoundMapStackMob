@@ -42,6 +42,7 @@ static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
     // must load blobs explicitely
     ff.autoLoadBlobs = NO;
     ff.autoLoadRefs = YES;
+//    ff.simulatingOffline = YES;
     ff.queueDelegate = [WMFatFractalManager sharedInstance];
 }
 

@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "WMNutritionGroup.h"
+#import "WoundCareProtocols.h"
 
-@interface WMNutritionGroup_CoreText : NSObject
+@interface WMNutritionGroup (CoreText) <WCCoreTextDataSource>
 
 @end

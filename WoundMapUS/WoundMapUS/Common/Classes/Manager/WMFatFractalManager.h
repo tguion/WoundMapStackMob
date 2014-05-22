@@ -56,6 +56,7 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 - (void)removeParticipant:(WMParticipant *)teamMember fromTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)movePatientsForParticipant:(WMParticipant *)participant toTeam:(WMTeam *)team completionHandler:(WMErrorCallback)completionHandler;
 
+- (void)queueUploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo;
 - (void)uploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo;
 
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler;

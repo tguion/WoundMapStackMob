@@ -115,11 +115,11 @@
 
 #pragma mark - FFQueueDelegate
 
+// not called on main thread
 - (void)queuedOperationCompleted:(FFQueuedOperation *)queuedOperation
 {
-    WM_ASSERT_MAIN_THREAD;
-    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
+//    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+//    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 #pragma mark - Sign In
@@ -866,6 +866,27 @@
 }
 
 #pragma mark - Blobs
+
+- (void)queueUploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff queueUpdateBlob:UIImagePNGRepresentation(woundPhoto.thumbnail)
+           withMimeType:@"image/png"
+                 forObj:woundPhoto
+             memberName:WMWoundPhotoAttributes.thumbnail];
+    [ff queueUpdateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailLarge)
+           withMimeType:@"image/png"
+                 forObj:woundPhoto
+             memberName:WMWoundPhotoAttributes.thumbnailLarge];
+    [ff queueUpdateBlob:UIImagePNGRepresentation(woundPhoto.thumbnailMini)
+           withMimeType:@"image/png"
+                 forObj:woundPhoto
+             memberName:WMWoundPhotoAttributes.thumbnailMini];
+    [ff queueUpdateBlob:UIImagePNGRepresentation(photo.photo)
+      withMimeType:@"image/png"
+            forObj:photo
+        memberName:WMPhotoAttributes.photo];
+}
 
 - (void)uploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo
 {

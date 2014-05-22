@@ -13,6 +13,7 @@
 #import "WMMedicationSummaryViewController.h"
 #import "WMDevicesSummaryViewController.h"
 #import "WMPsychoSocialSummaryViewController.h"
+#import "WMNutritionSummaryViewController.h"
 #import "WMWoundMeasurementSummaryViewController.h"
 #import "WMWoundTreatmentSummaryViewController.h"
 #import "WMPatient.h"
@@ -21,6 +22,7 @@
 #import "WMMedicationGroup.h"
 #import "WMDeviceGroup.h"
 #import "WMPsychoSocialGroup.h"
+#import "WMNutritionGroup.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMWoundMeasurementGroup.h"
@@ -47,6 +49,7 @@
 @property (strong, nonatomic) WMMedicationSummaryViewController *medicationSummaryViewController;
 @property (strong, nonatomic) WMDevicesSummaryViewController *devicesSummaryViewController;
 @property (strong, nonatomic) WMPsychoSocialSummaryViewController *psychoSocialSummaryViewController;
+@property (strong, nonatomic) WMNutritionSummaryViewController *nutritionSummaryViewController;
 @property (readonly, nonatomic) WMWoundMeasurementSummaryViewController *woundMeasurementSummaryViewController;
 @property (readonly, nonatomic) WMWoundTreatmentSummaryViewController *woundTreatmentSummaryViewController;
 
@@ -113,6 +116,15 @@
         [_scrollView addSubview:medicationSummaryViewController.view];
         [medicationSummaryViewController didMoveToParentViewController:self];
         [self.viewTitles addObject:@"Risk Assessment - Medications"];
+        frame.origin.x += width;
+    }
+    WMNutritionSummaryViewController *nutritionSummaryViewController = self.nutritionSummaryViewController;
+    if (nil != nutritionSummaryViewController) {
+        nutritionSummaryViewController.view.frame = frame;
+        [self addChildViewController:nutritionSummaryViewController];
+        [_scrollView addSubview:nutritionSummaryViewController.view];
+        [nutritionSummaryViewController didMoveToParentViewController:self];
+        [self.viewTitles addObject:@"Risk Assessment - Nutrition"];
         frame.origin.x += width;
     }
     WMDevicesSummaryViewController *devicesSummaryViewController = self.devicesSummaryViewController;
@@ -265,6 +277,15 @@
         _psychoSocialSummaryViewController.drawFullHistory = YES;
     }
     return _psychoSocialSummaryViewController;
+}
+
+- (WMNutritionSummaryViewController *)nutritionSummaryViewController
+{
+    if ([WMNutritionGroup nutritionGroupsCount:self.patient]) {
+        _nutritionSummaryViewController = [[WMNutritionSummaryViewController alloc] initWithNibName:@"WMNutritionSummaryViewController" bundle:nil];
+        _nutritionSummaryViewController.drawFullHistory = YES;
+    }
+    return _nutritionSummaryViewController;
 }
 
 - (WMWoundMeasurementSummaryViewController *)woundMeasurementSummaryViewController

@@ -316,6 +316,8 @@
 		7D674153192CEEEE007DBD1A /* NavigationTracksAU.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D674152192CEEEE007DBD1A /* NavigationTracksAU.plist */; };
 		7D674156192D3BC2007DBD1A /* _WMPaymentTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674155192D3BC2007DBD1A /* _WMPaymentTransaction.m */; };
 		7D674159192D3BD9007DBD1A /* WMPaymentTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674158192D3BD9007DBD1A /* WMPaymentTransaction.m */; };
+		7D67415D192E3508007DBD1A /* WMNutritionSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D67415B192E3508007DBD1A /* WMNutritionSummaryViewController.m */; };
+		7D67415E192E3508007DBD1A /* WMNutritionSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D67415C192E3508007DBD1A /* WMNutritionSummaryViewController.xib */; };
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
@@ -1118,6 +1120,9 @@
 		7D674155192D3BC2007DBD1A /* _WMPaymentTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPaymentTransaction.m; sourceTree = "<group>"; };
 		7D674157192D3BD9007DBD1A /* WMPaymentTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPaymentTransaction.h; sourceTree = "<group>"; };
 		7D674158192D3BD9007DBD1A /* WMPaymentTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPaymentTransaction.m; sourceTree = "<group>"; };
+		7D67415A192E3508007DBD1A /* WMNutritionSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNutritionSummaryViewController.h; sourceTree = "<group>"; };
+		7D67415B192E3508007DBD1A /* WMNutritionSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNutritionSummaryViewController.m; sourceTree = "<group>"; };
+		7D67415C192E3508007DBD1A /* WMNutritionSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMNutritionSummaryViewController.xib; sourceTree = "<group>"; };
 		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
 		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
@@ -2373,6 +2378,9 @@
 				7D67414C192CD8EF007DBD1A /* WMNutritionGroupViewController.h */,
 				7D67414D192CD8EF007DBD1A /* WMNutritionGroupViewController.m */,
 				7D67414E192CD8EF007DBD1A /* WMNutritionGroupViewController.xib */,
+				7D67415A192E3508007DBD1A /* WMNutritionSummaryViewController.h */,
+				7D67415B192E3508007DBD1A /* WMNutritionSummaryViewController.m */,
+				7D67415C192E3508007DBD1A /* WMNutritionSummaryViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3305,6 +3313,7 @@
 				7D10CE1118DCE01900AD43E3 /* WMBradenSectionSelectCellViewController.xib in Resources */,
 				7D10CDDB18DA3DB800AD43E3 /* WMInterventionEventViewController.xib in Resources */,
 				5F6DE54918B6FA4E00E87F7E /* WMIdListViewController.xib in Resources */,
+				7D67415E192E3508007DBD1A /* WMNutritionSummaryViewController.xib in Resources */,
 				5F67D1FC18AC3BE000460C37 /* RoleType.plist in Resources */,
 				5F67D1FF18AC3BE000460C37 /* SkinIntervention.plist in Resources */,
 				7D6894581902F6A4006DE509 /* WMPsychoSocialSummaryViewController.xib in Resources */,
@@ -3502,6 +3511,7 @@
 				5F6DE4F018AEDF2400E87F7E /* WMChooseTrackViewController.m in Sources */,
 				7D10CE2818DDF3AA00AD43E3 /* WMMedicationGroupHistoryViewController.m in Sources */,
 				7D39DB3218B823A30054DDC3 /* WMMedicationGroupViewController.m in Sources */,
+				7D67415D192E3508007DBD1A /* WMNutritionSummaryViewController.m in Sources */,
 				5F67D1C318AC39B800460C37 /* WMParticipant.m in Sources */,
 				7DF4E8F618C22EEC000A3F5B /* _WMWoundPositionValue.m in Sources */,
 				7DF4E8F018C22EEC000A3F5B /* _WMSkinAssessmentGroup.m in Sources */,

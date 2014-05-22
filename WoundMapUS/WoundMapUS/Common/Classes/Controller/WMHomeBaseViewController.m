@@ -2084,7 +2084,8 @@
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+//                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+                    [ffm queueUploadPhotosForWoundPhoto:woundPhoto photo:photo];
                     [ff grabBagAddItemAtFfUrl:photo.ffUrl
                                  toObjAtFfUrl:woundPhoto.ffUrl
                                   grabBagName:WMWoundPhotoRelationships.photos
