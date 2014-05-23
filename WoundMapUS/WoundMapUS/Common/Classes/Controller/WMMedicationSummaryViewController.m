@@ -50,7 +50,7 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
-    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicationGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicationGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf updateText];

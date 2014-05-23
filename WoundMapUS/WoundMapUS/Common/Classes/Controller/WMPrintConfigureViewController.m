@@ -110,7 +110,7 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
-    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.wounds] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.wounds] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
     }];
@@ -323,27 +323,27 @@
         onComplete(nil, nil, nil);
     } else {
         ++counter;
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicalHistoryGroups] onComplete:onComplete];
+        [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicalHistoryGroups] onComplete:onComplete];
         if (self.printSkinAssessment) {
             ++counter;
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.skinAssessmentGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.skinAssessmentGroups] onComplete:onComplete];
         }
         if (self.printRiskAssessment) {
             counter += 4;
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.bradenScales] onComplete:onComplete];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.medicationGroups] onComplete:onComplete];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.deviceGroups] onComplete:onComplete];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.psychosocialGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.bradenScales] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.medicationGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.deviceGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=2&depthRef=1", patient.ffUrl, WMPatientRelationships.psychosocialGroups] onComplete:onComplete];
         }
         if (self.printCarePlan) {
             ++counter;
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=4&depthRef=1", patient.ffUrl, WMPatientRelationships.carePlanGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=4&depthRef=1", patient.ffUrl, WMPatientRelationships.carePlanGroups] onComplete:onComplete];
         }
         NSSet *selectedWounds = self.selectedWounds;
         counter += [selectedWounds count] * 2;
         for (WMWound *wound in selectedWounds) {
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.measurementGroups] onComplete:onComplete];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.treatmentGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.measurementGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.treatmentGroups] onComplete:onComplete];
         }
         NSArray *woundPhotoSets = [self.selectedWoundPhotosMap allValues];
         for (NSSet *woundPhotoSet in woundPhotoSets) {

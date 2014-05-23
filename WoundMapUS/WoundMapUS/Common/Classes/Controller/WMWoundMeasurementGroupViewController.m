@@ -228,7 +228,7 @@
     self.tableView.backgroundView.alpha = kInitialBackgroundImageAlpha;
     // place WMAdjustAlpaView
     if (nil == _adjustAlpaView) {
-        CGRect aFrame = CGRectMake(0.0, 106.0, 32.0, CGRectGetHeight(self.view.bounds) - 144.0);
+        CGRect aFrame = CGRectMake(0.0, 44.0, 32.0, CGRectGetHeight(self.view.bounds) - 112.0);
         WMAdjustAlpaView *adjustAlpaView = [[WMAdjustAlpaView alloc] initWithFrame:aFrame delegate:self];
         adjustAlpaView.contentMode = UIViewContentModeRedraw;
         [self.view addSubview:adjustAlpaView];

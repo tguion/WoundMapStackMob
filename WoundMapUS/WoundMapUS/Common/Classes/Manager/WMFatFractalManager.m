@@ -795,9 +795,6 @@
                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                                // do not move patients to team here - new team member will do on next sign in
                                completionHandler(error);
-//                               [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=1", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-//                                   [weakSelf movePatientsForParticipant:invitee toTeam:team completionHandler:completionHandler];
-//                               }];
                            }];
                        }];
     }];

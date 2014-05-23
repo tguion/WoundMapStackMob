@@ -16,6 +16,7 @@
 #import "WMFatFractal.h"
 #import "ConstraintPack.h"
 #import "WCAppDelegate.h"
+#import "WMUtilities.h"
 
 #define kWoundMeasurementGroupMaximumRecords 3
 
@@ -48,16 +49,22 @@
     __weak __typeof(&*self)weakSelf = self;
     __block NSInteger counter = 0;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         if (counter == 0 || --counter == 0) {
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             [weakSelf updateText];
         }
     };
-    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.wounds] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.wounds] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         counter = [patient.wounds count];
         for (WMWound *wound in patient.wounds) {
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.measurementGroups] onComplete:onComplete];
+            [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", wound.ffUrl, WMWoundRelationships.measurementGroups] onComplete:onComplete];
         }
     }];
 }
