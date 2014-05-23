@@ -111,7 +111,7 @@
         self.woundPhotoWrapImageView.center = self.topImageView.center;
         [self.topImageView addSubview:self.woundPhotoWrapImageView];
     }
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:kImageFadeTimeInterval animations:^{
 //        weakSelf.bottomImageView.frame = weakSelf.view.bounds;  // dont' understand how the views go to CGRectZero
 //        weakSelf.topImageView.frame = weakSelf.view.bounds;     // dont' understand how the views go to CGRectZero

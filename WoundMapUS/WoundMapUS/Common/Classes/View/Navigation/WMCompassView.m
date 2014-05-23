@@ -238,7 +238,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
         }
         ++direction;
     }
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0 animations:^{
         MapBaseRotationDirection direction = MapBaseRotationDirection_West;
         for (UIView *view in weakSelf.navigationNodeControls) {
@@ -296,7 +296,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 - (IBAction)rotateToWestAction:(id)sender
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0 animations:^{
         weakSelf.compassNeedleImage.transform = CompassTransformWest;
     } completion:^(BOOL finished) {
@@ -307,7 +307,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 - (IBAction)rotateToNorthAction:(id)sender
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0 animations:^{
         weakSelf.compassNeedleImage.transform = CompassTransformNorth;
     } completion:^(BOOL finished) {
@@ -318,7 +318,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 - (IBAction)rotateToEastAction:(id)sender
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0 animations:^{
         weakSelf.compassNeedleImage.transform = CompassTransformEast;
     } completion:^(BOOL finished) {
@@ -329,7 +329,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 
 - (IBAction)rotateToSouthAction:(id)sender
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0 animations:^{
         weakSelf.compassNeedleImage.transform = CompassTransformSouth;
     } completion:^(BOOL finished) {

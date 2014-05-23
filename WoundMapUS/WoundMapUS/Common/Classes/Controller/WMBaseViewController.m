@@ -328,7 +328,7 @@
     // else
     query = [query stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [weakSelf.refreshControl endRefreshing];
         if (weakSelf.refreshCompletionHandler) {
@@ -490,7 +490,7 @@
 
 - (void)registerForNotifications
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     // check if we are already registered
     if (0 == [self.opaqueNotificationObservers count]) {
         // add observers
@@ -657,7 +657,7 @@
     if (backendSeedEntityName && ![self.coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=1", backendSeedEntityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.coreDataHelper markBackendDataAcquiredForEntityName:backendSeedEntityName];
@@ -760,7 +760,7 @@
             }
             viewController.iapProduct = iapProduct;
             
-            __weak __typeof(self) weakSelf = self;
+            __weak __typeof(&*self)weakSelf = self;
             viewController.acceptHandler = ^(SKPaymentTransaction *transaction) {
                 // make sure this is called on the main thread
                 dispatch_async(dispatch_get_main_queue(), ^{

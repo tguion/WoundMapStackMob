@@ -139,7 +139,6 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-//    return @[[WMNavigationNode entityName], [WMWoundMeasurement entityName]];
     // getting WMNavigationNode on sign in
     return @[[WMWoundMeasurement entityName]];
 }
@@ -527,7 +526,27 @@
 - (void)updateToolbar
 {
     [self setToolbarItems:self.toolbarItems];
-    self.reviewPhotosBarButtonItem.enabled = ([WMWound woundPhotoCountForWound:self.wound] > 0 ? YES:NO);
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    WMWound *wound = self.wound;
+    if (wound) {
+        BOOL hasWoundPhotos = [WMWound woundPhotoCountForWound:wound] > 0;
+        __weak __typeof(&*self)weakSelf = self;
+        WMErrorCallback completionHandler = ^(NSError *error) {
+            weakSelf.reviewPhotosBarButtonItem.enabled = (hasWoundPhotos ? YES:NO);
+        };
+        if (hasWoundPhotos) {
+            completionHandler(nil);
+        } else {
+            // check back end
+            [ffm updateGrabBags:@[WMWoundPhotoRelationships.photos]
+                     aggregator:wound
+                             ff:ff
+              completionHandler:completionHandler];
+        }
+    } else {
+        self.reviewPhotosBarButtonItem.enabled = NO;
+    }
 }
 
 - (NSArray *)toolbarItems
@@ -859,7 +878,7 @@
     [self.view addSubview:snapshot];
     [self.view bringSubviewToFront:snapshot];
     // animate using keyframe animation
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateKeyframesWithDuration:1.0 delay:0.0 options:0 animations:^{
         [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.5 animations:^{
             // scale up and move half way
@@ -934,7 +953,7 @@
 
 - (IBAction)editPoliciesAction:(id)sender
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -959,7 +978,7 @@
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMTeam *team = self.appDelegate.participant.team;
     if (team && self.appDelegate.participant.isTeamLeader) {
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         WMErrorCallback block = ^(NSError *error) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             if (error) {
@@ -1041,7 +1060,7 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1077,7 +1096,7 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
@@ -1131,7 +1150,7 @@
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     WMNavigationNode *navigationNode = navigationNodeButton.navigationNode;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1154,7 +1173,7 @@
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1185,7 +1204,7 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"sender:%@ must be NavigationNodeButton", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1219,7 +1238,7 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1243,7 +1262,7 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1267,7 +1286,7 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1290,7 +1309,7 @@
     WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1317,7 +1336,7 @@
     if (nil == self.appDelegate.navigationCoordinator.woundPhoto) {
         self.appDelegate.navigationCoordinator.woundPhoto = self.wound.lastWoundPhoto;
     }
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1381,7 +1400,7 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1405,7 +1424,7 @@
     NSAssert1([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1426,7 +1445,7 @@
 - (IBAction)carePlanAction:(id)sender
 {
     // update from back end
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
@@ -1470,7 +1489,7 @@
     WMWound *wound = self.wound;
     NSSet *woundPhotos = wound.photos;
     __block NSInteger counter = [woundPhotos count];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block1 = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
@@ -1546,7 +1565,7 @@
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
                 [self.appDelegate signOut];
-                __weak __typeof(self) weakSelf = self;
+                __weak __typeof(&*self)weakSelf = self;
                 [UIView transitionWithView:self.appDelegate.window
                                   duration:0.5
                                    options:UIViewAnimationOptionTransitionFlipFromLeft
@@ -1801,7 +1820,7 @@
 {
     [super registerForNotifications];
     // adjust when task completes
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kTaskDidCompleteNotification
                                                                     object:nil
                                                                      queue:[NSOperationQueue mainQueue]
@@ -2083,8 +2102,8 @@
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
-//                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
-                    [ffm queueUploadPhotosForWoundPhoto:woundPhoto photo:photo];
+                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+//                    [ffm queueUploadPhotosForWoundPhoto:woundPhoto photo:photo];
                     [ff grabBagAddItemAtFfUrl:photo.ffUrl
                                  toObjAtFfUrl:woundPhoto.ffUrl
                                   grabBagName:WMWoundPhotoRelationships.photos
@@ -2097,10 +2116,6 @@
                 }
                 WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                 WMPhoto *photo = (WMPhoto *)object1;
-                NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
-                // re-add the photo
-                [woundPhoto addPhotosObject:photo];
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [ff createObj:photo
                         atUri:[NSString stringWithFormat:@"/%@", [WMPhoto entityName]]
                    onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -2132,8 +2147,6 @@
                                 [weakSelf updateToolbar];
                                 // notify interface of completed task
                                 [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
-                                // save to back end - first break the relationship
-                                [woundPhoto removePhotosObject:photo];
                                 [ff createObj:woundPhoto
                                         atUri:[NSString stringWithFormat:@"/%@", [WMWoundPhoto entityName]]
                                    onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {

@@ -66,7 +66,7 @@ CGFloat kRetartRotationFactor = 5.0;
     self.retartedTranslation = CGPointZero;
     self.retartedScaleFactor = 1.0;
     // apply last transform
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0
                      animations:^{
                          if (weakSelf.woundPhoto.isTransformIdentity) {

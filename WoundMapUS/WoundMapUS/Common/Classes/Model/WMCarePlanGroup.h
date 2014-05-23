@@ -49,6 +49,4 @@
 
 - (NSInteger)valuesCountForCarePlanCategory:(WMCarePlanCategory *)carePlanCategory;
 
-- (void)refreshData;
-
 @end

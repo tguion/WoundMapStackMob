@@ -231,18 +231,12 @@
     self.zoomScale = 1.0;
     // make sure the data is local
     WMWoundPhoto *woundPhoto = self.woundPhoto;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMPhoto *photo = woundPhoto.photo;
-    NSManagedObjectID *woundPhotoID = [woundPhoto objectID];
-    NSManagedObjectID *photoID = [photo objectID];
     // make a new UIImageView for the new image
     UIImage *image = photo.photo;
     _zoomView = [[UIImageView alloc] initWithImage:image];
     [self addSubview:_zoomView];
     [self configureForImageSize:image.size];
-    // fault our cache
-    [Faulter faultObjectWithID:photoID inContext:managedObjectContext];
-    [Faulter faultObjectWithID:woundPhotoID inContext:managedObjectContext];
 }
 
 - (void)displayTiledImageOfSize:(CGSize)imageSize

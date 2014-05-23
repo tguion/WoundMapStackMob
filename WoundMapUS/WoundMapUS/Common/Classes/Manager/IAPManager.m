@@ -424,7 +424,7 @@ NSString* _deviceId;
 - (void)resetIAPAll
 {
     // remove credit transactions in index key store
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [self.managedObjectContext performBlockAndWait:^{
         [weakSelf resetIndexStoreAndKeyValueStores];
     }];

@@ -704,7 +704,7 @@
     //DLog(@"Plot %@ selected at index %d", plot.identifier, idx);
     self.imageView.image = [self woundPhotoForIndex:idx].thumbnail;
     self.imageView.hidden = NO;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:0.25 animations:^{
         weakSelf.imageView.alpha = 1.0;
     } completion:^(BOOL finished) {

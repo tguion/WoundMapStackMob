@@ -25,7 +25,7 @@
 {
     [super viewDidLoad];
     // listen for woundPhoto change
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     // woundPhoto was selected
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:kWoundPhotoChangedNotification
                                                                     object:nil

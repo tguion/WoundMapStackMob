@@ -183,20 +183,6 @@
     return [set count];
 }
 
-// refetch all data from datastore
-- (void)refreshData
-{
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    NSSet *values = [WMCarePlanGroup carePlanValuesForCarePlanGroup:self];
-    for (WMCarePlanValue *value in values) {
-        [managedObjectContext refreshObject:value mergeChanges:value.hasChanges];
-    }
-    NSSet *carePlanCategories = [WMCarePlanCategory carePlanCategories:managedObjectContext];
-    for (WMCarePlanCategory *category in carePlanCategories) {
-        [managedObjectContext refreshObject:category mergeChanges:category.hasChanges];
-    }
-}
-
 #pragma mark - Events
 
 - (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType

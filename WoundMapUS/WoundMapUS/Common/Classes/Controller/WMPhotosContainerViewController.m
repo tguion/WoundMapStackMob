@@ -28,6 +28,7 @@
 #import "WMUtilities.h"
 #import "WMNavigationCoordinator.h"
 #import "WMFatFractal.h"
+#import "Faulter.h"
 #import "WCAppDelegate.h"
 
 #define kWaitingForTilingToFinishAlertTag 1001
@@ -145,7 +146,7 @@
         aFrame = [self.view convertRect:aFrame fromView:self.photoZoomViewController.view];
         anImageView.frame = aFrame;
         [self.view addSubview:anImageView];
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         [UIView animateWithDuration:0.2
                          animations:^{
                              // show the image back
@@ -221,7 +222,7 @@
     self.toolbarItemsForZoom = nil;
     if (useTransition) {
         [self addChildViewController:self.photoZoomViewController];
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         [self transitionFromViewController:self.currentChildViewController toViewController:self.photoZoomViewController
                                   duration:0.5
                                    options:UIViewAnimationOptionTransitionFlipFromRight
@@ -255,7 +256,7 @@
         CGRect aFrame = [self.view convertRect:self.photoZoomViewController.initialFrame fromView:nil];
         anImageView.frame = aFrame;
         [self.view addSubview:anImageView];
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         [UIView animateWithDuration:0.5
                          animations:^{
                              CGRect targetFrame = [weakSelf.photoZoomViewController targetFrameInView:weakSelf.view];
@@ -506,6 +507,7 @@
 {
     [super viewWillDisappear:animated];
     [self unregisterForNotifications];
+    [self faultAllPhotos];
 }
 
 #pragma mark - Memory management
@@ -521,6 +523,18 @@
     if (nil != _woundPhoto2ObjectID && ![[_woundPhotoDate2 objectID] isTemporaryID]) {
         _woundPhoto2ObjectID = [_woundPhotoDate2 objectID];
         _woundPhotoDate2 = nil;
+    }
+    [self faultAllPhotos];
+}
+
+- (void)faultAllPhotos
+{
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    for (NSManagedObjectID *objectID in _cachedSortedWoundPhotos) {
+        NSManagedObject *woundPhoto = [managedObjectContext objectWithID:objectID];
+        NSManagedObjectID *photoObjectID = [woundPhoto valueForKeyPath:@"photo.objectID"];
+        [Faulter faultObjectWithID:photoObjectID inContext:managedObjectContext];
+        [Faulter faultObjectWithID:objectID inContext:managedObjectContext];
     }
 }
 
@@ -856,7 +870,7 @@
 - (IBAction)deletePhotoAction:(id)sender
 {
     BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Deleting photo will also delete associated assesments data"
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Deleting a photo can not be undone. Are you sure?"
                                                              delegate:self
                                                     cancelButtonTitle:(isPad ? nil:@"Cancel")
                                                destructiveButtonTitle:@"Delete"
@@ -1078,7 +1092,7 @@
         return;
     }
     // else make sure we have photo data
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
         weakSelf.photoZoomViewController.initialFrame = aFrame; // aFrame is in window coordinates

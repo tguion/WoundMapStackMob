@@ -327,7 +327,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     IAPProduct *iapProduct = self.iapProduct;
     NSManagedObjectContext *managedObjectContext = [iapProduct managedObjectContext];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [iapManager productWithProductId:productId
                       successHandler:^(NSArray *products) {
                           dispatch_async(dispatch_get_main_queue(), ^{
@@ -366,7 +366,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 - (void)registerForNotifications
 {
     [super registerForNotifications];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     id observer =
     [[NSNotificationCenter defaultCenter]
          addObserverForName:kIAPManagerProductPurchasedNotification

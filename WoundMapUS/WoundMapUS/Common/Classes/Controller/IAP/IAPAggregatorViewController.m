@@ -59,7 +59,7 @@
 - (void)skProductforProductSet:(NSSet *)productIdSet
 {
     [self showProgressView];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [[IAPManager sharedInstance] productsWithProductIdSet:productIdSet
                                            successHandler:^(NSArray *skProductList) {
                                                [weakSelf hideProgressView];
@@ -199,7 +199,7 @@
             SKProduct *skProduct = [self.skProductHash objectForKey:[iapProduct identifier]];
             [viewController setSelectedSkProduct:skProduct];
             
-            __weak __typeof(self) weakSelf = self;
+            __weak __typeof(&*self)weakSelf = self;
             viewController.acceptHandler = self.acceptHandler;
             
             viewController.declineHandler = ^{

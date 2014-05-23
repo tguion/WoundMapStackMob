@@ -38,7 +38,7 @@
     [super awakeFromNib];
     self.translatesAutoresizingMaskIntoConstraints = NO;
     // listen for low memory
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification
                                                                     object:nil
                                                                      queue:[NSOperationQueue mainQueue]

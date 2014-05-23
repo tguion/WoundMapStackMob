@@ -145,7 +145,6 @@
             }
         } else {
             self.imageView.image = woundPhoto.thumbnail;
-            [Faulter faultObjectWithID:woundPhotoObjectID inContext:managedObjectContext];
         }
     }
     [self setNeedsDisplay];

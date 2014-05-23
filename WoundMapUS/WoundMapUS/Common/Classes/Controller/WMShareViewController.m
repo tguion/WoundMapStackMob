@@ -162,7 +162,7 @@ CGFloat kCreditsMargin = 20;
 - (IBAction)purchaseMoreTokens:(id)sender
 {
     NSString *productIdentifier = @"pdf report aggregator";
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [self presentIAPViewControllerForProductIdentifier:productIdentifier
                                           successBlock:^(SKPaymentTransaction *transaction) {
                                               [weakSelf updateCreditStatusText];
@@ -285,7 +285,7 @@ CGFloat kCreditsMargin = 20;
     IAPManager *iapManager = [IAPManager sharedInstance];
     WMEmailManager *emailManager = [WMEmailManager sharedInstance];
     [self.navigationController popViewControllerAnimated:NO];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     switch (self.shareOption) {
         case SelectWoundAndActionShareOption_Print: {
             NSURL *url = [pdfPrintManager pdfURLForPatient:controller.patient];
@@ -393,7 +393,7 @@ CGFloat kCreditsMargin = 20;
         if ([self hasAdequateWoundInformation]) {
             // not coming from navigation node so hardcoding
             NSString *productIdentifier = @"pdf report aggregator";
-            __weak __typeof(self) weakSelf = self;
+            __weak __typeof(&*self)weakSelf = self;
             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:productIdentifier
                                                                  successBlock:^(SKPaymentTransaction *transaction) {
                                                                      [weakSelf navigateToPrintConfigureViewController];

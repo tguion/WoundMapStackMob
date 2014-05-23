@@ -114,7 +114,7 @@ CGFloat const kInitialBackgroundImageAlpha = 0.15;
     UIColor *startColor = [UIColor colorWithWhite:0.0 alpha:1.0];
     UIColor *endColor = [UIColor colorWithWhite:1.0 alpha:0.0];
     gradientLayer.colors = [NSArray arrayWithObjects:(id)[startColor CGColor], (id)[endColor CGColor], nil];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:1.0 animations:^{
         UIColor *startColor = [UIColor colorWithWhite:0.0 alpha:0.25];
         UIColor *endColor = [UIColor colorWithWhite:1.0 alpha:0.0];

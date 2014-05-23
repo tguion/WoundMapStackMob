@@ -109,7 +109,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     }
     
     // monitor network
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [self.networkMonitor setNetworkStatusChangeBlock:^(WMNetworkStatus status) {
         [weakSelf alertUserNetworkReachabilityChanged:status];
         // other stuff ??

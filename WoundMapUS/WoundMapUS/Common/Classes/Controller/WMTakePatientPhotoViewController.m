@@ -96,7 +96,7 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     patient.thumbnail = nil;
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         [weakSelf updateForPatient];
         // update back end
@@ -140,7 +140,7 @@
     MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     progressHUD.labelText = @"Processing Photo";
     NSManagedObjectID *objectID = [self.patient objectID];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];

@@ -68,7 +68,7 @@
 
 - (void)deletePatient:(WMPatient *)patient
 {
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
         // select a patient
         self.patientToOpen = [WMPatient MR_findFirstOrderedByAttribute:WMPatientAttributes.createdAt ascending:NO inContext:self.managedObjectContext];
@@ -120,7 +120,7 @@
     }
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [ffm fetchPatients:self.managedObjectContext ff:ff completionHandler:^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
@@ -213,7 +213,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Loading Patient Data...";
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [_patientToOpen managedObjectContext];
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     NSString *queryString = [NSString stringWithFormat:@"%@?depthGb=2&depthRef=2", _patientToOpen.ffUrl];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -507,7 +507,7 @@
     if (self.isShowingTeamPatients) {
         WMParticipant *participant = self.appDelegate.participant;
         WMPatientReferral *patientReferral = [patient patientReferralForReferree:participant];
-        __weak __typeof(self) weakSelf = self;
+        __weak __typeof(&*self)weakSelf = self;
         [myCell updateForPatient:object patientReferral:patientReferral referralCallback:^(WMPatientAutoTableViewCell *myCell) {
             if (myCell == cell) {
                 [weakSelf navigateToPatientReferral:patient];

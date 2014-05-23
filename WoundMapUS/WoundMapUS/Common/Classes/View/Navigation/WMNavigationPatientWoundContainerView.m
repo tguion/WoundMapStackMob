@@ -66,7 +66,7 @@ typedef enum {
             self.patientContainerView.hidden = NO;
             break;
     }
-    __weak __typeof(self) weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     [UIView animateWithDuration:0.5 animations:^{
         weakSelf.nameContainerView.transform = transform;
     } completion:^(BOOL finished) {
