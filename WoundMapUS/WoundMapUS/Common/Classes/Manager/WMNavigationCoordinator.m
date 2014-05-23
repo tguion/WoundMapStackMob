@@ -40,6 +40,7 @@ NSString *const kTransformControllerDidInstallNotification = @"TransformControll
 NSString *const kTransformControllerDidUninstallNotification = @"TransformControllerDidUninstallNotification";
 NSString *const kNavigationStageChangedNotification = @"NavigationStageChangedNotification";
 NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNotification";
+NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotification";
 
 @interface WMNavigationCoordinator ()
 

@@ -508,7 +508,7 @@
                                                                         object:nil
                                                                          queue:[NSOperationQueue mainQueue]
                                                                     usingBlock:^(NSNotification *notification) {
-                                                                        WMPatient *patient = (WMPatient *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                        WMPatient *patient = (WMPatient *)[weakSelf.managedObjectContext objectWithID:[notification object]];
                                                                         [weakSelf handlePatientChanged:patient];
                                                                     }];
         [self.persistantObservers addObject:observer];
@@ -517,7 +517,7 @@
                                                                      object:nil
                                                                       queue:[NSOperationQueue mainQueue]
                                                                  usingBlock:^(NSNotification *notification) {
-                                                                     WMWound *wound = (WMWound *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     WMWound *wound = (WMWound *)[weakSelf.managedObjectContext objectWithID:[notification object]];
                                                                      [weakSelf handleWoundChanged:wound];
                                                                  }];
         [self.persistantObservers addObject:observer];
@@ -526,7 +526,7 @@
                                                                      object:nil
                                                                       queue:[NSOperationQueue mainQueue]
                                                                  usingBlock:^(NSNotification *notification) {
-                                                                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[weakSelf.managedObjectContext objectWithID:[notification object]];
                                                                      [weakSelf handleWoundPhotoChanged:woundPhoto];
                                                                  }];
         [self.persistantObservers addObject:observer];
@@ -544,11 +544,18 @@
                                                                      object:nil
                                                                       queue:[NSOperationQueue mainQueue]
                                                                  usingBlock:^(NSNotification *notification) {
-                                                                     WMNavigationStage *navigationStage = (WMNavigationStage *)[weakSelf.managedObjectContext objectWithID:[notification object]];;
+                                                                     WMNavigationStage *navigationStage = (WMNavigationStage *)[weakSelf.managedObjectContext objectWithID:[notification object]];
                                                                      [weakSelf handleNavigationStageChanged:navigationStage];
                                                                  }];
         [self.persistantObservers addObject:observer];
-
+        // watch for participant responding to referral
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kRespondedToReferralNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     [weakSelf handleRespondedToReferralNotification:[notification object]];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
     }
 }
 
@@ -614,6 +621,10 @@
 }
 
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage
+{
+}
+
+- (void)handleRespondedToReferralNotification:(NSManagedObjectID *)referralObjectID
 {
 }
 

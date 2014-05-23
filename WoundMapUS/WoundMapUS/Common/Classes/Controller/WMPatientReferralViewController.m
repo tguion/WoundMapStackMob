@@ -70,49 +70,49 @@
         // assume we have to see if there is one
         _patientReferral = [self.patient patientReferralForReferree:participant];
     }
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (_patientReferral) {
         // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
             _removeUndoManagerWhenDone = YES;
         }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
+        [managedObjectContext.undoManager beginUndoGrouping];
         self.tableView.tableFooterView = _deletePatientReferralContainerView;
     } else {
-        _patientReferral = [WMPatientReferral MR_createInContext:self.managedObjectContext];
-        _patientReferral.patient = self.appDelegate.navigationCoordinator.patient;
+        WMPatient *patient = self.patient;
+        _patientReferral = [WMPatientReferral MR_createInContext:managedObjectContext];
+        _patientReferral.patient = patient;
+        _didAddPatientToReferral = YES;
         _patientReferral.referrer = participant;
         _didCreateReferral = YES;
         // create on back end
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMPatient *patient = self.patient;
         __block NSInteger counter = 0;
         __weak __typeof(&*self)weakSelf = self;
         FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                --counter;
-                if (counter == 0) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                }
             }
+            if (--counter == 0) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            }
+
         };
         FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                ++counter;
-                [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
-                             toObjAtFfUrl:patient.ffUrl
-                              grabBagName:WMPatientRelationships.referrals
-                               onComplete:completionHandler];
-                ++counter;
-                [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
-                             toObjAtFfUrl:participant.ffUrl
-                              grabBagName:WMParticipantRelationships.sourceReferrals
-                               onComplete:completionHandler];
             }
+            ++counter;
+            [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                         toObjAtFfUrl:patient.ffUrl
+                          grabBagName:WMPatientRelationships.referrals
+                           onComplete:completionHandler];
+            ++counter;
+            [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                         toObjAtFfUrl:participant.ffUrl
+                          grabBagName:WMParticipantRelationships.sourceReferrals
+                           onComplete:completionHandler];
         };
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ff createObj:_patientReferral atUri:[NSString stringWithFormat:@"/%@", [WMPatientReferral entityName]] onComplete:createCompletionHandler];
@@ -148,10 +148,12 @@
     }
     // else
     if (_patientReferral.patient) {
+        _patient = _patientReferral.patient;
         return _patientReferral.patient;
     }
     // else
-    return self.appDelegate.navigationCoordinator.patient;
+    _patient = self.appDelegate.navigationCoordinator.patient;
+    return _patient;
 }
 
 - (NSString *)messageTextViewText
@@ -283,21 +285,31 @@
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            if (--counter == 0) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
-            }
+        }
+        if (--counter == 0) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
         }
     };
     if (_didChangeReferree) {
-        ++counter;
         _patientReferral.dateAccepted = nil;
+        ++counter;
         [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
                       fromObjAtFfUrl:_patientReferral.referree.ffUrl
                          grabBagName:WMParticipantRelationships.targetReferrals
                           onComplete:completionHandler];
+        ++counter;
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.referrer.ffUrl
+                         grabBagName:WMParticipantRelationships.sourceReferrals
+                          onComplete:completionHandler];
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                     toObjAtFfUrl:participant.ffUrl
+                      grabBagName:WMParticipantRelationships.sourceReferrals
+                       onComplete:completionHandler];
+    } else {
         ++counter;
         [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
                      toObjAtFfUrl:participant.ffUrl
@@ -323,6 +335,8 @@
         }
        [ff updateObj:_patientReferral onComplete:completionHandler onOffline:completionHandler];
     }];
+    // send notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRespondedToReferralNotification object:[_patientReferral objectID]];
 }
 
 - (IBAction)deletePatientReferral:(id)sender

@@ -24,6 +24,7 @@ extern NSString *const kTransformControllerDidInstallNotification;
 extern NSString *const kTransformControllerDidUninstallNotification;
 extern NSString *const kNavigationTrackChangedNotification;
 extern NSString *const kNavigationStageChangedNotification;
+extern NSString *const kRespondedToReferralNotification;
 
 @class WMBaseViewController;
 @class WMPatient, WMWound, WMWoundPhoto;

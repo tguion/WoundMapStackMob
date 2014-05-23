@@ -229,6 +229,7 @@
 
 - (IBAction)navigateToPatientReferral:(WMPatient *)patient
 {
+    self.appDelegate.navigationCoordinator.patient = patient;
     WMPatientReferral *patientReferral = [patient patientReferralForReferree:self.appDelegate.participant];
     WMPatientReferralViewController *patientReferralViewController = self.patientReferralViewController;
     patientReferralViewController.patientReferral = patientReferral;

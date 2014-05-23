@@ -944,6 +944,11 @@
     [self performSelector:@selector(updateNavigationComponents) withObject:nil afterDelay:0.0];
 }
 
+- (void)handleRespondedToReferralNotification:(NSManagedObjectID *)referralObjectID
+{
+    [self updatePatientNodeControls];
+}
+
 #pragma mark - Actions
 
 - (IBAction)homeAction:(id)sender
