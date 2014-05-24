@@ -119,7 +119,7 @@
 
 - (NSPredicate *)fetchedResultsControllerPredicate
 {
-    return [NSPredicate predicateWithFormat:@"patient == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.patient];
+    return [NSPredicate predicateWithFormat:@"wound == %@ AND (status.activeFlag == NO OR closedFlag == YES)", self.wound];
 }
 
 - (NSArray *)fetchedResultsControllerSortDescriptors

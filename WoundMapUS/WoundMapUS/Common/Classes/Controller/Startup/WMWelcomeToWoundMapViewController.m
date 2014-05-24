@@ -37,6 +37,7 @@
 #import "WMNavigationTrack.h"
 #import "WMPatient.h"
 #import "IAPProduct.h"
+#import "WMPaymentTransaction.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "KeychainItemWrapper.h"
@@ -448,6 +449,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     switch (indexPath.section) {
         case 0: {
             // participant
@@ -509,7 +512,22 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
                                                                                  successBlock:^(SKPaymentTransaction *transaction) {
-                                                                                     [weakSelf presentCreateConsultingGroupViewController];
+                                                                                     // mark WMPaymentTransaction as applied
+                                                                                     WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
+                                                                                                                                                                            originalTransaction:nil
+                                                                                                                                                                                       username:self.participant.userName
+                                                                                                                                                                                         create:NO
+                                                                                                                                                                           managedObjectContext:managedObjectContext];
+                                                                                     paymentTransaction.appliedFlagValue = YES;
+                                                                                     [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                                                     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                                                         if (error) {
+                                                                                             [WMUtilities logError:error];
+                                                                                         }
+                                                                                         [weakSelf presentCreateConsultingGroupViewController];
+                                                                                     };
+                                                                                     [ff updateObj:paymentTransaction
+                                                                                        onComplete:onComplete onOffline:onComplete];
                                                                                  } withObject:self.view];
                             if (proceed) {
                                 [self presentCreateConsultingGroupViewController];
@@ -522,7 +540,22 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                                                  successBlock:^(SKPaymentTransaction *transaction) {
-                                                                                     [weakSelf presentCreateTeamViewController];
+                                                                                     // mark WMPaymentTransaction as applied
+                                                                                     WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
+                                                                                                                                                                            originalTransaction:nil
+                                                                                                                                                                                       username:self.participant.userName
+                                                                                                                                                                                         create:NO
+                                                                                                                                                                           managedObjectContext:managedObjectContext];
+                                                                                     paymentTransaction.appliedFlagValue = YES;
+                                                                                     [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                                                     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                                                         if (error) {
+                                                                                             [WMUtilities logError:error];
+                                                                                         }
+                                                                                         [weakSelf presentCreateTeamViewController];
+                                                                                     };
+                                                                                     [ff updateObj:paymentTransaction
+                                                                                        onComplete:onComplete onOffline:onComplete];
                                                                                  } proceedAlways:YES withObject:self.view];
                             if (proceed) {
                                 [self presentCreateTeamViewController];
@@ -545,9 +578,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             // patient
             NSInteger patientCount = 0;
             if (self.participant.team) {
-                patientCount = [WMPatient patientCount:self.managedObjectContext];
+                patientCount = [WMPatient patientCount:managedObjectContext];
             } else {
-                patientCount = [WMPatient patientCount:self.managedObjectContext onDevice:[[IAPManager sharedInstance] getIAPDeviceGuid]];
+                patientCount = [WMPatient patientCount:managedObjectContext onDevice:[[IAPManager sharedInstance] getIAPDeviceGuid]];
             }
             if (0 == patientCount) {
                 [self presentAddPatientViewController];

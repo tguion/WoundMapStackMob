@@ -27,7 +27,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Patient Detail Summary";
-    self.automaticallyAdjustsScrollViewInsets = NO;
     // load text view
     UITextView* tv = [[UITextView alloc] initWithFrame:self.view.bounds];
     tv.editable = NO;

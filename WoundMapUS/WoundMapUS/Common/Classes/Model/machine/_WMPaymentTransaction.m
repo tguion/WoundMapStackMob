@@ -4,6 +4,7 @@
 #import "_WMPaymentTransaction.h"
 
 const struct WMPaymentTransactionAttributes WMPaymentTransactionAttributes = {
+	.appliedFlag = @"appliedFlag",
 	.createdAt = @"createdAt",
 	.errorCode = @"errorCode",
 	.errorMessage = @"errorMessage",
@@ -51,6 +52,11 @@ const struct WMPaymentTransactionFetchedProperties WMPaymentTransactionFetchedPr
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"appliedFlagValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"appliedFlag"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"errorCodeValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"errorCode"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -74,6 +80,32 @@ const struct WMPaymentTransactionFetchedProperties WMPaymentTransactionFetchedPr
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic appliedFlag;
+
+
+
+- (BOOL)appliedFlagValue {
+	NSNumber *result = [self appliedFlag];
+	return [result boolValue];
+}
+
+- (void)setAppliedFlagValue:(BOOL)value_ {
+	[self setAppliedFlag:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveAppliedFlagValue {
+	NSNumber *result = [self primitiveAppliedFlag];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveAppliedFlagValue:(BOOL)value_ {
+	[self setPrimitiveAppliedFlag:[NSNumber numberWithBool:value_]];
+}
+
 
 
 

@@ -446,39 +446,6 @@
     }
 }
 
-- (void)fetchCollection:(NSString *)collection
-                  query:(NSString *)query
-                depthGb:(NSInteger)depthGb
-               depthRef:(NSInteger)depthRef
-                     ff:(WMFatFractal *)ff
-   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-      completionHandler:(FFHttpMethodCompletion)completionHandler
-{
-    NSString *queryString = nil;
-    id lastRefreshTime = self.lastRefreshTimeMap[collection];
-    if (nil == lastRefreshTime) {
-        lastRefreshTime = @(0);
-    }
-    if (query) {
-        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@ and %@)?depthGb=%ld&depthRef=%ld", collection, lastRefreshTime, query, (long)depthGb, (long)depthRef];
-    } else {
-        queryString = [NSString stringWithFormat:@"/%@/(updatedAt gt %@)?depthGb=%ld&depthRef=%ld", collection, lastRefreshTime, (long)depthGb, (long)depthRef];
-    }
-    [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithBlock:^(FFReadResponse *response) {
-        if (response.error) {
-            [WMUtilities logError:response.error];
-            completionHandler(response.error, response.objs, response.httpResponse);
-        } else {
-            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                completionHandler(response.error, response.objs, response.httpResponse);
-            }];
-        }
-    }];
-}
-
 #pragma mark - Backend Updates
 
 // create participant after successful FFUser registration

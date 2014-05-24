@@ -41,7 +41,8 @@
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"errorCodeValue",
                                                             @"flagsValue",
                                                             @"quantityValue",
-                                                            @"transactionStateValue"]];
+                                                            @"transactionStateValue",
+                                                            @"appliedFlagValue"]];
     });
     return PropertyNamesNotToSerialize;
 }

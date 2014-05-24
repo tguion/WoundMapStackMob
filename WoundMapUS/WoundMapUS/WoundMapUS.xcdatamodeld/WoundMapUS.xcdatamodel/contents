@@ -646,6 +646,7 @@
         <relationship name="referrer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="sourceReferrals" inverseEntity="WMParticipant" syncable="YES"/>
     </entity>
     <entity name="WMPaymentTransaction" representedClassName="WMPaymentTransaction" syncable="YES">
+        <attribute name="appliedFlag" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="errorCode" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="errorMessage" optional="YES" attributeType="String" syncable="YES"/>
@@ -1300,6 +1301,6 @@
         <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="223"/>
         <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
         <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>
-        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="238"/>
+        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>
     </elements>
 </model>

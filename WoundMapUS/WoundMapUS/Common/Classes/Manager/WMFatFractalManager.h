@@ -37,14 +37,6 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 - (void)updateGrabBags:(NSArray *)grabBagNames aggregator:(NSManagedObject *)aggregator ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)acquireGrabBagsForObjects:(NSArray *)objects aliases:(NSSet *)aliases ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 
-- (void)fetchCollection:(NSString *)collection
-                  query:(NSString *)query
-                depthGb:(NSInteger)depthGb
-               depthRef:(NSInteger)depthRef
-                     ff:(WMFatFractal *)ff
-   managedObjectContext:(NSManagedObjectContext *)managedObjectContext
-      completionHandler:(FFHttpMethodCompletion)completionHandler;
-
 - (void)createParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)updateParticipantAfterRegistration:(WMParticipant *)participant ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
 - (void)updatePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;

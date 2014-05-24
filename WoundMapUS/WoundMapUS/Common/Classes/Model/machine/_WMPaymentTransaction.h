@@ -5,6 +5,7 @@
 
 
 extern const struct WMPaymentTransactionAttributes {
+	__unsafe_unretained NSString *appliedFlag;
 	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *errorCode;
 	__unsafe_unretained NSString *errorMessage;
@@ -41,6 +42,7 @@ extern const struct WMPaymentTransactionFetchedProperties {
 
 
 
+
 @interface WMPaymentTransactionID : NSManagedObjectID {}
 @end
 
@@ -49,6 +51,20 @@ extern const struct WMPaymentTransactionFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (WMPaymentTransactionID*)objectID;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* appliedFlag;
+
+
+
+@property BOOL appliedFlagValue;
+- (BOOL)appliedFlagValue;
+- (void)setAppliedFlagValue:(BOOL)value_;
+
+//- (BOOL)validateAppliedFlag:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -208,6 +224,15 @@ extern const struct WMPaymentTransactionFetchedProperties {
 @end
 
 @interface _WMPaymentTransaction (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveAppliedFlag;
+- (void)setPrimitiveAppliedFlag:(NSNumber*)value;
+
+- (BOOL)primitiveAppliedFlagValue;
+- (void)setPrimitiveAppliedFlagValue:(BOOL)value_;
+
+
 
 
 - (NSDate*)primitiveCreatedAt;

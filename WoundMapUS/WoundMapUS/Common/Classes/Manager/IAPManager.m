@@ -134,17 +134,8 @@ NSString* _deviceId;
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     NSString *username = self.appDelegate.participant.userName;
+    __weak __typeof(&*self)weakSelf = self;
     for (SKPaymentTransaction *transaction in transactions) {
-        switch (transaction.transactionState) {
-            case SKPaymentTransactionStatePurchased:
-                [self completeTransaction:transaction];
-                break;
-            case SKPaymentTransactionStateFailed:
-                [self failedTransaction:transaction];
-                break;
-            case SKPaymentTransactionStateRestored:
-                [self restoreTransaction:transaction];
-        }
         // persist to back end
         WM_ASSERT_MAIN_THREAD;
         WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -183,6 +174,16 @@ NSString* _deviceId;
                 [WMUtilities logError:error];
             }
             [managedObjectContext MR_saveToPersistentStoreAndWait];
+            switch (transaction.transactionState) {
+                case SKPaymentTransactionStatePurchased:
+                    [weakSelf completeTransaction:transaction];
+                    break;
+                case SKPaymentTransactionStateFailed:
+                    [weakSelf failedTransaction:transaction];
+                    break;
+                case SKPaymentTransactionStateRestored:
+                    [weakSelf restoreTransaction:transaction];
+            }
         };
         if (paymentTransaction.ffUrl) {
             [ff updateObj:paymentTransaction
