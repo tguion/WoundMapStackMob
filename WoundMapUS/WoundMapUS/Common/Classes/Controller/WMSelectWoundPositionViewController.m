@@ -397,7 +397,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMWoundLocationPositionJoin entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

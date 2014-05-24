@@ -318,9 +318,9 @@
 		7D674159192D3BD9007DBD1A /* WMPaymentTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D674158192D3BD9007DBD1A /* WMPaymentTransaction.m */; };
 		7D67415D192E3508007DBD1A /* WMNutritionSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D67415B192E3508007DBD1A /* WMNutritionSummaryViewController.m */; };
 		7D67415E192E3508007DBD1A /* WMNutritionSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D67415C192E3508007DBD1A /* WMNutritionSummaryViewController.xib */; };
-		7D67416E192E8DF3007DBD1A /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7D67416B192E8DF3007DBD1A /* WoundMap.sqlite */; };
-		7D67416F192E8DF3007DBD1A /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7D67416C192E8DF3007DBD1A /* WoundMap.sqlite-shm */; };
-		7D674170192E8DF3007DBD1A /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7D67416D192E8DF3007DBD1A /* WoundMap.sqlite-wal */; };
+		7D6741741930DF8A007DBD1A /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7D6741711930DF8A007DBD1A /* WoundMap.sqlite */; };
+		7D6741751930DF8A007DBD1A /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7D6741721930DF8A007DBD1A /* WoundMap.sqlite-shm */; };
+		7D6741761930DF8A007DBD1A /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7D6741731930DF8A007DBD1A /* WoundMap.sqlite-wal */; };
 		7D68944D1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */; };
 		7D6894501902DE7F006DE509 /* WMNavigationStageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D68944F1902DE7F006DE509 /* WMNavigationStageTableViewCell.m */; };
 		7D6894531902EC6B006DE509 /* EditNodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D6894521902EC6B006DE509 /* EditNodeCell.xib */; };
@@ -1126,9 +1126,9 @@
 		7D67415A192E3508007DBD1A /* WMNutritionSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNutritionSummaryViewController.h; sourceTree = "<group>"; };
 		7D67415B192E3508007DBD1A /* WMNutritionSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNutritionSummaryViewController.m; sourceTree = "<group>"; };
 		7D67415C192E3508007DBD1A /* WMNutritionSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMNutritionSummaryViewController.xib; sourceTree = "<group>"; };
-		7D67416B192E8DF3007DBD1A /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
-		7D67416C192E8DF3007DBD1A /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
-		7D67416D192E8DF3007DBD1A /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
+		7D6741711930DF8A007DBD1A /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
+		7D6741721930DF8A007DBD1A /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
+		7D6741731930DF8A007DBD1A /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
 		7D68944B1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPolicySubnodeEditorViewController.h; sourceTree = "<group>"; };
 		7D68944C1902DDCD006DE509 /* WMPolicySubnodeEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPolicySubnodeEditorViewController.m; sourceTree = "<group>"; };
 		7D68944E1902DE7F006DE509 /* WMNavigationStageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationStageTableViewCell.h; sourceTree = "<group>"; };
@@ -1993,9 +1993,9 @@
 		7D864D3D191E5E0800D5973C /* Seed */ = {
 			isa = PBXGroup;
 			children = (
-				7D67416B192E8DF3007DBD1A /* WoundMap.sqlite */,
-				7D67416C192E8DF3007DBD1A /* WoundMap.sqlite-shm */,
-				7D67416D192E8DF3007DBD1A /* WoundMap.sqlite-wal */,
+				7D6741711930DF8A007DBD1A /* WoundMap.sqlite */,
+				7D6741721930DF8A007DBD1A /* WoundMap.sqlite-shm */,
+				7D6741731930DF8A007DBD1A /* WoundMap.sqlite-wal */,
 			);
 			path = Seed;
 			sourceTree = "<group>";
@@ -3407,7 +3407,7 @@
 				5F6DE54018B58BB000E87F7E /* InstructionsWoundAssessment.html in Resources */,
 				5F67D1F018AC3BE000460C37 /* BradenCare.plist in Resources */,
 				5F67D20018AC3BE000460C37 /* WCInterventionEventType.plist in Resources */,
-				7D67416E192E8DF3007DBD1A /* WoundMap.sqlite in Resources */,
+				7D6741741930DF8A007DBD1A /* WoundMap.sqlite in Resources */,
 				7D68949D190445D8006DE509 /* Kal.bundle in Resources */,
 				7DB2062C18A7D3400004DC32 /* Images.xcassets in Resources */,
 				7D39DAE818B7E5DD0054DDC3 /* WMSelectWoundViewController.xib in Resources */,
@@ -3426,7 +3426,7 @@
 				5F67D20A18AC3BE000460C37 /* WoundType.plist in Resources */,
 				7D9A94D618E892F600D92E95 /* WMOrganizationEditorViewController.xib in Resources */,
 				7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */,
-				7D674170192E8DF3007DBD1A /* WoundMap.sqlite-wal in Resources */,
+				7D6741761930DF8A007DBD1A /* WoundMap.sqlite-wal in Resources */,
 				7D10CDF418DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib in Resources */,
 				7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
@@ -3446,7 +3446,7 @@
 				5F67D1F418AC3BE000460C37 /* Devices.plist in Resources */,
 				7D39DB0618B7E8BE0054DDC3 /* WMPolicyEditorViewController.xib in Resources */,
 				7D39DB4518B826620054DDC3 /* WMCarePlanGroupViewController.xib in Resources */,
-				7D67416F192E8DF3007DBD1A /* WoundMap.sqlite-shm in Resources */,
+				7D6741751930DF8A007DBD1A /* WoundMap.sqlite-shm in Resources */,
 				7DDFD68618B7C09B00041927 /* WMHomeBaseViewController_iPhone.xib in Resources */,
 				5F6DE51118B586F600E87F7E /* WMInstructionsViewController.xib in Resources */,
 				7DDFD68B18B7C0B900041927 /* WMHomeBaseViewController_iPad.xib in Resources */,

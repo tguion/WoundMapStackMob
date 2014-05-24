@@ -233,7 +233,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMInterventionStatusJoin entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

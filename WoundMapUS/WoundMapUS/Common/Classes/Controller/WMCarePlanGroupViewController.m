@@ -726,7 +726,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMCarePlanCategory entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

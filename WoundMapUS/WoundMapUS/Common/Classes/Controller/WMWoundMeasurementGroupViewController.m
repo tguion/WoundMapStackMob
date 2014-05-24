@@ -850,7 +850,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMWoundMeasurement entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

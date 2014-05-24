@@ -415,17 +415,15 @@
 - (void)updateGrabBags:(NSArray *)grabBagNames aggregator:(NSManagedObject *)aggregator ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = [aggregator managedObjectContext];
+    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
     __block NSInteger counter = 0;
     WMErrorCallback onComplete = ^(NSError *error) {
         if (counter > 0) {
             if (error) {
-                counter = NSIntegerMin;
+                [WMUtilities logError:error];
+            }
+            if (--counter == 0) {
                 completionHandler(error);
-            } else {
-                --counter;
-                if (counter == 0) {
-                    completionHandler(error);
-                }
             }
         }
     };
@@ -436,9 +434,19 @@
             if (error) {
                 onComplete(error);
             } else {
-                NSSet *remoteGrabBag = [NSSet setWithArray:object];
-                [localGrabBagObjects minusSet:remoteGrabBag];
-                [managedObjectContext MR_deleteObjects:localGrabBagObjects];
+                // do not delete local objects that are part of the seed
+                NSEntityDescription *entityDescription = [aggregator entity];
+                NSRelationshipDescription *relationshipDescription = [entityDescription relationshipsByName][grabBagName];
+                NSEntityDescription *destinationEntity = relationshipDescription.destinationEntity;
+                NSString *entityName = [destinationEntity name];
+                if (![coreDataHelper isBackendDataAcquiredForEntityName:entityName]) {
+                    NSSet *remoteGrabBag = [NSSet setWithArray:object];
+                    [localGrabBagObjects minusSet:remoteGrabBag];
+                    if ([localGrabBagObjects count]) {
+                        DLog(@"Will delete %@", localGrabBagObjects);
+                        [managedObjectContext MR_deleteObjects:localGrabBagObjects];
+                    }
+                }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 onComplete(nil);
             }

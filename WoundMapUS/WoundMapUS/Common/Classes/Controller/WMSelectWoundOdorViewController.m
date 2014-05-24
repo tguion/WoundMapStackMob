@@ -103,7 +103,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[self.fetchedResultsControllerEntityName];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

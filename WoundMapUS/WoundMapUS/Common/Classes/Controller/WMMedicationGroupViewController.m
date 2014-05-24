@@ -484,7 +484,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMMedication entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

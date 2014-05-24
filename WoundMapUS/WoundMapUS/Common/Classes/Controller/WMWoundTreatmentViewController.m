@@ -785,7 +785,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMWoundTreatment entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

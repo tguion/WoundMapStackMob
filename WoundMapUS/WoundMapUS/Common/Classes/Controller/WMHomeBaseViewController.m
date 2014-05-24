@@ -140,7 +140,7 @@
 - (NSArray *)backendSeedEntityNames
 {
     // getting WMNavigationNode on sign in
-    return @[[WMWoundMeasurement entityName]];
+    return @[];
 }
 
 - (BOOL)shouldShowSelectTrackTableViewCell

@@ -392,7 +392,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMNutritionItem entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

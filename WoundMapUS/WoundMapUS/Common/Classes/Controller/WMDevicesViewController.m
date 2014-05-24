@@ -599,7 +599,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMDevice entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

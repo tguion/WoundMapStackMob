@@ -259,7 +259,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMWoundType entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

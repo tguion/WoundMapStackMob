@@ -695,7 +695,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMPsychoSocialItem entityName]];
+    return @[];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

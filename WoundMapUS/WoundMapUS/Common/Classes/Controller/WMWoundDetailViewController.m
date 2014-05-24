@@ -181,7 +181,7 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    return @[[WMWoundPosition entityName], [WMWoundLocation entityName], [WMWoundLocationPositionJoin entityName], [WMWoundType entityName]];
+    return @[];
 }
 
 #pragma mark - Actions
