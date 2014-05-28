@@ -391,11 +391,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             break;
         }
         case 2: {
-            // participants - remove from team
-            WMParticipant *participant = [self.teamMembers objectAtIndex:indexPath.row];
-            if (!participant.isTeamLeader) {
-                shouldHighlight = YES;
-            }
+            // participants - update subscription
+            shouldHighlight = YES;
             break;
         }
     }

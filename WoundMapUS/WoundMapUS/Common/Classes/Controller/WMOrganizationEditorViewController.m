@@ -12,10 +12,12 @@
 #import "WMValue1TableViewCell.h"
 #import "WMTextFieldTableViewCell.h"
 #import "MBProgressHUD.h"
+#import "WMParticipant.h"
 #import "WMOrganization.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUtilities.h"
+#import "WCAppDelegate.h"
 
 @interface WMOrganizationEditorViewController ()  <UITextFieldDelegate, AddressListViewControllerDelegate, IdListViewControllerDelegate>
 
@@ -59,6 +61,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMParticipant *participant = self.appDelegate.participant;
     __weak __typeof(&*self)weakSelf = self;
     if (nil == _organization) {
         _organization = [WMOrganization MR_createInContext:managedObjectContext];
@@ -67,7 +70,7 @@
         // create on back end before GRABBAG addresses and ids
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            NSParameterAssert([object isKindOfClass:[WMOrganization class]]);
+            [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:_organization.ffUrl grabBagName:WMOrganizationRelationships.participants];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         }];
     } else {
@@ -208,29 +211,28 @@
 {
     [self.view endEditing:YES];
     // check if we are canceling a new organization
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (_organizationCreated) {
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         BOOL deleteFromBackend = (nil != _organization.ffUrl);
         if (deleteFromBackend) {
             ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
         }
-        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
         [managedObjectContext MR_deleteObjects:@[_organization]];
         [managedObjectContext processPendingChanges];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
-
     } else {
         // cancel any updates
-        if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-            [self.managedObjectContext.undoManager endUndoGrouping];
-            if (self.managedObjectContext.undoManager.canUndo) {
+        if (managedObjectContext.undoManager.groupingLevel > 0) {
+            [managedObjectContext.undoManager endUndoGrouping];
+            if (managedObjectContext.undoManager.canUndo) {
                 // this should undo the insert of new person
-                [self.managedObjectContext.undoManager undoNestedGroup];
+                [managedObjectContext.undoManager undoNestedGroup];
             }
         }
         if (_removeUndoManagerWhenDone) {
-            self.managedObjectContext.undoManager = nil;
+            managedObjectContext.undoManager = nil;
         }
     }
     [self.delegate organizationEditorViewControllerDidCancel:self];

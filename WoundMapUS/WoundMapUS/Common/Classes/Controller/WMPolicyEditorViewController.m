@@ -447,17 +447,10 @@ NSString * const kTextCellIdentifier = @"TextCell";
 - (IBAction)saveAction:(id)sender
 {
     [self.view endEditing:YES];
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext.undoManager.groupingLevel > 0) {
-        [managedObjectContext.undoManager endUndoGrouping];
-        if (_removeUndoManagerWhenDone) {
-            managedObjectContext.undoManager = nil;
-        }
-    }
     if (nil == self.parentNavigationNode) {
         // check team policy
         WMTeamPolicy *teamPolicy = self.team.teamPolicy;
-        if (teamPolicy.deletePhotoBlobs && teamPolicy.numberOfMonthsToDeletePhotoBlobsValue == 0) {
+        if (teamPolicy.deletePhotoBlobsValue && teamPolicy.numberOfMonthsToDeletePhotoBlobsValue == 0) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Entry"
                                                                 message:@"You must set a number of months greater than zero for deleting photos"
                                                                delegate:nil
@@ -521,6 +514,14 @@ NSString * const kTextCellIdentifier = @"TextCell";
         }
         // else
         [self reorderNodesFromSortOrderings];
+        // handle undo
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        if (managedObjectContext.undoManager.groupingLevel > 0) {
+            [managedObjectContext.undoManager endUndoGrouping];
+            if (_removeUndoManagerWhenDone) {
+                managedObjectContext.undoManager = nil;
+            }
+        }
         // update back end if participant has team
         WMParticipant *participant = self.appDelegate.participant;
         if (participant.team) {
@@ -533,13 +534,13 @@ NSString * const kTextCellIdentifier = @"TextCell";
                 }
                 --counter;
                 if (counter == 0) {
-                    [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     [weakSelf.delegate policyEditorViewControllerDidSave:weakSelf];
                 }
             };
             WMFatFractal *ff = [WMFatFractal sharedInstance];
-            for (id updatedObject in self.managedObjectContext.updatedObjects) {
+            for (id updatedObject in managedObjectContext.updatedObjects) {
                 if (![updatedObject respondsToSelector:@selector(ffUrl)]) {
                     continue;
                 }
