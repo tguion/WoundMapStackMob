@@ -85,7 +85,7 @@
         };
         [ff createObj:_medicalHistoryGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
-           onComplete:createCompletionHandler];
+           onComplete:createCompletionHandler onOffline:createCompletionHandler];
     } else {
         // we want to support cancel, so make sure we have an undoManager
         if (nil == managedObjectContext.undoManager) {
@@ -192,19 +192,21 @@
         }
     };
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WMMedicalHistoryValue *medicalHistoryValue = (WMMedicalHistoryValue *)object;
+        [ff queueGrabBagAddItemAtUri:medicalHistoryValue.ffUrl toObjAtUri:_medicalHistoryGroup.ffUrl grabBagName:WMMedicalHistoryGroupRelationships.values];
+        [ff queueGrabBagAddItemAtUri:medicalHistoryValue.ffUrl toObjAtUri:medicalHistoryValue.medicalHistoryItem.ffUrl grabBagName:WMMedicalHistoryItemRelationships.values];
+        block(error, object, response);
+    };
     for (WMMedicalHistoryValue *medicalHistoryValue in medicalHistoryValues) {
         if (medicalHistoryValue.ffUrl) {
             ++counter;
-            [ff updateObj:medicalHistoryValue onComplete:block];
+            [ff updateObj:medicalHistoryValue onComplete:block onOffline:block];
         } else {
-            ++counter;
             ++counter;
             [ff createObj:medicalHistoryValue
                     atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryValue entityName]]
-               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                   [ff grabBagAddItemAtFfUrl:medicalHistoryValue.ffUrl toObjAtFfUrl:_medicalHistoryGroup.ffUrl grabBagName:WMMedicalHistoryGroupRelationships.values onComplete:block];
-                   [ff grabBagAddItemAtFfUrl:medicalHistoryValue.ffUrl toObjAtFfUrl:medicalHistoryValue.medicalHistoryItem.ffUrl grabBagName:WMMedicalHistoryItemRelationships.values onComplete:block];
-               }];
+               onComplete:createOnComplete onOffline:createOnComplete];
         }
     }
 }

@@ -58,24 +58,13 @@
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [WMBradenScale populateBradenSectionCells:_bradenSection];
         __block NSInteger counter = [_bradenSection.cells count];
-        FFHttpMethodCompletion handler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                --counter;
-                if (counter == 0) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                }
-            }
-        };
         FFHttpMethodCompletion createHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:[object valueForKey:WMBradenCellAttributes.ffUrl]
-                             toObjAtFfUrl:_bradenSection.ffUrl
-                              grabBagName:WMBradenSectionRelationships.cells
-                               onComplete:handler];
+            }
+            [ff queueGrabBagAddItemAtUri:[object valueForKey:WMBradenCellAttributes.ffUrl] toObjAtUri:_bradenSection.ffUrl grabBagName:WMBradenSectionRelationships.cells];
+            if (--counter == 0) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }
         };
         for (WMBradenCell *bradenCell in _bradenSection.cells) {

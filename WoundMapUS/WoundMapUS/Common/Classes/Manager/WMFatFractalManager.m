@@ -176,7 +176,6 @@
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
-//    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
@@ -189,6 +188,7 @@
         } else {
             // check for lost person - might happen when added to team by team leader
             if (nil == participant.person) {
+                DLog(@"**** WARNING: participant with nil person");
                 if (nil == person) {
                     person = [WMPerson MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil AND %K = nil", WMPersonRelationships.patient, WMPersonRelationships.patient] inContext:managedObjectContext];
                 }
@@ -221,7 +221,6 @@
                         }
                     }];
                 };
-//                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                 NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                 [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     // if we did not resolve team, we may have been removed from team
@@ -416,20 +415,17 @@
 {
     NSManagedObjectContext *managedObjectContext = [aggregator managedObjectContext];
     CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
-    __block NSInteger counter = 0;
+    __block NSInteger counter = [grabBagNames count];
     WMErrorCallback onComplete = ^(NSError *error) {
-        if (counter > 0) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            if (--counter == 0) {
-                completionHandler(error);
-            }
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
+            completionHandler(error);
         }
     };
     for (NSString *grabBagName in grabBagNames) {
         NSMutableSet *localGrabBagObjects = [[aggregator valueForKey:grabBagName] mutableCopy];
-        ++counter;
         [ff grabBagGetAllForObj:aggregator grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 onComplete(error);
@@ -493,35 +489,41 @@
     __block NSInteger counter = 0;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
-            counter = 0;
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             completionHandler(error);
-        } else {
-            --counter;
-            if (counter == 0) {
-                completionHandler(error);
-            }
         }
     };
-    ++counter;
-    [ff updateObj:person onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    FFHttpMethodCompletion createAddressOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
+        } else {
+            WMAddress *localAddress = (WMAddress *)object;
+            [ff queueGrabBagAddItemAtUri:localAddress.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.addresses];
+            block(error);
+        }
+    };
+    FFHttpMethodCompletion createTelecomOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
+        } else {
+            WMTelecom *localTelecom = (WMTelecom *)object;
+            [ff queueGrabBagAddItemAtUri:localTelecom.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.telecoms];
+        }
+    };
+    FFHttpMethodCompletion updatePersonOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             block(error);
         } else {
             for (WMAddress *address in person.addresses) {
                 ++counter;
                 if (!address.ffUrl) {
-                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if (error) {
-                            block(error);
-                        } else {
-                            WMAddress *localAddress = (WMAddress *)object;
-                            [ff grabBagAddItemAtFfUrl:localAddress.ffUrl toObjAtFfUrl:person.ffUrl grabBagName:WMPersonRelationships.addresses onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                block(error);
-                            }];
-                        }
-                    }];
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:createAddressOnComplete onOffline:createAddressOnComplete];
                 } else {
                     [ff updateObj:address onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         block(error);
                     }];
                 }
@@ -529,25 +531,20 @@
             for (WMTelecom *telecom in person.telecoms) {
                 ++counter;
                 if (!telecom.ffUrl) {
-                    [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if (error) {
-                            block(error);
-                        } else {
-                            WMTelecom *localTelecom = (WMTelecom *)object;
-                            [ff grabBagAddItemAtFfUrl:localTelecom.ffUrl toObjAtFfUrl:person.ffUrl grabBagName:WMPersonRelationships.telecoms onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                block(error);
-                            }];
-                        }
-                    }];
+                    [ff createObj:telecom atUri:[NSString stringWithFormat:@"/%@", [WMTelecom entityName]] onComplete:createTelecomOnComplete onOffline:createTelecomOnComplete];
                 } else {
                     [ff updateObj:telecom onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         block(error);
                     }];
                 }
             }
             block(nil);
         }
-    }];
+    };
+    ++counter;
+    [ff updateObj:person onComplete:updatePersonOnComplete onOffline:updatePersonOnComplete];
 }
 
 - (void)createTeamWithParticipant:(WMParticipant *)participant user:(id<FFUserProtocol>)user ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler;
@@ -654,13 +651,28 @@
     __block NSInteger counter = 0;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
-            counter = 0;
+            [WMUtilities logError:error];
+        }
+        if (--counter == 0) {
             completionHandler(error);
+        }
+    };
+    FFHttpMethodCompletion createAddressOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
         } else {
-            --counter;
-            if (counter == 0) {
-                completionHandler(error);
-            }
+            WMAddress *address = (WMAddress *)object;
+            [ff queueGrabBagAddItemAtUri:address.ffUrl toObjAtUri:organization.ffUrl grabBagName:WMOrganizationRelationships.addresses];
+            block(error);
+        }
+    };
+    FFHttpMethodCompletion createIdOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
+        } else {
+            WMId *anId = (WMId *)object;
+            [ff queueGrabBagAddItemAtUri:anId.ffUrl toObjAtUri:organization.ffUrl grabBagName:WMOrganizationRelationships.ids];
+            block(error);
         }
     };
     ++counter;
@@ -671,17 +683,11 @@
             for (WMAddress *address in organization.addresses) {
                 ++counter;
                 if (!address.ffUrl) {
-                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if (error) {
-                            block(error);
-                        } else {
-                            [ff grabBagAddItemAtFfUrl:address.ffUrl toObjAtFfUrl:organization.ffUrl grabBagName:WMOrganizationRelationships.addresses onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                block(error);
-                            }];
-                        }
-                    }];
+                    [ff createObj:address atUri:[NSString stringWithFormat:@"/%@", [WMAddress entityName]] onComplete:createAddressOnComplete onOffline:createAddressOnComplete];
                 } else {
                     [ff updateObj:address onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         block(error);
                     }];
                 }
@@ -689,17 +695,11 @@
             for (WMId *anId in organization.ids) {
                 ++counter;
                 if (!anId.ffUrl) {
-                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if (error) {
-                            block(error);
-                        } else {
-                            [ff grabBagAddItemAtFfUrl:anId.ffUrl toObjAtFfUrl:organization.ffUrl grabBagName:WMOrganizationRelationships.ids onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                block(error);
-                            }];
-                        }
-                    }];
+                    [ff createObj:anId atUri:[NSString stringWithFormat:@"/%@", [WMId entityName]] onComplete:createIdOnComplete onOffline:createIdOnComplete];
                 } else {
                     [ff updateObj:anId onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        block(error);
+                    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         block(error);
                     }];
                 }
@@ -989,28 +989,29 @@
     };
     FFUserGroup *consultantGroup = patient.consultantGroup;
     // create FFUserGroup that will hold the FFUser instance in team
-    ++counter;
-    [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    FFHttpMethodCompletion createPatientOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             block(error);
         } else {
-            [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    block(error);
-                } else {
-                    [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        block(error);
-                    }];
-                    if (patient.participant.team) {
-                        ++counter;
-                        [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            block(error);
-                        }];
-                    }
-                }
-            }];
+            [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients];
+            block(error);
+            if (patient.participant.team) {
+                ++counter;
+                [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients];
+                block(error);
+            }
+            block(error);
         }
-    }];
+    };
+    FFHttpMethodCompletion createConsultantGroupOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            block(error);
+        } else {
+            [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:createPatientOnComplete onOffline:createPatientOnComplete];
+        }
+    };
+    ++counter;
+    [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:createConsultantGroupOnComplete onOffline:createConsultantGroupOnComplete];
 }
 
 - (void)updatePatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
@@ -1040,6 +1041,8 @@
     }
     ++counter;
     [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        localCompletionHandler(error);
+    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
         localCompletionHandler(error);
     }];
 }
@@ -1086,30 +1089,21 @@
     NSParameterAssert([item managedObjectContext] == [aggregator managedObjectContext]);
     NSString *itemFFUrl = [item valueForKey:@"ffUrl"];
     NSString *aggregatorFFUrl = [aggregator valueForKey:@"ffUrl"];
+    FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+            completionHandler(error);
+        } else {
+            NSString *itemFFUrl = [object valueForKey:@"ffUrl"];
+            [ff queueGrabBagAddItemAtUri:itemFFUrl toObjAtUri:aggregatorFFUrl grabBagName:grabBagName];
+            completionHandler(error);
+        }
+    };
     if (nil == itemFFUrl) {
-        [ff createObj:item atUri:[NSString stringWithFormat:@"/%@", [[item entity] name]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-                completionHandler(error);
-            } else {
-                NSString *itemFFUrl = [object valueForKey:@"ffUrl"];
-                [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                    completionHandler(error);
-                }];
-            }
-        }];
+        [ff createObj:item atUri:[NSString stringWithFormat:@"/%@", [[item entity] name]] onComplete:createOnComplete onOffline:createOnComplete];
     } else {
-        [ff grabBagAddItemAtFfUrl:itemFFUrl toObjAtFfUrl:aggregatorFFUrl grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-                completionHandler(error);
-            } else {
-                completionHandler(error);
-            }
-        }];
+        [ff queueGrabBagAddItemAtUri:itemFFUrl toObjAtUri:aggregatorFFUrl grabBagName:grabBagName];
+        completionHandler(nil);
     }
 }
 

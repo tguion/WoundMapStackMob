@@ -84,23 +84,15 @@
     } else {
         _skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:managedObjectContext];
         _skinAssessmentGroup.patient = patient;
-        _skinAssessmentGroup.status = [WMInterventionStatus initialInterventionStatus:managedObjectContext];
         self.didCreateGroup = YES;
         // create on back end
-        [ff createObj:_skinAssessmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:_skinAssessmentGroup.ffUrl
-                             toObjAtFfUrl:patient.ffUrl
-                              grabBagName:WMPatientRelationships.skinAssessmentGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
             }
-        }];
+            [ff queueGrabBagAddItemAtUri:_skinAssessmentGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:WMPatientRelationships.skinAssessmentGroups];
+        };
+        [ff createObj:_skinAssessmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentGroup entityName]] onComplete:onComplete onOffline:onComplete];
         WMInterventionEvent *event = [_skinAssessmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                     title:nil
                                                                                 valueFrom:nil
@@ -234,7 +226,7 @@
                     }
                 };
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
-                [ff grabBagRemoveItemAtFfUrl:skinAssessmentValue.ffUrl fromObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.values onComplete:completionHandler];
+                [ff queueGrabBagRemoveItemAtUri:skinAssessmentValue.ffUrl fromObjAtUri:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.values];
                 [ff deleteObj:skinAssessmentValue onComplete:completionHandler];
             }
         }
@@ -330,7 +322,7 @@
     [self.skinAssessmentGroup createEditEventsForParticipant:self.appDelegate.participant];
     // wait for back end calls to complete
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    __block NSInteger counter = 0;
+    __block NSInteger counter = 1;  // update
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
@@ -349,6 +341,18 @@
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
+    FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WMInterventionEvent *interventionEvent = nil;
+        if ([object isKindOfClass:[WMInterventionEvent class]]) {
+            interventionEvent = (WMInterventionEvent *)object;
+        } else {
+            FFQueuedOperation *q = (FFQueuedOperation *)object;
+            interventionEvent = (WMInterventionEvent *)q.queuedObj;
+        }
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.interventionEvents];
+        completionHandler(error, object, response);
+    };
     NSSet *updatedObjects = managedObjectContext.updatedObjects;
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
         if (interventionEvent.ffUrl) {
@@ -362,15 +366,23 @@
         }
         // else
         ++counter;
-        ++counter;
-        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentGroupRelationships.interventionEvents onComplete:completionHandler];
-        }];
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:createOnComplete onOffline:createOnComplete];
     }
+    FFHttpMethodCompletion createValueOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WMSkinAssessmentValue *value = nil;
+        if ([object isKindOfClass:[WMSkinAssessmentValue class]]) {
+            value = (WMSkinAssessmentValue *)object;
+        } else {
+            FFQueuedOperation *q = (FFQueuedOperation *)object;
+            value = (WMSkinAssessmentValue *)q.queuedObj;
+        }
+        [ff queueGrabBagAddItemAtUri:value.ffUrl toObjAtUri:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentRelationships.values];
+        completionHandler(error, object, response);
+    };
     for (WMSkinAssessmentValue *value in _skinAssessmentGroup.values) {
         if (value.ffUrl) {
             if ([updatedObjects containsObject:value]) {
+                ++counter;
                 [ff updateObj:value
                    onComplete:completionHandler
                     onOffline:completionHandler];
@@ -379,12 +391,9 @@
         }
         // else
         ++counter;
-        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_skinAssessmentGroup.ffUrl grabBagName:WMSkinAssessmentRelationships.values onComplete:completionHandler];
-        }];
+        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentValue entityName]] onComplete:createValueOnComplete onOffline:createValueOnComplete];
     }
-    ++counter;
-    [ff updateObj:_skinAssessmentGroup onComplete:completionHandler];
+    [ff updateObj:_skinAssessmentGroup onComplete:completionHandler onOffline:completionHandler];
 }
 
 #pragma mark - InterventionStatusViewControllerDelegate

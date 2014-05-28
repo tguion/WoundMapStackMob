@@ -971,6 +971,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
+//        ff.simulatingOffline = YES;//DEPLOYMENT
     };
     if ([lastUserName isEqualToString:participant.userName]) {
         // attempt to acquire last patient and wound
@@ -1002,8 +1003,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             block();
         }
     } else {
-        // make sure we have some data
-        [self acquireBackendDataForEntityNames:@[[WMInterventionStatusJoin entityName], [WMTelecomType entityName], [WMWoundType entityName]]];
         block();
     }
 }

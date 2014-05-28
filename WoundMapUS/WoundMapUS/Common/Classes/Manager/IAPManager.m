@@ -34,7 +34,7 @@ NSString *const kIAPPurchaseError = @"IAPPurchaseError";
 NSString *const kIAPTxnCancelled = @"IAPTxnCancelled";
 
 NSString *const kIAPDeviceTransactionAggregate = @"IAPDeviceTransactionAggregate";
-int kStartupCreditAmount = 10000;   // DEPLOYMENT: set to 20 on deplay
+int kStartupCreditAmount = 20;   // DEPLOYMENT: set to 20 on deplay
 
 NSString *const kIAPDeviceId = @"iap-device-id.txt";
 

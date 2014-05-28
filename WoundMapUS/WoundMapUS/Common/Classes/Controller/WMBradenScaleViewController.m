@@ -109,17 +109,17 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 	_bradenScale = [WMBradenScale createNewBradenScaleForPatient:self.patient];
     __weak __typeof(&*self)weakSelf = self;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff queueGrabBagAddItemAtUri:[object valueForKey:@"ffUrl"] toObjAtUri:weakSelf.patient.ffUrl grabBagName:WMPatientRelationships.bradenScales];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        [weakSelf navigateToBradenScaleEditor:YES];
+    };
     [ff createObj:_bradenScale
             atUri:[NSString stringWithFormat:@"/%@", [WMBradenScale entityName]]
-       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-           [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
-                        toObjAtFfUrl:weakSelf.patient.ffUrl
-                         grabBagName:WMPatientRelationships.bradenScales
-                          onComplete: ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                              [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                              [weakSelf navigateToBradenScaleEditor:YES];
-                          }];
-       }];
+       onComplete:onComplete onOffline:onComplete];
     self.didCreateBradenScale = YES;
 }
 

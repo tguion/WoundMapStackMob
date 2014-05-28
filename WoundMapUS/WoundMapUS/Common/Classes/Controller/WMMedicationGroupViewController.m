@@ -321,17 +321,19 @@
             block();
         }
     };
+    FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WMInterventionEvent *interventionEvent = (WMInterventionEvent *)object;
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_medicationGroup.ffUrl grabBagName:WMMedicationGroupRelationships.interventionEvents];
+        completionHandler(error, object, response);
+    };
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
         if (interventionEvent.ffUrl) {
             continue;
         }
         // else
         ++counter;
-        ++counter;
-        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_medicationGroup.ffUrl grabBagName:WMMedicationGroupRelationships.interventionEvents onComplete:completionHandler];
-        }];
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:createOnComplete onOffline:createOnComplete];
     }
     for (WMMedication *value in _medicationGroup.medications) {
         ++counter;

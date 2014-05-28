@@ -94,6 +94,47 @@
     [IAPProduct seedDatabase:managedObjectContext];
 }
 
+- (void)seedNavigationTrackWithCompletionHandler:(void (^)(NSError *))handler
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
+    __block NSInteger counter = 0;
+    WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
+        // update backend from main thread
+        NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+        for (NSManagedObjectID *objectID in objectIDs) {
+            NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+            NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+            [ff createObj:object atUri:ffUrl];
+            [coreDataHelper markBackendDataAcquiredForEntityName:collection];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
+        if (callBack) {
+            callBack();
+        }
+        if (--counter == 0) {
+            handler(nil);
+        }
+    };
+    dispatch_block_t counterHandler = ^{
+        if (--counter == 0) {
+            handler(nil);
+        }
+    };
+    DLog(@"reading plists and seeding database start");
+    // *** WMNavigationTrack *** first attempt to acquire data from backend
+    counter += 5;   // WMNavigationTrack does 5 callbacks
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (![object count]) {
+            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
+        } else {
+            counterHandler();
+        }
+    }];
+}
+
 - (void)seedDatabaseWithCompletionHandler:(void (^)(NSError *))handler
 {
     WM_ASSERT_MAIN_THREAD;
@@ -114,20 +155,18 @@
         if (callBack) {
             callBack();
         }
-        --counter;
-        if (counter == 0) {
+        if (--counter == 0) {
             handler(nil);
         }
     };
     dispatch_block_t counterHandler = ^{
-        --counter;
-        if (counter == 0) {
+        if (--counter == 0) {
             handler(nil);
         }
     };
     DLog(@"reading plists and seeding database start");
     // *** WMNavigationTrack *** first attempt to acquire data from backend
-    ++counter;
+    counter += 5;   // WMNavigationTrack does 5 callbacks
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {

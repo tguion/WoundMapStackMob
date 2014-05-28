@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import "MigrationVC.h"
 
+@class WMNetworkReachability;
+
 extern NSString *storeFilename;
 extern NSString *sourceStoreFilename;
 extern NSString *localStoreFilename;
@@ -17,6 +19,8 @@ extern NSString *localStoreFilename;
 @interface CoreDataHelper : NSObject <UIAlertViewDelegate,NSXMLParserDelegate>
 
 + (instancetype)sharedInstance;
+
+@property (nonatomic, strong) WMNetworkReachability *networkMonitor;
 
 @property (nonatomic, readonly) NSManagedObjectContext *parentContext;          // MagicalRecord private queue parent managedObjectContext
 @property (nonatomic, readonly) NSManagedObjectContext *context;                // child context of parentContext managedObjectContext

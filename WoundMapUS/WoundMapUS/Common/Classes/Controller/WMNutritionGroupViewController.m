@@ -236,6 +236,20 @@
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
+    FFHttpMethodCompletion createInterventionEventOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WMInterventionEvent *interventionEvent = (WMInterventionEvent *)object;
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_nutritionGroup.ffUrl grabBagName:WMNutritionGroupRelationships.interventionEvents];
+        completionHandler(error, object, response);
+    };
+    FFHttpMethodCompletion createValueOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        WMNutritionValue *value = (WMNutritionValue *)object;
+        [ff queueGrabBagAddItemAtUri:value.ffUrl toObjAtUri:_nutritionGroup.ffUrl grabBagName:WMNutritionGroupRelationships.values];
+        completionHandler(error, object, response);
+    };
     NSSet *updatedObjects = managedObjectContext.updatedObjects;
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
         if (interventionEvent.ffUrl) {
@@ -248,11 +262,7 @@
         }
         // else
         ++counter;
-        ++counter;
-        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_nutritionGroup.ffUrl grabBagName:WMNutritionGroupRelationships.interventionEvents onComplete:completionHandler];
-        }];
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:createInterventionEventOnComplete onOffline:createInterventionEventOnComplete];
     }
     for (WMNutritionValue *value in _nutritionGroup.values) {
         if (value.ffUrl) {
@@ -265,15 +275,10 @@
         }
         // else
         ++counter;
-        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMNutritionValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_nutritionGroup.ffUrl grabBagName:WMNutritionGroupRelationships.values onComplete:completionHandler];
-        }];
+        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMNutritionValue entityName]] onComplete:createValueOnComplete onOffline:createValueOnComplete];
     }
     ++counter;
-    [ff updateObj:_nutritionGroup onComplete:completionHandler];
+    [ff updateObj:_nutritionGroup onComplete:completionHandler onOffline:completionHandler];
 }
 
 #pragma mark - BuildGroupViewController

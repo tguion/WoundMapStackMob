@@ -102,16 +102,8 @@
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:_deviceGroup.ffUrl
-                             toObjAtFfUrl:weakSelf.patient.ffUrl
-                              grabBagName:WMPatientRelationships.deviceGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
             }
+            [ff queueGrabBagAddItemAtUri:_deviceGroup.ffUrl toObjAtUri:weakSelf.patient.ffUrl grabBagName:WMPatientRelationships.deviceGroups];
         };
         [ff createObj:_deviceGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMDeviceGroup entityName]]
@@ -348,7 +340,7 @@
     [_deviceGroup createEditEventsForParticipant:self.appDelegate.participant];
     // update backend
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    __block NSInteger counter = 0;
+    __block NSInteger counter = 1;  // update _deviceGroup
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
@@ -367,6 +359,20 @@
         }
     };
     WMParticipant *participant = self.appDelegate.participant;
+    FFHttpMethodCompletion onCreateComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        WMInterventionEvent *interventionEvent = nil;
+        if ([object isKindOfClass:[WMInterventionEvent class]]) {
+            interventionEvent = (WMInterventionEvent *)object;
+        } else {
+            FFQueuedOperation *q = (FFQueuedOperation *)object;
+            interventionEvent = (WMInterventionEvent *)q.queuedObj;
+        }
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
+        [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.interventionEvents];
+    };
     NSSet *updatedObjects = managedObjectContext.updatedObjects;
     for (WMInterventionEvent *interventionEvent in participant.interventionEvents) {
         if (interventionEvent.ffUrl) {
@@ -379,12 +385,7 @@
             continue;
         }
         // else
-        ++counter;
-        ++counter;
-        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.interventionEvents onComplete:completionHandler];
-        }];
+        [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:onCreateComplete onOffline:onCreateComplete];
     }
     for (WMDeviceValue *value in _deviceGroup.values) {
         if (value.ffUrl) {
@@ -399,11 +400,11 @@
         // else
         ++counter;
         [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMDeviceValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.values onComplete:completionHandler];
+            [ff queueGrabBagAddItemAtUri:value.ffUrl toObjAtUri:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.values];
+            completionHandler(error, object, response);
         }];
     }
-    ++counter;
-    [ff updateObj:_deviceGroup onComplete:completionHandler];
+    [ff updateObj:_deviceGroup onComplete:completionHandler onOffline:completionHandler];
 }
 
 #pragma mark - NoteViewControllerDelegate

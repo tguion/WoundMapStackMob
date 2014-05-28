@@ -651,7 +651,7 @@
                                                              target:self
                                                              action:@selector(editPoliciesAction:)]];
         }
-        NSString *imageName = (self.appDelegate.participant.team ? @"ui_rabbit":@"ui_rabbit");
+        NSString *imageName = @"team_iPhone";
         [items addObject:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:imageName]
                                                           style:UIBarButtonItemStylePlain
                                                          target:self
@@ -980,8 +980,19 @@
 
 - (IBAction)editUserOrTeamAction:(id)sender
 {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMTeam *team = self.appDelegate.participant.team;
+    if (NO) {//DEPLOYMENT
+        if (ff.simulatingOffline) {
+            ff.simulatingOffline = NO;
+            NSLog(@"Online");
+        } else {
+            ff.simulatingOffline = YES;
+            NSLog(@"Simulating offline");
+        }
+        return;
+    }
     if (team && self.appDelegate.participant.isTeamLeader) {
         __weak __typeof(&*self)weakSelf = self;
         WMErrorCallback block = ^(NSError *error) {
@@ -1160,10 +1171,9 @@
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            weakSelf.parentNavigationNode = navigationNode;
-            [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
         }
+        weakSelf.parentNavigationNode = navigationNode;
+        [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.bradenScales, WMPatientRelationships.deviceGroups, WMPatientRelationships.medicalHistoryGroups, WMPatientRelationships.psychosocialGroups]
@@ -1248,11 +1258,10 @@
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf navigateToDeviceAssessment:navigationNodeButton];
         }
+        navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf navigateToDeviceAssessment:navigationNodeButton];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.deviceGroups]
@@ -1319,11 +1328,10 @@
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
         }
+        navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
@@ -1455,10 +1463,9 @@
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf navigateToCarePlan];
         }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf navigateToCarePlan];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.carePlanGroups]
@@ -1581,6 +1588,9 @@
                                 } completion:^(BOOL finished) {
                                     // nothing
                                 }];
+            } else {
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                ff.simulatingOffline = NO;//DEPLOYMENT
             }
             break;
         }

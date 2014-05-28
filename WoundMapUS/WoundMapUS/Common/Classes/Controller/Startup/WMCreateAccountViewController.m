@@ -346,9 +346,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     if (error) {
                         [WMUtilities logError:error];
                     } else {
-                        // DEPLOYMENT - this should not be needed in production - seeding should be done on the back end anyway
                         WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-                        [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                        [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
                             if (error) {
                                 [WMUtilities logError:error];
                             }

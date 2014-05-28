@@ -149,16 +149,8 @@
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:_carePlanGroup.ffUrl
-                             toObjAtFfUrl:weakSelf.patient.ffUrl
-                              grabBagName:WMPatientRelationships.carePlanGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
             }
+            [ff queueGrabBagAddItemAtUri:_carePlanGroup.ffUrl toObjAtUri:weakSelf.patient.ffUrl grabBagName:WMPatientRelationships.carePlanGroups];
         };
         [ff createObj:_carePlanGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanGroup entityName]]
@@ -420,7 +412,7 @@
     [self.carePlanGroup createEditEventsForParticipant:participant];
     // update backend
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    __block NSInteger counter = 0;
+    __block NSInteger counter = 1;  // update _carePlanGroup
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         [managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -429,10 +421,7 @@
     };
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
+    dispatch_block_t completionHandler = ^{
         if (--counter == 0) {
             block();
         }
@@ -443,24 +432,38 @@
         }
         // else
         ++counter;
-        ++counter;
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
-            [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_carePlanGroup.ffUrl grabBagName:WMCarePlanGroupRelationships.interventionEvents onComplete:completionHandler];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
+            [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_carePlanGroup.ffUrl grabBagName:WMCarePlanGroupRelationships.interventionEvents];
+            completionHandler();
         }];
     }
     for (WMCarePlanValue *value in _carePlanGroup.values) {
         ++counter;
         if (value.ffUrl) {
-            [ff updateObj:value onComplete:completionHandler onOffline:completionHandler];
+            [ff updateObj:value onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                completionHandler();
+            } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                completionHandler();
+            }];
         } else {
             [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_carePlanGroup.ffUrl grabBagName:WMCarePlanGroupRelationships.values onComplete:completionHandler];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [ff queueGrabBagAddItemAtUri:value.ffUrl toObjAtUri:_carePlanGroup.ffUrl grabBagName:WMCarePlanGroupRelationships.values];
+                completionHandler();
             }];
         }
     }
-    ++counter;
-    [ff updateObj:_carePlanGroup onComplete:completionHandler];
+    [ff updateObj:_carePlanGroup onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        completionHandler();
+    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        completionHandler();
+    }];
 }
 
 #pragma mark - AssessmentTableViewCellDelegate

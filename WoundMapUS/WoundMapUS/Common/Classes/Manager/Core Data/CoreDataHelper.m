@@ -20,8 +20,6 @@
 
 @interface CoreDataHelper () <UIAlertViewDelegate>
 
-@property (nonatomic, strong) WMNetworkReachability *networkMonitor;
-
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
 - (void)alertUserNetworkReachabilityChanged:(WMNetworkStatus)status;
