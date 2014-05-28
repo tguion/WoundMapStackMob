@@ -171,9 +171,10 @@ typedef enum {
 - (NSString *)photoLabelText
 {
     NSString *text = nil;
-    NSString *length = self.measurementGroup.measurementValueLength.value;
-    NSString *width = self.measurementGroup.measurementValueWidth.value;
-    NSString *depth = self.measurementGroup.measurementValueDepth.value;
+    WMWoundMeasurementGroup *measurementGroup = self.measurementGroup;
+    NSString *length = measurementGroup.measurementValueLength.value;
+    NSString *width = measurementGroup.measurementValueWidth.value;
+    NSString *depth = measurementGroup.measurementValueDepth.value;
     if (nil == length) {
         text = @"Not measured";
     } else {

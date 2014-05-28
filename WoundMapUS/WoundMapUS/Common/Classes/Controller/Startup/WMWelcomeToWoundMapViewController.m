@@ -504,8 +504,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 case 1: {
                     __weak __typeof(&*self)weakSelf = self;
                     if (self.participant.isTeamLeader) {
-                        // is the team already a consultant
+                        // is the team already a consultant group
                         if (self.connectedTeamIsConsultingGroup) {
+                            // TODO manage consulting group
                             break;
                         }
                         // else IAP for creating a consulting group

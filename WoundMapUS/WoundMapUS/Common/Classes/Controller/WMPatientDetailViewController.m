@@ -563,7 +563,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     __weak __typeof(&*self)weakSelf = self;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
-        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
     [self.tableView beginUpdates];

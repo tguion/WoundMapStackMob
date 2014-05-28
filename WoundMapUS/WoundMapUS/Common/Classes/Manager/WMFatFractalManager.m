@@ -439,8 +439,13 @@
                     NSSet *remoteGrabBag = [NSSet setWithArray:object];
                     [localGrabBagObjects minusSet:remoteGrabBag];
                     if ([localGrabBagObjects count]) {
-                        DLog(@"Will delete %@", localGrabBagObjects);
-                        [managedObjectContext MR_deleteObjects:localGrabBagObjects];
+                        // filter out any objects where ffUrl is nil
+                        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ffUrl != nil"];
+                        [localGrabBagObjects filterUsingPredicate:predicate];
+                        if ([localGrabBagObjects count]) {
+                            DLog(@"Will delete %@", localGrabBagObjects);
+                            [managedObjectContext MR_deleteObjects:localGrabBagObjects];
+                        }
                     }
                 }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];

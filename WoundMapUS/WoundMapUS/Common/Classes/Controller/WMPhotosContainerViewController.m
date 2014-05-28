@@ -1093,15 +1093,42 @@
     }
     // else make sure we have photo data
     __weak __typeof(&*self)weakSelf = self;
-    dispatch_block_t block = ^{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    WMErrorCallback errorCallback2 = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
         weakSelf.photoZoomViewController.initialFrame = aFrame; // aFrame is in window coordinates
         weakSelf.gridScrollSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment;
         [weakSelf installPhotoZoomViewController:NO];
     };
+    WMErrorCallback errorCallback = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // get the latest measurement group
+        WMWoundMeasurementGroup *measurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO];
+        if (measurementGroup) {
+            // get values from back end
+            [ffm updateGrabBags:@[WMWoundMeasurementGroupRelationships.values]
+                     aggregator:measurementGroup
+                             ff:ff
+              completionHandler:errorCallback2];
+        } else {
+            errorCallback2(nil);
+        }
+    };
+    dispatch_block_t block = ^{
+        // make sure we have measurement groups
+        [ffm updateGrabBags:@[WMWoundPhotoRelationships.measurementGroups]
+                 aggregator:woundPhoto
+                         ff:ff
+          completionHandler:errorCallback];
+    };
     WMPhoto *photo = woundPhoto.photo;
     if (nil == photo.photo) {
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Downloading photo";
         [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", photo.ffUrl, WMPhotoAttributes.photo]] executeAsyncWithBlock:^(FFReadResponse *response) {
             NSData *photoData = [response rawResponseData];

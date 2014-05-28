@@ -287,7 +287,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (IBAction)createAccountAction:(id)sender
 {
     [self.view endEditing:YES];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building account";
     [self performSelector:@selector(delayedCreateAccountAction) withObject:nil afterDelay:0.0];
 }
 
@@ -345,15 +345,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 [ffm createParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];
-                    } else {
-                        WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-                        [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-                        }];
                     }
+                    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                    }];
                 }];
             };
             NSString *lastUserName = userDefaultsManager.lastUserName;

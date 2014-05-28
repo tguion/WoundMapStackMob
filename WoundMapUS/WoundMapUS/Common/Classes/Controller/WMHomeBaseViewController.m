@@ -1354,11 +1354,10 @@
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf navigateToPhoto:navigationNode];
-            [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
         }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf navigateToPhoto:navigationNode];
+        [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]

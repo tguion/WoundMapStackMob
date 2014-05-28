@@ -450,18 +450,29 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
 
 - (NSArray *)createEditEventsForParticipant:(WMParticipant *)participant
 {
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     NSArray *addedValues = self.woundMeasurementValuesAdded;
     NSArray *deletedValues = self.woundMeasurementValuesRemoved;
     NSMutableArray *events = [NSMutableArray array];
     for (WMWoundMeasurementValue *value in addedValues) {
+        NSString *v = value.value;
+        if (nil == v) {
+            if (value.amountQualifier) {
+                v = value.amountQualifier.title;
+            } else if (value.odor) {
+                v = value.odor.title;
+            } else {
+                v = value.title;
+            }
+        }
         [events addObject:[self interventionEventForChangeType:InterventionEventChangeTypeAdd
                                                          title:value.woundMeasurement.title
                                                      valueFrom:nil
-                                                       valueTo:(value.value == nil ? value.title:value.value)
+                                                       valueTo:v
                                                           type:nil
                                                    participant:participant
                                                         create:YES
-                                          managedObjectContext:self.managedObjectContext]];
+                                          managedObjectContext:managedObjectContext]];
         DLog(@"Created add event %@", value.woundMeasurement.title);
     }
     for (WMWoundMeasurementValue *value in deletedValues) {
@@ -472,10 +483,10 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                           type:nil
                                                    participant:participant
                                                         create:YES
-                                          managedObjectContext:self.managedObjectContext]];
+                                          managedObjectContext:managedObjectContext]];
         DLog(@"Created delete event %@", value.title);
     }
-    for (WMWoundMeasurementValue *value in [self.managedObjectContext updatedObjects]) {
+    for (WMWoundMeasurementValue *value in [managedObjectContext updatedObjects]) {
         if ([value isKindOfClass:[WMWoundMeasurementValue class]]) {
             NSString *oldValue = nil;
             NSString *newValue = nil;
@@ -504,7 +515,7 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                               type:nil
                                                        participant:participant
                                                             create:YES
-                                              managedObjectContext:self.managedObjectContext]];
+                                              managedObjectContext:managedObjectContext]];
             DLog(@"Created event %@->%@", oldValue, newValue);
         }
     }
