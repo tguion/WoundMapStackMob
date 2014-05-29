@@ -7,6 +7,7 @@ SET AllowNewCollections         false
 SET AllowNewObjectTypes         false
 SET AllowNewMembers             false
 SET AllowSystemUserToLogin      true
+SET SystemUserPassword			Pontil00
 SET AndroidPushAuthToken        YOUR_ANDROID_AUTH_TOKEN_GOES_HERE
 SET ApplePushKeystorePassword   YOUR_KEYSTORE_PASSWORD_GOES_HERE
 SET ApplePushUsingProduction    false
@@ -26,18 +27,20 @@ CREATE OBJECTTYPE FFUserGroup (groupName STRING, users GRABBAG /FFUser)
 CREATE OBJECTTYPE FFNotificationID (idType STRING, idValue STRING)
 
 CREATE OBJECTTYPE WMParticipantType (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, loincCode STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, title STRING, updatedAt DATE)
-CREATE OBJECTTYPE WMParticipant (createdAt DATE, dateLastSignin DATE, email STRING, ffUrl STRING, flags NUMERIC, guid STRING, name STRING, permissions NUMERIC, thumbnail BYTEARRAY, updatedAt DATE, userName STRING, user REFERENCE /FFUser, organization REFERENCE /WMOrganization, participantType REFERENCE /WMParticipantType, person REFERENCE /WMPerson, team REFERENCE /WMTeam, teamInvitation REFERENCE /WMTeamInvitation, patients GRABBAG /WMPatient, acquiredConsults GRABBAG /WMPatientConsult, interventionEvents GRABBAG /WMInterventionEvent)
+CREATE OBJECTTYPE WMParticipant (bio STRING, createdAt DATE, dateAddedToTeam DATE, dateLastSignin DATE, dateTeamSubscriptionExpires DATE, email STRING, ffUrl STRING, flags NUMERIC, guid STRING, lastTokenCreditPurchaseDate DATE, name STRING, permissions NUMERIC, reportTokenCount NUMERIC, thumbnail BYTEARRAY, updatedAt DATE, userName STRING, user REFERENCE /FFUser, organization REFERENCE /WMOrganization, participantType REFERENCE /WMParticipantType, person REFERENCE /WMPerson, team REFERENCE /WMTeam, teamInvitation REFERENCE /WMTeamInvitation, patients GRABBAG /WMPatient, acquiredConsults GRABBAG /WMPatientConsult, interventionEvents GRABBAG /WMInterventionEvent, sourceReferrals GRABBAG /WMPatientReferral, targetReferrals GRABBAG /WMPatientReferral)
 CREATE OBJECTTYPE WMPatientConsult (acquiredFlag BOOLEAN, createdAt DATE, dateAcquired DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE)
-CREATE OBJECTTYPE WMInterventionEvent (changeType NUMERIC, createdAt DATE, dateEvent DATE, datePushed DATE, ffUrl STRING, path STRING, title STRING, updatedAt DATE, valueFrom STRING, valueTo STRING, carePlanGroup REFERENCE /WMCarePlanGroup, deviceGroup REFERENCE /WMDeviceGroup, eventType REFERENCE /WMInterventionEventType, measurementGroup REFERENCE /WMWoundMeasurementGroup, medicationGroup REFERENCE /WMMedicationGroup, participant REFERENCE /WMParticipant, psychoSocialGroup REFERENCE /WMPsychoSocialGroup, skinAssessmentGroup REFERENCE /WMSkinAssessmentGroup, treatmentGroup REFERENCE /WMWoundTreatmentGroup)
+CREATE OBJECTTYPE WMInterventionEvent (changeType NUMERIC, createdAt DATE, dateEvent DATE, datePushed DATE, ffUrl STRING, path STRING, title STRING, updatedAt DATE, valueFrom STRING, valueTo STRING, carePlanGroup REFERENCE /WMCarePlanGroup, deviceGroup REFERENCE /WMDeviceGroup, eventType REFERENCE /WMInterventionEventType, measurementGroup REFERENCE /WMWoundMeasurementGroup, medicationGroup REFERENCE /WMMedicationGroup, nutritionGroup REFERENCE /WMNutritionGroup, participant REFERENCE /WMParticipant, psychoSocialGroup REFERENCE /WMPsychoSocialGroup, skinAssessmentGroup REFERENCE /WMSkinAssessmentGroup, treatmentGroup REFERENCE /WMWoundTreatmentGroup)
 
 CREATE OBJECTTYPE WMTelecomType (createdAt DATE, ffUrl STRING, flags NUMERIC, icon STRING, sortRank NUMERIC, title STRING, updatedAt DATE)
 CREATE OBJECTTYPE WMTelecom (createdAt DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE, use STRING, value STRING, person REFERENCE /WMPerson, telecomType REFERENCE /WMTelecomType);
 CREATE OBJECTTYPE WMAddress (city STRING, country STRING, createdAt DATE, ffUrl STRING, postalCode STRING, state STRING, streetAddressLine STRING, streetAddressLine1 STRING, updatedAt DATE, organization REFERENCE /WMOrganization, person REFERENCE /WMPerson)
 CREATE OBJECTTYPE WMPerson (createAt DATE, ffUrl STRING, flags NUMERIC, nameFamily STRING, nameGiven STRING, namePrefix STRING, nameSuffix STRING, updatedAt DATE, participant REFERENCE /WMParticipant, patient REFERENCE /WMPatient, addresses GRABBAG /WMAddress, telecoms GRABBAG /WMTelecom)
-CREATE OBJECTTYPE WMTeam (createdAt DATE, ffUrl STRING, flags NUMERIC, name STRING, updatedAt DATE, consultingGroup REFERENCE /WMConsultingGroup, participantGroup REFERENCE /FFUserGroup, invitations GRABBAG /WMTeamInvitation, navigationTracks GRABBAG /WMNavigationTrack, participants GRABBAG /WMParticipant, patients GRABBAG /WMPatient)
-CREATE OBJECTTYPE WMTeamInvitation (acceptedFlag BOOLEAN, createdAt DATE, ffUrl STRING, flags NUMERIC, inviteeUserName STRING, passcode NUMERIC, updatedAt DATE, invitee REFERENCE /WMParticipant, team REFERENCE /WMTeam)
-CREATE OBJECTTYPE WMPatient (acquiredByConsultant BOOLEAN, archivedFlag BOOLEAN, createdAt DATE, updatedAt DATE, dateOfBirth DATE, flags NUMERIC, gender STRING, patientStatusMessages STRING, relevantMedications STRING, ssn STRING, surgicalHistory STRING, thumbnail BYTEARRAY, bradenScales GRABBAG /WMBradenScale, carePlanGroups GRABBAG /WMCarePlanGroup, deviceGroups GRABBAG /WMDeviceGroup, ids GRABBAG /WMId, medicalHistoryGroups GRABBAG /WMMedicalHistoryGroup, medicationGroups GRABBAG /WMMedicationGroup, person REFERENCE /WMPerson, participant REFERENCE /WMParticipant, patientConsultants GRABBAG /WMPatientConsult, team REFERENCE /WMTeam, psychosocialGroups GRABBAG /WMPsychoSocialGroup, skinAssessmentGroups GRABBAG /WMSkinAssessmentGroup, stage REFERENCE /WMNavigationStage, wounds GRABBAG /WMWound, consultantGroup REFERENCE /FFUserGroup)
-CREATE OBJECTTYPE WMConsultingGroup (createdAt DATE, ffUrl STRING, flags NUMERIC, name STRING, updatedAt DATE, team REFERENCE /WMTeam)
+CREATE OBJECTTYPE WMTeam (createdAt DATE, ffUrl STRING, flags NUMERIC, iapTeamMemberSuccessCount NUMERIC, name STRING, updatedAt DATE, consultingGroup REFERENCE /WMConsultingGroup, participantGroup REFERENCE /FFUserGroup, invitations GRABBAG /WMTeamInvitation, navigationTracks GRABBAG /WMNavigationTrack, participants GRABBAG /WMParticipant, patients GRABBAG /WMPatient, teamPolicy REFERENCE /WMTeamPolicy)
+CREATE OBJECTTYPE WMTeamInvitation (acceptedFlag BOOLEAN, createdAt DATE, ffUrl STRING, flags NUMERIC, invitationMessage STRING, inviteeUserName STRING, passcode NUMERIC, updatedAt DATE, invitee REFERENCE /WMParticipant, team REFERENCE /WMTeam)
+CREATE OBJECTTYPE WMTeamPolicy (createdAt DATE, deletePhotoBlobs BOOLEAN, ffUrl STRING, flags NUMERIC, numberOfMonthsToDeletePhotoBlobs NUMERIC, updatedAt DATE, team REFERENCE /WMTeam)
+CREATE OBJECTTYPE WMPatient (acquiredByConsultant BOOLEAN, archivedFlag BOOLEAN, createdAt DATE, createdOnDeviceId STRING, updatedAt DATE, dateOfBirth DATE, flags NUMERIC, gender STRING, patientStatusMessages STRING, relevantMedications STRING, ssn STRING, surgicalHistory STRING, thumbnail BYTEARRAY, bradenScales GRABBAG /WMBradenScale, carePlanGroups GRABBAG /WMCarePlanGroup, deviceGroups GRABBAG /WMDeviceGroup, ids GRABBAG /WMId, medicalHistoryGroups GRABBAG /WMMedicalHistoryGroup, medicationGroups GRABBAG /WMMedicationGroup, nutritionGroups GRABBAG /WMNutritionGroup, person REFERENCE /WMPerson, participant REFERENCE /WMParticipant, patientConsultants GRABBAG /WMPatientConsult, team REFERENCE /WMTeam, psychosocialGroups GRABBAG /WMPsychoSocialGroup, referrals GRABBAG /WMPatientReferral, skinAssessmentGroups GRABBAG /WMSkinAssessmentGroup, stage REFERENCE /WMNavigationStage, wounds GRABBAG /WMWound, consultantGroup REFERENCE /FFUserGroup)
+CREATE OBJECTTYPE WMConsultingGroup (createdAt DATE, ffUrl STRING, flags NUMERIC, name STRING, webURL STRING, updatedAt DATE, team REFERENCE /WMTeam)
+CREATE OBJECTTYPE WMPatientReferral (createdAt DATE, dateAccepted DATE, ffUrl STRING, flags NUMERIC, message STRING, updatedAt DATE, patient REFERENCE /WMPatient, referree REFERENCE /WMParticipant, referrer REFERENCE /WMParticipant)
 CREATE OBJECTTYPE WMOrganization (createdAt DATE, ffUrl STRING, flags NUMERIC, name STRING, updatedAt DATE, addresses GRABBAG /WMAddress, ids GRABBAG /WMId, participants GRABBAG /WMParticipant)
 
 CREATE OBJECTTYPE WMWoundType (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, label STRING, loincCode STRING, options STRING, placeHolder STRING, sectionTitle STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, title STRING, updatedAt DATE, valueTypeCode NUMERIC, woundTypeCode NUMERIC, parent REFERENCE /WMWoundType)
@@ -47,7 +50,7 @@ CREATE OBJECTTYPE WMWoundOdor (createdAt DATE, definition STRING, ffUrl STRING, 
 CREATE OBJECTTYPE WMBradenScale (closedFlag BOOLEAN, completeFlag BOOLEAN, createdAt DATE, ffUrl STRING, flags NUMERIC, score NUMERIC, updatedAt DATE, patient REFERENCE /WMPatient, sections GRABBAG /WMBradenSection)
 CREATE OBJECTTYPE WMBradenSection (createdAt DATE, desc STRING, ffUrl STRING, sortRank NUMERIC, title STRING, updatedAt DATE, bradenScale REFERENCE /WMBradenScale, cells GRABBAG /WMBradenCell)
 CREATE OBJECTTYPE WMBradenCell (createdAt DATE, ffUrl STRING, primaryDescription STRING, secondaryDescription STRING, selectedFlag BOOLEAN, title STRING, updatedAt DATE, value NUMERIC, section REFERENCE /WMBradenSection)
-CREATE OBJECTTYPE WMCarePlanCategory (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, iapIdentifier STRING, keyboardType NUMERIC, label STRING, loincCode STRING, options STRING, placeHolder STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, title STRING, updatedAt DATE, valueTypeCode NUMERIC, parent REFERENCE /WMCarePlanCategory, woundTypes GRABBAG /WMWoundType)
+CREATE OBJECTTYPE WMCarePlanCategory (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, iapIdentifier STRING, keyboardType NUMERIC, label STRING, loincCode STRING, options STRING, placeHolder STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, title STRING, updatedAt DATE, valueTypeCode NUMERIC, parent REFERENCE /WMCarePlanCategory, subcategories GRABBAG /WMCarePlanCategory, values GRABBAG /WMCarePlanValue, woundTypes GRABBAG /WMWoundType)
 CREATE OBJECTTYPE WMCarePlanGroup (closedFlag BOOLEAN, continueCount NUMERIC, createdAt DATE, datePushed DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE, interventionEvents GRABBAG /WMInterventionEvent, patient REFERENCE /WMPatient, status REFERENCE /WMInterventionStatus, values GRABBAG /WMCarePlanValue)
 CREATE OBJECTTYPE WMCarePlanValue (createdAt DATE, ffUrl STRING, flags NUMERIC, revisedFlag BOOLEAN, title STRING, updatedAt DATE, value STRING, category REFERENCE /WMCarePlanCategory, group REFERENCE /WMCarePlanGroup)
 CREATE OBJECTTYPE WMDevice (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, label STRING, loincCode STRING, options STRING, placeHolder STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, title STRING, updatedAt DATE, valueTypeCode NUMERIC, category REFERENCE /WMDeviceCategory, values GRABBAG /WMDeviceValue)
@@ -64,7 +67,7 @@ CREATE OBJECTTYPE WMMedicationGroup (closedFlag BOOLEAN, continueCount NUMERIC, 
 CREATE OBJECTTYPE WMPsychoSocialGroup (closedFlag BOOLEAN, createdAt DATE, datePushed DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE, patient REFERENCE /WMPatient, status REFERENCE /WMInterventionStatus, interventionEvents GRABBAG /WMInterventionEvent, values GRABBAG /WMPsychoSocialValue)
 CREATE OBJECTTYPE WMPsychoSocialItem (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, iapIdentifier STRING, loincCode STRING, options STRING, prefixTitle STRING, score NUMERIC, sectionTitle STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, subitemPrompt STRING, subtitle STRING, title STRING, updatedAt DATE, valueTypeCode NUMERIC, parentItem REFERENCE /WMPsychoSocialItem, subitems GRABBAG /WMPsychoSocialItem, values GRABBAG /WMPsychoSocialValue, woundTypes GRABBAG /WMWoundType)
 CREATE OBJECTTYPE WMPsychoSocialValue (createdAt DATE, datePushed DATE, ffUrl STRING, flags NUMERIC, revisedFlag BOOLEAN, title STRING, updatedAt DATE, value STRING, group REFERENCE /WMPsychoSocialGroup, psychoSocialItem REFERENCE /WMPsychoSocialItem)
-CREATE OBJECTTYPE WMWound (createdAt DATE, desc STRING, ffUrl STRING, flags NUMERIC, name STRING, sortRank NUMERIC, updatedAt DATE, woundLocationValue STRING, woundTypeValue STRING, locationValue REFERENCE /WMWoundLocationValue, patient REFERENCE /WMPatient, woundType REFERENCE /WMWoundType, measurementGroups GRABBAG /WMWoundMeasurementGroup, photos GRABBAG /WMWoundPhoto, positionValues GRABBAG /WMWoundPositionValue, treatmentGroups GRABBAG /WMWoundTreatmentGroup)
+CREATE OBJECTTYPE WMWound (createdAt DATE, desc STRING, ffUrl STRING, flags NUMERIC, history STRING, name STRING, sortRank NUMERIC, updatedAt DATE, woundLocationValue STRING, woundTypeValue STRING, locationValue REFERENCE /WMWoundLocationValue, patient REFERENCE /WMPatient, woundType REFERENCE /WMWoundType, measurementGroups GRABBAG /WMWoundMeasurementGroup, photos GRABBAG /WMWoundPhoto, positionValues GRABBAG /WMWoundPositionValue, treatmentGroups GRABBAG /WMWoundTreatmentGroup)
 CREATE OBJECTTYPE WMWoundMeasurementGroup (closedFlag BOOLEAN, continueCount NUMERIC, createdAt DATE, datePushed DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE, interventionEvents GRABBAG /WMInterventionEvent, status REFERENCE /WMInterventionStatus, values GRABBAG /WMWoundMeasurementValue, wound REFERENCE /WMWound, woundPhoto REFERENCE /WMWoundPhoto)
 CREATE OBJECTTYPE WMWoundMeasurementValue (createdAt DATE, datePushed DATE, ffUrl STRING, flags NUMERIC, fromOClockValue NUMERIC, revisedFlag BOOLEAN, sectionTitle STRING, sortRank NUMERIC, title STRING, toOClockValue NUMERIC, updatedAt DATE, value STRING, woundMeasurementValueType NUMERIC, amountQualifier REFERENCE /WMAmountQualifier, group REFERENCE /WMWoundMeasurementGroup, odor REFERENCE /WMWoundOdor, woundMeasurement REFERENCE /WMWoundMeasurement)
 CREATE OBJECTTYPE WMWoundPhoto (comments STRING, createdAt DATE, ffUrl STRING, flags NUMERIC, imageHeight NUMERIC, imageOrientation NUMERIC, imageWidth NUMERIC, metadata STRING, thumbnail BYTEARRAY, thumbnailLarge BYTEARRAY, thumbnailMini BYTEARRAY, transformAsString STRING, transformRotation NUMERIC, transformScale NUMERIC, transformSizeAsString STRING, transformTranslationX NUMERIC, transformTranslationY NUMERIC, updatedAt DATE, measurementGroups GRABBAG /WMWoundMeasurementGroup, photos GRABBAG /WMPhoto, wound REFERENCE /WMWound)
@@ -87,9 +90,15 @@ CREATE OBJECTTYPE WMMedicalHistoryItem (createdAt DATE, definition STRING, ffUrl
 CREATE OBJECTTYPE WMMedicalHistoryValue (createdAt DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE, value STRING, medicalHistoryGroup REFERENCE /WMMedicalHistoryGroup, medicalHistoryItem REFERENCE /WMMedicalHistoryItem)
 CREATE OBJECTTYPE WMMedicalHistoryGroup (createdAt DATE, ffUrl STRING, flags NUMERIC, updatedAt DATE, patient REFERENCE /WMPatient, values GRABBAG /WMMedicalHistoryValue)
 
+CREATE OBJECTTYPE WMNutritionItem (createdAt DATE, definition STRING, ffUrl STRING, flags NUMERIC, loincCode STRING, snomedCID NUMERIC, snomedFSN STRING, sortRank NUMERIC, title STRING, updatedAt DATE, valueTypeCode NUMERIC, values GRABBAG /WMNutritionValue)
+CREATE OBJECTTYPE WMNutritionGroup (closedFlag BOOLEAN, continueCount NUMERIC, createdAt DATE, datePushed DATE, ffUrl STRING, flags NUMERIC, loincCode STRING, snomedCID NUMERIC, snomedFSN STRING, updatedAt DATE, interventionEvents GRABBAG /WMInterventionEvent, patient REFERENCE /WMPatient, status REFERENCE /WMInterventionStatus, values GRABBAG /WMNutritionValue)
+CREATE OBJECTTYPE WMNutritionValue (createdAt DATE, ffUrl STRING, flags NUMERIC, title STRING, updatedAt DATE, value STRING, item REFERENCE /WMNutritionItem, nutritionGroup REFERENCE /WMNutritionGroup)
+
 CREATE OBJECTTYPE WMNavigationTrack (activeFlag BOOLEAN, createdAt DATE, desc STRING, disabledFlag BOOLEAN, displayTitle STRING, ffUrl STRING, flags NUMERIC, icon STRING, sortRank NUMERIC, title STRING, updatedAt DATE, stages GRABBAG /WMNavigationStage, team REFERENCE /WMTeam)
 CREATE OBJECTTYPE WMNavigationStage (createdAt DATE, desc STRING, disabledFlag BOOLEAN, displayTitle STRING, ffUrl STRING, flags NUMERIC, icon STRING, sortRank NUMERIC, title STRING, updatedAt DATE, nodes GRABBAG /WMNavigationNode, track REFERENCE /WMNavigationTrack)
 CREATE OBJECTTYPE WMNavigationNode (activeFlag BOOLEAN, closeUnit NUMERIC, closeValue NUMERIC, createdAt DATE, desc STRING, disabledFlag BOOLEAN, displayTitle STRING, ffUrl STRING, flags NUMERIC, frequencyUnit NUMERIC, frequencyValue NUMERIC, iapIdentifier STRING, icon STRING, patientFlag BOOLEAN, requiresPatientFlag BOOLEAN, requiresWoundFlag BOOLEAN, requiresWoundPhotoFlag BOOLEAN, sortRank NUMERIC, taskIdentifier NUMERIC, title STRING, updatedAt DATE, userSortRank NUMERIC, woundFlag BOOLEAN, woundTypeCodes STRING, parentNode REFERENCE /WMNavigationNode, stage REFERENCE /WMNavigationStage, subnodes GRABBAG /WMNavigationNode)
+
+CREATE OBJECTTYPE WMPaymentTransaction (appliedFlag BOOLEAN, username STRING, createdAt DATE, errorCode NUMERIC, errorMessage STRING, ffUrl STRING, flags NUMERIC, originalTransactionIdentifier STRING, productIdentifier STRING, quantity NUMERIC, transactionDate DATE, transactionIdentifier STRING, transactionState NUMERIC, updatedAt DATE)
 
 #
 # Collection Resources
@@ -101,8 +110,10 @@ CREATE COLLECTION /FFNotificationID OBJECTTYPE FFNotificationID
 CREATE COLLECTION /WMParticipantType OBJECTTYPE WMParticipantType
 CREATE COLLECTION /WMParticipant OBJECTTYPE WMParticipant
 CREATE COLLECTION /WMTeam OBJECTTYPE WMTeam
+CREATE COLLECTION /WMTeamPolicy OBJECTTYPE WMTeamPolicy
 CREATE COLLECTION /WMPatientConsult OBJECTTYPE WMPatientConsult
 CREATE COLLECTION /WMConsultingGroup OBJECTTYPE WMConsultingGroup
+CREATE COLLECTION /WMPatientReferral OBJECTTYPE WMPatientReferral
 CREATE COLLECTION /WMOrganization OBJECTTYPE WMOrganization
 
 CREATE COLLECTION /WMTelecomType OBJECTTYPE WMTelecomType
@@ -149,8 +160,8 @@ CREATE COLLECTION /WMWoundTreatment OBJECTTYPE WMWoundTreatment
 CREATE COLLECTION /WMWoundTreatmentValue OBJECTTYPE WMWoundTreatmentValue
 CREATE COLLECTION /WMWoundTreatmentGroup OBJECTTYPE WMWoundTreatmentGroup
 CREATE COLLECTION /WMWoundMeasurement OBJECTTYPE WMWoundMeasurement
-CREATE COLLECtION /WMWoundPhoto OBJECTTYPE WMWoundPhoto
-CREATE COLLECtION /WMPhoto OBJECTTYPE WMPhoto
+CREATE COLLECTION /WMWoundPhoto OBJECTTYPE WMWoundPhoto
+CREATE COLLECTION /WMPhoto OBJECTTYPE WMPhoto
 CREATE COLLECTION /WMSkinAssessmentCategory OBJECTTYPE WMSkinAssessmentCategory
 CREATE COLLECTION /WMSkinAssessment OBJECTTYPE WMSkinAssessment
 CREATE COLLECTION /WMSkinAssessmentGroup OBJECTTYPE WMSkinAssessmentGroup
@@ -159,9 +170,15 @@ CREATE COLLECTION /WMMedicalHistoryItem OBJECTTYPE WMMedicalHistoryItem
 CREATE COLLECTION /WMMedicalHistoryValue OBJECTTYPE WMMedicalHistoryValue
 CREATE COLLECTION /WMMedicalHistoryGroup OBJECTTYPE WMMedicalHistoryGroup
 
+CREATE COLLECTION /WMNutritionItem OBJECTTYPE WMNutritionItem
+CREATE COLLECTION /WMNutritionGroup OBJECTTYPE WMNutritionGroup
+CREATE COLLECTION /WMNutritionValue OBJECTTYPE WMNutritionValue
+
 CREATE COLLECTION /WMNavigationTrack OBJECTTYPE WMNavigationTrack
 CREATE COLLECTION /WMNavigationStage OBJECTTYPE WMNavigationStage
 CREATE COLLECTION /WMNavigationNode OBJECTTYPE WMNavigationNode
+
+CREATE COLLECTION /WMPaymentTransaction OBJECTTYPE WMPaymentTransaction
 
 #
 # ALIAS
@@ -173,22 +190,55 @@ CREATE COLLECTION /WMNavigationNode OBJECTTYPE WMNavigationNode
 #
 # Permits
 #
+PERMIT read:public write:public ON /WMInterventionStatus
+
+PERMIT read:public write:public ON /WMAddress
+PERMIT read:public write:public ON /WMTelecom
+PERMIT read:public write:public ON /WMOrganization
+PERMIT read:public write:public ON /WMId
+
 PERMIT read:public write:object.team.participantGroup ON /WMParticipant
 PERMIT read:public write:object.invitee.user ON /WMTeamInvitation
+PERMIT read:object.participantGroup write:object.participantGroup ON /WMTeam
+PERMIT read:object.team.participantGroup write:object.team.participantGroup ON /WMTeamPolicy
 PERMIT read:object.team.participantGroup,object.consultantGroup write:object.team.participantGroup,object.consultantGroup ON /WMPatient
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMBradenScale
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMCarePlanGroup
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMDeviceGroup
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMId
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMMedicalHistoryGroup
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMMedicationGroup
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMPatientConsult
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMPsychoSocialGroup
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMSkinAssessmentGroup
-PERMIT read:object.patient.participantGroup,object.patient.consultantGroup write:object.patient.participantGroup,object.patient.consultantGroup ON /WMWound
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMPatientReferral
+PERMIT read:public write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMPerson
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMBradenScale
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMCarePlanGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMDeviceGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMMedicalHistoryGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMMedicationGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMPatientConsult
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMPsychoSocialGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMNutritionGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMSkinAssessmentGroup
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMWound
+
+PERMIT read:object.bradenScale.patient.team.participantGroup,object.bradenScale.patient.consultantGroup write:object.bradenScale.patient.team.participantGroup,object.bradenScale.patient.consultantGroup ON /WMBradenSection
+PERMIT read:object.section.bradenScale.patient.team.participantGroup,object.section.bradenScale.patient.consultantGroup write:object.section.bradenScale.patient.team.participantGroup,object.section.bradenScale.patient.consultantGroup ON /WMBradenCell
+PERMIT read:object.group.patient.team.participantGroup,object.group.patient.consultantGroup write:object.group.patient.team.participantGroup,object.group.patient.consultantGroup ON /WMCarePlanValue
+PERMIT read:object.group.patient.team.participantGroup,object.group.patient.consultantGroup write:object.group.patient.team.participantGroup,object.group.patient.consultantGroup ON /WMDeviceValue
+PERMIT read:object.group.patient.team.participantGroup,object.group.patient.consultantGroup write:object.group.patient.team.participantGroup,object.group.patient.consultantGroup ON /WMPsychoSocialValue
+PERMIT read:object.group.patient.team.participantGroup,object.group.patient.consultantGroup write:object.group.patient.team.participantGroup,object.group.patient.consultantGroup ON /WMNutritionValue
+PERMIT read:object.group.patient.team.participantGroup,object.group.patient.consultantGroup write:object.group.patient.team.participantGroup,object.group.patient.consultantGroup ON /WMSkinAssessmentValue
+PERMIT read:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup write:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup ON /WMWoundLocationValue
+PERMIT read:object.medicalHistoryGroup.patient.team.participantGroup,object.medicalHistoryGroup.patient.consultantGroup write:object.medicalHistoryGroup.patient.team.participantGroup,object.medicalHistoryGroup.patient.consultantGroup ON /WMMedicalHistoryValue
+
+PERMIT read:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup write:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup ON /WMWoundMeasurementGroup
+PERMIT read:object.group.wound.patient.team.participantGroup,object.group.wound.patient.consultantGroup write:object.group.wound.patient.team.participantGroup,object.group.wound.patient.consultantGroup ON /WMWoundMeasurementValue
+
+PERMIT read:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup write:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup ON /WMWoundTreatmentGroup
+PERMIT read:object.group.wound.patient.team.participantGroup,object.group.wound.patient.consultantGroup write:object.group.wound.patient.team.participantGroup,object.group.wound.patient.consultantGroup ON /WMWoundTreatmentValue
+
+PERMIT read:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup write:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup ON /WMWoundPositionValue
+
+PERMIT read:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup write:object.wound.patient.team.participantGroup,object.wound.patient.consultantGroup ON /WMWoundPhoto
+PERMIT read:object.woundPhoto.wound.patient.team.participantGroup,object.woundPhoto.wound.patient.consultantGroup write:object.woundPhoto.wound.patient.team.participantGroup,object.woundPhoto.wound.patient.consultantGroup ON /WMPhoto
 
 PERMIT read:object.team.participantGroup write:object.team.participantGroup ON /WMNavigationTrack
-PERMIT write:object.stage.track.team.participantGroup ON /WMNavigationNode
+PERMIT read:public write:object.track.team.participantGroup ON /WMNavigationStage
+PERMIT read:object.stage.track.team.participantGroup write:object.stage.track.team.participantGroup ON /WMNavigationNode
 
 #
 # Event Handlers
