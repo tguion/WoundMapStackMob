@@ -146,7 +146,7 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
                 }
             }];
         } else {
-            [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
+            [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:self.participant.guid];
         }
     }
     if (nil != _patient) {
@@ -200,13 +200,13 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
     _wound = wound;
     if (nil != _wound) {
         [[WMUserDefaultsManager sharedInstance] setLastWoundFFURLOnDevice:wound.ffUrl forPatientFFURL:self.patient.ffUrl];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[_wound objectID]];
         WMErrorCallback block = ^(NSError *error) {
             if (error) {
                 [WMUtilities logError:error];
             }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[_wound objectID]];
         };
-        [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups]
+        [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups, WMWoundRelationships.positionValues]
                                                   aggregator:_wound
                                                           ff:[WMFatFractal sharedInstance]
                                            completionHandler:block];
