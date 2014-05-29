@@ -12,7 +12,6 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 @interface WMWoundMeasurementGroup : _WMWoundMeasurementGroup {}
 
 + (WMWoundMeasurementGroup *)woundMeasurementGroupInstanceForWound:(WMWound *)wound woundPhoto:(WMWoundPhoto *)woundPhoto;
-+ (WMWoundMeasurementGroup *)woundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto;
 + (WMWoundMeasurementGroup *)woundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto create:(BOOL)create;
 + (WMWoundMeasurementGroup *)activeWoundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto;
 + (NSDate *)mostRecentWoundMeasurementGroupDateModified:(WMWoundPhoto *)woundPhoto;

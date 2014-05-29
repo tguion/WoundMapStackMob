@@ -395,7 +395,7 @@
     CGRect frameLeft = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
     placeHolderView = self.rightDataView;
     CGRect frameRight = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
-    [self drawAttributedStringForDataSource:[WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto]
+    [self drawAttributedStringForDataSource:[WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO]
                                    rectLeft:frameLeft
                                  rectMiddle:CGRectZero
                                   rectRight:frameRight];
@@ -452,7 +452,7 @@
 
 - (BOOL)woundAssessmentRequiresFullPage:(WMWoundPhoto *)woundPhoto
 {
-    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto];
+    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO];
     if (nil == woundMeasurementGroup) {
         return NO;
     }
@@ -514,7 +514,7 @@
 
 - (CGFloat)drawAssessmentForWoundPhoto:(WMWoundPhoto *)woundPhoto atIndex:(NSInteger)index
 {
-    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto];
+    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO];
     UIView *placeHolderView = (index % 2 == 0 ? self.leftDataView:self.rightDataView);
     CGRect aFrame = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
     return [self drawAttributedStringForDataSource:woundMeasurementGroup

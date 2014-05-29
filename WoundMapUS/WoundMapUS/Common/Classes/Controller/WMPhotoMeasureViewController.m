@@ -43,8 +43,9 @@
 
 - (void)updateModel
 {
-    self.woundPhoto.measurementGroup.measurementValueLength.value = [self.lengthInCentimeters stringValue];
-    self.woundPhoto.measurementGroup.measurementValueWidth.value = [self.widthInCentimeters stringValue];
+    WMWoundMeasurementGroup *measurementGroup = self.woundPhoto.measurementGroup;
+    measurementGroup.measurementValueLength.value = [self.lengthInCentimeters stringValue];
+    measurementGroup.measurementValueWidth.value = [self.widthInCentimeters stringValue];
 }
 
 - (void)resetMeasurementViews
@@ -173,7 +174,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMWoundPhoto *woundPhoto = self.woundPhoto;
     WMWound *wound = woundPhoto.wound;
-    WMWoundMeasurementGroup *woundMeasurementGroup = self.woundPhoto.measurementGroup;
+    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:YES];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
@@ -182,28 +183,25 @@
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            --counter;
-            if (counter == 0) {
-                block();
-            }
+        }
+        if (--counter == 0) {
+            block();
         }
     };
     FFHttpMethodCompletion createdCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            ++counter;
-            [ff grabBagAddItemAtFfUrl:woundMeasurementGroup.ffUrl
-                         toObjAtFfUrl:wound.ffUrl
-                          grabBagName:WMWoundRelationships.measurementGroups
-                           onComplete:completionHandler];
-            ++counter;
-            [ff grabBagAddItemAtFfUrl:woundMeasurementGroup.ffUrl
-                         toObjAtFfUrl:woundPhoto.ffUrl
-                          grabBagName:WMWoundPhotoRelationships.measurementGroups
-                           onComplete:completionHandler];
         }
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:woundMeasurementGroup.ffUrl
+                     toObjAtFfUrl:wound.ffUrl
+                      grabBagName:WMWoundRelationships.measurementGroups
+                       onComplete:completionHandler];
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:woundMeasurementGroup.ffUrl
+                     toObjAtFfUrl:woundPhoto.ffUrl
+                      grabBagName:WMWoundPhotoRelationships.measurementGroups
+                       onComplete:completionHandler];
     };
     if (!woundMeasurementGroup.ffUrl) {
         [ff createObj:woundMeasurementGroup

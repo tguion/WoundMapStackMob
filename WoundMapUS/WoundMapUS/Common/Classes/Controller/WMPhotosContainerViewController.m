@@ -292,7 +292,7 @@
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     UIViewController *viewController = nil;
     NSAssert(nil != self.woundPhoto, @"%@.woundPhoto is nil - cannot present measurements controller", NSStringFromClass([self class]));
-    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];  // TODO use objectID
+    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto create:NO];
     if (woundMeasurementGroup.isClosed) {
         WMWoundMeasurementSummaryViewController *woundMeasurementSummaryViewController = self.woundMeasurementSummaryViewController;
         woundMeasurementSummaryViewController.woundMeasurementGroup = woundMeasurementGroup;

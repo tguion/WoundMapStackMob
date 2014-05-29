@@ -72,7 +72,7 @@ typedef enum {
 
 - (WMWoundMeasurementGroup *)measurementGroup
 {
-    return [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self];
+    return [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self create:NO];
 }
 
 + (WMWoundPhoto *)createWoundPhotoForWound:(WMWound *)wound

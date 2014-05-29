@@ -35,11 +35,6 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     return woundMeasurementGroup;
 }
 
-+ (WMWoundMeasurementGroup *)woundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto
-{
-    return [self woundMeasurementGroupForWoundPhoto:woundPhoto create:YES];
-}
-
 + (WMWoundMeasurementGroup *)woundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto create:(BOOL)create
 {
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];

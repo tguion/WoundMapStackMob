@@ -327,7 +327,7 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
 {
     if (nil == _woundMeasurementValueWidth) {
         if (nil != self.woundPhoto) {
-            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto create:NO];
             _woundMeasurementValueWidth = group.measurementValueWidth;
         }
     }
@@ -338,7 +338,7 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
 {
     if (nil == _woundMeasurementValueLength) {
         if (nil != self.woundPhoto) {
-            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto create:NO];
             _woundMeasurementValueLength = group.measurementValueLength;
         }
     }
@@ -349,7 +349,7 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
 {
     if (nil == _woundMeasurementValueDepth) {
         if (nil != self.woundPhoto) {
-            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            WMWoundMeasurementGroup *group = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto create:NO];
             _woundMeasurementValueDepth = group.measurementValueDepth;
         }
     }
@@ -405,6 +405,8 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
 {
     // update wound measurements from back end
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
@@ -473,12 +475,9 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
                 }
             }
         }
-
         [MBProgressHUD hideAllHUDsForView:viewController.view animated:NO];
     };
     [MBProgressHUD showHUDAddedTo:viewController.view animated:YES];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     ++counter;
     ++counter;
     ++counter;
@@ -487,9 +486,6 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
                      ff:[WMFatFractal sharedInstance]
       completionHandler:^(NSError *error) {
           block(error);
-          if (error) {
-              [WMUtilities logError:error];
-          }
           // make sure we have downloaded previous photo
           WMWoundPhoto *referenceWoundPhoto = [woundPhoto.wound referenceWoundPhoto:woundPhoto];
           if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto] && referenceWoundPhoto.thumbnail == nil && !woundPhoto.photoDeletedPerTeamPolicy) {
@@ -787,7 +783,7 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
             self.woundMeasurementValueDepth.value = [depth stringValue];
             // now enter undermining & tunneling
             WMUndermineTunnelViewController *undermineTunnelViewController = self.undermineTunnelViewController;
-            undermineTunnelViewController.woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto];
+            undermineTunnelViewController.woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto create:NO];
             undermineTunnelViewController.showCancelButton = NO;
             [viewController.navigationController pushViewController:undermineTunnelViewController animated:YES];
             break;
