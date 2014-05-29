@@ -64,24 +64,15 @@
         __weak __typeof(&*self)weakSelf = self;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         _medicalHistoryGroup = [WMMedicalHistoryGroup medicalHistoryGroupForPatient:patient];
-        _medicalHistoryGroup.patient = self.patient;
         _medicalHistoryGroupWasCreated = YES;
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             }
-            NSParameterAssert([object isKindOfClass:[WMMedicalHistoryGroup class]]);
             [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [ff grabBagAddItemAtFfUrl:_medicalHistoryGroup.ffUrl
-                         toObjAtFfUrl:patient.ffUrl
-                          grabBagName:WMPatientRelationships.medicalHistoryGroups
-                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                               if (error) {
-                                   [WMUtilities logError:error];
-                               }
-                               [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                           }];
+            [ff queueGrabBagAddItemAtUri:_medicalHistoryGroup.ffUrl toObjAtUri:patient.ffUrl grabBagName:WMPatientRelationships.medicalHistoryGroups];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         };
         [ff createObj:_medicalHistoryGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]

@@ -1050,7 +1050,21 @@
 {
     NSAssert([sender isKindOfClass:[WMNavigationNodeButton class]], @"Expected sender to be NavigationNodeButton: %@", sender);
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
-    [self navigateToPatientDetail:navigationNodeButton];
+    __weak __typeof(&*self)weakSelf = self;
+    WMErrorCallback block = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf navigateToPatientDetail:navigationNodeButton];
+    };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.medicalHistoryGroups]
+                                              aggregator:self.patient
+                                                      ff:[WMFatFractal sharedInstance]
+                                       completionHandler:block];
+
 }
 
 - (IBAction)addPatientAction:(id)sender
