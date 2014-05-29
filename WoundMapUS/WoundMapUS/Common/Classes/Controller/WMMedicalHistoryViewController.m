@@ -184,6 +184,9 @@
     };
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMMedicalHistoryValue *medicalHistoryValue = (WMMedicalHistoryValue *)object;
         [ff queueGrabBagAddItemAtUri:medicalHistoryValue.ffUrl toObjAtUri:_medicalHistoryGroup.ffUrl grabBagName:WMMedicalHistoryGroupRelationships.values];
         [ff queueGrabBagAddItemAtUri:medicalHistoryValue.ffUrl toObjAtUri:medicalHistoryValue.medicalHistoryItem.ffUrl grabBagName:WMMedicalHistoryItemRelationships.values];

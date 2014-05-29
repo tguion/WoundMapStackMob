@@ -515,6 +515,7 @@
         } else {
             WMTelecom *localTelecom = (WMTelecom *)object;
             [ff queueGrabBagAddItemAtUri:localTelecom.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.telecoms];
+            block(error);
         }
     };
     FFHttpMethodCompletion updatePersonOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {

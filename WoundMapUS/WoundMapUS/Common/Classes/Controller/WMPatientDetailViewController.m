@@ -488,7 +488,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    WMPatient *patient = weakSelf.patient;
+    WMPatient *patient = self.patient;
     NSParameterAssert(patient.ffUrl);
     [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

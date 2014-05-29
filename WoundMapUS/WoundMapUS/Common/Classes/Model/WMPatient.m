@@ -37,6 +37,7 @@ typedef enum {
              WMPatientRelationships.deviceGroups,
              WMPatientRelationships.ids,
              WMPatientRelationships.medicationGroups,
+             WMPatientRelationships.medicalHistoryGroups,
              WMPatientRelationships.patientConsultants,
              WMPatientRelationships.psychosocialGroups,
              WMPatientRelationships.skinAssessmentGroups,

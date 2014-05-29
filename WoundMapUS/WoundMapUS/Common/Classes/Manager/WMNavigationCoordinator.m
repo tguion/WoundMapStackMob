@@ -200,10 +200,13 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
     _wound = wound;
     if (nil != _wound) {
         [[WMUserDefaultsManager sharedInstance] setLastWoundFFURLOnDevice:wound.ffUrl forPatientFFURL:self.patient.ffUrl];
+        __weak __typeof(&*self)weakSelf = self;
         WMErrorCallback block = ^(NSError *error) {
             if (error) {
                 [WMUtilities logError:error];
             }
+            // set last wound photo
+            weakSelf.woundPhoto = wound.lastWoundPhoto;
             [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[_wound objectID]];
         };
         [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups, WMWoundRelationships.positionValues]

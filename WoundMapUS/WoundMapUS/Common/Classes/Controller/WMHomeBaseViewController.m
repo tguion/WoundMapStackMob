@@ -74,6 +74,8 @@
     if (self) {
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            weakSelf.compassView.navigationNodeControls = nil;
             [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
             [weakSelf updatePatientWoundComponents];
             [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
@@ -134,7 +136,13 @@
 
 - (NSString *)ffQuery
 {
-    return  [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.patient.ffUrl];
+    NSString *ffQuery = nil;
+    if (self.wound) {
+        ffQuery = [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.wound.ffUrl];
+    } else {
+        ffQuery = [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.patient.ffUrl];
+    }
+    return ffQuery;
 }
 
 - (NSArray *)backendSeedEntityNames
