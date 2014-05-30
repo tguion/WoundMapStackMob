@@ -235,6 +235,7 @@
     if (_removeUndoManagerWhenDone) {
         self.managedObjectContext.undoManager = nil;
     }
+    // RPN push notification to participant.guid, _patientReferral.referree.guid
     [self.delegate createTeamInvitationViewController:self didCreateInvitation:_teamInvitation];
 }
 

@@ -287,6 +287,7 @@
             [WMUtilities logError:error];
         }
         if (--counter == 0) {
+            // RPN push notification to _patientReferral.referrer.guid, _patientReferral.referree.guid, _patientReferral.patient.guid
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];

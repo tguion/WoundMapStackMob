@@ -21,19 +21,22 @@
 #import "WMPhotoManager.h"
 #import "WMUtilities.h"
 #import "KeychainItemWrapper.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
+NSInteger const kRemoteNotification = 4002;
 
 // Instantiating KeychainItemWrapper class as a singleton through AppDelegate
 static KeychainItemWrapper *_keychainItem;
 // Keychain Identifier
 static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
-@interface WCAppDelegate ()
+@interface WCAppDelegate () <UIAlertViewDelegate>
 
 @property (nonatomic, strong, readwrite) CoreDataHelper *coreDataHelper;
 @property (nonatomic, strong, readwrite) WMFatFractal *ff;
 @property (nonatomic, strong, readwrite) WMNavigationCoordinator *navigationCoordinator;
+@property (strong, nonatomic) NSDictionary *remoteNotification;
 
 @end
 
@@ -156,6 +159,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // set up IAP so it hears notifications
     [IAPManager sharedInstance];
     [self initializeInterface];
+    [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     return YES;
 }
 
@@ -219,6 +223,85 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 }
 
+#pragma mark - Remote Notifications
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
+{
+    [[FatFractal main] registerNotificationID:[devToken description]];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    id alertMsg = nil;
+    NSString *otherButton = nil;
+    NSString *badge = nil;
+
+    self.remoteNotification = userInfo;
+    // user already saw the alert and started up the app that way. don't show it to them again.
+    if (([application respondsToSelector: @selector(applicationState)]) && ([application applicationState] == UIApplicationStateInactive)) {
+        [self processRemoteNotification];
+        return;
+    }
+    
+    if (userInfo[@"aps"][@"alert"] != NULL) {
+        alertMsg = userInfo[@"aps"][@"alert"];
+        if (![alertMsg isKindOfClass:[NSString class]])
+            alertMsg = userInfo[@"aps"][@"alert"][@"body"];
+    } else {
+        alertMsg = @"{no alert message in dictionary}";
+    }
+    
+    if (userInfo[@"aps"][@"badge"] != NULL) {
+        badge = userInfo[@"aps"][@"badge"];
+		[application setApplicationIconBadgeNumber:[badge integerValue]];
+    }
+    
+    if (userInfo[@"aps"][@"sound"] != NULL)
+    {
+        //        sound = [[userInfo objectForKey:@"aps"] objectForKey:@"sound"];
+    }
+    
+    if (userInfo[@"aps"][@"alert"][@"action-loc-key"] != NULL) {
+        otherButton = userInfo[@"aps"][@"alert"][@"action-loc-key"];
+    }
+    
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    
+    UIAlertView *alert = nil;
+    
+    if ([otherButton isKindOfClass:[NSString class]]) {
+        alert = [[UIAlertView alloc] initWithTitle: @"Alert"
+                                           message: alertMsg
+                                          delegate: nil
+                                 cancelButtonTitle: @"Close"
+                                 otherButtonTitles: otherButton, nil];
+    } else {
+        alert = [[UIAlertView alloc] initWithTitle: @"Alert"
+                                           message: alertMsg
+                                          delegate: nil
+                                 cancelButtonTitle: @"Close"
+                                 otherButtonTitles: nil];
+    }
+    alert.tag = kRemoteNotification;
+    [alert setDelegate: self];
+    
+    [alert show];
+}
+
+- (void)processRemoteNotification
+{
+    NSNumber *patientId = self.remoteNotification[@"aps"][@"alert"][@"aId"];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kRemoteNotification) {
+        if (buttonIndex == 1)
+            [self processRemoteNotification];
+        self.remoteNotification = nil;
+    }
+}
 
 #pragma mark - Managers
 

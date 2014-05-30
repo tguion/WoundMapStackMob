@@ -109,8 +109,6 @@
         [alertView show];
         return;
     }
-    // TODO: ask to add current patients to team
-    
     // else update invitation to accepted and update back end
     WMTeamInvitation *teamInvitation = self.teamInvitation;
     NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
@@ -122,10 +120,10 @@
        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
            if (error) {
                [WMUtilities logError:error];
-           } else {
-               [managedObjectContext MR_saveToPersistentStoreAndWait];
-               [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
            }
+           // RPN push notification to participant.guid, teamInvitation.inviteeUserName
+           [managedObjectContext MR_saveToPersistentStoreAndWait];
+           [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
            //           FFQueuedOperation *operation = (FFQueuedOperation *)object;
        }];
