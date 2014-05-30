@@ -13,6 +13,7 @@
 #import "WMUtilities.h"
 #import "DictionaryToDataTransformer.h"
 #import "WMNavigationCoordinator.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import <ImageIO/ImageIO.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -25,6 +26,8 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 @property (readonly, nonatomic) WMWoundPhoto *woundPhoto;
+
+@property (strong, nonatomic) NSMutableSet *woundPhotoObjectIdsToUpload;            // woundPhoto objectIds to upload images to back end
 
 @property (strong, nonatomic) IBOutlet UIView *overlayView;                         // overlayView shown over view through camera
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;                      // view to hold woundPhoto.thumbnail or woundPhoto.thumbnailLarge
@@ -589,6 +592,14 @@
     return self.image.size;
 }
 
+- (NSMutableSet *)woundPhotoObjectIdsToUpload
+{
+    if (nil == _woundPhotoObjectIdsToUpload) {
+        _woundPhotoObjectIdsToUpload = [NSMutableSet set];
+    }
+    return _woundPhotoObjectIdsToUpload;
+}
+
 #pragma mark - Transforms
 
 + (void)applyTransform:(UIView *)aView forWoundPhoto:(WMWoundPhoto *)woundPhoto
@@ -637,6 +648,7 @@
         woundPhoto = [WMWoundPhoto createWoundPhotoForWound:wound0];
         [managedObjectContext save:NULL];
     }];
+    __weak __typeof(&*self)weakSelf = self;
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [managedObjectContext performBlock:^{
@@ -683,10 +695,51 @@
             thumbnail = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
             woundPhoto.thumbnailMini = thumbnail;
+            // upload photos after measurement
+            [weakSelf.woundPhotoObjectIdsToUpload addObject:[woundPhoto objectID]];
             // TODO call back on main thread
             completionHandler(nil, [woundPhoto MR_inContext:[wound managedObjectContext]]);
         }];
     });
+}
+
+- (void)uploadPhotoBlobs
+{
+    WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
+    [userDefaultManager clearWoundPhotoObjectIDs];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
+    for (NSManagedObjectID *objectId in self.woundPhotoObjectIdsToUpload) {
+        WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:objectId];
+        WMPhoto *photo = woundPhoto.photo;
+        [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+    }
+    _woundPhotoObjectIdsToUpload = nil;
+}
+
+- (void)persistWoundPhotoObjectIds
+{
+    if (_woundPhotoObjectIdsToUpload) {
+        WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
+        userDefaultManager.woundPhotoObjectIdsToUpload = _woundPhotoObjectIdsToUpload;
+    }
+}
+- (void)uploadWoundPhotoBlobsFromObjectIds
+{
+    WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
+    NSSet *urlStrings = userDefaultManager.woundPhotoObjectIdsToUpload;
+    if ([urlStrings count]) {
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
+        for (NSString *urlString in urlStrings) {
+            NSURL *uri = [NSURL URLWithString:urlString];
+            NSManagedObjectID *objectID = [[managedObjectContext persistentStoreCoordinator] managedObjectIDForURIRepresentation:uri];
+            WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:objectID];
+            WMPhoto *photo = woundPhoto.photo;
+            [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+        }
+        [userDefaultManager clearWoundPhotoObjectIDs];
+    }
 }
 
 #pragma mark - Patient Photo

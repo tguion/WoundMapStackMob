@@ -38,6 +38,10 @@
                   wound:(WMWound *)wound
       completionHandler:(WMObjectCallback)completionHandler;
 
+- (void)uploadPhotoBlobs;
+- (void)persistWoundPhotoObjectIds;
+- (void)uploadWoundPhotoBlobsFromObjectIds;
+
 // patient photo
 
 - (UIImage *)scaleAndCenterPatientPhoto:(UIImage *)photo rect:(CGRect)rect success:(BOOL *)success;

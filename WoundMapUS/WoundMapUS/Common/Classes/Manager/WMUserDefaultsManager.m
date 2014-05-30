@@ -46,7 +46,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setLastUserName:(NSString *)lastUserName
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastUserName forKey:@"com.mobilehealthware.woundmap.lastUserName"];
+    [userDefaults setObject:lastUserName forKey:@"com.mobilehealthware.woundmap.lastUserName"];
     [userDefaults synchronize];
 }
 
@@ -60,7 +60,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setLastTeamName:(NSString *)lastTeamName
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastTeamName forKey:@"com.mobilehealthware.woundmap.lastTeamName"];
+    [userDefaults setObject:lastTeamName forKey:@"com.mobilehealthware.woundmap.lastTeamName"];
     [userDefaults synchronize];
 }
 
@@ -103,7 +103,7 @@ NSDateFormatter * DOB_Formatter;
     if (nil == lastWoundFFURLOnDevice) {
         [dictionary removeObjectForKey:ffUrl];
     } else {
-        [dictionary setValue:lastWoundFFURLOnDevice forKey:ffUrl];
+        [dictionary setObject:lastWoundFFURLOnDevice forKey:ffUrl];
     }
     [userDefaults setObject:dictionary forKey:@"com.mobilehealthware.woundmap.lastWoundFFURLOnDevice"];
     [userDefaults synchronize];
@@ -125,7 +125,7 @@ NSDateFormatter * DOB_Formatter;
         lastDateOfBirth = [NSDate date];
     }
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:[DOB_Formatter stringFromDate:lastDateOfBirth] forKey:@"com.mobilehealthware.woundmap.lastDateOfBirth"];
+    [userDefaults setObject:[DOB_Formatter stringFromDate:lastDateOfBirth] forKey:@"com.mobilehealthware.woundmap.lastDateOfBirth"];
     [userDefaults synchronize];
 }
 
@@ -142,7 +142,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setWoundPositionTermKey:(NSString *)woundPositionTermKey
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:woundPositionTermKey forKey:@"com.mobilehealthware.woundmap.woundPositionTermKey"];
+    [userDefaults setObject:woundPositionTermKey forKey:@"com.mobilehealthware.woundmap.woundPositionTermKey"];
     [userDefaults synchronize];
 }
 
@@ -154,7 +154,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setDefaultIdRoot:(NSString *)defaultIdRoot
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:defaultIdRoot forKey:@"com.mobilehealthware.woundmap.defaultIdRoot"];
+    [userDefaults setObject:defaultIdRoot forKey:@"com.mobilehealthware.woundmap.defaultIdRoot"];
     [userDefaults synchronize];
 }
 
@@ -173,6 +173,30 @@ NSDateFormatter * DOB_Formatter;
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setDouble:[NSDate timeIntervalSinceReferenceDate] forKey:@"com.mobilehealthware.woundmap.lastPatientListUpdate"];
+}
+
+- (NSSet *)woundPhotoObjectIdsToUpload
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    return [NSSet setWithArray:[userDefaults stringArrayForKey:@"com.mobilehealthware.woundmap.woundPhotoObjectIds"]];
+}
+
+- (void)setWoundPhotoObjectIdsToUpload:(NSSet *)woundPhotoObjectIdsToUpload
+{
+    NSMutableArray *uris = [NSMutableArray array];
+    for (NSManagedObjectID *objectID in woundPhotoObjectIdsToUpload) {
+        NSURL *uri = [objectID URIRepresentation];
+        [uris addObject:[uri absoluteString]];
+    }
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:uris forKey:@"com.mobilehealthware.woundmap.woundPhotoObjectIds"];
+    [userDefaults synchronize];
+}
+
+- (void)clearWoundPhotoObjectIDs
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:@"com.mobilehealthware.woundmap.woundPhotoObjectIds"];
 }
 
 #pragma mark - FF
@@ -210,7 +234,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setDefaultNavigationTrackFFURL:(NSString *)defaultNavigationTrackFFURL
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:defaultNavigationTrackFFURL forKey:@"com.mobilehealthware.woundmap.navigationTrackFFURL"];
+    [userDefaults setObject:defaultNavigationTrackFFURL forKey:@"com.mobilehealthware.woundmap.navigationTrackFFURL"];
     [userDefaults synchronize];
 }
 
@@ -224,7 +248,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setEncryptionPassword:(NSString *)encryptionPassword
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:encryptionPassword forKey:@"com.mobilehealthware.woundmap.encryptionPassword"];
+    [userDefaults setObject:encryptionPassword forKey:@"com.mobilehealthware.woundmap.encryptionPassword"];
     [userDefaults synchronize];
 }
 
@@ -236,7 +260,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setEmailPDFtoRecipients:(NSArray *)emailPDFtoRecipients
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:emailPDFtoRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFtoRecipients"];
+    [userDefaults setObject:emailPDFtoRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFtoRecipients"];
     [userDefaults synchronize];
 }
 
@@ -248,7 +272,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setEmailPDFccRecipients:(NSArray *)emailPDFccRecipients
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:emailPDFccRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFccRecipients"];
+    [userDefaults setObject:emailPDFccRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFccRecipients"];
     [userDefaults synchronize];
 }
 
@@ -260,7 +284,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setEmailPDFbccRecipients:(NSArray *)emailPDFbccRecipients
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:emailPDFbccRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFbccRecipients"];
+    [userDefaults setObject:emailPDFbccRecipients forKey:@"com.mobilehealthware.woundmap.emailPDFbccRecipients"];
     [userDefaults synchronize];
 }
 
@@ -272,7 +296,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setPdfHeaderPrefix:(NSString *)pdfHeaderPrefix
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:pdfHeaderPrefix forKey:@"com.mobilehealthware.woundmap.pdfHeaderPrefix"];
+    [userDefaults setObject:pdfHeaderPrefix forKey:@"com.mobilehealthware.woundmap.pdfHeaderPrefix"];
     [userDefaults synchronize];
 }
 
@@ -286,7 +310,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setLastFTPHost:(NSString *)lastFTPHost
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastFTPHost forKey:@"com.mobilehealthware.woundmap.ftpHost"];
+    [userDefaults setObject:lastFTPHost forKey:@"com.mobilehealthware.woundmap.ftpHost"];
     [userDefaults synchronize];
 }
 
@@ -298,7 +322,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setLastFTPPath:(NSString *)lastFTPPath
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastFTPPath forKey:@"com.mobilehealthware.woundmap.ftpPath"];
+    [userDefaults setObject:lastFTPPath forKey:@"com.mobilehealthware.woundmap.ftpPath"];
     [userDefaults synchronize];
 }
 
@@ -310,7 +334,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setLastFTPUserName:(NSString *)lastFTPUserName
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastFTPUserName forKey:@"com.mobilehealthware.woundmap.ftpUserName"];
+    [userDefaults setObject:lastFTPUserName forKey:@"com.mobilehealthware.woundmap.ftpUserName"];
     [userDefaults synchronize];
 }
 
@@ -322,7 +346,7 @@ NSDateFormatter * DOB_Formatter;
 - (void)setLastFTPPassword:(NSString *)lastFTPPassword
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setValue:lastFTPPassword forKey:@"com.mobilehealthware.woundmap.ftpPassword"];
+    [userDefaults setObject:lastFTPPassword forKey:@"com.mobilehealthware.woundmap.ftpPassword"];
     [userDefaults synchronize];
 }
 

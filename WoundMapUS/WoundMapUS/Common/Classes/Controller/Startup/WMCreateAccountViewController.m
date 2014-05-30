@@ -348,8 +348,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     }
                     // DEPLOYMENT
                     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-//                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
+//                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
                         if (error) {
                             [WMUtilities logError:error];
                         }

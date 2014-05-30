@@ -209,6 +209,9 @@
         [self updateNavigationComponents];
         if (nil == parentNavigationNode) {
             [self reloadTableCellsForNavigation];
+            // upload any photos
+            WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+            [photoManager uploadPhotoBlobs];
         }
     }
 }
@@ -2138,8 +2141,8 @@
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
-//                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
-                    [ffm queueUploadPhotosForWoundPhoto:woundPhoto photo:photo];
+//                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];// defer
+//                    [ffm queueUploadPhotosForWoundPhoto:woundPhoto photo:photo];// appears to eventually cause delete of WMPhoto
                     [ff grabBagAddItemAtFfUrl:photo.ffUrl
                                  toObjAtFfUrl:woundPhoto.ffUrl
                                   grabBagName:WMWoundPhotoRelationships.photos

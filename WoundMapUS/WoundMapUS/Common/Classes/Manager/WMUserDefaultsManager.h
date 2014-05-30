@@ -30,6 +30,8 @@
 @property (nonatomic) NSString *defaultIdRoot;
 @property (readonly, nonatomic) NSInteger hoursSinceLastPatientListUpdate;
 - (void)patientListUpdated;
+@property (nonatomic) NSSet *woundPhotoObjectIdsToUpload;
+- (void)clearWoundPhotoObjectIDs;
 
 @property (nonatomic) NSString *lastFTPHost;
 @property (nonatomic) NSString *lastFTPPath;

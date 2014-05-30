@@ -17,6 +17,7 @@
 #import "WMFatFractalManager.h"
 #import "WMUserDefaultsManager.h"
 #import "WMSeedDatabaseManager.h"
+#import "WMPhotoManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"
@@ -204,6 +205,9 @@
                         [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                     }
                 }
+                // upload any woundPhoto blobs that were not uploaded
+                WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+                [photoManager uploadWoundPhotoBlobsFromObjectIds];
             };
             dispatch_block_t participantBlock = ^{
                 if (nil == participant) {

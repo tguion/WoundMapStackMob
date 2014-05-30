@@ -125,6 +125,15 @@
 // not called on main thread
 - (void)queuedOperationCompleted:(FFQueuedOperation *)queuedOperation
 {
+    if ([queuedOperation.queuedObj isKindOfClass:[WMPhoto class]]) {
+        WMPhoto *photo = (WMPhoto *)queuedOperation.queuedObj;
+        WMWoundPhoto *woundPhoto = photo.woundPhoto;
+        NSManagedObjectContext *managedObjectContext = [photo managedObjectContext];
+        [Faulter faultObjectWithID:[photo objectID]
+                         inContext:managedObjectContext];
+        [Faulter faultObjectWithID:[woundPhoto objectID]
+                         inContext:managedObjectContext];
+    }
 //    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
 //    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
