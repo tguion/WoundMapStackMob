@@ -94,7 +94,13 @@
 
 - (NSURL *)pdfURLForPatient:(WMPatient *)patient
 {
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@.%lf", patient.person.nameFamily, patient.person.nameGiven, [[NSDate date] timeIntervalSince1970]];
+    NSString *fileName = nil;
+    NSString *identifierEMR = patient.identifierEMR;
+    if (identifierEMR) {
+        fileName = [NSString stringWithFormat:@"%@.%@.%@.%lf", identifierEMR, patient.person.nameFamily, patient.person.nameGiven, [[NSDate date] timeIntervalSince1970]];
+    } else {
+        fileName = [NSString stringWithFormat:@"%@.%@.%lf", patient.person.nameFamily, patient.person.nameGiven, [[NSDate date] timeIntervalSince1970]];
+    }
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *pdfDirectory = [self.appDelegate.applicationDocumentsDirectory URLByAppendingPathComponent:@"PDF"];
     if (![fileManager fileExistsAtPath:pdfDirectory.path]) {

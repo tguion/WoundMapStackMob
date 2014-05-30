@@ -991,6 +991,7 @@
 
 - (IBAction)editUserOrTeamAction:(id)sender
 {
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMTeam *team = self.appDelegate.participant.team;
@@ -1028,7 +1029,7 @@
                                                    destructiveButtonTitle:@"Sign Out"
                                                         otherButtonTitles:nil];
         actionSheet.tag = kSignOutActionSheetTag;
-        [actionSheet showInView:self.view];
+        [actionSheet showFromToolbar:self.navigationController.toolbar];
     }
 }
 
