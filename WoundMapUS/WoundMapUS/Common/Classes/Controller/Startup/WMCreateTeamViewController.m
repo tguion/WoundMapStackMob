@@ -201,7 +201,6 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     participant.isTeamLeader = YES;
     participant.team = _team;
     participant.dateAddedToTeam = [NSDate date];
-    participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:2 toDate:participant.dateTeamSubscriptionExpires];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];

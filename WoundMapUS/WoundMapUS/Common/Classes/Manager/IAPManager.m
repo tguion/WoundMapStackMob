@@ -136,10 +136,13 @@ NSString* _deviceId;
     NSString *username = self.appDelegate.participant.userName;
     __weak __typeof(&*self)weakSelf = self;
     for (SKPaymentTransaction *transaction in transactions) {
+        if (nil == [transaction transactionIdentifier]) {
+            continue;
+        }
         // persist to back end
         WM_ASSERT_MAIN_THREAD;
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMPaymentTransaction *originalPaymentTransaction = nil;
+        WMPaymentTransaction *originalPaymentTransaction = nil; 
         if (transaction.transactionState == SKPaymentTransactionStateRestored) {
             SKPaymentTransaction *originalTransaction = transaction.originalTransaction;
             if (originalTransaction) {

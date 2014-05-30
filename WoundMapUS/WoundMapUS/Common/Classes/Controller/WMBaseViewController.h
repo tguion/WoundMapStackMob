@@ -9,6 +9,8 @@
 #import "WMFatFractalManager.h"
 #import <StoreKit/StoreKit.h>
 
+extern BOOL const kPresentIAPController;    // DEPLOYMENT
+
 typedef void (^IAPPresentViewControllerAcceptHandler)(SKPaymentTransaction *transaction);
 typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 

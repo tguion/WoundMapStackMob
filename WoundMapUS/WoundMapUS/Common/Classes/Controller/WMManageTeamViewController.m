@@ -15,6 +15,7 @@
 #import "WMParticipant.h"
 #import "WMTeam.h"
 #import "WMTeamInvitation.h"
+#import "WMPaymentTransaction.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "IAPManager.h"
@@ -187,6 +188,14 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                              participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
                                                              WMTeam *team = participant.team;
                                                              NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
+                                                             // mark WMPaymentTransaction as applied
+                                                             WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
+                                                                                                                                                    originalTransaction:nil
+                                                                                                                                                               username:participant.userName
+                                                                                                                                                                 create:NO
+                                                                                                                                                   managedObjectContext:managedObjectContext];
+                                                             paymentTransaction.appliedFlagValue = YES;
+                                                             [managedObjectContext MR_saveToPersistentStoreAndWait];
                                                              // update from back end
                                                              WMFatFractal *ff = [WMFatFractal sharedInstance];
                                                              [ff getObjFromUri:team.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -199,9 +208,17 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                                  if (error) {
                                                                      [WMUtilities logError:error];
                                                                  }
+                                                                 [ff updateObj:participant error:&error];
+                                                                 if (error) {
+                                                                     [WMUtilities logError:error];
+                                                                 }
+                                                                 [ff updateObj:paymentTransaction error:&error];
+                                                                 if (error) {
+                                                                     [WMUtilities logError:error];
+                                                                 }
                                                              }];
                                                              [weakSelf.tableView reloadData];
-                                                         } withObject:view];
+                                                         } proceedAlways:YES withObject:view];
 }
 
 - (void)initiateConfirmInvitation

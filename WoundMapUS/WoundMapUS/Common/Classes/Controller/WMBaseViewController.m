@@ -26,6 +26,8 @@
 #import "UIView+Custom.h"
 #import "WCAppDelegate.h"
 
+BOOL const kPresentIAPController = NO;
+
 @interface WMBaseViewController ()
 
 @property (nonatomic) BOOL assignedContentInsets;
@@ -808,7 +810,7 @@
                 CGRect rect = [self.view convertRect:button.frame fromView:button.superview];
                 [popoverController presentPopoverFromRect:rect
                                                    inView:self.view
-                                 permittedArrowDirections:UIPopoverArrowDirectionAny
+                                 permittedArrowDirections:UIPopoverArrowDirectionLeft
                                                  animated:YES];
                 _iapPopoverController = popoverController;
             } else if ([object isKindOfClass:[UIView class]] && self.isIPadIdiom) {

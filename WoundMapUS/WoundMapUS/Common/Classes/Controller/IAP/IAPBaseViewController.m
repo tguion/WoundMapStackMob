@@ -53,6 +53,9 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
         _descHTMLContainerView.frame = self.navigationController.view.bounds;
         _descTextView.attributedText = attributedString;
         [self.navigationController.view addSubview:_descHTMLContainerView];
+        if (self.skProduct) {
+            _descTextView.attributedText = [self.iapProduct descHTMLAttributedStringUpdatedWithSKProduct:self.skProduct];
+        }
     }
 }
 

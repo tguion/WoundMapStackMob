@@ -22,6 +22,7 @@
     }
     paymentTransaction.errorCode = @(transaction.error.code);
     paymentTransaction.errorMessage = transaction.error.localizedDescription;
+    paymentTransaction.transactionIdentifier = [transaction transactionIdentifier];
     paymentTransaction.originalTransactionIdentifier = originalTransaction.transactionIdentifier;
     paymentTransaction.productIdentifier = transaction.payment.productIdentifier;
     paymentTransaction.quantityValue = transaction.payment.quantity;

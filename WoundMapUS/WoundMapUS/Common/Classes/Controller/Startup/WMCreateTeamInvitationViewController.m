@@ -191,7 +191,7 @@
         } else {
             _invitee = object;
             // present IAP
-            if (NO) {
+            if (kPresentIAPController) {
                 [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                       successBlock:^(SKPaymentTransaction *transaction) {
                                                           // mark WMPaymentTransaction as applied

@@ -52,6 +52,8 @@
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
+NSInteger const kNumberFreeMonthsFirstSubscription = 3;
+
 @interface WMFatFractalManager ()
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
@@ -769,7 +771,7 @@
     if (nil == invitee.dateAddedToTeam) {
         invitee.dateAddedToTeam = [NSDate date];
     }
-    invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:2 toDate:invitee.dateTeamSubscriptionExpires];
+    invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:kNumberFreeMonthsFirstSubscription toDate:invitee.dateTeamSubscriptionExpires];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
     NSParameterAssert(participantGroup);

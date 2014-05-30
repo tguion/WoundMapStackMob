@@ -110,14 +110,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     _enterWoundMapButton.enabled = self.setupConfigurationComplete;
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-    if (isPad && !self.navigationController.navigationBarHidden) {
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-    }
-}
+//- (void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+//    if (isPad && !self.navigationController.navigationBarHidden) {
+//        [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    }
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -451,6 +451,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     switch (indexPath.section) {
         case 0: {
             // participant
@@ -502,7 +503,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     break;
                 }
                 case 1: {
-                    __weak __typeof(&*self)weakSelf = self;
                     if (self.participant.isTeamLeader) {
                         // is the team already a consultant group
                         if (self.connectedTeamIsConsultingGroup) {
@@ -510,13 +510,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             break;
                         }
                         // else IAP for creating a consulting group
-                        if (NO) {
+                        if (kPresentIAPController) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
                                                                                  successBlock:^(SKPaymentTransaction *transaction) {
                                                                                      // mark WMPaymentTransaction as applied
                                                                                      WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
                                                                                                                                                                             originalTransaction:nil
-                                                                                                                                                                                       username:self.participant.userName
+                                                                                                                                                                                       username:weakSelf.participant.userName
                                                                                                                                                                                          create:NO
                                                                                                                                                                            managedObjectContext:managedObjectContext];
                                                                                      paymentTransaction.appliedFlagValue = YES;
@@ -538,13 +538,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         }
                     } else {
                         // IAP for creating a team, and the team leader (the signed-in participant) will be the first team member
-                        if (NO) {
+                        if (kPresentIAPController) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                                                  successBlock:^(SKPaymentTransaction *transaction) {
                                                                                      // mark WMPaymentTransaction as applied
                                                                                      WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
                                                                                                                                                                             originalTransaction:nil
-                                                                                                                                                                                       username:self.participant.userName
+                                                                                                                                                                                       username:weakSelf.participant.userName
                                                                                                                                                                                          create:NO
                                                                                                                                                                            managedObjectContext:managedObjectContext];
                                                                                      paymentTransaction.appliedFlagValue = YES;
@@ -553,6 +553,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                                                                          if (error) {
                                                                                              [WMUtilities logError:error];
                                                                                          }
+                                                                                         WMParticipant *participant = weakSelf.participant;
+                                                                                         participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:kNumberFreeMonthsFirstSubscription toDate:participant.dateTeamSubscriptionExpires];
+                                                                                         [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                                                         [ff updateObj:participant];
                                                                                          [weakSelf presentCreateTeamViewController];
                                                                                      };
                                                                                      [ff updateObj:paymentTransaction

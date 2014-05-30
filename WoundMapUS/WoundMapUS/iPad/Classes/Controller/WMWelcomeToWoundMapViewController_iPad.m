@@ -68,7 +68,7 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     UINavigationController *viewController = [[UINavigationController alloc] initWithRootViewController:self.welcomeViewController];
-    [viewController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
 
     [self addChildViewController:viewController];
     [self.view addSubview:viewController.view];

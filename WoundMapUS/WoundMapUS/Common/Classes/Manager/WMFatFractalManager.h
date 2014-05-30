@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSInteger const kNumberFreeMonthsFirstSubscription;
+
 typedef void (^WMOperationCallback)(NSError *error, id object, BOOL signInRequired);
 typedef void (^WMErrorCallback)(NSError *error);
 typedef void (^WMObjectCallback)(NSError *error, id object);
