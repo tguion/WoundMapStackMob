@@ -9,6 +9,14 @@
 #import "Faulter.h"
 @implementation Faulter
 
++ (void)faultObjectWithIDs:(NSArray *)objectIDs
+                 inContext:(NSManagedObjectContext *)context
+{
+    for (NSManagedObjectID *objectID in objectIDs) {
+        [self faultObjectWithID:objectID inContext:context];
+    }
+}
+
 + (void)faultObjectWithID:(NSManagedObjectID*)objectID
                 inContext:(NSManagedObjectContext*)context
 {

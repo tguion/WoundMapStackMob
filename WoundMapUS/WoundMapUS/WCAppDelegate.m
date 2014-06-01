@@ -289,7 +289,9 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 - (void)processRemoteNotification
 {
-    NSNumber *patientId = self.remoteNotification[@"aps"][@"alert"][@"aId"];
+    NSNumber *patientId = self.remoteNotification[@"aps"][@"alert"][@"pId"];
+    NSNumber *sourceId = self.remoteNotification[@"aps"][@"alert"][@"sId"];
+    NSNumber *targetId = self.remoteNotification[@"aps"][@"alert"][@"tId"];
 }
 
 #pragma mark - UIAlertViewDelegate

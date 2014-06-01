@@ -47,7 +47,7 @@
 @property (strong, nonatomic) NSManagedObjectID *woundPhoto1ObjectID;                               // objectID for woundPhoto for date compare
 @property (strong, nonatomic) NSManagedObjectID *woundPhoto2ObjectID;                               // objectID for woundPhoto for date compare
 @property (strong, nonatomic) NSArray *cachedSortedWoundPhotos;                                     // cached sorted WMWoundPhotos objectIDs for self.wound
-@property (readonly, nonatomic) WMWoundPhoto *lastCachedWoundPhoto;                                 // last cached wound photo TODO: use objectID
+@property (readonly, nonatomic) WMWoundPhoto *lastCachedWoundPhoto;                                 // last cached wound photo
 @property (strong, nonatomic) WMPhotoGridViewController *photoGridViewController;                     // grid (UICollectionViewController) child view controller
 @property (strong, nonatomic) UIPageViewController *photoPageViewController;                        // paging/scrolling (UIPageViewController) child view controller
 @property (strong, nonatomic) WMComparePhotosViewController *compareViewController;                   // compare two photos child view controller
@@ -507,7 +507,6 @@
 {
     [super viewWillDisappear:animated];
     [self unregisterForNotifications];
-    [self faultAllPhotos];
 }
 
 #pragma mark - Memory management
@@ -523,18 +522,6 @@
     if (nil != _woundPhoto2ObjectID && ![[_woundPhotoDate2 objectID] isTemporaryID]) {
         _woundPhoto2ObjectID = [_woundPhotoDate2 objectID];
         _woundPhotoDate2 = nil;
-    }
-    [self faultAllPhotos];
-}
-
-- (void)faultAllPhotos
-{
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    for (NSManagedObjectID *objectID in _cachedSortedWoundPhotos) {
-        NSManagedObject *woundPhoto = [managedObjectContext objectWithID:objectID];
-        NSManagedObjectID *photoObjectID = [woundPhoto valueForKeyPath:@"photo.objectID"];
-        [Faulter faultObjectWithID:photoObjectID inContext:managedObjectContext];
-        [Faulter faultObjectWithID:objectID inContext:managedObjectContext];
     }
 }
 

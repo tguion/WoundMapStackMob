@@ -991,7 +991,6 @@
 
 - (IBAction)editUserOrTeamAction:(id)sender
 {
-    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMTeam *team = self.appDelegate.participant.team;
@@ -1142,10 +1141,10 @@
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            [weakSelf navigateToWounds:navigationNodeButton.navigationNode];
-            [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
         }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf navigateToWounds:navigationNodeButton.navigationNode];
+        [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
     };
     if (nil == self.wound) {
@@ -2123,7 +2122,7 @@
             __weak __typeof(&*self)weakSelf = self;
             [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Processing Photo";
             WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+//            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             // have photoManager start the process
             __block NSInteger counter = 2;
             FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {

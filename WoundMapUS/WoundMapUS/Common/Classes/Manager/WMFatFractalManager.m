@@ -49,6 +49,7 @@
 #import "CoreDataHelper.h"
 #import "Faulter.h"
 #import "WMFatFractal.h"
+#import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
@@ -460,6 +461,10 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                     }
                 }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
+                // post notification for WMWoundPhoto fetch from back end
+                if ([grabBagName isEqualToString:WMWoundRelationships.photos] && [object isKindOfClass:[NSArray class]]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kAcquiredWoundPhotosNotification object:[object valueForKeyPath:@"objectID"]];
+                }
                 onComplete(nil);
             }
         }];

@@ -26,6 +26,7 @@
 #import "IAPManager.h"
 #import "WMFatFractal.h"
 #import "WMUtilities.h"
+#import "Faulter.h"
 #import "NSObject+performBlockAfterDelay.h"
 #import "WCAppDelegate.h"
 
@@ -41,6 +42,7 @@ NSString *const kTransformControllerDidUninstallNotification = @"TransformContro
 NSString *const kNavigationStageChangedNotification = @"NavigationStageChangedNotification";
 NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNotification";
 NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotification";
+NSString *const kAcquiredWoundPhotosNotification = @"AcquiredWoundPhotosNotification";
 
 @interface WMNavigationCoordinator ()
 
@@ -72,6 +74,23 @@ NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotifica
         _SharedInstance = [[WMNavigationCoordinator alloc] init];
     }
     return _SharedInstance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (!self)
+        return nil;
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:kAcquiredWoundPhotosNotification
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *notification) {
+                                                      // refault
+                                                      [Faulter faultObjectWithIDs:[notification object] inContext:[NSManagedObjectContext MR_defaultContext]];
+                                                  }];
+    
+    return self;
 }
 
 - (WCAppDelegate *)appDelegate

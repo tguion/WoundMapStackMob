@@ -11,7 +11,10 @@
 
 @interface Faulter : NSObject
 
-+ (void)faultObjectWithID:(NSManagedObjectID*)objectID
-                inContext:(NSManagedObjectContext*)context;
++ (void)faultObjectWithIDs:(NSArray *)objectIDs
+                inContext:(NSManagedObjectContext *)context;
+
++ (void)faultObjectWithID:(NSManagedObjectID *)objectID
+                inContext:(NSManagedObjectContext *)context;
 
 @end
