@@ -558,6 +558,14 @@ BOOL const kPresentIAPController = NO;
                                                                      [weakSelf handleRespondedToReferralNotification:[notification object]];
                                                                  }];
         [self.persistantObservers addObject:observer];
+        // watch for objects deleted by another device or team member from back end
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kBackendDeletedObjectIDs
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     [weakSelf handleBackendDeletedObjectIds:[notification object]];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
     }
 }
 
@@ -627,6 +635,10 @@ BOOL const kPresentIAPController = NO;
 }
 
 - (void)handleRespondedToReferralNotification:(NSManagedObjectID *)referralObjectID
+{
+}
+
+- (void)handleBackendDeletedObjectIds:(NSArray *)objectIDs
 {
 }
 

@@ -321,50 +321,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     }];
 }
 
-- (void)updateTeam:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler
-{
-    NSParameterAssert(team.ffUrl);
-    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-//    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-    [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        NSAssert(nil != object && [object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
-        FFUserGroup *participantGroup = team.participantGroup;
-        NSLog(@"participantGroup %@ users %@", participantGroup, [participantGroup getUsersWithError:&error]);
-        [managedObjectContext saveToPersistentStoreAndWait];
-        if (completionHandler) {
-            completionHandler(error, object);
-        }
-        [self acquireGrabBagsForObjects:@[object] aliases:[WMTeam relationshipNamesNotToSerialize] ff:ff completionHandler:^(NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-        }];
-    }];
-    self.lastRefreshTimeMap[[team objectID]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
-}
-
-- (void)acquireGrabBagsForObjects:(NSArray *)objects aliases:(NSSet *)aliases ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
-{
-    WM_ASSERT_MAIN_THREAD;
-    id object = [objects firstObject];
-    if (nil == object) {
-        return;
-    }
-    // else
-    for (object in objects) {
-        for (NSString *alias in aliases) {
-            NSLog(@"fetching alias %@ for object %@", alias, object);
-            [ff grabBagGetAllForObj:object
-                        grabBagName:alias
-                         onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                             WM_ASSERT_MAIN_THREAD;
-                             completionHandler(error);
-                         }];
-        }
-    }
-}
-
 - (void)fetchPatients:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
     WM_ASSERT_MAIN_THREAD;
@@ -394,31 +350,27 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             completionHandler(response.error);
         } else {
             NSSet *patients = [NSSet setWithArray:response.objs];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             [localPatients minusSet:patients];
-            [managedObjectContext MR_deleteObjects:localPatients];
+            if ([localPatients count]) {
+                // filter out any objects where ffUrl is nil
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ffUrl != nil"];
+                [localPatients filterUsingPredicate:predicate];
+                if ([localPatients count]) {
+                    DLog(@"Will delete %@", localPatients);
+                    for (WMPatient *patient in localPatients) {
+                        [ff forgetObj:patient];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:[localPatients valueForKeyPath:@"objectID"]];
+                    [managedObjectContext MR_deleteObjects:localPatients];
+                }
+            }
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             // may need to get consultingGroup
             counter = [patients count];
             for (WMPatient *patient in patients) {
                 [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] onComplete:onComplete];
             }
-        }
-    }];
-}
-
-- (void)updateWoundsForPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
-{
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    NSMutableSet *localWounds = [patient.wounds mutableCopy];
-    [ff grabBagGetAllForObj:patient grabBagName:WMPatientRelationships.wounds onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            completionHandler(error);
-        } else {
-            NSSet *wounds = [NSSet setWithArray:object];
-            [localWounds minusSet:wounds];
-            [managedObjectContext MR_deleteObjects:localWounds];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            completionHandler(nil);
         }
     }];
 }
@@ -442,6 +394,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             if (error) {
                 onComplete(error);
             } else {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
                 // do not delete local objects that are part of the seed
                 NSEntityDescription *entityDescription = [aggregator entity];
                 NSRelationshipDescription *relationshipDescription = [entityDescription relationshipsByName][grabBagName];
@@ -456,6 +409,10 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                         [localGrabBagObjects filterUsingPredicate:predicate];
                         if ([localGrabBagObjects count]) {
                             DLog(@"Will delete %@", localGrabBagObjects);
+                            for (id localGrabBagObject in localGrabBagObjects) {
+                                [ff forgetObj:localGrabBagObject];
+                            }
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:[localGrabBagObjects valueForKeyPath:@"objectID"]];
                             [managedObjectContext MR_deleteObjects:localGrabBagObjects];
                         }
                     }
@@ -1089,7 +1046,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     if (counter == 0) {
         completionHandler(nil);
     } else {
+        NSError *localError = nil;
         for (WMPatient *patient in patients) {
+            id consultantGroup = [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] error:&localError];
+            if (localError) {
+                [WMUtilities logError:localError];
+            }
+            NSParameterAssert(consultantGroup);
+            patient.consultantGroup = consultantGroup;
             [patient updateNavigationToTeam:team patient2StageMap:self.appDelegate.patient2StageMap];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];

@@ -1523,8 +1523,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMWound *wound = self.wound;
-    NSSet *woundPhotos = wound.photos;
-    __block NSInteger counter = [woundPhotos count];
+    __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block1 = ^(NSError *error) {
         if (error) {
@@ -1541,6 +1540,8 @@
             [WMUtilities logError:error];
         }
         // update woundPhoto grab bags
+        NSSet *woundPhotos = wound.photos;
+        counter = [woundPhotos count];
         for (WMWoundPhoto *woundPhoto in woundPhotos) {
             [ffm updateGrabBags:@[WMWoundPhotoRelationships.photos]
                      aggregator:woundPhoto

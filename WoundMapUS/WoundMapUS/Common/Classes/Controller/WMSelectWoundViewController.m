@@ -122,7 +122,7 @@
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
-    [ffm updateWoundsForPatient:self.patient ff:ff completionHandler:^(NSError *error) {
+    [ffm updateGrabBags:@[WMPatientRelationships.wounds] aggregator:self.patient ff:ff completionHandler:^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }

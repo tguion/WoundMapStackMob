@@ -20,8 +20,6 @@ typedef enum {
 
 @interface WMPatient ()
 
-// Private interface goes here.
-
 @end
 
 
@@ -29,6 +27,14 @@ typedef enum {
 
 @synthesize consultantGroup=_consultantGroup;
 @dynamic managedObjectContext, objectID;
+
+static NSMutableDictionary *ffUrl2ConsultingGroupMap;
+
++ (void)initialize {
+    if (self == [WMPatient class]) {
+        ffUrl2ConsultingGroupMap = [[NSMutableDictionary alloc] init];
+    }
+}
 
 + (NSArray *)toManyRelationshipNames
 {
@@ -74,14 +80,35 @@ typedef enum {
     self.updatedAt = [NSDate date];
 }
 
+- (void)willTurnIntoFault
+{
+    if (_consultantGroup && self.ffUrl) {
+        [ffUrl2ConsultingGroupMap setObject:_consultantGroup forKey:self.ffUrl];
+    }
+}
+
+// we loose this property when self is faulted
 - (FFUserGroup *)consultantGroup
 {
     if (nil == _consultantGroup) {
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        _consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
-        [_consultantGroup setGroupName:kConsultantGroupName];
+        if (self.ffUrl) {
+            _consultantGroup = [ffUrl2ConsultingGroupMap objectForKey:self.ffUrl];
+        } else {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            _consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
+            [_consultantGroup setGroupName:kConsultantGroupName];
+        }
     }
     return _consultantGroup;
+}
+
+- (void)setConsultantGroup:(FFUserGroup *)consultantGroup
+{
+    if (_consultantGroup == consultantGroup) {
+        return;
+    }
+    // else
+    _consultantGroup = consultantGroup;
 }
 
 - (NSString *)lastNameFirstName

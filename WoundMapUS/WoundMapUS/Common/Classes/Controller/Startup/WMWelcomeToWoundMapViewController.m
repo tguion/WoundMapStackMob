@@ -1157,7 +1157,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         __block NSInteger counter = 0;
         __weak __typeof(&*self)weakSelf = self;
-        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
         NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
         counter = [patients count];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";

@@ -237,6 +237,8 @@
     _zoomView = [[UIImageView alloc] initWithImage:image];
     [self addSubview:_zoomView];
     [self configureForImageSize:image.size];
+    [Faulter faultObjectWithID:[photo objectID] inContext:self.managedObjectContext];
+    [Faulter faultObjectWithID:[woundPhoto objectID] inContext:self.managedObjectContext];
 }
 
 - (void)displayTiledImageOfSize:(CGSize)imageSize

@@ -97,6 +97,7 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 - (void)handleWoundPhotoChanged:(WMWoundPhoto *)woundPhoto NS_REQUIRES_SUPER;
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack NS_REQUIRES_SUPER;
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
+- (void)handleBackendDeletedObjectIds:(NSArray *)objectIDs;
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
                                         successBlock:(IAPPresentViewControllerAcceptHandler)successBlock

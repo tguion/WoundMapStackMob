@@ -8,6 +8,7 @@
 
 #import "WMNavigationCoordinator.h"
 #import "WMBaseViewController.h"
+#import "WMWelcomeToWoundMapViewController.h"
 #import "MBProgressHUD.h"
 #import "WMUserDefaultsManager.h"
 #import "WMParticipant.h"
@@ -30,6 +31,8 @@
 #import "NSObject+performBlockAfterDelay.h"
 #import "WCAppDelegate.h"
 
+#define kCurrentPatientDeletedAlertViewTag 1000
+
 NSString *const kPatientChangedNotification = @"PatientChangedNotification";
 NSString *const kWoundChangedNotification = @"WoundChangedNotification";
 NSString *const kWoundPhotoChangedNotification = @"WoundPhotoChangedNotification";
@@ -43,8 +46,9 @@ NSString *const kNavigationStageChangedNotification = @"NavigationStageChangedNo
 NSString *const kNavigationTrackChangedNotification = @"NavigationTrackChangedNotification";
 NSString *const kRespondedToReferralNotification = @"RespondedToReferralNotification";
 NSString *const kAcquiredWoundPhotosNotification = @"AcquiredWoundPhotosNotification";
+NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
 
-@interface WMNavigationCoordinator ()
+@interface WMNavigationCoordinator () <UIAlertViewDelegate>
 
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -82,6 +86,7 @@ NSString *const kAcquiredWoundPhotosNotification = @"AcquiredWoundPhotosNotifica
     if (!self)
         return nil;
     
+    __weak __typeof(&*self)weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserverForName:kAcquiredWoundPhotosNotification
                                                       object:nil
                                                        queue:[NSOperationQueue mainQueue]
@@ -89,7 +94,24 @@ NSString *const kAcquiredWoundPhotosNotification = @"AcquiredWoundPhotosNotifica
                                                       // refault
                                                       [Faulter faultObjectWithIDs:[notification object] inContext:[NSManagedObjectContext MR_defaultContext]];
                                                   }];
-    
+    // watch for objects deleted by another device or team member from back end
+    [[NSNotificationCenter defaultCenter] addObserverForName:kBackendDeletedObjectIDs
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *notification) {
+                                                      NSArray *objectIDs = [notification object];
+                                                      if ([objectIDs containsObject:[_patient objectID]]) {
+                                                          [weakSelf clearPatientCache];
+                                                          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Patient Deleted"
+                                                                                                              message:@"The current patient has been deleted by another team member."
+                                                                                                             delegate:self
+                                                                                                    cancelButtonTitle:@"Continue"
+                                                                                                    otherButtonTitles:nil];
+                                                          alertView.tag = kCurrentPatientDeletedAlertViewTag;
+                                                          [alertView show];
+                                                      }
+                                                  }];
+
     return self;
 }
 
@@ -693,6 +715,26 @@ NSString *const kAcquiredWoundPhotosNotification = @"AcquiredWoundPhotosNotifica
     [managedObjectContext MR_deleteObjects:@[woundPhoto]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kWoundPhotoWillDeleteNotification object:woundPhoto];
 }
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kCurrentPatientDeletedAlertViewTag) {
+        [self.appDelegate signOut];
+        UIViewController *viewController = [[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [UIView transitionWithView:self.appDelegate.window
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionFlipFromLeft
+                        animations:^{
+                            self.appDelegate.window.rootViewController = navigationController;
+                        } completion:^(BOOL finished) {
+                            // nothing
+                        }];
+    }
+}
+
 
 #pragma mark - TransformPhotoViewControllerDelegate
 

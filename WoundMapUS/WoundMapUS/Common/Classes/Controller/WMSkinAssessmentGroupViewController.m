@@ -26,7 +26,9 @@
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
-@interface WMSkinAssessmentGroupViewController ()
+#define kSkinAssessmentDeletedTag 1000
+
+@interface WMSkinAssessmentGroupViewController () <UIAlertViewDelegate>
 
 @property (strong, nonatomic) WMSkinAssessmentGroup *skinAssessmentGroup;
 
@@ -247,6 +249,21 @@
     return [[WMSkinAssessmentGroupHistoryViewController alloc] initWithNibName:@"WMSkinAssessmentGroupHistoryViewController" bundle:nil];
 }
 
+#pragma mark - BaseViewController
+
+- (void)handleBackendDeletedObjectIds:(NSArray *)objectIDs
+{
+    if ([objectIDs containsObject:[_skinAssessmentGroup objectID]]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                            message:@"Another team member has deleted the skin assessment."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        alertView.tag = kSkinAssessmentDeletedTag;
+        [alertView show];
+    }
+}
+
 #pragma mark - Actions
 
 - (IBAction)showSkinAssessmentGroupHistoryAction:(id)sender
@@ -394,6 +411,15 @@
         [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMSkinAssessmentValue entityName]] onComplete:createValueOnComplete onOffline:createValueOnComplete];
     }
     [ff updateObj:_skinAssessmentGroup onComplete:completionHandler onOffline:completionHandler];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kSkinAssessmentDeletedTag) {
+        [self cancelAction:nil];
+    }
 }
 
 #pragma mark - InterventionStatusViewControllerDelegate
