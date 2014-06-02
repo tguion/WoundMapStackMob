@@ -15,6 +15,8 @@ NSString * const kParticipantGroupName = @"participantGroup";
 
 @synthesize participantGroup=_participantGroup;
 
+static NSMutableDictionary *ffUrl2ParticipantGroupMap;
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
@@ -22,12 +24,23 @@ NSString * const kParticipantGroupName = @"participantGroup";
     self.updatedAt = [NSDate date];
 }
 
+- (void)willTurnIntoFault
+{
+    if (_participantGroup && self.ffUrl) {
+        [ffUrl2ParticipantGroupMap setObject:_participantGroup forKey:self.ffUrl];
+    }
+}
+
 - (FFUserGroup *)participantGroup
 {
     if (_participantGroup == nil) {
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        _participantGroup = [[FFUserGroup alloc] initWithFF:ff];
-        [_participantGroup setGroupName:kParticipantGroupName];
+        if (self.ffUrl) {
+            _participantGroup = [ffUrl2ParticipantGroupMap objectForKey:self.ffUrl];
+        } else {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            _participantGroup = [[FFUserGroup alloc] initWithFF:ff];
+            [_participantGroup setGroupName:kParticipantGroupName];
+        }
     }
     return _participantGroup;
 }
