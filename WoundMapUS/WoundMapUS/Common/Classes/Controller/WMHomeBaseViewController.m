@@ -74,7 +74,6 @@
     if (self) {
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             weakSelf.compassView.navigationNodeControls = nil;
             [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
             [weakSelf updatePatientWoundComponents];
@@ -100,6 +99,28 @@
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     // make initial update to UI
     _patientWoundUIRequiresUpdate = YES;
+    // update care plan cell
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    WMPatient *patient = self.patient;
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm updateGrabBags:@[WMPatientRelationships.carePlanGroups] aggregator:patient ff:ff completionHandler:^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        WMCarePlanGroup *carePlanGroup = [WMCarePlanGroup mostRecentOrActiveCarePlanGroup:patient];
+        if (carePlanGroup) {
+            [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:carePlanGroup ff:[WMFatFractal sharedInstance] completionHandler:^(NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:weakSelf.carePlanCell];
+                if (indexPath) {
+                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                }
+            }];
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -147,7 +168,6 @@
 
 - (NSArray *)backendSeedEntityNames
 {
-    // getting WMNavigationNode on sign in
     return @[];
 }
 

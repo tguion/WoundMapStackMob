@@ -19,6 +19,9 @@
 #import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
+#define kOrganizationRequiresAddress NO
+#define kOrganizationRequiresId NO
+
 @interface WMOrganizationEditorViewController ()  <UITextFieldDelegate, AddressListViewControllerDelegate, IdListViewControllerDelegate>
 
 @property (weak, nonatomic) NSManagedObjectContext *moc;
@@ -153,11 +156,15 @@
 - (BOOL)validateInput
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
-    if ([_organization.addresses count] == 0) {
-        [messages addObject:@"Please add at least one address"];
+    if (kOrganizationRequiresAddress) {
+        if ([_organization.addresses count] == 0) {
+            [messages addObject:@"Please add at least one address"];
+        }
     }
-    if ([_organization.ids count] == 0) {
-        [messages addObject:@"Please add at least one id"];
+    if (kOrganizationRequiresId) {
+        if ([_organization.ids count] == 0) {
+            [messages addObject:@"Please add at least one id"];
+        }
     }
     if ([messages count]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Information"

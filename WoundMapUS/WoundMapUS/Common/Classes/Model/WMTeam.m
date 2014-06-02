@@ -17,6 +17,12 @@ NSString * const kParticipantGroupName = @"participantGroup";
 
 static NSMutableDictionary *ffUrl2ParticipantGroupMap;
 
++ (void)initialize {
+    if (self == [WMTeam class]) {
+        ffUrl2ParticipantGroupMap = [[NSMutableDictionary alloc] init];
+    }
+}
+
 - (void)awakeFromInsert
 {
     [super awakeFromInsert];
