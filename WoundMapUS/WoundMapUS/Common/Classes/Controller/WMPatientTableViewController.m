@@ -190,6 +190,16 @@
 
 - (IBAction)doneAction:(id)sender
 {
+    if (nil == _patientToOpen) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action Required"
+                                                            message:@"Please select a patient"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    // else
     if ([self.appDelegate.navigationCoordinator canEditPatientOnDevice:_patientToOpen]) {
         [self.delegate patientTableViewController:self didSelectPatient:_patientToOpen];
     } else {

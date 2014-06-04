@@ -70,6 +70,7 @@
 
 - (IBAction)doneAction:(id)sender
 {
+    [_introductionContainerView removeFromSuperview];
     [self.delegate requestConsultViewControllerDidFinish:self];
 }
 

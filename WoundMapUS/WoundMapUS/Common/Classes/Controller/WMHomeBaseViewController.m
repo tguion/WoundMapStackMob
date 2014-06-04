@@ -1104,9 +1104,19 @@
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     // create patient if team, or if not exceed maximum number of patients
     WMTeam *team = self.appDelegate.participant.team;
-    if (nil == team && [WMPatient patientCount:self.managedObjectContext] >= kMaximumNumberOfNonTeamPatients) {
+    if (nil == team) {
+        if ([WMPatient patientCount:self.managedObjectContext] >= kMaximumNumberOfNonTeamPatients) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action not Allowed"
+                                                                message:@"The maximum number of patients for non-team members has been reached. This restriction will be removed when you create or join a team. You may delete patients from the 'Select Patient' view."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            return;
+        }
+    } else if ([team.patients count] > team.purchasedPatientCountValue) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action not Allowed"
-                                                            message:@"The maximum number of patients for non-team members has been reached. This restriction will be removed when you create or join a team. You may delete patients from the 'Select Patient' view."
+                                                            message:@"Your team has reached the maximum of number of patients based on patient credits purchased. The team leader must purchase more patient credits to add additional patients."
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];

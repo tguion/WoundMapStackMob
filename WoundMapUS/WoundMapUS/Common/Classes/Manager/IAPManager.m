@@ -26,6 +26,10 @@ NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundmap.cad.pr
 NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundmap.cad.print10.token";
 NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundmap.cad.print25.token";
 
+NSString *const kPatientCredit5Feature = @"com.mobilehealthware.woundmap.patient.credit5.token";
+NSString *const kPatientCredit25Feature = @"com.mobilehealthware.woundmap.patient.credit25.token";
+NSString *const kPatientCredit100Feature = @"com.mobilehealthware.woundmap.patient.credit100.token";
+
 NSString *const kTeamMemberProductIdentifier = @"com.mobilehealthware.woundmap.team.teamMember";
 NSString *const kCreateConsultingGroupProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.consultGroup.create";
 
@@ -44,6 +48,7 @@ NSString *const kIAPDeviceId = @"iap-device-id.txt";
 @property (readonly, nonatomic) CoreDataHelper *coreDataHelper;
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSArray *sharedPDFReportProductIdentifiers;
+@property (strong, nonatomic) NSArray *patientCreditProductIdentifiers;
 
 @end
 
@@ -65,6 +70,7 @@ NSString* _deviceId;
     dispatch_once(&onceToken, ^{
         SharedInstance = [[IAPManager alloc] init];
         SharedInstance.sharedPDFReportProductIdentifiers = @[kSharePdfReport5Feature, kSharePdfReport10Feature, kSharePdfReport25Feature];
+        SharedInstance.patientCreditProductIdentifiers = @[kPatientCredit5Feature, kPatientCredit25Feature, kPatientCredit100Feature];
         __weak __typeof(SharedInstance) weakSelf = SharedInstance;
         [[NSNotificationCenter defaultCenter] addObserverForName:NSUbiquitousKeyValueStoreDidChangeExternallyNotification
                                                           object:nil
@@ -314,7 +320,32 @@ NSString* _deviceId;
 - (void)provideContentForTeamAddedProductIdentifier:(SKPaymentTransaction *)transaction
 {
     // need to determine if the purchase has been applied, persist the transaction
+    
+}
 
+- (void)provideContentForPatientCreditProductIdentifier:(SKPaymentTransaction *)transaction
+{
+    NSString *productIdentifier = transaction.payment.productIdentifier;
+    int32_t creditsToAdd = 0;
+    if ([productIdentifier isEqualToString:kPatientCredit5Feature]) {
+        creditsToAdd = 5;
+    } else if ([productIdentifier isEqualToString:kPatientCredit25Feature]) {
+        creditsToAdd = 25;
+    } else if ([productIdentifier isEqualToString:kPatientCredit100Feature]) {
+        creditsToAdd = 100;
+    }
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    team.purchasedPatientCountValue = (team.purchasedPatientCountValue + creditsToAdd);
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    };
+    [ff updateObj:team onComplete:onComplete onOffline:onComplete];
 }
 
 // called when purchase of IAP has successfully completed on iTunes store kit server
@@ -325,6 +356,8 @@ NSString* _deviceId;
         [self provideContentForPDFReportProductIdentifier:transaction];
     } else if ([productIdentifier isEqualToString:kTeamMemberProductIdentifier]) {
         [self provideContentForTeamAddedProductIdentifier:transaction];
+    } else if ([_patientCreditProductIdentifiers containsObject:productIdentifier]) {
+        [self provideContentForPatientCreditProductIdentifier:transaction];
     }
 }
 

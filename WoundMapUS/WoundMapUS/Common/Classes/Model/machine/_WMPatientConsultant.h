@@ -10,6 +10,7 @@ extern const struct WMPatientConsultantAttributes {
 	__unsafe_unretained NSString *dateAquired;
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
+	__unsafe_unretained NSString *pdf;
 	__unsafe_unretained NSString *updatedAt;
 } WMPatientConsultantAttributes;
 
@@ -23,6 +24,7 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 @class WMParticipant;
 @class WMPatient;
+
 
 
 
@@ -102,6 +104,16 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSData* pdf;
+
+
+
+//- (BOOL)validatePdf:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSDate* updatedAt;
 
 
@@ -168,6 +180,12 @@ extern const struct WMPatientConsultantFetchedProperties {
 
 - (int32_t)primitiveFlagsValue;
 - (void)setPrimitiveFlagsValue:(int32_t)value_;
+
+
+
+
+- (NSData*)primitivePdf;
+- (void)setPrimitivePdf:(NSData*)value;
 
 
 

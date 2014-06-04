@@ -208,18 +208,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         return NO;
     }
     // else
-    if (nil == self.userDefaultsManager.defaultNavigationTrackFFURL) {
-        return NO;
-    }
-    // else
-    if (_welcomeState != WMWelcomeStateInvitationAccepted) {
-        if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
-            return NO;
-        }
-    }
-    // else
-    WMPatient *patient = self.patient;
-    return [self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient];
+    return YES;
 }
 
 - (WMSignInViewController *)signInViewController
@@ -397,6 +386,29 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (IBAction)enterWoundMapAction:(id)sender
 {
+    // check if all information has been entered
+    NSString *alertMessage = nil;
+    if (nil == self.userDefaultsManager.defaultNavigationTrackFFURL) {
+        alertMessage = @"Please select a Clinical Setting.";
+    } else if (_welcomeState != WMWelcomeStateInvitationAccepted) {
+        if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
+            alertMessage = @"Please select 'Defer Team' or 'Create a Team'.";
+        }
+    }
+    WMPatient *patient = self.patient;
+    if (nil == alertMessage && (nil == patient || ![self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient])) {
+        alertMessage = @"Please select or add a patient.";
+    }
+    if (alertMessage) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action Required"
+                                                            message:alertMessage
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    // else
     UIViewController *viewController = self.initialRootViewController;
     [UIView transitionWithView:self.appDelegate.window
                       duration:0.5

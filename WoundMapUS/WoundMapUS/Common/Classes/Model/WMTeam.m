@@ -65,7 +65,8 @@ static NSMutableDictionary *ffUrl2ParticipantGroupMap;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"teamLeader",
-                                                            @"iapTeamMemberSuccessCountValue"]];
+                                                            @"iapTeamMemberSuccessCountValue",
+                                                            @"purchasedPatientCountValue"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -346,10 +346,11 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     if (error) {
                         [WMUtilities logError:error];
                     }
+                    weakSelf.appDelegate.participant = participant;
                     // DEPLOYMENT
                     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-//                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
+//                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
+                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
                         if (error) {
                             [WMUtilities logError:error];
                         }
@@ -390,9 +391,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
                 if (error) {
                     [WMUtilities logError:error];
-                } else {
-                    [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
                 }
+                [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
             }];
         }];
     }

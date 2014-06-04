@@ -630,6 +630,7 @@
         <attribute name="dateAquired" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="pdf" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="acquiredConsults" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="patientConsultants" inverseEntity="WMPatient" syncable="YES"/>
@@ -819,6 +820,7 @@
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="iapTeamMemberSuccessCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="purchasedPatientCount" optional="YES" attributeType="Integer 32" defaultValueString="5" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="team" inverseEntity="WMConsultingGroup" syncable="YES"/>
         <relationship name="invitations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTeamInvitation" inverseName="team" inverseEntity="WMTeamInvitation" syncable="YES"/>
@@ -1263,12 +1265,16 @@
         <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="450"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
+        <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>
+        <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="223"/>
+        <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="495"/>
-        <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="163"/>
+        <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="30"/>
         <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
+        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="128" height="195"/>
@@ -1278,7 +1284,7 @@
         <element name="WMSkinAssessmentCategory" positionX="0" positionY="0" width="128" height="255"/>
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="208"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="223"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="30"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="195"/>
         <element name="WMTeamPolicy" positionX="18" positionY="153" width="128" height="148"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
@@ -1298,9 +1304,5 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="223"/>
-        <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
-        <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>
-        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>
     </elements>
 </model>

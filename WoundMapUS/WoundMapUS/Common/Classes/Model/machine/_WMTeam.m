@@ -9,6 +9,7 @@ const struct WMTeamAttributes WMTeamAttributes = {
 	.flags = @"flags",
 	.iapTeamMemberSuccessCount = @"iapTeamMemberSuccessCount",
 	.name = @"name",
+	.purchasedPatientCount = @"purchasedPatientCount",
 	.updatedAt = @"updatedAt",
 };
 
@@ -57,6 +58,11 @@ const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
 	}
 	if ([key isEqualToString:@"iapTeamMemberSuccessCountValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"iapTeamMemberSuccessCount"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"purchasedPatientCountValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"purchasedPatientCount"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -135,6 +141,32 @@ const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
 
 @dynamic name;
 
+
+
+
+
+
+@dynamic purchasedPatientCount;
+
+
+
+- (int32_t)purchasedPatientCountValue {
+	NSNumber *result = [self purchasedPatientCount];
+	return [result intValue];
+}
+
+- (void)setPurchasedPatientCountValue:(int32_t)value_ {
+	[self setPurchasedPatientCount:[NSNumber numberWithInt:value_]];
+}
+
+- (int32_t)primitivePurchasedPatientCountValue {
+	NSNumber *result = [self primitivePurchasedPatientCount];
+	return [result intValue];
+}
+
+- (void)setPrimitivePurchasedPatientCountValue:(int32_t)value_ {
+	[self setPrimitivePurchasedPatientCount:[NSNumber numberWithInt:value_]];
+}
 
 
 

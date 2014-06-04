@@ -27,7 +27,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRevokeInvitationActionSheetTag,
     kConfirmInvitationActionSheetTag,
     kRemoveParticipantActionSheetTag,
-    kSignOutActionSheetTag
+    kSignOutActionSheetTag,
+    kPurchasePatientCreditsActionSheetTag
 };
 
 @interface WMManageTeamViewController () <CreateTeamInvitationViewControllerDelegate, UIActionSheetDelegate>
@@ -116,6 +117,18 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     if ([namesExpiring count]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Members Expiring"
                                                             message:[NSString stringWithFormat:@"The following team member's membership may needed to be extended: %@", [namesExpiring componentsJoinedByString:@","]]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+    // check patient count
+    WMTeam *team = self.team;
+    int purchasedPatientCount = team.purchasedPatientCountValue;
+    int patientCount = [team.patients count];
+    if ((purchasedPatientCount - patientCount) < 3) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Low Patient Credits"
+                                                            message:@"Your team's Patient Credits is getting low. Consider purchasing more credits by tapping on 'Patient Credits'."
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
@@ -243,6 +256,17 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [actionSheet showInView:self.view];
 }
 
+- (void)initiatePurchasePatientCredits
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"You have selected the option to purchase addition patient credits."
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Continue"
+                                                    otherButtonTitles:nil];
+    actionSheet.tag = kPurchasePatientCreditsActionSheetTag;
+    [actionSheet showInView:self.view];
+}
+
 - (WMCreateTeamInvitationViewController *)createTeamInvitationViewController
 {
     WMCreateTeamInvitationViewController *createTeamInvitationViewController = [[WMCreateTeamInvitationViewController alloc] initWithNibName:@"WMCreateTeamInvitationViewController" bundle:nil];
@@ -318,12 +342,13 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     NSManagedObjectContext *managedObjetContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t revokeBlock = ^{
         [ffm revokeTeamInvitation:_teamInvitationToDeleteOrConfirm ff:ff completionHandler:^(NSError *error) {
             // update local
-            [weakSelf.managedObjectContext deleteObject:_teamInvitationToDeleteOrConfirm];
-            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [managedObjectContext deleteObject:_teamInvitationToDeleteOrConfirm];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             _teamInvitationToDeleteOrConfirm = nil;
             _teamInvitations = nil;
             [weakSelf.tableView reloadData];
@@ -388,6 +413,31 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             }
             break;
         }
+        case kPurchasePatientCreditsActionSheetTag: {
+            NSString *productIdentifier = @"patient credit aggregator";
+            __weak __typeof(&*self)weakSelf = self;
+            [self presentIAPViewControllerForProductIdentifier:productIdentifier
+                                                  successBlock:^(SKPaymentTransaction *transaction) {
+                                                      // mark WMPaymentTransaction as applied
+                                                      WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
+                                                                                                                                             originalTransaction:nil
+                                                                                                                                                        username:self.participant.userName
+                                                                                                                                                          create:NO
+                                                                                                                                            managedObjectContext:managedObjectContext];
+                                                      paymentTransaction.appliedFlagValue = YES;
+                                                      [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                      FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                          if (error) {
+                                                              [WMUtilities logError:error];
+                                                          }
+                                                          [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+                                                      };
+                                                      [ff updateObj:paymentTransaction
+                                                         onComplete:onComplete onOffline:onComplete];
+                                                  } proceedAlways:YES
+                                                    withObject:self.view];
+            break;
+        }
     }
 }
 
@@ -409,6 +459,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case 2: {
             // participants - update subscription
+            shouldHighlight = YES;
+            break;
+        }
+        case 3: {
+            // patient credits
             shouldHighlight = YES;
             break;
         }
@@ -478,6 +533,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             [self initiateUpdateSubscriptionTeamMember:[tableView cellForRowAtIndexPath:indexPath]];
             break;
         }
+        case 3: {
+            // patient credits
+            [self initiatePurchasePatientCredits];
+            break;
+        }
     }
 }
 
@@ -489,11 +549,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         return 0;
     }
     // else
-    NSInteger count = 2;
-    if ([self.teamMembers count]) {
-        ++count;
-    }
-    return count;
+    return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -510,6 +566,10 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case 2:
             // participants
             title = @"Team Members";
+            break;
+        case 3:
+            // patient credits
+            title = @"Patient Credits";
             break;
     }
     return title;
@@ -529,6 +589,10 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case 2: {
             count = [self.teamMembers count];
+            break;
+        }
+        case 3: {
+            count = 1;
             break;
         }
     }
@@ -592,6 +656,20 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
             } else {
                 cell.accessoryView = nil;
+            }
+            break;
+        }
+        case 3: {
+            // patient credits
+            WMTeam *team = self.team;
+            cell.textLabel.text = @"Patient Credits";
+            cell.detailTextLabel.text = [team.purchasedPatientCount stringValue];
+            int purchasedPatientCount = team.purchasedPatientCountValue;
+            int patientCount = [team.patients count];
+            if ((purchasedPatientCount - patientCount) < 3) {
+                // warn
+                UIImage *image = [UIImage imageNamed:@"alert_yellow_iPhone"];
+                cell.accessoryView = [[UIImageView alloc] initWithImage:image];
             }
             break;
         }

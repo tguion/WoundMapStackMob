@@ -73,6 +73,9 @@
         // create on back end before GRABBAG addresses and ids
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [ff queueGrabBagAddItemAtUri:participant.ffUrl toObjAtUri:_organization.ffUrl grabBagName:WMOrganizationRelationships.participants];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         }];

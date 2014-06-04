@@ -22,6 +22,8 @@
 #import "WMPerson.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationStage.h"
+#import "WMParticipant.h"
+#import "WMTeam.h"
 #import "WMUtilities.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
@@ -490,10 +492,29 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMPatient *patient = self.patient;
     NSParameterAssert(patient.ffUrl);
-    [ffm updatePatient:patient ff:ff completionHandler:^(NSError *error) {
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    FFHttpMethodCompletion onUpdateTeamComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
-    }];
+    };
+    WMErrorCallback completionHandler = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (_newPatientFlag && nil == error && team) {
+            // update team.purchasePatientCountValue
+            team.purchasedPatientCountValue = (team.purchasedPatientCountValue - 1);
+            [ff updateObj:team onComplete:onUpdateTeamComplete onOffline:onUpdateTeamComplete];
+        } else {
+            onUpdateTeamComplete(nil, nil, nil);
+        }
+    };
+    [ffm updatePatient:patient ff:ff completionHandler:completionHandler];
 }
 
 #pragma mark - UIActionSheetDelegate

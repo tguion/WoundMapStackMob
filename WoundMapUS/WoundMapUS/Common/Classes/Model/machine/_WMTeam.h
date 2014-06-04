@@ -10,6 +10,7 @@ extern const struct WMTeamAttributes {
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *iapTeamMemberSuccessCount;
 	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *purchasedPatientCount;
 	__unsafe_unretained NSString *updatedAt;
 } WMTeamAttributes;
 
@@ -31,6 +32,7 @@ extern const struct WMTeamFetchedProperties {
 @class WMParticipant;
 @class WMPatient;
 @class WMTeamPolicy;
+
 
 
 
@@ -105,6 +107,20 @@ extern const struct WMTeamFetchedProperties {
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* purchasedPatientCount;
+
+
+
+@property int32_t purchasedPatientCountValue;
+- (int32_t)purchasedPatientCountValue;
+- (void)setPurchasedPatientCountValue:(int32_t)value_;
+
+//- (BOOL)validatePurchasedPatientCount:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -224,6 +240,15 @@ extern const struct WMTeamFetchedProperties {
 
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitivePurchasedPatientCount;
+- (void)setPrimitivePurchasedPatientCount:(NSNumber*)value;
+
+- (int32_t)primitivePurchasedPatientCountValue;
+- (void)setPrimitivePurchasedPatientCountValue:(int32_t)value_;
 
 
 
