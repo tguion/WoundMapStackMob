@@ -104,6 +104,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
+        if (object) {
+            [ff forgetObj:object];
+        }
     };
     if (_processDeletesOnNSManagedObjectContextObjectsDidChangeNotification) {
         NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];

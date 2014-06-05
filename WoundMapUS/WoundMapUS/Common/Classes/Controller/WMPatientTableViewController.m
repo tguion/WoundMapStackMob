@@ -14,6 +14,8 @@
 #import "WMPatientReferralViewController.h"
 #import "WMPatientAutoTableViewCell.h"
 #import "MBProgressHUD.h"
+#import "WMparticipant.h"
+#import "WMTeam.h"
 #import "WMPatient.h"
 #import "WMPatientConsultant.h"
 #import "WMPatientReferral.h"
@@ -69,15 +71,31 @@
 - (void)deletePatient:(WMPatient *)patient
 {
     __weak __typeof(&*self)weakSelf = self;
-    [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         // select a patient
-        self.patientToOpen = [WMPatient MR_findFirstOrderedByAttribute:WMPatientAttributes.createdAt ascending:NO inContext:self.managedObjectContext];
-        if (nil == self.patientToOpen) {
+        weakSelf.patientToOpen = [WMPatient MR_findFirstOrderedByAttribute:WMPatientAttributes.createdAt ascending:NO inContext:managedObjectContext];
+        if (nil == weakSelf.patientToOpen) {
             // need to create a patient
             [weakSelf.navigationController pushViewController:weakSelf.patientDetailViewController animated:YES];
         } else {
             [weakSelf updateUIForPatientList];
             [weakSelf.tableView reloadData];
+        }
+    };
+    [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
+        // update team
+        WMTeam *team = self.appDelegate.participant.team;
+        if (team) {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            team.purchasedPatientCountValue = (team.purchasedPatientCountValue + 1);
+            [ff updateObj:team onComplete:onComplete onOffline:onComplete];
+        } else {
+            onComplete(nil, nil, nil);
         }
     }];
 }
@@ -344,17 +362,18 @@
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    NSManagedObjectContext *managedObjectContext = [_patientToDelete managedObjectContext];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    };
     if (actionSheet.tag == kDeletePatientConfirmAlertTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [self deletePatient:_patientToDelete];
         } else {
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            };
-            NSManagedObjectContext *managedObjectContext = [_patientToDelete managedObjectContext];
             NSInteger firstOtherButtonIndex = actionSheet.firstOtherButtonIndex;
             NSInteger otherButtonIndex = buttonIndex - firstOtherButtonIndex;
             switch (otherButtonIndex) {

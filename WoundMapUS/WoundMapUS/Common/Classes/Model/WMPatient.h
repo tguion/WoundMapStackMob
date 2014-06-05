@@ -33,6 +33,7 @@ extern NSString * const kConsultantGroupName;
 @property (readonly, nonatomic) BOOL dayOrMoreSinceCreated;
 @property (readonly, nonatomic) WMMedicalHistoryGroup *lastActiveMedicalHistoryGroup;
 @property (readonly, nonatomic) BOOL hasPatientDetails;
+@property (nonatomic) BOOL isDeleting;
 
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

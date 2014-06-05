@@ -11,6 +11,7 @@
 #import "WMWelcomeToWoundMapViewController.h"
 #import "MBProgressHUD.h"
 #import "WMUserDefaultsManager.h"
+#import "WMTeam.h"
 #import "WMParticipant.h"
 #import "WMPatient.h"
 #import "WMWound.h"
@@ -160,7 +161,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     }
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     // else update patient status
-    if (_patient) {
+    if (_patient && !_patient.isDeleting) {
         [_patient updatePatientStatusMessages];
         [[_patient managedObjectContext] MR_saveToPersistentStoreAndWait];
         FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -640,20 +641,38 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
 
 - (void)deletePatient:(WMPatient *)patient completionHandler:(dispatch_block_t)completionHandler
 {
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    // mark that we are deleting patient
+    patient.isDeleting = YES;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
     BOOL deleteFromBackend = (nil != patient.ffUrl);
-    if (deleteFromBackend) {
-        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
-    }
     if ([patient isEqual:_patient]) {
         self.patient = nil;
     }
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    __block NSInteger counter = 0;
+    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (object) {
+            [ff forgetObj:object];
+        }
+        if (--counter == 0) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            completionHandler();
+        }
+    };
     [managedObjectContext MR_deleteObjects:@[patient]];
     [managedObjectContext processPendingChanges];
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
-    ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
-    completionHandler();
+    if (deleteFromBackend) {
+        ++counter;
+        [ff deleteObj:patient.consultantGroup onComplete:httpMethodCompletion];
+        NSSet *deletedObjects = managedObjectContext.deletedObjects;
+        counter += [deletedObjects count];
+        for (id object in deletedObjects) {
+            [ff deleteObj:object onComplete:httpMethodCompletion];
+        }
+    }
 }
 
 - (void)deleteWoundFromBackEnd:(WMWound *)wound

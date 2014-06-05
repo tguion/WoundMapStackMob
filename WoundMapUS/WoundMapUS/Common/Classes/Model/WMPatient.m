@@ -16,6 +16,7 @@ NSString * const kConsultantGroupName = @"consultantGroup";
 typedef enum {
     PatientFlagsFaceDetectionFailed         = 0,
     PatientFlagsFacePhotoTaken              = 1,
+    PatientFlagsIsDeleting                  = 2,
 } PatientFlags;
 
 @interface WMPatient ()
@@ -82,9 +83,15 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
 
 - (void)willTurnIntoFault
 {
-    if (_consultantGroup && self.ffUrl) {
+    if (_consultantGroup && self.ffUrl && !self.isDeleting) {
         [ffUrl2ConsultingGroupMap setObject:_consultantGroup forKey:self.ffUrl];
     }
+}
+
+- (void)prepareForDeletion
+{
+    [super prepareForDeletion];
+    [ffUrl2ConsultingGroupMap removeObjectForKey:self.ffUrl];
 }
 
 // we loose this property when self is faulted
@@ -306,6 +313,16 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:PatientFlagsFacePhotoTaken to:facePhotoTaken]);
 }
 
+- (BOOL)isDeleting
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:PatientFlagsIsDeleting];
+}
+
+- (void)setIsDeleting:(BOOL)isDeleting
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:PatientFlagsIsDeleting to:isDeleting]);
+}
+
 - (BOOL)dayOrMoreSinceCreated
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -384,7 +401,8 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
                                                             @"dayOrMoreSinceCreated",
                                                             @"lastActiveMedicalHistoryGroup",
                                                             @"hasPatientDetails",
-                                                            @"photoBlobCount"]];
+                                                            @"photoBlobCount",
+                                                            @"isDeleting"]];
     });
     return PropertyNamesNotToSerialize;
 }
