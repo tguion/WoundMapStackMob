@@ -1114,7 +1114,7 @@
             [alertView show];
             return;
         }
-    } else if ([team.patients count] > team.purchasedPatientCountValue) {
+    } else if (team.purchasedPatientCountValue <= 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action not Allowed"
                                                             message:@"Your team has reached the maximum of number of patients based on patient credits purchased. The team leader must purchase more patient credits to add additional patients."
                                                            delegate:nil
