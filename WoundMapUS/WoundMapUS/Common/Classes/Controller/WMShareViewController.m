@@ -183,6 +183,7 @@ CGFloat kCreditsMargin = 20;
 {
     WMPatientReferralViewController *patientReferralViewController = [[WMPatientReferralViewController alloc] initWithNibName:@"WMPatientReferralViewController" bundle:nil];
     patientReferralViewController.delegate = self;
+    patientReferralViewController.patientReferral = [self.patient patientReferral];
     return patientReferralViewController;
 }
 

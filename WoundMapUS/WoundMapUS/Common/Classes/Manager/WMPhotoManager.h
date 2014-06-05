@@ -38,6 +38,7 @@
                   wound:(WMWound *)wound
       completionHandler:(WMObjectCallback)completionHandler;
 
+@property (readonly, nonatomic) BOOL hasPhotosToUpload;
 - (void)uploadPhotoBlobs;
 - (void)persistWoundPhotoObjectIds;
 - (void)uploadWoundPhotoBlobsFromObjectIds;

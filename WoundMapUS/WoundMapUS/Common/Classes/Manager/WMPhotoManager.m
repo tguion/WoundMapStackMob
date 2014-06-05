@@ -703,6 +703,11 @@
     });
 }
 
+- (BOOL)hasPhotosToUpload
+{
+    return [_woundPhotoObjectIdsToUpload count] > 0;
+}
+
 - (void)uploadPhotoBlobs
 {
     WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
@@ -724,6 +729,7 @@
         userDefaultManager.woundPhotoObjectIdsToUpload = _woundPhotoObjectIdsToUpload;
     }
 }
+
 - (void)uploadWoundPhotoBlobsFromObjectIds
 {
     WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];

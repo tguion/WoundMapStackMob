@@ -96,6 +96,7 @@ CGFloat kRetartSetScaleDownFactor = 0.9;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     return self;
 }

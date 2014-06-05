@@ -463,6 +463,7 @@
 		7DDA0141193F714700E8F65E /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA013E193F714700E8F65E /* WoundMap.sqlite */; };
 		7DDA0142193F714700E8F65E /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA013F193F714700E8F65E /* WoundMap.sqlite-shm */; };
 		7DDA0143193F714700E8F65E /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA0140193F714700E8F65E /* WoundMap.sqlite-wal */; };
+		7DDA01451940AE9E00E8F65E /* TeamIntroduction.html in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA01441940AE9E00E8F65E /* TeamIntroduction.html */; };
 		7DDA8D96192550B000A1AFB7 /* NMSSH.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D95192550B000A1AFB7 /* NMSSH.framework */; };
 		7DDA8D9A1925511000A1AFB7 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D991925511000A1AFB7 /* libz.dylib */; };
 		7DDA8D9C1925511B00A1AFB7 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */; };
@@ -1386,6 +1387,7 @@
 		7DDA013E193F714700E8F65E /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
 		7DDA013F193F714700E8F65E /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
 		7DDA0140193F714700E8F65E /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
+		7DDA01441940AE9E00E8F65E /* TeamIntroduction.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TeamIntroduction.html; sourceTree = "<group>"; };
 		7DDA8D95192550B000A1AFB7 /* NMSSH.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NMSSH.framework; sourceTree = "<group>"; };
 		7DDA8D991925511000A1AFB7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -1780,6 +1782,7 @@
 				5F6DE53418B58BB000E87F7E /* InstructionsSkinAssessment.html */,
 				5F6DE53518B58BB000E87F7E /* InstructionsWoundAssessment.html */,
 				5F6DE53618B58BB000E87F7E /* InstructionsWoundTreatment.html */,
+				7DDA01441940AE9E00E8F65E /* TeamIntroduction.html */,
 			);
 			path = Instructions;
 			sourceTree = "<group>";
@@ -3437,6 +3440,7 @@
 				5F67D20418AC3BE000460C37 /* WoundMeasurementDefinitions.plist in Resources */,
 				7D10CDEC18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.xib in Resources */,
 				5F67D20618AC3BE000460C37 /* WoundOdor.plist in Resources */,
+				7DDA01451940AE9E00E8F65E /* TeamIntroduction.html in Resources */,
 				5F6DE53A18B58BB000E87F7E /* InstructionsPatientPhoto.html in Resources */,
 				7DDE40C2191151D7008DDA3E /* WMCarePlanGroupHistoryViewController.xib in Resources */,
 				7D10CD8E18D7755700AD43E3 /* WMSelectAmountQualifierViewController.xib in Resources */,

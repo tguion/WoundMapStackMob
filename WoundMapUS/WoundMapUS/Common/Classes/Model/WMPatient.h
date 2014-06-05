@@ -38,6 +38,7 @@ extern NSString * const kConsultantGroupName;
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
+- (WMPatientReferral *)patientReferral;
 - (WMPatientReferral *)patientReferralForReferree:(WMParticipant *)referee;
 - (BOOL)updateNavigationToTeam:(WMTeam *)team patient2StageMap:(NSDictionary *)patient2StageMap;
 - (NSString *)updatePatientStatusMessages;

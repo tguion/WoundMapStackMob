@@ -336,6 +336,15 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     return ([self.person.addresses count] || [self.person.telecoms count] || [self.medicalHistoryGroups count] || self.surgicalHistory || self.relevantMedications);
 }
 
+- (WMPatientReferral *)patientReferral
+{
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    return [WMPatientReferral MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMPatientReferralRelationships.patient, self]
+                                               sortedBy:WMPatientReferralAttributes.createdAt
+                                              ascending:NO
+                                              inContext:managedObjectContext];
+}
+
 - (WMPatientReferral *)patientReferralForReferree:(WMParticipant *)referee
 {
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
@@ -402,7 +411,8 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
                                                             @"lastActiveMedicalHistoryGroup",
                                                             @"hasPatientDetails",
                                                             @"photoBlobCount",
-                                                            @"isDeleting"]];
+                                                            @"isDeleting",
+                                                            @"patientReferral"]];
     });
     return PropertyNamesNotToSerialize;
 }

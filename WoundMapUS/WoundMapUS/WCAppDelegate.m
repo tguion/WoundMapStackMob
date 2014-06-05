@@ -67,7 +67,9 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 - (void)signOut
 {
-    WMFatFractal *ff = self.ff;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+    [photoManager uploadPhotoBlobs];
     self.participant = nil;
     [self.navigationCoordinator clearPatientCache];
     [ff forgetAllObjs];
@@ -212,6 +214,9 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    // upload any photos
+    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+    [photoManager uploadPhotoBlobs];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

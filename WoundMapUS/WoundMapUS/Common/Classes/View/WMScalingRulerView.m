@@ -35,6 +35,11 @@
     self.boxOffset = 8.0;
     self.scaleFactor = 1.0;
     self.transform = CGAffineTransformIdentity;
+    // recenter
+    CGRect frame = self.superview.bounds;
+    frame = CGRectInset(frame, 20, 20);
+    self.frame = frame;
+    [self setNeedsDisplay];
 }
 
 - (void)setBoxOffset:(CGFloat)boxOffset

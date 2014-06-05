@@ -21,7 +21,7 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong, readonly) CoreDataHelper *coreDataHelper;
-@property (readonly, strong, nonatomic) WMFatFractal *ff;
+//@property (readonly, strong, nonatomic) WMFatFractal *ff;
 @property (nonatomic, readonly) WMNavigationCoordinator *navigationCoordinator;
 
 @property (nonatomic, readonly) NSURL *applicationDocumentsDirectory;

@@ -6,6 +6,20 @@
 		<key>contentFileExtension</key>
 		<string>html</string>
 		<key>contentFileName</key>
+		<string>TeamIntroduction</string>
+		<key>desc</key>
+		<string>What is a WoundMap Team and how do I create one?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>0</integer>
+		<key>title</key>
+		<string>WoundMap Team</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
 		<string>InstructionsIntroduction</string>
 		<key>desc</key>
 		<string>What kind of data does WoundMap collect? How does WoundMap help improve consistency and quality of wound care?</string>
