@@ -65,3 +65,4 @@ curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMap
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMNavigationStage/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMNavigationNode/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/FFUser/(guid%20ne%20'system'%20and%20guid%20ne%20'anonymous')"
+curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/FFUserGroup/(guid%20ne%20'')"
