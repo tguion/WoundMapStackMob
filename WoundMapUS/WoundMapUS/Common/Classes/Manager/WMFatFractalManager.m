@@ -173,14 +173,11 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     NSString *lastUserName = userDefaultsManager.lastUserName;
     if (lastUserName && ![lastUserName isEqualToString:userName]) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            [WMPatient MR_truncateAllInContext:managedObjectContext];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionHandler();
-            });
-        });
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
+        [WMPatient MR_truncateAllInContext:managedObjectContext];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        completionHandler();
     } else {
         completionHandler();
     }
@@ -441,6 +438,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     NSParameterAssert([participant managedObjectContext] == managedObjectContext);
     [ff createObj:participant atUri:[NSString stringWithFormat:@"/%@", [WMParticipant entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             completionHandler(error);
         }];

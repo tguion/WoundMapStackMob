@@ -101,6 +101,9 @@
     CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
     __block NSInteger counter = 0;
     WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         // update backend from main thread
         NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
         for (NSManagedObjectID *objectID in objectIDs) {
@@ -126,6 +129,9 @@
     // *** WMNavigationTrack *** first attempt to acquire data from backend
     counter += 5;   // WMNavigationTrack does 5 callbacks
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (![object count]) {
             [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];

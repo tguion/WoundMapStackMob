@@ -103,10 +103,16 @@ typedef enum {
     NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
     if (nil == fileURL) {
         DLog(@"NavigationTracks.plist file not found");
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil);
+        }
         return;
     }
     // else check if already loaded
     if ([WMNavigationTrack navigationTrackCount:managedObjectContext] > 0) {
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil);
+        }
         return;
     }
     // else

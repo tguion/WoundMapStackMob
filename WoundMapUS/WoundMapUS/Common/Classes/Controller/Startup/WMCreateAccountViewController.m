@@ -360,7 +360,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             };
             NSString *lastUserName = userDefaultsManager.lastUserName;
             if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
-                [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Checking access to patient records...";
+                [MBProgressHUD HUDForView:weakSelf.view].labelText = @"Checking access to patient records...";
                 [ffm truncateStoreForSignIn:participant.userName completionHandler:participantBlock];
             } else {
                 participantBlock();
