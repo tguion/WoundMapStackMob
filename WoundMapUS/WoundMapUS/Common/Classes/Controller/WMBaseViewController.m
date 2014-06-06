@@ -26,7 +26,7 @@
 #import "UIView+Custom.h"
 #import "WCAppDelegate.h"
 
-BOOL const kPresentIAPController = NO;
+BOOL const kPresentIAPController = YES;
 
 @interface WMBaseViewController ()
 

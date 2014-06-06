@@ -339,7 +339,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             completionHandler(error);
         }
     };
@@ -368,8 +368,12 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             // may need to get consultingGroup
             counter = [patients count];
-            for (WMPatient *patient in patients) {
-                [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] onComplete:onComplete];
+            if (0 == counter) {
+                completionHandler(nil);
+            } else {
+                for (WMPatient *patient in patients) {
+                    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] onComplete:onComplete];
+                }
             }
         }
     }];

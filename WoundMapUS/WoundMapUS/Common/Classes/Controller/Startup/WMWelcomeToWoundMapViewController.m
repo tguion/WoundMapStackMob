@@ -521,8 +521,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                             // TODO manage consulting group
                             break;
                         }
-                        // else IAP for creating a consulting group
-                        if (kPresentIAPController) {
+                        // else IAP for creating a consulting group DEPLOYMENT
+                        if (NO) {
                             BOOL proceed = [self presentIAPViewControllerForProductIdentifier:kCreateConsultingGroupProductIdentifier
                                                                                  successBlock:^(SKPaymentTransaction *transaction) {
                                                                                      // mark WMPaymentTransaction as applied
