@@ -186,6 +186,8 @@ typedef enum {
         range0.length = (stringLength - range0.location);
         // append remaining part of string
         [substrings addObject:[string substringWithRange:range0]];
+    } else {
+        [substrings addObject:string];
     }
     string = [substrings componentsJoinedByString:@" "];
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[string dataUsingEncoding:NSUTF8StringEncoding]

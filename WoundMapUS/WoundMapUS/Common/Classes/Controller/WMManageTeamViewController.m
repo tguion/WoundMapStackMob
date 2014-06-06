@@ -364,16 +364,42 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case kConfirmInvitationActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
                 // add to team
-                [ffm addParticipantToTeamFromTeamInvitation:_teamInvitationToDeleteOrConfirm team:self.team ff:ff completionHandler:^(NSError *error) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                    [managedObjetContext MR_saveToPersistentStoreAndWait];
-                    // update regardless of error
-                    _teamInvitations = nil;
-                    _teamMembers = nil;
-                    [weakSelf.tableView reloadData];
-                }];
+                dispatch_block_t block = ^{
+                    [ffm addParticipantToTeamFromTeamInvitation:_teamInvitationToDeleteOrConfirm team:weakSelf.team ff:ff completionHandler:^(NSError *error) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                        [managedObjetContext MR_saveToPersistentStoreAndWait];
+                        // update regardless of error
+                        _teamInvitations = nil;
+                        _teamMembers = nil;
+                        [weakSelf.tableView reloadData];
+                    }];
+                };
+                if (kPresentIAPController) {
+                    [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
+                                                          successBlock:^(SKPaymentTransaction *transaction) {
+                                                              // mark WMPaymentTransaction as applied
+                                                              WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
+                                                                                                                                                     originalTransaction:nil
+                                                                                                                                                                username:self.participant.userName
+                                                                                                                                                                  create:NO
+                                                                                                                                                    managedObjectContext:managedObjectContext];
+                                                              paymentTransaction.appliedFlagValue = YES;
+                                                              [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                                              FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                                  if (error) {
+                                                                      [WMUtilities logError:error];
+                                                                  }
+                                                                  block();
+                                                              };
+                                                              [ff updateObj:paymentTransaction
+                                                                 onComplete:onComplete onOffline:onComplete];
+                                                          } proceedAlways:YES
+                                                            withObject:self.view];
+                } else {
+                    block();
+                }
             } else if (buttonIndex == actionSheet.cancelButtonIndex) {
                 // revoke
                 revokeBlock();
@@ -429,7 +455,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                           if (error) {
                                                               [WMUtilities logError:error];
                                                           }
-                                                          [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+                                                          [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
                                                       };
                                                       [ff updateObj:paymentTransaction
                                                          onComplete:onComplete onOffline:onComplete];

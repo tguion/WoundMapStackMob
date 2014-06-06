@@ -40,7 +40,6 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     [self.tableView registerClass:[WMIAPProductTextTableViewCell class] forCellReuseIdentifier:@"IAPProductText"];
     self.tableView.tableFooterView = self.actionContainerView;
     self.tableView.separatorInset = UIEdgeInsetsMake(0.0, 15.0, 0.0, 0.0);
-    _actionContainerView = nil;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
 }
@@ -148,6 +147,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 
 - (IBAction)cancelAction:(id)sender
 {
+    [_descHTMLContainerView removeFromSuperview];
     _declineHandler();
     [self performSelector:@selector(clearAllReferences) withObject:nil afterDelay:0.0];
 }
@@ -187,7 +187,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     }
     // else
     if (actionSheet.tag == kPurchaseConfirmActionSheetTag) {
-        // else delete index patient
+        [_descHTMLContainerView removeFromSuperview];
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             // IAPManager will post notification with success or error for purchase

@@ -178,7 +178,6 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@')", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         if (nil == object) {
@@ -190,31 +189,7 @@
             [alertView show];
         } else {
             _invitee = object;
-            // present IAP
-            if (kPresentIAPController) {
-                [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
-                                                      successBlock:^(SKPaymentTransaction *transaction) {
-                                                          // mark WMPaymentTransaction as applied
-                                                          WMPaymentTransaction *paymentTransaction = [WMPaymentTransaction paymentTransactionForSKPaymentTransaction:transaction
-                                                                                                                                                 originalTransaction:nil
-                                                                                                                                                            username:self.participant.userName
-                                                                                                                                                              create:NO
-                                                                                                                                                managedObjectContext:managedObjectContext];
-                                                          paymentTransaction.appliedFlagValue = YES;
-                                                          [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                                          FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                                              if (error) {
-                                                                  [WMUtilities logError:error];
-                                                              }
-                                                              [weakSelf completeTeamInvitation];
-                                                          };
-                                                          [ff updateObj:paymentTransaction
-                                                             onComplete:onComplete onOffline:onComplete];
-                                                      } proceedAlways:YES
-                                                        withObject:sender];
-            } else {
-                [weakSelf completeTeamInvitation];
-            }
+            [weakSelf completeTeamInvitation];
         }
     }];
 }
