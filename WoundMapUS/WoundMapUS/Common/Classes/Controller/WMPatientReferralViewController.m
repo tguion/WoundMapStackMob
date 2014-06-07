@@ -94,7 +94,7 @@
             if (error) {
                 [WMUtilities logError:error];
             }
-            if (--counter == 0) {
+            if (counter == 0 || --counter == 0) {
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }
 
@@ -286,7 +286,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             // RPN push notification to _patientReferral.referrer.guid, _patientReferral.referree.guid, _patientReferral.patient.guid
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -351,7 +351,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             [managedObjectContext MR_deleteObjects:@[_patientReferral]];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

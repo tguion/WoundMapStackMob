@@ -532,8 +532,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
                 if (error) {
                     [WMUtilities logError:error];
                 }
-                --counter;
-                if (counter == 0) {
+                if (counter == 0 || --counter == 0) {
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     [weakSelf.delegate policyEditorViewControllerDidSave:weakSelf];

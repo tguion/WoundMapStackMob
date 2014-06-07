@@ -152,15 +152,13 @@
     FFHttpMethodCompletion updateHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
-        } else {
-            --counter;
-            if (counter == 0) {
-                // save local
-                NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [weakSelf.navigationController popViewControllerAnimated:YES];
-                weakSelf.didCreateBradenScale = NO;
-            }
+        }
+        if (counter == 0 || --counter == 0) {
+            // save local
+            NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+            weakSelf.didCreateBradenScale = NO;
         }
     };
     for (WMBradenSection *bradenSection in _bradenScale.sections) {

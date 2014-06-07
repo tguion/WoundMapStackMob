@@ -290,7 +290,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             if (error) {
                 [WMUtilities logError:error];
             }
-            if (--counter == 0) {
+            if (counter == 0 || --counter == 0) {
                 [coreDataHelper.context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                     completionHandler(error, participant);
                 }];
@@ -388,7 +388,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             completionHandler(error);
         }
     };
@@ -476,7 +476,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             completionHandler(error);
         }
     };
@@ -549,13 +549,10 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     __block NSInteger counter = 0;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
-            counter = 0;
+            [WMUtilities logError:error];
+        }
+        if (counter == 0 || --counter == 0) {
             completionHandler(error);
-        } else {
-            --counter;
-            if (counter == 0) {
-                completionHandler(error);
-            }
         }
     };
     
@@ -639,7 +636,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             completionHandler(error);
         }
     };
@@ -778,7 +775,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             [ff forgetObj:teamMember];
             [managedObjectContext MR_deleteObjects:@[teamMember]];
             DLog(@"deleted objects:%@", managedObjectContext.deletedObjects);
@@ -969,7 +966,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             completionHandler(error, patient);
         }
     };
@@ -1009,7 +1006,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             completionHandler(error);
         }
@@ -1043,7 +1040,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             completionHandler(error);
         }

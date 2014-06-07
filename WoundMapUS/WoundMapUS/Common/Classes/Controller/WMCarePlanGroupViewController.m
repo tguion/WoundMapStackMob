@@ -422,7 +422,7 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     dispatch_block_t completionHandler = ^{
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             block();
         }
     };

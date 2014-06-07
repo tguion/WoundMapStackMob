@@ -354,7 +354,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             block();
         }
     };

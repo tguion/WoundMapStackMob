@@ -116,12 +116,12 @@
         if (callBack) {
             callBack();
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             handler(nil);
         }
     };
     dispatch_block_t counterHandler = ^{
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             handler(nil);
         }
     };
@@ -161,12 +161,12 @@
         if (callBack) {
             callBack();
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             handler(nil);
         }
     };
     dispatch_block_t counterHandler = ^{
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             handler(nil);
         }
     };

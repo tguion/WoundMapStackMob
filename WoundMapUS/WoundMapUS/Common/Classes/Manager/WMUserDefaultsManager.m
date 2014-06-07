@@ -36,6 +36,18 @@ NSDateFormatter * DOB_Formatter;
 {
 }
 
+- (BOOL)splashViewInstructionViewed
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"com.mobilehealthware.woundmap.splashViewInstructionViewed"];
+}
+
+- (void)setSplashViewInstructionViewed:(BOOL)splashViewInstructionViewed
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:splashViewInstructionViewed forKey:@"com.mobilehealthware.woundmap.splashViewInstructionViewed"];
+    [userDefaults synchronize];
+}
+
 #pragma mark - Pariticipant
 
 - (NSString *)lastUserName

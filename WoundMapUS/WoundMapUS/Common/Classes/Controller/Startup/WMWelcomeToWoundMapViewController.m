@@ -45,6 +45,7 @@
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 
 //#define kAddPatientToTeamActionSheetTag 1000
@@ -57,7 +58,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,            // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate, UIWebViewDelegate>
+
+@property (strong, nonatomic) IBOutlet UIView *descHTMLContainerView;
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
 
 @property (nonatomic) WMWelcomeState welcomeState;
 @property (readonly, nonatomic) BOOL connectedTeamIsConsultingGroup;
@@ -110,19 +114,32 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     _enterWoundMapButton.enabled = self.setupConfigurationComplete;
 }
 
-//- (void)viewDidAppear:(BOOL)animated
-//{
-//    [super viewDidAppear:animated];
-//    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-//    if (isPad && !self.navigationController.navigationBarHidden) {
-//        [self.navigationController setNavigationBarHidden:YES animated:YES];
-//    }
-//}
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    if (!userDefaultsManager.splashViewInstructionViewed) {
+        [self presentSplashViewInstructionsView];
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)presentSplashViewInstructionsView
+{
+    NSURL *htmlURL = [[NSBundle mainBundle] URLForResource:@"SplashReadInstructions" withExtension:@"html"];
+    NSError *error = nil;
+    NSString *_htmlString = [NSString stringWithContentsOfURL:htmlURL encoding:NSUTF8StringEncoding error:&error];
+    if (error) {
+        [WMUtilities logError:error];
+    }
+    [_webView loadHTMLString:_htmlString baseURL:nil];
+    _descHTMLContainerView.frame = self.view.bounds;
+    [self.view addSubview:_descHTMLContainerView];
 }
 
 #pragma mark - Core
@@ -358,6 +375,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 #pragma mark - Actions
 
+- (IBAction)dismissSplashViewInstructions:(id)sender
+{
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    userDefaultsManager.splashViewInstructionViewed = YES;
+    [_descHTMLContainerView removeFromSuperview];
+}
+
 - (IBAction)deferTeamAction:(id)sender
 {
     UISwitch *deferTeamSwitch = (UISwitch *)sender;
@@ -426,6 +450,18 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self presentViewController:navigationController animated:YES completion:^{
         // nothing
     }];
+}
+
+#pragma mark - UIWebViewDelegate
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        NSURL *url = request.URL;
+        [[UIApplication sharedApplication] openURL:url];
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - UIActionSheetDelegate

@@ -657,7 +657,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         if (object) {
             [ff forgetObj:object];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             completionHandler();
         }

@@ -133,11 +133,9 @@
         FFHttpMethodCompletion handler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                --counter;
-                if (counter == 0) {
-                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                }
+            }
+            if (counter == 0 || --counter == 0) {
+                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }
         };
         FFHttpMethodCompletion grabBagHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {

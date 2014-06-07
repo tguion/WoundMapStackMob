@@ -97,7 +97,7 @@
         UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         __weak __typeof(&*self)weakSelf = self;
         dispatch_block_t block = ^{
-            if (--counter == 0) {
+            if (counter == 0 || --counter == 0) {
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [activityIndicatorView removeFromSuperview];
                 weakSelf.imageView.image = woundPhoto.thumbnail;

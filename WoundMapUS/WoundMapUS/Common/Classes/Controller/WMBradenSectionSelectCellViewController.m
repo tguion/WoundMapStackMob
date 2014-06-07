@@ -63,7 +63,7 @@
                 [WMUtilities logError:error];
             }
             [ff queueGrabBagAddItemAtUri:[object valueForKey:WMBradenCellAttributes.ffUrl] toObjAtUri:_bradenSection.ffUrl grabBagName:WMBradenSectionRelationships.cells];
-            if (--counter == 0) {
+            if (counter == 0 || --counter == 0) {
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }
         };

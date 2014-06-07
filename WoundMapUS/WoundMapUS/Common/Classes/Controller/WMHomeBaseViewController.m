@@ -1559,7 +1559,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf navigateToBrowsePhotos:sender];
@@ -2161,7 +2161,7 @@
                     [WMUtilities logError:error];
                 }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
-                if (--counter == 0) {
+                if (counter == 0 || --counter == 0) {
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 }
             };

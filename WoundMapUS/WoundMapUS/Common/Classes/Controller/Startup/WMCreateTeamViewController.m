@@ -409,6 +409,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.view endEditing:YES];
+    if ([_teamNameTextInput length] == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Input"
+                                                          message:@"Please enter the name of your team first"
+                                                         delegate:nil
+                                                cancelButtonTitle:@"Dismiss"
+                                                otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
     switch (indexPath.section) {
         case 0: {
             // team name - nothing

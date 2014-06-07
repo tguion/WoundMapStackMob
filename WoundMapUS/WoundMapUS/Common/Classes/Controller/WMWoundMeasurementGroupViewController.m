@@ -176,11 +176,9 @@
             FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
-                } else {
-                    --counter;
-                    if (counter == 0) {
-                        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                    }
+                }
+                if (counter == 0 || --counter == 0) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 }
             };
             [ff createObj:_woundMeasurementGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -516,7 +514,7 @@
         if (error) {
             [WMUtilities logError:error];
         }
-        if (--counter == 0) {
+        if (counter == 0 || --counter == 0) {
             block();
         }
     };
