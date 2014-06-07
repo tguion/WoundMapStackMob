@@ -319,20 +319,11 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     }
     [[WMUserDefaultsManager sharedInstance] setDefaultNavigationTrackFFURL:navigationTrack.ffUrl];
     WMPatient *patient = self.patient;
-    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     if (nil != patient) {
         WMNavigationTrack *patientNavigationTrack = patient.stage.track;
         if (![patientNavigationTrack isEqual:navigationTrack]) {
-            patient.stage = navigationTrack.initialStage;
+            self.navigationStage = navigationTrack.initialStage;
             patientNavigationTrackDidChange = YES;
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            };
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [ff updateObj:patient onComplete:onComplete onOffline:onComplete];
         }
     }
     if (patientNavigationTrackDidChange) {

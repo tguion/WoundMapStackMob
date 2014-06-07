@@ -338,6 +338,7 @@
     }];
     // send notification
     [[NSNotificationCenter defaultCenter] postNotificationName:kRespondedToReferralNotification object:[_patientReferral objectID]];
+    // RPN
 }
 
 - (IBAction)deletePatientReferral:(id)sender

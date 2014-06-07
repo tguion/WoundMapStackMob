@@ -12,9 +12,23 @@
 		<key>iconFileName</key>
 		<string>ui_assessment</string>
 		<key>sortRank</key>
-		<integer>0</integer>
+		<integer>-2</integer>
 		<key>title</key>
 		<string>WoundMap Team</string>
+	</dict>
+	<dict>
+		<key>contentFileExtension</key>
+		<string>html</string>
+		<key>contentFileName</key>
+		<string>InstructionPatientReferral</string>
+		<key>desc</key>
+		<string>How to I refer a patient to another member of the team?</string>
+		<key>iconFileName</key>
+		<string>ui_assessment</string>
+		<key>sortRank</key>
+		<integer>-1</integer>
+		<key>title</key>
+		<string>Patient Referral</string>
 	</dict>
 	<dict>
 		<key>contentFileExtension</key>

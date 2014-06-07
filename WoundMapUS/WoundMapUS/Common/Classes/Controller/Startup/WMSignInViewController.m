@@ -215,10 +215,10 @@
                     [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
                         if (error) {
                             [WMUtilities logError:error];
-                        } else {
-                            participant = object;
-                            block();
                         }
+                        participant = object;
+                        participant.dateLastSignin = [NSDate date];
+                        block();
                     }];
                 } else {
                     [ffm updateParticipant:participant completionHandler:^(NSError *error) {

@@ -33,5 +33,6 @@ extern NSString *localStoreFilename;
 
 - (void)markBackendDataAcquiredForEntityName:(NSString *)entityName;
 - (BOOL)isBackendDataAcquiredForEntityName:(NSString *)entityName;
+- (void)unmarkBackendDataAcquiredForEntityName:(NSString *)entityName;
 
 @end

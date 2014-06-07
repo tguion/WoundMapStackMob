@@ -174,8 +174,11 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     NSString *lastUserName = userDefaultsManager.lastUserName;
     if (lastUserName && ![lastUserName isEqualToString:userName]) {
         NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+        [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
+        CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
+        [coreDataHelper unmarkBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         completionHandler();
     } else {
@@ -242,18 +245,12 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                         block();
                     } else {
                         // make sure we have the team nodes
-                        NSInteger stageCountNoTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team = nil"] inContext:managedObjectContext];
-                        NSInteger stageCountTeam = [WMNavigationStage MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"track.team == %@", team] inContext:managedObjectContext];
-                        if (stageCountTeam < stageCountNoTeam) {
-                            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                if (error) {
-                                    [WMUtilities logError:error];
-                                }
-                                block();
-                            }];
-                        } else {
+                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
                             block();
-                        }
+                        }];
                     }
                 }];
             } else if (teamInvitation) {
@@ -309,7 +306,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (![coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
             ++counter;
             [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1", [WMMedicalHistoryItem entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+                [coreDataHelper markBackendDataAcquiredForEntityName:[WMMedicalHistoryItem entityName]];
                 errorCallback(error);
             }];
         }

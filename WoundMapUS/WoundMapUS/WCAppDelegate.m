@@ -230,11 +230,13 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 #pragma mark - Remote Notifications
 
+// RPN
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
 {
     [[FatFractal main] registerNotificationID:[devToken description]];
 }
 
+// RPN
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     id alertMsg = nil;
     NSString *otherButton = nil;
@@ -292,11 +294,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [alert show];
 }
 
+// RPN
 - (void)processRemoteNotification
 {
-    NSNumber *patientId = self.remoteNotification[@"aps"][@"alert"][@"pId"];
-    NSNumber *sourceId = self.remoteNotification[@"aps"][@"alert"][@"sId"];
-    NSNumber *targetId = self.remoteNotification[@"aps"][@"alert"][@"tId"];
+    NSString *patientGUID = self.remoteNotification[@"aps"][@"alert"][@"pId"];      // patient
+    NSString *sourceGUID = self.remoteNotification[@"aps"][@"alert"][@"sId"];       // source participant
+    NSString *targetGUID = self.remoteNotification[@"aps"][@"alert"][@"tId"];       // target participant
 }
 
 #pragma mark - UIAlertViewDelegate
