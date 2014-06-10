@@ -54,6 +54,22 @@
     return date[@"updatedAt"];
 }
 
++ (NSDate *)lastWoundTreatmentGroupCreated:(WMPatient *)patient
+{
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+    NSExpression *dateCreatedExpression = [NSExpression expressionForKeyPath:WMWoundTreatmentGroupAttributes.createdAt];
+    NSExpressionDescription *dateCreatedExpressionDescription = [[NSExpressionDescription alloc] init];
+    dateCreatedExpressionDescription.name = WMWoundTreatmentGroupAttributes.createdAt;
+    dateCreatedExpressionDescription.expression = [NSExpression expressionForFunction:@"max:" arguments:@[dateCreatedExpression]];
+    dateCreatedExpressionDescription.expressionResultType = NSDateAttributeType;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:[WMWoundTreatmentGroup entityName]];
+    request.predicate = [NSPredicate predicateWithFormat:@"wound.patient == %@", patient];
+    request.resultType = NSDictionaryResultType;
+    request.propertiesToFetch = @[dateCreatedExpressionDescription];
+    NSDictionary *date = (NSDictionary *)[WMWoundTreatmentGroup MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    return date[WMWoundTreatmentGroupAttributes.createdAt];
+}
+
 + (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound
 {
     return [WMWoundTreatmentGroup MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"wound == %@ AND status.activeFlag == YES AND closedFlag == NO", wound]

@@ -9,9 +9,13 @@
 #import "WMWoundTreatmentGroupsViewController.h"
 #import "WMWoundTreatmentViewController.h"
 #import "WMWoundTreatmentSummaryViewController.h"
+#import "MBProgressHUD.h"
+#import "WMParticipant.h"
+#import "WMTeam.h"
 #import "WMWound.h"
 #import "WMWoundTreatmentGroup.h"
 #import "WMInterventionStatus.h"
+#import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
 @interface WMWoundTreatmentGroupsViewController () <WoundTreatmentViewControllerDelegate>
@@ -88,7 +92,32 @@
 
 - (IBAction)addAction:(id)sender
 {
-    [self navigateToWoundTreatmentViewController:nil];
+    // consider this a new encounter if there is only one wound or the last wound treatment was created over 24 hours ago
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf navigateToWoundTreatmentViewController:nil];
+    };
+    // check if there are available credits
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    if (nil == team) {
+        block();
+    } else {
+        if (team.purchasedPatientCountValue <= 0) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action not Allowed"
+                                                                message:@"Your team has reached the maximum of number of patient encounters based on patient encounter credits purchased. The team leader must purchase more patient encounter credits to document patient encounters."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            return;
+        }
+        // else
+        [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Checking Encounter Credits";
+        [ffm decrementPatientEncounterCreditForPatient:self.patient onComplete:block];
+    }
 }
 
 #pragma mark - WoundTreatmentViewControllerDelegate

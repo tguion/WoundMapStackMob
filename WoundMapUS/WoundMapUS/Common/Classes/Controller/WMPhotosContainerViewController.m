@@ -1121,6 +1121,14 @@
             NSData *photoData = [response rawResponseData];
             if (response.httpResponse.statusCode > 300) {
                 DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                if (response.httpResponse.statusCode == 404) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Photo"
+                                                                        message:@"The full size photo has not been submitted to the cloud."
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"Dismiss"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                }
             } else {
                 photo.photo = [[UIImage alloc] initWithData:photoData];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];

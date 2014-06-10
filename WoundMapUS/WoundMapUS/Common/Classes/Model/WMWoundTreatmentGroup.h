@@ -30,6 +30,7 @@
                                               wound:(WMWound *)wound;
 
 + (NSDate *)mostRecentDateModified:(WMWound *)wound;
++ (NSDate *)lastWoundTreatmentGroupCreated:(WMPatient *)patient;
 + (WMWoundTreatmentGroup *)activeWoundTreatmentGroupForWound:(WMWound *)wound;
 
 - (NSInteger)valuesCountForWoundTreatment:(WMWoundTreatment *)woundTreatment;

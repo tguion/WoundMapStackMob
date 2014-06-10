@@ -170,10 +170,10 @@
 
 - (IBAction)doneAction:(id)sender
 {
+    [self.view endEditing:YES];
     if (![self validateInput]) {
         return;
     }
-    [self.view endEditing:YES];
     // see if we can confirm user name
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -225,23 +225,19 @@
 
 #pragma mark - UITextFieldDelegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    __weak __typeof(&*self)weakSelf = self;
-    [self performBlock:^{
-        switch (textField.tag) {
-            case 1000: {
-                weakSelf.userNameTextInput = textField.text;
-                break;
-            }
-            case 1001: {
-                // TODO check number
-                weakSelf.passcodeTextInput = textField.text;
-                break;
-            }
+    switch (textField.tag) {
+        case 1000: {
+            self.userNameTextInput = textField.text;
+            break;
         }
-    } afterDelay:0.1];
-    return YES;
+        case 1001: {
+            // TODO check number
+            self.passcodeTextInput = textField.text;
+            break;
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -308,7 +304,7 @@
         case 1: {
             textField.tag = 1001;
             textField.keyboardType = UIKeyboardTypeNumberPad;
-            [myCell updateWithLabelText:@"Passcode" valueText:_userNameTextInput valuePrompt:@"Numeric passcode"];
+            [myCell updateWithLabelText:@"Passcode" valueText:_passcodeTextInput valuePrompt:@"Numeric passcode"];
             break;
         }
     }

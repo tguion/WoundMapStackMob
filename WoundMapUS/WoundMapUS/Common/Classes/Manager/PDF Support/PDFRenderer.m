@@ -132,6 +132,7 @@ NSInteger kXPlotOffset = 0;
 	// 1 - Create the graph
 	CPTGraph *graph = [[CPTXYGraph alloc] initWithFrame:self.hostingView.bounds];
 	[graph applyTheme:[CPTTheme themeNamed:kCPTPlainWhiteTheme]];
+    graph.fill = [CPTFill fillWithColor:[CPTColor clearColor]];
 	self.hostingView.hostedGraph = graph;
 	// 2 - Set graph title
 	NSString *title = self.woundStatusMeasurementTitle;
@@ -386,6 +387,7 @@ NSInteger kXPlotOffset = 0;
 	// 1 - Create the graph
 	CPTGraph *graph = [[CPTXYGraph alloc] initWithFrame:self.hostingView.bounds];
 	[graph applyTheme:[CPTTheme themeNamed:kCPTPlainWhiteTheme]];
+    graph.fill = [CPTFill fillWithColor:[CPTColor clearColor]];
 	self.hostingView.hostedGraph = graph;
 	// 2 - Set graph title
 

@@ -156,7 +156,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 //        [self initializeInterface];
 //    }
     // Register the preference defaults early.
-    NSDictionary *appDefaults = @{@"com.mobilehealthware.woundmap.defaultIdRoot": @"2.16.840.1.113883.3.933"};
+    NSDictionary *appDefaults = @{@"com.mobilehealthware.woundmap.shouldRequestPasswordForEmailAttachment": @YES,
+                                  @"com.mobilehealthware.woundmap.defaultIdRoot": @"2.16.840.1.113883.3.933"};
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     // set up IAP so it hears notifications
     [IAPManager sharedInstance];

@@ -59,4 +59,6 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 - (NSInteger)deleteExpiredPhotos:(WMTeamPolicy *)teamPolicy;
 - (void)deletePhotosForPatient:(WMPatient *)patient;
 
+- (void)decrementPatientEncounterCreditForPatient:(WMPatient *)patient onComplete:(dispatch_block_t)onComplete;
+
 @end

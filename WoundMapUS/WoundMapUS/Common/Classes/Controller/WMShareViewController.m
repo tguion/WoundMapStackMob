@@ -24,6 +24,7 @@
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMEmailManager.h"
+#import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
@@ -260,7 +261,12 @@ CGFloat kCreditsMargin = 20;
 
 - (BOOL)shouldRequestPassword
 {
-    return self.shareOption == SelectWoundAndActionShareOption_Email;
+    if (self.shareOption == SelectWoundAndActionShareOption_Email) {
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        return userDefaultsManager.shouldRequestPasswordForEmailAttachment;
+    }
+    // else
+    return NO;
 }
 
 - (BOOL)hasRiskAssessment

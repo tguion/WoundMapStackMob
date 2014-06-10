@@ -178,9 +178,15 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
         CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
-        [coreDataHelper unmarkBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
-        completionHandler();
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            completionHandler();
+        }];
     } else {
         completionHandler();
     }
@@ -1062,6 +1068,46 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
             }];
         }
+    }
+}
+
+#pragma mark - Patient Encounter Credits
+
+- (void)decrementPatientEncounterCreditForPatient:(WMPatient *)patient onComplete:(dispatch_block_t)onComplete
+{
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    if (nil == team) {
+        onComplete();
+        return;
+    }
+    // else
+    BOOL shouldDecrementPatientEncounterCredit = NO;
+    NSDate *now = [NSDate date];
+    NSDate *lastWoundTreatmentGroup = [WMWoundTreatmentGroup lastWoundTreatmentGroupCreated:patient];
+    if (nil == lastWoundTreatmentGroup) {
+        shouldDecrementPatientEncounterCredit = YES;
+    } else {
+        // check if 24 hours apart
+        if ([now timeIntervalSinceDate:lastWoundTreatmentGroup] > 60.0*60.0*24.0) {
+            shouldDecrementPatientEncounterCredit = YES;
+        }
+    }
+    if (shouldDecrementPatientEncounterCredit) {
+        NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+        // update back end
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        FFHttpMethodCompletion onUpdateTeamComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            onComplete();
+        };
+        team.purchasedPatientCountValue = (team.purchasedPatientCountValue - 1);
+        [ff updateObj:team onComplete:onUpdateTeamComplete onOffline:onUpdateTeamComplete];
+    } else {
+        onComplete();
     }
 }
 

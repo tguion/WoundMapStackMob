@@ -383,6 +383,7 @@
 		7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */; };
 		7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */; };
 		7D9AA28A18B13F5900C1B698 /* WMPatientTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */; };
+		7DA3C6AD19460E44008DA3DC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7DA3C6AC19460E43008DA3DC /* Settings.bundle */; };
 		7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060818A7D3400004DC32 /* Foundation.framework */; };
 		7DB2060B18A7D3400004DC32 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */; };
 		7DB2060D18A7D3400004DC32 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060C18A7D3400004DC32 /* UIKit.framework */; };
@@ -1245,6 +1246,7 @@
 		7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPatientTableViewController.xib; sourceTree = "<group>"; };
 		7D9AA28818B13F5900C1B698 /* WMPatientTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientTableViewCell.h; sourceTree = "<group>"; };
 		7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientTableViewCell.m; sourceTree = "<group>"; };
+		7DA3C6AC19460E43008DA3DC /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7DB2060518A7D3400004DC32 /* WoundMapUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoundMapUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DB2060818A7D3400004DC32 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7DB2060A18A7D3400004DC32 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -2079,6 +2081,7 @@
 				7DB2062B18A7D3400004DC32 /* Images.xcassets */,
 				7DB2062218A7D3400004DC32 /* WoundMapUS.xcdatamodeld */,
 				7DB2061118A7D3400004DC32 /* Supporting Files */,
+				7DA3C6AC19460E43008DA3DC /* Settings.bundle */,
 			);
 			path = WoundMapUS;
 			sourceTree = "<group>";
@@ -3441,6 +3444,7 @@
 				7D10CDF418DB251000AD43E3 /* WMSkinAssessmentSummaryViewController.xib in Resources */,
 				7D6A58CB190C2EF000D72800 /* WMWelcomeToWoundMapViewController_iPad.xib in Resources */,
 				5F6DE54E18B6FBF400E87F7E /* WMIdEditorViewController.xib in Resources */,
+				7DA3C6AD19460E44008DA3DC /* Settings.bundle in Resources */,
 				7D39DBC418BAB4FB0054DDC3 /* WMPhotoDepthViewController.xib in Resources */,
 				7D674134192BF0F3007DBD1A /* WoundMeasurementAU.plist in Resources */,
 				7D10CDD618DA3B5300AD43E3 /* WMInterventionStatusViewController.xib in Resources */,

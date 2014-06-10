@@ -126,8 +126,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     WMTeam *team = self.team;
     int purchasedPatientCount = team.purchasedPatientCountValue;
     if (purchasedPatientCount < 3) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Low Patient Credits"
-                                                            message:@"Your team's Patient Credits is getting low. Consider purchasing more credits by tapping on 'Patient Credits'."
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Low Patient Encounter Credits"
+                                                            message:@"Your team's Patient Encounter Credits is getting low. Consider purchasing more credits by tapping on 'Patient Encounter Credits'."
                                                            delegate:nil
                                                   cancelButtonTitle:@"Dismiss"
                                                   otherButtonTitles:nil];
@@ -687,7 +687,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case 3: {
             // patient credits
             WMTeam *team = self.team;
-            cell.textLabel.text = @"Patient Credits";
+            cell.textLabel.text = @"Patient Encounter Credits";
             cell.detailTextLabel.text = [team.purchasedPatientCount stringValue];
             int purchasedPatientCount = team.purchasedPatientCountValue;
             if (purchasedPatientCount < 3) {

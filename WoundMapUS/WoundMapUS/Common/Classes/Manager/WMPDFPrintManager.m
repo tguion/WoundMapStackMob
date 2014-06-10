@@ -96,7 +96,7 @@
 {
     NSString *fileName = nil;
     NSString *identifierEMR = patient.identifierEMR;
-    if (identifierEMR) {
+    if ([identifierEMR length]) {
         fileName = [NSString stringWithFormat:@"%@.%@.%@.%lf", identifierEMR, patient.person.nameFamily, patient.person.nameGiven, [[NSDate date] timeIntervalSince1970]];
     } else {
         fileName = [NSString stringWithFormat:@"%@.%@.%lf", patient.person.nameFamily, patient.person.nameGiven, [[NSDate date] timeIntervalSince1970]];

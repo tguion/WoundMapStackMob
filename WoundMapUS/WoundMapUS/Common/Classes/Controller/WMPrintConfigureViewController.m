@@ -20,7 +20,10 @@
 #import "WMDesignUtilities.h"
 #import "WCAppDelegate.h"
 
-@interface WMPrintConfigureViewController ()
+#define kInsufficientDataForReport 1000
+
+@interface WMPrintConfigureViewController () <UIAlertViewDelegate>
+
 @property (readonly, nonatomic) BOOL hasSelectedWounds;
 @property (strong, nonatomic) NSMutableSet *selectedWounds;
 @property (readonly, nonatomic) NSArray *sortedSelectedWounds;
@@ -38,6 +41,7 @@
 @property (readonly, nonatomic) BOOL printSkinAssessment;
 @property (readonly, nonatomic) BOOL printCarePlan;
 @property (readonly, nonatomic) WMSelectWoundPhotoViewController *selectWoundPhotoViewController;
+
 @end
 
 @interface WMPrintConfigureViewController (PrivateMethods)
@@ -106,7 +110,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     // get wounds
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Acquiring latest wound data";
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
@@ -120,6 +124,20 @@
 {
     [super viewWillAppear:animated];
     [self updateUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (!self.hasSelectedWounds) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Insufficient data"
+                                                            message:@"The patient does not have enough data to generate a report."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        alertView.tag = kInsufficientDataForReport;
+        [alertView show];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -358,6 +376,15 @@
                 }
             }
         }
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == kInsufficientDataForReport) {
+        [self cancelAction:nil];
     }
 }
 

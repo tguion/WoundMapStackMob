@@ -88,15 +88,7 @@
         }
     };
     [self.appDelegate.navigationCoordinator deletePatient:patient completionHandler:^{
-        // update team
-        WMTeam *team = self.appDelegate.participant.team;
-        if (team) {
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            team.purchasedPatientCountValue = (team.purchasedPatientCountValue + 1);
-            [ff updateObj:team onComplete:onComplete onOffline:onComplete];
-        } else {
-            onComplete(nil, nil, nil);
-        }
+        onComplete(nil, nil, nil);
     }];
 }
 

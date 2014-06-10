@@ -252,6 +252,18 @@ NSDateFormatter * DOB_Formatter;
 
 #pragma mark - Email
 
+- (BOOL)shouldRequestPasswordForEmailAttachment
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"com.mobilehealthware.woundmap.shouldRequestPasswordForEmailAttachment"];
+}
+
+- (void)setShouldRequestPasswordForEmailAttachment:(BOOL)shouldRequestPasswordForEmailAttachment
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:shouldRequestPasswordForEmailAttachment forKey:@"com.mobilehealthware.woundmap.shouldRequestPasswordForEmailAttachment"];
+    [userDefaults synchronize];
+}
+
 - (NSString *)encryptionPassword
 {
     return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.encryptionPassword"];
