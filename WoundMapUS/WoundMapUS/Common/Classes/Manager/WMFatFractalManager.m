@@ -170,26 +170,30 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 
 - (void)truncateStoreForSignIn:(NSString *)userName completionHandler:(dispatch_block_t)completionHandler
 {
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     NSString *lastUserName = userDefaultsManager.lastUserName;
     if (lastUserName && ![lastUserName isEqualToString:userName]) {
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
         [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
-        CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
+    }
+    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSString *queryString = [NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]];
+    [ff getArrayFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if ([object isKindOfClass:[NSArray class]] && [object count]) {
+            [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationTrack entityName]];
+            [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationStage entityName]];
             [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
-            completionHandler();
-        }];
-    } else {
+        }
         completionHandler();
-    }
+    }];
+
 }
 
 #pragma mark - Fetch
@@ -244,19 +248,16 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 };
                 NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                 [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
                     // if we did not resolve team, we may have been removed from team
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                     if (nil == object && response.statusCode == 403) {
                         participant.team = nil;
                         block();
                     } else {
-                        // make sure we have the team nodes
-                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                            block();
-                        }];
+                        block();
                     }
                 }];
             } else if (teamInvitation) {
@@ -287,6 +288,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 //    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
     [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         id participant = object;
         __block NSInteger counter = 0;
         WMErrorCallback errorCallback = ^(NSError *error) {
@@ -299,23 +303,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 }];
             }
         };
-        // acquire nodes now and medical history items
-        NSString *backendSeedEntityName = [WMNavigationNode entityName];
-        if (![coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
-            ++counter;
-            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
-                errorCallback(error);
-            }];
-        }
-        backendSeedEntityName = [WMMedicalHistoryItem entityName];
-        if (![coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
-            ++counter;
-            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1", [WMMedicalHistoryItem entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                [coreDataHelper markBackendDataAcquiredForEntityName:[WMMedicalHistoryItem entityName]];
-                errorCallback(error);
-            }];
-        }
         // explicite fetch patients - this appears to be needed since fetching the participant incurs some error
         ++counter;
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -593,7 +580,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                                 block(error);
                             } else {
                                 // add to grab bag
-                                ++counter; // 2
                                 [ff grabBagAddItemAtFfUrl:participant.ffUrl
                                              toObjAtFfUrl:team.ffUrl
                                               grabBagName:WMTeamRelationships.participants
@@ -611,6 +597,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                                     }];
                                 }
                                 // seed team with navigation track, stage, node 1
+                                counter += 5;   // WMNavigationTrack does 5 callbacks
                                 [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
                                     // update backend
                                     NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
@@ -622,7 +609,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                                     if (callBack) {
                                         callBack();
                                     }
-                                    block(nil); // 0
+                                    block(error); // 0
                                 }];
                             }
                         }];

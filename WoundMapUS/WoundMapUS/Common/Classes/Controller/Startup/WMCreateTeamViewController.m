@@ -202,35 +202,29 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     participant.team = _team;
     participant.dateAddedToTeam = [NSDate date];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Team...";
     __weak __typeof(&*self)weakSelf = self;
-    [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    // hold onto stage/track for each patient
+    NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
+    NSMutableDictionary *map = [NSMutableDictionary dictionary];
+    for (WMPatient *patient in patients) {
+        map[patient.ffUrl] = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
+    }
+    self.appDelegate.patient2StageMap = map;
+    // delete local tracks
+    NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+    [managedObjectContext MR_deleteObjects:navigationTracks];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
-            completionHandler(error);
-        } else {
-            // hold onto stage/track for each patient
-            NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
-            NSMutableDictionary *map = [NSMutableDictionary dictionary];
-            for (WMPatient *patient in patients) {
-                map[patient.ffUrl] = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
-            }
-            self.appDelegate.patient2StageMap = map;
-            // delete local tracks
-            NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
-            [managedObjectContext MR_deleteObjects:navigationTracks];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                completionHandler(error);
-            }];
         }
+        completionHandler(error);
     }];
 }
 

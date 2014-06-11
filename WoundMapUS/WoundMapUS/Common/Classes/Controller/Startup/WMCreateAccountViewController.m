@@ -318,7 +318,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     _ffUser.email = _emailTextInput;
     _ffUser.firstName = _firstNameTextInput;
     _ffUser.lastName = _lastNameTextInput;
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -349,8 +348,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     weakSelf.appDelegate.participant = participant;
                     // DEPLOYMENT
                     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-//                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {
-                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {
+//                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {        // this line when we need to build the seed database
+                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {   // this line when we have a seed database
                         if (error) {
                             [WMUtilities logError:error];
                         }
@@ -358,13 +357,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     }];
                 }];
             };
-            NSString *lastUserName = userDefaultsManager.lastUserName;
-            if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
-                [MBProgressHUD HUDForView:weakSelf.view].labelText = @"Checking access to patient records...";
-                [ffm truncateStoreForSignIn:participant.userName completionHandler:participantBlock];
-            } else {
-                participantBlock();
-            }
+            [ffm truncateStoreForSignIn:participant.userName completionHandler:participantBlock];
         }
     }];
 }

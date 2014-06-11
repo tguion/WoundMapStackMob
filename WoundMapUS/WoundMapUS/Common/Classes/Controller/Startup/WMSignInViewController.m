@@ -123,7 +123,6 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff loginWithUserName:self.userNameTextInput andPassword:self.passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         WM_ASSERT_MAIN_THREAD;
@@ -230,12 +229,7 @@
                 }
             };
             // check assess to data
-            NSString *lastUserName = userDefaultsManager.lastUserName;
-            if (lastUserName && ![lastUserName isEqualToString:user.userName]) {
-                [ffm truncateStoreForSignIn:user.userName completionHandler:participantBlock];
-            } else {
-                participantBlock();
-            }
+            [ffm truncateStoreForSignIn:user.userName completionHandler:participantBlock];
         }
     }];
 }

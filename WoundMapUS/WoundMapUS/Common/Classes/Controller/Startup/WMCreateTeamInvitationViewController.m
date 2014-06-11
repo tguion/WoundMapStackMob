@@ -229,12 +229,12 @@
 {
     switch (textField.tag) {
         case 1000: {
-            self.userNameTextInput = textField.text;
+            _userNameTextInput = textField.text;
             break;
         }
         case 1001: {
             // TODO check number
-            self.passcodeTextInput = textField.text;
+            _passcodeTextInput = textField.text;
             break;
         }
     }
