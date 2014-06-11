@@ -729,6 +729,18 @@
     // ???
 }
 
+//- (void)delayedUpdateTableViewCellsForNavigation
+//{
+//    NSIndexPath *indexPath = [self.tableView indexPathForCell:self.trackTableViewCell];
+//    if (nil != indexPath) {
+//        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+//    }
+//    indexPath = [self.tableView indexPathForCell:self.stageTableViewCell];
+//    if (nil != indexPath) {
+//        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+//    }
+//}
+
 - (void)updateNavigationComponents
 {
     if (nil == self.view.window) {
@@ -742,18 +754,7 @@
     _updateNavigationComponentsInProgress = YES;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateNavigationComponents) object:nil];
     // else update table cells
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:self.trackTableViewCell];
-    if (nil != indexPath) {
-        [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-    }
-    indexPath = [self.tableView indexPathForCell:self.stageTableViewCell];
-    if (nil != indexPath) {
-        [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-    }
+    [self.tableView reloadData];
     // update other UI
     [self updateTitle];
     [self updateToolbar];

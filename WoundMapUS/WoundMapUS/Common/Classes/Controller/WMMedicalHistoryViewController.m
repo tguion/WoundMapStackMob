@@ -60,12 +60,24 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     _medicalHistoryGroup = [WMMedicalHistoryGroup activeMedicalHistoryGroup:patient];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    WMErrorCallback errorCallback = ^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // we want to support cancel, so make sure we have an undoManager
+        if (nil == managedObjectContext.undoManager) {
+            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+            _removeUndoManagerWhenDone = YES;
+        }
+        [managedObjectContext.undoManager beginUndoGrouping];
+    };
     if (nil == _medicalHistoryGroup) {
-        __weak __typeof(&*self)weakSelf = self;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         _medicalHistoryGroup = [WMMedicalHistoryGroup medicalHistoryGroupForPatient:patient];
         _medicalHistoryGroupWasCreated = YES;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
         FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -78,12 +90,7 @@
                 atUri:[NSString stringWithFormat:@"/%@", [WMMedicalHistoryGroup entityName]]
            onComplete:createCompletionHandler onOffline:createCompletionHandler];
     } else {
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == managedObjectContext.undoManager) {
-            managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
-        }
-        [managedObjectContext.undoManager beginUndoGrouping];
+        [ffm updateGrabBags:@[WMMedicalHistoryGroupRelationships.values] aggregator:_medicalHistoryGroup ff:ff completionHandler:errorCallback];
     }
 }
 
@@ -189,7 +196,6 @@
         }
         WMMedicalHistoryValue *medicalHistoryValue = (WMMedicalHistoryValue *)object;
         [ff queueGrabBagAddItemAtUri:medicalHistoryValue.ffUrl toObjAtUri:_medicalHistoryGroup.ffUrl grabBagName:WMMedicalHistoryGroupRelationships.values];
-        [ff queueGrabBagAddItemAtUri:medicalHistoryValue.ffUrl toObjAtUri:medicalHistoryValue.medicalHistoryItem.ffUrl grabBagName:WMMedicalHistoryItemRelationships.values];
         block(error, object, response);
     };
     for (WMMedicalHistoryValue *medicalHistoryValue in medicalHistoryValues) {

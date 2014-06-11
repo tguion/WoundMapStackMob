@@ -275,6 +275,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation
 {
+    _teamInvitations = nil;
     [self.navigationController popViewControllerAnimated:YES];
     // add to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
