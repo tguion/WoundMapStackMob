@@ -2210,22 +2210,18 @@
                             WMPhoto *photo = [woundPhoto.photos anyObject];
                             // save the photo
                             NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
-                            [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                                if (error) {
-                                    [WMUtilities logError:error];
-                                }
-                                weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
-                                [weakSelf updateToolbar];
-                                // notify interface of completed task
-                                [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
-                                [ff createObj:woundPhoto
-                                        atUri:[NSString stringWithFormat:@"/%@", [WMWoundPhoto entityName]]
-                                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                       createWoundPhotoComplete(error, woundPhoto, photo);
-                                   } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                       createWoundPhotoComplete(error, woundPhoto, photo);
-                                   }];
-                            }];
+                            [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            weakSelf.appDelegate.navigationCoordinator.woundPhoto = woundPhoto;
+                            [weakSelf updateToolbar];
+                            // notify interface of completed task
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kTakePhotoNode]];
+                            [ff createObj:woundPhoto
+                                    atUri:[NSString stringWithFormat:@"/%@", [WMWoundPhoto entityName]]
+                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   createWoundPhotoComplete(error, woundPhoto, photo);
+                               } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   createWoundPhotoComplete(error, woundPhoto, photo);
+                               }];
                         }];
             break;
         }

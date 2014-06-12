@@ -228,12 +228,19 @@ typedef enum {
         for (NSDictionary *dictionary in propertyList) {
             [self updateTrackFromDictionary:dictionary team:team create:YES managedObjectContext:managedObjectContext];
         }
+        // create patient and wound nodes
+        [WMNavigationNode seedPatientNodes:managedObjectContext];
+        [WMNavigationNode seedWoundNodes:managedObjectContext];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         if (!completionHandler) {
             return;
         }
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        // else now gather the objectIDs
+        // mark all as team nodes
+        NSArray *navigationNodes = [WMNavigationNode MR_findAllInContext:managedObjectContext];
+        [navigationNodes makeObjectsPerformSelector:@selector(setTeamFlag:) withObject:@YES];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
+        // else now gather the objectIDs
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
         NSArray *navigationTracks = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
         NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
         completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], ^{

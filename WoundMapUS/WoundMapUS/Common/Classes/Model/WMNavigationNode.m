@@ -595,7 +595,8 @@ typedef enum {
                                                             @"closeUnitValue",
                                                             @"closeUnitForDisplay",
                                                             @"requiredFlag",
-                                                            @"hidesStatusIndicator"]];
+                                                            @"hidesStatusIndicator",
+                                                            @"teamFlagValue"]];
     });
     return PropertyNamesNotToSerialize;
 }

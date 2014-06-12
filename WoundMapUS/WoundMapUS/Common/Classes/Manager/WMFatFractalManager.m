@@ -168,22 +168,29 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     }
 }
 
-- (void)truncateStoreForSignIn:(NSString *)userName completionHandler:(dispatch_block_t)completionHandler
+- (void)truncateStoreForSignIn:(WMParticipant *)participant completionHandler:(dispatch_block_t)completionHandler
 {
+    WMTeam *team = participant.team;
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     NSString *lastUserName = userDefaultsManager.lastUserName;
-    if (lastUserName && ![lastUserName isEqualToString:userName]) {
+    if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
         [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
     }
     CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    NSString *queryString = [NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]];
+    NSString *queryString = [NSString stringWithFormat:@"/%@/(teamFlag eq '%@')?depthRef=2", [WMNavigationNode entityName], team == nil ? @"false":@"true"];
     [ff getArrayFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
+        }
+        // patient and wound nodes are not connected to stage, so will not be acquired with last query
+        NSArray *patientNavigationNodes = [WMNavigationNode patientNodes:managedObjectContext];
+        if ([patientNavigationNodes count] == 0) {
+            NSError *localError = nil;
+            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(%@ eq 'true' or %@ eq 'true')", [WMNavigationNode entityName], WMNavigationNodeAttributes.patientFlag, WMNavigationNodeAttributes.woundFlag] error:&localError];
         }
         if ([object isKindOfClass:[NSArray class]] && [object count]) {
             [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationTrack entityName]];
@@ -193,120 +200,123 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
         completionHandler();
     }];
-
 }
 
 #pragma mark - Fetch
 
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
-    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
-    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+    NSParameterAssert(participant.person);
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    __block WMPerson *person = participant.person;
-    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        WM_ASSERT_MAIN_THREAD;
-        NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
-        if (error) {
-            completionHandler(error);
-        } else {
-            // check for lost person - might happen when added to team by team leader
-            if (nil == participant.person) {
-                DLog(@"**** WARNING: participant with nil person");
-                if (nil == person) {
-                    person = [WMPerson MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil AND %K = nil", WMPersonRelationships.patient, WMPersonRelationships.patient] inContext:managedObjectContext];
-                }
-                participant.person = person;
-            }
-            // update team
-            WMTeam *team = participant.team;
-            WMTeamInvitation *teamInvitation = participant.teamInvitation;
-            if (team) {
-                NSParameterAssert(team.ffUrl);
-                dispatch_block_t block = ^{
-                    // get patients
-                    [ffm fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
-                        // check that participant is still on team
-                        if (nil != participant.team) {
-                            // move any patients track to team track
-                            [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
-                                if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
-                                    // may have been deleted on back end
-                                    participant.teamInvitation = nil;
-                                    [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                    completionHandler(error);
-                                } else {
-                                    completionHandler(error);
-                                }
-                            }];
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
+    __weak __typeof(&*self)weakSelf = self;
+    // check assess to data
+    [self truncateStoreForSignIn:participant completionHandler:^{
+        NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], [participant.ffUrl lastPathComponent]];
+        [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            WM_ASSERT_MAIN_THREAD;
+            NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
+            if (error) {
+                completionHandler(error);
+            } else {
+                // update team
+                WMTeam *team = participant.team;
+                WMTeamInvitation *teamInvitation = participant.teamInvitation;
+                if (team) {
+                    NSParameterAssert(team.ffUrl);
+                    dispatch_block_t block = ^{
+                        // get patients
+                        [weakSelf fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
+                            // check that participant is still on team
+                            if (nil != participant.team) {
+                                // move any patients track to team track
+                                [self movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
+                                    if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
+                                        // may have been deleted on back end
+                                        participant.teamInvitation = nil;
+                                        [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                        completionHandler(error);
+                                    } else {
+                                        completionHandler(error);
+                                    }
+                                }];
+                            } else {
+                                completionHandler(error);
+                            }
+                        }];
+                    };
+                    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                        // if we did not resolve team, we may have been removed from team
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                        if (nil == object && response.statusCode == 403) {
+                            participant.team = nil;
+                            block();
                         } else {
-                            completionHandler(error);
+                            block();
                         }
                     }];
-                };
-                NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
-                [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                    // if we did not resolve team, we may have been removed from team
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    if (nil == object && response.statusCode == 403) {
-                        participant.team = nil;
-                        block();
-                    } else {
-                        block();
-                    }
-                }];
-            } else if (teamInvitation) {
-                NSParameterAssert(teamInvitation.ffUrl);
-                NSString *queryString = [NSString stringWithFormat:@"/%@/%@",[WMTeamInvitation entityName], [teamInvitation.ffUrl lastPathComponent]];
-                [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    // may have been deleted on back end
-                    if (response.statusCode == 404) {
-                        // it was deleted
-                        participant.teamInvitation = nil;
-                        [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                        [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    }
-                    completionHandler(error);
-                }];
-            } else {
-                completionHandler(nil);
+                } else if (teamInvitation) {
+                    NSParameterAssert(teamInvitation.ffUrl);
+                    NSString *queryString = [NSString stringWithFormat:@"/%@/%@",[WMTeamInvitation entityName], [teamInvitation.ffUrl lastPathComponent]];
+                    [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                        // may have been deleted on back end
+                        if (response.statusCode == 404) {
+                            // it was deleted
+                            participant.teamInvitation = nil;
+                            [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                            [managedObjectContext MR_saveToPersistentStoreAndWait];
+                        }
+                        completionHandler(error);
+                    }];
+                } else {
+                    completionHandler(nil);
+                }
             }
-        }
+        }];
+        self.lastRefreshTimeMap[[participant objectID]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
     }];
-    self.lastRefreshTimeMap[[participant objectID]] = [FFUtils unixTimeStampFromDate:[NSDate date]];
 }
 
 - (void)acquireParticipantForUser:(FFUser *)user completionHandler:(WMObjectCallback)completionHandler
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
-//    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=4&depthRef=4",[WMParticipant entityName], user.guid];
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    WMObjectCallback objectCallback2 = ^(NSError *error, id participant) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        completionHandler(error, participant);
+    };
+    WMObjectCallback objectCallback = ^(NSError *error, id participant) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // explicite fetch patients - this appears to be needed since fetching the participant incurs some error
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            objectCallback2(error, participant);
+        }];
+    };
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], user.guid];
     [ff getObjFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
         id participant = object;
-        __block NSInteger counter = 0;
-        WMErrorCallback errorCallback = ^(NSError *error) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            if (counter == 0 || --counter == 0) {
-                [coreDataHelper.context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-                    completionHandler(error, participant);
-                }];
-            }
-        };
-        // explicite fetch patients - this appears to be needed since fetching the participant incurs some error
-        ++counter;
-        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            errorCallback(error);
+        // check assess to data
+        [self truncateStoreForSignIn:participant completionHandler:^{
+            objectCallback(error, participant);
         }];
     }];
 }
@@ -435,9 +445,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            completionHandler(error);
-        }];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        completionHandler(error);
     }];
 
 }
@@ -721,6 +730,13 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     WMParticipant *invitee = teamInvitation.invitee;
     NSParameterAssert([invitee isKindOfClass:[WMParticipant class]]);
     FFUser *user = teamInvitation.invitee.user;
+    if (nil == user) {
+        NSError *localError = nil;
+        user = [ff getObjFromUri:[NSString stringWithFormat:@"/FFUser/(userName eq '%@')", teamInvitation.inviteeUserName] error:&localError];
+        if (localError) {
+            [WMUtilities logError:localError];
+        }
+    }
     NSParameterAssert([user isKindOfClass:[FFUser class]]);
     // only team leader can do this
     invitee.team = team;
@@ -733,12 +749,17 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     NSParameterAssert(participantGroup);
     NSError *error = nil;
     [participantGroup addUser:user error:&error];
-//    __weak __typeof(&*self)weakSelf = self;
     [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [ff grabBagAddItemAtFfUrl:invitee.ffUrl
                      toObjAtFfUrl:team.ffUrl
                       grabBagName:WMTeamRelationships.participants
                        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                           if (error) {
+                               [WMUtilities logError:error];
+                           }
                            [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                                // do not move patients to team here - new team member will do on next sign in

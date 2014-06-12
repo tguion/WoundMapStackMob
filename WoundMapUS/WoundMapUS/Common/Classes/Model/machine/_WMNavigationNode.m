@@ -23,6 +23,7 @@ const struct WMNavigationNodeAttributes WMNavigationNodeAttributes = {
 	.requiresWoundPhotoFlag = @"requiresWoundPhotoFlag",
 	.sortRank = @"sortRank",
 	.taskIdentifier = @"taskIdentifier",
+	.teamFlag = @"teamFlag",
 	.title = @"title",
 	.updatedAt = @"updatedAt",
 	.userSortRank = @"userSortRank",
@@ -127,6 +128,11 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 	}
 	if ([key isEqualToString:@"taskIdentifierValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"taskIdentifier"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"teamFlagValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"teamFlag"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -521,6 +527,32 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 
 - (void)setPrimitiveTaskIdentifierValue:(int16_t)value_ {
 	[self setPrimitiveTaskIdentifier:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+@dynamic teamFlag;
+
+
+
+- (BOOL)teamFlagValue {
+	NSNumber *result = [self teamFlag];
+	return [result boolValue];
+}
+
+- (void)setTeamFlagValue:(BOOL)value_ {
+	[self setTeamFlag:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveTeamFlagValue {
+	NSNumber *result = [self primitiveTeamFlag];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveTeamFlagValue:(BOOL)value_ {
+	[self setPrimitiveTeamFlag:[NSNumber numberWithBool:value_]];
 }
 
 

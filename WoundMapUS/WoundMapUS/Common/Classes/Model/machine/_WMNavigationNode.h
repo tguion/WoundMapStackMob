@@ -24,6 +24,7 @@ extern const struct WMNavigationNodeAttributes {
 	__unsafe_unretained NSString *requiresWoundPhotoFlag;
 	__unsafe_unretained NSString *sortRank;
 	__unsafe_unretained NSString *taskIdentifier;
+	__unsafe_unretained NSString *teamFlag;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *updatedAt;
 	__unsafe_unretained NSString *userSortRank;
@@ -43,6 +44,7 @@ extern const struct WMNavigationNodeFetchedProperties {
 @class WMNavigationNode;
 @class WMNavigationStage;
 @class WMNavigationNode;
+
 
 
 
@@ -324,6 +326,20 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* teamFlag;
+
+
+
+@property BOOL teamFlagValue;
+- (BOOL)teamFlagValue;
+- (void)setTeamFlagValue:(BOOL)value_;
+
+//- (BOOL)validateTeamFlag:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* title;
 
 
@@ -567,6 +583,15 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 - (int16_t)primitiveTaskIdentifierValue;
 - (void)setPrimitiveTaskIdentifierValue:(int16_t)value_;
+
+
+
+
+- (NSNumber*)primitiveTeamFlag;
+- (void)setPrimitiveTeamFlag:(NSNumber*)value;
+
+- (BOOL)primitiveTeamFlagValue;
+- (void)setPrimitiveTeamFlagValue:(BOOL)value_;
 
 
 

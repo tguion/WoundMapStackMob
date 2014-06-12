@@ -29,7 +29,7 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 
 // simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;
-- (void)truncateStoreForSignIn:(NSString *)userName completionHandler:(dispatch_block_t)completionHandler;
+- (void)truncateStoreForSignIn:(WMParticipant *)participant completionHandler:(dispatch_block_t)completionHandler;
 
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler;
 - (void)acquireParticipantForUser:(FFUser *)user  completionHandler:(WMObjectCallback)completionHandler;

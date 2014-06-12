@@ -357,7 +357,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                     }];
                 }];
             };
-            [ffm truncateStoreForSignIn:participant.userName completionHandler:participantBlock];
+            [ffm truncateStoreForSignIn:participant completionHandler:participantBlock];
         }
     }];
 }
@@ -376,17 +376,16 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         participant.person = _person;
         participant.participantType = _selectedParticipantType;
         participant.organization = _organization;
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
         __weak __typeof(&*self)weakSelf = self;
-        [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-            // participant has logged in as new user - now push data to backend
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
-            }];
+        // participant has logged in as new user - now push data to backend
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
         }];
     }
 }

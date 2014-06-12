@@ -144,15 +144,6 @@
                                                                                 create:NO
                                                                   managedObjectContext:managedObjectContext];
             dispatch_block_t block = ^{
-                // make sure we didn't loose the user when removed from team
-                if (nil == participant.user) {
-                    participant.user = user;
-                    NSError *localError = nil;
-                    [ff updateObj:participant error:&localError];
-                    if (localError) {
-                        [WMUtilities logError:localError];
-                    }
-                }
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 // handle team invitation confirmation
@@ -208,28 +199,25 @@
                 WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
                 [photoManager uploadWoundPhotoBlobsFromObjectIds];
             };
-            dispatch_block_t participantBlock = ^{
-                if (nil == participant) {
-                    // must be on back end
-                    [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                        participant = object;
-                        participant.dateLastSignin = [NSDate date];
-                        block();
-                    }];
-                } else {
-                    [ffm updateParticipant:participant completionHandler:^(NSError *error) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                        block();
-                    }];
-                }
-            };
-            // check assess to data
-            [ffm truncateStoreForSignIn:user.userName completionHandler:participantBlock];
+            if (nil == participant) {
+                // must be on back end
+                [ffm acquireParticipantForUser:user completionHandler:^(NSError *error, WMParticipant *object) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                    participant = object;
+                    participant.dateLastSignin = [NSDate date];
+                    block();
+                }];
+            } else {
+                [ffm updateParticipant:participant completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                    participant.dateLastSignin = [NSDate date];
+                    block();
+                }];
+            }
         }
     }];
 }

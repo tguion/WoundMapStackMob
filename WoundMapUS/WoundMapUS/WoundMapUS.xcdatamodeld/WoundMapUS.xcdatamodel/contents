@@ -445,6 +445,7 @@
         <attribute name="requiresWoundPhotoFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="sortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="taskIdentifier" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="teamFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <attribute name="userSortRank" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -1262,7 +1263,7 @@
         <element name="WMMedication" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMMedicationCategory" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMMedicationGroup" positionX="0" positionY="0" width="128" height="270"/>
-        <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="450"/>
+        <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="465"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
         <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>

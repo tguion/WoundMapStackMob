@@ -96,19 +96,17 @@
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     patient.thumbnail = nil;
-    __weak __typeof(&*self)weakSelf = self;
-    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        [weakSelf updateForPatient];
-        // update back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff deleteBlobForObj:patient
-                  memberName:WMPatientAttributes.thumbnail
-                  onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                      // nothing
-                  } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                      // nothing
-                  }];
-    }];
+    [self updateForPatient];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    // update back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [ff deleteBlobForObj:patient
+              memberName:WMPatientAttributes.thumbnail
+              onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                  // nothing
+              } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                  // nothing
+              }];
 }
 
 - (IBAction)doneAction:(id)sender

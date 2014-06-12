@@ -697,8 +697,10 @@
             woundPhoto.thumbnailMini = thumbnail;
             // upload photos after measurement
             [weakSelf.woundPhotoObjectIdsToUpload addObject:[woundPhoto objectID]];
-            // TODO call back on main thread
-            completionHandler(nil, [woundPhoto MR_inContext:[wound managedObjectContext]]);
+            // call back on main thread
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                completionHandler(nil, [woundPhoto MR_inContext:[wound managedObjectContext]]);
+            });
         }];
     });
 }
