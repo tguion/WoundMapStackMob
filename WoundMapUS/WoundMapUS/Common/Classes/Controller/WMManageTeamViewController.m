@@ -544,6 +544,16 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 [self navigateToCreateInvitationViewController];
             } else {
                 _teamInvitationToDeleteOrConfirm = [self.teamInvitations objectAtIndex:indexPath.row];
+                if (nil == _teamInvitationToDeleteOrConfirm.team) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Unknown Error"
+                                                                        message:@"An unknown error occurred. Please try again after signing out and signing back in again."
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"Dismiss"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                    return;
+                }
+                // else
                 if (_teamInvitationToDeleteOrConfirm.isAccepted) {
                     [self initiateConfirmInvitation];
                 } else {

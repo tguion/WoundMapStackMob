@@ -7,6 +7,7 @@
 //
 
 #import "WMFatFractalManager.h"
+#import "MBProgressHUD.h"
 #import "WMNavigationTrack.h"
 #import "WMNavigationNode.h"
 #import "WMMedicalHistoryItem.h"

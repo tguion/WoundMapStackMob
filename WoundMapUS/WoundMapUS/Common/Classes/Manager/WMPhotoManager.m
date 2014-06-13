@@ -7,6 +7,7 @@
 //
 
 #import "WMPhotoManager.h"
+#import "MBProgressHUD.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMPhoto.h"
@@ -729,6 +730,7 @@
     if (_woundPhotoObjectIdsToUpload) {
         WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
         userDefaultManager.woundPhotoObjectIdsToUpload = _woundPhotoObjectIdsToUpload;
+        _woundPhotoObjectIdsToUpload = nil;
     }
 }
 
@@ -736,7 +738,9 @@
 {
     WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
     NSSet *urlStrings = userDefaultManager.woundPhotoObjectIdsToUpload;
+    [userDefaultManager clearWoundPhotoObjectIDs];
     if ([urlStrings count]) {
+        [MBProgressHUD showHUDAddedTo:self.appDelegate.window.rootViewController.view animated:NO];
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
         for (NSString *urlString in urlStrings) {
@@ -746,7 +750,6 @@
             WMPhoto *photo = woundPhoto.photo;
             [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
         }
-        [userDefaultManager clearWoundPhotoObjectIDs];
     }
 }
 

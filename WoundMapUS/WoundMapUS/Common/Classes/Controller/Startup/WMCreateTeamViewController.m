@@ -257,6 +257,9 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [self.view endEditing:YES];
     __weak __typeof(&*self)weakSelf = self;
     [self createTeam:^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [weakSelf navigateToCreateInvitationViewController];
     }];
 }

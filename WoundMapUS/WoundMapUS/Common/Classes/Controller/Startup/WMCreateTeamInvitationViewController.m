@@ -189,6 +189,14 @@
             [alertView show];
         } else {
             _invitee = object;
+            if (nil == _invitee.user) {
+                NSError *localError = nil;
+                FFUser *user = [ff getObjFromUri:[NSString stringWithFormat:@"/FFUser/(userName eq '%@')", _userNameTextInput] error:&localError];
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
+                _invitee.user = user;
+            }
             [weakSelf completeTeamInvitation];
         }
     }];
