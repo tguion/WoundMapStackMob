@@ -153,7 +153,7 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
 
 - (NSString *)identifierEMR
 {
-    return [[[self valueForKeyPath:@"ids.extension"] allObjects] componentsJoinedByString:@","];
+    return [[[self valueForKeyPath:@"ids.extension"] allObjects] componentsJoinedByString:@"."];
 }
 
 - (NSInteger)genderIndex
