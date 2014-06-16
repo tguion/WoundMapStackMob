@@ -187,11 +187,9 @@
 {
     if (nil == _selectedWounds) {
         _selectedWounds = [[NSMutableSet alloc] initWithCapacity:16];
-        if (!self.patient.hasMultipleWounds) {
-            id obj = self.patient.lastActiveWound;
-            if (nil != obj) {
-                [_selectedWounds addObject:obj];
-            }
+        id obj = self.patient.lastActiveWound;
+        if (obj) {
+            [_selectedWounds addObject:obj];
         }
     }
     return _selectedWounds;

@@ -266,8 +266,7 @@
         // existing wound cell
         WMWound *wound = [self.fetchedResultsController objectAtIndexPath:indexPath];
         cell.imageView.image = (wound == self.wound ? [WMDesignUtilities selectedWoundTableCellImage]:[WMDesignUtilities unselectedWoundTableCellImage]);
-        cell.textLabel.text = wound.name;
-        cell.detailTextLabel.text = wound.woundType.title;
+        cell.textLabel.text = wound.shortName;
         cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     }
 }

@@ -351,7 +351,9 @@
         if ([positionValue.value length] > 1) {
             string = [string stringByAppendingFormat:@": %@", positionValue.value];
         }
-        [array addObject:string];
+        if (string) {
+            [array addObject:string];
+        }
     }
     return [string stringByAppendingString:[array componentsJoinedByString:@", "]];
 }
