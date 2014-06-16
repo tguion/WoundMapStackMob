@@ -740,7 +740,7 @@
     NSSet *urlStrings = userDefaultManager.woundPhotoObjectIdsToUpload;
     [userDefaultManager clearWoundPhotoObjectIDs];
     if ([urlStrings count]) {
-        [MBProgressHUD showHUDAddedTo:self.appDelegate.window.rootViewController.view animated:NO];
+        [MBProgressHUD showHUDAddedTo:self.appDelegate.window.rootViewController.view animated:NO].labelText = @"Uploading photos";
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
         for (NSString *urlString in urlStrings) {

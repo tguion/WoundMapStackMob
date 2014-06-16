@@ -48,6 +48,18 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (BOOL)showUserNameOnSignIn
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"com.mobilehealthware.woundmap.showUserNameOnSignIn"];
+}
+
+- (void)setShowUserNameOnSignIn:(BOOL)showUserNameOnSignIn
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:showUserNameOnSignIn forKey:@"com.mobilehealthware.woundmap.showUserNameOnSignIn"];
+    [userDefaults synchronize];
+}
+
 #pragma mark - Pariticipant
 
 - (NSString *)lastUserName

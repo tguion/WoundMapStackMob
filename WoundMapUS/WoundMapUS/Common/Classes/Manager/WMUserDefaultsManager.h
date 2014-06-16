@@ -15,6 +15,7 @@
 + (WMUserDefaultsManager *)sharedInstance;
 
 @property (nonatomic) BOOL splashViewInstructionViewed;
+@property (nonatomic) BOOL showUserNameOnSignIn;
 @property (nonatomic) NSString *lastUserName;
 @property (nonatomic) NSString *lastTeamName;
 - (NSString *)lastPatientFFURLForUserGUID:(NSString *)guid;

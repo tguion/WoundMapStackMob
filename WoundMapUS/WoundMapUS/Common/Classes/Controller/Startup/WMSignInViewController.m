@@ -60,9 +60,11 @@
                                                                              target:self action:@selector(signInAction:)];
     [self.tableView registerClass:[WMTextFieldTableViewCell class] forCellReuseIdentifier:@"TextCell"];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    _userNameTextInput = userDefaultsManager.lastUserName;
-    if ([_userNameTextInput length]) {
-        _makePasswordFieldFirstResponder = YES;
+    if (userDefaultsManager.showUserNameOnSignIn) {
+        _userNameTextInput = userDefaultsManager.lastUserName;
+        if ([_userNameTextInput length]) {
+            _makePasswordFieldFirstResponder = YES;
+        }
     }
     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
     [seedDatabaseManager seedLocalData:self.managedObjectContext];

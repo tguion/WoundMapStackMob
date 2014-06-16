@@ -139,6 +139,20 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                       ascending:YES
                                                   withPredicate:[NSPredicate predicateWithFormat:@"team == %@", self.team]
                                                       inContext:self.managedObjectContext];
+        // make sure we have not lost team reference
+        if (_team) {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            NSError *localError = nil;
+            for (WMTeamInvitation *teamInvitation in _teamInvitations) {
+                if (nil == teamInvitation.team) {
+                    teamInvitation.team = _team;
+                    [ff updateObj:teamInvitation error:&localError];
+                    if (localError) {
+                        [WMUtilities logError:localError];
+                    }
+                }
+            }
+        }
     }
     return _teamInvitations;
 }

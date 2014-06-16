@@ -893,6 +893,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [WMUtilities logError:error];
         }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:self.appDelegate.window.rootViewController.view animated:NO];
         [Faulter faultObjectWithID:[woundPhoto objectID] inContext:managedObjectContext];
         [Faulter faultObjectWithID:[photo objectID] inContext:managedObjectContext];
     };

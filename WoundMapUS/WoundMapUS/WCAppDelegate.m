@@ -161,22 +161,23 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     // set up IAP so it hears notifications
     [IAPManager sharedInstance];
-    [self initializeInterface];
     [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     return YES;
 }
 
 - (void)initializeInterface
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    if (nil == _window) {
+        _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    }
     BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     UIViewController *viewController = (isPad ? [[WMWelcomeToWoundMapViewController_iPad alloc] initWithNibName:@"WMWelcomeToWoundMapViewController_iPad" bundle:nil]:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]);
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     if (!isPad) {
         navigationController.delegate = self;
     }
-    self.window.rootViewController = navigationController;
-    [self.window makeKeyAndVisible];
+    _window.rootViewController = navigationController;
+    [_window makeKeyAndVisible];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -215,6 +216,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [self initializeInterface];
     // upload any photos
     WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
     [photoManager uploadWoundPhotoBlobsFromObjectIds];

@@ -6,6 +6,22 @@
 	<array>
 		<dict>
 			<key>Title</key>
+			<string>Security Settings</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Show username</string>
+			<key>Key</key>
+			<string>com.mobilehealthware.woundmap.showUserNameOnSignIn</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>PDF Reports</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
