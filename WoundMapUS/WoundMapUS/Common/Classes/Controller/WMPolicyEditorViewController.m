@@ -284,6 +284,8 @@ NSString * const kTextCellIdentifier = @"TextCell";
         [ff createObj:teamPolicy
                 atUri:[NSString stringWithFormat:@"/%@", [WMTeamPolicy entityName]]
            onComplete:onComplete onOffline:onComplete];
+    } else {
+        block();
     }
 }
 
@@ -469,6 +471,14 @@ NSString * const kTextCellIdentifier = @"TextCell";
         [actionSheet showInView:self.view];
     } else {
         // just collect data
+        // handle undo
+        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+        if (managedObjectContext.undoManager.groupingLevel > 0) {
+            [managedObjectContext.undoManager endUndoGrouping];
+            if (_removeUndoManagerWhenDone) {
+                managedObjectContext.undoManager = nil;
+            }
+        }
         [self reorderNodesFromSortOrderings];
         [self.delegate policyEditorViewControllerDidSave:self];
         _navigationTrack = nil;
