@@ -5,6 +5,7 @@
 //  Created by Todd Guion on 2/21/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
+//  2014.06.20 TODO update for offline
 
 #import "WMWoundTreatmentViewController.h"
 #import "WMWoundTreatmentGroupsViewController.h"
@@ -39,6 +40,8 @@
 @property (readonly, nonatomic) WMWoundTreatmentSummaryViewController *woundTreatmentSummaryViewController;
 @property (readonly, nonatomic) WMWoundTreatmentGroupHistoryViewController *woundTreatmentGroupHistoryViewController;
 @property (readonly, nonatomic) WMNoteViewController *noteViewController;
+@property (strong, nonatomic) NSMutableSet *woundTreatmentValuesToDeleteOnSave;
+@property (strong, nonatomic) NSMutableSet *woundTreatmentValuesToDeleteOnCancel;
 
 @end
 
@@ -58,6 +61,7 @@
     WMWoundTreatmentViewController *woundTreatmentViewController = self.woundTreatmentViewController;
     woundTreatmentViewController.parentWoundTreatment = woundTreatment;
     woundTreatmentViewController.woundTreatmentGroup = self.woundTreatmentGroup;
+    woundTreatmentViewController.didCreateGroup = self.didCreateGroup;
     [self clearOpenHeightsForAssessmentGroup:woundTreatment];
     [self.navigationController pushViewController:woundTreatmentViewController animated:YES];
 }
@@ -86,25 +90,24 @@
     [super viewDidLoad];
     WMWound *wound = self.wound;
     NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
-    if (nil == _woundTreatmentGroup) {
-        _woundTreatmentGroup = [WMWoundTreatmentGroup activeWoundTreatmentGroupForWound:wound];
-    }
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     if (_parentWoundTreatment || _woundTreatmentGroup) {
         dispatch_block_t block = ^{
-            // we want to support cancel, so make sure we have an undoManager
-            if (nil == managedObjectContext.undoManager) {
-                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-                _removeUndoManagerWhenDone = YES;
+            if (!weakSelf.didCreateGroup) {
+                // we want to support cancel, so make sure we have an undoManager
+                if (nil == managedObjectContext.undoManager) {
+                    managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                    _removeUndoManagerWhenDone = YES;
+                }
+                [managedObjectContext.undoManager beginUndoGrouping];
             }
-            [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
         if (_parentWoundTreatment) {
             if ([_parentWoundTreatment.values count] == 0) {
                 [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_parentWoundTreatment ff:ff completionHandler:^(NSError *error) {
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                     block();
                 }];
             } else {
@@ -113,7 +116,6 @@
         } else {
             if ([_woundTreatmentGroup.values count] == 0) {
                 [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_woundTreatmentGroup ff:ff completionHandler:^(NSError *error) {
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                     block();
                 }];
             } else {
@@ -125,28 +127,15 @@
         self.didCreateGroup = YES;
         // create on back end
         WMWound *wound = self.wound;
-        __block NSInteger counter = 0;
-        __weak __typeof(&*self)weakSelf = self;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             }
-            if (counter == 0 || --counter == 0) {
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-            }
+            [ff queueGrabBagAddItemAtUri:_woundTreatmentGroup.ffUrl toObjAtUri:wound.ffUrl grabBagName:WMWoundRelationships.treatmentGroups];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         };
-        [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            } else {
-                ++counter;
-                [ff grabBagAddItemAtFfUrl:_woundTreatmentGroup.ffUrl
-                             toObjAtFfUrl:wound.ffUrl
-                              grabBagName:WMWoundRelationships.treatmentGroups
-                               onComplete:completionHandler];
-            }
-        }];
+        [ff createObj:_woundTreatmentGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentGroup entityName]] onComplete:createCompletionHandler onOffline:createCompletionHandler];
         
         WMInterventionEvent *event = [_woundTreatmentGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                     title:nil
@@ -207,6 +196,22 @@
 }
 
 #pragma mark - Core
+
+- (NSMutableSet *)woundTreatmentValuesToDeleteOnSave
+{
+    if (nil == _woundTreatmentValuesToDeleteOnSave) {
+        _woundTreatmentValuesToDeleteOnSave = [NSMutableSet set];
+    }
+    return _woundTreatmentValuesToDeleteOnSave;
+}
+
+- (NSMutableSet *)woundTreatmentValuesToDeleteOnCancel
+{
+    if (nil == _woundTreatmentValuesToDeleteOnCancel) {
+        _woundTreatmentValuesToDeleteOnCancel = [NSMutableSet set];
+    }
+    return _woundTreatmentValuesToDeleteOnCancel;
+}
 
 - (WMWoundTreatmentViewController *)woundTreatmentViewController
 {
@@ -281,19 +286,22 @@
     [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
+// if we cancel, then a value may not be deleted on the client, so defer this
 - (void)deleteWoundTreatmentValue:(WMWoundTreatmentValue *)woundTreatmentValue
 {
     if (_woundTreatmentGroup.ffUrl) {
         if (woundTreatmentValue.ffUrl) {
-            FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-            };
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff grabBagRemoveItemAtFfUrl:woundTreatmentValue.ffUrl fromObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values onComplete:completionHandler];
-            [ff deleteObj:woundTreatmentValue onComplete:completionHandler];
+            [self.woundTreatmentValuesToDeleteOnSave addObject:woundTreatmentValue];
         }
+    }
+}
+
+- (void)processBackendWoundTreatmentValueDeletes
+{
+    for (WMWoundTreatmentValue *woundTreatmentValue in _woundTreatmentValuesToDeleteOnSave) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff queueGrabBagRemoveItemAtUri:woundTreatmentValue.ffUrl fromObjAtUri:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values];
+        [ff queueDeleteObj:woundTreatmentValue];
     }
 }
 
@@ -348,6 +356,7 @@
                                                                                                           value:nil];
     if (createValue) {
         woundTreatmentValue.value = value;
+        [self.woundTreatmentValuesToDeleteOnCancel addObject:woundTreatmentValue];
     } else if (nil != woundTreatmentValue) {
         [self.woundTreatmentGroup removeValuesObject:woundTreatmentValue];
         [self.managedObjectContext deleteObject:woundTreatmentValue];
@@ -415,6 +424,7 @@
         [weakSelf.delegate woundTreatmentViewControllerDidFinish:weakSelf];
     };
     // update back end
+    [self processBackendWoundTreatmentValueDeletes];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
@@ -468,7 +478,8 @@
     if (self.didCreateGroup && _woundTreatmentGroup.ffUrl) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         NSError *error = nil;
-        for (WMWoundTreatmentValue *value in _woundTreatmentGroup.values) {
+        NSSet *values = self.woundTreatmentValuesToDeleteOnCancel;
+        for (WMWoundTreatmentValue *value in values) {
             if (value.ffUrl) {
                 [ff grabBagRemove:value from:_woundTreatmentGroup grabBagName:WMWoundTreatmentGroupRelationships.values error:&error];
                 if (error) {
@@ -480,13 +491,15 @@
                 }
             }
         }
-        [ff grabBagRemove:_woundTreatmentGroup from:self.wound grabBagName:WMWoundRelationships.treatmentGroups error:&error];
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        [ff deleteObj:_woundTreatmentGroup error:&error];
-        if (error) {
-            [WMUtilities logError:error];
+        if (nil == _parentWoundTreatment) {
+            [ff grabBagRemove:_woundTreatmentGroup from:self.wound grabBagName:WMWoundRelationships.treatmentGroups error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [ff deleteObj:_woundTreatmentGroup error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
         }
     }
     [self.delegate woundTreatmentViewControllerDidCancel:self];
@@ -645,10 +658,11 @@
 
 - (void)noteViewController:(WMNoteViewController *)viewController didUpdateNote:(NSString *)note
 {
-    WMWoundTreatmentValue *value = [self.woundTreatmentGroup woundTreatmentValueForWoundTreatment:self.selectedWoundTreatment
-                                                                                           create:YES
-                                                                                            value:nil];
-    value.value = note;
+    WMWoundTreatmentValue *woundTreatmentValue = [self.woundTreatmentGroup woundTreatmentValueForWoundTreatment:self.selectedWoundTreatment
+                                                                                                         create:YES
+                                                                                                          value:nil];
+    woundTreatmentValue.value = note;
+    [self.woundTreatmentValuesToDeleteOnCancel addObject:woundTreatmentValue];
     [self.navigationController popViewControllerAnimated:YES];
     // reload the section if only one selection allowed
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.fetchedResultsController indexPathForObject:self.selectedWoundTreatment]] withRowAnimation:UITableViewRowAnimationNone];
@@ -721,7 +735,7 @@
         woundTreatmentValue = [self.woundTreatmentGroup woundTreatmentValueForWoundTreatment:woundTreatment
                                                                                       create:YES
                                                                                        value:nil];
-        [self.woundTreatmentGroup addValuesObject:woundTreatmentValue];
+        [self.woundTreatmentValuesToDeleteOnCancel addObject:woundTreatmentValue];
         if (nil != previousWoundTreatmentValue) {
             // remove previous (assumes parent does not allow multiple values)
             [self.woundTreatmentGroup removeValuesObject:previousWoundTreatmentValue];

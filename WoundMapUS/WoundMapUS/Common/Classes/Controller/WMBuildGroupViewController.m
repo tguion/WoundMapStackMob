@@ -63,8 +63,6 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     // update model before save in super.viewWillDissappear:
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
-    // reset state
-    self.didCreateGroup = NO;
 }
 
 #pragma mark - Memory
