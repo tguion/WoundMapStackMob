@@ -19,6 +19,7 @@
 + (BOOL)checkForAuthentication;
 
 @property (strong, nonatomic) UIWindow *window;
+@property (readonly, nonatomic) UINavigationController *initialViewController;
 
 @property (nonatomic, strong, readonly) CoreDataHelper *coreDataHelper;
 //@property (readonly, strong, nonatomic) WMFatFractal *ff;
@@ -30,5 +31,6 @@
 @property (nonatomic, strong) NSDictionary *patient2StageMap;       // used to move patients to team
 
 - (void)signOut;
+- (void)handleFatFractalSignout;
 
 @end

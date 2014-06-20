@@ -44,6 +44,9 @@
 - (void)updateModel
 {
     WMWoundMeasurementGroup *measurementGroup = self.woundPhoto.measurementGroup;
+    if (nil == measurementGroup) {
+        measurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:self.woundPhoto create:YES];
+    }
     measurementGroup.measurementValueLength.value = [self.lengthInCentimeters stringValue];
     measurementGroup.measurementValueWidth.value = [self.widthInCentimeters stringValue];
 }

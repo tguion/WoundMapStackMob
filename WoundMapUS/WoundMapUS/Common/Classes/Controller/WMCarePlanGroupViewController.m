@@ -394,7 +394,7 @@
 - (IBAction)saveAction:(id)sender
 {
     BOOL hasValues = [_carePlanGroup.values count] > 0;
-    if (!hasValues) {
+    if (!hasValues && nil == _parentCategory) {
         [self cancelAction:sender];
         return;
     }

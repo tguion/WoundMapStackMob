@@ -25,6 +25,7 @@
 
 NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
 NSInteger const kRemoteNotification = 4002;
+NSInteger const kSessionTimeoutAlertViewTag = 1000;
 
 // Instantiating KeychainItemWrapper class as a singleton through AppDelegate
 static KeychainItemWrapper *_keychainItem;
@@ -37,6 +38,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 @property (nonatomic, strong, readwrite) WMFatFractal *ff;
 @property (nonatomic, strong, readwrite) WMNavigationCoordinator *navigationCoordinator;
 @property (strong, nonatomic) NSDictionary *remoteNotification;
+@property (strong, nonatomic) UIAlertView *timeOutAlertView;
 
 @end
 
@@ -65,6 +67,15 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     return _ff;
 }
 
+- (UINavigationController *)initialViewController
+{
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    UIViewController *viewController = (isPad ? [[WMWelcomeToWoundMapViewController_iPad alloc] initWithNibName:@"WMWelcomeToWoundMapViewController_iPad" bundle:nil]:[[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil]);
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    navigationController.delegate = self;
+    return navigationController;
+}
+
 - (void)signOut
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -72,10 +83,31 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [photoManager uploadPhotoBlobs];
     self.participant = nil;
     [self.navigationCoordinator clearPatientCache];
+    _patient2StageMap = nil;
     [ff forgetAllObjs];
     [ff logout];
     [[NSManagedObjectContext MR_defaultContext] reset];
     [[NSManagedObjectContext MR_rootSavingContext] reset];
+}
+
+- (void)handleFatFractalSignout
+{
+    if (nil == _timeOutAlertView) {
+        [self.timeOutAlertView show];
+    }
+}
+
+- (UIAlertView *)timeOutAlertView
+{
+    if (nil == _timeOutAlertView) {
+        _timeOutAlertView = [[UIAlertView alloc] initWithTitle:@"Session Expired"
+                                                       message:@"Your session has expired. You will need to sign in again."
+                                                      delegate:self
+                                             cancelButtonTitle:@"Dismiss"
+                                             otherButtonTitles:nil];
+        _timeOutAlertView.tag = kSessionTimeoutAlertViewTag;
+    }
+    return _timeOutAlertView;
 }
 
 #pragma mark - Memory
@@ -313,6 +345,19 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         if (buttonIndex == 1)
             [self processRemoteNotification];
         self.remoteNotification = nil;
+    } else if (alertView.tag == kSessionTimeoutAlertViewTag) {
+        _timeOutAlertView = nil;
+        [self signOut];
+        __weak __typeof(&*self)weakSelf = self;
+        UINavigationController *navigationController = self.initialViewController;
+        [UIView transitionWithView:self.window
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionFlipFromLeft
+                        animations:^{
+                            weakSelf.window.rootViewController = navigationController;
+                        } completion:^(BOOL finished) {
+                            // nothing
+                        }];
     }
 }
 

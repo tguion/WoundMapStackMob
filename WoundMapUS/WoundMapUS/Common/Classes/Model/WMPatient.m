@@ -91,7 +91,9 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
 - (void)prepareForDeletion
 {
     [super prepareForDeletion];
-    [ffUrl2ConsultingGroupMap removeObjectForKey:self.ffUrl];
+    if (self.ffUrl) {
+        [ffUrl2ConsultingGroupMap removeObjectForKey:self.ffUrl];
+    }
 }
 
 // we loose this property when self is faulted

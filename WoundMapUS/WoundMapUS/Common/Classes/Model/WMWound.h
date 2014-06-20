@@ -20,6 +20,7 @@
 + (NSDate *)mostRecentWoundPhotoDateCreatedForWound:(WMWound *)wound;
 
 @property (readonly, nonatomic) NSString *shortName;
+@property (readonly, nonatomic) NSString *longName;
 @property (readonly, nonatomic) WMWoundPhoto *lastWoundPhoto;
 @property (readonly, nonatomic) NSInteger woundPhotosCount;
 @property (readonly, nonatomic) NSDictionary *minimumAndMaximumWoundPhotoDates;

@@ -126,10 +126,7 @@
                                                create:(BOOL)create
                                                 value:(NSString *)value
 {
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    if (nil != carePlanCategory) {
-        NSParameterAssert(managedObjectContext == [carePlanCategory managedObjectContext]);
-    }
+    NSManagedObjectContext *managedObjectContext = [carePlanCategory managedObjectContext];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"group == %@ AND category == %@", self, carePlanCategory];
     if (nil != value) {
         predicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:predicate, [NSPredicate predicateWithFormat:@"value == %@", value], nil]];

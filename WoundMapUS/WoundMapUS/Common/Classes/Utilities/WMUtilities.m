@@ -31,6 +31,11 @@ NSTimeInterval kOneDayTimeInterval = 60.0 * 60 * 24.0;
 	} else {
         DLog(@"  %@", [error userInfo]);
 	}
+    // check for session time-out
+    if ([error.domain isEqualToString:@"FatFractal"] && error.code == 401) {
+        WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate handleFatFractalSignout];
+    }
 }
 
 #pragma mark - Bit Utilities

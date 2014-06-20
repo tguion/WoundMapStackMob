@@ -470,8 +470,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
         actionSheet.tag = kSavePolicyAlertTag;
         [actionSheet showInView:self.view];
     } else {
-        // just collect data
-        // handle undo
+        // just collect data and handle undo
         NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
         if (managedObjectContext.undoManager.groupingLevel > 0) {
             [managedObjectContext.undoManager endUndoGrouping];

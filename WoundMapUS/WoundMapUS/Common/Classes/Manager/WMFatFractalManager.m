@@ -212,7 +212,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
         NSMutableDictionary *map = [NSMutableDictionary dictionary];
         for (WMPatient *patient in patients) {
-            map[patient.ffUrl] = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
+            if (patient.ffUrl) {
+                NSString *string = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
+                if (string) {
+                    map[patient.ffUrl] = string;
+                }
+            } else {
+                [managedObjectContext MR_deleteObjects:@[patient]];
+            }
         }
         weakSelf.appDelegate.patient2StageMap = map;
         if ([object isKindOfClass:[NSArray class]] && [object count]) {
@@ -483,11 +490,10 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     [self updatePerson:participant.person ff:ff completionHandler:^(NSError *error) {
         if (error) {
             completionHandler(error);
-        } else {
-            [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                completionHandler(error);
-            }];
         }
+        [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            completionHandler(error);
+        }];
     }];
 }
 
@@ -503,22 +509,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
     };
     FFHttpMethodCompletion createAddressOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            block(error);
-        } else {
-            WMAddress *localAddress = (WMAddress *)object;
-            [ff queueGrabBagAddItemAtUri:localAddress.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.addresses];
-            block(error);
-        }
+        WMAddress *localAddress = (WMAddress *)object;
+        [ff queueGrabBagAddItemAtUri:localAddress.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.addresses];
+        block(error);
     };
     FFHttpMethodCompletion createTelecomOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            block(error);
-        } else {
-            WMTelecom *localTelecom = (WMTelecom *)object;
-            [ff queueGrabBagAddItemAtUri:localTelecom.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.telecoms];
-            block(error);
-        }
+        WMTelecom *localTelecom = (WMTelecom *)object;
+        [ff queueGrabBagAddItemAtUri:localTelecom.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.telecoms];
+        block(error);
     };
     FFHttpMethodCompletion updatePersonOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {

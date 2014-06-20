@@ -1633,14 +1633,13 @@
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
                 [self.appDelegate signOut];
+                UINavigationController *navigationController = self.appDelegate.initialViewController;
                 __weak __typeof(&*self)weakSelf = self;
                 [UIView transitionWithView:self.appDelegate.window
                                   duration:0.5
                                    options:UIViewAnimationOptionTransitionFlipFromLeft
                                 animations:^{
-                                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:weakSelf.welcomeToWoundMapViewController];
-                                    navigationController.delegate = weakSelf.appDelegate;
-                                    self.appDelegate.window.rootViewController = navigationController;
+                                    weakSelf.appDelegate.window.rootViewController = navigationController;
                                 } completion:^(BOOL finished) {
                                     // nothing
                                 }];

@@ -741,8 +741,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
 {
     if (alertView.tag == kCurrentPatientDeletedAlertViewTag) {
         [self.appDelegate signOut];
-        UIViewController *viewController = [[WMWelcomeToWoundMapViewController alloc] initWithNibName:@"WMWelcomeToWoundMapViewController" bundle:nil];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        UINavigationController *navigationController = self.appDelegate.initialViewController;
         [UIView transitionWithView:self.appDelegate.window
                           duration:0.5
                            options:UIViewAnimationOptionTransitionFlipFromLeft

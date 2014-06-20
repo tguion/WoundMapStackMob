@@ -306,11 +306,12 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         return;
     }
     WMParticipant *participant = self.participant;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     participant.name = [NSString stringWithFormat:@"%@ %@", _firstNameTextInput, _lastNameTextInput];
     participant.userName = _userNameTextInput;
     participant.email = _emailTextInput;
     // else first save to object permenant objectID
-    [[participant managedObjectContext] MR_saveOnlySelfAndWait];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     _ffUser = [[FFUser alloc] initWithFF:ff];

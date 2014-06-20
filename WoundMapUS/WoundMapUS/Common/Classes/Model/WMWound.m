@@ -177,6 +177,19 @@
     return string;
 }
 
+- (NSString *)longName
+{
+    NSString *longName = self.shortName;
+    NSString *string = self.locationValue.location.title;
+    if ([self.positionValues count] > 0) {
+        string = [string stringByAppendingFormat:@":%@", self.positionValuesForDisplay];
+    }
+    if (string) {
+        longName = [longName stringByAppendingString:[NSString stringWithFormat:@":%@", string]];
+    }
+    return longName;
+}
+
 - (WMWoundPhoto *)lastWoundPhoto
 {
     NSArray *objectIDs = self.sortedWoundPhotoIDs;
@@ -388,6 +401,7 @@
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"sortRankValue",
                                                             @"shortName",
+                                                            @"longName",
                                                             @"lastWoundPhoto",
                                                             @"woundPhotosCount",
                                                             @"minimumAndMaximumWoundPhotoDates",
@@ -411,10 +425,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMWoundRelationships.measurementGroups,
-                                                            WMWoundRelationships.photos,
-                                                            WMWoundRelationships.positionValues,
-                                                            WMWoundRelationships.treatmentGroups]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[]];
     });
     return PropertyNamesNotToSerialize;
 }

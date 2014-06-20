@@ -223,6 +223,7 @@
 - (void)setComplianceDelta:(NSInteger)complianceDelta
 {
     if (_complianceDelta == complianceDelta) {
+        self.statusImageView.image = [self.policyManager statusImageForComplianceDelta:complianceDelta];
         return;
     }
     // else
