@@ -178,7 +178,6 @@
 
 - (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didDeleteWound:(WMWound *)wound
 {
-    [self.appDelegate.navigationCoordinator deleteWound:wound];
     [self.navigationController popViewControllerAnimated:YES];
     // reload table
     [self.tableView reloadData];

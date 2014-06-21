@@ -372,9 +372,25 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     NSParameterAssert(stageTitle);
     if (nil == stage.track.team) {
         NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSError *localError = nil;
         WMNavigationTrack *track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, trackTitle] inContext:managedObjectContext];
+        if (nil == track) {
+            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] error:&localError];
+            if (localError) {
+                [WMUtilities logError:localError];
+            }
+            track = [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"team == %@ AND title == %@", team, trackTitle] inContext:managedObjectContext];
+        }
         NSParameterAssert(track);
         WMNavigationStage *stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, stageTitle] inContext:managedObjectContext];
+        if (nil == stage) {
+            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationStage entityName]] error:&localError];
+            if (localError) {
+                [WMUtilities logError:localError];
+            }
+            stage = [WMNavigationStage MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"track == %@ AND title == %@", track, stageTitle] inContext:managedObjectContext];
+        }
         NSParameterAssert(stage);
         self.stage = stage;
         self.team = team;
