@@ -31,6 +31,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"Assessment Summary";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
     // load text view
     UITextView* tv = [[UITextView alloc] initWithFrame:self.view.bounds];
     tv.editable = NO;
@@ -107,6 +108,11 @@
         [descriptionAsMutableAttributedStringWithBaseFontSize appendAttributedString:[self.woundMeasurementGroup descriptionAsMutableAttributedStringWithBaseFontSize:12]];
     }
     self.textView.attributedText = descriptionAsMutableAttributedStringWithBaseFontSize;
+}
+
+- (IBAction)doneAction:(id)sender
+{
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -26,7 +26,7 @@
 #import "UIView+Custom.h"
 #import "WCAppDelegate.h"
 
-BOOL const kPresentIAPController = NO;  // DEPLOYMENT
+BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 @interface WMBaseViewController ()
 
@@ -992,6 +992,8 @@ BOOL const kPresentIAPController = NO;  // DEPLOYMENT
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    // adjust for view controller
+    sectionIndex = [self sectionIndexFetchedResultsControllerToTable:sectionIndex];
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
@@ -1007,6 +1009,10 @@ BOOL const kPresentIAPController = NO;  // DEPLOYMENT
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    // adjust for view controller
+    indexPath = [self indexPathFetchedResultsControllerToTable:indexPath];
+    newIndexPath = [self indexPathFetchedResultsControllerToTable:newIndexPath];
+
     UITableView *tableView = self.tableView;
     
     switch(type) {

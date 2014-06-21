@@ -673,7 +673,7 @@
         // skip password
         ++section;
     } else if (section == 2) {
-        title = @"Optional Password";
+        title = (self.delegate.shouldRequestPassword ? @"Password":@"Optional Password");
     }
     if (!self.delegate.hasRiskAssessment && !self.delegate.hasSkinAssessment && !self.delegate.hasCarePlan && !sectionDeterminedFlag) {
         // skip section

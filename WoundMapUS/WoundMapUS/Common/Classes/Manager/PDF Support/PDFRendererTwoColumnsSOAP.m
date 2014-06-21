@@ -515,6 +515,10 @@
 - (CGFloat)drawAssessmentForWoundPhoto:(WMWoundPhoto *)woundPhoto atIndex:(NSInteger)index
 {
     WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO];
+    if (nil == woundMeasurementGroup) {
+        return 0.0;
+    }
+    // else
     UIView *placeHolderView = (index % 2 == 0 ? self.leftDataView:self.rightDataView);
     CGRect aFrame = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
     return [self drawAttributedStringForDataSource:woundMeasurementGroup

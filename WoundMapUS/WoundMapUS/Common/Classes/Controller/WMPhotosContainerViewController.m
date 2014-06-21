@@ -1090,6 +1090,7 @@
         weakSelf.photoZoomViewController.initialFrame = aFrame; // aFrame is in window coordinates
         weakSelf.gridScrollSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment;
         [weakSelf installPhotoZoomViewController:NO];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
     };
     WMErrorCallback errorCallback = ^(NSError *error) {
         if (error) {
@@ -1129,12 +1130,12 @@
                                                               otherButtonTitles:nil];
                     [alertView show];
                 }
+                [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             } else {
                 photo.photo = [[UIImage alloc] initWithData:photoData];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 block();
             }
-            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         }];
     } else {
         block();

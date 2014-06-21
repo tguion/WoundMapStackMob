@@ -171,64 +171,81 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 
 - (void)truncateStoreForSignIn:(WMParticipant *)participant completionHandler:(dispatch_block_t)completionHandler
 {
-    NSError *localError = nil;
     CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMTeam *team = participant.team;
-    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     NSString *lastUserName = userDefaultsManager.lastUserName;
+    BOOL participantHasChangedOnDevice = NO;
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
+        // participant on this device has changed
+        participantHasChangedOnDevice = YES;
         [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
     }
-    // refetch patients
-    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] error:&localError];
-    if (localError) {
-        [WMUtilities logError:localError];
+    // determine if we need to move patients to team
+    __block NSInteger patientCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
+    BOOL assignPatientsToTeam = NO;
+    if (patientCount && team) {
+        // participant is on team, but has some patients not assigned to team
+        assignPatientsToTeam = YES;
     }
-    NSString *queryString = [NSString stringWithFormat:@"/%@/(teamFlag eq '%@')?depthRef=2", [WMNavigationNode entityName], team == nil ? @"false":@"true"];
-    // if any patients not on team, get all nodes since we need all to move patients to team
-    NSInteger patientCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
-    if (patientCount) {
-        queryString = [NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]];
+    if (!participantHasChangedOnDevice && !assignPatientsToTeam) {
+        completionHandler();
+        return;
     }
-    [ff getArrayFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    // else refetch patients
+    [self fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
-        // patient and wound nodes are not connected to stage, so will not be acquired with last query
-        NSError *localError = nil;
-        NSArray *patientNavigationNodes = [WMNavigationNode patientNodes:managedObjectContext];
-        if ([patientNavigationNodes count] == 0) {
-            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(%@ eq 'true' or %@ eq 'true')", [WMNavigationNode entityName], WMNavigationNodeAttributes.patientFlag, WMNavigationNodeAttributes.woundFlag] error:&localError];
-            if (localError) {
-                [WMUtilities logError:localError];
-            }
+        patientCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
+        NSString *queryString = [NSString stringWithFormat:@"/%@/(teamFlag eq '%@')?depthRef=2", [WMNavigationNode entityName], team == nil ? @"false":@"true"];
+        if (patientCount) {
+            // if any patients not on team, get all nodes since we need all to move patients to team
+            queryString = [NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]];
         }
-        // hold onto stage/track for each patient
-        NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
-        NSMutableDictionary *map = [NSMutableDictionary dictionary];
-        for (WMPatient *patient in patients) {
-            if (patient.ffUrl) {
-                NSString *string = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
-                if (string) {
-                    map[patient.ffUrl] = string;
+        [ff getArrayFromUri:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            // patient and wound nodes are not connected to stage, so will not be acquired with last query
+            NSError *localError = nil;
+            NSArray *patientNavigationNodes = [WMNavigationNode patientNodes:managedObjectContext];
+            if ([patientNavigationNodes count] == 0) {
+                [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(%@ eq 'true' or %@ eq 'true')", [WMNavigationNode entityName], WMNavigationNodeAttributes.patientFlag, WMNavigationNodeAttributes.woundFlag] error:&localError];
+                if (localError) {
+                    [WMUtilities logError:localError];
                 }
-            } else {
-                [managedObjectContext MR_deleteObjects:@[patient]];
             }
-        }
-        weakSelf.appDelegate.patient2StageMap = map;
-        if ([object isKindOfClass:[NSArray class]] && [object count]) {
-            [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationTrack entityName]];
-            [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationStage entityName]];
-            [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-        }
-        completionHandler();
+            // hold onto stage/track for each patient
+            NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
+            NSMutableDictionary *map = [NSMutableDictionary dictionary];
+            for (WMPatient *patient in patients) {
+                if (patient.ffUrl) {
+                    if (nil == patient.team) {
+                        NSString *string = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
+                        if (string) {
+                            map[patient.ffUrl] = string;
+                        }
+                    }
+                } else {
+                    // patient may have been abandoned
+                    [managedObjectContext MR_deleteObjects:@[patient]];
+                }
+            }
+            weakSelf.appDelegate.patient2StageMap = map;
+            if ([object isKindOfClass:[NSArray class]] && [object count]) {
+                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationTrack entityName]];
+                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationStage entityName]];
+                [coreDataHelper markBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+            }
+            completionHandler();
+        }];
     }];
 }
 
@@ -255,7 +272,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 if (team) {
                     NSParameterAssert(team.ffUrl);
                     dispatch_block_t block = ^{
-                        // get patients
+                        // get patients - patients may have been created or deleted on another device
                         [weakSelf fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
                             if (error) {
                                 [WMUtilities logError:error];

@@ -251,7 +251,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [self initializeInterface];
     // upload any photos
     WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-    [photoManager uploadWoundPhotoBlobsFromObjectIds];
+    [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
