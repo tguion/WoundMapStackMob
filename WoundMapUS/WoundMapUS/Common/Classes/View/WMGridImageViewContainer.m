@@ -14,6 +14,7 @@
 #import "WMFatFractal.h"
 #import "Faulter.h"
 #import "ConstraintPack.h"
+#import "WMUtilities.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface WMGridImageViewContainer()
@@ -185,6 +186,9 @@
             [activityIndicatorView startAnimating];
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 [activityIndicatorView removeFromSuperview];
                 id data = woundPhoto.thumbnail;
                 if ([data isKindOfClass:[NSData class]]) {

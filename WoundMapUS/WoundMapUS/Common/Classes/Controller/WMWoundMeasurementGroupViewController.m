@@ -184,18 +184,17 @@
             [ff createObj:_woundMeasurementGroup atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementGroup entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
-                } else {
-                    ++counter;
-                    [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
-                                 toObjAtFfUrl:wound.ffUrl
-                                  grabBagName:WMWoundRelationships.measurementGroups
-                                   onComplete:completionHandler];
-                    ++counter;
-                    [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
-                                 toObjAtFfUrl:woundPhoto.ffUrl
-                                  grabBagName:WMWoundPhotoRelationships.measurementGroups
-                                   onComplete:completionHandler];
                 }
+                ++counter;
+                [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
+                             toObjAtFfUrl:wound.ffUrl
+                              grabBagName:WMWoundRelationships.measurementGroups
+                               onComplete:completionHandler];
+                ++counter;
+                [ff grabBagAddItemAtFfUrl:_woundMeasurementGroup.ffUrl
+                             toObjAtFfUrl:woundPhoto.ffUrl
+                              grabBagName:WMWoundPhotoRelationships.measurementGroups
+                               onComplete:completionHandler];
             }];
             WMInterventionEvent *event = [_woundMeasurementGroup interventionEventForChangeType:InterventionEventChangeTypeUpdateStatus
                                                                                           title:nil
@@ -527,6 +526,9 @@
         ++counter;
         ++counter;
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_woundMeasurementGroup.ffUrl grabBagName:WMWoundMeasurementGroupRelationships.interventionEvents onComplete:completionHandler];
         }];
@@ -539,6 +541,9 @@
                 onOffline:completionHandler];
         } else {
             [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMWoundMeasurementValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_woundMeasurementGroup.ffUrl grabBagName:WMWoundMeasurementGroupRelationships.values onComplete:completionHandler];
             }];
         }

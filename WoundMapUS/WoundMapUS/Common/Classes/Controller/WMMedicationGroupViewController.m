@@ -84,17 +84,16 @@
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [ff grabBagAddItemAtFfUrl:_medicationGroup.ffUrl
-                             toObjAtFfUrl:patient.ffUrl
-                              grabBagName:WMPatientRelationships.medicationGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
             }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [ff grabBagAddItemAtFfUrl:_medicationGroup.ffUrl
+                         toObjAtFfUrl:patient.ffUrl
+                          grabBagName:WMPatientRelationships.medicationGroups
+                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
+                           }];
         };
         [ff createObj:_medicationGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMMedicationGroup entityName]]
@@ -322,6 +321,9 @@
         }
     };
     FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMInterventionEvent *interventionEvent = (WMInterventionEvent *)object;
         [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
         [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_medicationGroup.ffUrl grabBagName:WMMedicationGroupRelationships.interventionEvents];

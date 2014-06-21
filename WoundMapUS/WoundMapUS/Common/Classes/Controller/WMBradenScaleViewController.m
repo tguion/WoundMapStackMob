@@ -92,6 +92,9 @@
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthGb=2", self.bradenScale.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             block();

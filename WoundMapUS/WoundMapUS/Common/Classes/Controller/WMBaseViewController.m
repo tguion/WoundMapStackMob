@@ -332,6 +332,9 @@ BOOL const kPresentIAPController = NO;  // DEPLOYMENT
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [weakSelf.refreshControl endRefreshing];
         if (weakSelf.refreshCompletionHandler) {
             weakSelf.refreshCompletionHandler(error, nil);
@@ -684,6 +687,9 @@ BOOL const kPresentIAPController = NO;  // DEPLOYMENT
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=1", backendSeedEntityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.coreDataHelper markBackendDataAcquiredForEntityName:backendSeedEntityName];
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];

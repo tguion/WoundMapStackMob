@@ -176,6 +176,9 @@
                     if (nil == teamInvitation) {
                         // look for team invitation
                         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], participant.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
                             if ([object count]) {
                                 // invitation is for this participant
                                 object = [object firstObject];

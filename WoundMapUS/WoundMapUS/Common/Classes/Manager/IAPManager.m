@@ -495,6 +495,9 @@ NSString* _deviceId;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         completionHandler(error, participant.reportTokenCountValue, participant.lastTokenCreditPurchaseDate);
     }];

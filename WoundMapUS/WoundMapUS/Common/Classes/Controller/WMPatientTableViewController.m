@@ -236,6 +236,9 @@
     __weak __typeof(&*self)weakSelf = self;
     NSString *queryString = [NSString stringWithFormat:@"%@?depthGb=2&depthRef=2", _patientToOpen.ffUrl];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf.navigationController pushViewController:weakSelf.patientSummaryContainerViewController animated:YES];

@@ -170,6 +170,9 @@
             // initiate update from server
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [ff getObjFromUri:_wound.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 [weakSelf.tableView reloadData];
             }];
         }

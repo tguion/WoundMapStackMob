@@ -443,6 +443,9 @@
         ++counter;
         ++counter;
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.interventionEvents onComplete:completionHandler];
         }];
@@ -455,6 +458,9 @@
                 onOffline:completionHandler];
         } else {
             [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMWoundTreatmentValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_woundTreatmentGroup.ffUrl grabBagName:WMWoundTreatmentGroupRelationships.values onComplete:completionHandler];
             }];
         }

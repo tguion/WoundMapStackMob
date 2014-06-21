@@ -1033,12 +1033,18 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         NSString *patientFFUrl = [userDefaultsManager lastPatientFFURLForUserGUID:participant.guid];
         if (patientFFUrl) {
             [ff getObjFromUri:patientFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 if (object) {
                     WMPatient *patient = (WMPatient *)object;
                     navigationCoordinator.patient = patient;
                     NSString *woundFFUrl = [userDefaultsManager lastWoundFFURLOnDeviceForPatientFFURL:patientFFUrl];
                     if (woundFFUrl) {
                         [ff getObjFromUri:woundFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
                             if (object) {
                                 WMWound *wound = (WMWound *)object;
                                 navigationCoordinator.wound = wound;
@@ -1142,6 +1148,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             block();

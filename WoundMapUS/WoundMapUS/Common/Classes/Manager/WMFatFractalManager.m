@@ -357,6 +357,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
         // explicite fetch patients - this appears to be needed since fetching the participant incurs some error
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             objectCallback2(error, participant);
         }];
     };
@@ -514,6 +517,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             completionHandler(error);
         }
         [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             completionHandler(error);
         }];
     }];
@@ -531,11 +537,17 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
     };
     FFHttpMethodCompletion createAddressOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMAddress *localAddress = (WMAddress *)object;
         [ff queueGrabBagAddItemAtUri:localAddress.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.addresses];
         block(error);
     };
     FFHttpMethodCompletion createTelecomOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMTelecom *localTelecom = (WMTelecom *)object;
         [ff queueGrabBagAddItemAtUri:localTelecom.ffUrl toObjAtUri:person.ffUrl grabBagName:WMPersonRelationships.telecoms];
         block(error);
@@ -640,6 +652,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                                 for (WMTeamInvitation *invitation in team.invitations) {
                                     ++counter; // 2
                                     [ff createObj:invitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                        if (error) {
+                                            [WMUtilities logError:error];
+                                        }
                                         NSParameterAssert([object isKindOfClass:[WMTeamInvitation class]]);
                                         WMTeamInvitation *teamInvitation = (WMTeamInvitation *)object;
                                         [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
@@ -749,6 +764,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                          toObjAtFfUrl:teamInvitation.team.ffUrl
                           grabBagName:WMTeamRelationships.invitations
                            onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
                                [managedObjectContext MR_saveToPersistentStoreAndWait];
                                completionHandler(error);
                            }];
@@ -804,6 +822,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                                [WMUtilities logError:error];
                            }
                            [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                                // do not move patients to team here - new team member will do on next sign in
                                completionHandler(error);

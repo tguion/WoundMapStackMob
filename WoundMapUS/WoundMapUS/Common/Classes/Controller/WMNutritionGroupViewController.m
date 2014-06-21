@@ -73,17 +73,16 @@
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [ff grabBagAddItemAtFfUrl:_nutritionGroup.ffUrl
-                             toObjAtFfUrl:patient.ffUrl
-                              grabBagName:WMPatientRelationships.nutritionGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
             }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [ff grabBagAddItemAtFfUrl:_nutritionGroup.ffUrl
+                         toObjAtFfUrl:patient.ffUrl
+                          grabBagName:WMPatientRelationships.nutritionGroups
+                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
+                           }];
         };
         [ff createObj:_nutritionGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMNutritionGroup entityName]]
@@ -237,6 +236,9 @@
     };
     WMParticipant *participant = self.appDelegate.participant;
     FFHttpMethodCompletion createInterventionEventOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMInterventionEvent *interventionEvent = (WMInterventionEvent *)object;
         [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents];
         [ff queueGrabBagAddItemAtUri:interventionEvent.ffUrl toObjAtUri:_nutritionGroup.ffUrl grabBagName:WMNutritionGroupRelationships.interventionEvents];

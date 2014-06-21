@@ -619,6 +619,9 @@
     if (woundPhoto && nil == woundPhoto.thumbnail) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [ff loadBlobsForObj:woundPhoto onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             id data = woundPhoto.thumbnail;
             if ([data isKindOfClass:[NSData class]]) {
                 woundPhoto.thumbnail = [UIImage imageWithData:data];

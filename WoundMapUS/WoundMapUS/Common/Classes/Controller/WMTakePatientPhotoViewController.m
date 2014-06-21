@@ -103,9 +103,13 @@
     [ff deleteBlobForObj:patient
               memberName:WMPatientAttributes.thumbnail
               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                  // nothing
+                  if (error) {
+                      [WMUtilities logError:error];
+                  }
               } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                  // nothing
+                  if (error) {
+                      [WMUtilities logError:error];
+                  }
               }];
 }
 

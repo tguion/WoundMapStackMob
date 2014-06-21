@@ -9,6 +9,7 @@
 #import "WMPatientPhotoImageView.h"
 #import "WMPatient.h"
 #import "WMFatFractal.h"
+#import "WMUtilities.h"
 
 @implementation WMPatientPhotoImageView
 
@@ -40,6 +41,9 @@
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             __weak __typeof(&*self)weakSelf = self;
             [ff loadBlobsForObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 [activityIndicatorView removeFromSuperview];
                 // image will be NSData, must convert to image
                 if ([patient.thumbnail isKindOfClass:[NSData class]]) {

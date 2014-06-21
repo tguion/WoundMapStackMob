@@ -2040,6 +2040,9 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
 }
@@ -2189,8 +2192,14 @@
                 [ff createObj:photo
                         atUri:[NSString stringWithFormat:@"/%@", [WMPhoto entityName]]
                    onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                       if (error) {
+                           [WMUtilities logError:error];
+                       }
                        createPhotoComplete(error, woundPhoto, photo);
                    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                       if (error) {
+                           [WMUtilities logError:error];
+                       }
                        createPhotoComplete(error, woundPhoto, photo);
                    }];
                 [ff grabBagAddItemAtFfUrl:woundPhoto.ffUrl
@@ -2217,8 +2226,14 @@
                             [ff createObj:woundPhoto
                                     atUri:[NSString stringWithFormat:@"/%@", [WMWoundPhoto entityName]]
                                onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
                                    createWoundPhotoComplete(error, woundPhoto, photo);
                                } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                   if (error) {
+                                       [WMUtilities logError:error];
+                                   }
                                    createWoundPhotoComplete(error, woundPhoto, photo);
                                }];
                         }];

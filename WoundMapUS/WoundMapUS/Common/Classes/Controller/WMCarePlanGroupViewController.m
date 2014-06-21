@@ -313,9 +313,8 @@
                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                   if (error) {
                                       [WMUtilities logError:error];
-                                  } else {
-                                      [ff deleteObj:value onComplete:block onOffline:block];
                                   }
+                                  [ff deleteObj:value onComplete:block onOffline:block];
                               }];
         }
     }
@@ -445,8 +444,14 @@
         ++counter;
         if (value.ffUrl) {
             [ff updateObj:value onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 completionHandler();
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
                 completionHandler();
             }];
         } else {
@@ -460,8 +465,14 @@
         }
     }
     [ff updateObj:_carePlanGroup onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         completionHandler();
     } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         completionHandler();
     }];
 }

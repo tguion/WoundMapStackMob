@@ -15,6 +15,7 @@
 #import "WMFatFractal.h"
 #import "WCAppDelegate.h"
 #import "ConstraintPack.h"
+#import "WMUtilities.h"
 
 #define kPsychoSocialGroupMaximumRecords 3
 
@@ -45,6 +46,9 @@
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
     [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.psychosocialGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf updateText];

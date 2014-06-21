@@ -14,6 +14,7 @@
 #import "ConstraintPack.h"
 #import "WMNavigationCoordinator.h"
 #import "WMFatFractal.h"
+#import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 #define kSkinAssessentGroupMaximumRecords 3
@@ -53,6 +54,9 @@
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
     [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.skinAssessmentGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf updateText];

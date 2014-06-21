@@ -133,16 +133,15 @@
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:_psychoSocialGroup.ffUrl
-                             toObjAtFfUrl:weakSelf.patient.ffUrl
-                              grabBagName:WMPatientRelationships.psychosocialGroups
-                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                   if (error) {
-                                       [WMUtilities logError:error];
-                                   }
-                               }];
             }
+            [ff grabBagAddItemAtFfUrl:_psychoSocialGroup.ffUrl
+                         toObjAtFfUrl:weakSelf.patient.ffUrl
+                          grabBagName:WMPatientRelationships.psychosocialGroups
+                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
+                           }];
         };
         [ff createObj:_psychoSocialGroup
                 atUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialGroup entityName]]
@@ -326,9 +325,8 @@
                               onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                   if (error) {
                                       [WMUtilities logError:error];
-                                  } else {
-                                      [ff deleteObj:value onComplete:block onOffline:block];
                                   }
+                                  [ff deleteObj:value onComplete:block onOffline:block];
                               }];
         }
     }
@@ -457,6 +455,9 @@
         ++counter;
         ++counter;
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:participant.ffUrl grabBagName:WMParticipantRelationships.interventionEvents onComplete:completionHandler];
             [ff grabBagAddItemAtFfUrl:interventionEvent.ffUrl toObjAtFfUrl:_psychoSocialGroup.ffUrl grabBagName:WMPsychoSocialGroupRelationships.interventionEvents onComplete:completionHandler];
         }];
@@ -464,6 +465,9 @@
     for (WMPsychoSocialValue *value in _psychoSocialGroup.values) {
         ++counter;
         [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_psychoSocialGroup.ffUrl grabBagName:WMPsychoSocialGroupRelationships.values onComplete:completionHandler];
         }];
     }

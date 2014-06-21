@@ -141,12 +141,11 @@
         FFHttpMethodCompletion grabBagHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
-            } else {
-                [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
-                             toObjAtFfUrl:_bradenScale.ffUrl
-                              grabBagName:WMBradenScaleRelationships.sections
-                               onComplete:handler];
             }
+            [ff grabBagAddItemAtFfUrl:[object valueForKey:@"ffUrl"]
+                         toObjAtFfUrl:_bradenScale.ffUrl
+                          grabBagName:WMBradenScaleRelationships.sections
+                           onComplete:handler];
         };
         for (WMBradenSection *bradenSection in _bradenScale.sections) {
             [ff createObj:bradenSection

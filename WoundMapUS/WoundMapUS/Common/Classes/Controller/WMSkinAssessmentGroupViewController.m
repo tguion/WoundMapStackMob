@@ -359,6 +359,9 @@
     };
     WMParticipant *participant = self.appDelegate.participant;
     FFHttpMethodCompletion createOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMInterventionEvent *interventionEvent = nil;
         if ([object isKindOfClass:[WMInterventionEvent class]]) {
             interventionEvent = (WMInterventionEvent *)object;
@@ -386,6 +389,9 @@
         [ff createObj:interventionEvent atUri:[NSString stringWithFormat:@"/%@", [WMInterventionEvent entityName]] onComplete:createOnComplete onOffline:createOnComplete];
     }
     FFHttpMethodCompletion createValueOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         WMSkinAssessmentValue *value = nil;
         if ([object isKindOfClass:[WMSkinAssessmentValue class]]) {
             value = (WMSkinAssessmentValue *)object;

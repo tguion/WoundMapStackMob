@@ -67,6 +67,9 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         block();

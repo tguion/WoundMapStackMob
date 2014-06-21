@@ -400,6 +400,9 @@
         // else
         ++counter;
         [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMDeviceValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [ff queueGrabBagAddItemAtUri:value.ffUrl toObjAtUri:_deviceGroup.ffUrl grabBagName:WMDeviceGroupRelationships.values];
             completionHandler(error, object, response);
         }];

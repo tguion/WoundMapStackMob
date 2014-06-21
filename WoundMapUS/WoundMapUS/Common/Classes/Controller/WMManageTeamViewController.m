@@ -72,6 +72,9 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     _acquiringTeamInvitations = YES;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/invitations", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         if ([object isKindOfClass:[NSArray class]]) {
             // make sure we didn't loose the team reference
             NSArray *teamInvitations = (NSArray *)object;
@@ -91,6 +94,9 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     _acquiringTeamMembers = YES;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/participants", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         _acquiringTeamMembers = NO;
         _teamMembers = object;

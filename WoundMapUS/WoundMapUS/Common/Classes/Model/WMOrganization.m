@@ -30,7 +30,9 @@
         [[WMFatFractal sharedInstance] grabBagGetAllForObj:self
                                                grabBagName:WMOrganizationRelationships.addresses
                                                 onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                                    WM_ASSERT_MAIN_THREAD;
+                                                    if (error) {
+                                                        [WMUtilities logError:error];
+                                                    }
                                                     handler();
                                                 }];
     } else {

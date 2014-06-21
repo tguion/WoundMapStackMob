@@ -165,6 +165,9 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
 }

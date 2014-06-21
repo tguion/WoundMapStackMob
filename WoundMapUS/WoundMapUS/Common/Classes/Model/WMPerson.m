@@ -55,7 +55,9 @@
         [[WMFatFractal sharedInstance] grabBagGetAllForObj:self
                                                grabBagName:WMPersonRelationships.addresses
                                                 onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                                    WM_ASSERT_MAIN_THREAD;
+                                                    if (error) {
+                                                        [WMUtilities logError:error];
+                                                    }
                                                     handler();
                                                 }];
     } else {
@@ -74,7 +76,9 @@
         [[WMFatFractal sharedInstance] grabBagGetAllForObj:self
                                                grabBagName:WMPersonRelationships.telecoms
                                                 onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                                                    WM_ASSERT_MAIN_THREAD;
+                                                    if (error) {
+                                                        [WMUtilities logError:error];
+                                                    }
                                                     handler();
                                                 }];
     } else {

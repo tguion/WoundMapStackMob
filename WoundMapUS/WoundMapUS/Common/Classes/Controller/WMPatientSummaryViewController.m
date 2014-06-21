@@ -14,6 +14,7 @@
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 #import "WMFatFractal.h"
+#import "WMUtilities.h"
 #import "ConstraintPack.h"
 
 @interface WMPatientSummaryViewController ()
@@ -43,6 +44,9 @@
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
     [ff getArrayFromUri:[NSString stringWithFormat:@"%@/%@?depthGb=1&depthRef=1", patient.ffUrl, WMPatientRelationships.medicalHistoryGroups] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         weakSelf.textView.attributedText = [patient descriptionAsMutableAttributedStringWithBaseFontSize:12];

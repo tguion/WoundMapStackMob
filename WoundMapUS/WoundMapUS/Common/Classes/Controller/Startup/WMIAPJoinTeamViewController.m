@@ -125,7 +125,10 @@
            [managedObjectContext MR_saveToPersistentStoreAndWait];
            [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-           //           FFQueuedOperation *operation = (FFQueuedOperation *)object;
+           if (error) {
+               [WMUtilities logError:error];
+           }
+           [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
        }];
 }
 
