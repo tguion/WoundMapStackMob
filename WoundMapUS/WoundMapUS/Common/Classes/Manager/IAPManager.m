@@ -606,7 +606,7 @@ NSString* _deviceId;
     [deviceId writeToFile:fileName
               atomically:NO
                 encoding:NSStringEncodingConversionAllowLossy
-                   error:nil];
+                   error:NULL];
     
 }
 
@@ -615,7 +615,7 @@ NSString* _deviceId;
     NSString *fileName = [IAPManager deviceIdFilename];
     NSString *deviceId = [[NSString alloc] initWithContentsOfFile:fileName
                                                     usedEncoding:nil
-                                                           error:nil];
+                                                           error:NULL];
     return deviceId;
 }
 

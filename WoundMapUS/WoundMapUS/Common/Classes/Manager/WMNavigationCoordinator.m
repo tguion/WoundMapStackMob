@@ -160,6 +160,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         return;
     }
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     // else update patient status
     if (_patient && !_patient.isDeleting) {
         [_patient updatePatientStatusMessages];
@@ -175,21 +176,15 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     _patient = patient;
     // save user defaults
     if ([patient.ffUrl length] > 0) {
-        if (nil == patient.participant) {
-            DLog(@"*** WARNING: patient without participant: %@", patient);
-            __weak __typeof(&*self)weakSelf = self;
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
-                if (patient.participant.guid) {
-                    [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
-                }
-            }];
-        } else {
-            [self.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:self.participant.guid];
-        }
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=1", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
+            if (patient.participant.guid) {
+                [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
+            }
+        }];
     }
     if (nil != _patient) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];

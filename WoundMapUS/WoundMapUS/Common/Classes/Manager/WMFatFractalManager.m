@@ -187,13 +187,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [WMPatient MR_truncateAllInContext:managedObjectContext];
     }
     // determine if we need to move patients to team
-    __block NSInteger patientCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
+    NSInteger patientCount = [WMPatient MR_countOfEntitiesWithContext:managedObjectContext];
+    __block NSInteger patientsNotOnTeamCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
     BOOL assignPatientsToTeam = NO;
-    if (patientCount && team) {
+    if (patientsNotOnTeamCount && team) {
         // participant is on team, but has some patients not assigned to team
         assignPatientsToTeam = YES;
     }
-    if (!participantHasChangedOnDevice && !assignPatientsToTeam) {
+    if (patientCount && !participantHasChangedOnDevice && !assignPatientsToTeam) {
         completionHandler();
         return;
     }
@@ -202,9 +203,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             [WMUtilities logError:error];
         }
-        patientCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
+        patientsNotOnTeamCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
         NSString *queryString = [NSString stringWithFormat:@"/%@/(teamFlag eq '%@')?depthRef=2", [WMNavigationNode entityName], team == nil ? @"false":@"true"];
-        if (patientCount) {
+        if (patientsNotOnTeamCount) {
             // if any patients not on team, get all nodes since we need all to move patients to team
             queryString = [NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]];
         }
@@ -275,29 +276,23 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 if (team) {
                     NSParameterAssert(team.ffUrl);
                     dispatch_block_t block = ^{
-                        // get patients - patients may have been created or deleted on another device
-                        [weakSelf fetchPatients:managedObjectContext ff:ff completionHandler:^(NSError *error) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                            // check that participant is still on team
-                            if (nil != localParticipant.team) {
-                                // move any patients track to team track
-                                [weakSelf movePatientsForParticipant:localParticipant toTeam:team completionHandler:^(NSError *error) {
-                                    if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
-                                        // may have been deleted on back end
-                                        localParticipant.teamInvitation = nil;
-                                        [managedObjectContext MR_deleteObjects:@[teamInvitation]];
-                                        [managedObjectContext MR_saveToPersistentStoreAndWait];
-                                        completionHandler(error);
-                                    } else {
-                                        completionHandler(error);
-                                    }
-                                }];
-                            } else {
-                                completionHandler(error);
-                            }
-                        }];
+                        // check that participant is still on team
+                        if (nil != localParticipant.team) {
+                            // move any patients track to team track
+                            [weakSelf movePatientsForParticipant:localParticipant toTeam:team completionHandler:^(NSError *error) {
+                                if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
+                                    // may have been deleted on back end
+                                    localParticipant.teamInvitation = nil;
+                                    [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                                    completionHandler(error);
+                                } else {
+                                    completionHandler(error);
+                                }
+                            }];
+                        } else {
+                            completionHandler(error);
+                        }
                     };
                     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -416,9 +411,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                     }
                     [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:[localPatients valueForKeyPath:@"objectID"]];
                     [managedObjectContext MR_deleteObjects:localPatients];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }
             }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
             // may need to get consultingGroup
             counter = [patients count];
             if (0 == counter) {
