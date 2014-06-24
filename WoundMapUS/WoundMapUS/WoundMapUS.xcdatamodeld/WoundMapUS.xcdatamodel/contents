@@ -600,6 +600,7 @@
             <userInfo/>
         </attribute>
         <attribute name="gender" optional="YES" attributeType="String" defaultValueString="X" syncable="YES"/>
+        <attribute name="lastUpdatedOnDeviceId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="patientStatusMessages" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="relevantMedications" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ssn" optional="YES" attributeType="String" syncable="YES"/>
@@ -1272,7 +1273,7 @@
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="495"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="508"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="30"/>
         <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>

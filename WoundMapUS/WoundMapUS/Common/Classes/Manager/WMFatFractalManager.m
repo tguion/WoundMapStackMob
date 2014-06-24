@@ -51,6 +51,7 @@
 #import "Faulter.h"
 #import "WMFatFractal.h"
 #import "WMNavigationCoordinator.h"
+#import "IAPManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
@@ -101,7 +102,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 - (void)handleRootManagedObjectContextDidSave:(NSNotification *)notification
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    FFHttpMethodCompletion httpMethodCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+    FFHttpMethodCompletion onDeleteCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
@@ -109,10 +110,25 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [ff forgetObj:object];
         }
     };
+    FFHttpMethodCompletion onUpdateCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    FFHttpMethodCompletion onUpdatePatientCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (object && [object isKindOfClass:[WMPatient class]]) {
+            WMPatient *patient = (WMPatient *)object;
+            NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
+    };
     if (_processDeletesOnNSManagedObjectContextObjectsDidChangeNotification) {
         NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
         for (id object in deletedObjects) {
-            [ff deleteObj:object onComplete:httpMethodCompletion];
+            [ff deleteObj:object onComplete:onDeleteCompletion];
         }
     }
     if (_processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification) {
@@ -122,7 +138,20 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
          */
         NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
         for (id object in updatedObjects) {
-            [ff updateObj:object onComplete:httpMethodCompletion];
+            [ff updateObj:object onComplete:onUpdateCompletion];
+        }
+    }
+    // mark the current patient as last updated on device
+    NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
+    if ([updatedObjects count]) {
+        WMPatient *patient = self.appDelegate.navigationCoordinator.patient;
+        if (patient) {
+            IAPManager *iapManager = [IAPManager sharedInstance];
+            NSString *deviceId = [iapManager getIAPDeviceGuid];
+            if (![patient.lastUpdatedOnDeviceId isEqualToString:deviceId]) {
+                patient.lastUpdatedOnDeviceId = [iapManager getIAPDeviceGuid];
+                [ff updateObj:patient onComplete:onUpdatePatientCompletion onOffline:onUpdatePatientCompletion];
+            }
         }
     }
 }
@@ -187,14 +216,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [WMPatient MR_truncateAllInContext:managedObjectContext];
     }
     // determine if we need to move patients to team
-    NSInteger patientCount = [WMPatient MR_countOfEntitiesWithContext:managedObjectContext];
+    NSInteger nodeCount = [WMNavigationNode MR_countOfEntitiesWithContext:managedObjectContext];
     __block NSInteger patientsNotOnTeamCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
     BOOL assignPatientsToTeam = NO;
     if (patientsNotOnTeamCount && team) {
         // participant is on team, but has some patients not assigned to team
         assignPatientsToTeam = YES;
     }
-    if (patientCount && !participantHasChangedOnDevice && !assignPatientsToTeam) {
+    if (nodeCount && !participantHasChangedOnDevice && !assignPatientsToTeam) {
         completionHandler();
         return;
     }
@@ -366,6 +395,37 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [self truncateStoreForSignIn:participant completionHandler:^{
             objectCallback(error, participant);
         }];
+    }];
+}
+
+- (void)fetchPatientsShallow:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    NSString *collection = [WMPatient entityName];
+    NSMutableSet *localPatients = [NSMutableSet setWithArray:[WMPatient MR_findAllInContext:managedObjectContext]];
+    NSString *queryString = [NSString stringWithFormat:@"/%@", collection];
+    [[[ff newReadRequest] prepareGetFromCollection:queryString] executeAsyncWithOptions:0 andBlock:^(FFReadResponse *response) {
+        if (response.error) {
+            completionHandler(response.error);
+        } else {
+            NSSet *patients = [NSSet setWithArray:response.objs];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [localPatients minusSet:patients];
+            if ([localPatients count]) {
+                // filter out any objects where ffUrl is nil
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ffUrl != nil"];
+                [localPatients filterUsingPredicate:predicate];
+                if ([localPatients count]) {
+                    DLog(@"Will delete %@", localPatients);
+                    for (WMPatient *patient in localPatients) {
+                        [ff forgetObj:patient];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:[localPatients valueForKeyPath:@"objectID"]];
+                    [managedObjectContext MR_deleteObjects:localPatients];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                }
+            }
+            completionHandler(nil);
+        }
     }];
 }
 
@@ -917,7 +977,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         memberName:WMPhotoAttributes.photo];
 }
 
-- (void)uploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo
+- (void)uploadPhotosForWoundPhoto:(WMWoundPhoto *)woundPhoto photo:(WMPhoto *)photo completionHandler:(dispatch_block_t)completionHandler
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [woundPhoto managedObjectContext];
@@ -930,6 +990,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [MBProgressHUD hideAllHUDsForView:self.appDelegate.window.rootViewController.view animated:NO];
         [Faulter faultObjectWithID:[woundPhoto objectID] inContext:managedObjectContext];
         [Faulter faultObjectWithID:[photo objectID] inContext:managedObjectContext];
+        if (completionHandler) {
+            completionHandler();
+        }
     };
     FFHttpMethodCompletion uploadWoundPhotoComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {

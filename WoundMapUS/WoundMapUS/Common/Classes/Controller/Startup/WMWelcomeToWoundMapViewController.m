@@ -412,16 +412,20 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     // check if all information has been entered
     NSString *alertMessage = nil;
-    if (nil == self.userDefaultsManager.defaultNavigationTrackFFURL) {
+    if (_welcomeState == WMWelcomeStateSignedInNoTeam) {
+        alertMessage = @"Please select 'Defer Team' or 'Create a Team'.";
+    } else if (nil == self.userDefaultsManager.defaultNavigationTrackFFURL) {
         alertMessage = @"Please select a Clinical Setting.";
     } else if (_welcomeState != WMWelcomeStateInvitationAccepted) {
         if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
             alertMessage = @"Please select 'Defer Team' or 'Create a Team'.";
         }
     }
-    WMPatient *patient = self.patient;
-    if (nil == alertMessage && (nil == patient || ![self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient])) {
-        alertMessage = @"Please select or add a patient.";
+    if (nil == alertMessage) {
+        WMPatient *patient = self.patient;
+        if (nil == alertMessage && (nil == patient || ![self.appDelegate.navigationCoordinator canEditPatientOnDevice:patient])) {
+            alertMessage = @"Please select or add a patient.";
+        }
     }
     if (alertMessage) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action Required"

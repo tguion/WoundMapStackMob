@@ -13,6 +13,7 @@ extern const struct WMPatientAttributes {
 	__unsafe_unretained NSString *ffUrl;
 	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *gender;
+	__unsafe_unretained NSString *lastUpdatedOnDeviceId;
 	__unsafe_unretained NSString *patientStatusMessages;
 	__unsafe_unretained NSString *relevantMedications;
 	__unsafe_unretained NSString *ssn;
@@ -59,6 +60,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMNavigationStage;
 @class WMTeam;
 @class WMWound;
+
 
 
 
@@ -175,6 +177,16 @@ extern const struct WMPatientFetchedProperties {
 
 
 //- (BOOL)validateGender:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* lastUpdatedOnDeviceId;
+
+
+
+//- (BOOL)validateLastUpdatedOnDeviceId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -475,6 +487,12 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSString*)primitiveGender;
 - (void)setPrimitiveGender:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveLastUpdatedOnDeviceId;
+- (void)setPrimitiveLastUpdatedOnDeviceId:(NSString*)value;
 
 
 

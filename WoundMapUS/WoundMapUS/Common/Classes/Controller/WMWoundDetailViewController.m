@@ -351,23 +351,27 @@
 {
     [self.view endEditing:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    // create undo group
-    [self.managedObjectContext.undoManager beginUndoGrouping];
     switch (indexPath.row) {
         case 1: {
             // wound type
+            // create undo group
+            [self.managedObjectContext.undoManager beginUndoGrouping];
             [self.managedObjectContext.undoManager setActionName:@"EditWoundType"];
             [self.navigationController pushViewController:self.selectWoundTypeViewController animated:YES];
             break;
         }
         case 2: {
             // wound location
+            // create undo group
+            [self.managedObjectContext.undoManager beginUndoGrouping];
             [self.managedObjectContext.undoManager setActionName:@"EditWoundLocation"];
             [self.navigationController pushViewController:self.selectWoundLocationViewController animated:YES];
             break;
         }
         case 3: {
             // wound history
+            // create undo group
+            [self.managedObjectContext.undoManager beginUndoGrouping];
             [self.managedObjectContext.undoManager setActionName:@"EditWoundHistory"];
             [self.navigationController pushViewController:self.noteViewController animated:YES];
             break;

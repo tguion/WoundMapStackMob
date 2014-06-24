@@ -29,6 +29,7 @@
 @property (readonly, nonatomic) WMWoundPhoto *woundPhoto;
 
 @property (strong, nonatomic) NSMutableSet *woundPhotoObjectIdsToUpload;            // woundPhoto objectIds to upload images to back end
+@property (nonatomic) NSInteger photosUploadingCount;
 
 @property (strong, nonatomic) IBOutlet UIView *overlayView;                         // overlayView shown over view through camera
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;                      // view to hold woundPhoto.thumbnail or woundPhoto.thumbnailLarge
@@ -711,16 +712,25 @@
     return [_woundPhotoObjectIdsToUpload count] > 0;
 }
 
+- (BOOL)hasCompletedPhotoUploads
+{
+    return (_photosUploadingCount == 0);
+}
+
 - (void)uploadPhotoBlobs
 {
     WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
     [userDefaultManager clearWoundPhotoObjectIDs];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
+    dispatch_block_t completionHandler = ^{
+        --_photosUploadingCount;
+    };
     for (NSManagedObjectID *objectId in self.woundPhotoObjectIdsToUpload) {
         WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:objectId];
         WMPhoto *photo = woundPhoto.photo;
-        [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+        ++_photosUploadingCount;
+        [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo completionHandler:completionHandler];
     }
     _woundPhotoObjectIdsToUpload = nil;
 }
@@ -730,16 +740,19 @@
     if (_woundPhotoObjectIdsToUpload) {
         WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
         userDefaultManager.woundPhotoObjectIdsToUpload = _woundPhotoObjectIdsToUpload;
-        _woundPhotoObjectIdsToUpload = nil;
     }
 }
 
 - (void)uploadWoundPhotoBlobsFromObjectIds
 {
+    _woundPhotoObjectIdsToUpload = nil;
     WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
     NSSet *urlStrings = userDefaultManager.woundPhotoObjectIdsToUpload;
     [userDefaultManager clearWoundPhotoObjectIDs];
     if ([urlStrings count]) {
+        dispatch_block_t completionHandler = ^{
+            --_photosUploadingCount;
+        };
         [MBProgressHUD showHUDAddedTo:self.appDelegate.window.rootViewController.view animated:NO].labelText = @"Uploading photos";
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
@@ -748,7 +761,7 @@
             NSManagedObjectID *objectID = [[managedObjectContext persistentStoreCoordinator] managedObjectIDForURIRepresentation:uri];
             WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:objectID];
             WMPhoto *photo = woundPhoto.photo;
-            [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];
+            [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo completionHandler:completionHandler];
         }
     }
 }

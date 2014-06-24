@@ -176,8 +176,11 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     _patient = patient;
     // save user defaults
     if ([patient.ffUrl length] > 0) {
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=1", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
+        IAPManager *iapManager = [IAPManager sharedInstance];
+        NSString *deviceId = [iapManager getIAPDeviceGuid];
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@/(lastUpdatedOnDeviceId ne '%@')?depthRef=1&depthGb=1", patient.ffUrl, deviceId] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error && error.code != 1) {
+                // may not receive any data
                 [WMUtilities logError:error];
             }
             [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
