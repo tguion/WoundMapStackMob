@@ -37,6 +37,7 @@
 - (void)clearWoundPhotoObjectIDs;
 
 @property (nonatomic) NSString *lastFTPHost;
+@property (nonatomic) NSInteger lastFTPPort;
 @property (nonatomic) NSString *lastFTPPath;
 @property (nonatomic) NSString *lastFTPUserName;
 @property (nonatomic) NSString *lastFTPPassword;

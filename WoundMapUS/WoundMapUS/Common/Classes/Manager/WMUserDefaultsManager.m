@@ -350,6 +350,18 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSInteger)lastFTPPort
+{
+    return [[NSUserDefaults standardUserDefaults] integerForKey:@"com.mobilehealthware.woundmap.ftpPort"];
+}
+
+- (void)setLastFTPPort:(NSInteger)lastFTPPort
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setInteger:lastFTPPort forKey:@"com.mobilehealthware.woundmap.ftpPort"];
+    [userDefaults synchronize];
+}
+
 - (NSString *)lastFTPPath
 {
     return [[NSUserDefaults standardUserDefaults] stringForKey:@"com.mobilehealthware.woundmap.ftpPath"];

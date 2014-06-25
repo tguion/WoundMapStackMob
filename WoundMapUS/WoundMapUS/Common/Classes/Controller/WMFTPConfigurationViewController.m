@@ -20,6 +20,7 @@
 @interface WMFTPConfigurationViewController () <UITextFieldDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) NSString *hostTextInput;
+@property (strong, nonatomic) NSString *portTextInput;
 @property (strong, nonatomic) NSString *pathTextInput;
 @property (strong, nonatomic) NSString *userNameTextInput;
 @property (strong, nonatomic) NSString *passwordTextInput;
@@ -55,6 +56,7 @@
     [self.tableView registerClass:[WMSwitchTableViewCell class] forCellReuseIdentifier:@"SwitchCell"];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     _hostTextInput = userDefaultsManager.lastFTPHost;
+    _portTextInput = [NSString stringWithFormat:@"%d", userDefaultsManager.lastFTPPort];
     _pathTextInput = userDefaultsManager.lastFTPPath;
     _userNameTextInput = userDefaultsManager.lastFTPUserName;
     _passwordTextInput = userDefaultsManager.lastFTPPassword;
@@ -75,7 +77,7 @@
     switch (indexPath.section) {
         case 0: {
             switch (indexPath.row) {
-                case 2: {
+                case 3: {
                     // use
                     cellReuseIdentifier = @"SwitchCell";
                     break;
@@ -117,6 +119,9 @@
     if (_hostTextInput) {
         userDefaultsManager.lastFTPHost = _hostTextInput;
     }
+    if (_portTextInput) {
+        userDefaultsManager.lastFTPPort = [_portTextInput integerValue];
+    }
     if (_pathTextInput) {
         userDefaultsManager.lastFTPPath = _pathTextInput;
     }
@@ -126,7 +131,7 @@
     if (_passwordTextInput) {
         userDefaultsManager.lastFTPPassword = _passwordTextInput;
     }
-    NMSSHSession *session = [NMSSHSession connectToHost:_hostTextInput withUsername:_userNameTextInput];
+    NMSSHSession *session = [NMSSHSession connectToHost:_hostTextInput port:[_portTextInput integerValue] withUsername:_userNameTextInput];
     if (session.isConnected) {
         [session authenticateByKeyboardInteractiveUsingBlock:^NSString *(NSString *request) {
             return _passwordTextInput;
@@ -270,6 +275,11 @@
             self.hostTextInput = textField.text;
             break;
         }
+        case 1002: {
+            // port
+            self.portTextInput = textField.text;
+            break;
+        }
         case 1001: {
             // path
             self.pathTextInput = textField.text;
@@ -300,7 +310,7 @@
     NSInteger count = 0;
     switch (section) {
         case 0:
-            count = 3;
+            count = 4;
             break;
         case 1:
             count = 2;
@@ -342,6 +352,19 @@
                     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     textField.autocorrectionType = UITextAutocorrectionTypeNo;
                     textField.spellCheckingType = UITextSpellCheckingTypeNo;
+                    textField.keyboardType = UIKeyboardTypeNumberPad;
+                    textField.returnKeyType = UIReturnKeyDefault;
+                    textField.delegate = self;
+                    textField.tag = 1002;
+                    [myCell updateWithLabelText:@"Port" valueText:_portTextInput valuePrompt:@"Enter port (default 22)"];
+                    break;
+                }
+                case 2: {
+                    WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+                    UITextField *textField = myCell.textField;
+                    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+                    textField.spellCheckingType = UITextSpellCheckingTypeNo;
                     textField.returnKeyType = UIReturnKeyDefault;
                     textField.delegate = self;
                     textField.tag = 1001;
@@ -349,7 +372,7 @@
                     [myCell updateWithLabelText:@"Path" valueText:_pathTextInput valuePrompt:@"Enter path"];
                     break;
                 }
-                case 2: {
+                case 3: {
                     // use SFTP
                     WMSwitchTableViewCell *myCell = (WMSwitchTableViewCell *)cell;
                     cell.tag = (3000 + indexPath.row);
