@@ -171,6 +171,8 @@
     if (_removeUndoManagerWhenDone) {
         managedObjectContext.undoManager = nil;
     }
+    // indicate that patient was changed on device
+    [self patientNavigationDataChangedOnDevice];
     // save locally
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     // update back end

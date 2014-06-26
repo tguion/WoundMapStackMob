@@ -115,16 +115,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [WMUtilities logError:error];
         }
     };
-    FFHttpMethodCompletion onUpdatePatientCompletion = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        if (object && [object isKindOfClass:[WMPatient class]]) {
-            WMPatient *patient = (WMPatient *)object;
-            NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-        }
-    };
     if (_processDeletesOnNSManagedObjectContextObjectsDidChangeNotification) {
         NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
         for (id object in deletedObjects) {
@@ -139,19 +129,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
         for (id object in updatedObjects) {
             [ff updateObj:object onComplete:onUpdateCompletion];
-        }
-    }
-    // mark the current patient as last updated on device
-    NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
-    if ([updatedObjects count]) {
-        WMPatient *patient = self.appDelegate.navigationCoordinator.patient;
-        if (patient) {
-            IAPManager *iapManager = [IAPManager sharedInstance];
-            NSString *deviceId = [iapManager getIAPDeviceGuid];
-            if (![patient.lastUpdatedOnDeviceId isEqualToString:deviceId]) {
-                patient.lastUpdatedOnDeviceId = [iapManager getIAPDeviceGuid];
-                [ff updateObj:patient onComplete:onUpdatePatientCompletion onOffline:onUpdatePatientCompletion];
-            }
         }
     }
 }
@@ -686,7 +663,19 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 } else {
                     NSAssert([object isKindOfClass:[WMTeam class]], @"Expected WMTeam but got %@", object);
                     // add participant (user) to FFUserGroup
-                    [team.participantGroup addUser:user error:&error];
+                    [participantGroup addUser:user error:&error];
+                    if (error) {
+                        // FF bug ?
+                        /*
+                         2014-06-25 14:03:44.003 WoundMapUS[68176:60b] metaDataForObj: Did not find in-memory metadata for object FFUser[ guid[lpunVfkNY3413ZBsrzE647] active[1], userName[todd.team.4],firstName[Todd],lastName[Team.4],email[todd.team.4@me.com], authDomain[LOCAL], scriptAuthService[(null)], groupsLoaded[0],groups[{
+                         }]]
+                         2014-06-25 14:03:44.008 WoundMapUS[68176:60b] +[WMUtilities logError:] [Line 25] *** ERROR ***: grabBagAdd: Could not find FatFractal url for item being added
+                         */
+                        FFUser *localUser = [ff getObjFromUri:[NSString stringWithFormat:@"/FFUser/(guid eq '%@')", user.guid] error:&error];
+                        if (localUser) {
+                            [participantGroup addUser:localUser error:&error];
+                        }
+                    }
                     if (error) {
                         block(error);
                     } else {

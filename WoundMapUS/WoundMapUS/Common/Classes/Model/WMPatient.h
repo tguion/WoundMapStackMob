@@ -8,6 +8,7 @@ extern NSString * const kConsultantGroupName;
 @interface WMPatient : _WMPatient <idSource> {}
 
 + (NSArray *)toManyRelationshipNames;
++ (NSSet *)relationshipNamesAffectingCompassStatus;
 
 // add FFUsers to this group when a consultant acquires the patient
 @property (strong, nonatomic) FFUserGroup *consultantGroup;

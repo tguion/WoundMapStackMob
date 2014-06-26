@@ -35,6 +35,7 @@
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
+@property (strong, nonatomic) IBOutlet UIView *tableFooterView;
 @property (strong, nonatomic) WMWoundTreatment *selectedWoundTreatment;
 @property (readonly, nonatomic) WMWoundTreatmentViewController *woundTreatmentViewController;
 @property (readonly, nonatomic) WMWoundTreatmentSummaryViewController *woundTreatmentSummaryViewController;
@@ -154,6 +155,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    // do this here
+    if (self.parentWoundTreatment.normalizeMeasurements) {
+        self.tableView.tableFooterView = self.tableFooterView;
+    } else {
+        self.tableView.tableFooterView = nil;
+    }
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
                                                             message:[NSString stringWithFormat:@"Your Policy has closed %ld open Wound Treatment records.", (long)self.recentlyClosedCount]
@@ -383,6 +390,12 @@
 #pragma mark - BaseViewController
 
 #pragma mark - Actions
+
+- (IBAction)normalizePercentageAction:(id)sender
+{
+    [self.woundTreatmentGroup normalizeInputsForParentWoundTreatment:self.parentWoundTreatment];
+    [self.tableView.visibleCells makeObjectsPerformSelector:@selector(updateContentForAssessmentGroup)];
+}
 
 - (IBAction)showWoundTreatmentGroupHistoryAction:(id)sender
 {

@@ -228,6 +228,8 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
     self.willCancelFlag = NO;
     // get any values in text fields
     [self.view endEditing:YES];
+    // indicate that patient was changed on device
+    [self patientNavigationDataChangedOnDevice];
 }
 
 #pragma mark - Open/Closed Cell

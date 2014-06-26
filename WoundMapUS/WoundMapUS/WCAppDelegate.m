@@ -231,7 +231,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    // TODO saves changes in the application's managed object context before the application terminates.
     _bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
         // Clean up any unfinished task business by marking where you. stopped or ending the task outright.
         [application endBackgroundTask:_bgTask];
@@ -244,7 +243,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (([application backgroundTimeRemaining] > 0) && !photoManager.hasCompletedPhotoUploads) {
             // wait until the blobs have uploaded
-            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow: 0.1]];
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         }
         [application endBackgroundTask:_bgTask];
         _bgTask = UIBackgroundTaskInvalid;

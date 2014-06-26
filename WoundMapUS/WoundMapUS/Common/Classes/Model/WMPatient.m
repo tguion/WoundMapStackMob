@@ -8,6 +8,23 @@
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMPatientReferral.h"
+#import "WMBradenScale.h"
+#import "WMCarePlanGroup.h"
+#import "WMCarePlanValue.h"
+#import "WMDeviceGroup.h"
+#import "WMDeviceValue.h"
+#import "WMMedicalHistoryValue.h"
+#import "WMMedicationGroup.h"
+#import "WMNutritionGroup.h"
+#import "WMNutritionValue.h"
+#import "WMPsychoSocialGroup.h"
+#import "WMPsychoSocialValue.h"
+#import "WMSkinAssessmentGroup.h"
+#import "WMSkinAssessmentValue.h"
+#import "WMWoundMeasurementGroup.h"
+#import "WMWoundMeasurementValue.h"
+#import "WMWoundTreatmentGroup.h"
+#import "WMWoundTreatmentValue.h"
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 
@@ -49,6 +66,37 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
              WMPatientRelationships.psychosocialGroups,
              WMPatientRelationships.skinAssessmentGroups,
              WMPatientRelationships.wounds];
+}
+
+// DEPLOYMENT: watch for additional relationships
++ (NSSet *)relationshipNamesAffectingCompassStatus
+{
+    static NSMutableSet *RelationshipNamesAffectingCompassStatus = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        RelationshipNamesAffectingCompassStatus = [[NSMutableSet alloc] init];
+        [RelationshipNamesAffectingCompassStatus addObjectsFromArray:@[[WMPatient entityName],
+                                                                       [WMBradenScale entityName],
+                                                                       [WMCarePlanGroup entityName],
+                                                                       [WMCarePlanValue entityName],
+                                                                       [WMDeviceGroup entityName],
+                                                                       [WMDeviceValue entityName],
+                                                                       [WMMedicalHistoryGroup entityName],
+                                                                       [WMMedicalHistoryValue entityName],
+                                                                       [WMMedicationGroup entityName],
+                                                                       [WMNutritionGroup entityName],
+                                                                       [WMNutritionValue entityName],
+                                                                       [WMPsychoSocialGroup entityName],
+                                                                       [WMPsychoSocialValue entityName],
+                                                                       [WMSkinAssessmentGroup entityName],
+                                                                       [WMSkinAssessmentValue entityName],
+                                                                       [WMWound entityName],
+                                                                       [WMWoundMeasurementGroup entityName],
+                                                                       [WMWoundMeasurementValue entityName],
+                                                                       [WMWoundTreatmentGroup entityName],
+                                                                       [WMWoundTreatmentValue entityName]]];
+    });
+    return RelationshipNamesAffectingCompassStatus;
 }
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext

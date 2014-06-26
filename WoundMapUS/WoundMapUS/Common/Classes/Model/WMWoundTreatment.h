@@ -11,6 +11,7 @@
 @property (readonly, nonatomic) NSArray *sortedChildrenWoundTreatments;
 @property (readonly, nonatomic) BOOL childrenHaveSectionTitles;
 @property (nonatomic) BOOL skipSelectionIcon;
+@property (nonatomic) BOOL normalizeMeasurements;
 
 - (NSString *)combineKeyAndValue:(NSString *)value;
 - (void)aggregateWoundTreatments:(NSMutableSet *)set;

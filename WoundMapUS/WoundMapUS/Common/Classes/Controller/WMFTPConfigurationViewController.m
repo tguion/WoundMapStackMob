@@ -56,7 +56,7 @@
     [self.tableView registerClass:[WMSwitchTableViewCell class] forCellReuseIdentifier:@"SwitchCell"];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
     _hostTextInput = userDefaultsManager.lastFTPHost;
-    _portTextInput = [NSString stringWithFormat:@"%d", userDefaultsManager.lastFTPPort];
+    _portTextInput = [NSString stringWithFormat:@"%ld", (long)userDefaultsManager.lastFTPPort];
     _pathTextInput = userDefaultsManager.lastFTPPath;
     _userNameTextInput = userDefaultsManager.lastFTPUserName;
     _passwordTextInput = userDefaultsManager.lastFTPPassword;

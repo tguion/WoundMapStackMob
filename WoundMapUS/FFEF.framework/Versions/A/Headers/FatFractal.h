@@ -665,30 +665,27 @@ xVerifyCredentialsAuthorization:(NSString *)xVerifyCredentialsAuthorization
 #pragma mark Push support
 
 /**
- Synchronous method that stores the push notification id locally. If logged in, will synchronize with your app's backend.
+ If logged in, will register this notification ID with the backend, for this user, and saves it in local preferences.
+ <br>If the notif ID is the same as what is already stored in local preferences for this user, then this is a no-op.
+ <br>If not logged-in, nothing is done, and an error is returned
  @param NSString idValue : the notification identifier. If == nil, equivalent to calling unregisterNotificationID.
- @return <b>NSError</b> - returns non-nil if any error has occurred
+ @return <b>NSError</b> - returns non-nil if either (a) not logged in, or (b) any error occurred while trying to sync
  */
 - (NSError *) registerNotificationID:(NSString *) idValue;
 
 /**
- Synchronous method that removes the push notification id locally. If logged in, will synchronize with your app's backend.
- @return <b>NSError</b> returns non-nil if any error has occurred
+ If logged in, will get the notification ID stored in local preferences for this user, and un-register from the backend
+ <br>If there is no notification ID stored locally, then this is a no-op.
+ <br>If not logged-in, nothing is done, and an error is returned
+ @return <b>NSError</b> - returns non-nil if either (a) not logged in, or (b) any error occurred while trying to sync
  */
 - (NSError *) unregisterNotificationID;
 
 /**
- The push notification id which is in local storage.
- @return <b>NSString</b> - returns the notificationId else the empty string @"" if there is nothing stored locally.
+ The push notification id for the current logged-in user, as previously set via registerNotificationID
+ @return <b>NSString</b> - if not logged in, returns nil; otherwise returns the notificationId if there is one, else the empty string @""
  */
 - (NSString *) getNotificationID;
-
-/**
- The guid from your app's backend which corresponds to the notification id which is in local storage.
- @return <b>NSString</b> - the guid from your app's backend which corresponds to the notificationId else the empty 
- string @"" if there is nothing stored locally.
- */
-- (NSString *) getBackendNotificationGuid;
 
 #pragma mark Lifecycle support for your persistent objects, via HTTP to your Fat Fractal backend
 

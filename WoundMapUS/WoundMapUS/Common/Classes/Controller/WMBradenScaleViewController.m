@@ -157,6 +157,8 @@
             [WMUtilities logError:error];
         }
         if (counter == 0 || --counter == 0) {
+            // indicate that patient was changed on device
+            [self patientNavigationDataChangedOnDevice];
             // save local
             NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
             [managedObjectContext MR_saveToPersistentStoreAndWait];

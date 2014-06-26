@@ -483,6 +483,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         WMNavigationStage *navigationStage = navigationTrack.initialStage;
         _patient.stage = navigationStage;
     }
+    // indicate that patient was changed on device
+    [self patientNavigationDataChangedOnDevice];
     // save local
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];

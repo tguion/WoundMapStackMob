@@ -430,7 +430,6 @@
 {
     [super patientTableViewController:viewController didSelectPatient:patient];
     [_navigationNodePopoverController dismissPopoverAnimated:YES];
-    [viewController clearAllReferences];
     _navigationNodePopoverController = nil;
 }
 

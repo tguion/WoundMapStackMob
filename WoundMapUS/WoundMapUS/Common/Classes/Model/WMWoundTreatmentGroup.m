@@ -160,6 +160,58 @@
     return [woundTreatmentsForValues count];
 }
 
+#pragma mark - Normalization
+
+- (NSArray *)woundTreatmentValuesForParentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment
+{
+    return [WMWoundTreatmentValue MR_findAllSortedBy:@"woundTreatment.sortRank" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"group == %@ AND woundTreatment.parentTreatment == %@", self, parentWoundTreatment] inContext:[self managedObjectContext]];
+}
+
+- (NSDecimalNumber *)totalPercentageAmount:(WMWoundTreatment *)parentWoundTreatment
+{
+    static NSDecimalNumberHandler* roundingBehavior = nil;
+    if (roundingBehavior == nil) {
+        roundingBehavior = [[NSDecimalNumberHandler alloc] initWithRoundingMode:NSRoundPlain
+                                                                          scale:0
+                                                               raiseOnExactness:NO
+                                                                raiseOnOverflow:NO
+                                                               raiseOnUnderflow:NO
+                                                            raiseOnDivideByZero:NO];
+    }
+    NSArray *values = [self woundTreatmentValuesForParentWoundTreatment:parentWoundTreatment];
+    NSDecimalNumber *amount = [NSDecimalNumber zero];
+    for (WMWoundTreatmentValue *value in values) {
+        amount = [amount decimalNumberByAdding:[NSDecimalNumber decimalNumberWithString:value.value]];
+    }
+    amount = [amount decimalNumberByRoundingAccordingToBehavior:roundingBehavior];
+    return amount;
+}
+
+- (void)normalizeInputsForParentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment
+{
+    static NSDecimalNumberHandler* roundingBehavior = nil;
+    if (roundingBehavior == nil) {
+        roundingBehavior = [[NSDecimalNumberHandler alloc] initWithRoundingMode:NSRoundPlain
+                                                                          scale:0
+                                                               raiseOnExactness:NO
+                                                                raiseOnOverflow:NO
+                                                               raiseOnUnderflow:NO
+                                                            raiseOnDivideByZero:NO];
+    }
+    NSDecimalNumber *sum = [self totalPercentageAmount:parentWoundTreatment];
+    if ([sum floatValue] == 0.0) {
+        return;
+    }
+    // else
+    NSDecimalNumber *multiplier = [[NSDecimalNumber decimalNumberWithString:@"100.0"] decimalNumberByDividingBy:sum];
+    NSArray *values = [self woundTreatmentValuesForParentWoundTreatment:parentWoundTreatment];
+    for (WMWoundTreatmentValue *value in values) {
+        NSDecimalNumber *number = [[NSDecimalNumber decimalNumberWithString:value.value] decimalNumberByMultiplyingBy:multiplier];
+        number = [number decimalNumberByRoundingAccordingToBehavior:roundingBehavior];
+        value.value = [number stringValue];
+    }
+}
+
 #pragma mark - Events
 
 - (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType

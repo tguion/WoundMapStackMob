@@ -35,6 +35,8 @@
 
 - (NSInteger)valuesCountForWoundTreatment:(WMWoundTreatment *)woundTreatment;
 
+- (void)normalizeInputsForParentWoundTreatment:(WMWoundTreatment *)parentWoundTreatment;
+
 - (WMInterventionEvent *)interventionEventForChangeType:(InterventionEventChangeType)changeType
                                                   title:(NSString *)title
                                               valueFrom:(id)valueFrom

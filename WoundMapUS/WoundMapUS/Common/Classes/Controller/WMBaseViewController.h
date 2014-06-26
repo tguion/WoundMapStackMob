@@ -89,6 +89,8 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 
 @property (strong, nonatomic) IBOutlet UIToolbar *inputAccessoryView;
 
+- (void)patientNavigationDataChangedOnDevice;
+
 - (void)handleParticipantLoggedOut;
 
 - (void)handleApplicationWillResignActiveNotification NS_REQUIRES_SUPER;

@@ -9,6 +9,7 @@ typedef enum {
     WoundTreatmentFlagsOtherFlag                    = 2,
     WoundTreatmentFlagsCombineKeyAndValue           = 3,
     WoundTreatmentFlagsSkipSelectionIcon            = 4,
+    WoundTreatmentFlagsNormalizeChildInputs         = 5,
 } WoundTreatmentFlags;
 
 
@@ -83,6 +84,16 @@ typedef enum {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsSkipSelectionIcon to:skipSelectionIcon]);
 }
 
+- (BOOL)normalizeMeasurements
+{
+    return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsNormalizeChildInputs];
+}
+
+- (void)setNormalizeMeasurements:(BOOL)normalizeMeasurements
+{
+    self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WoundTreatmentFlagsNormalizeChildInputs to:normalizeMeasurements]);
+}
+
 - (NSString *)combineKeyAndValue:(NSString *)value
 {
     return [self.title stringByReplacingOccurrencesOfString:@"_" withString:value];
@@ -137,6 +148,7 @@ typedef enum {
     treatment.combineKeyAndValue = [[dictionary objectForKey:@"combineKeyAndValue"] boolValue];
     treatment.allowMultipleChildSelection = [[dictionary objectForKey:@"allowMultipleChildSelection"] boolValue];
     treatment.skipSelectionIcon = [[dictionary objectForKey:@"skipSelectionIcon"] boolValue];
+    treatment.normalizeMeasurements = [[dictionary objectForKey:@"normalizeMeasurements"] boolValue];
     treatment.snomedFSN = [dictionary objectForKey:@"SNOMED CT FSN"];
     treatment.snomedCID = [dictionary objectForKey:@"SNOMED CT CID"];
     treatment.loincCode = [dictionary objectForKey:@"LOINC Code"];
@@ -297,7 +309,8 @@ typedef enum {
                                                             @"hasChildrenWoundTreatments",
                                                             @"sortedChildrenWoundTreatments",
                                                             @"childrenHaveSectionTitles",
-                                                            @"skipSelectionIcon"]];
+                                                            @"skipSelectionIcon",
+                                                            @"normalizeMeasurements"]];
     });
     return PropertyNamesNotToSerialize;
 }

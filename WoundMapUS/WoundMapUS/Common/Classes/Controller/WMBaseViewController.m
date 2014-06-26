@@ -588,6 +588,11 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     
 }
 
+- (void)patientNavigationDataChangedOnDevice
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPatientNavigationDataChangedOnDeviceNotification object:self.patient];
+}
+
 - (void)handleParticipantLoggedOut
 {
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
