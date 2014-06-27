@@ -24,12 +24,14 @@
 
 @interface WMPhotoManager()
 
+@property UIBackgroundTaskIdentifier bgTask;
+@property (nonatomic) BOOL photoUploadInProgress;                                   // woundPhotos are uploading
+@property (strong, nonatomic) NSMutableSet *woundPhotoObjectIdsToUpload;            // woundPhoto objectIds to upload images to back end
+@property (nonatomic) NSInteger photosUploadingCount;                               // number of photos remaining to be uploaded
+
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (readonly, nonatomic) BOOL isIPadIdiom;
 @property (readonly, nonatomic) WMWoundPhoto *woundPhoto;
-
-@property (strong, nonatomic) NSMutableSet *woundPhotoObjectIdsToUpload;            // woundPhoto objectIds to upload images to back end
-@property (nonatomic) NSInteger photosUploadingCount;
 
 @property (strong, nonatomic) IBOutlet UIView *overlayView;                         // overlayView shown over view through camera
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;                      // view to hold woundPhoto.thumbnail or woundPhoto.thumbnailLarge
@@ -376,6 +378,55 @@
     return SharedInstance;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (!self)
+        return nil;
+    
+    __weak __typeof(&*self)weakSelf = self;
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *notification) {
+                                                      [weakSelf persistWoundPhotoObjectIds];
+                                                      [weakSelf beginUploadPhotoBackgroundTask];
+                                                  }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *notification) {
+                                                      UIApplication *application = [UIApplication sharedApplication];
+                                                      [application endBackgroundTask:_bgTask];
+                                                      _bgTask = UIBackgroundTaskInvalid;
+                                                  }];
+    
+    return self;
+}
+
+- (void)beginUploadPhotoBackgroundTask
+{
+    UIApplication *application = [UIApplication sharedApplication];
+    _bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // Clean up any unfinished task business by marking where you. stopped or ending the task outright.
+        [application endBackgroundTask:_bgTask];
+        _bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    // Start the long-running task and return immediately.
+    [self uploadPhotoBlobs];
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (([application backgroundTimeRemaining] > 0) && !weakSelf.hasCompletedPhotoUploads) {
+            // wait until the blobs have uploaded
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        }
+        [application endBackgroundTask:_bgTask];
+        _bgTask = UIBackgroundTaskInvalid;
+    });
+
+}
+
 #pragma mark - Take Photo
 
 - (BOOL)shouldUseCameraForNextPhoto
@@ -714,25 +765,35 @@
 
 - (BOOL)hasCompletedPhotoUploads
 {
-    return (_photosUploadingCount == 0);
+    return !_photoUploadInProgress;
 }
 
 - (void)uploadPhotoBlobs
 {
-    WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
-    [userDefaultManager clearWoundPhotoObjectIDs];
+    if (_photoUploadInProgress || [_woundPhotoObjectIdsToUpload count] == 0) {
+        return;
+    }
+    // else
+    _photoUploadInProgress = YES;
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext MR_defaultContext] parentContext];
+    __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t completionHandler = ^{
         --_photosUploadingCount;
+        [weakSelf persistWoundPhotoObjectIds];
     };
-    for (NSManagedObjectID *objectId in self.woundPhotoObjectIdsToUpload) {
+    NSSet *woundPhotoObjectIds = [_woundPhotoObjectIdsToUpload copy];
+    _photosUploadingCount = [woundPhotoObjectIds count];
+    for (NSManagedObjectID *objectId in woundPhotoObjectIds) {
         WMWoundPhoto *woundPhoto = (WMWoundPhoto *)[managedObjectContext objectWithID:objectId];
         WMPhoto *photo = woundPhoto.photo;
-        ++_photosUploadingCount;
+        [_woundPhotoObjectIdsToUpload removeObject:objectId];
         [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo completionHandler:completionHandler];
     }
+    WMUserDefaultsManager *userDefaultManager = [WMUserDefaultsManager sharedInstance];
+    [userDefaultManager clearWoundPhotoObjectIDs];
     _woundPhotoObjectIdsToUpload = nil;
+    _photoUploadInProgress = NO;
 }
 
 - (void)persistWoundPhotoObjectIds

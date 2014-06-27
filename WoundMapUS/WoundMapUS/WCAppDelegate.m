@@ -220,8 +220,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-    [photoManager persistWoundPhotoObjectIds];
+//    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+//    [photoManager persistWoundPhotoObjectIds];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -231,23 +231,23 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    _bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        // Clean up any unfinished task business by marking where you. stopped or ending the task outright.
-        [application endBackgroundTask:_bgTask];
-        _bgTask = UIBackgroundTaskInvalid;
-    }];
-    
-    // Start the long-running task and return immediately.
-    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-    [photoManager uploadPhotoBlobs];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        while (([application backgroundTimeRemaining] > 0) && !photoManager.hasCompletedPhotoUploads) {
-            // wait until the blobs have uploaded
-            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-        }
-        [application endBackgroundTask:_bgTask];
-        _bgTask = UIBackgroundTaskInvalid;
-    });
+//    _bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+//        // Clean up any unfinished task business by marking where you. stopped or ending the task outright.
+//        [application endBackgroundTask:_bgTask];
+//        _bgTask = UIBackgroundTaskInvalid;
+//    }];
+//    
+//    // Start the long-running task and return immediately.
+//    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+//    [photoManager uploadPhotoBlobs];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        while (([application backgroundTimeRemaining] > 0) && !photoManager.hasCompletedPhotoUploads) {
+//            // wait until the blobs have uploaded
+//            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+//        }
+//        [application endBackgroundTask:_bgTask];
+//        _bgTask = UIBackgroundTaskInvalid;
+//    });
 
 }
 
@@ -270,8 +270,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         [self initializeInterface];
     }
     // upload any photos
-    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-    [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
+//    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+//    [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

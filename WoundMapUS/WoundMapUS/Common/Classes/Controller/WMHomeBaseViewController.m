@@ -231,7 +231,7 @@
             [self reloadTableCellsForNavigation];
             // upload any photos
             WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-            [photoManager uploadPhotoBlobs];
+            [photoManager beginUploadPhotoBackgroundTask];
         }
     }
 }

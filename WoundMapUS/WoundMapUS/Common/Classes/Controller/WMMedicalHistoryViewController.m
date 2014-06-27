@@ -135,15 +135,16 @@
 - (IBAction)cancelAction:(id)sender
 {
     [self.view endEditing:YES];
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-        if (self.managedObjectContext.undoManager.canUndo) {
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
+        if (managedObjectContext.undoManager.canUndo) {
             // this should undo the insert of new person
-            [self.managedObjectContext.undoManager undoNestedGroup];
+            [managedObjectContext.undoManager undoNestedGroup];
         }
     }
     if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
+        managedObjectContext.undoManager = nil;
     }
     // delete from back end
     __weak __typeof(&*self)weakSelf = self;
@@ -156,6 +157,7 @@
     if (_medicalHistoryGroupWasCreated) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [ff deleteObj:_medicalHistoryGroup onComplete:block];
+        [managedObjectContext MR_deleteObjects:@[_medicalHistoryGroup]];
     } else {
         [self.delegate medicalHistoryViewControllerDidCancel:self];
     }

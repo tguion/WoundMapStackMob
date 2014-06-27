@@ -43,6 +43,7 @@
 - (void)uploadPhotoBlobs;
 - (void)persistWoundPhotoObjectIds;
 - (void)uploadWoundPhotoBlobsFromObjectIds;
+- (void)beginUploadPhotoBackgroundTask;
 
 // patient photo
 
