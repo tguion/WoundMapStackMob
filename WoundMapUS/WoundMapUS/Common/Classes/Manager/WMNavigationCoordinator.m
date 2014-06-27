@@ -194,19 +194,18 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     _patient = patient;
     // save user defaults
     if ([patient.ffUrl length] > 0) {
-        IAPManager *iapManager = [IAPManager sharedInstance];
-        NSString *deviceId = [iapManager getIAPDeviceGuid];
+//        IAPManager *iapManager = [IAPManager sharedInstance];
+//        NSString *deviceId = [iapManager getIAPDeviceGuid];
         // we need to get the groups and values
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@/(lastUpdatedOnDeviceId ne '%@')?depthRef=1&depthGb=2", patient.ffUrl, deviceId] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+//        [ff getObjFromUri:[NSString stringWithFormat:@"%@/(lastUpdatedOnDeviceId ne '%@')?depthRef=1&depthGb=2", patient.ffUrl, deviceId] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (nil != object) {
                 if (error) {
                     // may not receive any data
                     [WMUtilities logError:error];
                 }
                 [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
-                if (patient.participant.guid) {
-                    [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:patient.participant.guid];
-                }
+                [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:weakSelf.appDelegate.participant.guid];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
             }
         }];

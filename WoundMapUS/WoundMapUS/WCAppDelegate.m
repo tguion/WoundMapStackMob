@@ -80,8 +80,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 - (void)signOut
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-    [photoManager uploadPhotoBlobs];
     self.participant = nil;
     [self.navigationCoordinator clearPatientCache];
     _patient2StageMap = nil;
