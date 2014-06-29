@@ -35,6 +35,7 @@
 #define kCurrentPatientDeletedAlertViewTag 1000
 
 NSString *const kPatientChangedNotification = @"PatientChangedNotification";
+NSString *const kPatientRefreshingFromCloudNotification = @"PatientRefreshingFromCloudNotification";
 NSString *const kPatientNavigationDataChangedOnDeviceNotification = @"PatientNavigationDataChangedOnDeviceNotification";
 NSString *const kWoundChangedNotification = @"WoundChangedNotification";
 NSString *const kWoundPhotoChangedNotification = @"WoundPhotoChangedNotification";
@@ -192,12 +193,18 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     }
     [self clearPatientCache];
     _patient = patient;
-    // save user defaults
+    if (nil != _patient) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
+        // attempt to set a wound
+        self.wound = self.lastWoundForPatient;
+    }
     if ([patient.ffUrl length] > 0) {
 //        IAPManager *iapManager = [IAPManager sharedInstance];
 //        NSString *deviceId = [iapManager getIAPDeviceGuid];
         // we need to get the groups and values
 //        [ff getObjFromUri:[NSString stringWithFormat:@"%@/(lastUpdatedOnDeviceId ne '%@')?depthRef=1&depthGb=2", patient.ffUrl, deviceId] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        // update UI to show that patient data is refreshing from cloud
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPatientRefreshingFromCloudNotification object:[_patient objectID]];
         [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (nil != object) {
                 if (error) {
@@ -209,11 +216,6 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
                 [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
             }
         }];
-    }
-    if (nil != _patient) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
-        // attempt to set a wound
-        self.wound = self.lastWoundForPatient;
     }
 }
 

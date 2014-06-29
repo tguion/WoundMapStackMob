@@ -569,6 +569,14 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                                                                      [weakSelf handleBackendDeletedObjectIds:[notification object]];
                                                                  }];
         [self.persistantObservers addObject:observer];
+        // watch for patient data refreshing from back end
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kPatientRefreshingFromCloudNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     [weakSelf handlePatientRefreshingFromCloud:[notification object]];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
     }
 }
 
@@ -647,6 +655,10 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 }
 
 - (void)handleBackendDeletedObjectIds:(NSArray *)objectIDs
+{
+}
+
+- (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
 {
 }
 

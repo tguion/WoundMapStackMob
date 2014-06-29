@@ -938,6 +938,7 @@
 {
     [super handlePatientChanged:patient];
     [self clearNavigationCache];
+    [self.compassView hidePatientRefreshing];
     [self performSelector:@selector(updatePatientWoundComponents) withObject:nil afterDelay:0.0];
 }
 
@@ -979,6 +980,11 @@
 - (void)handleRespondedToReferralNotification:(NSManagedObjectID *)referralObjectID
 {
     [self updatePatientNodeControls];
+}
+
+- (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
+{
+    [self.compassView showPatientRefreshing];
 }
 
 #pragma mark - Actions

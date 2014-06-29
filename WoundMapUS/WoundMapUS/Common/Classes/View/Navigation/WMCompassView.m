@@ -37,6 +37,7 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
 @property (weak, nonatomic) WMPatientPhotoImageView *patientImageView;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 @property (strong, nonatomic) IBOutlet UILabel *returnToPreviousLevelView;
+@property (weak, nonatomic) UIActivityIndicatorView *patientRefreshingActivityIndicator;
 
 @property (nonatomic) CGRect compassImageViewFrame;                             // acquire before transforms
 @property (nonatomic) CGRect clippingRect;
@@ -290,6 +291,22 @@ CGFloat const kNavigationNodeButtonEdgeInset = 4.0;
     if (actionState > CompassViewActionStateHome) {
         [_patientImageView performSelector:@selector(flashReturnToPreviousLevelView) withObject:nil afterDelay:1.0];
     }
+}
+- (void)showPatientRefreshing
+{
+    if (nil == _patientRefreshingActivityIndicator) {
+        UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activityIndicatorView.center = self.center;
+        [self addSubview:activityIndicatorView];
+        [activityIndicatorView startAnimating];
+        _patientRefreshingActivityIndicator = activityIndicatorView;
+    }
+}
+
+- (void)hidePatientRefreshing
+{
+    [_patientRefreshingActivityIndicator removeFromSuperview];
+    _patientRefreshingActivityIndicator = nil;
 }
 
 #pragma mark - Actions

@@ -52,4 +52,7 @@ typedef enum {
 - (void)updateForPatientPhotoProcessing;
 - (void)updateForPatientPhotoProcessed;
 
+- (void)showPatientRefreshing;
+- (void)hidePatientRefreshing;
+
 @end
