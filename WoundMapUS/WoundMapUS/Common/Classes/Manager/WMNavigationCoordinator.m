@@ -199,23 +199,35 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         self.wound = self.lastWoundForPatient;
     }
     if ([patient.ffUrl length] > 0) {
+        NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
 //        IAPManager *iapManager = [IAPManager sharedInstance];
 //        NSString *deviceId = [iapManager getIAPDeviceGuid];
         // we need to get the groups and values
 //        [ff getObjFromUri:[NSString stringWithFormat:@"%@/(lastUpdatedOnDeviceId ne '%@')?depthRef=1&depthGb=2", patient.ffUrl, deviceId] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         // update UI to show that patient data is refreshing from cloud
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientRefreshingFromCloudNotification object:[_patient objectID]];
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", patient.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (nil != object) {
-                if (error) {
-                    // may not receive any data
-                    [WMUtilities logError:error];
-                }
-                [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
-                [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:weakSelf.appDelegate.participant.guid];
-                [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
+        // fetch wound data after we get the patient data
+        FFHttpMethodCompletion onPatientComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:weakSelf.appDelegate.participant.guid];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
+            WMWound *wound = weakSelf.wound;
+            if (nil == wound) {
+                wound = weakSelf.lastWoundForPatient;
             }
-        }];
+            if (wound && [wound.ffUrl length]) {
+                [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", wound.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        // may not receive any data
+                        [WMUtilities logError:error];
+                    }
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    // set last wound photo
+                    weakSelf.wound = wound;
+                }];
+            }
+        };
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", patient.ffUrl] onComplete:onPatientComplete];
     }
 }
 
@@ -262,23 +274,11 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     // else
     _wound = wound;
     if (nil != _wound) {
-        __weak __typeof(&*self)weakSelf = self;
-        [[WMUserDefaultsManager sharedInstance] setLastWoundFFURLOnDevice:wound.ffUrl forPatientFFURL:self.patient.ffUrl];
         // save user defaults
-        if ([wound.ffUrl length] > 0) {
-            // we need to get the groups and values
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", wound.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    // may not receive any data
-                    [WMUtilities logError:error];
-                }
-                [[wound managedObjectContext] MR_saveToPersistentStoreAndWait];
-                // set last wound photo
-                weakSelf.woundPhoto = wound.lastWoundPhoto;
-                [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[wound objectID]];
-            }];
-        }
+        [[WMUserDefaultsManager sharedInstance] setLastWoundFFURLOnDevice:wound.ffUrl forPatientFFURL:self.patient.ffUrl];
+        // set last wound photo
+        self.woundPhoto = wound.lastWoundPhoto;
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWoundChangedNotification object:[wound objectID]];
     }
 }
 

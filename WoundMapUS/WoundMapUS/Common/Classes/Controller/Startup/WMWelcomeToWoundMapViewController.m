@@ -26,6 +26,7 @@
 #import "MBProgressHUD.h"
 #import "WMInterventionStatusJoin.h"
 #import "WMTelecomType.h"
+#import "WMNavigationNode.h"
 #import "WMWoundType.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
@@ -337,7 +338,28 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)presentChooseNavigationTrack
 {
-    [self.navigationController pushViewController:self.chooseTrackViewController animated:YES];
+    // make sure the nodes have been loaded
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t block = ^{
+        [weakSelf.navigationController pushViewController:weakSelf.chooseTrackViewController animated:YES];
+    };
+    NSInteger count = [WMNavigationTrack MR_countOfEntitiesWithPredicate:self.navigationTrackPredicate inContext:managedObjectContext];
+    if (count == 0) {
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            block();
+        };
+        [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Acquiring account data";
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:onComplete];
+    } else {
+        block();
+    }
 }
 
 - (void)presentCreateConsultingGroupViewController
