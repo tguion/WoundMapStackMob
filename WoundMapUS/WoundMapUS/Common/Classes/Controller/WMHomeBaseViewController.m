@@ -1635,20 +1635,42 @@
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    __weak __typeof(&*self)weakSelf = self;
     switch (actionSheet.tag) {
         case kSignOutActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                [self.appDelegate signOut];
-                UINavigationController *navigationController = self.appDelegate.initialViewController;
-                __weak __typeof(&*self)weakSelf = self;
-                [UIView transitionWithView:self.appDelegate.window
-                                  duration:0.5
-                                   options:UIViewAnimationOptionTransitionFlipFromLeft
-                                animations:^{
-                                    weakSelf.appDelegate.window.rootViewController = navigationController;
-                                } completion:^(BOOL finished) {
-                                    // nothing
-                                }];
+                dispatch_block_t block = ^{
+                    [weakSelf.appDelegate signOut];
+                    UINavigationController *navigationController = weakSelf.appDelegate.initialViewController;
+                    [UIView transitionWithView:weakSelf.appDelegate.window
+                                      duration:0.5
+                                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                                    animations:^{
+                                        weakSelf.appDelegate.window.rootViewController = navigationController;
+                                    } completion:^(BOOL finished) {
+                                        // nothing
+                                    }];
+                };
+                // wait for photos to complete upload
+                WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+                if (!photoManager.hasCompletedPhotoUploads) {
+                    UIView *view = self.view;
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:NO];
+                    hud.labelText = @"Photo uploading";
+                    hud.detailsLabelText = @"Please wait...";
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        while (!photoManager.hasCompletedPhotoUploads) {
+                            // wait until the blobs have uploaded
+                            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+                        }
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [MBProgressHUD hideAllHUDsForView:view animated:NO];
+                            block();
+                        });
+                    });
+                } else {
+                    block();
+                }
             } else {
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
                 ff.simulatingOffline = NO;//DEPLOYMENT
