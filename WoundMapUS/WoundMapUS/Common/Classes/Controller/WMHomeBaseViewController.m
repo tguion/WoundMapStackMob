@@ -159,9 +159,9 @@
 {
     NSString *ffQuery = nil;
     if (self.wound) {
-        ffQuery = [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.wound.ffUrl];
+        ffQuery = [NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.wound.ffUrl];
     } else {
-        ffQuery = [NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.patient.ffUrl];
+        ffQuery = [NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.patient.ffUrl];
     }
     return ffQuery;
 }

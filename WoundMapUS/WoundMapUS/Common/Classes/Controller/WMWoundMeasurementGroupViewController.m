@@ -45,7 +45,7 @@
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 
-@property (weak, nonatomic) WMAdjustAlpaView *adjustAlpaView;
+@property (strong, nonatomic) WMAdjustAlpaView *adjustAlpaView;
 @property (strong, nonatomic) IBOutlet UIView *tableFooterView;
 @property (readonly, nonatomic) WMWoundMeasurementGroupViewController *woundMeasurementViewController;
 @property (strong, nonatomic) WMWoundMeasurement *selectedWoundMeasurement;
@@ -220,18 +220,21 @@
     } else {
         self.tableView.tableFooterView = nil;
     }
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:self.woundMeasurementGroup.woundPhoto.thumbnail];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.tableView.backgroundView = imageView;
-    self.tableView.backgroundView.alpha = kInitialBackgroundImageAlpha;
-    // place WMAdjustAlpaView
-    if (nil == _adjustAlpaView) {
-        CGRect aFrame = CGRectMake(0.0, 44.0, 32.0, CGRectGetHeight(self.view.bounds) - 112.0);
-        WMAdjustAlpaView *adjustAlpaView = [[WMAdjustAlpaView alloc] initWithFrame:aFrame delegate:self];
-        adjustAlpaView.contentMode = UIViewContentModeRedraw;
-        [self.view addSubview:adjustAlpaView];
-        [adjustAlpaView performSelector:@selector(flashViewAlpha) withObject:nil afterDelay:0.0];
-        _adjustAlpaView = adjustAlpaView;
+    UIImage *image = self.woundMeasurementGroup.woundPhoto.thumbnail;
+    if (image) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.tableView.backgroundView = imageView;
+        self.tableView.backgroundView.alpha = kInitialBackgroundImageAlpha;
+        // place WMAdjustAlpaView
+        if (nil == _adjustAlpaView) {
+            CGRect aFrame = CGRectMake(0.0, 44.0, 32.0, CGRectGetHeight(self.view.bounds) - 112.0);
+            WMAdjustAlpaView *adjustAlpaView = [[WMAdjustAlpaView alloc] initWithFrame:aFrame delegate:self];
+            adjustAlpaView.contentMode = UIViewContentModeRedraw;
+            [self.view addSubview:adjustAlpaView];
+            [adjustAlpaView performSelector:@selector(flashViewAlpha) withObject:nil afterDelay:0.0];
+            _adjustAlpaView = adjustAlpaView;
+        }
     }
     if (self.recentlyClosedCount > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please Note"
