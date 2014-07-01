@@ -79,10 +79,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             // make sure we didn't loose the team reference
             NSArray *teamInvitations = (NSArray *)object;
             for (WMTeamInvitation *teamInvitation in teamInvitations) {
-                if (nil == teamInvitation.team) {
-                    teamInvitation.team = self.team;
-                    [ff updateObj:teamInvitation];
-                }
+                teamInvitation.team = self.team;
+                [ff updateObj:teamInvitation];
             }
         }
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -183,7 +181,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 - (BOOL)indexPathIsAddInvitation:(NSIndexPath *)indexPath
 {
-    return indexPath.section == 1 && indexPath.row == [self.team.invitations count];
+    return indexPath.section == 1 && indexPath.row == [self.teamInvitations count];
 }
 
 - (void)initiateRevokeInvitation
@@ -351,8 +349,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t revokeBlock = ^{
         [ffm revokeTeamInvitation:_teamInvitationToDeleteOrConfirm ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             // update local
-            [managedObjectContext deleteObject:_teamInvitationToDeleteOrConfirm];
+            [managedObjectContext MR_deleteObjects:@[_teamInvitationToDeleteOrConfirm]];
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             _teamInvitationToDeleteOrConfirm = nil;
             _teamInvitations = nil;
@@ -624,7 +625,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             break;
         }
         case 1: {
-            count = [self.team.invitations count] + 1;
+            count = [self.teamInvitations count] + 1;
             break;
         }
         case 2: {

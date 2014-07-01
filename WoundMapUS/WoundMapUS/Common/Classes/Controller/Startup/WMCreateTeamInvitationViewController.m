@@ -179,6 +179,9 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@')", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         if (nil == object) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid user name"

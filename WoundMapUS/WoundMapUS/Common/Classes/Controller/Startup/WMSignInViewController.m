@@ -147,6 +147,12 @@
                                                                   managedObjectContext:managedObjectContext];
             dispatch_block_t block = ^{
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
+                // update participant
+                NSError *localError = nil;
+                [ff updateObj:participant error:&localError];
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 // handle team invitation confirmation
                 WMTeam *team = participant.team;
@@ -212,6 +218,7 @@
                     }
                     participant = object;
                     participant.dateLastSignin = [NSDate date];
+                    participant.user = user;
                     block();
                 }];
             } else {
@@ -220,6 +227,7 @@
                         [WMUtilities logError:error];
                     }
                     participant.dateLastSignin = [NSDate date];
+                    participant.user = user;
                     block();
                 }];
             }

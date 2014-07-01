@@ -500,7 +500,7 @@
 							</dict>
 							<dict>
 								<key>title</key>
-								<string>Subcutaneous Tissue, Muscle</string>
+								<string>Muscle/Fascia</string>
 								<key>sortRank</key>
 								<integer>20</integer>
 								<key>SNOMED CT FSN</key>
@@ -512,7 +512,7 @@
 							</dict>
 							<dict>
 								<key>title</key>
-								<string>Subcutaneous Tissue, Muscle, Bone</string>
+								<string>Bone</string>
 								<key>sortRank</key>
 								<integer>30</integer>
 								<key>SNOMED CT FSN</key>
@@ -553,7 +553,19 @@
 							</dict>
 							<dict>
 								<key>title</key>
-								<string>Fibrin/Biofilm</string>
+								<string>Fibrin</string>
+								<key>sortRank</key>
+								<integer>21</integer>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Biofilm</string>
 								<key>sortRank</key>
 								<integer>20</integer>
 								<key>SNOMED CT FSN</key>
@@ -799,22 +811,6 @@
 								<string></string>
 							</dict>
 						</array>
-					</dict>
-					<dict>
-						<key>title</key>
-						<string>Post Debridement</string>
-						<key>sortRank</key>
-						<integer>100</integer>
-						<key>inputTypeCode</key>
-						<integer>16</integer>
-						<key>placeHolder</key>
-						<string>Post Debridement</string>
-						<key>SNOMED CT FSN</key>
-						<string></string>
-						<key>SNOMED CT CID</key>
-						<integer>0</integer>
-						<key>LOINC Code</key>
-						<string></string>
 					</dict>
 					<dict>
 						<key>title</key>
@@ -1102,6 +1098,22 @@
 							</dict>
 						</array>
 					</dict>
+					<dict>
+						<key>title</key>
+						<string>Post Debridement Needs</string>
+						<key>sortRank</key>
+						<integer>130</integer>
+						<key>inputTypeCode</key>
+						<integer>16</integer>
+						<key>placeHolder</key>
+						<string>Post Debridement</string>
+						<key>SNOMED CT FSN</key>
+						<string></string>
+						<key>SNOMED CT CID</key>
+						<integer>0</integer>
+						<key>LOINC Code</key>
+						<string></string>
+					</dict>
 				</array>
 			</dict>
 			<dict>
@@ -1282,21 +1294,9 @@
 						<array>
 							<dict>
 								<key>title</key>
-								<string>Santyl</string>
+								<string>Santyl/Collagenase</string>
 								<key>sortRank</key>
 								<integer>10</integer>
-								<key>SNOMED CT FSN</key>
-								<string></string>
-								<key>SNOMED CT CID</key>
-								<integer>0</integer>
-								<key>LOINC Code</key>
-								<string></string>
-							</dict>
-							<dict>
-								<key>title</key>
-								<string>Collagenase</string>
-								<key>sortRank</key>
-								<integer>20</integer>
 								<key>SNOMED CT FSN</key>
 								<string></string>
 								<key>SNOMED CT CID</key>
@@ -1399,7 +1399,7 @@
 				<array>
 					<dict>
 						<key>title</key>
-						<string>Dressing-Gel</string>
+						<string>Dressing</string>
 						<key>sortRank</key>
 						<integer>10</integer>
 						<key>SNOMED CT FSN</key>

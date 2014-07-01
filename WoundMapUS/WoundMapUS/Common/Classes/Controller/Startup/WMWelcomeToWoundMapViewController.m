@@ -395,6 +395,19 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     [self.navigationController pushViewController:patientTableViewController animated:YES];
 }
 
+#pragma mark - Notification handlers
+
+- (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Acquiring Patients";
+}
+
+- (void)handlePatientChanged:(WMPatient *)patient
+{
+    [super handlePatientChanged:patient];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+}
+
 #pragma mark - Actions
 
 - (IBAction)dismissSplashViewInstructions:(id)sender
