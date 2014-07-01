@@ -446,10 +446,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (IBAction)enterWoundMapAction:(id)sender
 {
     // check if all information has been entered
+    WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
     NSString *alertMessage = nil;
     if (_welcomeState == WMWelcomeStateSignedInNoTeam) {
         alertMessage = @"Please select 'Defer Team' or 'Create a Team'.";
-    } else if (nil == self.userDefaultsManager.defaultNavigationTrackFFURL) {
+    } else if (nil == navigationCoordinator.navigationTrack) {
         alertMessage = @"Please select a Clinical Setting.";
     } else if (_welcomeState != WMWelcomeStateInvitationAccepted) {
         if (_welcomeState != WMWelcomeStateDeferTeam && nil == self.participant.team) {
@@ -1051,10 +1052,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     NSString *lastUserName = userDefaultsManager.lastUserName;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
-        if (participant.teamInvitation.isAccepted) {
-            weakSelf.welcomeState = WMWelcomeStateInvitationAccepted;
-        } else if (weakSelf.participant.team) {
+        if (weakSelf.participant.team) {
             weakSelf.welcomeState = WMWelcomeStateTeamSelected;
+        } else if (participant.teamInvitation.isAccepted) {
+            weakSelf.welcomeState = WMWelcomeStateInvitationAccepted;
         } else {
             weakSelf.welcomeState = WMWelcomeStateSignedInNoTeam;
         }
