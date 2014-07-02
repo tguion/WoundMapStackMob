@@ -96,6 +96,7 @@
                 }
                 [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
             }
+            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;

@@ -36,6 +36,7 @@
 
 NSString *const kPatientChangedNotification = @"PatientChangedNotification";
 NSString *const kPatientRefreshingFromCloudNotification = @"PatientRefreshingFromCloudNotification";
+NSString *const kPatientUpdatedFromBackendNotification = @"PatientUpdatedFromBackendNotification";
 NSString *const kPatientNavigationDataChangedOnDeviceNotification = @"PatientNavigationDataChangedOnDeviceNotification";
 NSString *const kWoundChangedNotification = @"WoundChangedNotification";
 NSString *const kWoundPhotoChangedNotification = @"WoundPhotoChangedNotification";
@@ -200,34 +201,51 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     }
     if ([patient.ffUrl length] > 0) {
         NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-//        IAPManager *iapManager = [IAPManager sharedInstance];
-//        NSString *deviceId = [iapManager getIAPDeviceGuid];
-        // we need to get the groups and values
-//        [ff getObjFromUri:[NSString stringWithFormat:@"%@/(lastUpdatedOnDeviceId ne '%@')?depthRef=1&depthGb=2", patient.ffUrl, deviceId] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         // update UI to show that patient data is refreshing from cloud
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientRefreshingFromCloudNotification object:[_patient objectID]];
         // fetch wound data after we get the patient data
-        FFHttpMethodCompletion onPatientComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:weakSelf.appDelegate.participant.guid];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kPatientChangedNotification object:[_patient objectID]];
+        FFHttpMethodCompletion onBlobsComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            // must transform patient photo blob
+            NSData *data = patient.thumbnail;
+            if (data && [data isKindOfClass:[NSData class]]) {
+                patient.thumbnail = [[UIImage alloc] initWithData:data];
+            }
             WMWound *wound = weakSelf.wound;
             if (nil == wound) {
                 wound = weakSelf.lastWoundForPatient;
             }
             if (wound && [wound.ffUrl length]) {
-                [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", wound.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                NSString *uri = [wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     if (error) {
                         // may not receive any data
                         [WMUtilities logError:error];
                     }
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                     // set last wound photo
-                    weakSelf.wound = wound;
+                    if (_wound == wound) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
+                    } else {
+                        weakSelf.wound = wound;
+                    }
                 }];
+            } else {
+                [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
             }
         };
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", patient.ffUrl] onComplete:onPatientComplete];
+        FFHttpMethodCompletion onPatientComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            [weakSelf.userDefaultsManager setLastPatientFFURL:patient.ffUrl forUserGUID:weakSelf.appDelegate.participant.guid];
+            // get blobs
+            [ff loadBlobsForObj:patient onComplete:onBlobsComplete];
+        };
+        NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", uri] onComplete:onPatientComplete];
     }
 }
 

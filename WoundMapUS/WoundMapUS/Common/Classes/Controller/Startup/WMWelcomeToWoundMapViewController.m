@@ -399,12 +399,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Acquiring Patients";
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Updating Patient";
 }
 
-- (void)handlePatientChanged:(WMPatient *)patient
+- (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
 {
-    [super handlePatientChanged:patient];
     [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
 }
 
@@ -1072,7 +1071,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
         NSString *patientFFUrl = [userDefaultsManager lastPatientFFURLForUserGUID:participant.guid];
         if (patientFFUrl) {
-            [ff getObjFromUri:patientFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSString *uri = [patientFFUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+            [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
@@ -1081,7 +1081,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     navigationCoordinator.patient = patient;
                     NSString *woundFFUrl = [userDefaultsManager lastWoundFFURLOnDeviceForPatientFFURL:patientFFUrl];
                     if (woundFFUrl) {
-                        [ff getObjFromUri:woundFFUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        NSString *uri = [woundFFUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                        [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                             if (error) {
                                 [WMUtilities logError:error];
                             }

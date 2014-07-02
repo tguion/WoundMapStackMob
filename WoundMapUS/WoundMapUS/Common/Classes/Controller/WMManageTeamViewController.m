@@ -214,7 +214,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                              [managedObjectContext MR_saveToPersistentStoreAndWait];
                                                              // update from back end
                                                              WMFatFractal *ff = [WMFatFractal sharedInstance];
-                                                             [ff getObjFromUri:team.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                                                             NSString *uri = [team.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                                                             [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                                                                  if (error) {
                                                                      [WMUtilities logError:error];
                                                                  }

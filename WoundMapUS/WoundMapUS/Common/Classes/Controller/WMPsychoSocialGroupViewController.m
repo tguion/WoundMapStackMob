@@ -81,6 +81,7 @@
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             if (!weakSelf.didCreateGroup) {
                 [weakSelf.tableView reloadData];
+                [weakSelf.refreshControl endRefreshing];
             }
         };
     }

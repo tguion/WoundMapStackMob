@@ -457,7 +457,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                 completionHandler(nil);
             } else {
                 for (WMPatient *patient in patients) {
-                    [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] onComplete:onComplete];
+                    NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                    [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] onComplete:onComplete];
                 }
             }
         }
@@ -557,12 +558,27 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 
 - (void)updatePerson:(WMPerson *)person ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
+    __weak __typeof(&*self)weakSelf = self;
     __block NSInteger counter = 0;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
         if (counter == 0 || --counter == 0) {
+            // update permissions
+            WMTeam *team = weakSelf.appDelegate.participant.team;
+            if (team) {
+                NSError *localError = nil;
+                [ff setPermissionOnObject:person
+                                readUsers:[NSArray array]
+                               readGroups:@[team.participantGroup]
+                               writeUsers:[NSArray array]
+                              writeGroups:@[team.participantGroup]
+                                    error:&localError];
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
+            }
             completionHandler(error);
         }
     };
@@ -1173,7 +1189,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     } else {
         NSError *localError = nil;
         for (WMPatient *patient in patients) {
-            id consultantGroup = [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", patient.ffUrl, @"consultantGroup"] error:&localError];
+            NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+            id consultantGroup = [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] error:&localError];
             if (localError) {
                 [WMUtilities logError:localError];
             }

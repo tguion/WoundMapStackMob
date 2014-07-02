@@ -234,6 +234,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;

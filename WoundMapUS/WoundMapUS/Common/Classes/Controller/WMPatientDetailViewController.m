@@ -276,7 +276,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             };
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/%@", _patient.ffUrl, @"consultantGroup"] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSString *uri = [_patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+            [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
                 }

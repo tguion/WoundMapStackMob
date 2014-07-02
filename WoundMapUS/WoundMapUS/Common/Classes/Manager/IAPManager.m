@@ -307,7 +307,8 @@ NSString* _deviceId;
     WMParticipant *participant = self.appDelegate.participant;
     NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    NSString *uri = [participant.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+    [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [participant addReportTokens:[creditsToAdd integerValue]];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [ff updateObj:participant error:&error];
@@ -494,7 +495,8 @@ NSString* _deviceId;
     WMParticipant *participant = self.appDelegate.participant;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [ff getObjFromUri:participant.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    NSString *uri = [participant.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+    [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }

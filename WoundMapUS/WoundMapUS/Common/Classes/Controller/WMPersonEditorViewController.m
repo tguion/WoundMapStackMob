@@ -179,11 +179,6 @@
 - (IBAction)doneAction:(id)sender
 {
     [self.view endEditing:YES];
-    [self performSelector:@selector(delayedDoneAction) withObject:nil afterDelay:0.0];
-}
-
-- (void)delayedDoneAction
-{
     if ([self validateInput]) {
         if (self.managedObjectContext.undoManager.groupingLevel > 0) {
             [self.managedObjectContext.undoManager endUndoGrouping];

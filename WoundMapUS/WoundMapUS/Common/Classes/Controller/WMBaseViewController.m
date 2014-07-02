@@ -335,9 +335,10 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
         if (error) {
             [WMUtilities logError:error];
         }
-        [weakSelf.refreshControl endRefreshing];
         if (weakSelf.refreshCompletionHandler) {
             weakSelf.refreshCompletionHandler(error, nil);
+        } else {
+            [weakSelf.refreshControl endRefreshing];
         }
     }];
 }
@@ -577,6 +578,14 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                                                                      [weakSelf handlePatientRefreshingFromCloud:[notification object]];
                                                                  }];
         [self.persistantObservers addObject:observer];
+        // watch for patient data refreshing from back end finished
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kPatientUpdatedFromBackendNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     [weakSelf handlePatientRefreshedFromCloud:[notification object]];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
     }
 }
 
@@ -659,6 +668,10 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 }
 
 - (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
+{
+}
+
+- (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
 {
 }
 

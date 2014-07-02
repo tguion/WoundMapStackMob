@@ -38,6 +38,7 @@
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.tableView reloadData];
+            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;

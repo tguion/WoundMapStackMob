@@ -91,7 +91,8 @@
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(&*self)weakSelf = self;
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthGb=2", self.bradenScale.ffUrl] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        NSString *uri = [self.bradenScale.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthGb=2", uri] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
             }

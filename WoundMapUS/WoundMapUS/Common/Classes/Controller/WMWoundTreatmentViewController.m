@@ -183,6 +183,7 @@
             if (!weakSelf.didCreateGroup) {
                 [weakSelf.tableView reloadData];
             }
+            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;

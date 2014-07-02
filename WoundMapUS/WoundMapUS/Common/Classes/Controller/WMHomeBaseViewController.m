@@ -74,10 +74,28 @@
     if (self) {
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
-            weakSelf.compassView.navigationNodeControls = nil;
-            [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
-            [weakSelf updatePatientWoundComponents];
-            [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
+            // update care plan cell
+            [weakSelf updateCarePlanCell];
+            // get wound values
+            if (weakSelf.wound) {
+                FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                    [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+                    // update displayed nodes
+                    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
+                    [policyManager updateRegisteredButtonsInArray:weakSelf.navigationNodeControls];
+                    [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
+                    [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
+                    [weakSelf.refreshControl endRefreshing];
+                };
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                NSString *uri = [weakSelf.wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                [ff getObjFromUri:uri onComplete:onComplete];
+            } else {
+                [weakSelf.refreshControl endRefreshing];
+            }
         };
     }
     return self;
@@ -114,10 +132,7 @@
                 if (error) {
                     [WMUtilities logError:error];
                 }
-                NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:weakSelf.carePlanCell];
-                if (indexPath) {
-                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                }
+                [weakSelf updateCarePlanCell];
             }];
         }
     }];
@@ -157,13 +172,7 @@
 
 - (NSString *)ffQuery
 {
-    NSString *ffQuery = nil;
-    if (self.wound) {
-        ffQuery = [NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.wound.ffUrl];
-    } else {
-        ffQuery = [NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.patient.ffUrl];
-    }
-    return ffQuery;
+    return [NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.patient.ffUrl];
 }
 
 - (NSArray *)backendSeedEntityNames
@@ -518,6 +527,14 @@
         _navigationNodeControls = array;
     }
     return _navigationNodeControls;
+}
+
+- (void)updateCarePlanCell
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:self.carePlanCell];
+    if (indexPath) {
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 #pragma mark - Accessors
@@ -985,6 +1002,20 @@
 - (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
 {
     [self.compassView showPatientRefreshing];
+}
+
+- (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
+{
+    // a referral may have come in
+    [self updatePatientNodeControls];
+    // update care plan cell
+    [self updateCarePlanCell];
+    // update displayed nodes
+    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
+    [policyManager updateRegisteredButtonsInArray:_navigationNodeControls];
+    // inform compass that patient has updated
+    [self.compassView updateForPatient:self.patient];
+    [self.compassView hidePatientRefreshing];
 }
 
 #pragma mark - Actions
@@ -2288,8 +2319,7 @@
     [self dismissViewControllerAnimated:YES completion:^{
         // post notification if some values were added
         [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kCarePlanNode)];
-        NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:self.carePlanCell];
-        [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf updateCarePlanCell];
     }];
 }
 

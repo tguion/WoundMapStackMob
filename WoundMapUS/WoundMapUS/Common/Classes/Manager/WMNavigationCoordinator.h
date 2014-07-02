@@ -15,6 +15,7 @@
 
 extern NSString *const kPatientChangedNotification;
 extern NSString *const kPatientRefreshingFromCloudNotification;
+extern NSString *const kPatientUpdatedFromBackendNotification;
 extern NSString *const kPatientNavigationDataChangedOnDeviceNotification;
 extern NSString *const kWoundChangedNotification;
 extern NSString *const kWoundPhotoChangedNotification;

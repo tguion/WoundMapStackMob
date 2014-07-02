@@ -44,6 +44,7 @@
                 WMFatFractal *ff = [WMFatFractal sharedInstance];
                 dispatch_block_t block = ^{
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                    [weakSelf.refreshControl endRefreshing];
                 };
                 WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
                     // update backend from main thread
@@ -65,6 +66,8 @@
                     [MBProgressHUD showHUDAddedTo:weakSelf.view animated:NO].labelText = @"Building account on device";
                     [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
                 }
+            } else {
+                [weakSelf.refreshControl endRefreshing];
             }
         };
     }

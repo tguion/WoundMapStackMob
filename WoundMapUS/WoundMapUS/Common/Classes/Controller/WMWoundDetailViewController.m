@@ -169,7 +169,8 @@
             _wound = [super wound];
             // initiate update from server
             WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [ff getObjFromUri:_wound.ffUrl onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSString *uri = [_wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+            [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
