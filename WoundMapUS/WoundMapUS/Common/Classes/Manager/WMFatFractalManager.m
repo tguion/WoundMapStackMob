@@ -482,6 +482,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         NSMutableSet *localGrabBagObjects = [[aggregator valueForKey:grabBagName] mutableCopy];
         [ff grabBagGetAllForObj:aggregator grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
+                [WMUtilities logError:error];
+            }
+            if (error) {
                 onComplete(error);
             } else {
                 [managedObjectContext MR_saveToPersistentStoreAndWait];

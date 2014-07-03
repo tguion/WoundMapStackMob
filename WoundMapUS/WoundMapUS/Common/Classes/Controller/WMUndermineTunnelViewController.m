@@ -202,7 +202,9 @@
         [self.navigationController setToolbarHidden:YES animated:YES];
         // place WMAdjustAlpaView
         if (nil == _adjustAlpaView) {
-            CGRect aFrame = CGRectMake(0.0, 44.0, 32.0, CGRectGetHeight(self.view.bounds) - 112.0);
+            // keep out of way of tableview
+            CGFloat height = CGRectGetHeight(self.view.bounds);
+            CGRect aFrame = CGRectMake(0.0, ceilf(1.0 * height/3.0) + 88.0, 32.0, ceilf(1.0 * height/3.0));
             WMAdjustAlpaView *adjustAlpaView = [[WMAdjustAlpaView alloc] initWithFrame:aFrame delegate:self];
             [self.view addSubview:adjustAlpaView];
             [adjustAlpaView performSelector:@selector(flashViewAlpha) withObject:nil afterDelay:0.0];

@@ -1008,6 +1008,8 @@
 {
     // a referral may have come in
     [self updatePatientNodeControls];
+    // update toolbar
+    [self updateToolbar];
     // update care plan cell
     [self updateCarePlanCell];
     // update displayed nodes
