@@ -182,6 +182,33 @@ NSDateFormatter * DOB_Formatter;
     [userDefaults synchronize];
 }
 
+- (NSString *)defaultIdRootAtIndex:(NSInteger)index
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *map = [userDefaults dictionaryForKey:@"com.mobilehealthware.woundmap.defaultIdRootMap"];
+    return map[[@(index) stringValue]];
+}
+
+- (void)setDefaultIdRoot:(NSString *)idRoot atIndex:(NSInteger)index
+{
+    id key = [@(index) stringValue];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *map = [userDefaults dictionaryForKey:@"com.mobilehealthware.woundmap.defaultIdRootMap"];
+    if (nil == map && idRoot) {
+        map = @{key : idRoot};
+    } else {
+        NSMutableDictionary *mmap = [map mutableCopy];
+        if (idRoot) {
+            mmap[key] = idRoot;
+        } else {
+            [mmap removeObjectForKey:key];
+        }
+        map = mmap;
+    }
+    [userDefaults setObject:map forKey:@"com.mobilehealthware.woundmap.defaultIdRootMap"];
+    [userDefaults synchronize];
+}
+
 - (NSInteger)hoursSinceLastPatientListUpdate
 {
     double lastDateUpdated = [[NSUserDefaults standardUserDefaults] doubleForKey:@"com.mobilehealthware.woundmap.lastPatientListUpdate"];

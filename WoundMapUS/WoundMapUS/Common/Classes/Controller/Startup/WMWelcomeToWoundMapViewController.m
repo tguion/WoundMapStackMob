@@ -915,7 +915,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     switch (indexPath.row) {
                         case 0: {
                             if (_welcomeState == WMWelcomeStateInvitationAccepted) {
-                                title = @"Team Invitation Accepted";
+                                title = @"Invitation Accepted";
                                 value = @"Pending Approval";
                                 accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             } else {

@@ -127,6 +127,9 @@
 - (IBAction)addAction:(id)sender
 {
     WMId *anId = [WMId MR_createInContext:self.managedObjectContext];
+    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    NSInteger index = [self.delegate.idSource.ids count];
+    anId.root = [userDefaultsManager defaultIdRootAtIndex:index];
     [self navigateToIdEditorForId:anId];
 }
 
@@ -162,14 +165,18 @@
 
 - (void)idEditorViewController:(WMIdEditorViewController *)viewController didEditId:(WMId *)anId
 {
+    NSInteger index = [self.delegate.idSource.ids count];
     [self.delegate.idSource addIdsObject:anId];
     [self.navigationController popViewControllerAnimated:YES];
     _ids = nil;
     [self.tableView reloadData];
-    WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    NSString *defaultIdRoot = userDefaultsManager.defaultIdRoot;
-    if (nil == defaultIdRoot && nil != anId.root) {
-        userDefaultsManager.defaultIdRoot = anId.root;
+    if (self.delegate.persistRootAsDefault) {
+        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+        NSString *defaultIdRoot = userDefaultsManager.defaultIdRoot;
+        if (nil == defaultIdRoot && nil != anId.root) {
+            userDefaultsManager.defaultIdRoot = anId.root;
+        }
+        [userDefaultsManager setDefaultIdRoot:anId.root atIndex:index];
     }
 }
 

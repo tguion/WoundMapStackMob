@@ -593,6 +593,11 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     return self.patient;
 }
 
+- (BOOL)persistRootAsDefault
+{
+    return YES;
+}
+
 - (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];

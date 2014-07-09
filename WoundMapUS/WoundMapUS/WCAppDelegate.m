@@ -297,7 +297,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
     self.remoteNotification = userInfo;
     // user already saw the alert and started up the app that way. don't show it to them again.
-    if (([application respondsToSelector: @selector(applicationState)]) && ([application applicationState] == UIApplicationStateInactive)) {
+    if (([application respondsToSelector:@selector(applicationState)]) && ([application applicationState] == UIApplicationStateInactive)) {
         [self processRemoteNotification];
         return;
     }

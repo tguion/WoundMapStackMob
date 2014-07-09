@@ -292,6 +292,11 @@
     return _organization;
 }
 
+- (BOOL)persistRootAsDefault
+{
+    return NO;
+}
+
 - (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];

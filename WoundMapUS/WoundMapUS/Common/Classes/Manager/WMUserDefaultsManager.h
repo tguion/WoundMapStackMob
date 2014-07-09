@@ -31,6 +31,8 @@
 @property (nonatomic) NSDictionary *lastRefreshTimeMap;
 @property (nonatomic) NSString *woundPositionTermKey;           // key used to display wound position (Left, Right, etc)
 @property (nonatomic) NSString *defaultIdRoot;
+- (NSString *)defaultIdRootAtIndex:(NSInteger)index;
+- (void)setDefaultIdRoot:(NSString *)idRoot atIndex:(NSInteger)index;
 @property (readonly, nonatomic) NSInteger hoursSinceLastPatientListUpdate;
 - (void)patientListUpdated;
 @property (nonatomic) NSSet *woundPhotoObjectIdsToUpload;

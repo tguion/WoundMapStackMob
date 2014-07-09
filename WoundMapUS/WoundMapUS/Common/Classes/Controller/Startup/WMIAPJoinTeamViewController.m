@@ -94,11 +94,6 @@
 - (IBAction)acceptAction:(id)sender
 {
     [self.view endEditing:YES];
-    [self performSelector:@selector(delayedAcceptAction:) withObject:nil afterDelay:0.0];
-}
-
-- (IBAction)delayedAcceptAction:(id)sender
-{
     // check pincode
     if ([_pincodeTextInput integerValue] != self.teamInvitation.passcodeValue) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incorrect Pincode"

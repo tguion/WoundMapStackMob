@@ -16,6 +16,7 @@
 @property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (readonly, nonatomic) id<idSource> idSource;
+@property (readonly, nonatomic) BOOL persistRootAsDefault;
 
 - (void)idListViewControllerDidFinish:(WMIdListViewController *)viewController;
 - (void)idListViewControllerDidCancel:(WMIdListViewController *)viewController;

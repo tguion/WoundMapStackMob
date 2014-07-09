@@ -161,7 +161,7 @@
                     if ([participant.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedAscending) {
                         // times up
                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Subscription Expired"
-                                                                            message:@"Your team leader must purchase additional access time to continue to use WoundMap"
+                                                                            message:@"Your team leader must extend your subscription to continue to use WoundMap"
                                                                            delegate:self
                                                                   cancelButtonTitle:@"Dismiss"
                                                                   otherButtonTitles:nil];
