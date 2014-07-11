@@ -95,7 +95,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     WMPatient *patient = self.patient;
     patient.dateOfBirth = self.datePickerView.date;
     // save dob for next patient
-    self.userDefaultsManager.lastDateOfBirth = self.patient.dateOfBirth;
+    self.userDefaultsManager.lastDateOfBirth = patient.dateOfBirth;
 }
 
 // update any view not table view cell
@@ -468,11 +468,6 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 - (IBAction)saveAction:(id)sender
 {
     [self.view endEditing:YES];
-    [self performSelector:@selector(delayedSaveAction:) withObject:sender afterDelay:0.0];
-}
-
-- (IBAction)delayedSaveAction:(id)sender
-{
     // associate
     if (nil == _patient.person) {
         _patient.person = _person;
@@ -543,6 +538,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     // update model from text
     if (textField == self.ssnTextField) {
         self.patient.ssn = textField.text;
+    } else if (textField == self.dobTextField) {
+        [self updateDOBModelFromView];
     }
     [self performSelector:@selector(updateTitle) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateUIForDataChange) withObject:nil afterDelay:0.0];

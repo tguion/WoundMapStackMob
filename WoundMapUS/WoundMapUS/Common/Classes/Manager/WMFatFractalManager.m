@@ -191,6 +191,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     // determine if we need to move patients to team
     NSInteger nodeCount = [WMNavigationNode MR_countOfEntitiesWithContext:managedObjectContext];
