@@ -347,10 +347,27 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                         [WMUtilities logError:error];
                     }
                     weakSelf.appDelegate.participant = participant;
-                    // DEPLOYMENT
-                    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
-//                    [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {        // this line when we need to build the seed database
-                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {   // this line when we have a seed database
+                    /*
+                     Usage
+                     The extension can be invoked via getArrayFromExtension or postObjToExtension, whichever is your preference
+                     In either case, you must supply userGuid or teamUrl - but not both
+                     If userGuid is supplied, then the policies are built for that individual user
+                     If teamUrl is supplied, then the policies are built for that team
+                     Assuming the policies are successfully created, then they are returned
+                     Currently they are not returned if the data already exists; instead a HTTP 409 “conflict” statusCode is set
+                     */
+                    CoreDataHelper *coreDataHelper = weakSelf.appDelegate.coreDataHelper;
+                    if (!coreDataHelper.seedDatabaseFound) {
+                        // DEPLOYMENT
+                        WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+                        [seedDatabaseManager seedDatabaseWithCompletionHandler:^(NSError *error) {        // this line when we need to build the seed database
+                            if (error) {
+                                [WMUtilities logError:error];
+                            }
+                            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                        }];
+                    }
+                    [ff getArrayFromExtension:[NSString stringWithFormat:@"createPolicies?userGuid=%@", ffUser.guid] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         if (error) {
                             [WMUtilities logError:error];
                         }

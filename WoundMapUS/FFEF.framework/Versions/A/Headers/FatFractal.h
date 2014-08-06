@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, FFUrlType) {
     NSMapTable              *references;
 
     /**
-     The #classToClazzDict property (NSMutableDictionary) holds the mapping from Obj-C Class to 
+     The #classToClazzDict property (NSMutableDictionary) holds the mapping from Obj-C Class to
      the 'class name' that your app's backend stores with the data.
      */
     NSMutableDictionary     *classToClazzDict;

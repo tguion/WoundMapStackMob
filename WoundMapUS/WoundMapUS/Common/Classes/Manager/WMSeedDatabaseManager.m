@@ -170,17 +170,17 @@
             handler(nil);
         }
     };
-    DLog(@"reading plists and seeding database start");
-    // *** WMNavigationTrack *** first attempt to acquire data from backend
-    counter += 5;   // WMNavigationTrack does 5 callbacks
-    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
-        if (![object count]) {
-            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
-        } else {
-            counterHandler();
-        }
-    }];
+//    DLog(@"reading plists and seeding database start");
+//    // *** WMNavigationTrack *** first attempt to acquire data from backend
+//    counter += 5;   // WMNavigationTrack does 5 callbacks
+//    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+//        [managedObjectContext MR_saveToPersistentStoreAndWait];
+//        if (![object count]) {
+//            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
+//        } else {
+//            counterHandler();
+//        }
+//    }];
     if (self.databaseSeedHasCompleted) {
         handler(nil);
         return;

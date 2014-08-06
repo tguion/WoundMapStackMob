@@ -16,6 +16,7 @@ const struct WMTeamAttributes WMTeamAttributes = {
 const struct WMTeamRelationships WMTeamRelationships = {
 	.consultingGroup = @"consultingGroup",
 	.invitations = @"invitations",
+	.navigationNodes = @"navigationNodes",
 	.navigationTracks = @"navigationTracks",
 	.participants = @"participants",
 	.patients = @"patients",
@@ -192,6 +193,19 @@ const struct WMTeamFetchedProperties WMTeamFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"invitations"];
   
 	[self didAccessValueForKey:@"invitations"];
+	return result;
+}
+	
+
+@dynamic navigationNodes;
+
+	
+- (NSMutableSet*)navigationNodesSet {
+	[self willAccessValueForKey:@"navigationNodes"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"navigationNodes"];
+  
+	[self didAccessValueForKey:@"navigationNodes"];
 	return result;
 }
 	

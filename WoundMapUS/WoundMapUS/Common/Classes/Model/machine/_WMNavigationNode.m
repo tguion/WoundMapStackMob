@@ -35,6 +35,7 @@ const struct WMNavigationNodeRelationships WMNavigationNodeRelationships = {
 	.parentNode = @"parentNode",
 	.stage = @"stage",
 	.subnodes = @"subnodes",
+	.team = @"team",
 };
 
 const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties = {
@@ -651,6 +652,10 @@ const struct WMNavigationNodeFetchedProperties WMNavigationNodeFetchedProperties
 	[self didAccessValueForKey:@"subnodes"];
 	return result;
 }
+	
+
+@dynamic team;
+
 	
 
 

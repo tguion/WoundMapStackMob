@@ -29,6 +29,8 @@ extern NSString *localStoreFilename;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator *coordinator;      // coordinator for stores
 @property (nonatomic, readonly) NSPersistentStore *store;                       // MagicalRecord default store
 
+@property (nonatomic, readonly) BOOL seedDatabaseFound;                         // YES if we have a seed database
+
 - (void)setupCoreData;
 
 - (void)markBackendDataAcquiredForEntityName:(NSString *)entityName;

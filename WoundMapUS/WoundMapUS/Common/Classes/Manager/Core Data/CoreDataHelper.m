@@ -136,6 +136,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
         [self unmarkBackendDataAcquiredForEntityName:[WMNavigationTrack entityName]];
         [self unmarkBackendDataAcquiredForEntityName:[WMNavigationStage entityName]];
         [self unmarkBackendDataAcquiredForEntityName:[WMNavigationNode entityName]];
+        _seedDatabaseFound = YES;
     }
 }
 

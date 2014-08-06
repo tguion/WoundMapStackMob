@@ -36,6 +36,7 @@ extern const struct WMNavigationNodeRelationships {
 	__unsafe_unretained NSString *parentNode;
 	__unsafe_unretained NSString *stage;
 	__unsafe_unretained NSString *subnodes;
+	__unsafe_unretained NSString *team;
 } WMNavigationNodeRelationships;
 
 extern const struct WMNavigationNodeFetchedProperties {
@@ -44,6 +45,7 @@ extern const struct WMNavigationNodeFetchedProperties {
 @class WMNavigationNode;
 @class WMNavigationStage;
 @class WMNavigationNode;
+@class WMTeam;
 
 
 
@@ -419,6 +421,13 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 
 
+@property (nonatomic, strong) WMTeam *team;
+
+//- (BOOL)validateTeam:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -645,6 +654,11 @@ extern const struct WMNavigationNodeFetchedProperties {
 
 - (NSMutableSet*)primitiveSubnodes;
 - (void)setPrimitiveSubnodes:(NSMutableSet*)value;
+
+
+
+- (WMTeam*)primitiveTeam;
+- (void)setPrimitiveTeam:(WMTeam*)value;
 
 
 @end

@@ -726,20 +726,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                                     }];
                                 }
                                 // seed team with navigation track, stage, node 1
-                                counter += 5;   // WMNavigationTrack does 5 callbacks
-                                [WMNavigationTrack seedDatabaseForTeam:team completionHandler:^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
-                                    // update backend
-                                    NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
-                                    for (NSManagedObjectID *objectID in objectIDs) {
-                                        NSManagedObject *object = [managedObjectContext objectWithID:objectID];
-                                        NSLog(@"*** WoundMap: Will create collection backend: %@", object);
-                                        [ff createObj:object atUri:ffUrl];
-                                    }
-                                    if (callBack) {
-                                        callBack();
-                                    }
-                                    block(error); // 0
-                                }];
+                                counter += 1;
+                                [ff getArrayFromExtension:[NSString stringWithFormat:@"createPolicies?teamUrl=%@", team.ffUrl] onComplete:httpMethodCompletion];
                             }
                         }];
                     }

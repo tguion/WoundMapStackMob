@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13D65" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
@@ -454,6 +454,7 @@
         <relationship name="parentNode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationNode" inverseName="subnodes" inverseEntity="WMNavigationNode" syncable="YES"/>
         <relationship name="stage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMNavigationStage" inverseName="nodes" inverseEntity="WMNavigationStage" syncable="YES"/>
         <relationship name="subnodes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationNode" inverseName="parentNode" inverseEntity="WMNavigationNode" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="navigationNodes" inverseEntity="WMTeam" syncable="YES"/>
     </entity>
     <entity name="WMNavigationStage" representedClassName="WMNavigationStage" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -826,6 +827,7 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultingGroup" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMConsultingGroup" inverseName="team" inverseEntity="WMConsultingGroup" syncable="YES"/>
         <relationship name="invitations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMTeamInvitation" inverseName="team" inverseEntity="WMTeamInvitation" syncable="YES"/>
+        <relationship name="navigationNodes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationNode" inverseName="team" inverseEntity="WMNavigationNode" syncable="YES"/>
         <relationship name="navigationTracks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNavigationTrack" inverseName="team" inverseEntity="WMNavigationTrack" syncable="YES"/>
         <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="team" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatient" inverseName="team" inverseEntity="WMPatient" syncable="YES"/>
@@ -1264,7 +1266,7 @@
         <element name="WMMedication" positionX="0" positionY="0" width="128" height="225"/>
         <element name="WMMedicationCategory" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMMedicationGroup" positionX="0" positionY="0" width="128" height="270"/>
-        <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="465"/>
+        <element name="WMNavigationNode" positionX="0" positionY="0" width="128" height="478"/>
         <element name="WMNavigationStage" positionX="0" positionY="0" width="128" height="240"/>
         <element name="WMNavigationTrack" positionX="0" positionY="0" width="128" height="238"/>
         <element name="WMNutritionGroup" positionX="36" positionY="171" width="128" height="253"/>
@@ -1286,7 +1288,7 @@
         <element name="WMSkinAssessmentCategory" positionX="0" positionY="0" width="128" height="255"/>
         <element name="WMSkinAssessmentGroup" positionX="0" positionY="0" width="128" height="208"/>
         <element name="WMSkinAssessmentValue" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="WMTeam" positionX="9" positionY="153" width="128" height="30"/>
+        <element name="WMTeam" positionX="9" positionY="153" width="128" height="255"/>
         <element name="WMTeamInvitation" positionX="18" positionY="162" width="128" height="195"/>
         <element name="WMTeamPolicy" positionX="18" positionY="153" width="128" height="148"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>

@@ -286,7 +286,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 // RPN
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
 {
-    [[FatFractal main] registerNotificationID:[devToken description]];
+    [[WMFatFractal sharedInstance] registerNotificationID:[devToken description]];
 }
 
 // RPN
@@ -301,8 +301,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         [self processRemoteNotification];
         return;
     }
-    
-    if (userInfo[@"aps"][@"alert"] != NULL) {
+    // else
+    if (userInfo[@"aps"][@"alert"]) {
         alertMsg = userInfo[@"aps"][@"alert"];
         if (![alertMsg isKindOfClass:[NSString class]])
             alertMsg = userInfo[@"aps"][@"alert"][@"body"];
@@ -320,11 +320,11 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         //        sound = [[userInfo objectForKey:@"aps"] objectForKey:@"sound"];
     }
     
-    if (userInfo[@"aps"][@"alert"][@"action-loc-key"] != NULL) {
-        otherButton = userInfo[@"aps"][@"alert"][@"action-loc-key"];
-    }
+//    if (userInfo[@"aps"][@"alert"][@"action-loc-key"] != NULL) {
+//        otherButton = userInfo[@"aps"][@"alert"][@"action-loc-key"];
+//    }
     
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+//    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     
     UIAlertView *alert = nil;
     
@@ -350,9 +350,10 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 // RPN
 - (void)processRemoteNotification
 {
-    NSString *patientGUID = self.remoteNotification[@"aps"][@"alert"][@"pId"];      // patient
-    NSString *sourceGUID = self.remoteNotification[@"aps"][@"alert"][@"sId"];       // source participant
-    NSString *targetGUID = self.remoteNotification[@"aps"][@"alert"][@"tId"];       // target participant
+    NSString *patientGUID = self.remoteNotification[@"patientGuid"];        // WMPatient guid
+    NSString *invitationGuid = self.remoteNotification[@"invitationGuid"];  // WMTeamInvitation guid
+    NSString *teamGuid = self.remoteNotification[@"teamGuid"];              // WMTeam guid
+
 }
 
 #pragma mark - UIAlertViewDelegate

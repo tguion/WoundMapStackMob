@@ -12,6 +12,8 @@
 
 //static NSString *baseUrl = @"http://localhost:8080/WoundMapUS";//DEPLOYMENT
 //static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
+//static NSString *baseUrl = @"http://192.168.1.149:8080/WoundMapUS";//DEPLOYMENT
+//static NSString *sslUrl = @"https://192.168.1.149:8443/WoundMapUS";
 static NSString *baseUrl = @"http://mobilehealthware.fatfractal.com/WoundMapUS";
 static NSString *sslUrl = @"https://mobilehealthware.fatfractal.com/WoundMapUS";
 
