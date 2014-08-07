@@ -26,6 +26,7 @@ const struct WMPatientRelationships WMPatientRelationships = {
 	.carePlanGroups = @"carePlanGroups",
 	.deviceGroups = @"deviceGroups",
 	.ids = @"ids",
+	.location = @"location",
 	.medicalHistoryGroups = @"medicalHistoryGroups",
 	.medicationGroups = @"medicationGroups",
 	.nutritionGroups = @"nutritionGroups",
@@ -303,6 +304,10 @@ const struct WMPatientFetchedProperties WMPatientFetchedProperties = {
 	[self didAccessValueForKey:@"ids"];
 	return result;
 }
+	
+
+@dynamic location;
+
 	
 
 @dynamic medicalHistoryGroups;

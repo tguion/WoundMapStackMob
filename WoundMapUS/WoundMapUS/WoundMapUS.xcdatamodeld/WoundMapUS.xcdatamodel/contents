@@ -614,6 +614,7 @@
         <relationship name="carePlanGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMCarePlanGroup" inverseName="patient" inverseEntity="WMCarePlanGroup" syncable="YES"/>
         <relationship name="deviceGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMDeviceGroup" inverseName="patient" inverseEntity="WMDeviceGroup" syncable="YES"/>
         <relationship name="ids" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMId" inverseName="patient" inverseEntity="WMId" syncable="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPatientLocation" inverseName="patient" inverseEntity="WMPatientLocation" syncable="YES"/>
         <relationship name="medicalHistoryGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicalHistoryGroup" inverseName="patient" inverseEntity="WMMedicalHistoryGroup" syncable="YES"/>
         <relationship name="medicationGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMMedicationGroup" inverseName="patient" inverseEntity="WMMedicationGroup" syncable="YES"/>
         <relationship name="nutritionGroups" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMNutritionGroup" inverseName="patient" inverseEntity="WMNutritionGroup" syncable="YES"/>
@@ -637,6 +638,16 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="consultant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="acquiredConsults" inverseEntity="WMParticipant" syncable="YES"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="patientConsultants" inverseEntity="WMPatient" syncable="YES"/>
+    </entity>
+    <entity name="WMPatientLocation" representedClassName="WMPatientLocation" syncable="YES">
+        <attribute name="facility" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="room" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
+        <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="location" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMPatientReferral" representedClassName="WMPatientReferral" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -1275,7 +1286,7 @@
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
         <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="WMPatient" positionX="0" positionY="0" width="128" height="508"/>
+        <element name="WMPatient" positionX="0" positionY="0" width="128" height="523"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="30"/>
         <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>
@@ -1308,5 +1319,6 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
+        <element name="WMPatientLocation" positionX="18" positionY="153" width="128" height="163"/>
     </elements>
 </model>

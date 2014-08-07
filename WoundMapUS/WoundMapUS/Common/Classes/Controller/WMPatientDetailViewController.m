@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import "UIView+Custom.h"
 #import "WMPatient.h"
+#import "WMPatientLocation.h"
 #import "WMId.h"
 #import "WMMedicalHistoryGroup.h"
 #import "WMPerson.h"
@@ -338,6 +339,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
         }
         case 3: {
+            cellReuseIdentifier = @"TextCell";
+            break;
+        }
+        case 4: {
             cellReuseIdentifier = @"ValueCell";
             break;
         }
@@ -730,6 +735,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
         }
         case 3: {
+            // location
+            break;
+        }
+        case 4: {
             [self deletePhotoBlobs];
             break;
         }
@@ -740,7 +749,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return (self.patient.photoBlobCount ? 4:3);
+    return (self.patient.photoBlobCount ? 5:4);
 }
 
 // fixed font style. use custom view (UILabel) if you want something different
@@ -761,6 +770,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
         }
         case 3: {
+            title = @"Location";
+            break;
+        }
+        case 4: {
             title = @"Photos";
             break;
         }
@@ -785,6 +798,10 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
         }
         case 3: {
+            count = 4;
+            break;
+        }
+        case 4: {
             count = 1;
             break;
         }
@@ -894,6 +911,47 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             break;
         }
         case 3: {
+            // location
+            WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+            myCell.textField.keyboardType = UIKeyboardTypeDefault;
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            switch (indexPath.row) {
+                case 0: {
+                    // facility
+                    [myCell updateWithLabelText:@"Facility"
+                                      valueText:patient.location.facility
+                                    valuePrompt:@"Facility name"];
+                    myCell.textField.inputView = nil;
+                    break;
+                }
+                case 1: {
+                    // unit
+                    [myCell updateWithLabelText:@"Unit"
+                                      valueText:patient.location.unit
+                                    valuePrompt:@"Unit identifier"];
+                    myCell.textField.inputView = nil;
+                    break;
+                }
+                case 2: {
+                    // room
+                    [myCell updateWithLabelText:@"Room"
+                                      valueText:patient.location.unit
+                                    valuePrompt:@"Room identifier"];
+                    myCell.textField.inputView = nil;
+                    break;
+                }
+                case 3: {
+                    // location
+                    [myCell updateWithLabelText:@"Location"
+                                      valueText:patient.location.unit
+                                    valuePrompt:@"Location description"];
+                    myCell.textField.inputView = nil;
+                    break;
+                }
+            }
+            break;
+        }
+        case 4: {
             cell.textLabel.text = @"Delete Photos";
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%d photos", self.patient.photosCount];
             cell.accessoryType = UITableViewCellAccessoryNone;

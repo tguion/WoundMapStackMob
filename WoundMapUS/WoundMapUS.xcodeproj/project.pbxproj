@@ -538,6 +538,8 @@
 		7DDFD68B18B7C0B900041927 /* WMHomeBaseViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDFD68918B7C0B900041927 /* WMHomeBaseViewController_iPad.xib */; };
 		7DDFD69118B7C2C000041927 /* WMNavigationPatientWoundContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68E18B7C2C000041927 /* WMNavigationPatientWoundContainerView.m */; };
 		7DDFD69218B7C2C000041927 /* WMNavigationPatientWoundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD69018B7C2C000041927 /* WMNavigationPatientWoundView.m */; };
+		7DE617D119940429000839E6 /* _WMPatientLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE617D019940429000839E6 /* _WMPatientLocation.m */; };
+		7DE617D619940436000839E6 /* WMPatientLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE617D519940436000839E6 /* WMPatientLocation.m */; };
 		7DF4E8E418C22EEC000A3F5B /* _WMCarePlanCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8B918C22EEC000A3F5B /* _WMCarePlanCategory.m */; };
 		7DF4E8E518C22EEC000A3F5B /* _WMCarePlanGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8BB18C22EEC000A3F5B /* _WMCarePlanGroup.m */; };
 		7DF4E8E718C22EEC000A3F5B /* _WMCarePlanValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8BF18C22EEC000A3F5B /* _WMCarePlanValue.m */; };
@@ -1518,6 +1520,10 @@
 		7DDFD68E18B7C2C000041927 /* WMNavigationPatientWoundContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationPatientWoundContainerView.m; sourceTree = "<group>"; };
 		7DDFD68F18B7C2C000041927 /* WMNavigationPatientWoundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationPatientWoundView.h; sourceTree = "<group>"; };
 		7DDFD69018B7C2C000041927 /* WMNavigationPatientWoundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationPatientWoundView.m; sourceTree = "<group>"; };
+		7DE617CF19940429000839E6 /* _WMPatientLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMPatientLocation.h; sourceTree = "<group>"; };
+		7DE617D019940429000839E6 /* _WMPatientLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPatientLocation.m; sourceTree = "<group>"; };
+		7DE617D419940436000839E6 /* WMPatientLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientLocation.h; sourceTree = "<group>"; };
+		7DE617D519940436000839E6 /* WMPatientLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientLocation.m; sourceTree = "<group>"; };
 		7DF4E8B818C22EEC000A3F5B /* _WMCarePlanCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMCarePlanCategory.h; sourceTree = "<group>"; };
 		7DF4E8B918C22EEC000A3F5B /* _WMCarePlanCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMCarePlanCategory.m; sourceTree = "<group>"; };
 		7DF4E8BA18C22EEC000A3F5B /* _WMCarePlanGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMCarePlanGroup.h; sourceTree = "<group>"; };
@@ -2545,6 +2551,8 @@
 				7DB206CA18A839180004DC32 /* WMPatient.m */,
 				7D9AA28018B1107200C1B698 /* WMPatientConsultant.h */,
 				7D9AA28118B1107200C1B698 /* WMPatientConsultant.m */,
+				7DE617D419940436000839E6 /* WMPatientLocation.h */,
+				7DE617D519940436000839E6 /* WMPatientLocation.m */,
 				7DDE40CB1914212B008DDA3E /* WMPatientReferral.h */,
 				7DDE40CC1914212B008DDA3E /* WMPatientReferral.m */,
 				7D674157192D3BD9007DBD1A /* WMPaymentTransaction.h */,
@@ -2926,6 +2934,8 @@
 				7DB206E218A839240004DC32 /* _WMPatient.m */,
 				7D9AA27D18B1106500C1B698 /* _WMPatientConsultant.h */,
 				7D9AA27E18B1106500C1B698 /* _WMPatientConsultant.m */,
+				7DE617CF19940429000839E6 /* _WMPatientLocation.h */,
+				7DE617D019940429000839E6 /* _WMPatientLocation.m */,
 				7DDE40C81914211C008DDA3E /* _WMPatientReferral.h */,
 				7DDE40C91914211C008DDA3E /* _WMPatientReferral.m */,
 				7D674154192D3BC2007DBD1A /* _WMPaymentTransaction.h */,
@@ -3617,6 +3627,7 @@
 				7D10CD8D18D7755700AD43E3 /* WMSelectAmountQualifierViewController.m in Sources */,
 				7D68947319044032006DE509 /* WMWoundPhotoCollectionViewCell.m in Sources */,
 				7D864D581922931600D5973C /* _WMTeamPolicy.m in Sources */,
+				7DE617D119940429000839E6 /* _WMPatientLocation.m in Sources */,
 				7D39DB7E18B947330054DDC3 /* WMMedication.m in Sources */,
 				7D10CDC518DA352800AD43E3 /* ConstraintUtilities-Matching.m in Sources */,
 				5F6DE54818B6FA4E00E87F7E /* WMIdListViewController.m in Sources */,
@@ -3796,6 +3807,7 @@
 				7DD8372C18C78A390028C2D3 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				7D9A94CE18E88FAE00D92E95 /* WMOrganizationListViewController.m in Sources */,
 				7DF4E92D18C22F27000A3F5B /* WMPsychoSocialGroup.m in Sources */,
+				7DE617D619940436000839E6 /* WMPatientLocation.m in Sources */,
 				7D6894A3190445D8006DE509 /* KalTileView.m in Sources */,
 				7D10CD7018D4EA9E00AD43E3 /* WMCreateAccountViewController.m in Sources */,
 				7DB2061B18A7D3400004DC32 /* WCAppDelegate.m in Sources */,

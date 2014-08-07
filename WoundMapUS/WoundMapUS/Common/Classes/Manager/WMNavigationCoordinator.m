@@ -14,6 +14,7 @@
 #import "WMTeam.h"
 #import "WMParticipant.h"
 #import "WMPatient.h"
+#import "WMPatientLocation.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMNavigationTrack.h"
@@ -260,9 +261,17 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     patient.createdOnDeviceId = [[IAPManager sharedInstance] getIAPDeviceGuid];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    FFHttpMethodCompletion createLocationOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        completionHandler(error, patient);
+    };
     [ffm createPatient:patient ff:ff completionHandler:^(NSError *error, id object) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        completionHandler(error, object);
+        // add location
+        patient.location = [WMPatientLocation MR_createInContext:managedObjectContext];
+        [ff createObj:patient.location atUri:[NSString stringWithFormat:@"/%@", [WMPatientLocation entityName]] onComplete:createLocationOnComplete onOffline:createLocationOnComplete];
     }];
 }
 

@@ -1,0 +1,363 @@
+Create Policy Tree should be done on back end
+
+Context
+
+On creating a new user (participant), we have to create the Policies object graph.
+This object graph has WMNavigationTrack objects (5 instances), and each WMNavigationTrack has 1-3 WMNavigationStage, and each WMNavigationStage has 1-n WMNavigationNode instances. We create these Core Data objects on the client and persist to FatFractal backend.
+
+When a team is created, we also create the same object graph, but these instances are shared by each member of the team.
+
+ffdl
+
+CREATE OBJECTTYPE WMNavigationTrack (activeFlag BOOLEAN, createdAt DATE, desc STRING, disabledFlag BOOLEAN, displayTitle STRING, ffUrl STRING, flags NUMERIC, icon STRING, sortRank NUMERIC, title STRING, updatedAt DATE, stages GRABBAG /WMNavigationStage, team REFERENCE /WMTeam)
+
+CREATE OBJECTTYPE WMNavigationStage (createdAt DATE, desc STRING, disabledFlag BOOLEAN, displayTitle STRING, ffUrl STRING, flags NUMERIC, icon STRING, sortRank NUMERIC, title STRING, updatedAt DATE, nodes GRABBAG /WMNavigationNode, track REFERENCE /WMNavigationTrack)
+
+CREATE OBJECTTYPE WMNavigationNode (activeFlag BOOLEAN, closeUnit NUMERIC, closeValue NUMERIC, createdAt DATE, desc STRING, disabledFlag BOOLEAN, displayTitle STRING, ffUrl STRING, flags NUMERIC, frequencyUnit NUMERIC, frequencyValue NUMERIC, iapIdentifier STRING, icon STRING, patientFlag BOOLEAN, requiresPatientFlag BOOLEAN, requiresWoundFlag BOOLEAN, requiresWoundPhotoFlag BOOLEAN, sortRank NUMERIC, taskIdentifier NUMERIC, teamFlag BOOLEAN, title STRING, updatedAt DATE, userSortRank NUMERIC, woundFlag BOOLEAN, woundTypeCodes STRING, parentNode REFERENCE /WMNavigationNode, stage REFERENCE /WMNavigationStage, subnodes GRABBAG /WMNavigationNode)
+
+iOS
+
+Note that we are reading from a plist (xml file) to create core data objects, and persist to the back end. Because of the structure of the node tree, we have to stage the creation of objects carefully. First we create the WMNavigationTrack instances, then WMNavigationStage instances, and the the root level of WMNavigationNode instances, and then subnodes.
+
+WMNavigationTrack
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationTrackRelationships.stages]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+WMNavigationStage
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationStageRelationships.patients, WMNavigationStageRelationships.nodes]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+WMNavigationNode
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMNavigationNodeRelationships.subnodes]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+And then controller code:
+
+    [ff registerUser:_ffUser password:_passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        WM_ASSERT_MAIN_THREAD;
+        FFUser *ffUser = (FFUser *)object;
+        if (error) {
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to create account"
+                                                                message:[NSString stringWithFormat:@"Unable to create an account: %@", error.localizedDescription]
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        } else {
+            weakSelf.state = CreateAccountAccountCreated;
+            [weakSelf updateNavigationState];
+            [weakSelf.tableView reloadData];
+            [weakSelf saveUserCredentialsInKeychain];
+            // update participant
+            participant.user = ffUser;
+            participant.guid = ffUser.guid;
+            // check for data access
+            dispatch_block_t participantBlock = ^{
+                // create participant on back end
+                [ffm createParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                    weakSelf.appDelegate.participant = participant;
+                    // DEPLOYMENT
+                    WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
+                    [seedDatabaseManager seedNavigationTrackWithCompletionHandler:^(NSError *error) {   // this line when we have a seed database
+                        if (error) {
+                            [WMUtilities logError:error];
+                        }
+                        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                    }];
+                }];
+            };
+            [ffm truncateStoreForSignIn:participant completionHandler:participantBlock];
+        }
+    }];
+
+- (void)seedNavigationTrackWithCompletionHandler:(void (^)(NSError *))handler
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
+    __block NSInteger counter = 0;
+    WMProcessCallbackWithCallback completionHandler = ^(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // update backend from main thread
+        NSString *ffUrl = [NSString stringWithFormat:@"/%@", collection];
+        for (NSManagedObjectID *objectID in objectIDs) {
+            NSManagedObject *object = [managedObjectContext objectWithID:objectID];
+            NSLog(@"*** WoundMap: Will create collection backend: %@", object);
+            [ff createObj:object atUri:ffUrl];
+            [coreDataHelper markBackendDataAcquiredForEntityName:collection];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
+        if (callBack) {
+            callBack();
+        }
+        if (counter == 0 || --counter == 0) {
+            handler(nil);
+        }
+    };
+    dispatch_block_t counterHandler = ^{
+        if (counter == 0 || --counter == 0) {
+            handler(nil);
+        }
+    };
+    DLog(@"reading plists and seeding database start");
+    // *** WMNavigationTrack *** first attempt to acquire data from backend
+    counter += 5;   // WMNavigationTrack does 5 callbacks
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMNavigationTrack entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (![object count]) {
+            [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
+        } else {
+            counterHandler();
+        }
+    }];
+}
+
+
++ (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler
+{
+    NSString *filename = @"NavigationTracks";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
+    // read the plist
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
+    if (nil == fileURL) {
+        DLog(@"NavigationTracks.plist file not found");
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil);
+        }
+        return;
+    }
+    // else check if already loaded
+    if ([WMNavigationTrack navigationTrackCount:managedObjectContext] > 0) {
+        if (completionHandler) {
+            completionHandler(nil, nil, nil, nil);
+        }
+        return;
+    }
+    // else
+    @autoreleasepool {
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        id propertyList = [NSPropertyListSerialization propertyListWithData:data
+                                                                    options:NSPropertyListImmutable
+                                                                     format:NULL
+                                                                      error:&error];
+        NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
+        for (NSDictionary *dictionary in propertyList) {
+            [self updateTrackFromDictionary:dictionary team:nil create:YES managedObjectContext:managedObjectContext];
+        }
+        // create patient and wound nodes
+        [WMNavigationNode seedPatientNodes:managedObjectContext];
+        [WMNavigationNode seedWoundNodes:managedObjectContext];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (!completionHandler) {
+            return;
+        }
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        // else now gather the objectIDs
+        NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+        NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
+        completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], ^{
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            // get stages
+            NSArray *stages = [WMNavigationStage MR_findAllInContext:managedObjectContext];
+            NSArray *navigationStageObjectIDs = [stages valueForKey:@"objectID"];
+            completionHandler(nil, navigationStageObjectIDs, [WMNavigationStage entityName], ^{
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                NSError *error = nil;
+                for (WMNavigationStage *stage in stages) {
+                    [ff grabBagAdd:stage to:stage.track grabBagName:WMNavigationTrackRelationships.stages error:&error];
+                }
+                // get nodes
+                __block NSArray *navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
+                __block NSArray *navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
+                completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                    NSError *error = nil;
+                    for (WMNavigationNode *node in navigationNodes) {
+                        if (node.stage) {
+                            [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                        }
+                    }
+                    navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", navigationNodes] inContext:managedObjectContext];
+                    navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
+                    completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                        NSError *error = nil;
+                        for (WMNavigationNode *node in navigationNodes) {
+                            if (node.stage) {
+                                [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                            }
+                            if (node.parentNode) {
+                                [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                            }
+                        }
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                        while (YES) {
+                            navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", navigationNodes] inContext:managedObjectContext];
+                            if ([navigationNodes count] == 0) {
+                                break;
+                            }
+                            // else
+                            navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
+                            completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                                NSError *error = nil;
+                                for (WMNavigationNode *node in navigationNodes) {
+                                    if (node.stage) {
+                                        [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                                    }
+                                    if (node.parentNode) {
+                                        [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                    }
+                                }
+                                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    }
+}
+
++ (void)seedDatabaseForTeam:(WMTeam *)team completionHandler:(WMProcessCallbackWithCallback)completionHandler
+{
+    NSString *filename = @"NavigationTracks";
+    if (kSeedFileSuffix) {
+        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    }
+    // read the plist
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"NavigationTracks" withExtension:@"plist"];
+    if (nil == fileURL) {
+        DLog(@"NavigationTracks.plist file not found");
+        return;
+    }
+    // else check if already loaded
+    NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
+    if ([[WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext] count] > 0) {
+        return;
+    }
+    // else
+    @autoreleasepool {
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfURL:fileURL];
+        id propertyList = [NSPropertyListSerialization propertyListWithData:data
+                                                                    options:NSPropertyListImmutable
+                                                                     format:NULL
+                                                                      error:&error];
+        NSAssert1([propertyList isKindOfClass:[NSArray class]], @"Property list file did not return an NSArray, class was %@", NSStringFromClass([propertyList class]));
+        for (NSDictionary *dictionary in propertyList) {
+            [self updateTrackFromDictionary:dictionary team:team create:YES managedObjectContext:managedObjectContext];
+        }
+        // create patient and wound nodes
+        [WMNavigationNode seedPatientNodes:managedObjectContext];
+        [WMNavigationNode seedWoundNodes:managedObjectContext];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (!completionHandler) {
+            return;
+        }
+        // mark all as team nodes
+        NSArray *navigationNodes = [WMNavigationNode MR_findAllInContext:managedObjectContext];
+        [navigationNodes makeObjectsPerformSelector:@selector(setTeamFlag:) withObject:@YES];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        // else now gather the objectIDs
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        NSArray *navigationTracks = [WMNavigationTrack MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"team == %@", team] inContext:managedObjectContext];
+        NSArray *navigationTrackObjectIDs = [navigationTracks valueForKeyPath:@"objectID"];
+        completionHandler(nil, navigationTrackObjectIDs, [WMNavigationTrack entityName], ^{
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            NSError *error = nil;
+            for (WMNavigationTrack *navigationTrack in navigationTracks) {
+                [ff grabBagAdd:navigationTrack to:team grabBagName:WMTeamRelationships.navigationTracks error:&error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            // get stages
+            NSArray *stages = [WMNavigationStage MR_findAllInContext:managedObjectContext];
+            NSArray *navigationStageObjectIDs = [stages valueForKey:@"objectID"];
+            completionHandler(nil, navigationStageObjectIDs, [WMNavigationStage entityName], ^{
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                NSError *error = nil;
+                for (WMNavigationStage *stage in stages) {
+                    [ff grabBagAdd:stage to:stage.track grabBagName:WMNavigationTrackRelationships.stages error:&error];
+                }
+                // get nodes
+                __block NSArray *navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode = nil"] inContext:managedObjectContext];
+                __block NSArray *navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
+                completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                    NSError *error = nil;
+                    for (WMNavigationNode *node in navigationNodes) {
+                        if (node.stage) {
+                            [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                        }
+                    }
+                    navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", navigationNodes] inContext:managedObjectContext];
+                    navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
+                    completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                        NSError *error = nil;
+                        for (WMNavigationNode *node in navigationNodes) {
+                            if (node.stage) {
+                                [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                            }
+                            if (node.parentNode) {
+                                [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                            }
+                        }
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                        while (YES) {
+                            navigationNodes = [WMNavigationNode MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"parentNode IN (%@)", navigationNodes] inContext:managedObjectContext];
+                            if ([navigationNodes count] == 0) {
+                                break;
+                            }
+                            // else
+                            navigationNodeObjectIDs = [navigationNodes valueForKey:@"objectID"];
+                            completionHandler(nil, navigationNodeObjectIDs, [WMNavigationNode entityName], ^{
+                                NSError *error = nil;
+                                for (WMNavigationNode *node in navigationNodes) {
+                                    if (node.stage) {
+                                        [ff grabBagAdd:node to:node.stage grabBagName:WMNavigationStageRelationships.nodes error:&error];
+                                    }
+                                    if (node.parentNode) {
+                                        [ff grabBagAdd:node to:node.parentNode grabBagName:WMNavigationNodeRelationships.subnodes error:&error];
+                                    }
+                                }
+                                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    }
+}

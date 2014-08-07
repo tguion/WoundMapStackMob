@@ -27,6 +27,7 @@ extern const struct WMPatientRelationships {
 	__unsafe_unretained NSString *carePlanGroups;
 	__unsafe_unretained NSString *deviceGroups;
 	__unsafe_unretained NSString *ids;
+	__unsafe_unretained NSString *location;
 	__unsafe_unretained NSString *medicalHistoryGroups;
 	__unsafe_unretained NSString *medicationGroups;
 	__unsafe_unretained NSString *nutritionGroups;
@@ -48,6 +49,7 @@ extern const struct WMPatientFetchedProperties {
 @class WMCarePlanGroup;
 @class WMDeviceGroup;
 @class WMId;
+@class WMPatientLocation;
 @class WMMedicalHistoryGroup;
 @class WMMedicationGroup;
 @class WMNutritionGroup;
@@ -276,6 +278,13 @@ extern const struct WMPatientFetchedProperties {
 @property (nonatomic, strong) NSSet *ids;
 
 - (NSMutableSet*)idsSet;
+
+
+
+
+@property (nonatomic, strong) WMPatientLocation *location;
+
+//- (BOOL)validateLocation:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -551,6 +560,11 @@ extern const struct WMPatientFetchedProperties {
 
 - (NSMutableSet*)primitiveIds;
 - (void)setPrimitiveIds:(NSMutableSet*)value;
+
+
+
+- (WMPatientLocation*)primitiveLocation;
+- (void)setPrimitiveLocation:(WMPatientLocation*)value;
 
 
 

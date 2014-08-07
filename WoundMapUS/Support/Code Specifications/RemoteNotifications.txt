@@ -1,0 +1,260 @@
+Push Notifications
+1. Patient Referral
+2. Team Invitation
+
+1. Patient Referral
+
+Context
+
+WoundMap allows a group of participants to create a team. Each member of the team has access to patient data collected by any member of the team. Any member of the team can refer a patient to another team member. When a referral is created or updated, we would like the referree (the participant to whom the patient has been referred) to receive a remote notification, where the remote notification contains the patient guid. 
+
+ffdl
+
+CREATE OBJECTTYPE WMPatientReferral (createdAt DATE, dateAccepted DATE, ffUrl STRING, flags NUMERIC, message STRING, updatedAt DATE, patient REFERENCE /WMPatient, referree REFERENCE /WMParticipant, referrer REFERENCE /WMParticipant)
+
+CREATE OBJECTTYPE WMPatient (acquiredByConsultant BOOLEAN, archivedFlag BOOLEAN, createdAt DATE, createdOnDeviceId STRING, updatedAt DATE, dateOfBirth DATE, ffUrl STRING, flags NUMERIC, gender STRING, lastUpdatedOnDeviceId STRING, patientStatusMessages STRING, relevantMedications STRING, ssn STRING, surgicalHistory STRING, thumbnail BYTEARRAY, bradenScales GRABBAG /WMBradenScale, carePlanGroups GRABBAG /WMCarePlanGroup, deviceGroups GRABBAG /WMDeviceGroup, ids GRABBAG /WMId, medicalHistoryGroups GRABBAG /WMMedicalHistoryGroup, medicationGroups GRABBAG /WMMedicationGroup, nutritionGroups GRABBAG /WMNutritionGroup, person REFERENCE /WMPerson, participant REFERENCE /WMParticipant, patientConsultants GRABBAG /WMPatientConsult, team REFERENCE /WMTeam, psychosocialGroups GRABBAG /WMPsychoSocialGroup, referrals GRABBAG /WMPatientReferral, skinAssessmentGroups GRABBAG /WMSkinAssessmentGroup, stage REFERENCE /WMNavigationStage, wounds GRABBAG /WMWound, consultantGroup REFERENCE /FFUserGroup)
+
+CREATE OBJECTTYPE WMParticipant (bio STRING, createdAt DATE, dateAddedToTeam DATE, dateLastSignin DATE, dateTeamSubscriptionExpires DATE, email STRING, ffUrl STRING, flags NUMERIC, guid STRING, lastTokenCreditPurchaseDate DATE, name STRING, permissions NUMERIC, reportTokenCount NUMERIC, thumbnail BYTEARRAY, updatedAt DATE, userName STRING, user REFERENCE /FFUser, organization REFERENCE /WMOrganization, participantType REFERENCE /WMParticipantType, person REFERENCE /WMPerson, team REFERENCE /WMTeam, teamInvitation REFERENCE /WMTeamInvitation, patients GRABBAG /WMPatient, acquiredConsults GRABBAG /WMPatientConsult, interventionEvents GRABBAG /WMInterventionEvent, sourceReferrals GRABBAG /WMPatientReferral, targetReferrals GRABBAG /WMPatientReferral)
+
+CREATE OBJECTTYPE WMPerson (createAt DATE, ffUrl STRING, flags NUMERIC, nameFamily STRING, nameGiven STRING, namePrefix STRING, nameSuffix STRING, updatedAt DATE, participant REFERENCE /WMParticipant, patient REFERENCE /WMPatient, addresses GRABBAG /WMAddress, telecoms GRABBAG /WMTelecom)
+
+PERMIT read:object.team.participantGroup,object.consultantGroup write:object.team.participantGroup,object.consultantGroup ON /WMPatient
+
+PERMIT read:object.patient.team.participantGroup,object.patient.consultantGroup write:object.patient.team.participantGroup,object.patient.consultantGroup ON /WMPatientReferral
+
+PERMIT read:public write:object.team.participantGroup ON /WMParticipant
+
+iOS 
+
+Here is the critical code from the client.
+Perhaps we could send the remote notification when add to _referree GRABBAG named 'referrals' (near bottom of method). The data needed is in the WMPatientReferral object.
+
+- (IBAction)doneAction:(id)sender
+{
+    [self.view endEditing:YES];
+    if (nil == _referree) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing To"
+                                                            message:@"Please select the participant you want to refer the patient."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    NSString *message = self.messageTextViewText;
+    if ([message length] == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Message"
+                                                            message:@"Please add a message to your referral."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    // else
+    WMParticipant *participant = self.appDelegate.participant;
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
+    }
+    if (_removeUndoManagerWhenDone) {
+        managedObjectContext.undoManager = nil;
+    }
+    [_patientReferral prependMessage:message from:participant];
+    // wait for back end calls to complete
+    __block NSInteger counter = 0;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        if (counter == 0 || --counter == 0) {
+            // RPN push notification to _patientReferral.referrer.guid, _patientReferral.referree.guid, _patientReferral.patient.guid
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
+        }
+    };
+    if (_didChangeReferree) {
+        _patientReferral.dateAccepted = nil;
+        ++counter;
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.referree.ffUrl
+                         grabBagName:WMParticipantRelationships.targetReferrals
+                          onComplete:completionHandler];
+        ++counter;
+        [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
+                      fromObjAtFfUrl:_patientReferral.referrer.ffUrl
+                         grabBagName:WMParticipantRelationships.sourceReferrals
+                          onComplete:completionHandler];
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                     toObjAtFfUrl:participant.ffUrl
+                      grabBagName:WMParticipantRelationships.sourceReferrals
+                       onComplete:completionHandler];
+    } else {
+        ++counter;
+        [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                     toObjAtFfUrl:participant.ffUrl
+                      grabBagName:WMParticipantRelationships.sourceReferrals
+                       onComplete:completionHandler];
+    }
+    _patientReferral.referree = _referree;
+    if (_didAddPatientToReferral) {
+        ++counter;
+        self.patientReferral.patient = _patient;
+        [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                     toObjAtFfUrl:_patient.ffUrl
+                      grabBagName:WMPatientRelationships.referrals
+                       onComplete:completionHandler];
+    }
+    ++counter;
+    [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
+                 toObjAtFfUrl:_referree.ffUrl
+                  grabBagName:WMParticipantRelationships.targetReferrals
+                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+       [ff updateObj:_patientReferral onComplete:completionHandler onOffline:completionHandler];
+    }];
+    // send notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRespondedToReferralNotification object:[_patientReferral objectID]];
+    // RPN
+}
+
+2. Team Invitation
+
+Context
+
+WoundMap presents users with ability to form a team. The user (participant) who forms a team is the team leader. The team leader asks another WoundMap user (participant) for their WoundMap username (FFUser.userName), and creates an WMTeamInvitation object. On sign in, the invited participant will see that they have an invitation, and can elect to accept the invitation. This is indicated with the acceptedFlag BOOLEAN. The team leader can then confirm the invitation which adds the invitee to WMTeam GRABBAG named 'participants'.
+
+We would like the invitee to get a remote notification when the invitation is created, and the team leader notified when the invitation is accepted, and the invitee notified when they are added to the team.
+
+ffdl
+
+CREATE OBJECTTYPE WMTeamInvitation (acceptedFlag BOOLEAN, createdAt DATE, ffUrl STRING, flags NUMERIC, invitationMessage STRING, inviteeUserName STRING, passcode NUMERIC, updatedAt DATE, invitee REFERENCE /WMParticipant, team REFERENCE /WMTeam)
+
+CREATE OBJECTTYPE WMTeam (createdAt DATE, ffUrl STRING, flags NUMERIC, iapTeamMemberSuccessCount NUMERIC, name STRING, purchasedPatientCount NUMERIC, updatedAt DATE, consultingGroup REFERENCE /WMConsultingGroup, participantGroup REFERENCE /FFUserGroup, invitations GRABBAG /WMTeamInvitation, navigationTracks GRABBAG /WMNavigationTrack, participants GRABBAG /WMParticipant, patients GRABBAG /WMPatient, teamPolicy REFERENCE /WMTeamPolicy)
+
+PERMIT read:public write:object.invitee.user ON /WMTeamInvitation
+
+iOS
+
+Creating the invitation
+
+- (void)createTeamInvitation:(WMTeamInvitation *)teamInvitation ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    NSParameterAssert([teamInvitation.ffUrl length] == 0);
+    NSParameterAssert(nil != teamInvitation.team);
+    NSParameterAssert([teamInvitation.team.ffUrl length] > 0);
+    NSParameterAssert(nil != teamInvitation.invitee);
+    NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
+    [ff createObj:teamInvitation atUri:[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            completionHandler(error);
+        } else {
+            [ff grabBagAddItemAtFfUrl:teamInvitation.ffUrl
+                         toObjAtFfUrl:teamInvitation.team.ffUrl
+                          grabBagName:WMTeamRelationships.invitations
+                           onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
+                               [managedObjectContext MR_saveToPersistentStoreAndWait];
+                               completionHandler(error);
+                           }];
+        }
+    }];
+}
+
+Accepting invitation
+
+- (IBAction)acceptAction:(id)sender
+{
+    [self.view endEditing:YES];
+    // check pincode
+    if ([_pincodeTextInput integerValue] != self.teamInvitation.passcodeValue) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incorrect Pincode"
+                                                            message:@"The pincode that you entered does not match the invitation pincode"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Try Again"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
+    // else update invitation to accepted and update back end
+    WMTeamInvitation *teamInvitation = self.teamInvitation;
+    NSManagedObjectContext *managedObjectContext = [teamInvitation managedObjectContext];
+    teamInvitation.acceptedFlagValue = YES;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
+    [ff updateObj:teamInvitation
+       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+           if (error) {
+               [WMUtilities logError:error];
+           }
+           // RPN push notification to participant.guid, teamInvitation.inviteeUserName
+           [managedObjectContext MR_saveToPersistentStoreAndWait];
+           [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
+       } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+           if (error) {
+               [WMUtilities logError:error];
+           }
+           [weakSelf.delegate iapJoinTeamViewControllerDidPurchase:weakSelf];
+       }];
+}
+
+Adding invitee to Team
+
+- (void)addParticipantToTeamFromTeamInvitation:(WMTeamInvitation *)teamInvitation team:(WMTeam *)team ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
+{
+    NSManagedObjectContext *managedObjectContext = teamInvitation.managedObjectContext;
+    NSParameterAssert([teamInvitation.ffUrl length]);
+    WMParticipant *invitee = teamInvitation.invitee;
+    NSParameterAssert([invitee isKindOfClass:[WMParticipant class]]);
+    FFUser *user = teamInvitation.invitee.user;
+    if (nil == user) {
+        NSError *localError = nil;
+        user = [ff getObjFromUri:[NSString stringWithFormat:@"/FFUser/(userName eq '%@')", teamInvitation.inviteeUserName] error:&localError];
+        if (localError) {
+            [WMUtilities logError:localError];
+        }
+    }
+    NSParameterAssert([user isKindOfClass:[FFUser class]]);
+    // only team leader can do this
+    invitee.team = team;
+    if (nil == invitee.dateAddedToTeam) {
+        invitee.dateAddedToTeam = [NSDate date];
+    }
+    invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:kNumberFreeMonthsFirstSubscription toDate:invitee.dateTeamSubscriptionExpires];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
+    NSParameterAssert(participantGroup);
+    NSError *error = nil;
+    [participantGroup addUser:user error:&error];
+    [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [ff grabBagAddItemAtFfUrl:invitee.ffUrl
+                     toObjAtFfUrl:team.ffUrl
+                      grabBagName:WMTeamRelationships.participants
+                       onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                           if (error) {
+                               [WMUtilities logError:error];
+                           }
+                           [ff deleteObj:teamInvitation onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                               if (error) {
+                                   [WMUtilities logError:error];
+                               }
+                               [managedObjectContext MR_deleteObjects:@[teamInvitation]];
+                               // do not move patients to team here - new team member will do on next sign in
+                               completionHandler(error);
+                           }];
+                       }];
+    }];
+}
