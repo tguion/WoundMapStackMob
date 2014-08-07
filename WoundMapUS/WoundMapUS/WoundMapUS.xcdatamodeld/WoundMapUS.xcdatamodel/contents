@@ -640,6 +640,7 @@
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="patientConsultants" inverseEntity="WMPatient" syncable="YES"/>
     </entity>
     <entity name="WMPatientLocation" representedClassName="WMPatientLocation" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="facility" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ffUrl" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="flags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -1319,6 +1320,6 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMPatientLocation" positionX="18" positionY="153" width="128" height="163"/>
+        <element name="WMPatientLocation" positionX="18" positionY="153" width="128" height="178"/>
     </elements>
 </model>

@@ -5,10 +5,14 @@
 
 
 extern const struct WMPatientLocationAttributes {
+	__unsafe_unretained NSString *createdAt;
 	__unsafe_unretained NSString *facility;
+	__unsafe_unretained NSString *ffUrl;
+	__unsafe_unretained NSString *flags;
 	__unsafe_unretained NSString *location;
 	__unsafe_unretained NSString *room;
 	__unsafe_unretained NSString *unit;
+	__unsafe_unretained NSString *updatedAt;
 } WMPatientLocationAttributes;
 
 extern const struct WMPatientLocationRelationships {
@@ -19,6 +23,10 @@ extern const struct WMPatientLocationFetchedProperties {
 } WMPatientLocationFetchedProperties;
 
 @class WMPatient;
+
+
+
+
 
 
 
@@ -38,11 +46,45 @@ extern const struct WMPatientLocationFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* createdAt;
+
+
+
+//- (BOOL)validateCreatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* facility;
 
 
 
 //- (BOOL)validateFacility:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* ffUrl;
+
+
+
+//- (BOOL)validateFfUrl:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* flags;
+
+
+
+@property int32_t flagsValue;
+- (int32_t)flagsValue;
+- (void)setFlagsValue:(int32_t)value_;
+
+//- (BOOL)validateFlags:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -78,6 +120,16 @@ extern const struct WMPatientLocationFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSDate* updatedAt;
+
+
+
+//- (BOOL)validateUpdatedAt:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) WMPatient *patient;
 
 //- (BOOL)validatePatient:(id*)value_ error:(NSError**)error_;
@@ -95,8 +147,29 @@ extern const struct WMPatientLocationFetchedProperties {
 @interface _WMPatientLocation (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSDate*)primitiveCreatedAt;
+- (void)setPrimitiveCreatedAt:(NSDate*)value;
+
+
+
+
 - (NSString*)primitiveFacility;
 - (void)setPrimitiveFacility:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveFfUrl;
+- (void)setPrimitiveFfUrl:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveFlags;
+- (void)setPrimitiveFlags:(NSNumber*)value;
+
+- (int32_t)primitiveFlagsValue;
+- (void)setPrimitiveFlagsValue:(int32_t)value_;
 
 
 
@@ -115,6 +188,12 @@ extern const struct WMPatientLocationFetchedProperties {
 
 - (NSString*)primitiveUnit;
 - (void)setPrimitiveUnit:(NSString*)value;
+
+
+
+
+- (NSDate*)primitiveUpdatedAt;
+- (void)setPrimitiveUpdatedAt:(NSDate*)value;
 
 
 

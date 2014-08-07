@@ -4,10 +4,14 @@
 #import "_WMPatientLocation.h"
 
 const struct WMPatientLocationAttributes WMPatientLocationAttributes = {
+	.createdAt = @"createdAt",
 	.facility = @"facility",
+	.ffUrl = @"ffUrl",
+	.flags = @"flags",
 	.location = @"location",
 	.room = @"room",
 	.unit = @"unit",
+	.updatedAt = @"updatedAt",
 };
 
 const struct WMPatientLocationRelationships WMPatientLocationRelationships = {
@@ -43,6 +47,11 @@ const struct WMPatientLocationFetchedProperties WMPatientLocationFetchedProperti
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"flagsValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"flags"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
@@ -50,8 +59,48 @@ const struct WMPatientLocationFetchedProperties WMPatientLocationFetchedProperti
 
 
 
+@dynamic createdAt;
+
+
+
+
+
+
 @dynamic facility;
 
+
+
+
+
+
+@dynamic ffUrl;
+
+
+
+
+
+
+@dynamic flags;
+
+
+
+- (int32_t)flagsValue {
+	NSNumber *result = [self flags];
+	return [result intValue];
+}
+
+- (void)setFlagsValue:(int32_t)value_ {
+	[self setFlags:[NSNumber numberWithInt:value_]];
+}
+
+- (int32_t)primitiveFlagsValue {
+	NSNumber *result = [self primitiveFlags];
+	return [result intValue];
+}
+
+- (void)setPrimitiveFlagsValue:(int32_t)value_ {
+	[self setPrimitiveFlags:[NSNumber numberWithInt:value_]];
+}
 
 
 
@@ -72,6 +121,13 @@ const struct WMPatientLocationFetchedProperties WMPatientLocationFetchedProperti
 
 
 @dynamic unit;
+
+
+
+
+
+
+@dynamic updatedAt;
 
 
 
