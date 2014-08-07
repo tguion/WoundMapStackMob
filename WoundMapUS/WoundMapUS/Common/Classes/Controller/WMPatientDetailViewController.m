@@ -541,10 +541,26 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     // update model from text
-    if (textField == self.ssnTextField) {
-        self.patient.ssn = textField.text;
-    } else if (textField == self.dobTextField) {
+    if (textField == self.dobTextField) {
         [self updateDOBModelFromView];
+    } else {
+        switch (textField.tag) {
+            case 1000:
+                self.patient.ssn = textField.text;
+                break;
+            case 3000:
+                self.patient.location.facility = textField.text;
+                break;
+            case 3001:
+                self.patient.location.unit = textField.text;
+                break;
+            case 3002:
+                self.patient.location.room = textField.text;
+                break;
+            case 3003:
+                self.patient.location.location = textField.text;
+                break;
+        }
     }
     [self performSelector:@selector(updateTitle) withObject:nil afterDelay:0.0];
     [self performSelector:@selector(updateUIForDataChange) withObject:nil afterDelay:0.0];
@@ -864,6 +880,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                                       valueText:patient.ssn
                                     valuePrompt:@"SSN (optional)"];
                     myCell.textField.inputView = nil;
+                    myCell.textField.tag = 1000;
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     break;
                 }
@@ -913,7 +930,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         case 3: {
             // location
             WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
-            myCell.textField.keyboardType = UIKeyboardTypeDefault;
+            UITextField *textField = myCell.textField;
+            textField.keyboardType = UIKeyboardTypeDefault;
             cell.accessoryType = UITableViewCellAccessoryNone;
             switch (indexPath.row) {
                 case 0: {
@@ -921,7 +939,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     [myCell updateWithLabelText:@"Facility"
                                       valueText:patient.location.facility
                                     valuePrompt:@"Facility name"];
-                    myCell.textField.inputView = nil;
+                    textField.inputView = nil;
+                    textField.tag = 3000;
                     break;
                 }
                 case 1: {
@@ -929,7 +948,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     [myCell updateWithLabelText:@"Unit"
                                       valueText:patient.location.unit
                                     valuePrompt:@"Unit identifier"];
-                    myCell.textField.inputView = nil;
+                    textField.inputView = nil;
+                    textField.tag = 3001;
                     break;
                 }
                 case 2: {
@@ -937,7 +957,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     [myCell updateWithLabelText:@"Room"
                                       valueText:patient.location.unit
                                     valuePrompt:@"Room identifier"];
-                    myCell.textField.inputView = nil;
+                    textField.inputView = nil;
+                    textField.tag = 3002;
                     break;
                 }
                 case 3: {
@@ -945,7 +966,8 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                     [myCell updateWithLabelText:@"Location"
                                       valueText:patient.location.unit
                                     valuePrompt:@"Location description"];
-                    myCell.textField.inputView = nil;
+                    textField.inputView = nil;
+                    textField.tag = 3003;
                     break;
                 }
             }

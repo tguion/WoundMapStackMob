@@ -1152,6 +1152,12 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
     }
     ++counter;
+    [ff updateObj:patient.location onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        localCompletionHandler(error);
+    } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+        localCompletionHandler(error);
+    }];
+    ++counter;
     [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         localCompletionHandler(error);
     } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {

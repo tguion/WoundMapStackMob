@@ -262,13 +262,16 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     FFHttpMethodCompletion createLocationOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         completionHandler(error, patient);
     };
     [ffm createPatient:patient ff:ff completionHandler:^(NSError *error, id object) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
         // add location
         patient.location = [WMPatientLocation MR_createInContext:managedObjectContext];
         [ff createObj:patient.location atUri:[NSString stringWithFormat:@"/%@", [WMPatientLocation entityName]] onComplete:createLocationOnComplete onOffline:createLocationOnComplete];
