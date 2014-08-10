@@ -68,6 +68,7 @@
     __weak __typeof(&*self)weakSelf = self;
     if (nil == _organization) {
         _organization = [WMOrganization MR_createInContext:managedObjectContext];
+        participant.organization = _organization;
         _organizationCreated = YES;
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         // create on back end before GRABBAG addresses and ids
@@ -159,6 +160,9 @@
 - (BOOL)validateInput
 {
     NSMutableArray *messages = [[NSMutableArray alloc] init];
+    if ([_organization.name length] == 0) {
+        [messages addObject:@"Please enter the organization name."];
+    }
     if (kOrganizationRequiresAddress) {
         if ([_organization.addresses count] == 0) {
             [messages addObject:@"Please add at least one address"];
@@ -187,11 +191,6 @@
 - (IBAction)doneAction:(id)sender
 {
     [self.view endEditing:YES];
-    [self performSelector:@selector(delayedDoneAction) withObject:nil afterDelay:0.0];
-}
-
-- (void)delayedDoneAction
-{
     if ([self validateInput]) {
         if (self.managedObjectContext.undoManager.groupingLevel > 0) {
             [self.managedObjectContext.undoManager endUndoGrouping];
@@ -223,15 +222,18 @@
     // check if we are canceling a new organization
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (_organizationCreated) {
-        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         BOOL deleteFromBackend = (nil != _organization.ffUrl);
         if (deleteFromBackend) {
-            ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = YES;
+            FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            };
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            [ff deleteObj:_organization onComplete:onComplete onOffline:onComplete];
         }
         [managedObjectContext MR_deleteObjects:@[_organization]];
-        [managedObjectContext processPendingChanges];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
-        ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
     } else {
         // cancel any updates
         if (managedObjectContext.undoManager.groupingLevel > 0) {

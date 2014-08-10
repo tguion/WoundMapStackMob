@@ -313,6 +313,17 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     _teamMembers = nil;
 }
 
+- (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2&depthGb=2", [WMTeam entityName]] onComplete:onComplete];
+}
+
 #pragma mark - CreateTeamInvitationViewControllerDelegate
 
 - (void)createTeamInvitationViewController:(WMCreateTeamInvitationViewController *)viewController didCreateInvitation:(WMTeamInvitation *)teamInvitation

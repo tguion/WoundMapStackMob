@@ -100,6 +100,9 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 - (void)handleNavigationTrackChanged:(WMNavigationTrack *)navigationTrack NS_REQUIRES_SUPER;
 - (void)handleNavigationStageChanged:(WMNavigationStage *)navigationStage NS_REQUIRES_SUPER;
 - (void)handleBackendDeletedObjectIds:(NSArray *)objectIDs;
+- (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID;
+- (void)handleTeamMemberAdded:(NSString *)teamGUID;
+- (void)handlePatientReferralUpdated:(NSString *)patientGUID;
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
                                         successBlock:(IAPPresentViewControllerAcceptHandler)successBlock

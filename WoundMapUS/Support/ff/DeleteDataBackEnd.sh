@@ -12,6 +12,7 @@ curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMap
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMAddress/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMPerson/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMPatient/(guid%20ne%20'')"
+curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMPatientLocation/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMTeamInvitation/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMTeamPolicy/(guid%20ne%20'')"
 curl -usystem:Pontil00 -XDELETE "http://mobilehealthware.fatfractal.com/WoundMapUS/ff/resources/WMPaymentTransaction/(guid%20ne%20'')"

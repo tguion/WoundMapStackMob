@@ -23,6 +23,7 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 @property (weak, nonatomic) UIAlertView *networkReachabilityAlertView;
 - (void)alertUserNetworkReachabilityChanged:(WMNetworkStatus)status;
+@property (nonatomic) BOOL blockNetworkReachabiltyAlert;
 
 @end
 
@@ -36,6 +37,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         SharedInstance = [[CoreDataHelper alloc] init];
+        SharedInstance.blockNetworkReachabiltyAlert = YES;
     });
     return SharedInstance;
 }
@@ -66,7 +68,12 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     if (nil != _networkReachabilityAlertView) {
         return;
     }
+    // else don't show this on start up
+    if (_blockNetworkReachabiltyAlert) {
+        return;
+    }
     // else
+    _blockNetworkReachabiltyAlert = NO;
     NSString *title = @"Network reachability changed";
     NSString *message = nil;
     switch (status) {

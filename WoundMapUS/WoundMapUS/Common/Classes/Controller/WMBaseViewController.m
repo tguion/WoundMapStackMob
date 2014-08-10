@@ -507,6 +507,27 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                                                                             [weakSelf handleDefaultManagedObjectContextWillSave:notification];
                                                                         }];
         [self.opaqueNotificationObservers addObject:observer];
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kTeamInvitationNotification
+                                                                        object:nil
+                                                                         queue:[NSOperationQueue mainQueue]
+                                                                    usingBlock:^(NSNotification *notification) {
+                                                                        [weakSelf handleTeamInvitationUpdated:notification.object];
+                                                                    }];
+        [self.opaqueNotificationObservers addObject:observer];
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kPatientReferralNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     [weakSelf handlePatientReferralUpdated:notification.object];
+                                                                 }];
+        [self.opaqueNotificationObservers addObject:observer];
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kTeamMemberAddedNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     [weakSelf handleTeamMemberAdded:notification.object];
+                                                                 }];
+        [self.opaqueNotificationObservers addObject:observer];
     }
     if (0 == [self.persistantObservers count]) {
         // update for change in patient
@@ -673,6 +694,21 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
 {
+}
+
+- (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
+{
+    [self refreshTable];
+}
+
+- (void)handleTeamMemberAdded:(NSString *)teamGUID
+{
+    [self refreshTable];
+}
+
+- (void)handlePatientReferralUpdated:(NSString *)patientGUID
+{
+    [self refreshTable];
 }
 
 #pragma mark - Accessors

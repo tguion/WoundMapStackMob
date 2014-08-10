@@ -8,6 +8,10 @@
 
 #import "CoreDataHelper.h"
 
+extern NSString * const kPatientReferralNotification;
+extern NSString * const kTeamInvitationNotification;
+extern NSString * const kTeamMemberAddedNotification;
+
 @class KeychainItemWrapper;
 @class WMFatFractal;
 @class WMNavigationCoordinator;

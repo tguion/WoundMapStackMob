@@ -23,6 +23,10 @@
 #import "KeychainItemWrapper.h"
 #import <AudioToolbox/AudioToolbox.h>
 
+NSString * const kPatientReferralNotification = @"PatientReferralNotification";
+NSString * const kTeamInvitationNotification = @"TeamInvitationNotification";
+NSString * const kTeamMemberAddedNotification = @"TeamMemberAddedNotification";
+
 NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
 NSInteger const kRemoteNotification = 4002;
 NSInteger const kSessionTimeoutAlertViewTag = 1000;
@@ -353,7 +357,14 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     NSString *patientGUID = self.remoteNotification[@"patientGuid"];        // WMPatient guid
     NSString *invitationGuid = self.remoteNotification[@"invitationGuid"];  // WMTeamInvitation guid
     NSString *teamGuid = self.remoteNotification[@"teamGuid"];              // WMTeam guid
-
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    if (patientGUID) {
+        [center postNotificationName:kPatientReferralNotification object:patientGUID];
+    } else if (invitationGuid) {
+        [center postNotificationName:kTeamInvitationNotification object:invitationGuid];
+    } else if (teamGuid) {
+        [center postNotificationName:kTeamMemberAddedNotification object:teamGuid];
+    }
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -361,8 +372,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == kRemoteNotification) {
-        if (buttonIndex == 1)
-            [self processRemoteNotification];
+        [self processRemoteNotification];
         self.remoteNotification = nil;
     } else if (alertView.tag == kSessionTimeoutAlertViewTag) {
         _timeOutAlertView = nil;
