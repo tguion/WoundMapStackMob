@@ -428,8 +428,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         if (error) {
             [WMUtilities logError:error];
         }
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf.tableView reloadData];
     };
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Acquiring Team";
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2&depthGb=2", [WMTeam entityName]] onComplete:onComplete];
 }
 

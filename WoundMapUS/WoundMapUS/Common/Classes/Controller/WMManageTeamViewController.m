@@ -320,6 +320,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         if (error) {
             [WMUtilities logError:error];
         }
+        [self.tableView reloadData];
     };
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2&depthGb=2", [WMTeam entityName]] onComplete:onComplete];
 }
