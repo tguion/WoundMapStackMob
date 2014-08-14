@@ -551,6 +551,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (error) {
             completionHandler(error);
         }
+        participant.dateLastSignin = [NSDate date];
         [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];

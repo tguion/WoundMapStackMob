@@ -1820,6 +1820,10 @@
 						<integer>2</integer>
 						<key>frequencyValue</key>
 						<integer>1</integer>
+						<key>closeUnit</key>
+						<integer>2</integer>
+						<key>closeValue</key>
+						<integer>1</integer>
 						<key>requiresWoundFlag</key>
 						<false/>
 						<key>requiresPatientFlag</key>
@@ -2232,6 +2236,10 @@
 						<integer>2</integer>
 						<key>frequencyValue</key>
 						<integer>1</integer>
+						<key>closeUnit</key>
+						<integer>2</integer>
+						<key>closeValue</key>
+						<integer>1</integer>
 					</dict>
 					<dict>
 						<key>title</key>
@@ -2524,6 +2532,10 @@
 						<key>frequencyUnit</key>
 						<integer>2</integer>
 						<key>frequencyValue</key>
+						<integer>1</integer>
+						<key>closeUnit</key>
+						<integer>2</integer>
+						<key>closeValue</key>
 						<integer>1</integer>
 					</dict>
 					<dict>

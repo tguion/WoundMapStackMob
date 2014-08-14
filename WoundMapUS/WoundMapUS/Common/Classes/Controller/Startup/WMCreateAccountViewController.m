@@ -338,6 +338,14 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             participant.user = ffUser;
             participant.guid = ffUser.guid;
             // check for data access
+            FFHttpMethodCompletion createPoliciesOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                // save now, no longer able to cancel
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            };
             dispatch_block_t participantBlock = ^{
                 // create participant on back end
                 [ffm createParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
@@ -369,9 +377,9 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                         if (error) {
                             [WMUtilities logError:error];
                         }
-                        // save now, no longer able to cancel
-                        [managedObjectContext MR_saveToPersistentStoreAndWait];
-                        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+                        // attach the person to participant
+                        participant.person = weakSelf.person;
+                        [ff updateObj:participant onComplete:createPoliciesOnComplete onOffline:createPoliciesOnComplete];
                     }];
                 }];
             };
@@ -391,18 +399,22 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     if ([self dataInputIsComplete]) {
         NSParameterAssert(_person);
         WMParticipant *participant = self.participant;
-        participant.person = _person;
         participant.participantType = _selectedParticipantType;
         participant.organization = _organization;
-        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        participant.dateLastSignin = [NSDate date];
+        NSManagedObjectContext *managedObjectContext = participant.managedObjectContext;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         __weak __typeof(&*self)weakSelf = self;
         // participant has logged in as new user - now push data to backend
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
             if (error) {
                 [WMUtilities logError:error];
             }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             [weakSelf.delegate createAccountViewController:weakSelf didCreateParticipant:participant];
         }];
     }

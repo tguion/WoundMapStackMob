@@ -98,6 +98,14 @@
     return _moc;
 }
 
+- (WMTelecomType *)telecomType
+{
+    if (nil == _telecomType) {
+        _telecomType = _telecom.telecomType;
+    }
+    return _telecomType;
+}
+
 - (NSString *)cellReuseIdentifier:(NSIndexPath *)indexPath
 {
     NSString *cellReuseIdentifier = nil;
@@ -161,7 +169,7 @@
 - (NSString *)valuePlaceHolder
 {
     NSString *string = @"(888)555-1212";
-    if (_telecomType.isEmail) {
+    if (self.telecomType.isEmail) {
         string = @"you@host.com";
     }
     return string;
@@ -228,11 +236,11 @@
 
 - (NSArray *)selectedValuesForDisplay
 {
-    if (nil == _telecomType) {
+    if (nil == self.telecomType) {
         return [NSArray array];
     }
     // else
-    return [NSArray arrayWithObject:_telecomType.title];
+    return [NSArray arrayWithObject:self.telecomType.title];
 }
 
 - (void)simpleTableViewController:(WMSimpleTableViewController *)viewController didSelectValues:(NSArray *)selectedValues

@@ -1146,9 +1146,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)createAccountViewController:(WMCreateAccountViewController *)viewController didCreateParticipant:(WMParticipant *)participant
 {
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-    participant.dateLastSignin = [NSDate date];
     [self.navigationController popViewControllerAnimated:YES];
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     self.appDelegate.participant = participant;
     userDefaultsManager.lastUserName = participant.userName;
     _welcomeState = (nil == self.participant.team ? WMWelcomeStateSignedInNoTeam:WMWelcomeStateTeamSelected);
