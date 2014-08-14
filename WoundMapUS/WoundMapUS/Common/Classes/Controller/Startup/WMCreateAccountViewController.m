@@ -131,10 +131,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         _person.nameGiven = _firstNameTextInput;
         // create back end
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        __weak __typeof(&*self)weakSelf = self;
         [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             if (error) {
                 [WMUtilities logError:error];
             }
@@ -277,6 +274,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                                                                                                    target:self
                                                                                                    action:@selector(doneAction:)];
             self.navigationItem.rightBarButtonItem.enabled = self.hasSufficientCreateAccountInput;
+            self.navigationItem.leftBarButtonItem.enabled = NO;
             break;
         }
     }
@@ -371,6 +369,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                         if (error) {
                             [WMUtilities logError:error];
                         }
+                        // save now, no longer able to cancel
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
                         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                     }];
                 }];
