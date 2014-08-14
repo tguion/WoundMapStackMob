@@ -61,7 +61,7 @@ CGFloat kCreditsMargin = 20;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // set state
-        self.preferredContentSize = CGSizeMake(320.0, 232.0);
+        self.preferredContentSize = CGSizeMake(320.0, 420.0);
     }
     return self;
 }
