@@ -477,13 +477,13 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (self.didCreateGroup) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.medicationGroup.ffUrl, WMMedicationGroupRelationships.medications];
+    return @[[NSString stringWithFormat:@"%@/%@", self.medicationGroup.ffUrl, WMMedicationGroupRelationships.medications]];
 }
 
 - (NSArray *)backendSeedEntityNames

@@ -43,7 +43,6 @@
                 }
                 [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
             }
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -123,10 +122,10 @@
 	return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"value" ascending:YES]];
 }
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (_bradenSection.ffUrl) {
-        return [NSString stringWithFormat:@"%@/%@", _bradenSection.ffUrl, WMBradenSectionRelationships.cells];
+        return @[[NSString stringWithFormat:@"%@/%@", _bradenSection.ffUrl, WMBradenSectionRelationships.cells]];
     }
     // else
     return nil;

@@ -122,9 +122,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    return [NSString stringWithFormat:@"%@/%@", self.wound.ffUrl, WMWoundRelationships.measurementGroups];
+    return @[[NSString stringWithFormat:@"%@/%@", self.wound.ffUrl, WMWoundRelationships.measurementGroups]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

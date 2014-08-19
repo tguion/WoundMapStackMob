@@ -81,7 +81,6 @@
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             if (!weakSelf.didCreateGroup) {
                 [weakSelf.tableView reloadData];
-                [weakSelf.refreshControl endRefreshing];
             }
         };
     }
@@ -686,13 +685,13 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (self.didCreateGroup) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.psychoSocialGroup.ffUrl, WMPsychoSocialGroupRelationships.values];
+    return @[[NSString stringWithFormat:@"%@/%@", self.psychoSocialGroup.ffUrl, WMPsychoSocialGroupRelationships.values]];
 }
 
 - (NSArray *)backendSeedEntityNames

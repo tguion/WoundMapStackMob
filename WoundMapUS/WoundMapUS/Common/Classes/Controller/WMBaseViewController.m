@@ -82,7 +82,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 {
     [super viewWillAppear:animated];
     // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated.
-    if (self.ffQuery) {
+    if ([self.ffQuery count]) {
         UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
         [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
         self.refreshControl = refreshControl;
@@ -323,24 +323,29 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)refreshTable
 {
-    NSString *query = self.ffQuery;
-    if (nil == query) {
+    NSArray *queries = self.ffQuery;
+    if (0 == [queries count]) {
         return;
     }
     // else
-    query = [query stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    [ff getArrayFromUri:query onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __block NSInteger count = [queries count];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
-        if (weakSelf.refreshCompletionHandler) {
-            weakSelf.refreshCompletionHandler(error, nil);
-        } else {
+        if (0 == count || --count == 0) {
+            if (weakSelf.refreshCompletionHandler) {
+                weakSelf.refreshCompletionHandler(error, nil);
+            }
             [weakSelf.refreshControl endRefreshing];
         }
-    }];
+    };
+    for (NSString *query in queries) {
+        NSString *q = [query stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+        [ff getArrayFromUri:q onComplete:onComplete];
+    }
 }
 
 - (IBAction)previousAction:(id)sender
@@ -698,12 +703,10 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
 {
-    [self refreshTable];
 }
 
 - (void)handleTeamMemberAdded:(NSString *)teamGUID
 {
-    [self refreshTable];
 }
 
 - (void)handlePatientReferralUpdated:(NSString *)patientGUID
@@ -1049,7 +1052,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     [self.activeTableView reloadData];
 }
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     return nil;
 }

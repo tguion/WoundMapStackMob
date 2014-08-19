@@ -234,7 +234,6 @@ NSString * const kTextCellIdentifier = @"TextCell";
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -945,14 +944,14 @@ NSString * const kTextCellIdentifier = @"TextCell";
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    NSString *ffQuery = nil;
+    NSArray *ffQuery = nil;
     WMParticipant *participant = self.appDelegate.participant;
     if (participant.team) {
-        ffQuery = [NSString stringWithFormat:@"/%@/%@/navigationTracks?depthRef=1&depthGb=2", [WMTeam entityName], [participant.team.ffUrl lastPathComponent]];
+        ffQuery = @[[NSString stringWithFormat:@"/%@/%@/navigationTracks?depthRef=1&depthGb=2", [WMTeam entityName], [participant.team.ffUrl lastPathComponent]]];
     } else {
-        ffQuery = [NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]];
+        ffQuery = @[[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=2", [WMNavigationTrack entityName]]];
     }
     return ffQuery;
 }

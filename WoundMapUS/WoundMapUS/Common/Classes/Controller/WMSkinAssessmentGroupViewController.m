@@ -52,7 +52,6 @@
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -570,13 +569,13 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (self.didCreateGroup) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.skinAssessmentGroup.ffUrl, WMSkinAssessmentGroupRelationships.values];
+    return @[[NSString stringWithFormat:@"%@/%@", self.skinAssessmentGroup.ffUrl, WMSkinAssessmentGroupRelationships.values]];
 }
 
 - (NSArray *)backendSeedEntityNames

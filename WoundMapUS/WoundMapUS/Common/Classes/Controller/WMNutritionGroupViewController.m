@@ -388,13 +388,13 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (self.didCreateGroup) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.nutritionGroup.ffUrl, WMNutritionGroupRelationships.values];
+    return @[[NSString stringWithFormat:@"%@/%@", self.nutritionGroup.ffUrl, WMNutritionGroupRelationships.values]];
 }
 
 - (NSArray *)backendSeedEntityNames

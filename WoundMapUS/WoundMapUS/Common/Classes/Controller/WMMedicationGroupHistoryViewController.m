@@ -43,7 +43,6 @@
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -114,9 +113,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.medicationGroups];
+    return @[[NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.medicationGroups]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

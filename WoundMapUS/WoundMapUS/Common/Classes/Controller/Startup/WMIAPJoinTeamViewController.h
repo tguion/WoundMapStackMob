@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class WMIAPJoinTeamViewController;
+@class WMTeamInvitation;
 
 @protocol WMIAPJoinTeamViewControllerDelegate <NSObject>
 
@@ -20,5 +21,7 @@
 @interface WMIAPJoinTeamViewController : UIViewController
 
 @property (weak, nonatomic) id<WMIAPJoinTeamViewControllerDelegate> delegate;
+
+@property (strong, nonatomic) WMTeamInvitation *teamInvitation;
 
 @end

@@ -76,26 +76,11 @@
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             // update care plan cell
             [weakSelf updateCarePlanCell];
-            // get wound values
-            if (weakSelf.wound) {
-                FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    if (error) {
-                        [WMUtilities logError:error];
-                    }
-                    [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-                    // update displayed nodes
-                    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
-                    [policyManager updateRegisteredButtonsInArray:weakSelf.navigationNodeControls];
-                    [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
-                    [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
-                    [weakSelf.refreshControl endRefreshing];
-                };
-                WMFatFractal *ff = [WMFatFractal sharedInstance];
-                NSString *uri = [weakSelf.wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-                [ff getObjFromUri:uri onComplete:onComplete];
-            } else {
-                [weakSelf.refreshControl endRefreshing];
-            }
+            // update nodes
+            WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
+            [policyManager updateRegisteredButtonsInArray:weakSelf.navigationNodeControls];
+            [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
+            [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
         };
     }
     return self;
@@ -170,9 +155,17 @@
 
 #pragma mark - Core
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    return [NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.patient.ffUrl];
+    NSMutableArray *queries = [NSMutableArray array];
+    [queries addObject:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.patient.ffUrl]];
+    if (self.wound) {
+        [queries addObject:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.wound.ffUrl]];
+        if (self.woundPhoto) {
+            [queries addObject:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", self.woundPhoto.ffUrl]];
+        }
+    }
+    return queries;
 }
 
 - (NSArray *)backendSeedEntityNames

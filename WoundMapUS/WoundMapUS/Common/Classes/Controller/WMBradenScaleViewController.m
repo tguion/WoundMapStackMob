@@ -207,9 +207,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    return [NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.bradenScales];
+    return @[[NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.bradenScales]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

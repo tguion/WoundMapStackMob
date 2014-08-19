@@ -140,9 +140,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    return [NSString stringWithFormat:@"%@/(%@ eq %@)", self.fetchedResultsControllerEntityName, self.keyName, self.assessmentGroup];
+    return @[[NSString stringWithFormat:@"%@/(%@ eq %@)", self.fetchedResultsControllerEntityName, self.keyName, self.assessmentGroup]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

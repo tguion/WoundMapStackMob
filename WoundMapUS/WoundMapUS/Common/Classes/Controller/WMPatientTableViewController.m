@@ -548,9 +548,9 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
-    return [NSString stringWithFormat:@"/%@", self.fetchedResultsControllerEntityName];
+    return @[[NSString stringWithFormat:@"/%@", self.fetchedResultsControllerEntityName]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

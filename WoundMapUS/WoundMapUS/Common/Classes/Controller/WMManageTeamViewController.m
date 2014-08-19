@@ -316,11 +316,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [self.tableView reloadData];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [weakSelf.tableView reloadData];
     };
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2&depthGb=2", [WMTeam entityName]] onComplete:onComplete];
 }
@@ -331,19 +335,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     _teamInvitations = nil;
     [self.navigationController popViewControllerAnimated:YES];
-    // add to back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    __weak __typeof(&*self)weakSelf = self;
-    [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-        [weakSelf.tableView reloadData];
-    }];
+    [self.tableView reloadData];
 }
 
 - (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController

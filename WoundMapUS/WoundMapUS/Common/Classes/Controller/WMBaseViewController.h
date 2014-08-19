@@ -69,7 +69,7 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 - (void)refetchDataForCoreTableView;                                        // nil the reference _fetchedResultsController and reload tableView
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
 - (void)refreshTable;                                                       // refetch using FatFractal
-@property (readonly, nonatomic) NSString *ffQuery;                          // query string that fetches same as predicate from FatFractal
+@property (readonly, nonatomic) NSArray *ffQuery;                           // query string that fetches same as predicate from FatFractal
 @property (strong, nonatomic) WMObjectCallback refreshCompletionHandler;    // block to call after table auto refreshes
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource

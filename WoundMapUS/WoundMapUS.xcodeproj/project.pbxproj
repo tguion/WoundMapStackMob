@@ -4066,10 +4066,8 @@
 				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				"OTHER_LDFLAGS[arch=*]" = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -4097,10 +4095,8 @@
 				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				"OTHER_LDFLAGS[arch=*]" = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

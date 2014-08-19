@@ -38,7 +38,6 @@
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.tableView reloadData];
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -307,13 +306,13 @@
     return @[]; // WMMedicalHistoryItem fetched on sign in
 }
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (_medicalHistoryGroupWasCreated) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.medicalHistoryGroup.ffUrl, WMMedicalHistoryGroupRelationships.values];
+    return @[[NSString stringWithFormat:@"%@/%@", self.medicalHistoryGroup.ffUrl, WMMedicalHistoryGroupRelationships.values]];
 }
 
 - (NSString *)fetchedResultsControllerEntityName

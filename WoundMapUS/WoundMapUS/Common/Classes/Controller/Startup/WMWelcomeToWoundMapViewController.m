@@ -27,6 +27,7 @@
 #import "WMInterventionStatusJoin.h"
 #import "WMTelecomType.h"
 #import "WMNavigationNode.h"
+#import "WMWound.h"
 #import "WMWoundType.h"
 #import "WMParticipant.h"
 #import "WMPerson.h"
@@ -76,6 +77,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 @property (readonly, nonatomic) WMOrganizationEditorViewController *organizationEditorViewController;
 
 @property (readonly, nonatomic) WMParticipant *participant;
+@property (strong, nonatomic) WMTeamInvitation *teamInvitation;
 
 @property (strong, nonatomic) IBOutlet UIView *footerView;
 @property (weak, nonatomic) IBOutlet UIButton *enterWoundMapButton;
@@ -92,7 +94,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+        };
     }
     return self;
 }
@@ -148,6 +154,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (WMParticipant *)participant
 {
     return self.appDelegate.participant;
+}
+
+- (WMTeamInvitation *)teamInvitation
+{
+    if (nil == _teamInvitation) {
+        _teamInvitation = [WMTeamInvitation MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMTeamInvitationAttributes.inviteeUserName, self.participant.userName]];
+    }
+    return _teamInvitation;
 }
 
 - (WMPerson *)person
@@ -246,6 +260,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (WMIAPJoinTeamViewController *)iapJoinTeamViewController
 {
     WMIAPJoinTeamViewController *iapJoinTeamViewController = [[WMIAPJoinTeamViewController alloc] initWithNibName:@"WMIAPJoinTeamViewController" bundle:nil];
+    iapJoinTeamViewController.teamInvitation = self.teamInvitation;
     iapJoinTeamViewController.delegate = self;
     return iapJoinTeamViewController;
 }
@@ -299,8 +314,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)presentJoinTeamViewController
 {
     // must have an invitation
-    if (self.participant.teamInvitation) {
-        if (self.participant.teamInvitation.isAccepted) {
+    if (self.teamInvitation) {
+        if (self.teamInvitation.isAccepted) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invitation Accepted"
                                                                 message:@"You have already accepted the invitation. The team leader has been notified and must complete the transaction."
                                                                delegate:nil
@@ -410,29 +425,40 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    __block NSInteger counter = 1;
     __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [weakSelf.tableView reloadData];
+        if (0 == counter || --counter == 0) {
+            [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+        }
     };
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMTeamInvitation entityName]] onComplete:onComplete];
 }
 
 - (void)handleTeamMemberAdded:(NSString *)teamGUID
 {
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    // do not alert when the team leader is added
+    if (self.participant.isTeamLeader) {
+        return;
+    }
+    // else update the participant
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+    WMErrorCallback errorCallback = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        _welcomeState = WMWelcomeStateTeamSelected;
         [weakSelf.tableView reloadData];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Acquiring Team";
-    [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2&depthGb=2", [WMTeam entityName]] onComplete:onComplete];
+    [ffm updateParticipant:self.participant completionHandler:errorCallback];
 }
 
 #pragma mark - Actions
@@ -553,6 +579,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 //        }];
 //    }
 //}
+
+- (NSArray *)ffQuery
+{
+    return @[[NSString stringWithFormat:@"/%@", [WMTeamInvitation entityName]], [NSString stringWithFormat:@"/%@", [WMTeam entityName]]];
+}
 
 #pragma mark - UITableViewDelegate
 
@@ -886,8 +917,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     switch (indexPath.row) {
                         case 0: {
                             title = @"Join Team";
-                            if (self.participant.teamInvitation) {
-                                value = (self.participant.teamInvitation.acceptedFlagValue ? @"accepted":@"invitation");// TODO show icon
+                            if (self.teamInvitation) {
+                                value = (self.teamInvitation.acceptedFlagValue ? @"accepted":@"invitation");// TODO show icon
                             }
                             accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                             break;
@@ -1072,6 +1103,8 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WM_ASSERT_MAIN_THREAD;
     participant.dateLastSignin = [NSDate date];
     self.appDelegate.participant = participant;
+    WMTeam *team = participant.team;
+    WMTeamInvitation *teamInvitation = self.teamInvitation;
     [self.navigationController popViewControllerAnimated:YES];
     // if participant has changed, we need to purge the local cache
     WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -1079,9 +1112,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     NSString *lastUserName = userDefaultsManager.lastUserName;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
-        if (weakSelf.participant.team) {
+        if (team) {
             weakSelf.welcomeState = WMWelcomeStateTeamSelected;
-        } else if (participant.teamInvitation.isAccepted) {
+        } else if (teamInvitation.isAccepted) {
             weakSelf.welcomeState = WMWelcomeStateInvitationAccepted;
         } else {
             weakSelf.welcomeState = WMWelcomeStateSignedInNoTeam;
@@ -1105,6 +1138,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                     [WMUtilities logError:error];
                 }
                 if (object) {
+                    NSParameterAssert([object isKindOfClass:[WMPatient class]]);
                     WMPatient *patient = (WMPatient *)object;
                     navigationCoordinator.patient = patient;
                     NSString *woundFFUrl = [userDefaultsManager lastWoundFFURLOnDeviceForPatientFFURL:patientFFUrl];
@@ -1115,6 +1149,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                                 [WMUtilities logError:error];
                             }
                             if (object) {
+                                NSParameterAssert([object isKindOfClass:[WMWound class]]);
                                 WMWound *wound = (WMWound *)object;
                                 navigationCoordinator.wound = wound;
                             }

@@ -21,7 +21,6 @@
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 
 @property (readonly, nonatomic) WMParticipant *participant;
-@property (readonly, nonatomic) WMTeamInvitation *teamInvitation;
 
 @property (strong, nonatomic) IBOutlet UILabel *messageLabel;
 
@@ -77,16 +76,6 @@
 - (WMParticipant *)participant
 {
     return self.appDelegate.participant;
-}
-
-- (WMTeam *)team
-{
-    return self.teamInvitation.team;
-}
-
-- (WMTeamInvitation *)teamInvitation
-{
-    return self.participant.teamInvitation;
 }
 
 #pragma mark - Actions

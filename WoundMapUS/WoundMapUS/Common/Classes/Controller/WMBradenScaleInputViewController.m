@@ -96,7 +96,6 @@
                 }
                 [weakSelf.managedObjectContext.undoManager beginUndoGrouping];
             }
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -275,10 +274,10 @@
 	return [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortRank" ascending:YES]];
 }
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (_bradenScale.ffUrl) {
-        return [NSString stringWithFormat:@"%@/%@", _bradenScale.ffUrl, WMBradenScaleRelationships.sections];
+        return @[[NSString stringWithFormat:@"%@/%@", _bradenScale.ffUrl, WMBradenScaleRelationships.sections]];
     }
     // else
     return nil;

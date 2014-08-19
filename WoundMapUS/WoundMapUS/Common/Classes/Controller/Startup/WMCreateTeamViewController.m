@@ -228,9 +228,11 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         map[patient.ffUrl] = [NSString stringWithFormat:@"%@|%@", patient.stage.track.title, patient.stage.title];
     }
     self.appDelegate.patient2StageMap = map;
-    // delete local tracks
-    NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
-    [managedObjectContext MR_deleteObjects:navigationTracks];
+    // delete local tracks only if there are not patients that need to be moved to team
+    if ([patients count] == 0) {
+        NSArray *navigationTracks = [WMNavigationTrack MR_findAllInContext:managedObjectContext];
+        [managedObjectContext MR_deleteObjects:navigationTracks];
+    }
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     [ffm createTeamWithParticipant:participant user:(FFUser *)ff.loggedInUser ff:ff completionHandler:^(NSError *error) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -305,18 +307,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     _teamInvitations = nil;
     [self.navigationController popViewControllerAnimated:YES];
-    // add to back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    __weak __typeof(&*self)weakSelf = self;
-    [ffm createTeamInvitation:teamInvitation ff:ff completionHandler:^(NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-        [weakSelf.tableView reloadData];
-    }];
+    [self.tableView reloadData];
 }
 
 - (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController

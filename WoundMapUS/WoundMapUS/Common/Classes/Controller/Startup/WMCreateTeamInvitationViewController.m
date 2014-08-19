@@ -214,15 +214,38 @@
     _teamInvitation.passcode = @([_passcodeTextInput integerValue]);
     _teamInvitation.invitationMessage = [NSString stringWithFormat:@"%@ of team %@ has invited you to join the team. Enter the 4 digit pincode provided to you by %@ and tap 'Accept'. Or you may decline the invitation.", self.participant.name, self.participant.team.name, self.participant.name];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    // handle undo
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
-    }
-    if (_removeUndoManagerWhenDone) {
-        self.managedObjectContext.undoManager = nil;
-    }
-    // RPN push notification to participant.guid, _patientReferral.referree.guid
-    [self.delegate createTeamInvitationViewController:self didCreateInvitation:_teamInvitation];
+    // add to back end
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
+    [ffm createTeamInvitation:_teamInvitation ff:ff completionHandler:^(NSError *error) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // allow invitee to modify the invitation
+        NSArray *readUsers = @[_teamInvitation.invitee.user];
+        NSArray *readGroups = @[];
+        NSArray *writeUsers = @[_teamInvitation.invitee.user];
+        NSArray *writeGroups = @[];
+        NSError *localError = nil;
+        [[WMFatFractal sharedInstance] setPermissionOnObject:_teamInvitation readUsers:readUsers readGroups:readGroups writeUsers:writeUsers writeGroups:writeGroups error:&localError];
+        if (localError) {
+            [WMUtilities logError:localError];
+        }
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        // handle undo
+        if (weakSelf.managedObjectContext.undoManager.groupingLevel > 0) {
+            [weakSelf.managedObjectContext.undoManager endUndoGrouping];
+        }
+        if (_removeUndoManagerWhenDone) {
+            weakSelf.managedObjectContext.undoManager = nil;
+        }
+        // RPN push notification to participant.guid, _patientReferral.referree.guid
+        [weakSelf.delegate createTeamInvitationViewController:weakSelf didCreateInvitation:_teamInvitation];
+    }];
 }
 
 #pragma mark - BaseViewController

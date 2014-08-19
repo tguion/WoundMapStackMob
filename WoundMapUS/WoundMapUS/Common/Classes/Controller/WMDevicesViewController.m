@@ -50,7 +50,6 @@
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
             [weakSelf.tableView reloadData];
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -593,13 +592,13 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (self.didCreateGroup) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.deviceGroup.ffUrl, WMDeviceGroupRelationships.values];
+    return @[[NSString stringWithFormat:@"%@/%@", self.deviceGroup.ffUrl, WMDeviceGroupRelationships.values]];
 }
 
 - (NSArray *)backendSeedEntityNames

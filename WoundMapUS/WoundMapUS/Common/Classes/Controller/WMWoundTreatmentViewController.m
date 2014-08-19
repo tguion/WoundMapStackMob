@@ -183,7 +183,6 @@
             if (!weakSelf.didCreateGroup) {
                 [weakSelf.tableView reloadData];
             }
-            [weakSelf.refreshControl endRefreshing];
         };
     }
     return self;
@@ -808,13 +807,13 @@
 
 #pragma mark - NSFetchedResultsController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (self.didCreateGroup) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@/%@", self.woundTreatmentGroup.ffUrl, WMWoundTreatmentGroupRelationships.values];
+    return @[[NSString stringWithFormat:@"%@/%@", self.woundTreatmentGroup.ffUrl, WMWoundTreatmentGroupRelationships.values]];
 }
 
 - (NSArray *)backendSeedEntityNames

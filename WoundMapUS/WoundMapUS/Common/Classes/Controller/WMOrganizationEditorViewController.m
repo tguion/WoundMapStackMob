@@ -252,13 +252,13 @@
 
 #pragma mark - WMBaseViewController
 
-- (NSString *)ffQuery
+- (NSArray *)ffQuery
 {
     if (_organizationCreated) {
         return nil;
     }
     // else
-    return [NSString stringWithFormat:@"%@?depthGb=1&depthRef=1", _organization.ffUrl];
+    return @[[NSString stringWithFormat:@"%@?depthGb=1&depthRef=1", _organization.ffUrl]];
 }
 
 - (void)clearDataCache
