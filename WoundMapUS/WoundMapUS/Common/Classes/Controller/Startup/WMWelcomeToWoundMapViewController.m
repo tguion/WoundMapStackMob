@@ -1106,6 +1106,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMTeam *team = participant.team;
     WMTeamInvitation *teamInvitation = self.teamInvitation;
     [self.navigationController popViewControllerAnimated:YES];
+    [[IAPManager sharedInstance] processPendingTransactions];
     // if participant has changed, we need to purge the local cache
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];

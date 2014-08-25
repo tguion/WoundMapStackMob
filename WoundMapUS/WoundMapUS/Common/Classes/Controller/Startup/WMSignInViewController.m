@@ -18,6 +18,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WMSeedDatabaseManager.h"
 #import "WMPhotoManager.h"
+#import "IAPManager.h"
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import "NSObject+performBlockAfterDelay.h"

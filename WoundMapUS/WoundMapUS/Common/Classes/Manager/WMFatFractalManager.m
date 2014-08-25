@@ -1193,6 +1193,16 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             if (localError) {
                 [WMUtilities logError:localError];
             }
+            if (nil == consultantGroup) {
+                // this should not happen
+                DLog(@"WARNING: consultant group not found: %@", uri);
+                consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
+                [consultantGroup setGroupName:kConsultantGroupName];
+                [ff createObj:consultantGroup atUri:@"/FFUserGroup" error:&localError];
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
+            }
             NSParameterAssert(consultantGroup);
             patient.consultantGroup = consultantGroup;
             [patient updateNavigationToTeam:team patient2StageMap:self.appDelegate.patient2StageMap];

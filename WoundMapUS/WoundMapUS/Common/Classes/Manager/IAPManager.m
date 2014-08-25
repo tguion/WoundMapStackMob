@@ -50,6 +50,9 @@ NSString *const kIAPDeviceId = @"iap-device-id.txt";
 @property (strong, nonatomic) NSArray *sharedPDFReportProductIdentifiers;
 @property (strong, nonatomic) NSArray *patientCreditProductIdentifiers;
 
+@property (strong, nonatomic) SKPaymentQueue *paymentQueue;
+@property (strong, nonatomic) NSArray *transactions;
+
 @end
 
 @implementation IAPManager
@@ -81,6 +84,15 @@ NSString* _deviceId;
         
     });
     return SharedInstance;
+}
+
+- (void)processPendingTransactions
+{
+    if (_paymentQueue && [_transactions count]) {
+        [self paymentQueue:_paymentQueue updatedTransactions:_transactions];
+    }
+    _paymentQueue = nil;
+    _transactions = nil;
 }
 
 - (WCAppDelegate *)appDelegate
@@ -136,19 +148,38 @@ NSString* _deviceId;
 
 #pragma mark - SKPaymentTransactionObserver
 
+// Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.
+- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
+{
+    DLog(@"Failed to restore transactions. - error.description is - %@", error.description);
+}
+
+// Sent when all transactions from the user's purchase history have successfully been added back to the queue.
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
+{
+    DLog(@"Succeeded to restore transactions.");
+}
+
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     NSString *username = self.appDelegate.participant.userName;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    // transactions can come in before sign-in, cache and how we can catch up
+    if (!ff.loggedIn) {
+        _paymentQueue = queue;
+        _transactions = transactions;
+        return;
+    }
     __weak __typeof(&*self)weakSelf = self;
     for (SKPaymentTransaction *transaction in transactions) {
         if (nil == [transaction transactionIdentifier]) {
+            // no action required - we are not updating the UI here
             continue;
         }
         // persist to back end
         WM_ASSERT_MAIN_THREAD;
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        WMPaymentTransaction *originalPaymentTransaction = nil; 
+        WMPaymentTransaction *originalPaymentTransaction = nil;
         if (transaction.transactionState == SKPaymentTransactionStateRestored) {
             SKPaymentTransaction *originalTransaction = transaction.originalTransaction;
             if (originalTransaction) {

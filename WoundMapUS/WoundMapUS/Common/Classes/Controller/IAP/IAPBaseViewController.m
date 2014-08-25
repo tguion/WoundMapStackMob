@@ -386,8 +386,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                     weakSelf.iapProduct.purchasedFlag = @YES;
                     [weakSelf.iapProduct.managedObjectContext MR_saveToPersistentStoreAndWait];
                     [weakSelf acceptHandler](transaction);
-                    [weakSelf clearAllReferences];
-                } else if (nil != errorObj) {
+                } else if (errorObj || cancelledTxnObj) {
                     NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [errorObj localizedDescription]];
                     [weakSelf iapFailureAlert:message];
                 }

@@ -31,6 +31,8 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 
 + (IAPManager *)sharedInstance;
 
+- (void)processPendingTransactions;
+
 - (NSString *)updatePriceInString:(NSString *)string skProducts:(NSArray *)products;
 
 - (NSString *)getIAPDeviceGuid;
