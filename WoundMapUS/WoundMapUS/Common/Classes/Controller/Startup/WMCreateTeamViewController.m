@@ -418,6 +418,18 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     return NO;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[WMTextFieldTableViewCell class]]) {
+        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+        [myCell.textField becomeFirstResponder];
+        return nil;
+    }
+    // else
+    return indexPath;
+}
+
 // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -425,7 +437,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [self.view endEditing:YES];
     if ([_teamNameTextInput length] == 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Input"
-                                                          message:@"Please enter the name of your team first"
+                                                          message:@"Please enter the name of your team first."
                                                          delegate:nil
                                                 cancelButtonTitle:@"Dismiss"
                                                 otherButtonTitles:nil];

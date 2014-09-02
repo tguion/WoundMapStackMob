@@ -305,6 +305,18 @@
     return 44.0;
 }
 
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[WMTextFieldTableViewCell class]]) {
+        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+        [myCell.textField becomeFirstResponder];
+        return nil;
+    }
+    // else
+    return indexPath;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

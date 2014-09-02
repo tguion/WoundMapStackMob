@@ -2053,6 +2053,8 @@
 {
     // update our reference to current patient
     self.appDelegate.navigationCoordinator.patient = viewController.patient;
+    // update patient name
+    [self updatePatientWoundComponents];
 }
 
 - (void)patientDetailViewControllerDidCancelUpdate:(WMPatientDetailViewController *)viewController {}

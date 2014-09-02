@@ -307,11 +307,21 @@ NSTimeInterval timeInterval30Days = -60.0*60.0*24.0*30.0;
 
 #pragma mark - UITableViewDelegate
 
-// Called before the user changes the selection. Return a new indexPath, or nil, to change the proposed selection.
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     WoundStatusMeasurementRollup *woundStatusMeasurementRollup = [self woundStatusRollupForIndexPath:indexPath];
-    return (0 == woundStatusMeasurementRollup.valueCount ? nil:indexPath);
+    if (0 == woundStatusMeasurementRollup.valueCount) {
+        return nil;
+    }
+    // else
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[WMTextFieldTableViewCell class]]) {
+        WMTextFieldTableViewCell *myCell = (WMTextFieldTableViewCell *)cell;
+        [myCell.textField becomeFirstResponder];
+        return nil;
+    }
+    // else
+    return indexPath;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
