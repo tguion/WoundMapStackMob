@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script type="text/javascript">
+    function httpsRedirect() {
+      var httpURL = window.location.hostname + window.location.pathname;
+      var httpsURL = "https://" + httpURL;
+      window.location = httpsURL;
+    }
+    console.log(window.location.href);
+    if (!window.location.href.match('^https://') && !window.location.href.match('^http://localhost'))
+      httpsRedirect();
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="css/common.css" media="screen">
+
+  <!--select2-->
+  <link rel="stylesheet" type="text/css" href="select2-3.3.1/select2.css" media="screen">
+
+  <!--Bootstrap-->
+  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+</head>
+<body style="height:100%; width:100%; overflow-x:hidden">
+
+<div id="navbar" class="navbar">
+  <div class="navbar-inner">
+    <img src="assets/ff_head_databrowser.png" width="240px" class="brand pull-left">
+    <!--<a class="brand" href="#">FatFractal Data Browser</a>-->
+
+    <!--<div class="navbar-text pull-left">App URL</div>-->
+
+    <form class="navbar-form form-inline pull-left" data-bind="submit: setAppUrl">
+      <input id="input_appUrl" data-bind="value: baseUrl" type="text" style="font-size: 15px" class="input-xlarge"
+             placeholder="App URL">
+      <button id="btn_appUrl" type="submit" class="btn">Change App URL</button>
+    </form>
+
+    <div class="pull-right">
+      <div data-bind="visible: !loggedInUserName()">
+        <button class="btn btn btn-primary" data-toggle="modal" data-target="#login-dialog">Login</button>
+      </div>
+      <div data-bind="visible: loggedInUserName" style="display: none">
+        <p class="navbar-text">
+          Logged in as <span class="text-info" data-bind="text: loggedInUserName"></span>
+          <button class="btn" data-bind="click: function() { logout() }" style="vertical-align:top">Logout</button>
+          <!--TODO: vertical-align style here is quite janky-->
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="bodyContainer" class="bodyContainer">
+  <img id="imgAjaxLoader" class="ajaxLoader" src="assets/ajax-loader.gif"/>
+
+  <div id="bodyTargetContainer" class="bodyTargetContainer hasLeftCol">
+    <div id="leftColumnContainer" class="leftColumnContainer">
+      <div id="leftColumnTargetContainer" class="leftColumnTargetContainer">
+        <div id="collectionList" class="displayScrollBar"
+             style="border-style:solid; border-width:thin; border-color: #8fbc8f; padding: 2px; width:100%; overflow-y: scroll">
+          <table id="collectionListTable" class="table3">
+            <thead>
+            <tr>
+              <th>Collections</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: mdCollections">
+            <tr style="width:100%">
+              <td style="max-width: 160px; overflow-y: auto" class="highlightWhenHover truncate"
+                  data-bind="title: collectionName, text: collectionName, click: function() { $root.collectionQuery($data.collectionName); }">
+              </td>
+              <!-- ko if: $root.loggedInUserName -->
+              <!--TODO: should also hide if user is logged in but lacks write permission to collection-->
+              <td style="width: 40px">
+                <div data-bind="ffdb_newObjectMenu: $data"></div>
+              </td>
+              <!-- /ko -->
+            </tr>
+            </tbody>
+          </table>
+          <table id="addNewCollectionTable" class="table3"
+                 data-bind="visible: allowNewCollections() && loggedInUserName()"
+                 style="display: none; overflow: hidden">
+            <thead></thead>
+            <tbody>
+            <tr style="width:100%; overflow:hidden">
+              <!--hokey; need to add in FFDL execution-->
+              <form id="addNewCollectionForm" data-bind="submit: addNewCollection" style="width:100%">
+                <td style="width:70%">
+                  <input class="input-medium" id="input_newCollectionName" type="text" placeholder="New Collection"/>
+                </td>
+                <td style="width:30%">
+                  <!--<input class="btn btn-danger" value="Add Collection" type="submit" id='newCollectionSubmit'/>-->
+                  <button class="btn btn-primary" type="submit" id="newCollectionSubmit" title="Add Collection"><i
+                      class="icon-plus"></i></button>
+                </td>
+              </form>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="centerColumnContainer" class="centerColumnContainer hasLeftCol">
+      <div id="centerHeaderContainer" class="headerTargetContainer">
+        <form id='queryForm' class="form-inline" data-bind="submit: submitQuery">
+          <div class="input-prepend input-append">
+            <button id='btn_queryBack' type="button" class="btn" data-bind="click: queryHistoryBack"><i
+                class="icon-chevron-left"></i></button>
+            <button id='btn_queryForward' type="button" class="btn" data-bind="click: queryHistoryForward"><i
+                class="icon-chevron-right"></i></button>
+            <input id='input_queryText' type='text'>
+            <input id='btn_executeQuery' type='submit' class="btn" value='Execute Query'>
+          </div>
+        </form>
+      </div>
+      <div id="centerColumnTargetContainer" class="centerColumnTargetContainer">
+        <div id="queryResultsDiv" class="displayScrollBar"
+             style="height: 100%; width: 100%; overflow: scroll; border-style:solid; border-width:thin; border-color: #8fbc8f; padding: 4px"
+             data-bind="ffdb_displayResults: queryResults, visible: tableVisible">
+        </div>
+
+        <!--This is where object viewing and editing takes place-->
+        <div id="objectDetailDiv" class="displayScrollBar"
+             style="display: none; height: 100%; width: 100%; overflow: scroll; border-style:solid; border-width:thin; border-color: #8fbc8f; padding: 4px"
+             data-bind="visible: detailVisible, with: detailObject">
+          <h3>
+            <div data-bind="if: newObj">
+              Create new <span data-bind="text: obj.clazz"></span> object
+            </div>
+            <div data-bind="ifnot: newObj">
+              Details: <span data-bind="text: obj.ffUrl"></span>
+            </div>
+          </h3>
+          <form data-bind="submit: submit">
+            <!--buttons-->
+            <div data-bind="if: newObj">
+              <button class="btn" type="button" data-bind="click: $root.dismissDetail">Cancel</button>
+              <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+            <div data-bind="ifnot: newObj">
+              <button class="btn" type="button" data-bind="click: $root.dismissDetail">Dismiss</button>
+              <span data-bind="if: canEdit">
+                <button class="btn btn-danger" type="button" data-bind="click: deleteObj">Delete
+                </button>
+                <button class="btn btn-primary" type="submit">Update</button>
+              </span>
+            </div>
+            <div data-bind="template: { name: 'template-main', data: $data }"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!--Login dialog-->
+<div class="modal hide fade" id="login-dialog">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3>Login</h3>
+  </div>
+  <div class="modal-body">
+    <form id="loginForm" class="form-horizontal" data-bind="submit: login">
+      <div class="control-group">
+        <label class="control-label" for="input_userName">Username:</label>
+
+        <div class="controls">
+          <input id="input_userName" type="text" data-bind="value: userName">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="input_password">Password:</label>
+
+        <div class="controls">
+          <input id="input_password" type="password" data-bind="value: password">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <label class="checkbox">
+            <input id='viaConsole' type='checkbox'>Use FatFractal Console credentials
+          </label>
+          <span class="help-block">Using your Console credentials will log you in to the application as the <strong>system</strong> user.</span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" form="loginForm">Login</button>
+  </div>
+</div>
+
+<div> <!--JavaScript-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+  <script type="text/javascript" src="js/knockout-switch-case.js"></script>
+  <script type="text/javascript" src="select2-3.3.1/select2.js"></script>
+  <script type="text/javascript" src="js/FatFractal.js"></script>
+  <script type="text/javascript" src="js/databrowser.js"></script>
+  <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+</div>
+
+</body>
+</html>
+
+<!-- Knockout templates -->
+<!-- Main -->
+<script type="text/html" id="template-main">
+  <table class="table">
+    <col width="200px">
+    <thead>
+    <tr>
+      <th>Member</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tbody data-bind="foreach: {data: fields, as: 'field'}">
+    <!-- ko if: fieldName != 'BackReferences' -->
+    <tr>
+      <td><span data-bind="text: fieldName"></span></td>
+      <td data-bind="switch: memberType">
+        <!-- TODO: OBJECT -->
+        <span data-bind="case: ['BYTEARRAY', 'REFERENCE', 'GRABBAG', 'BOOLEAN', 'DATE', 'NUMERIC', 'STRING', 'GEOLOCATION', 'OBJECT']">
+          <span data-bind="ifnot: array">
+            <span data-bind="template: { name: 'template-' + memberType, data: { value: $parent.fieldVals[fieldName], canEdit: $parent.canEdit } }"></span>
+          </span>
+          <span data-bind="if: array">
+            <span data-bind="if: memberType == 'GEOLOCATION'">
+              <div data-bind="if: $parent.canEdit">
+                <a href="#"
+                   data-bind="popover: 'Editing this datatype is not currently supported in the Data Browser. In the interim, you need to use the APIs in order to modify them. <a href=\'http://fatfractal.com/prod/docs/datastore/\' target=\'_blank\'>See here</a> for examples of how to do that.'">Info</a>
+              </div>
+              <span data-bind="html: JSON.stringify($parent.fieldVals[fieldName](), null, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\n/g, '<br/>')"></span>
+            </span>
+            <span data-bind="ifnot: memberType == 'GEOLOCATION'">
+              <a data-bind="visible: !$parent.fieldExpanded[fieldName](), click: $parent.showField">Show</a>
+              <div data-bind="visible: $parent.fieldExpanded[fieldName]()">
+                <a data-bind="click: $parent.hideField">Hide</a>
+                <table>
+                  <tbody>
+                  <!-- ko foreach: { data: $parent.fieldVals[fieldName], as: 'subfield' } -->
+                  <tr>
+                    <td>
+                      <span data-bind="template: { name: 'template-' + field.memberType, data: { value: subfield.value, canEdit: $parents[1].canEdit } }"></span>
+                    </td>
+                    <!-- ko if: $parents[1].canEdit -->
+                    <td>
+                      <a data-bind="click: function(data) { $parents[1].removeFromField($index(), field) }">Remove</a>
+                    </td>
+                    <!-- /ko -->
+                    <!--<td><i>item</i></td>-->
+                  </tr>
+                  <!-- /ko -->
+                  <!-- ko if: $parent.canEdit -->
+                  <tr>
+                    <td>
+                      <span data-bind="template: { name: 'template-' + field.memberType, data: { value: $parent.stagedFieldVals[fieldName], canEdit: true } }"></span>
+                    </td>
+                    <td>
+                      <a data-bind="click: function(data) { $parent.addStageToField(field) }">Add</a>
+                    </td>
+                  </tr>
+                  <!-- /ko -->
+                  </tbody>
+                </table>
+              </div>
+            </span>
+          </span>
+        </span>
+        <span data-bind="case: $default">
+          <div data-bind="if: $parent.canEdit">
+            <a href="#"
+               data-bind="popover: 'Editing this datatype is not currently supported in the Data Browser. In the interim, you need to use the APIs in order to modify them. <a href=\'http://fatfractal.com/prod/docs/datastore/\' target=\'_blank\'>See here</a> for examples of how to do that.'">Info</a>
+          </div>
+          <span data-bind="if: $parent.fieldVals[fieldName]()">
+            <span data-bind="html: JSON.stringify($parent.fieldVals[fieldName](), null, '&nbsp;&nbsp;&nbsp;&nbsp;').replace(/\n/g, '<br/>')"></span>
+          </span>
+        </span>
+      </td>
+    </tr>
+    <!-- /ko -->
+    </tbody>
+  </table>
+</script>
+
+<!-- OBJECT -->
+<script type="text/html" id="template-OBJECT">
+  <div data-bind="template: { name: 'template-main', data: value }"></div>
+</script>
+
+<!-- BYTEARRAY -->
+<script type="text/html" id="template-BYTEARRAY">
+  <div data-bind="ffdb_blob: field"></div>
+</script>
+
+<!-- REFERENCE -->
+<script type="text/html" id="template-REFERENCE">
+  <div data-bind="if: $root.detailObject().canEdit">
+    <span
+        data-bind="selectReference: value, selectReferenceObjWrapper: $root.detailObject(), selectReferenceFieldObj: field"></span>
+    <a data-bind="click: function() { displayReference($root.detailObject().obj.ffUrl + '/' + field.fieldName) }">Query</a>
+  </div>
+  <div data-bind="ifnot: $root.detailObject().canEdit">
+    <a data-bind="text: objCollectionAndGuid($root.detailObject().obj[field.fieldName]), click: function() { displayReference($root.detailObject().obj.ffUrl + '/' + field.fieldName) }"></a>
+  </div>
+</script>
+
+<!-- GRABBAG -->
+<script type="text/html" id="template-GRABBAG">
+  <a data-bind="visible: !$root.detailObject().fieldExpanded[field.fieldName](), click: function() { $root.detailObject().showField(field) }">Show</a>
+
+  <div data-bind="visible: $root.detailObject().fieldExpanded[field.fieldName]()">
+    <a data-bind="click: function() { $root.detailObject().hideField(field) }">Hide</a>
+    <table>
+      <tbody>
+      <!-- ko foreach: value -->
+      <tr>
+        <td><a data-bind="text: $data, click: function() { $root.query($data); }"></a></td>
+        <!-- ko if: $root.detailObject().canEdit -->
+        <td><a
+            data-bind="click: $root.detailObject().removeFromField.bind($root.detailObject(), $data, field)">Remove</a>
+        </td>
+        <!-- /ko -->
+      </tr>
+      <!-- /ko -->
+      <tr data-bind="if: $root.detailObject().canEdit">
+        <td>
+          <div
+              data-bind="selectReference: $root.detailObject().stagedFieldVals[field.fieldName], selectReferenceObjWrapper: $root.detailObject(), selectReferenceFieldObj: value"></div>
+        </td>
+        <td><a data-bind="click: $root.detailObject().addStageToField.bind($root.detailObject(), field)">Add</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</script>
+
+<!-- GEOLOCATION -->
+<script type="text/html" id="template-GEOLOCATION">
+  <table>
+    <tbody>
+    <tr><td><label>Latitude</label></td><td><input type="text" data-bind="value: value.latitude"></td></tr>
+    <tr><td><label>Longitude</label></td><td><input type="text" data-bind="value: value.longitude"></td></tr>
+    <tr><td><label>Altitude</label></td><td><input type="text" data-bind="value: value.altitude"></td></tr>
+    <tr><td><label>Accuracy</label></td><td><input type="text" data-bind="value: value.accuracy"></td></tr>
+    <tr><td><label>Altitude Accuracy</label></td><td><input type="text" data-bind="value: value.altitudeAccuracy"></td></tr>
+    <tr><td><label>Heading</label></td><td><input type="text" data-bind="value: value.heading"></td></tr>
+    <tr><td><label>Speed</label></td><td><input type="text" data-bind="value: value.speed"></td></tr>
+    </tbody>
+  </table>
+</script>
+
+<!-- BOOLEAN -->
+<script type="text/html" id="template-BOOLEAN">
+  <span data-bind="if: canEdit">
+    <input type="checkbox" data-bind="checked: value">
+  </span>
+  <span data-bind="ifnot: canEdit">
+    <span data-bind="text: value"></span>
+  </span>
+</script>
+
+<!-- DATE -->
+<script type="text/html" id="template-DATE">
+  <span data-bind="if: canEdit">
+    <div data-bind="datepicker: value"></div>
+  </span>
+  <span data-bind="ifnot: canEdit">
+    <span data-bind="text: value() ? ISODateString(new Date(value())) : ''"></span>
+  </span>
+</script>
+
+<!-- NUMERIC -->
+<script type="text/html" id="template-NUMERIC">
+  <span data-bind="if: canEdit">
+    <input type="text" data-bind="value: value">
+  </span>
+  <span data-bind="ifnot: canEdit">
+    <span data-bind="text: value"></span>
+  </span>
+</script>
+
+<!-- STRING -->
+<script type="text/html" id="template-STRING">
+  <span data-bind="if: canEdit">
+    <input type="text" data-bind="value: value">
+  </span>
+  <span data-bind="ifnot: canEdit">
+    <span data-bind="text: value"></span>
+  </span>
+</script>
+
+<script type='text/javascript'>
+  console.log("loggedInUserName = ", ffdb_mainViewModel.loggedInUserName);
+  ko.applyBindings(ffdb_mainViewModel);
+
+  $(document).ready(function () {
+    ffdb_mainViewModel.initDataBrowser();
+    ffdb_resizeDivs();
+  });
+
+  // for the window resize
+  $(window).resize(function () {
+    ffdb_resizeDivs();
+  });
+</script>
