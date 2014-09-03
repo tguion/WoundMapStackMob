@@ -26,6 +26,7 @@
 #import "MBProgressHUD.h"
 #import "WMInterventionStatusJoin.h"
 #import "WMTelecomType.h"
+#import "WMNavigationStage.h"
 #import "WMNavigationNode.h"
 #import "WMWound.h"
 #import "WMWoundType.h"
@@ -1174,7 +1175,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)signInViewControllerDidCancel:(WMSignInViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
-    [viewController clearAllReferences];
 }
 
 #pragma mark - CreateAccountDelegate
@@ -1349,6 +1349,11 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 }
 
 #pragma mark - ChooseTrackDelegate
+
+- (WMNavigationTrack *)selectedTrack
+{
+    return self.patient.stage.track;
+}
 
 - (NSPredicate *)navigationTrackPredicate
 {

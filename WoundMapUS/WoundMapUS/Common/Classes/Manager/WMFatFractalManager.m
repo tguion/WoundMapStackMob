@@ -211,7 +211,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [WMUtilities logError:error];
         }
         patientsNotOnTeamCount = [WMPatient MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"%K = nil", WMPatientRelationships.team] inContext:managedObjectContext];
-        NSString *queryString = [NSString stringWithFormat:@"/%@/(teamFlag eq '%@')?depthRef=2", [WMNavigationNode entityName], team == nil ? @"false":@"true"];
+        NSString *queryString = [NSString stringWithFormat:@"/%@/(teamFlag eq %@)?depthRef=2", [WMNavigationNode entityName], team == nil ? @"false":@"true"];
         if (patientsNotOnTeamCount) {
             // if any patients not on team, get all nodes since we need all to move patients to team
             queryString = [NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]];

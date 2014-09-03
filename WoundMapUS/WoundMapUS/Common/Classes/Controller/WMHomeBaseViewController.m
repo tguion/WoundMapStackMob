@@ -2003,6 +2003,11 @@
 
 #pragma mark - ChooseTrackDelegate
 
+- (WMNavigationTrack *)selectedTrack
+{
+    return self.patient.stage.track;
+}
+
 - (NSPredicate *)navigationTrackPredicate
 {
     return [NSPredicate predicateWithFormat:@"team == %@", self.appDelegate.participant.team];

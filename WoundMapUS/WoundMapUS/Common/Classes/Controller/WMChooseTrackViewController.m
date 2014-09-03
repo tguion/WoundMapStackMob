@@ -116,7 +116,11 @@
 - (WMNavigationTrack *)navigationTrack
 {
     if (nil == _navigationTrack) {
-        _navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext];
+        if (nil == self.delegate) {
+            _navigationTrack = [self.userDefaultsManager defaultNavigationTrack:self.managedObjectContext];
+        } else {
+            _navigationTrack = self.delegate.selectedTrack;
+        }
     }
     return _navigationTrack;
 }
@@ -125,7 +129,21 @@
 
 - (IBAction)chooseTrackAction:(id)sender
 {
-    [self.delegate chooseTrackViewController:self didChooseNavigationTrack:self.navigationTrack];
+    // make sure we have the navigation data
+    __weak __typeof(&*self)weakSelf = self;
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        [weakSelf.delegate chooseTrackViewController:weakSelf didChooseNavigationTrack:weakSelf.navigationTrack];
+    };
+    WMNavigationStage *stage = self.navigationTrack.initialStage;
+    if (nil == stage) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Acquiring policies";
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:onComplete];
+    } else {
+        onComplete(nil, nil, nil);
+    }
 }
 
 - (IBAction)cancelAction:(id)sender

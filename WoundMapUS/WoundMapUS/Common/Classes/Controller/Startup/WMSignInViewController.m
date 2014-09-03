@@ -122,7 +122,9 @@
         return;
     }
     // else
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Updating Your Account";
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Updating Your Account";
+    hud.detailsLabelText = @"This may take a minute.";
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;

@@ -12,6 +12,7 @@
 
 @protocol ChooseTrackDelegate <NSObject>
 
+@property (readonly, nonatomic) WMNavigationTrack *selectedTrack;
 @property (readonly, nonatomic) NSPredicate *navigationTrackPredicate;
 
 - (void)chooseTrackViewController:(WMChooseTrackViewController *)viewController didChooseNavigationTrack:(WMNavigationTrack *)navigationTrack;

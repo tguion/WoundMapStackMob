@@ -818,26 +818,6 @@
 						<key>sortRank</key>
 						<integer>110</integer>
 						<key>inputTypeCode</key>
-						<integer>2</integer>
-						<key>keyboardType</key>
-						<integer>8</integer>
-						<key>placeHolder</key>
-						<string>Specify size in cm</string>
-						<key>unit</key>
-						<string>cm</string>
-						<key>SNOMED CT FSN</key>
-						<string></string>
-						<key>SNOMED CT CID</key>
-						<integer>0</integer>
-						<key>LOINC Code</key>
-						<string></string>
-					</dict>
-					<dict>
-						<key>title</key>
-						<string>Wound Size</string>
-						<key>sortRank</key>
-						<integer>110</integer>
-						<key>inputTypeCode</key>
 						<integer>5</integer>
 						<key>unit</key>
 						<string>cm</string>
@@ -1137,21 +1117,82 @@
 						<key>title</key>
 						<string>Wound Size</string>
 						<key>sortRank</key>
-						<integer>10</integer>
+						<integer>110</integer>
 						<key>inputTypeCode</key>
-						<integer>2</integer>
-						<key>keyboardType</key>
-						<integer>8</integer>
-						<key>placeHolder</key>
-						<string>Specify size in cm</string>
+						<integer>5</integer>
 						<key>unit</key>
 						<string>cm</string>
+						<key>allowMultipleChildSelection</key>
+						<true/>
 						<key>SNOMED CT FSN</key>
 						<string></string>
 						<key>SNOMED CT CID</key>
 						<integer>0</integer>
 						<key>LOINC Code</key>
 						<string></string>
+						<key>children</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Width</string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>placeHolder</key>
+								<string>Enter width in cm</string>
+								<key>unit</key>
+								<string>cm</string>
+								<key>SNOMED CT FSN</key>
+								<string>width of wound(observable entity)</string>
+								<key>SNOMED CT CID</key>
+								<integer>401239006</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Length</string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>placeHolder</key>
+								<string>Enter length in cm</string>
+								<key>unit</key>
+								<string>cm</string>
+								<key>SNOMED CT FSN</key>
+								<string>length of wound(observable entity)</string>
+								<key>SNOMED CT CID</key>
+								<integer>401238003</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Depth</string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>inputTypeCode</key>
+								<integer>2</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>placeHolder</key>
+								<string>Enter depth in cm</string>
+								<key>unit</key>
+								<string>cm</string>
+								<key>SNOMED CT FSN</key>
+								<string>depth of wound(observable entity)</string>
+								<key>SNOMED CT CID</key>
+								<integer>425094009</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
 					</dict>
 					<dict>
 						<key>title</key>
@@ -1159,19 +1200,182 @@
 						<key>sortRank</key>
 						<integer>20</integer>
 						<key>inputTypeCode</key>
-						<integer>2</integer>
-						<key>keyboardType</key>
-						<integer>8</integer>
-						<key>placeHolder</key>
-						<string>Specify %</string>
-						<key>unit</key>
-						<string>%</string>
+						<integer>4</integer>
+						<key>allowMultipleChildSelection</key>
+						<true/>
+						<key>normalizeMeasurements</key>
+						<true/>
+						<key>range</key>
+						<string>0,100</string>
 						<key>SNOMED CT FSN</key>
 						<string></string>
 						<key>SNOMED CT CID</key>
 						<integer>0</integer>
 						<key>LOINC Code</key>
 						<string></string>
+						<key>children</key>
+						<array>
+							<dict>
+								<key>title</key>
+								<string>Epithelial</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>10</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string>wound epithelialization(finding)</string>
+								<key>SNOMED CT CID</key>
+								<integer>449743005</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Granular(red)</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>20</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string>granulation of tissue(finding)</string>
+								<key>SNOMED CT CID</key>
+								<integer>225541009</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Slough(yellow)</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>30</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string>wound slough(finding)</string>
+								<key>SNOMED CT CID</key>
+								<integer>449746002</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Fibrinous(white)</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>40</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string>fibrinous wound bed(finding)</string>
+								<key>SNOMED CT CID</key>
+								<integer>449745003</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Eschar(black)</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>50</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string>skin eschar(disorder)</string>
+								<key>SNOMED CT CID</key>
+								<integer>409590008</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Bone</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>60</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Muscle</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>70</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+							<dict>
+								<key>title</key>
+								<string>Tendon</string>
+								<key>definition</key>
+								<string></string>
+								<key>sortRank</key>
+								<integer>80</integer>
+								<key>inputTypeCode</key>
+								<integer>10</integer>
+								<key>keyboardType</key>
+								<integer>8</integer>
+								<key>unit</key>
+								<string>%</string>
+								<key>SNOMED CT FSN</key>
+								<string></string>
+								<key>SNOMED CT CID</key>
+								<integer>0</integer>
+								<key>LOINC Code</key>
+								<string></string>
+							</dict>
+						</array>
 					</dict>
 					<dict>
 						<key>title</key>
