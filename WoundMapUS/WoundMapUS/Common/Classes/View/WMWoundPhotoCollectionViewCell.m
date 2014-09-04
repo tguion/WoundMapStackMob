@@ -121,8 +121,8 @@
                         DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
                     } else {
                         woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
-                        block();
                     }
+                    block();
                 }];
                 [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
                     NSData *photoData = [response rawResponseData];
@@ -130,8 +130,8 @@
                         DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
                     } else {
                         woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
-                        block();
                     }
+                    block();
                 }];
                 [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailMini]] executeAsyncWithBlock:^(FFReadResponse *response) {
                     NSData *photoData = [response rawResponseData];
@@ -139,8 +139,8 @@
                         DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
                     } else {
                         woundPhoto.thumbnailMini = [[UIImage alloc] initWithData:photoData];
-                        block();
                     }
+                    block();
                 }];
             }
         } else {

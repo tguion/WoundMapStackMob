@@ -66,6 +66,9 @@
         if ([_userNameTextInput length]) {
             _makePasswordFieldFirstResponder = YES;
         }
+        // DEBUG
+        _passwordTextInput = @"WoundMap00";
+        // DEBUG END
     }
     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
     [seedDatabaseManager seedLocalData:self.managedObjectContext];

@@ -605,7 +605,7 @@
         }
         case PhotoAcquisitionStateAcquireWoundPhoto: {
             // tear down interface
-            if (photoManager.shouldUseCameraForNextPhoto) {
+            if (!photoManager.shouldUseCameraForNextPhoto) {
                 [_navigationNodePopoverController dismissPopoverAnimated:YES];
                 _navigationNodePopoverController = nil;
             } else {

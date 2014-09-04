@@ -1124,7 +1124,7 @@
                 DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
                 if (response.httpResponse.statusCode == 404) {
                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Photo"
-                                                                        message:@"The full size photo has not been submitted to the cloud."
+                                                                        message:@"The full size photo has not been submitted to the cloud. Please try again later."
                                                                        delegate:nil
                                                               cancelButtonTitle:@"Dismiss"
                                                               otherButtonTitles:nil];

@@ -439,6 +439,7 @@
 {
     if (nil == _imagePickerController) {
         _imagePickerController = [[UIImagePickerController alloc] init];
+        _imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
         _imagePickerController.delegate = self;
         _imagePickerController.sourceType = self.shouldUseCameraForNextPhoto ? UIImagePickerControllerSourceTypeCamera:UIImagePickerControllerSourceTypePhotoLibrary;
         _imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects:(NSString *)kUTTypeImage, nil];
@@ -518,7 +519,7 @@
     frame = CGRectInset(frame, 66.0, 66.0);
     self.overlayView.frame = frame;
     self.imageView.frame = self.imagePickerController.view.bounds;
-    self.imageView.center = CGPointMake(CGRectGetMidX(self.overlayView.bounds), CGRectGetMidY(self.overlayView.bounds));
+//    self.imageView.center = CGPointMake(CGRectGetMidX(self.overlayView.bounds), CGRectGetMidY(self.overlayView.bounds));
     self.tapView.frame = self.overlayView.bounds;
     [self.overlayView bringSubviewToFront:self.tapView];
     // set the overlay
@@ -696,16 +697,21 @@
     DictionaryToDataTransformer *transformer = [[DictionaryToDataTransformer alloc] init];
     NSManagedObjectContext *managedObjectContext = [[wound managedObjectContext] parentContext];
     __block WMWoundPhoto *woundPhoto = nil;
+    __block WMPhoto *originalPhoto = nil;
     [managedObjectContext performBlockAndWait:^{
         WMWound *wound0 = (WMWound *)[wound MR_inContext:managedObjectContext];
         woundPhoto = [WMWoundPhoto createWoundPhotoForWound:wound0];
-        [managedObjectContext save:NULL];
+        originalPhoto = [woundPhoto fetchOrCreatePhotoForType:PhotoTypeOriginal];
+        NSError *localError = nil;
+        [managedObjectContext save:&localError];
+        if (localError) {
+            [WMUtilities logError:localError];
+        }
     }];
     __weak __typeof(&*self)weakSelf = self;
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         [managedObjectContext performBlock:^{
-            WMPhoto *originalPhoto = [woundPhoto fetchOrCreatePhotoForType:PhotoTypeOriginal];
             originalPhoto.photo = image;
             woundPhoto.imageWidth = @(image.size.width);
             woundPhoto.imageHeight = @(image.size.height);

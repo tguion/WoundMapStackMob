@@ -134,7 +134,8 @@ CGFloat kRetartSetScaleDownFactor = 0.9;
     tapGestureRecognizer.numberOfTapsRequired = 2;
     [self.view addGestureRecognizer:tapGestureRecognizer];
     // add constraints
-    ConstrainToSuperview(_imageView, 1000);
+//    _imageView.translatesAutoresizingMaskIntoConstraints = NO;
+//    ConstrainToSuperview(_imageView, 1000);
 }
 
 - (void)viewDidAppear:(BOOL)animated
