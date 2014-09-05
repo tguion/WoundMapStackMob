@@ -20,6 +20,7 @@ extern NSString *const kTaskDidCompleteNotification;
 
 - (void)registerNavigationNodeButton:(WMNavigationNodeButton *)navigationNodeButton;
 - (void)unregisterNavigationNodeButton:(WMNavigationNodeButton *)navigationNodeButton;
+- (void)clearRegisteredButtons;
 - (void)updateRegisteredButtons;
 - (void)updateRegisteredButtonsInArray:(NSArray *)navigationButtons;
 - (BOOL)buttonIsRegistered:(WMNavigationNodeButton *)navigationNodeButton;

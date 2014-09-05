@@ -1974,6 +1974,8 @@
     _parentNavigationNode = nil;
     _navigationNodes = nil;
     _navigationNodeControls = nil;
+    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
+    [policyManager clearRegisteredButtons];
 }
 
 #pragma mark - PolicyEditorDelegate

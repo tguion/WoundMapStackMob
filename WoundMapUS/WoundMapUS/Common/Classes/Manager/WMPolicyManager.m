@@ -585,10 +585,17 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
     [self.registeredButtons removeObject:navigationNodeButton];
 }
 
+- (void)clearRegisteredButtons
+{
+    _registeredButtons = nil;
+}
+
 - (void)updateRegisteredButtonWithNavigationNodeIdentifier:(NSNumber *)navigationNodeIdentifier
 {
-    WMNavigationNodeButton *navigationNodeButton = [[self.registeredButtons filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"navigationNode.taskIdentifier == %@", navigationNodeIdentifier]] anyObject];
-    navigationNodeButton.complianceDelta = [self complianceDeltaForNavigationNode:navigationNodeButton.navigationNode];
+    NSSet *navigationNodeButtons = [self.registeredButtons filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"navigationNode.taskIdentifier == %@", navigationNodeIdentifier]];
+    for (WMNavigationNodeButton *navigationNodeButton in navigationNodeButtons) {
+        navigationNodeButton.complianceDelta = [self complianceDeltaForNavigationNode:navigationNodeButton.navigationNode];
+    }
 }
 
 - (void)updateRegisteredButtons
