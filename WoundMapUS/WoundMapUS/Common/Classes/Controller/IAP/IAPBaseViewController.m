@@ -392,7 +392,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                 }
             }
      }];
-    [self.opaqueNotificationObservers addObject:observer];
+    [self.persistantObservers addObject:observer];
 }
 
 #pragma mark Utilities

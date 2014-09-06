@@ -646,9 +646,19 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 {
     __block UIViewController *viewController = self.appDelegate.window.rootViewController.presentedViewController;
     if (nil != viewController) {
+        // do not dismiss during IAP
+        if ([viewController isKindOfClass:[IAPBaseViewController class]]) {
+            return;
+        }
         NSMutableArray *viewControllers = [NSMutableArray array];
         if ([viewController isKindOfClass:[UINavigationController class]]) {
             UINavigationController *navigationController = (UINavigationController *)viewController;
+            for (UIViewController *vc in navigationController.viewControllers) {
+                // do not dismiss during IAP
+                if ([vc isKindOfClass:[IAPBaseViewController class]]) {
+                    return;
+                }
+            }
             [viewControllers addObjectsFromArray:navigationController.viewControllers];
         } else {
             [viewControllers addObject:viewController];

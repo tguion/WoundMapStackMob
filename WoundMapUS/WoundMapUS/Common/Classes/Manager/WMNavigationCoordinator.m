@@ -205,6 +205,40 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         // update UI to show that patient data is refreshing from cloud
         [[NSNotificationCenter defaultCenter] postNotificationName:kPatientRefreshingFromCloudNotification object:[_patient objectID]];
         // fetch wound data after we get the patient data
+        
+        FFHttpMethodCompletion onWoundPhotoComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                // may not receive any data
+                [WMUtilities logError:error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
+        };
+        
+        FFHttpMethodCompletion onWoundComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                // may not receive any data
+                [WMUtilities logError:error];
+            }
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            WMWound *wound = (WMWound *)object;
+            if ([wound isKindOfClass:[WMWound class]]) {
+                weakSelf.wound = wound;
+                // set last wound photo
+                WMWoundPhoto *woundPhoto = weakSelf.woundPhoto;
+                if (nil == woundPhoto) {
+                    woundPhoto = wound.lastWoundPhoto;
+                }
+                if (woundPhoto) {
+                    weakSelf.woundPhoto = woundPhoto;
+                    NSString *uri = [woundPhoto.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                    [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=4", uri] onComplete:onWoundPhotoComplete];
+                } else {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
+                }
+            }
+        };
+
         FFHttpMethodCompletion onBlobsComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -220,23 +254,12 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
             }
             if (wound && [wound.ffUrl length]) {
                 NSString *uri = [wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-                [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                    if (error) {
-                        // may not receive any data
-                        [WMUtilities logError:error];
-                    }
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    // set last wound photo
-                    if (_wound == wound) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
-                    } else {
-                        weakSelf.wound = wound;
-                    }
-                }];
+                [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=4", uri] onComplete:onWoundComplete];
             } else {
                 [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
             }
         };
+        
         FFHttpMethodCompletion onPatientComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -245,8 +268,9 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
             // get blobs
             [ff loadBlobsForObj:patient onComplete:onBlobsComplete];
         };
+        
         NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", uri] onComplete:onPatientComplete];
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=4", uri] onComplete:onPatientComplete];
     }
 }
 
