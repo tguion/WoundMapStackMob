@@ -1208,7 +1208,10 @@
 					"-Wno-deprecated-implementations",
 				);
 				OTHER_CPTLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "CorePlot-CocoaTouch";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PROJECT_NAME)";
 				SYMROOT = "$(PROJECT_DIR)/../build";
@@ -1230,7 +1233,10 @@
 					"-Wno-deprecated-implementations",
 				);
 				OTHER_CPTLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "CorePlot-CocoaTouch";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PROJECT_NAME)";
 				SYMROOT = "$(PROJECT_DIR)/../build";
@@ -1272,7 +1278,10 @@
 					"-Wextra",
 					"-Wno-unused-parameter",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				SDKROOT = iphoneos;
 				SEPARATE_STRIP = YES;
 				SKIP_INSTALL = YES;
@@ -1317,7 +1326,10 @@
 					"-Wextra",
 					"-Wno-unused-parameter",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				SDKROOT = iphoneos;
 				SEPARATE_STRIP = YES;
 				SKIP_INSTALL = YES;
