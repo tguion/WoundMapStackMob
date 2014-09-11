@@ -104,11 +104,6 @@
 - (IBAction)signInAction:(id)sender
 {
     [self.view endEditing:YES];
-    [self performSelector:@selector(delayedSignInAction) withObject:nil afterDelay:0.0];
-}
-
-- (void)delayedSignInAction
-{
     NSString *message = nil;
     if ([self.userNameTextInput length] < 3) {
         message = @"Please enter a valid username";
@@ -144,9 +139,6 @@
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         } else {
             FFUser *user = (FFUser *)object;
-            NSAssert(nil != user, @"loginWithUserName:password success but returned object is nil");
-            NSParameterAssert([user.userName length] > 0);
-            NSAssert([user isKindOfClass:[FFUser class]], @"Expected FFUser but received %@", object);
             // fetch participant
             __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
                                                                                 create:NO

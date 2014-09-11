@@ -415,7 +415,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Updating Patient";
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+    hud.labelText = @"Updating Patient...";
+    hud.detailsLabelText = @"This may take a minute.";
 }
 
 - (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
@@ -1124,7 +1126,6 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
 //        ff.simulatingOffline = YES;//DEPLOYMENT
     };
@@ -1142,6 +1143,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                 if (object) {
                     NSParameterAssert([object isKindOfClass:[WMPatient class]]);
                     WMPatient *patient = (WMPatient *)object;
+                    // wait for notification that patient has updated
                     navigationCoordinator.patient = patient;
                     NSString *woundFFUrl = [userDefaultsManager lastWoundFFURLOnDeviceForPatientFFURL:patientFFUrl];
                     if (woundFFUrl) {
@@ -1161,13 +1163,16 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         block();
                     }
                 } else {
+                    [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                     block();
                 }
             }];
         } else {
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             block();
         }
     } else {
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         block();
     }
 }

@@ -270,8 +270,92 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         };
         
         NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=4", uri] onComplete:onPatientComplete];
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", uri] onComplete:onPatientComplete];
     }
+}
+
+- (void)updatePatientFromCloud:(WMPatient *)patient
+{
+    WMFatFractal *ff = [WMFatFractal instance];
+    __weak __typeof(&*self)weakSelf = self;
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = nil;
+        
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMPatient *localPatient = (WMPatient *)[patient MR_inContext:managedObjectContext];
+        
+        // fetch patient data
+        NSString *uri = [localPatient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+        localPatient = [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", uri] error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // update defaults
+        [weakSelf.userDefaultsManager setLastPatientFFURL:localPatient.ffUrl forUserGUID:weakSelf.appDelegate.participant.guid];
+        
+        // fetch wound data
+        WMWound *wound = weakSelf.wound;
+        if (nil == wound) {
+            wound = weakSelf.lastWoundForPatient;
+        }
+        if (wound) {
+            wound = (WMWound *)[wound MR_inContext:managedObjectContext];
+        }
+        if (wound && [wound.ffUrl length]) {
+            NSString *uri = [wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+            wound = [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=4", uri] error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+        } else {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[localPatient objectID]];
+            });
+        }
+
+        // fetch wound photo
+        if ([wound isKindOfClass:[WMWound class]]) {
+            weakSelf.wound = [wound MR_inContext:[NSManagedObjectContext MR_defaultContext]];
+            // set last wound photo
+            WMWoundPhoto *woundPhoto = weakSelf.woundPhoto;
+            if (nil == woundPhoto) {
+                woundPhoto = wound.lastWoundPhoto;
+            }
+            if (woundPhoto) {
+                weakSelf.woundPhoto = [woundPhoto MR_inContext:[NSManagedObjectContext MR_defaultContext]];
+                woundPhoto = [woundPhoto MR_inContext:managedObjectContext];
+                NSString *uri = [woundPhoto.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                woundPhoto = [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=4", uri] error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+            }
+            
+            // final save
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[localPatient objectID]];
+            });
+
+        }
+
+    });
+    
+    // load blob
+    FFHttpMethodCompletion onBlobsComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        // must transform patient photo blob
+        NSData *data = patient.thumbnail;
+        if (data && [data isKindOfClass:[NSData class]]) {
+            patient.thumbnail = [[UIImage alloc] initWithData:data];
+            [[patient managedObjectContext] MR_saveToPersistentStoreAndWait];
+        }
+    };
+    [ff loadBlobsForObj:patient onComplete:onBlobsComplete];
 }
 
 - (void)createPatient:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMObjectCallback)completionHandler

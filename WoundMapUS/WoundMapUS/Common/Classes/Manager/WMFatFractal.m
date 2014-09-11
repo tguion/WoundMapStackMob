@@ -52,14 +52,18 @@ static NSString *sslUrl = @"https://mobilehealthware.fatfractal.com/WoundMapUS";
              managedObjectContext:(NSManagedObjectContext *)managedObjectContext
                   persistentStore:(NSPersistentStore *)store
 {
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(clazz) inManagedObjectContext:managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDescription];
-    if (store) {
-        [request setAffectedStores:@[store]];
-    }
-    [request setPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl]];
-    return [NSManagedObject MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    __block id object = nil;
+    [managedObjectContext performBlockAndWait:^{
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(clazz) inManagedObjectContext:managedObjectContext];
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDescription];
+        if (store) {
+            [request setAffectedStores:@[store]];
+        }
+        [request setPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl]];
+        object = [NSManagedObject MR_executeFetchRequestAndReturnFirstObject:request inContext:managedObjectContext];
+    }];
+    return object;
 }
 
 /**
@@ -74,14 +78,17 @@ static NSString *sslUrl = @"https://mobilehealthware.fatfractal.com/WoundMapUS";
 {
     if ([clazz isSubclassOfClass:[NSManagedObject class]]) {
         NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        id obj = [self findExistingObjectWithClass:clazz ffUrl:objMetaData.ffUrl managedObjectContext:managedObjectContext persistentStore:nil];
-        if (obj) {
-            DLog(@"Found existing %@ object with ffUrl %@ in managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
-            return obj;
-        }
-        // else
-        DLog(@"Inserting new %@ object with ffUrl %@ into managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
-        return [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(clazz) inManagedObjectContext:managedObjectContext];
+        __block id object = nil;
+        [managedObjectContext performBlockAndWait:^{
+            object = [self findExistingObjectWithClass:clazz ffUrl:objMetaData.ffUrl managedObjectContext:managedObjectContext persistentStore:nil];
+            if (object) {
+                DLog(@"Found existing %@ object with ffUrl %@ in managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
+            } else {
+                DLog(@"Inserting new %@ object with ffUrl %@ into managed context", NSStringFromClass(clazz), objMetaData.ffUrl);
+                object = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(clazz) inManagedObjectContext:managedObjectContext];
+            }
+        }];
+        return object;
     }
     // else
     return [[clazz alloc] init];

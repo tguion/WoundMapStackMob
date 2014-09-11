@@ -967,7 +967,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                 case 2: {
                     // room
                     [myCell updateWithLabelText:@"Room"
-                                      valueText:patient.location.unit
+                                      valueText:patient.location.room
                                     valuePrompt:@"Room identifier"];
                     textField.inputView = nil;
                     textField.tag = 3002;
@@ -976,7 +976,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                 case 3: {
                     // location
                     [myCell updateWithLabelText:@"Location"
-                                      valueText:patient.location.unit
+                                      valueText:patient.location.location
                                     valuePrompt:@"Location description"];
                     textField.inputView = nil;
                     textField.tag = 3003;

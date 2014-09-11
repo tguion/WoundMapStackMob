@@ -20,6 +20,7 @@
 #import "WMAddress.h"
 #import "WMTelecom.h"
 #import "WMPatient.h"
+#import "WMPatientReferral.h"
 #import "WMBradenScale.h"
 #import "WMBradenSection.h"
 #import "WMBradenCell.h"
@@ -269,7 +270,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     // check assess to data
     NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMParticipant entityName], [localParticipant.ffUrl lastPathComponent]];
     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        WM_ASSERT_MAIN_THREAD;
         NSAssert(nil != object && [object isKindOfClass:[WMParticipant class]], @"Expected WMParticipant but got %@", object);
         if (error) {
             completionHandler(error);
@@ -301,7 +301,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                             completionHandler(error);
                         }
                     };
-                    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                    // do we need to fetch team here?
+                    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=0&depthRef=0",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         if (error) {
                             [WMUtilities logError:error];
@@ -378,6 +379,13 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 
 - (void)fetchPatientsShallow:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        completionHandler(nil);
+    };
+
     NSString *collection = [WMPatient entityName];
     NSMutableSet *localPatients = [NSMutableSet setWithArray:[WMPatient MR_findAllInContext:managedObjectContext]];
     NSString *queryString = [NSString stringWithFormat:@"/%@", collection];
@@ -402,7 +410,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                 }
             }
-            completionHandler(nil);
+            // fetch referrals now
+            [ff getArrayFromUri:[NSString stringWithFormat:@"/%@", [WMPatientReferral entityName]] onComplete:onComplete];
         }
     }];
 }
