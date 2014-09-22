@@ -1,7 +1,8 @@
 #import "_WMDeviceCategory.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
-@interface WMDeviceCategory : _WMDeviceCategory {}
+@interface WMDeviceCategory : _WMDeviceCategory <WMFFManagedObject> {}
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 

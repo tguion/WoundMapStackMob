@@ -1,6 +1,7 @@
 #import "_WMIAPTransaction.h"
+#import "WMFFManagedObject.h"
 
-@interface WMIAPTransaction : _WMIAPTransaction {}
+@interface WMIAPTransaction : _WMIAPTransaction <WMFFManagedObject> {}
 
 + (id)instanceWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
                                credits:(NSNumber *)credits;

@@ -1,5 +1,6 @@
 #import "_WMWoundMeasurementGroup.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 extern NSString * const kDimensionsWoundMeasurementTitle;
 extern NSString * const kDimensionWidthWoundMeasurementTitle;
@@ -9,7 +10,7 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 
 @class WMWound, WMWoundPhoto, WMWoundMeasurement, WMWoundMeasurementValue, WMInterventionEvent, WMParticipant;
 
-@interface WMWoundMeasurementGroup : _WMWoundMeasurementGroup {}
+@interface WMWoundMeasurementGroup : _WMWoundMeasurementGroup <WMFFManagedObject> {}
 
 + (WMWoundMeasurementGroup *)woundMeasurementGroupInstanceForWound:(WMWound *)wound woundPhoto:(WMWoundPhoto *)woundPhoto;
 + (WMWoundMeasurementGroup *)woundMeasurementGroupForWoundPhoto:(WMWoundPhoto *)woundPhoto create:(BOOL)create;

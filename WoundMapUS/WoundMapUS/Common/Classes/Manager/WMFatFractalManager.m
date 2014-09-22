@@ -49,6 +49,7 @@
 #import "WMTelecomType.h"
 #import "WMUserDefaultsManager.h"
 #import "CoreDataHelper.h"
+#import "WMFFManagedObject.h"
 #import "Faulter.h"
 #import "WMFatFractal.h"
 #import "WMNavigationCoordinator.h"
@@ -58,11 +59,59 @@
 
 NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 
+@interface WMSilentUpdateData : NSObject { }
+
+@property (strong, nonatomic) NSString *patientGuid;
+@property (strong, nonatomic) NSString *woundGuid;
+@property (strong, nonatomic) NSString *woundPhotoGuid;
+@property (strong, nonatomic) NSString *collection;
+@property (strong, nonatomic) NSString *objectGuid;
+@property (strong, nonatomic) NSString *action;
+@property (strong, nonatomic) NSArray *userGuids;
+
+- (instancetype)initWithPatientGuid:(NSString *)patientGuid
+                          woundGuid:(NSString *)woundGuid
+                     woundPhotoGuid:(NSString *)woundPhotoGuid
+                         collection:(NSString *)collection
+                         objectGuid:(NSString *)objectGuid
+                             action:(NSString *)action
+                          userGuids:(NSArray *)userGuids;
+
+@end
+
+@implementation WMSilentUpdateData
+
+- (instancetype)initWithPatientGuid:(NSString *)patientGuid
+                          woundGuid:(NSString *)woundGuid
+                     woundPhotoGuid:(NSString *)woundPhotoGuid
+                         collection:(NSString *)collection
+                         objectGuid:(NSString *)objectGuid
+                             action:(NSString *)action
+                          userGuids:(NSArray *)userGuids
+{
+    self = [super init];
+    if (!self)
+        return nil;
+    
+    _patientGuid = patientGuid;
+    _woundGuid = woundGuid;
+    _woundPhotoGuid = woundPhotoGuid;
+    _collection = collection;
+    _objectGuid = objectGuid;
+    _action = action;
+    _userGuids = userGuids;
+    
+    return self;
+}
+
+@end
+
 @interface WMFatFractalManager ()
 
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 
 @property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;      // map of objectID or collection to refresh times
+@property (strong, nonatomic) NSMutableArray *teamUsers;            // team users
 
 @end
 
@@ -132,6 +181,153 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [ff updateObj:object onComplete:onUpdateCompletion];
         }
     }
+    
+    [self debugRootManagedObjectContextDidSave:notification];
+    
+    if (_postSynchronizationEvents) {
+        // reset flag
+        _postSynchronizationEvents = NO;
+        // post to FF
+        [self postSynchronizationEventsForNotification:notification];
+    }
+}
+
+- (void)postSynchronizationEventsForNotification:(NSNotification *)notification
+{
+    // only issue if we have a team
+    WMParticipant *participant = self.appDelegate.participant;
+    WMTeam *team = participant.team;
+    if (nil == team) {
+        return;
+    }
+    if (nil == _teamUsers) {
+        NSError *error = nil;
+        _teamUsers = [[team.participantGroup getUsersWithError:&error] mutableCopy];
+        if (error) {
+            [WMUtilities logError:error];
+            return;
+        }
+        // else
+        [_teamUsers removeObject:participant.user];
+        if ([_teamUsers count] == 0) {
+            return;
+        }
+        // else just guids
+        _teamUsers = [_teamUsers valueForKeyPath:@"guid"];
+    }
+    
+    WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
+    NSString *patientGuid = [[navigationCoordinator.patient.ffUrl componentsSeparatedByString:@"/"] lastObject];
+    if (nil == patientGuid) {
+        return;
+    }
+    NSString *woundGuid = [[navigationCoordinator.wound.ffUrl componentsSeparatedByString:@"/"] lastObject];
+    NSString *woundPhotoGuid = [[navigationCoordinator.woundPhoto.ffUrl componentsSeparatedByString:@"/"] lastObject];
+    
+    WMSilentUpdateData *silentUpdateData = [[WMSilentUpdateData alloc] initWithPatientGuid:patientGuid
+                                                                                 woundGuid:woundGuid
+                                                                            woundPhotoGuid:woundPhotoGuid
+                                                                                collection:nil
+                                                                                objectGuid:nil
+                                                                                    action:nil
+                                                                                 userGuids:_teamUsers];
+
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+    };
+
+    NSSet *createdObjects = [[notification userInfo] objectForKey:NSInsertedObjectsKey];
+    NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
+    NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
+
+    // inserts
+    silentUpdateData.action = @"INSERT";
+    for (NSManagedObject *object in createdObjects) {
+        if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
+            continue;
+        }
+        // else
+        silentUpdateData.collection = [[object entity] name];
+        id<WMFFManagedObject>ffManagedObject = (id<WMFFManagedObject>)object;
+        silentUpdateData.objectGuid = [[ffManagedObject.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (nil == silentUpdateData.objectGuid) {
+            continue;
+        }
+        // else
+        [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+    }
+    
+    // updates
+    silentUpdateData.action = @"UPDATE";
+    for (NSManagedObject *object in updatedObjects) {
+        if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
+            continue;
+        }
+        // else
+        silentUpdateData.collection = [[object entity] name];
+        id<WMFFManagedObject>ffManagedObject = (id<WMFFManagedObject>)object;
+        silentUpdateData.objectGuid = [[ffManagedObject.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (nil == silentUpdateData.objectGuid) {
+            continue;
+        }
+        // else
+        [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+    }
+
+    // deletes
+    silentUpdateData.action = @"DELETE";
+    for (NSManagedObject *object in deletedObjects) {
+        if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
+            continue;
+        }
+        // else
+        silentUpdateData.collection = [[object entity] name];
+        id<WMFFManagedObject>ffManagedObject = (id<WMFFManagedObject>)object;
+        silentUpdateData.objectGuid = [[ffManagedObject.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (nil == silentUpdateData.objectGuid) {
+            continue;
+        }
+        // else
+        [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+    }
+
+}
+
+- (void)debugRootManagedObjectContextDidSave:(NSNotification *)notification
+{
+    NSSet *createdObjects = [[notification userInfo] objectForKey:NSInsertedObjectsKey];
+    DLog(@"*** Inserted (%d) ***", [createdObjects count]);
+    for (NSManagedObject *object in createdObjects) {
+        DLog(@"%@:%@", [[object entity] name], [object valueForKey:@"ffUrl"]);
+    }
+    DLog(@"*** Inserted End ***");
+    NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
+    DLog(@"*** Updated (%d) ***", [updatedObjects count]);
+    for (NSManagedObject *object in updatedObjects) {
+        DLog(@"%@:%@", [[object entity] name], [object valueForKey:@"ffUrl"]);
+        if ([self ffUrlAdded:object]) {
+            // this is really an insert
+            DLog(@"%@:%@ is an insert", [[object entity] name], [object valueForKey:@"ffUrl"]);
+        }
+    }
+    DLog(@"*** Updated End ***")
+    NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
+    DLog(@"*** Deleted (%d) ***", [deletedObjects count]);
+    for (NSManagedObject *object in deletedObjects) {
+        DLog(@"%@:%@", [[object entity] name], [object valueForKey:@"ffUrl"]);
+    }
+    DLog(@"*** Deleted End ***")
+}
+
+- (BOOL)ffUrlAdded:(NSManagedObject *)object
+{
+    NSDictionary *committedValueMap = [object committedValuesForKeys:@[@"ffUrl"]];
+    id committedValue = [committedValueMap objectForKey:@"ffUrl"];
+    return (!committedValue && [object valueForKey:@"ffUrl"]);
 }
 
 #pragma mark - FFQueueDelegate

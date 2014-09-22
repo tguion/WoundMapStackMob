@@ -1,6 +1,7 @@
 #import "_WMWoundPosition.h"
+#import "WMFFManagedObject.h"
 
-@interface WMWoundPosition : _WMWoundPosition {}
+@interface WMWoundPosition : _WMWoundPosition <WMFFManagedObject> {}
 
 @property (nonatomic) BOOL optionsInline;
 @property (nonatomic) BOOL allowMultipleSelection;

@@ -343,6 +343,7 @@
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
+        [WMFatFractalManager sharedInstance].postSynchronizationEvents = YES;
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate skinAssessmentGroupViewControllerDidSave:weakSelf];

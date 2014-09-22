@@ -1,9 +1,10 @@
 #import "_WMNavigationTrack.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMNavigationStage;
 
-@interface WMNavigationTrack : _WMNavigationTrack {}
+@interface WMNavigationTrack : _WMNavigationTrack <WMFFManagedObject> {}
 
 + (NSSet *)attributeNamesNotToSerialize;
 + (NSSet *)relationshipNamesNotToSerialize;

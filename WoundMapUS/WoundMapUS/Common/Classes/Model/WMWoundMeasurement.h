@@ -1,11 +1,12 @@
 #import "_WMWoundMeasurement.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 extern NSString *const kWoundMeasurementTitleDimensions;
 
 @class WMWoundType;
 
-@interface WMWoundMeasurement : _WMWoundMeasurement <AssessmentGroup> {}
+@interface WMWoundMeasurement : _WMWoundMeasurement <AssessmentGroup, WMFFManagedObject> {}
 
 @property (nonatomic) BOOL allowMultipleChildSelection;
 @property (nonatomic) BOOL normalizeMeasurements;

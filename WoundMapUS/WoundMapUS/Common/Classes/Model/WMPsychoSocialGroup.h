@@ -1,10 +1,11 @@
 #import "_WMPsychoSocialGroup.h"
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 @class WMPatient, WMPsychoSocialItem, WMPsychoSocialValue, WMInterventionEvent, WMParticipant;
 
-@interface WMPsychoSocialGroup : _WMPsychoSocialGroup <AssessmentGroup> {}
+@interface WMPsychoSocialGroup : _WMPsychoSocialGroup <AssessmentGroup, WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL hasInterventionEvents;
 

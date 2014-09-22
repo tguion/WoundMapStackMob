@@ -1,11 +1,12 @@
 #import "_WMBradenScale.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 extern NSString * const kBradenScaleTitle;
 
 @class WMPatient;
 
-@interface WMBradenScale : _WMBradenScale {}
+@interface WMBradenScale : _WMBradenScale <WMFFManagedObject> {}
 
 + (WMBradenScale *)createNewBradenScaleForPatient:(WMPatient *)patient;
 + (void)populateBradenScaleSections:(WMBradenScale *)bradenScale;

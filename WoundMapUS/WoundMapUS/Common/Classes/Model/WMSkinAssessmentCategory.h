@@ -1,7 +1,8 @@
 #import "_WMSkinAssessmentCategory.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
-@interface WMSkinAssessmentCategory : _WMSkinAssessmentCategory {}
+@interface WMSkinAssessmentCategory : _WMSkinAssessmentCategory <WMFFManagedObject> {}
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 

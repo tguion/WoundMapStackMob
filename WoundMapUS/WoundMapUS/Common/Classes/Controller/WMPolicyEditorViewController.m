@@ -620,6 +620,11 @@ NSString * const kTextCellIdentifier = @"TextCell";
 
 #pragma mark - ChooseTrackDelegate
 
+- (WMNavigationTrack *)selectedTrack
+{
+    return self.navigationTrack;
+}
+
 - (NSPredicate *)navigationTrackPredicate
 {
     return [NSPredicate predicateWithFormat:@"team == %@", self.appDelegate.participant.team];

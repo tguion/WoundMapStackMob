@@ -1,5 +1,6 @@
 #import "_WMPaymentTransaction.h"
 #import <StoreKit/StoreKit.h>
+#import "WMFFManagedObject.h"
 
 @interface WMPaymentTransaction : _WMPaymentTransaction {}
 

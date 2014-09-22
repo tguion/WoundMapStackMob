@@ -1,9 +1,10 @@
 #import "_WMTelecomType.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 extern NSString * const kTelecomTypeEmailTitle;
 
-@interface WMTelecomType : _WMTelecomType {}
+@interface WMTelecomType : _WMTelecomType <WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL isEmail;
 

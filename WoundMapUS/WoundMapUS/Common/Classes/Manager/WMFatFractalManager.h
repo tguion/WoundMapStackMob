@@ -26,6 +26,7 @@ typedef void (^WMObjectsCallback)(NSError *error, id object0, id object1);
 
 @property (nonatomic) BOOL processUpdatesOnNSManagedObjectContextObjectsDidChangeNotification;
 @property (nonatomic) BOOL processDeletesOnNSManagedObjectContextObjectsDidChangeNotification;
+@property (nonatomic) BOOL postSynchronizationEvents;       // if yes, process save to root notification to remote notifiation other team members
 
 // simple login alert shown when execution occurs with user session timeout
 - (void)showLoginWithTitle:(NSString *)title andMessage:(NSString *)message;

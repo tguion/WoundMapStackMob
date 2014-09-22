@@ -1,10 +1,11 @@
 #import "_WMWoundTreatmentGroup.h"
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 @class WMPatient, WMWound, WMWoundTreatment, WMWoundTreatmentValue, WMInterventionEvent, WMParticipant;
 
-@interface WMWoundTreatmentGroup : _WMWoundTreatmentGroup <AssessmentGroup> {}
+@interface WMWoundTreatmentGroup : _WMWoundTreatmentGroup <AssessmentGroup, WMFFManagedObject> {}
 
 + (WMWoundTreatmentGroup *)woundTreatmentGroupForWound:(WMWound *)wound;
 

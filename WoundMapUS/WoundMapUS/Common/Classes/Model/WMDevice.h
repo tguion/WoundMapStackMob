@@ -1,9 +1,10 @@
 #import "_WMDevice.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundType, WMPatient;
 
-@interface WMDevice : _WMDevice <AssessmentGroup> {}
+@interface WMDevice : _WMDevice <AssessmentGroup, WMFFManagedObject> {}
 
 @property (nonatomic) BOOL exludesOtherValues;
 

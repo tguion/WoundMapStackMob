@@ -1,9 +1,10 @@
 #import "_WMSkinAssessment.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundType, WMSkinAssessmentCategory;
 
-@interface WMSkinAssessment : _WMSkinAssessment <AssessmentGroup> {}
+@interface WMSkinAssessment : _WMSkinAssessment <AssessmentGroup, WMFFManagedObject> {}
 
 + (WMSkinAssessment *)updateSkinAssessmentFromDictionary:(NSDictionary *)dictionary
                                                 category:(WMSkinAssessmentCategory *)category

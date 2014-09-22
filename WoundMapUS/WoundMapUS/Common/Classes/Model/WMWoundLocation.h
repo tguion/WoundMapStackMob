@@ -1,7 +1,8 @@
 #import "_WMWoundLocation.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
-@interface WMWoundLocation : _WMWoundLocation <AssessmentGroup> {}
+@interface WMWoundLocation : _WMWoundLocation <AssessmentGroup, WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL isOther;
 @property (readonly, nonatomic) NSArray *sortedWoundPositionJoins;

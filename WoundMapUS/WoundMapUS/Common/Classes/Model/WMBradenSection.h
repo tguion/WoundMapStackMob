@@ -1,8 +1,9 @@
 #import "_WMBradenSection.h"
+#import "WMFFManagedObject.h"
 
 @class WMBradenSection, WMBradenCell;
 
-@interface WMBradenSection : _WMBradenSection {}
+@interface WMBradenSection : _WMBradenSection <WMFFManagedObject> {}
 
 + (id)instanceWithBradenScale:(WMBradenScale *)bradenScale;
 

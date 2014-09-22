@@ -1,8 +1,9 @@
 #import "_WMTeam.h"
+#import "WMFFManagedObject.h"
 
 extern NSString * const kParticipantGroupName;
 
-@interface WMTeam : _WMTeam {}
+@interface WMTeam : _WMTeam <WMFFManagedObject> {}
 
 + (NSSet *)relationshipNamesNotToSerialize;
 

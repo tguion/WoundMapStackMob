@@ -1,6 +1,7 @@
 #import "_WMTeamInvitation.h"
+#import "WMFFManagedObject.h"
 
-@interface WMTeamInvitation : _WMTeamInvitation {}
+@interface WMTeamInvitation : _WMTeamInvitation <WMFFManagedObject> {}
 
 @property (nonatomic, readonly) BOOL isAccepted;
 

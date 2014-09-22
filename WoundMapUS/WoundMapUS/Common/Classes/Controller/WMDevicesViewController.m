@@ -215,7 +215,8 @@
     if ([value isKindOfClass:[NSString class]]) {
         createDeviceValue = [value length] > 0;
     }
-    WMDeviceValue *deviceValue = [self.deviceGroup deviceValueForDevice:assessmentGroup
+    NSAssert([assessmentGroup isKindOfClass:[WMDevice class]], @"Expected WMDevice, but %@", assessmentGroup);
+    WMDeviceValue *deviceValue = [self.deviceGroup deviceValueForDevice:(WMDevice *)assessmentGroup
                                                                  create:createDeviceValue
                                                                   value:nil];
     if (createDeviceValue) {

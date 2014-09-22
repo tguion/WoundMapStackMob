@@ -1,4 +1,5 @@
 #import "_WMWoundMeasurementValue.h"
+#import "WMFFManagedObject.h"
 
 typedef NS_ENUM(NSUInteger, WoundMeasurementValueType) {
     kWoundMeasurementValueTypeNormal,
@@ -6,7 +7,7 @@ typedef NS_ENUM(NSUInteger, WoundMeasurementValueType) {
     kWoundMeasurementValueTypeUndermine
 };
 
-@interface WMWoundMeasurementValue : _WMWoundMeasurementValue {}
+@interface WMWoundMeasurementValue : _WMWoundMeasurementValue <WMFFManagedObject> {}
 
 + (instancetype)normalWoundMeasurementValue:(NSManagedObjectContext *)managedObjectContext;
 + (instancetype)tunnelWoundMeasurementValue:(NSManagedObjectContext *)managedObjectContext;

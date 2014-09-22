@@ -488,18 +488,18 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     [self patientNavigationDataChangedOnDevice];
     // save local
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMPatient *patient = self.patient;
     NSParameterAssert(patient.ffUrl);
     WMErrorCallback completionHandler = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        ffm.postSynchronizationEvents = YES;
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
     };

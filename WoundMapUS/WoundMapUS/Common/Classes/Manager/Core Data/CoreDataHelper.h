@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "MigrationVC.h"
+#import "WMFFManagedObject.h"
 
 @class WMNetworkReachability;
 
@@ -36,5 +37,7 @@ extern NSString *localStoreFilename;
 - (void)markBackendDataAcquiredForEntityName:(NSString *)entityName;
 - (BOOL)isBackendDataAcquiredForEntityName:(NSString *)entityName;
 - (void)unmarkBackendDataAcquiredForEntityName:(NSString *)entityName;
+
+- (id<WMFFManagedObject>)ffManagedObjectForCollection:(NSString *)collection guid:(NSString *)guid managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

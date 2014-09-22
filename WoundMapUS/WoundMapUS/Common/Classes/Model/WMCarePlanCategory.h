@@ -1,9 +1,10 @@
 #import "_WMCarePlanCategory.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundType;
 
-@interface WMCarePlanCategory : _WMCarePlanCategory <AssessmentGroup> {}
+@interface WMCarePlanCategory : _WMCarePlanCategory <AssessmentGroup, WMFFManagedObject> {}
 
 @property (nonatomic) BOOL combineKeyAndValue;
 @property (nonatomic) BOOL inputValueInline;

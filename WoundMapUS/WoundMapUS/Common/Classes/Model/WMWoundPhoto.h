@@ -1,4 +1,5 @@
 #import "_WMWoundPhoto.h"
+#import "WMFFManagedObject.h"
 
 @class WMWound, WMPhoto, WMWoundMeasurementGroup;
 
@@ -12,7 +13,7 @@ typedef enum {
     WoundPhotoThumbnailTypeThumbnailLarge,
 } WoundPhotoThumbnailType;
 
-@interface WMWoundPhoto : _WMWoundPhoto {}
+@interface WMWoundPhoto : _WMWoundPhoto <WMFFManagedObject> {}
 
 + (WMWoundPhoto *)createWoundPhotoForWound:(WMWound *)wound;
 

@@ -1,9 +1,10 @@
 #import "_WMMedicalHistoryGroup.h"
 #import "WMFatFractalManager.h"
+#import "WMFFManagedObject.h"
 
 @class WMMedicalHistoryItem;
 
-@interface WMMedicalHistoryGroup : _WMMedicalHistoryGroup {}
+@interface WMMedicalHistoryGroup : _WMMedicalHistoryGroup <WMFFManagedObject> {}
 
 @property (readonly, nonatomic) NSArray *sortedMedicalHistoryValues;
 @property (readonly, nonatomic) NSInteger valueCount;

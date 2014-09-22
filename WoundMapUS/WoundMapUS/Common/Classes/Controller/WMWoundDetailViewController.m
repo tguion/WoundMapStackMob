@@ -150,7 +150,6 @@
         __weak __typeof(&*self)weakSelf = self;
         if (_newWoundFlag) {
             _wound = [WMWound instanceWithPatient:self.patient];
-            [self.managedObjectContext MR_saveToPersistentStoreAndWait];
             // create on back end
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -193,8 +192,9 @@
 - (IBAction)saveAction:(id)sender
 {
     [self.view endEditing:YES];
-    if (self.managedObjectContext.undoManager.groupingLevel > 0) {
-        [self.managedObjectContext.undoManager endUndoGrouping];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    if (managedObjectContext.undoManager.groupingLevel > 0) {
+        [managedObjectContext.undoManager endUndoGrouping];
     }
     [self.delegate woundDetailViewController:self didUpdateWound:self.wound];
 }

@@ -1,5 +1,6 @@
 #import "_WMWoundType.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 // IAP: wound type codes here
 typedef enum {
@@ -18,7 +19,7 @@ typedef enum {
     WoundTypeCode_Other                         = 12,
 } WoundTypeCode;
 
-@interface WMWoundType : _WMWoundType <AssessmentGroup> {}
+@interface WMWoundType : _WMWoundType <AssessmentGroup, WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL isOther;
 @property (readonly, nonatomic) BOOL hasChildrenWoundTypes;

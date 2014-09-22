@@ -1,7 +1,8 @@
 #import "_WMNutritionItem.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
-@interface WMNutritionItem : _WMNutritionItem <AssessmentGroup> {}
+@interface WMNutritionItem : _WMNutritionItem <AssessmentGroup, WMFFManagedObject> {}
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 

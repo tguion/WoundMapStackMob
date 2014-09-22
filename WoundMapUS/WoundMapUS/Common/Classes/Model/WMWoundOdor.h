@@ -1,7 +1,8 @@
 #import "_WMWoundOdor.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
-@interface WMWoundOdor : _WMWoundOdor {}
+@interface WMWoundOdor : _WMWoundOdor <WMFFManagedObject> {}
 
 + (WMWoundOdor *)woundOdorForTitle:(NSString *)title
                             create:(BOOL)create

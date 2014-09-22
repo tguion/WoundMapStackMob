@@ -100,6 +100,10 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self selector:@selector(observeKeyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
     [center addObserver:self selector:@selector(observeKeyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+    
+    // DEBUG
+    NSInteger groupingLevel = self.managedObjectContext.undoManager.groupingLevel;
+    DLog(@"*** groupingLevel %d", groupingLevel);
 }
 
 - (void)viewWillDisappear:(BOOL)animated

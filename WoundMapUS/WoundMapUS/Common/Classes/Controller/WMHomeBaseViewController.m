@@ -2083,6 +2083,8 @@
 - (void)selectWoundController:(WMSelectWoundViewController *)viewController didSelectWound:(WMWound *)wound
 {
     self.appDelegate.navigationCoordinator.wound = wound;
+    // update from cloud
+    [self.appDelegate.navigationCoordinator updateWoundFromCloud:wound];
 }
 
 - (void)selectWoundControllerDidCancel:(WMSelectWoundViewController *)viewController
@@ -2094,18 +2096,20 @@
 - (void)woundDetailViewController:(WMWoundDetailViewController *)viewController didUpdateWound:(WMWound *)wound
 {
     self.appDelegate.navigationCoordinator.wound = wound;
-    // save
-    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     // update UI
     [self.navigationPatientWoundContainerView updateContentForPatient];
     __weak __typeof(&*self)weakSelf = self;
     // commit to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
+        // save
+        ffm.postSynchronizationEvents = YES;
+        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
     }];
 }

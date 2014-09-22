@@ -1,5 +1,6 @@
 #import "_WMInterventionEventType.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 extern NSString * const kInterventionEventTypePlan;
 extern NSString * const kInterventionEventTypeBegin;
@@ -18,7 +19,7 @@ typedef enum {
     InterventionEventChangeTypeUpdateStatus,
 } InterventionEventChangeType;
 
-@interface WMInterventionEventType : _WMInterventionEventType {}
+@interface WMInterventionEventType : _WMInterventionEventType <WMFFManagedObject> {}
 
 + (void)seedDatabase:(NSManagedObjectContext *)managedObjectContext completionHandler:(WMProcessCallbackWithCallback)completionHandler;
 

@@ -1,8 +1,9 @@
 #import "_WMWound.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundPosition, WMWoundLocationPositionJoin, WMWoundPositionValue, WMWoundPhoto;
 
-@interface WMWound : _WMWound {}
+@interface WMWound : _WMWound <WMFFManagedObject> {}
 
 + (NSArray *)pressureUlcerTypeCodes;
 

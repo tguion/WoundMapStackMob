@@ -1,9 +1,10 @@
 #import "_WMNavigationStage.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMNavigationTrack;
 
-@interface WMNavigationStage : _WMNavigationStage {}
+@interface WMNavigationStage : _WMNavigationStage <WMFFManagedObject> {}
 
 + (NSInteger)navigationStageCount:(NSManagedObjectContext *)managedObjectContext;
 

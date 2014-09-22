@@ -16,6 +16,7 @@
 extern NSString *const kPatientChangedNotification;
 extern NSString *const kPatientRefreshingFromCloudNotification;
 extern NSString *const kPatientUpdatedFromBackendNotification;
+extern NSString *const kWoundUpdatedFromBackendNotification;
 extern NSString *const kPatientNavigationDataChangedOnDeviceNotification;
 extern NSString *const kWoundChangedNotification;
 extern NSString *const kWoundPhotoChangedNotification;
@@ -69,6 +70,7 @@ typedef enum {
 - (WMWound *)selectLastWoundForPatient;
 - (void)deleteWoundFromBackEnd:(WMWound *)wound;
 - (void)deleteWound:(WMWound *)wound;
+- (void)updateWoundFromCloud:(WMWound *)wound;
 
 - (void)viewController:(UIViewController *)viewController beginMeasurementsForWoundPhoto:(WMWoundPhoto *)woundPhoto addingPhoto:(BOOL)addingPhoto;
 - (void)cancelWoundMeasurementNavigation:(UIViewController *)viewController;

@@ -1,10 +1,11 @@
 #import "_WMSkinAssessmentGroup.h"
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 @class WMPatient, WMSkinAssessment, WMSkinAssessmentCategory, WMSkinAssessmentValue, WMInterventionEvent, WMParticipant;
 
-@interface WMSkinAssessmentGroup : _WMSkinAssessmentGroup <AssessmentGroup> {}
+@interface WMSkinAssessmentGroup : _WMSkinAssessmentGroup <AssessmentGroup, WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL isClosed;
 @property (readonly, nonatomic) BOOL hasInterventionEvents;

@@ -1,5 +1,6 @@
 #import "_WMId.h"
+#import "WMFFManagedObject.h"
 
-@interface WMId : _WMId {}
+@interface WMId : _WMId <WMFFManagedObject> {}
 
 @end

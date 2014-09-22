@@ -1,7 +1,8 @@
 #import "_WMMedicalHistoryItem.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
-@interface WMMedicalHistoryItem : _WMMedicalHistoryItem {}
+@interface WMMedicalHistoryItem : _WMMedicalHistoryItem <WMFFManagedObject> {}
 
 + (NSArray *)sortedMedicalHistoryItems:(NSManagedObjectContext *)managedObjectContext;
 

@@ -1,6 +1,7 @@
 #import "_WMParticipant.h"
+#import "WMFFManagedObject.h"
 
-@interface WMParticipant : _WMParticipant {}
+@interface WMParticipant : _WMParticipant <WMFFManagedObject> {}
 
 + (NSSet *)relationshipNamesNotToSerialize;
 

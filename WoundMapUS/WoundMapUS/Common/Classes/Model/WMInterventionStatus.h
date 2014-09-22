@@ -1,5 +1,6 @@
 #import "_WMInterventionStatus.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 extern NSString * const kInterventionStatusPlanned;
 extern NSString * const kInterventionStatusInProcess;
@@ -8,7 +9,7 @@ extern NSString * const kInterventionStatusCancelled;
 extern NSString * const kInterventionStatusDiscontinue;
 extern NSString * const kInterventionStatusNotAdopted;
 
-@interface WMInterventionStatus : _WMInterventionStatus {}
+@interface WMInterventionStatus : _WMInterventionStatus <WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL isActive;
 @property (readonly, nonatomic) BOOL isInProcess;

@@ -1,9 +1,10 @@
 #import "_WMMedication.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundType;
 
-@interface WMMedication : _WMMedication <AssessmentGroup> {}
+@interface WMMedication : _WMMedication <AssessmentGroup, WMFFManagedObject> {}
 
 @property (nonatomic) BOOL exludesOtherValues;
 

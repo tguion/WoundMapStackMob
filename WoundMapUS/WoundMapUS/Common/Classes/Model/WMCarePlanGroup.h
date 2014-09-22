@@ -1,10 +1,11 @@
 #import "_WMCarePlanGroup.h"
 #import "WoundCareProtocols.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 @class WMPatient, WMCarePlanValue, WMCarePlanCategory, WMInterventionEvent, WMParticipant, WMInterventionEventType;
 
-@interface WMCarePlanGroup : _WMCarePlanGroup <AssessmentGroup> {}
+@interface WMCarePlanGroup : _WMCarePlanGroup <AssessmentGroup, WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL hasInterventionEvents;
 @property (readonly, nonatomic) NSArray *sortedCarePlanValues;

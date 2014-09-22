@@ -1,9 +1,10 @@
 #import "_WMPsychoSocialItem.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundType;
 
-@interface WMPsychoSocialItem : _WMPsychoSocialItem <AssessmentGroup> {}
+@interface WMPsychoSocialItem : _WMPsychoSocialItem <AssessmentGroup, WMFFManagedObject> {}
 
 @property (readonly, nonatomic) BOOL hasSubItems;
 @property (nonatomic) BOOL allowMultipleChildSelection;

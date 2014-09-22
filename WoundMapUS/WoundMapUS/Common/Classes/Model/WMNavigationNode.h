@@ -1,5 +1,6 @@
 #import "_WMNavigationNode.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 typedef NS_ENUM(int16_t, NavigationNodeFrequencyUnit) {
     NavigationNodeFrequencyUnit_None        = 0,
@@ -11,7 +12,7 @@ typedef NS_ENUM(int16_t, NavigationNodeFrequencyUnit) {
 
 @class WMNavigationStage, WMWoundType;
 
-@interface WMNavigationNode : _WMNavigationNode {}
+@interface WMNavigationNode : _WMNavigationNode <WMFFManagedObject> {}
 
 @property (readonly, nonatomic) NSArray *sortedSubnodes;
 @property (readonly) NavigationNodeIdentifier navigationNodeIdentifier;

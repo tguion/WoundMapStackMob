@@ -86,7 +86,7 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
             break;
         }
         case WMNetworkStatusReachable: {
-            message = @"The network is now reachable. You will receive updates from team members, and team members will have access to patient data you entered while the network was unavailable.";
+            message = @"The network is now reachable. Your patient records will now be updated through our secure network.  We recommend that you use a wifi connection whenever possible.";
             break;
         }
         default:
@@ -236,6 +236,15 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
 - (NSPersistentStore *)store
 {
     return [NSPersistentStore MR_defaultPersistentStore];
+}
+
+#pragma mark - Core
+
+- (id<WMFFManagedObject>)ffManagedObjectForCollection:(NSString *)collection guid:(NSString *)guid managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    Class aClass = NSClassFromString(collection);
+    id<WMFFManagedObject> object = [aClass MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", [NSString stringWithFormat:@"/ff/Resources/%@", guid]] inContext:managedObjectContext];
+    return object;
 }
 
 #pragma mark - VALIDATION ERROR HANDLING

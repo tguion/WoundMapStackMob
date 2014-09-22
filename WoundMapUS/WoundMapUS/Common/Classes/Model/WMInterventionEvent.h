@@ -1,10 +1,11 @@
 #import "_WMInterventionEvent.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 @class WMParticipant, WMInterventionEventType;
 @class WMSkinAssessmentGroup, WMCarePlanGroup, WMDeviceGroup, WMMedicationGroup, WMPsychoSocialGroup, WMWoundMeasurementGroup, WMWoundTreatmentGroup, WMNutritionGroup;
 
-@interface WMInterventionEvent : _WMInterventionEvent {}
+@interface WMInterventionEvent : _WMInterventionEvent <WMFFManagedObject> {}
 
 + (WMInterventionEvent *)interventionEventForSkinAssessmentGroup:(WMSkinAssessmentGroup *)skinAssessmentGroup
                                                       changeType:(InterventionEventChangeType)changeType

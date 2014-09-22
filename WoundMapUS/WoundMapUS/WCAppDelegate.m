@@ -16,6 +16,9 @@
 #import "WMSeedDatabaseManager.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
+#import "WMPatient.h"
+#import "WMWound.h"
+#import "WMWoundPhoto.h"
 #import "WMWoundType.h"
 #import "IAPManager.h"
 #import "WMPhotoManager.h"
@@ -196,6 +199,16 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
     // set up IAP so it hears notifications
     [IAPManager sharedInstance];
+    // account for iOS 8 new notification registration
+//    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+//        // use registerUserNotificationSettings
+//        [application registerForRemoteNotifications];
+//        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
+//    } else {
+//        // use registerForRemoteNotifications
+//        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+//    }
+
     [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     return YES;
 }
@@ -294,10 +307,30 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 }
 
 // RPN
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+    // check for data synch
+    id content_available = userInfo[@"aps"][@"content-available"];
+    if (content_available) {
+        [self downloadFFDataForCollection:userInfo[@"aps"] fetchCompletionHandler:handler];
+    } else {
+        // no data
+        handler(UIBackgroundFetchResultNoData);
+    }
+}
+
+// RPN
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     id alertMsg = nil;
     NSString *otherButton = nil;
     NSString *badge = nil;
+    
+    // check for data synch
+    id content_available = userInfo[@"aps"][@"content-available"];
+    if (content_available) {
+        [self downloadFFDataForCollection:userInfo[@"aps"] fetchCompletionHandler:nil];
+        return;
+    }
 
     self.remoteNotification = userInfo;
     // user already saw the alert and started up the app that way. don't show it to them again.
@@ -346,20 +379,100 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                                  otherButtonTitles: nil];
     }
     alert.tag = kRemoteNotification;
-    [alert setDelegate: self];
+    [alert setDelegate:self];
     
     [alert show];
 }
 
 // RPN
+- (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+    UIBackgroundFetchResult backgroundFetchResult = UIBackgroundFetchResultFailed;
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    if (ff.loggedIn) {
+        NSString *patientGuid = map[@"patientGuid"];
+        NSString *woundGuid = map[@"woundGuid"];
+        NSString *woundPhotoGuid = map[@"woundPhotoGuid"];
+        NSString *collection = map[@"collection"];
+        NSString *objectGuid = map[@"objectGuid"];
+        NSString *action = map[@"action"];
+        // make sure we have patient
+        NSError *error = nil;
+        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+        WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
+        if (nil == patient) {
+            // just fetch the patient
+            [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMPatient entityName], patientGuid] error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+                goto BackgroundLabel;
+            }
+        }
+        
+        // else
+        if (woundGuid) {
+            WMWound *wound = [WMWound MR_findFirstByAttribute:WMWoundAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMWound/%@", woundGuid] inContext:managedObjectContext];
+            if (nil == wound) {
+                // just fetch the wound
+                [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMWound entityName], woundGuid] error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                    goto BackgroundLabel;
+                }
+            }
+        }
+        
+        // else
+        if (woundPhotoGuid) {
+            WMWoundPhoto *woundPhoto = [WMWoundPhoto MR_findFirstByAttribute:WMWoundPhotoAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMWoundPhoto/%@", woundPhotoGuid] inContext:managedObjectContext];
+            if (nil == woundPhoto) {
+                // just fetch the woundPhoto
+                [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMWoundPhoto entityName], woundPhotoGuid] error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                    goto BackgroundLabel;
+                }
+            }
+        }
+        
+        // else
+        if ([collection isKindOfClass:[NSString class]] && [collection length] && [objectGuid isKindOfClass:[NSString class]] && [objectGuid length]) {
+            // fetch the data
+            id object = [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@", collection, objectGuid] error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            if ([action isEqualToString:@"DELETE"]) {
+                [managedObjectContext MR_deleteObjects:@[object]];
+            }
+            // save data
+            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+            // update UI
+            
+            // mark as success
+            backgroundFetchResult = UIBackgroundFetchResultNewData;
+        } else {
+            // no data
+            backgroundFetchResult = UIBackgroundFetchResultNoData;
+        }
+    }
+    
+    // success
+BackgroundLabel:
+    if (handler) {
+        handler(backgroundFetchResult);
+    }
+}
+
+// RPN
 - (void)processRemoteNotification
 {
-    NSString *patientGUID = self.remoteNotification[@"patientGuid"];        // WMPatient guid
+    NSString *patientGuid = self.remoteNotification[@"patientGuid"];        // WMPatient guid
     NSString *invitationGuid = self.remoteNotification[@"invitationGuid"];  // WMTeamInvitation guid
     NSString *teamGuid = self.remoteNotification[@"teamGuid"];              // WMTeam guid
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    if (patientGUID) {
-        [center postNotificationName:kPatientReferralNotification object:patientGUID];
+    if (patientGuid) {
+        [center postNotificationName:kPatientReferralNotification object:patientGuid];
     } else if (invitationGuid) {
         [center postNotificationName:kTeamInvitationNotification object:invitationGuid];
     } else if (teamGuid) {

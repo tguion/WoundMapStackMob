@@ -404,7 +404,14 @@
 
 - (IBAction)saveAction:(id)sender
 {
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (self.selectedPsychoSocialItem) {
+        if (managedObjectContext.undoManager.groupingLevel > 0) {
+            [managedObjectContext.undoManager endUndoGrouping];
+            if (_removeUndoManagerWhenDone) {
+                managedObjectContext.undoManager = nil;
+            }
+        }
         // just pull down UI
         [self.delegate psychoSocialGroupViewControllerDidFinish:self];
         return;
@@ -416,7 +423,6 @@
         return;
     }
     // else
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext.undoManager.groupingLevel > 0) {
         [managedObjectContext.undoManager endUndoGrouping];
         if (_removeUndoManagerWhenDone) {

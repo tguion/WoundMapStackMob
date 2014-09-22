@@ -1,9 +1,10 @@
 #import "_WMWoundTreatment.h"
 #import "WoundCareProtocols.h"
+#import "WMFFManagedObject.h"
 
 @class WMWoundType;
 
-@interface WMWoundTreatment : _WMWoundTreatment <AssessmentGroup> {}
+@interface WMWoundTreatment : _WMWoundTreatment <AssessmentGroup, WMFFManagedObject> {}
 
 @property (nonatomic) BOOL combineKeyAndValue;
 @property (nonatomic) BOOL allowMultipleChildSelection;

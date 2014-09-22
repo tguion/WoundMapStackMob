@@ -1,9 +1,10 @@
 #import "_WMNutritionGroup.h"
 #import "WMInterventionEventType.h"
+#import "WMFFManagedObject.h"
 
 @class WMPatient, WMInterventionEvent, WMParticipant, WMNutritionItem;
 
-@interface WMNutritionGroup : _WMNutritionGroup {}
+@interface WMNutritionGroup : _WMNutritionGroup <WMFFManagedObject> {}
 
 @property (readonly, nonatomic) NSArray *sortedValues;
 
