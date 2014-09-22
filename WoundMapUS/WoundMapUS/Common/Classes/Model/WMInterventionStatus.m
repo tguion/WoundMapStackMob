@@ -140,6 +140,17 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
     }
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -152,7 +163,9 @@ NSString * const kInterventionStatusNotAdopted = @"Not Adopted";
                                                             @"snomedCIDValue",
                                                             @"sortRankValue",
                                                             @"isActive",
-                                                            @"isInProcess"]];
+                                                            @"isInProcess",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

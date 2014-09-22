@@ -340,17 +340,19 @@
     // create intervention events before super
     [_deviceGroup createEditEventsForParticipant:self.appDelegate.participant];
     // update backend
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block NSInteger counter = 1;  // update _deviceGroup
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         WM_ASSERT_MAIN_THREAD;
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+        ffm.postSynchronizationEvents = YES;
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate devicesViewControllerDidSave:weakSelf];
     };
     // update back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];

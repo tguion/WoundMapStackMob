@@ -208,6 +208,18 @@
     self.continueCountValue = self.continueCountValue + 1;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -232,7 +244,9 @@
                                                             @"medicationsInGroup",
                                                             @"isClosed",
                                                             @"medicationsAdded",
-                                                            @"medicationsRemoved"]];
+                                                            @"medicationsRemoved",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -1,5 +1,6 @@
 #import "WMTelecom.h"
 #import "WMTelecomType.h"
+#import "WMPerson.h"
 
 @interface WMTelecom ()
 
@@ -37,6 +38,18 @@
     return [array0 componentsJoinedByString:@":"];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.person;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -47,7 +60,9 @@
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"isEmail",
                                                             @"stringValue",
-                                                            @"objectID"]];
+                                                            @"objectID",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -297,12 +297,14 @@
     }
     // handle back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     WMWoundMeasurementGroup *woundMeasurementGroup = self.woundMeasurementGroup;
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     dispatch_block_t block = ^{
         if (_saveToStoreOnSave) {
+            ffm.postSynchronizationEvents = YES;
             [[woundMeasurementGroup managedObjectContext] MR_saveToPersistentStoreAndWait];
         }
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];

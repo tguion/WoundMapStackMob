@@ -31,6 +31,18 @@
     return [self.selectedFlag boolValue];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -40,7 +52,9 @@
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"selectedFlagValue",
                                                             @"valueValue",
-                                                            @"isSelected"]];
+                                                            @"isSelected",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

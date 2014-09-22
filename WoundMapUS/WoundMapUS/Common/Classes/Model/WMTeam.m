@@ -56,6 +56,18 @@ static NSMutableDictionary *ffUrl2ParticipantGroupMap;
     return [[[self.participants allObjects] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isTeamLeader == YES"]] lastObject];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -66,7 +78,9 @@ static NSMutableDictionary *ffUrl2ParticipantGroupMap;
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"teamLeader",
                                                             @"iapTeamMemberSuccessCountValue",
-                                                            @"purchasedPatientCountValue"]];
+                                                            @"purchasedPatientCountValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

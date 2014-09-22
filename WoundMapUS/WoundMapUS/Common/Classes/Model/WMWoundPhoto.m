@@ -300,6 +300,18 @@ typedef enum {
     self.transformRotation = [NSNumber numberWithFloat:0.0];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.wound;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -330,7 +342,9 @@ typedef enum {
                                                             @"isTransformIdentity",
                                                             @"transformBoundsSize",
                                                             @"tilesCreatedForOriginalImage",
-                                                            @"photoDeletedPerTeamPolicy"]];
+                                                            @"photoDeletedPerTeamPolicy",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

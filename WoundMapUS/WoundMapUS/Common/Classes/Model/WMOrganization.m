@@ -41,6 +41,18 @@
     return self.addresses;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -50,7 +62,9 @@
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"managedObjectContext",
-                                                            @"objectID"]];
+                                                            @"objectID",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -72,6 +72,18 @@ typedef enum {
     return woundPosition;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -85,7 +97,9 @@ typedef enum {
                                                             @"valueTypeCodeValue",
                                                             @"optionsInline",
                                                             @"allowMultipleSelection",
-                                                            @"hasTitle"]];
+                                                            @"hasTitle",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

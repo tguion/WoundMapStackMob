@@ -1,4 +1,6 @@
 #import "WMId.h"
+#import "WMPatient.h"
+#import "WMOrganization.h"
 
 @interface WMId ()
 
@@ -16,6 +18,18 @@
     self.updatedAt = [NSDate date];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return (self.patient ? self.patient:self.organization);
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -23,7 +37,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue"]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue", @"aggregator", @"requireUpdatesFromCloud"]];
     });
     return PropertyNamesNotToSerialize;
 }

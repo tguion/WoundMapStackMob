@@ -74,6 +74,18 @@ typedef enum {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:WCDeviceExludeOtherValues to:exludesOtherValues]);
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -91,7 +103,9 @@ typedef enum {
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
                                                             @"interventionEvents",
-                                                            @"exludesOtherValues"]];
+                                                            @"exludesOtherValues",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

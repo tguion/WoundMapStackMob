@@ -44,6 +44,18 @@
     return [self.sortedPositions objectAtIndex:index];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -60,7 +72,9 @@
                                         @"value",
                                         @"optionsArray",
                                         @"secondaryOptionsArray",
-                                        @"interventionEvents"]];
+                                        @"interventionEvents",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

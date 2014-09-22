@@ -1,4 +1,5 @@
 #import "WMWoundMeasurementValue.h"
+#import "WMWoundMeasurementGroup.h"
 #import "WMWoundMeasurement.h"
 #import "WMAmountQualifier.h"
 #import "WMWoundOdor.h"
@@ -125,7 +126,19 @@
     }
     return displayValue;
 }
-//, , , , , , , , , ,
+
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.group;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -143,7 +156,9 @@
                                                             @"displayValue",
                                                             @"valueText",
                                                             @"labelText",
-                                                            @"isTunnelingValue"]];
+                                                            @"isTunnelingValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

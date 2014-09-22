@@ -60,6 +60,18 @@
     return [self.categoryPathToValue componentsJoinedByString:@","];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.group;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -70,7 +82,9 @@
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"revisedFlagValue",
                                                             @"categoryPathToValue",
-                                                            @"pathToValue"]];
+                                                            @"pathToValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

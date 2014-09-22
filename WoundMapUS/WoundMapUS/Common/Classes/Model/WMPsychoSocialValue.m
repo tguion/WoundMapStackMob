@@ -1,5 +1,6 @@
 #import "WMPsychoSocialValue.h"
 #import "WMPsychoSocialItem.h"
+#import "WMPsychoSocialGroup.h"
 
 @interface WMPsychoSocialValue ()
 
@@ -42,6 +43,18 @@
     return displayValue;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.group;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -52,7 +65,9 @@
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                                             @"pathToValue",
                                                             @"revisedFlagValue",
-                                                            @"displayValue"]];
+                                                            @"displayValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

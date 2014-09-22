@@ -35,4 +35,56 @@
     return interventionStatusJoin;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
+#pragma mark - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"aggregator", @"requireUpdatesFromCloud"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
++ (NSSet *)relationshipNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[WMInterventionStatusJoinRelationships.fromStatus, WMInterventionStatusJoinRelationships.toStatus]];
+    });
+    return PropertyNamesNotToSerialize;
+}
+
+- (BOOL)ff_shouldSerialize:(NSString *)propertyName
+{
+    if ([[WMInterventionStatusJoin attributeNamesNotToSerialize] containsObject:propertyName] || [[WMInterventionStatusJoin relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+- (BOOL)ff_shouldSerializeAsSetOfReferences:(NSString *)propertyName {
+    if ([[WMInterventionStatusJoin relationshipNamesNotToSerialize] containsObject:propertyName]) {
+        return NO;
+    }
+    // else
+    return YES;
+}
+
+
 @end

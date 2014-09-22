@@ -566,6 +566,18 @@ typedef enum {
     return navigationNode;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -596,7 +608,9 @@ typedef enum {
                                                             @"closeUnitForDisplay",
                                                             @"requiredFlag",
                                                             @"hidesStatusIndicator",
-                                                            @"teamFlagValue"]];
+                                                            @"teamFlagValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

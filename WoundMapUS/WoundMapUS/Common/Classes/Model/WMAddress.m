@@ -1,4 +1,6 @@
 #import "WMAddress.h"
+#import "WMPerson.h"
+#import "WMOrganization.h"
 
 @interface WMAddress ()
 
@@ -45,14 +47,37 @@
     self.updatedAt = [NSDate date];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return (self.person ? self.person:self.organization);
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mar - FatFractal
+
++ (NSSet *)attributeNamesNotToSerialize
+{
+    static NSSet *PropertyNamesNotToSerialize = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"stringValue",
+                                                            @"stringValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator",
+                                                            @"objectID"]];
+    });
+    return PropertyNamesNotToSerialize;
+}
 
 - (BOOL)ff_shouldSerialize:(NSString *)propertyName
 {
-    if ([propertyName isEqualToString:@"stringValue"]) {
-        return NO;
-    }
-    if ([propertyName isEqualToString:@"objectID"]) {
+    if ([[WMAddress attributeNamesNotToSerialize] containsObject:propertyName]) {
         return NO;
     }
     // else

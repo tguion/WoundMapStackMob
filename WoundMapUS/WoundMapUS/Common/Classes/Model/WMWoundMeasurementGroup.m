@@ -569,6 +569,18 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     return self.closedFlagValue;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.woundPhoto;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -604,7 +616,9 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
                                                             @"sortedDeviceValues",
                                                             @"isClosed",
                                                             @"deviceValuesAdded",
-                                                            @"deviceValuesRemoved"]];
+                                                            @"deviceValuesRemoved",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

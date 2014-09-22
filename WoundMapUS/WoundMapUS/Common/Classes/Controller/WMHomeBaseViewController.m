@@ -2223,6 +2223,7 @@
             __weak __typeof(&*self)weakSelf = self;
             [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Processing Photo";
             WMFatFractal *ff = [WMFatFractal sharedInstance];
+            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
 //            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             // have photoManager start the process
             __block NSInteger counter = 2;
@@ -2230,6 +2231,7 @@
                 if (error) {
                     [WMUtilities logError:error];
                 }
+                ffm.postSynchronizationEvents = YES;
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 if (counter == 0 || --counter == 0) {
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -2241,6 +2243,7 @@
                 } else {
                     WMWoundPhoto *woundPhoto = (WMWoundPhoto *)object0;
                     WMPhoto *photo = (WMPhoto *)object1;
+                    ffm.postSynchronizationEvents = YES;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
 //                    [ffm uploadPhotosForWoundPhoto:woundPhoto photo:photo];// defer
 //                    [ffm queueUploadPhotosForWoundPhoto:woundPhoto photo:photo];// appears to eventually cause delete of WMPhoto
@@ -2342,6 +2345,8 @@
 
 - (void)woundTreatmentGroupsViewControllerDidFinish:(WMWoundTreatmentGroupsViewController *)viewController
 {
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    ffm.postSynchronizationEvents = YES;
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:@(kWoundTreatmentNode)];
 }

@@ -148,6 +148,18 @@ NSString * const kOtherWoundTypeTitle = @"Other";
     return [WMWoundType MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"title == %@", kOtherWoundTypeTitle] inContext:managedObjectContext];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -170,7 +182,9 @@ NSString * const kOtherWoundTypeTitle = @"Other";
                                                             @"value",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"interventionEvents"]];
+                                                            @"interventionEvents",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

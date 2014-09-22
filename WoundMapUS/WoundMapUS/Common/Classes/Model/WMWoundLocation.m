@@ -177,6 +177,18 @@ NSString * const kOtherWoundLocationTitle = @"Other";
     }
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -195,7 +207,9 @@ NSString * const kOtherWoundLocationTitle = @"Other";
                                                             @"secondaryOptionsArray",
                                                             @"interventionEvents",
                                                             @"isOther",
-                                                            @"sortedWoundPositionJoins"]];
+                                                            @"sortedWoundPositionJoins",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

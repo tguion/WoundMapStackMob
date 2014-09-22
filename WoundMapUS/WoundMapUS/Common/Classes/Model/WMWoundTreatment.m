@@ -285,6 +285,18 @@ typedef enum {
     return [NSPredicate predicateWithFormat:@"parentTreatment == %@ AND (woundTypes.@count == 0 OR ANY woundTypes == %@)", parentWoundTreatment, woundType];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -310,7 +322,9 @@ typedef enum {
                                                             @"sortedChildrenWoundTreatments",
                                                             @"childrenHaveSectionTitles",
                                                             @"skipSelectionIcon",
-                                                            @"normalizeMeasurements"]];
+                                                            @"normalizeMeasurements",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

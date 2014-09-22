@@ -313,7 +313,8 @@
     if ([value isKindOfClass:[NSString class]]) {
         createNutritionValue = [value length] > 0;
     }
-    WMNutritionValue *nutritionValue = [self.nutritionGroup nutritionValueForItem:assessmentGroup
+    NSParameterAssert([assessmentGroup isKindOfClass:[WMNutritionItem class]]);
+    WMNutritionValue *nutritionValue = [self.nutritionGroup nutritionValueForItem:(WMNutritionItem *)assessmentGroup
                                                                            create:createNutritionValue
                                                                             value:nil];
     if (createNutritionValue) {

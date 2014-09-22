@@ -54,6 +54,18 @@
     return string;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -63,7 +75,9 @@
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"acquiredFlagValue",
                                                             @"flagsValue",
-                                                            @"pdf"]];
+                                                            @"pdf",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -87,7 +87,6 @@
     };
     // must make sure the sections and cells are downloaded
     if (self.bradenScale.ffUrl && [self.bradenScale.sections count] == 0) {
-        NSManagedObjectContext *managedObjectContext = [self.bradenScale managedObjectContext];
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         __weak __typeof(&*self)weakSelf = self;
@@ -96,7 +95,6 @@
             if (error) {
                 [WMUtilities logError:error];
             }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             block();
         }];
@@ -151,6 +149,7 @@
     }
     // else update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion updateHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -162,6 +161,7 @@
             [self patientNavigationDataChangedOnDevice];
             // save local
             NSManagedObjectContext *managedObjectContext = [bradenScale managedObjectContext];
+            ffm.postSynchronizationEvents = YES;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.navigationController popViewControllerAnimated:YES];
             weakSelf.didCreateBradenScale = NO;

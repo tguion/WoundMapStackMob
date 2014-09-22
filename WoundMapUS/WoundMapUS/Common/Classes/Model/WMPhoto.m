@@ -1,4 +1,5 @@
 #import "WMPhoto.h"
+#import "WMWoundPhoto.h"
 
 @interface WMPhoto ()
 
@@ -16,6 +17,18 @@
     self.updatedAt = [NSDate date];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.woundPhoto;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -27,7 +40,9 @@
                                                             @"flagsValue",
                                                             @"originalFlagValue",
                                                             @"scaleValue",
-                                                            @"sortRankValue"]];
+                                                            @"sortRankValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

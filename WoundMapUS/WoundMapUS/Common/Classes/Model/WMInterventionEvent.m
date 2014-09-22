@@ -297,6 +297,18 @@
     return interventionEvent;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -304,7 +316,7 @@
     static NSSet *PropertyNamesNotToSerialize = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"changeTypeValue"]];
+        PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"changeTypeValue", @"aggregator", @"requireUpdatesFromCloud"]];
     });
     return PropertyNamesNotToSerialize;
 }

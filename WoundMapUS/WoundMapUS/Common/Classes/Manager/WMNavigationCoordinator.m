@@ -782,6 +782,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     // mark that we are deleting patient
     patient.isDeleting = YES;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     BOOL deleteFromBackend = (nil != patient.ffUrl);
     if ([patient isEqual:_patient]) {
         self.patient = nil;
@@ -796,6 +797,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
             [ff forgetObj:object];
         }
         if (counter == 0 || --counter == 0) {
+            ffm.postSynchronizationEvents = YES;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             completionHandler();
         }
@@ -855,6 +857,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     [wound.patient removeWoundsObject:wound];
     [managedObjectContext MR_deleteObjects:@[wound]];
     [managedObjectContext processPendingChanges];
+    ffm.postSynchronizationEvents = YES;
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     ffm.processDeletesOnNSManagedObjectContextObjectsDidChangeNotification = NO;
     if (deletingCurrentWound) {

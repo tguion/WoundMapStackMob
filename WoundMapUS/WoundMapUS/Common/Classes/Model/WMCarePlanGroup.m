@@ -292,6 +292,18 @@
     self.continueCount = @([self.continueCount intValue] + 1);
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -314,7 +326,9 @@
                                                             @"sortedCarePlanValues",
                                                             @"isClosed",
                                                             @"carePlanValuesAdded",
-                                                            @"carePlanValuesRemoved"]];
+                                                            @"carePlanValuesRemoved",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

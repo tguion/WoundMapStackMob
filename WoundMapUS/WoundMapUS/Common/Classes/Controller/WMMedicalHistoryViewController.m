@@ -176,6 +176,8 @@
     // indicate that patient was changed on device
     [self patientNavigationDataChangedOnDevice];
     // save locally
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    ffm.postSynchronizationEvents = YES;
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     // update back end
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -188,8 +190,9 @@
             [WMUtilities logError:error];
         }
         if (counter == 0 || --counter == 0) {
-            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+            ffm.postSynchronizationEvents = YES;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.delegate medicalHistoryViewControllerDidFinish:weakSelf];
         }
     };

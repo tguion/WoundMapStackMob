@@ -68,6 +68,18 @@
     selectedCell.selectedFlag = @YES;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -82,7 +94,9 @@
                                                             @"isScored",
                                                             @"isScoredCalculated",
                                                             @"selectedCell",
-                                                            @"sortedCells"]];
+                                                            @"sortedCells",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

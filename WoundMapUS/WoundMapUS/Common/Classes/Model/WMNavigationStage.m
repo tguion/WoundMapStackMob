@@ -109,6 +109,18 @@ NSString *const kDischargeStageTitle = @"Discharge";
     return navigationStage;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -120,7 +132,9 @@ NSString *const kDischargeStageTitle = @"Discharge";
                                                             @"flagsValue",
                                                             @"sortRankValue",
                                                             @"rootNavigationNodes",
-                                                            @"isInitialStage"]];
+                                                            @"isInitialStage",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

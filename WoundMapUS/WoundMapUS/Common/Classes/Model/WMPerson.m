@@ -87,6 +87,18 @@
     return self.telecoms;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -98,7 +110,9 @@
                                                             @"lastNameFirstName",
                                                             @"defaultEmailTelecom",
                                                             @"managedObjectContext",
-                                                            @"objectID"]];
+                                                            @"objectID",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

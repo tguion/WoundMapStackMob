@@ -67,6 +67,18 @@ NSString * const kTelecomTypeEmailTitle = @"email";
     return [self.title isEqualToString:kTelecomTypeEmailTitle];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -76,7 +88,9 @@ NSString * const kTelecomTypeEmailTitle = @"email";
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
                                         @"sortRankValue",
-                                        @"isEmail"]];
+                                        @"isEmail",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

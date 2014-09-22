@@ -226,6 +226,18 @@ NSInteger const kBradenSectionCount = 6;
     return self.closedFlagValue;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -242,7 +254,9 @@ NSInteger const kBradenSectionCount = 6;
                                                             @"isScoredCalculated",
                                                             @"scoreMessage",
                                                             @"sortedSections",
-                                                            @"updateScoreFromSections"]];
+                                                            @"updateScoreFromSections",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

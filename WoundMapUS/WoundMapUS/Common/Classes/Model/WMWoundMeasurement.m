@@ -267,6 +267,18 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
     [set unionSet:self.childrenMeasurements];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -291,7 +303,9 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
                                                             @"allowMultipleChildSelection",
                                                             @"normalizeMeasurements",
                                                             @"hasChildrenWoundMeasurements",
-                                                            @"childrenHaveSectionTitles"]];
+                                                            @"childrenHaveSectionTitles",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

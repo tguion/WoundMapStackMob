@@ -239,6 +239,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
             [WMUtilities logError:error];
         }
     };
+    
+    NSMutableSet *guids = [NSMutableSet set];
 
     NSSet *createdObjects = [[notification userInfo] objectForKey:NSInsertedObjectsKey];
     NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
@@ -246,48 +248,76 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 
     // inserts
     silentUpdateData.action = @"INSERT";
-    for (NSManagedObject *object in createdObjects) {
+    for (id<WMFFManagedObject> object in createdObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
             continue;
         }
-        // else
-        silentUpdateData.collection = [[object entity] name];
-        id<WMFFManagedObject>ffManagedObject = (id<WMFFManagedObject>)object;
-        silentUpdateData.objectGuid = [[ffManagedObject.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (!object.requireUpdatesFromCloud) {
+            continue;
+        }
+        // else check if we must issue to insert aggregator
+        id<WMFFManagedObject> aggregator = object.aggregator;
+        if (aggregator) {
+            silentUpdateData.collection = [[(NSManagedObject *)aggregator entity] name];
+            silentUpdateData.objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
+            if (![guids containsObject:silentUpdateData.objectGuid]) {
+                [guids addObject:silentUpdateData.objectGuid];
+                [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+            }
+        }
+        silentUpdateData.collection = [[(NSManagedObject *)object entity] name];
+        silentUpdateData.objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (nil == silentUpdateData.objectGuid) {
             continue;
         }
         // else
-        [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        if (![guids containsObject:silentUpdateData.objectGuid]) {
+            [guids addObject:silentUpdateData.objectGuid];
+            [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        }
     }
     
     // updates
     silentUpdateData.action = @"UPDATE";
-    for (NSManagedObject *object in updatedObjects) {
+    for (id<WMFFManagedObject> object in updatedObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
             continue;
         }
-        // else
-        silentUpdateData.collection = [[object entity] name];
-        id<WMFFManagedObject>ffManagedObject = (id<WMFFManagedObject>)object;
-        silentUpdateData.objectGuid = [[ffManagedObject.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (!object.requireUpdatesFromCloud) {
+            continue;
+        }
+        // else check if we must issue to insert aggregator
+        id<WMFFManagedObject> aggregator = object.aggregator;
+        if (aggregator) {
+            silentUpdateData.collection = [[(NSManagedObject *)aggregator entity] name];
+            silentUpdateData.objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
+            if (![guids containsObject:silentUpdateData.objectGuid]) {
+                [guids addObject:silentUpdateData.objectGuid];
+                [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+            }
+        }
+        silentUpdateData.collection = [[(NSManagedObject *)object entity] name];
+        silentUpdateData.objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (nil == silentUpdateData.objectGuid) {
             continue;
         }
         // else
-        [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        if (![guids containsObject:silentUpdateData.objectGuid]) {
+            [guids addObject:silentUpdateData.objectGuid];
+            [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        }
     }
 
     // deletes
     silentUpdateData.action = @"DELETE";
-    for (NSManagedObject *object in deletedObjects) {
+    for (id<WMFFManagedObject> object in deletedObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
             continue;
         }
+        NSAssert(object.requireUpdatesFromCloud, @"Deleted object should be synchronizable from cloud: %@", object);
         // else
-        silentUpdateData.collection = [[object entity] name];
-        id<WMFFManagedObject>ffManagedObject = (id<WMFFManagedObject>)object;
-        silentUpdateData.objectGuid = [[ffManagedObject.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        silentUpdateData.collection = [[(NSManagedObject *)object entity] name];
+        silentUpdateData.objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (nil == silentUpdateData.objectGuid) {
             continue;
         }

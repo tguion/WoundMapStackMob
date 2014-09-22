@@ -500,18 +500,20 @@
     // create intervention events before super
     [self.woundMeasurementGroup createEditEventsForParticipant:self.appDelegate.participant];
     // wait for back end calls to complete
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
         if (nil == _parentWoundMeasurement) {
+            ffm.postSynchronizationEvents = YES;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
         }
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate woundMeasurementGroupViewControllerDidFinish:weakSelf];
     };
     // update back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];

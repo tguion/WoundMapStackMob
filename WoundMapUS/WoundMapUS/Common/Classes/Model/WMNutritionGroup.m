@@ -223,6 +223,18 @@
     return events;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -237,7 +249,9 @@
                                                             @"nutritionValuesAdded",
                                                             @"nutritionValuesRemoved",
                                                             @"sortedValues",
-                                                            @"objectID"]];
+                                                            @"objectID",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

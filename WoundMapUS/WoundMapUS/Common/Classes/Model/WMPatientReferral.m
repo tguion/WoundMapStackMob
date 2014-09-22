@@ -1,5 +1,6 @@
 #import "WMPatientReferral.h"
 #import "WMParticipant.h"
+#import "WMPatient.h"
 
 NSString *const kPatientReferralMessageDelimiter = @"^^^^";
 
@@ -140,6 +141,18 @@ NSString *const kPatientReferralMessageDelimiter = @"^^^^";
     return DateAttributes;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -152,7 +165,9 @@ NSString *const kPatientReferralMessageDelimiter = @"^^^^";
                                                             @"attributedStringMessageHistory",
                                                             @"sourceAttributes",
                                                             @"dateAttributes",
-                                                            @"messageAttributes"]];
+                                                            @"messageAttributes",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

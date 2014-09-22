@@ -82,6 +82,18 @@
     }
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -100,7 +112,9 @@
                                                             @"unit",
                                                             @"optionsArray",
                                                             @"secondaryOptionsArray",
-                                                            @"objectID"]];
+                                                            @"objectID",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

@@ -1,4 +1,5 @@
 #import "WMDeviceValue.h"
+#import "WMDeviceGroup.h"
 
 @interface WMDeviceValue ()
 
@@ -16,6 +17,18 @@
     self.updatedAt = [NSDate date];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.group;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -24,7 +37,9 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"flagsValue",
-                                                            @"revisedFlagValue"]];
+                                                            @"revisedFlagValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

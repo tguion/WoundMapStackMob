@@ -317,6 +317,18 @@
     return [self.interventionEvents count] > 0;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.wound;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -339,7 +351,9 @@
                                                             @"isClosed",
                                                             @"hasInterventionEvents",
                                                             @"woundTreatmentValuesAdded",
-                                                            @"woundTreatmentValuesRemoved"]];
+                                                            @"woundTreatmentValuesRemoved",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

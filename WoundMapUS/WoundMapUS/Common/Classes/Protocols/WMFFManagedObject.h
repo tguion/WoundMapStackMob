@@ -14,4 +14,7 @@
 @property (nonatomic, strong) NSString* ffUrl;
 @property (nonatomic, strong) NSDate* updatedAt;
 
+@property (nonatomic, readonly) id<WMFFManagedObject> aggregator;       // object that should be update for other team members if self is updated/inserted
+@property (nonatomic, readonly) BOOL requireUpdatesFromCloud;           // YES if this data can be modified on client
+
 @end

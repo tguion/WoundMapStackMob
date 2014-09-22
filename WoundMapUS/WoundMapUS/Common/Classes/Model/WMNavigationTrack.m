@@ -371,6 +371,18 @@ typedef enum {
     return [WMNavigationTrack MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"ffUrl == %@", ffUrl] inContext:managedObjectContext];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -387,7 +399,9 @@ typedef enum {
                                                             @"limitToSinglePatientFlag",
                                                             @"skipCarePlanFlag",
                                                             @"skipPolicyEditor",
-                                                            @"initialStage"]];
+                                                            @"initialStage",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

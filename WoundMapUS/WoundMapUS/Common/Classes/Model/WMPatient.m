@@ -448,6 +448,17 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     return NO;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -478,7 +489,9 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
                                                             @"hasPatientDetails",
                                                             @"photoBlobCount",
                                                             @"isDeleting",
-                                                            @"patientReferral"]];
+                                                            @"patientReferral",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

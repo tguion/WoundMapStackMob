@@ -244,6 +244,18 @@
     self.continueCount = [NSNumber numberWithInt:([self.continueCount intValue] + 1)];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -267,7 +279,9 @@
                                                             @"sortedDeviceValues",
                                                             @"isClosed",
                                                             @"deviceValuesAdded",
-                                                            @"deviceValuesRemoved"]];
+                                                            @"deviceValuesRemoved",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

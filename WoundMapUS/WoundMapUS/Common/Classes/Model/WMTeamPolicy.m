@@ -21,6 +21,18 @@
     return teamPolicy;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -30,7 +42,9 @@
     dispatch_once(&onceToken, ^{
         PropertyNamesNotToSerialize = [NSSet setWithArray:@[@"deletePhotoBlobsValue",
                                                             @"flagsValue",
-                                                            @"numberOfMonthsToDeletePhotoBlobsValue"]];
+                                                            @"numberOfMonthsToDeletePhotoBlobsValue",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

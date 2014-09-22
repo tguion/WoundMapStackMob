@@ -410,16 +410,18 @@
     // create intervention events before super
     [self.carePlanGroup createEditEventsForParticipant:participant];
     // update backend
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __block NSInteger counter = 1;  // update _carePlanGroup
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
+        ffm.postSynchronizationEvents = YES;
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate carePlanGroupViewControllerDidSave:weakSelf];
     };
     // update back end
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
     dispatch_block_t completionHandler = ^{
         if (counter == 0 || --counter == 0) {
             block();

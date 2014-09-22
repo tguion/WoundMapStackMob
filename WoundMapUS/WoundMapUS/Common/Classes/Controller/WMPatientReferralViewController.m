@@ -282,12 +282,14 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
         if (counter == 0 || --counter == 0) {
             // RPN push notification to _patientReferral.referrer.guid, _patientReferral.referree.guid, _patientReferral.patient.guid
+            ffm.postSynchronizationEvents = YES;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
@@ -348,12 +350,14 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
         if (counter == 0 || --counter == 0) {
             [managedObjectContext MR_deleteObjects:@[_patientReferral]];
+            ffm.postSynchronizationEvents = YES;
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             _patientReferral = nil;

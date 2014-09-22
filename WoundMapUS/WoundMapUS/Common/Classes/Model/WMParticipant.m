@@ -172,6 +172,18 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
     return [WMPatientReferral MR_findAllSortedBy:WMPatientReferralAttributes.createdAt ascending:NO withPredicate:predicate inContext:managedObjectContext];
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return NO;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -188,7 +200,9 @@ typedef NS_ENUM(int16_t, WMParticipantFlags) {
                                                             @"isTeamLeader",
                                                             @"teamLeaderIAPPurchaseSuccessful",
                                                             @"teamAddedIAPPurchaseSuccessful",
-                                                            @"isIntroductoryTeamPricing"]];
+                                                            @"isIntroductoryTeamPricing",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

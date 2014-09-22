@@ -391,6 +391,18 @@
     return result;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return self.patient;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -415,7 +427,9 @@
                                                             @"positionValuesForDisplay",
                                                             @"woundLocationAndPositionForDisplay",
                                                             @"lastWoundTreatmentGroup",
-                                                            @"woundTreatmentGroupCount"]];
+                                                            @"woundTreatmentGroupCount",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }

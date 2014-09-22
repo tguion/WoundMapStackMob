@@ -34,6 +34,18 @@
     return self.acceptedFlagValue;
 }
 
+#pragma mark - WMFFManagedObject
+
+- (id<WMFFManagedObject>)aggregator
+{
+    return nil;
+}
+
+- (BOOL)requireUpdatesFromCloud
+{
+    return YES;
+}
+
 #pragma mark - FatFractal
 
 + (NSSet *)attributeNamesNotToSerialize
@@ -46,7 +58,9 @@
                                                             @"addedToTeamFlagValue",
                                                             @"flagsValue",
                                                             @"passcodeValue",
-                                                            @"isAccepted"]];
+                                                            @"isAccepted",
+                                                            @"requireUpdatesFromCloud",
+                                                            @"aggregator"]];
     });
     return PropertyNamesNotToSerialize;
 }
