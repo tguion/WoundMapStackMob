@@ -233,7 +233,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
                 if (woundPhoto) {
                     weakSelf.woundPhoto = woundPhoto;
                     NSString *uri = [woundPhoto.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-                    [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", uri] onComplete:onWoundPhotoComplete];
+                    [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=1", uri] onComplete:onWoundPhotoComplete];
                 } else {
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                     [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
@@ -256,7 +256,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
             }
             if (wound && [wound.ffUrl length]) {
                 NSString *uri = [wound.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-                [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=2&depthGb=2", uri] onComplete:onWoundComplete];
+                [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=1", uri] onComplete:onWoundComplete];
             } else {
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kPatientUpdatedFromBackendNotification object:[_patient objectID]];
@@ -273,7 +273,7 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         };
         
         NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", uri] onComplete:onPatientComplete];
+        [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthRef=1&depthGb=1", uri] onComplete:onPatientComplete];
     }
 }
 

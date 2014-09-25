@@ -57,24 +57,24 @@
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
-NSInteger const kNumberFreeMonthsFirstSubscription = 3;
+NSInteger const kNumberFreeMonthsFirstSubscription = 2;
 
 @interface WMSilentUpdateData : NSObject { }
 
 @property (strong, nonatomic) NSString *patientGuid;
 @property (strong, nonatomic) NSString *woundGuid;
 @property (strong, nonatomic) NSString *woundPhotoGuid;
-@property (strong, nonatomic) NSString *collection;
-@property (strong, nonatomic) NSString *objectGuid;
-@property (strong, nonatomic) NSString *action;
+@property (strong, nonatomic) NSArray *collections;
+@property (strong, nonatomic) NSArray *objectGuids;
+@property (strong, nonatomic) NSArray *actions;
 @property (strong, nonatomic) NSArray *userGuids;
 
 - (instancetype)initWithPatientGuid:(NSString *)patientGuid
                           woundGuid:(NSString *)woundGuid
                      woundPhotoGuid:(NSString *)woundPhotoGuid
-                         collection:(NSString *)collection
-                         objectGuid:(NSString *)objectGuid
-                             action:(NSString *)action
+                        collections:(NSArray *)collections
+                        objectGuids:(NSArray *)objectGuids
+                            actions:(NSArray *)actions
                           userGuids:(NSArray *)userGuids;
 
 @end
@@ -84,9 +84,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
 - (instancetype)initWithPatientGuid:(NSString *)patientGuid
                           woundGuid:(NSString *)woundGuid
                      woundPhotoGuid:(NSString *)woundPhotoGuid
-                         collection:(NSString *)collection
-                         objectGuid:(NSString *)objectGuid
-                             action:(NSString *)action
+                        collections:(NSArray *)collections
+                        objectGuids:(NSArray *)objectGuids
+                            actions:(NSArray *)actions
                           userGuids:(NSArray *)userGuids
 {
     self = [super init];
@@ -96,9 +96,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     _patientGuid = patientGuid;
     _woundGuid = woundGuid;
     _woundPhotoGuid = woundPhotoGuid;
-    _collection = collection;
-    _objectGuid = objectGuid;
-    _action = action;
+    _collections = collections;
+    _objectGuids = objectGuids;
+    _actions = actions;
     _userGuids = userGuids;
     
     return self;
@@ -182,7 +182,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
     }
     
-    [self debugRootManagedObjectContextDidSave:notification];
+//    [self debugRootManagedObjectContextDidSave:notification];
     
     if (_postSynchronizationEvents) {
         // reset flag
@@ -227,9 +227,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     WMSilentUpdateData *silentUpdateData = [[WMSilentUpdateData alloc] initWithPatientGuid:patientGuid
                                                                                  woundGuid:woundGuid
                                                                             woundPhotoGuid:woundPhotoGuid
-                                                                                collection:nil
-                                                                                objectGuid:nil
-                                                                                    action:nil
+                                                                                collections:nil
+                                                                                objectGuids:nil
+                                                                                    actions:nil
                                                                                  userGuids:_teamUsers];
 
     WMFatFractal *ff = [WMFatFractal sharedInstance];
@@ -241,13 +241,15 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     };
     
     NSMutableSet *guids = [NSMutableSet set];
+    NSMutableArray *collections = [NSMutableArray array];
+    NSMutableArray *objectGuids = [NSMutableArray array];
+    NSMutableArray *actions = [NSMutableArray array];
 
     NSSet *createdObjects = [[notification userInfo] objectForKey:NSInsertedObjectsKey];
     NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
     NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
 
     // inserts
-    silentUpdateData.action = @"INSERT";
     for (id<WMFFManagedObject> object in createdObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
             continue;
@@ -257,28 +259,23 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
         // else check if we must issue to insert aggregator
         id<WMFFManagedObject> aggregator = object.aggregator;
-        if (aggregator) {
-            silentUpdateData.collection = [[(NSManagedObject *)aggregator entity] name];
-            silentUpdateData.objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
-            if (![guids containsObject:silentUpdateData.objectGuid]) {
-                [guids addObject:silentUpdateData.objectGuid];
-                [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
-            }
+        NSString *objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (aggregator && ![guids containsObject:objectGuid]) {
+            [actions addObject:@"INSERT"];
+            [collections addObject:[[(NSManagedObject *)aggregator entity] name]];
+            [objectGuids addObject:objectGuid];
+            [guids addObject:objectGuid];
         }
-        silentUpdateData.collection = [[(NSManagedObject *)object entity] name];
-        silentUpdateData.objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (nil == silentUpdateData.objectGuid) {
-            continue;
-        }
-        // else
-        if (![guids containsObject:silentUpdateData.objectGuid]) {
-            [guids addObject:silentUpdateData.objectGuid];
-            [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (![guids containsObject:objectGuid]) {
+            [actions addObject:@"INSERT"];
+            [collections addObject:[[(NSManagedObject *)object entity] name]];
+            [objectGuids addObject:objectGuid];
+            [guids addObject:objectGuid];
         }
     }
     
     // updates
-    silentUpdateData.action = @"UPDATE";
     for (id<WMFFManagedObject> object in updatedObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
             continue;
@@ -288,55 +285,48 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         }
         // else check if we must issue to insert aggregator
         id<WMFFManagedObject> aggregator = object.aggregator;
-        if (aggregator) {
-            silentUpdateData.collection = [[(NSManagedObject *)aggregator entity] name];
-            silentUpdateData.objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
-            if (![guids containsObject:silentUpdateData.objectGuid]) {
-                [guids addObject:silentUpdateData.objectGuid];
-                [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
-            }
+        NSString *objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (aggregator && ![guids containsObject:objectGuid]) {
+            [actions addObject:@"UPDATE"];
+            [collections addObject:[[(NSManagedObject *)aggregator entity] name]];
+            [objectGuids addObject:objectGuid];
+            [guids addObject:objectGuid];
         }
-        silentUpdateData.collection = [[(NSManagedObject *)object entity] name];
-        silentUpdateData.objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (nil == silentUpdateData.objectGuid) {
-            continue;
-        }
-        // else
-        if (![guids containsObject:silentUpdateData.objectGuid]) {
-            [guids addObject:silentUpdateData.objectGuid];
-            [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (![guids containsObject:objectGuid]) {
+            [actions addObject:@"INSERT"];
+            [collections addObject:[[(NSManagedObject *)object entity] name]];
+            [objectGuids addObject:objectGuid];
+            [guids addObject:objectGuid];
         }
     }
 
     // deletes
-    silentUpdateData.action = @"DELETE";
     for (id<WMFFManagedObject> object in deletedObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
             continue;
         }
         NSAssert(object.requireUpdatesFromCloud, @"Deleted object should be synchronizable from cloud: %@", object);
-        // else
-        silentUpdateData.collection = [[(NSManagedObject *)object entity] name];
-        silentUpdateData.objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (nil == silentUpdateData.objectGuid) {
-            continue;
-        }
-        // else
-        [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
+        NSString *objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        [actions addObject:@"DELETE"];
+        [collections addObject:[[(NSManagedObject *)object entity] name]];
+        [objectGuids addObject:objectGuid];
     }
+    
+    [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
 
 }
 
 - (void)debugRootManagedObjectContextDidSave:(NSNotification *)notification
 {
     NSSet *createdObjects = [[notification userInfo] objectForKey:NSInsertedObjectsKey];
-    DLog(@"*** Inserted (%d) ***", [createdObjects count]);
+    DLog(@"*** Inserted (%lu) ***", (unsigned long)[createdObjects count]);
     for (NSManagedObject *object in createdObjects) {
         DLog(@"%@:%@", [[object entity] name], [object valueForKey:@"ffUrl"]);
     }
     DLog(@"*** Inserted End ***");
     NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
-    DLog(@"*** Updated (%d) ***", [updatedObjects count]);
+    DLog(@"*** Updated (%lu) ***", (unsigned long)[updatedObjects count]);
     for (NSManagedObject *object in updatedObjects) {
         DLog(@"%@:%@", [[object entity] name], [object valueForKey:@"ffUrl"]);
         if ([self ffUrlAdded:object]) {
@@ -346,7 +336,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     }
     DLog(@"*** Updated End ***")
     NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
-    DLog(@"*** Deleted (%d) ***", [deletedObjects count]);
+    DLog(@"*** Deleted (%lu) ***", (unsigned long)[deletedObjects count]);
     for (NSManagedObject *object in deletedObjects) {
         DLog(@"%@:%@", [[object entity] name], [object valueForKey:@"ffUrl"]);
     }
@@ -418,6 +408,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
         [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
         [WMPatient MR_truncateAllInContext:managedObjectContext];
+        [WMTeamInvitation MR_truncateAllInContext:managedObjectContext];
         [managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     // determine if we need to move patients to team
@@ -1083,6 +1074,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
         if (localError) {
             [WMUtilities logError:localError];
         }
+        invitee.user = user;
     }
     NSParameterAssert([user isKindOfClass:[FFUser class]]);
     // only team leader can do this
@@ -1092,10 +1084,22 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 3;
     }
     invitee.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:kNumberFreeMonthsFirstSubscription toDate:invitee.dateTeamSubscriptionExpires];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
-    FFUserGroup *participantGroup = teamInvitation.team.participantGroup;
+    FFUserGroup *participantGroup = team.participantGroup;
     NSParameterAssert(participantGroup);
     NSError *error = nil;
     [participantGroup addUser:user error:&error];
+    if (error) {
+        NSString *uri = [team.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+        participantGroup = [ff getObjFromUri:[NSString stringWithFormat:@"/%@/participantGroup", uri] error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        [participantGroup addUser:user error:&error];
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        NSAssert(nil == error, @"Error adding user to participantGroup: %@", error);
+    }
     [ff updateObj:invitee onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];

@@ -19,7 +19,7 @@
         _credits = credits;
         _flags = [NSNumber numberWithInteger:0];
         _txnDate = [NSDate date];
-        _startupCredits = NO;
+        _startupCredits = @NO;
     }
     return self;
 }

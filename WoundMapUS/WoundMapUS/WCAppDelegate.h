@@ -37,4 +37,6 @@ extern NSString * const kTeamMemberAddedNotification;
 - (void)signOut;
 - (void)handleFatFractalSignout;
 
+- (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+
 @end

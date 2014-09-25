@@ -20,6 +20,7 @@
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
 #import "WMWoundType.h"
+#import "WMUnhandledSilentUpdateNotification.h"
 #import "IAPManager.h"
 #import "WMPhotoManager.h"
 #import "WMUtilities.h"
@@ -200,14 +201,14 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // set up IAP so it hears notifications
     [IAPManager sharedInstance];
     // account for iOS 8 new notification registration
-//    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-//        // use registerUserNotificationSettings
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        // use registerUserNotificationSettings DEBUG: only Xcode 6
 //        [application registerForRemoteNotifications];
 //        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
-//    } else {
-//        // use registerForRemoteNotifications
-//        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-//    }
+    } else {
+        // use registerForRemoteNotifications
+        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    }
 
     [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     return YES;
@@ -235,8 +236,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-//    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-//    [photoManager persistWoundPhotoObjectIds];
+    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+    [photoManager persistWoundPhotoObjectIds];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -246,23 +247,23 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-//    _bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-//        // Clean up any unfinished task business by marking where you. stopped or ending the task outright.
-//        [application endBackgroundTask:_bgTask];
-//        _bgTask = UIBackgroundTaskInvalid;
-//    }];
-//    
-//    // Start the long-running task and return immediately.
-//    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-//    [photoManager uploadPhotoBlobs];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        while (([application backgroundTimeRemaining] > 0) && !photoManager.hasCompletedPhotoUploads) {
-//            // wait until the blobs have uploaded
-//            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-//        }
-//        [application endBackgroundTask:_bgTask];
-//        _bgTask = UIBackgroundTaskInvalid;
-//    });
+    _bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // Clean up any unfinished task business by marking where you. stopped or ending the task outright.
+        [application endBackgroundTask:_bgTask];
+        _bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    // Start the long-running task and return immediately.
+    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+    [photoManager uploadPhotoBlobs];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (([application backgroundTimeRemaining] > 0) && !photoManager.hasCompletedPhotoUploads) {
+            // wait until the blobs have uploaded
+            [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        }
+        [application endBackgroundTask:_bgTask];
+        _bgTask = UIBackgroundTaskInvalid;
+    });
 
 }
 
@@ -285,8 +286,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         [self initializeInterface];
     }
     // upload any photos
-//    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-//    [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
+    WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+    [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -387,26 +388,29 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 // RPN
 - (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
     UIBackgroundFetchResult backgroundFetchResult = UIBackgroundFetchResultFailed;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     if (ff.loggedIn) {
         NSString *patientGuid = map[@"patientGuid"];
         NSString *woundGuid = map[@"woundGuid"];
         NSString *woundPhotoGuid = map[@"woundPhotoGuid"];
-        NSString *collection = map[@"collection"];
-        NSString *objectGuid = map[@"objectGuid"];
-        NSString *action = map[@"action"];
+        NSArray *collections = map[@"collections"];
+        NSArray *objectGuids = map[@"objectGuids"];
+        NSArray *actions = map[@"actions"];
         // make sure we have patient
+        BOOL patientAcquired = NO;
+        BOOL woundAcquired = NO;
+        BOOL woundPhotoAcquired = NO;
         NSError *error = nil;
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
         WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
         if (nil == patient) {
             // just fetch the patient
             [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMPatient entityName], patientGuid] error:&error];
             if (error) {
                 [WMUtilities logError:error];
-                goto BackgroundLabel;
             }
+            patientAcquired = YES;
         }
         
         // else
@@ -417,8 +421,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMWound entityName], woundGuid] error:&error];
                 if (error) {
                     [WMUtilities logError:error];
-                    goto BackgroundLabel;
                 }
+                woundAcquired = YES;
             }
         }
         
@@ -430,35 +434,52 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMWoundPhoto entityName], woundPhotoGuid] error:&error];
                 if (error) {
                     [WMUtilities logError:error];
-                    goto BackgroundLabel;
                 }
+                woundPhotoAcquired = YES;
             }
         }
         
-        // else
-        if ([collection isKindOfClass:[NSString class]] && [collection length] && [objectGuid isKindOfClass:[NSString class]] && [objectGuid length]) {
-            // fetch the data
-            id object = [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@", collection, objectGuid] error:&error];
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            if ([action isEqualToString:@"DELETE"]) {
-                [managedObjectContext MR_deleteObjects:@[object]];
+        if (objectGuids && [objectGuids isKindOfClass:[NSArray class]]) {
+            NSInteger index = 0;
+            for (NSString *objectGuid in objectGuids) {
+                NSString *collection = collections[index];
+                if (patientAcquired && [collection isEqualToString:[WMPatient entityName]]) {
+                    continue;
+                }
+                if (woundAcquired && [collection isEqualToString:[WMWound entityName]]) {
+                    continue;
+                }
+                if (woundPhotoAcquired && [collection isEqualToString:[WMWoundPhoto entityName]]) {
+                    continue;
+                }
+                NSString *action = actions[index];
+                // fetch the data
+                id object = [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@", collection, objectGuid] error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                if ([action isEqualToString:@"DELETE"]) {
+                    [managedObjectContext MR_deleteObjects:@[object]];
+                }
+                // update UI
+                
             }
             // save data
             [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-            // update UI
-            
             // mark as success
             backgroundFetchResult = UIBackgroundFetchResultNewData;
         } else {
             // no data
             backgroundFetchResult = UIBackgroundFetchResultNoData;
         }
+    } else {
+        // persist and pick up when user logs in
+        WMUnhandledSilentUpdateNotification *unhandledSilentUpdateNotification = [WMUnhandledSilentUpdateNotification MR_createInContext:managedObjectContext];
+        unhandledSilentUpdateNotification.notification = map;
+                                                                                  
     }
     
-    // success
-BackgroundLabel:
+    // finished
     if (handler) {
         handler(backgroundFetchResult);
     }

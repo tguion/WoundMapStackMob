@@ -987,7 +987,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         }
         case 4: {
             cell.textLabel.text = @"Delete Photos";
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d photos", self.patient.photosCount];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld photos", (long)self.patient.photosCount];
             cell.accessoryType = UITableViewCellAccessoryNone;
             break;
         }

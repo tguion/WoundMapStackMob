@@ -76,6 +76,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 {
     DLog(@"%@ %@.viewDidLoad:", self, NSStringFromClass([self class]));
     [super viewDidLoad];
+    self.tableView.rowHeight = 44.0;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -103,7 +104,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     
     // DEBUG
     NSInteger groupingLevel = self.managedObjectContext.undoManager.groupingLevel;
-    DLog(@"*** groupingLevel %d", groupingLevel);
+    DLog(@"*** groupingLevel %ld", groupingLevel);
 }
 
 - (void)viewWillDisappear:(BOOL)animated

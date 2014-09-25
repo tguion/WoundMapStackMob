@@ -32,6 +32,8 @@
 extern NSString * const FF_SCRIPT_AUTH_SERVICE_FACEBOOK;
 extern NSString * const FF_SCRIPT_AUTH_SERVICE_TWITTER;
 
+static NSString * const SDK_VERSION = @"R1.4.3.RC2_R2945";
+
 /** \brief The FFQueueDelegate protocol. */
 /**
  * The FFQueueDelegate protocol provides an interface that any class can use to manage a 
@@ -760,7 +762,7 @@ xVerifyCredentialsAuthorization:(NSString *)xVerifyCredentialsAuthorization
 
 /**
  Asynchronous method with an onComplete callback which can be called to explicitly load blobs for an object from your
- application's backend when #autoLoadBlobs is set to false.
+ application's backend when #autoLoadBlobs is set to false. Note that if you are using an FFLocalStorage then the cache will be checked first and a blob will only be loaded if either (a) there is nothing in the cache or (b) the blob in cache is not the latest (i.e. has a different blob tag than that which the object knows)
  @param id obj : the object for which the blobs will be loaded
  @param FFHttpMethodCompletion the block defined here will execute when the HTTP call completes
  @return <b>void</b> does not return anything directly - response is via the FFHttpMethodCompletion block which has these parameters:
@@ -771,6 +773,21 @@ xVerifyCredentialsAuthorization:(NSString *)xVerifyCredentialsAuthorization
  @see FFHttpDelegate::onComplete
  */
 - (void) loadBlobsForObj:(id)obj onComplete:(FFHttpMethodCompletion)onComplete;
+
+/**
+ Asynchronous method with an onComplete callback which can be called to explicitly load NAMED blobs for an object from your
+ application's backend when #autoLoadBlobs is set to false. Note that if you are using an FFLocalStorage then the cache will be checked first and a blob will only be loaded if either (a) there is nothing in the cache or (b) the blob in cache is not the latest (i.e. has a different blob tag than that which the object knows)
+ @param id obj : the object for which the blobs will be loaded
+ @param NSSet blobNames: the set of blob names for which the blob will be loaded
+ @param FFHttpMethodCompletion the block defined here will execute when the HTTP call completes
+ @return <b>void</b> does not return anything directly - response is via the FFHttpMethodCompletion block which has these parameters:
+ <br>   <b>(NSError *)</b> - non-nil if there is an error
+ <br>   <b>(id)</b> - the object which was passed
+ <br>   <b>(NSHTTPURLResponse *)</b> - the full NSHTTPURLResponse
+ @see #autoLoadBlobs
+ @see FFHttpDelegate::onComplete
+ */
+- (void) loadBlobsForObj:(id)obj withNames:(NSSet *)blobNames onComplete:(FFHttpMethodCompletion)onComplete;
 
 /**
  Asynchronous method with an onComplete callback which can be called to explicitly load references for an object 

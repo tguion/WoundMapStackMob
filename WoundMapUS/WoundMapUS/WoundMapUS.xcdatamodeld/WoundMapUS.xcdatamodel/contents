@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6248" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
@@ -894,6 +894,10 @@
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <relationship name="telecoms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMTelecom" inverseName="telecomType" inverseEntity="WMTelecom" syncable="YES"/>
     </entity>
+    <entity name="WMUnhandledSilentUpdateNotification" representedClassName="WMUnhandledSilentUpdateNotification" syncable="YES">
+        <attribute name="notification" optional="YES" attributeType="Transformable" valueTransformerName="DictionaryToDataTransformer" syncable="YES"/>
+        <attribute name="userNamme" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="WMWound" representedClassName="WMWound" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
@@ -1289,6 +1293,7 @@
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="523"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="30"/>
+        <element name="WMPatientLocation" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
@@ -1320,6 +1325,6 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMPatientLocation" positionX="18" positionY="153" width="128" height="178"/>
+        <element name="WMUnhandledSilentUpdateNotification" positionX="18" positionY="153" width="128" height="73"/>
     </elements>
 </model>

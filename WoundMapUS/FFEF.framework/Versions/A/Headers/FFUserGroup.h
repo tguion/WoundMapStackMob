@@ -25,6 +25,9 @@
  */
 - (id)initWithFF:(FatFractal *)_ff;
 
+/*! An NSString with the unique identifier for this FFUserGroup */
+@property (strong, nonatomic) NSString          *guid;
+
 /*!
  The name of this group.
  @see FFUser::groupWithName:

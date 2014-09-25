@@ -422,7 +422,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case kRemoveParticipantActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                [ffm removeParticipant:_teamMemberToDelete fromTeam:_teamMemberToDelete.team ff:ff completionHandler:^(NSError *error) {
+                [ffm removeParticipant:_teamMemberToDelete fromTeam:self.team ff:ff completionHandler:^(NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];
                     }

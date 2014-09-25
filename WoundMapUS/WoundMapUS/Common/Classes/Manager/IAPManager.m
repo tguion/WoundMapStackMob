@@ -125,7 +125,7 @@ NSString* _deviceId;
     DLog(@"Loaded list of products...");
     _productsRequest = nil;
     
-    NSArray * skProducts = response.products;
+    NSArray *skProducts = [response.products copy];
     for (SKProduct *skProduct in skProducts) {
         DLog(@"Found product: %@ %@ %0.2f",
               skProduct.productIdentifier,
