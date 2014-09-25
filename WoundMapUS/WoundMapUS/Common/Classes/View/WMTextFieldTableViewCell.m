@@ -30,19 +30,18 @@
         textField.translatesAutoresizingMaskIntoConstraints = NO;
         textField.textAlignment = NSTextAlignmentRight;
         textField.clearButtonMode = UITextFieldViewModeAlways;
-        [textField setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+        [textField setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
         
         UILabel *textLabel = self.textLabel;
         textLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [textLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        [textField setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 
         NSDictionary *views = NSDictionaryOfVariableBindings(textLabel, textField);
 
         NSMutableArray *constraints = [NSMutableArray array];
-//        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[textLabel]|" options:NSLayoutFormatAlignAllLeading metrics:nil views:views]];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[textLabel]-[textField]-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
         [constraints addObject:[NSLayoutConstraint constraintWithItem:textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
-//        [constraints addObject:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
         [contentView addConstraints:constraints];
         
     }

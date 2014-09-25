@@ -99,6 +99,7 @@
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     _carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
     if (_carePlanGroup.ffUrl || _parentCategory) {
         dispatch_block_t block = ^{
@@ -110,25 +111,11 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        if (_parentCategory) {
-            if ([_parentCategory.values count] == 0) {
-                [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_parentCategory ff:ff completionHandler:^(NSError *error) {
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    block();
-                }];
-            } else {
-                block();
-            }
-        } else {
-            if ([_carePlanGroup.values count] == 0) {
-                [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_carePlanGroup ff:ff completionHandler:^(NSError *error) {
-                    [managedObjectContext MR_saveToPersistentStoreAndWait];
-                    block();
-                }];
-            } else {
-                block();
-            }
-        }
+        [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_parentCategory ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+            block();
+        }];
     } else if (nil == _carePlanGroup) {
         _carePlanGroup = [WMCarePlanGroup carePlanGroupForPatient:patient];
         self.didCreateGroup = YES;
@@ -145,7 +132,6 @@
                                                               managedObjectContext:managedObjectContext];
         DLog(@"Created event %@", event.eventType.title);
         // update backend
-        __weak __typeof(&*self)weakSelf = self;
         FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];

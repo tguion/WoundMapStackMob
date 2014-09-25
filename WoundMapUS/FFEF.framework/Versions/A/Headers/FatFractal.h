@@ -32,7 +32,7 @@
 extern NSString * const FF_SCRIPT_AUTH_SERVICE_FACEBOOK;
 extern NSString * const FF_SCRIPT_AUTH_SERVICE_TWITTER;
 
-static NSString * const SDK_VERSION = @"R1.4.3.RC2_R2945";
+static NSString * const SDK_VERSION = @"R1.4.3.RC3_R2947";
 
 /** \brief The FFQueueDelegate protocol. */
 /**

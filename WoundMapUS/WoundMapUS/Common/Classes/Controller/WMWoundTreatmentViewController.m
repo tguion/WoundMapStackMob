@@ -106,23 +106,11 @@
             }
         };
         // values may not have been aquired from back end
-        if (_parentWoundTreatment) {
-            if ([_parentWoundTreatment.values count] == 0) {
-                [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_parentWoundTreatment ff:ff completionHandler:^(NSError *error) {
-                    block();
-                }];
-            } else {
-                block();
-            }
-        } else {
-            if ([_woundTreatmentGroup.values count] == 0) {
-                [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_woundTreatmentGroup ff:ff completionHandler:^(NSError *error) {
-                    block();
-                }];
-            } else {
-                block();
-            }
-        }
+        [ffm updateGrabBags:@[WMWoundTreatmentGroupRelationships.values] aggregator:_woundTreatmentGroup ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+            block();
+        }];
     } else if (nil == _woundTreatmentGroup) {
         _woundTreatmentGroup = [WMWoundTreatmentGroup woundTreatmentGroupForWound:self.wound];
         self.didCreateGroup = YES;

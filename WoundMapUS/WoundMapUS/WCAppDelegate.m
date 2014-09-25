@@ -19,6 +19,7 @@
 #import "WMPatient.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
+#import "WMPhoto.h"
 #import "WMWoundType.h"
 #import "WMUnhandledSilentUpdateNotification.h"
 #import "IAPManager.h"
@@ -202,15 +203,14 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [IAPManager sharedInstance];
     // account for iOS 8 new notification registration
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        // use registerUserNotificationSettings DEBUG: only Xcode 6
-//        [application registerForRemoteNotifications];
-//        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
+        // use registerUserNotificationSettings
+        [application registerForRemoteNotifications];
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
     } else {
         // use registerForRemoteNotifications
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     }
 
-    [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     return YES;
 }
 
@@ -429,11 +429,32 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         // else
         if (woundPhotoGuid) {
             WMWoundPhoto *woundPhoto = [WMWoundPhoto MR_findFirstByAttribute:WMWoundPhotoAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMWoundPhoto/%@", woundPhotoGuid] inContext:managedObjectContext];
-            if (nil == woundPhoto) {
+            if (nil == woundPhoto || nil == woundPhoto.thumbnail || nil == woundPhoto.thumbnailLarge || nil == woundPhoto.thumbnailMini) {
                 // just fetch the woundPhoto
                 [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMWoundPhoto entityName], woundPhotoGuid] error:&error];
                 if (error) {
                     [WMUtilities logError:error];
+                }
+                FFReadResponse *response = [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeSync];
+                NSData *photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                } else {
+                    woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
+                }
+                response = [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeSync];
+                photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                } else {
+                    woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                }
+                response = [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailMini]] executeSync];
+                photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                } else {
+                    woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
                 }
                 woundPhotoAcquired = YES;
             }
@@ -461,8 +482,20 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 if ([action isEqualToString:@"DELETE"]) {
                     [managedObjectContext MR_deleteObjects:@[object]];
                 }
-                // update UI
-                
+                // get photo
+                if ([collection isEqualToString:[WMPhoto entityName]]) {
+                    // get blobs autoLoadBlobs
+                    WMPhoto *photo = (WMPhoto *)object;
+                    FFReadResponse *response = [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", photo.ffUrl, WMPhotoAttributes.photo]] executeSync];
+                    NSData *photoData = [response rawResponseData];
+                    if (response.httpResponse.statusCode > 300) {
+                        DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                    } else {
+                        photo.photo = [[UIImage alloc] initWithData:photoData];
+                    }
+                }
+                // increment index
+                ++index;
             }
             // save data
             [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
@@ -476,7 +509,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         // persist and pick up when user logs in
         WMUnhandledSilentUpdateNotification *unhandledSilentUpdateNotification = [WMUnhandledSilentUpdateNotification MR_createInContext:managedObjectContext];
         unhandledSilentUpdateNotification.notification = map;
-                                                                                  
     }
     
     // finished

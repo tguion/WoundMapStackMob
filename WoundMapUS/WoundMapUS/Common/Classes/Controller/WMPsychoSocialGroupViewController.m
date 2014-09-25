@@ -95,6 +95,7 @@
     _psychoSocialGroup = [WMPsychoSocialGroup activePsychoSocialGroup:patient];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     if (_psychoSocialGroup.ffUrl || self.parentPsychoSocialItem.hasSubItems) {
         dispatch_block_t block = ^{
             // we want to support cancel, so make sure we have an undoManager
@@ -105,14 +106,11 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        if ([_psychoSocialGroup.values count] == 0) {
-            [ffm updateGrabBags:@[WMPsychoSocialGroupRelationships.values] aggregator:_psychoSocialGroup ff:ff completionHandler:^(NSError *error) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                block();
-            }];
-        } else {
+        [ffm updateGrabBags:@[WMPsychoSocialGroupRelationships.values] aggregator:_psychoSocialGroup ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
             block();
-        }
+        }];
     } else if (nil == _psychoSocialGroup) {
         _psychoSocialGroup = [WMPsychoSocialGroup psychoSocialGroupForPatient:self.patient];
         self.didCreateGroup = YES;

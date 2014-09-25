@@ -104,7 +104,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     
     // DEBUG
     NSInteger groupingLevel = self.managedObjectContext.undoManager.groupingLevel;
-    DLog(@"*** groupingLevel %ld", groupingLevel);
+    DLog(@"*** groupingLevel %ld", (long)groupingLevel);
 }
 
 - (void)viewWillDisappear:(BOOL)animated

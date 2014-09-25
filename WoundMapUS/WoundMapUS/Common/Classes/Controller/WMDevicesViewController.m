@@ -65,6 +65,7 @@
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     if (_deviceGroup) {
         dispatch_block_t block = ^{
             // we want to support cancel, so make sure we have an undoManager
@@ -75,14 +76,11 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        if ([_deviceGroup.values count] == 0) {
-            [ffm updateGrabBags:@[WMDeviceGroupRelationships.values] aggregator:_deviceGroup ff:ff completionHandler:^(NSError *error) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                block();
-            }];
-        } else {
+        [ffm updateGrabBags:@[WMDeviceGroupRelationships.values] aggregator:_deviceGroup ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
             block();
-        }
+        }];
     } else {
         _deviceGroup = [WMDeviceGroup deviceGroupForPatient:patient];
         self.didCreateGroup = YES;

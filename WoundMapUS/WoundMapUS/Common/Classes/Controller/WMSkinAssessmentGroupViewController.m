@@ -65,6 +65,7 @@
     _skinAssessmentGroup = [WMSkinAssessmentGroup activeSkinAssessmentGroup:patient];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     if (_skinAssessmentGroup) {
         dispatch_block_t block = ^{
             // we want to support cancel, so make sure we have an undoManager
@@ -75,14 +76,11 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        if ([_skinAssessmentGroup.values count] == 0) {
-            [ffm updateGrabBags:@[WMSkinAssessmentGroupRelationships.values] aggregator:_skinAssessmentGroup ff:ff completionHandler:^(NSError *error) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                block();
-            }];
-        } else {
+        [ffm updateGrabBags:@[WMSkinAssessmentGroupRelationships.values] aggregator:_skinAssessmentGroup ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
             block();
-        }
+        }];
     } else {
         _skinAssessmentGroup = [WMSkinAssessmentGroup MR_createInContext:managedObjectContext];
         _skinAssessmentGroup.patient = patient;

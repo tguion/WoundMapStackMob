@@ -154,15 +154,11 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        if ([_woundMeasurementGroup.values count] == 0) {
-            [ffm updateGrabBags:@[WMWoundMeasurementGroupRelationships.values] aggregator:_woundMeasurementGroup ff:ff completionHandler:^(NSError *error) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                [weakSelf.tableView reloadData];
-                block();
-            }];
-        } else {
+        [ffm updateGrabBags:@[WMWoundMeasurementGroupRelationships.values] aggregator:_woundMeasurementGroup ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
             block();
-        }
+        }];
     } else {
         if (nil == _woundMeasurementGroup) {
             _woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupInstanceForWound:self.wound woundPhoto:woundPhoto];

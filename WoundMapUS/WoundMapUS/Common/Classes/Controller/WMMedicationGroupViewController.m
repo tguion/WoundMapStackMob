@@ -66,6 +66,7 @@
     _medicationGroup = [WMMedicationGroup activeMedicationGroup:patient];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    __weak __typeof(&*self)weakSelf = self;
     if (nil == _medicationGroup) {
         _medicationGroup = [WMMedicationGroup medicationGroupForPatient:patient];
         self.didCreateGroup = YES;
@@ -109,14 +110,11 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        if ([_medicationGroup.medications count] == 0) {
-            [ffm updateGrabBags:@[WMMedicationGroupRelationships.medications] aggregator:_medicationGroup ff:ff completionHandler:^(NSError *error) {
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-                block();
-            }];
-        } else {
+        [ffm updateGrabBags:@[WMMedicationGroupRelationships.medications] aggregator:_medicationGroup ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
             block();
-        }
+        }];
     }
 }
 

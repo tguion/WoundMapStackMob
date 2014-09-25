@@ -209,13 +209,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         }
         // else
         [_teamUsers removeObject:participant.user];
-        if ([_teamUsers count] == 0) {
-            return;
-        }
         // else just guids
         _teamUsers = [_teamUsers valueForKeyPath:@"guid"];
     }
     
+    if ([_teamUsers count] == 0) {
+        return;
+    }
+
     WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
     NSString *patientGuid = [[navigationCoordinator.patient.ffUrl componentsSeparatedByString:@"/"] lastObject];
     if (nil == patientGuid) {
@@ -294,7 +295,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         }
         objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (![guids containsObject:objectGuid]) {
-            [actions addObject:@"INSERT"];
+            [actions addObject:@"UPDATE"];
             [collections addObject:[[(NSManagedObject *)object entity] name]];
             [objectGuids addObject:objectGuid];
             [guids addObject:objectGuid];
@@ -312,6 +313,10 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         [collections addObject:[[(NSManagedObject *)object entity] name]];
         [objectGuids addObject:objectGuid];
     }
+    
+    silentUpdateData.collections = collections;
+    silentUpdateData.objectGuids = objectGuids;
+    silentUpdateData.actions = actions;
     
     [ff postObj:silentUpdateData toExtension:@"silentUpdateNotification" onComplete:onComplete onOffline:onComplete];
 
