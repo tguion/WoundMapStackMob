@@ -11,6 +11,7 @@
 extern NSString * const kPatientReferralNotification;
 extern NSString * const kTeamInvitationNotification;
 extern NSString * const kTeamMemberAddedNotification;
+extern NSString * const kUpdatedContentFromCloudNotification;
 
 @class KeychainItemWrapper;
 @class WMFatFractal;
@@ -37,6 +38,7 @@ extern NSString * const kTeamMemberAddedNotification;
 - (void)signOut;
 - (void)handleFatFractalSignout;
 
+@property (nonatomic, strong) NSArray *sortedEntityNames;
 - (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
 
 @end

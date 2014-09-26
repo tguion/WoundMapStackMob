@@ -31,6 +31,7 @@
 NSString * const kPatientReferralNotification = @"PatientReferralNotification";
 NSString * const kTeamInvitationNotification = @"TeamInvitationNotification";
 NSString * const kTeamMemberAddedNotification = @"TeamMemberAddedNotification";
+NSString * const kUpdatedContentFromCloudNotification = @"UpdatedContentFromCloudNotification";
 
 NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
 NSInteger const kRemoteNotification = 4002;
@@ -385,6 +386,14 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     [alert show];
 }
 
+- (NSArray *)sortedEntityNames
+{
+    if (nil == _sortedEntityNames) {
+        _sortedEntityNames = [[[NSManagedObjectModel MR_defaultManagedObjectModel] entities] valueForKey:@"name"];
+    }
+    return _sortedEntityNames;
+}
+
 // RPN
 - (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
@@ -392,12 +401,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     UIBackgroundFetchResult backgroundFetchResult = UIBackgroundFetchResultFailed;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     if (ff.loggedIn) {
-        NSString *patientGuid = map[@"patientGuid"];
-        NSString *woundGuid = map[@"woundGuid"];
-        NSString *woundPhotoGuid = map[@"woundPhotoGuid"];
-        NSArray *collections = map[@"collections"];
-        NSArray *objectGuids = map[@"objectGuids"];
-        NSArray *actions = map[@"actions"];
+        NSString *patientGuid = map[@"p"];
+        NSString *woundGuid = map[@"w"];
+        NSString *woundPhotoGuid = map[@"wp"];
+        NSArray *collections = map[@"c"];
+        NSArray *objectGuids = map[@"o"];
+        NSArray *actions = map[@"a"];
         // make sure we have patient
         BOOL patientAcquired = NO;
         BOOL woundAcquired = NO;
@@ -406,7 +415,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
         if (nil == patient) {
             // just fetch the patient
-            [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMPatient entityName], patientGuid] error:&error];
+            patient = [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@?depthRef=1&depthGb=2", [WMPatient entityName], patientGuid] error:&error];
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            // just fetch the BackReferences
+            [ff grabBagGetAllForObj:patient grabBagName:@"BackReferences" error:&error];
             if (error) {
                 [WMUtilities logError:error];
             }
@@ -454,16 +468,18 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 if (response.httpResponse.statusCode > 300) {
                     DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
                 } else {
-                    woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                    woundPhoto.thumbnailMini = [[UIImage alloc] initWithData:photoData];
                 }
                 woundPhotoAcquired = YES;
             }
         }
         
+        NSArray *sortedEntityNames = self.sortedEntityNames;
         if (objectGuids && [objectGuids isKindOfClass:[NSArray class]]) {
             NSInteger index = 0;
             for (NSString *objectGuid in objectGuids) {
-                NSString *collection = collections[index];
+                NSNumber *collectionNumber = collections[index];
+                NSString *collection = [sortedEntityNames objectAtIndex:[collectionNumber intValue]];
                 if (patientAcquired && [collection isEqualToString:[WMPatient entityName]]) {
                     continue;
                 }
@@ -473,14 +489,27 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 if (woundPhotoAcquired && [collection isEqualToString:[WMWoundPhoto entityName]]) {
                     continue;
                 }
+                
                 NSString *action = actions[index];
-                // fetch the data
+
+                if ([action isEqualToString:@"DELETE"]) {
+                    // fetch object in store
+                    Class clazz = NSClassFromString(collection);
+                    if (clazz) {
+                        NSManagedObject *objectToDelete = [clazz MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/%@/%@", collection, patientGuid] inContext:managedObjectContext];
+                        if (objectToDelete) {
+                            NSManagedObjectID *objectID = [objectToDelete objectID];
+                            [managedObjectContext MR_deleteObjects:@[objectToDelete]];
+                            // notify UI
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:@[objectID]];
+                        }
+                    }
+                    continue;
+                }
+                // else fetch the data
                 id object = [ff getObjFromUri:[NSString stringWithFormat:@"/%@/%@", collection, objectGuid] error:&error];
                 if (error) {
                     [WMUtilities logError:error];
-                }
-                if ([action isEqualToString:@"DELETE"]) {
-                    [managedObjectContext MR_deleteObjects:@[object]];
                 }
                 // get photo
                 if ([collection isEqualToString:[WMPhoto entityName]]) {
@@ -499,6 +528,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
             }
             // save data
             [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+            // notify UI
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdatedContentFromCloudNotification object:map];
             // mark as success
             backgroundFetchResult = UIBackgroundFetchResultNewData;
         } else {

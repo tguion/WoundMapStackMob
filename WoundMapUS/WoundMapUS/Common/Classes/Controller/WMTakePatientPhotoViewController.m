@@ -142,7 +142,17 @@
     MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     progressHUD.labelText = @"Processing Photo";
     NSManagedObjectID *objectID = [self.patient objectID];
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        ffm.postSynchronizationEvents = YES;
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
+    };
     [self dismissViewControllerAnimated:YES completion:^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -162,7 +172,6 @@
                 [_photoImageView updateForPatient:patient];
                 NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
                 WMPatient *patient = (WMPatient *)[managedObjectContext objectWithID:objectID];
-                WMFatFractal *ff = [WMFatFractal sharedInstance];
                 [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                     if (error) {
                         [WMUtilities logError:error];
@@ -171,17 +180,7 @@
                       withMimeType:@"image/png"
                             forObj:patient
                         memberName:WMPatientAttributes.thumbnail
-                        onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                            [managedObjectContext MR_saveToPersistentStoreAndWait];
-                        } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                            if (error) {
-                                [WMUtilities logError:error];
-                            }
-                            [managedObjectContext MR_saveToPersistentStoreAndWait];
-                        }];
+                        onComplete:onComplete onOffline:onComplete];
                 }];
             });
         });

@@ -101,7 +101,7 @@
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     _carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
-    if (_carePlanGroup.ffUrl || _parentCategory) {
+    if (_carePlanGroup.ffUrl) {
         dispatch_block_t block = ^{
             // we want to support cancel, so make sure we have an undoManager
             if (nil == managedObjectContext.undoManager) {
@@ -111,7 +111,7 @@
             [managedObjectContext.undoManager beginUndoGrouping];
         };
         // values may not have been aquired from back end
-        [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_parentCategory ff:ff completionHandler:^(NSError *error) {
+        [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_carePlanGroup ff:ff completionHandler:^(NSError *error) {
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
             block();
@@ -402,7 +402,9 @@
     __block NSInteger counter = 1;  // update _carePlanGroup
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
-        ffm.postSynchronizationEvents = YES;
+        if (nil == _parentCategory) {
+            ffm.postSynchronizationEvents = YES;
+        }
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate carePlanGroupViewControllerDidSave:weakSelf];

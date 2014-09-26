@@ -23,6 +23,7 @@
 @property (nonatomic) CGRect applicationFrameForCalculatedInsets;
 @property (nonatomic) BOOL keyboardIsShowing;
 @property (nonatomic) UIEdgeInsets contentInsetsBeforeShowingKeyboard;
+@property (nonatomic, strong) NSArray *constraints;
 
 @end
 
@@ -60,10 +61,11 @@
 
 - (void)updateTextViewContraints
 {
-    RemoveConstraints(self.view.constraints);
+    RemoveConstraints(_constraints);
+    UIEdgeInsets contentInsets = self.contentInsets;
     NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings (_textView);
-    NSDictionary *metrics = @{@"Top" : @(_contentInsets.top + 20),
-                              @"Bottom" : @(_contentInsets.bottom + 20)};
+    NSDictionary *metrics = @{@"Top" : @(contentInsets.top + 20),
+                              @"Bottom" : @(contentInsets.bottom + 44)};
     NSMutableArray *constraints = [NSMutableArray array];
     [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-Top-[_textView]-Bottom-|"
                                                                              options:0
@@ -71,6 +73,7 @@
                                                                                views:viewsDictionary]];
     [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_textView]-|" options:NSLayoutFormatAlignAllLeading metrics:nil views:viewsDictionary]];
     [self.view addConstraints:constraints];
+    _constraints = constraints;
 }
 
 - (void)viewWillLayoutSubviews
@@ -121,7 +124,7 @@
         CGFloat height = (UIInterfaceOrientationIsPortrait(orientation) ? CGRectGetHeight(application.statusBarFrame) : CGRectGetWidth(application.statusBarFrame));
         
         if (CGRectGetMinY(rect) < height)
-            insets.top += 20;
+            insets.top += height;
     }
     
     // If the navigation bar ISN'T hidden, we'll set our top inset to the bottom of the navigation bar. This allows the system to position things correctly to account for the double height status bar.

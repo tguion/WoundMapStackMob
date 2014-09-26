@@ -250,6 +250,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
     NSSet *updatedObjects = [[notification userInfo] objectForKey:NSUpdatedObjectsKey];
     NSSet *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
 
+    NSArray *sortedEntityNames = self.appDelegate.sortedEntityNames;
+    NSString *entityName = nil;
+
     // inserts
     for (id<WMFFManagedObject> object in createdObjects) {
         if (![object conformsToProtocol:@protocol(WMFFManagedObject)]) {
@@ -262,15 +265,17 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         id<WMFFManagedObject> aggregator = object.aggregator;
         NSString *objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (aggregator && ![guids containsObject:objectGuid]) {
-            [actions addObject:@"INSERT"];
-            [collections addObject:[[(NSManagedObject *)aggregator entity] name]];
+            [actions addObject:@"I"];
+            entityName = [[(NSManagedObject *)aggregator entity] name];
+            [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
             [objectGuids addObject:objectGuid];
             [guids addObject:objectGuid];
         }
         objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (![guids containsObject:objectGuid]) {
-            [actions addObject:@"INSERT"];
-            [collections addObject:[[(NSManagedObject *)object entity] name]];
+            [actions addObject:@"I"];
+            entityName = [[(NSManagedObject *)object entity] name];
+            [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
             [objectGuids addObject:objectGuid];
             [guids addObject:objectGuid];
         }
@@ -288,15 +293,17 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         id<WMFFManagedObject> aggregator = object.aggregator;
         NSString *objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (aggregator && ![guids containsObject:objectGuid]) {
-            [actions addObject:@"UPDATE"];
-            [collections addObject:[[(NSManagedObject *)aggregator entity] name]];
+            [actions addObject:@"U"];
+            entityName = [[(NSManagedObject *)aggregator entity] name];
+            [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
             [objectGuids addObject:objectGuid];
             [guids addObject:objectGuid];
         }
         objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
         if (![guids containsObject:objectGuid]) {
-            [actions addObject:@"UPDATE"];
-            [collections addObject:[[(NSManagedObject *)object entity] name]];
+            [actions addObject:@"U"];
+            entityName = [[(NSManagedObject *)object entity] name];
+            [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
             [objectGuids addObject:objectGuid];
             [guids addObject:objectGuid];
         }
@@ -309,8 +316,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         }
         NSAssert(object.requireUpdatesFromCloud, @"Deleted object should be synchronizable from cloud: %@", object);
         NSString *objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        [actions addObject:@"DELETE"];
-        [collections addObject:[[(NSManagedObject *)object entity] name]];
+        [actions addObject:@"D"];
+        entityName = [[(NSManagedObject *)object entity] name];
+        [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
         [objectGuids addObject:objectGuid];
     }
     
@@ -1335,39 +1343,30 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
 - (void)createPatient:(WMPatient *)patient ff:(WMFatFractal *)ff completionHandler:(WMObjectCallback)completionHandler
 {
     NSParameterAssert(nil == patient.ffUrl);
-    __block NSInteger counter = 0;
     WMErrorCallback block = ^(NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         }
-        if (counter == 0 || --counter == 0) {
-            completionHandler(error, patient);
-        }
+        completionHandler(error, patient);
     };
     FFUserGroup *consultantGroup = patient.consultantGroup;
     // create FFUserGroup that will hold the FFUser instance in team
     FFHttpMethodCompletion createPatientOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
-            block(error);
-        } else {
-            [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients];
-            block(error);
-            if (patient.participant.team) {
-                ++counter;
-                [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients];
-                block(error);
-            }
-            block(error);
+            [WMUtilities logError:error];
         }
+        [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients];
+        if (patient.participant.team) {
+            [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients];
+        }
+        block(error);
     };
     FFHttpMethodCompletion createConsultantGroupOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
-            block(error);
-        } else {
-            [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:createPatientOnComplete onOffline:createPatientOnComplete];
+            [WMUtilities logError:error];
         }
+        [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:createPatientOnComplete onOffline:createPatientOnComplete];
     };
-    ++counter;
     [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:createConsultantGroupOnComplete onOffline:createConsultantGroupOnComplete];
 }
 

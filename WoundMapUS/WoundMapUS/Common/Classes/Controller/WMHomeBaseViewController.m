@@ -1013,6 +1013,18 @@
     [self.compassView hidePatientRefreshing];
 }
 
+- (void)handleContentUpdatedFromCloud:(NSDictionary *)map
+{
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [super handleContentUpdatedFromCloud:map];
+        NSString *patientGuid = map[@"p"];
+        NSManagedObjectContext *managedObjectContext = weakSelf.managedObjectContext;
+        WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
+        [weakSelf handlePatientRefreshedFromCloud:[patient objectID]];
+    });
+}
+
 #pragma mark - Actions
 
 - (IBAction)homeAction:(id)sender
@@ -2128,14 +2140,9 @@
 - (void)bradenScaleControllerDidFinish:(WMBradenScaleViewController *)viewController
 {
     // save in order to update updatedAt
-    [self.managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
-        }
-    }];
+    [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kBradenScaleNode]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTaskDidCompleteNotification object:[NSNumber numberWithInt:kRiskAssessmentNode]];
 }
 
 #pragma mark - MedicationGroupViewControllerDelegate

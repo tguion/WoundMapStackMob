@@ -335,12 +335,15 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     // else
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __block NSInteger count = [queries count];
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
         if (0 == count || --count == 0) {
+            // we must save here, since we may have picked up changes from cloud
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
             if (weakSelf.refreshCompletionHandler) {
                 weakSelf.refreshCompletionHandler(error, nil);
             }
@@ -617,6 +620,16 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                                                                      [weakSelf handlePatientRefreshedFromCloud:[notification object]];
                                                                  }];
         [self.persistantObservers addObject:observer];
+        // watch for content-available from cloud
+        observer = [[NSNotificationCenter defaultCenter] addObserverForName:kUpdatedContentFromCloudNotification
+                                                                     object:nil
+                                                                      queue:[NSOperationQueue mainQueue]
+                                                                 usingBlock:^(NSNotification *notification) {
+                                                                     NSDictionary *map = notification.object;
+                                                                     DLog(@"%@ updating from cloud:%@", weakSelf, map);
+                                                                     [weakSelf handleContentUpdatedFromCloud:map];
+                                                                 }];
+        [self.persistantObservers addObject:observer];
     }
 }
 
@@ -714,6 +727,12 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
 {
+    [self.tableView reloadData];
+}
+
+- (void)handleContentUpdatedFromCloud:(NSDictionary *)map
+{
+    
 }
 
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
