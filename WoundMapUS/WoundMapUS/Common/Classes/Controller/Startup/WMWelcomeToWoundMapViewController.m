@@ -1113,6 +1113,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     // if participant has changed, we need to purge the local cache
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     NSString *lastUserName = userDefaultsManager.lastUserName;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{
@@ -1125,9 +1126,9 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         }
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
-        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
-//        ff.simulatingOffline = YES;//DEPLOYMENT
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
     };
     if ([lastUserName isEqualToString:participant.userName]) {
         // attempt to acquire last patient and wound
@@ -1150,6 +1151,15 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         NSString *uri = [woundFFUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
                         [ff getObjFromUri:uri onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                             if (error) {
+                                if (response.statusCode == 404) {
+                                    // it was deleted
+                                    [userDefaultsManager setLastWoundFFURLOnDevice:nil forPatientFFURL:patientFFUrl];
+                                    navigationCoordinator.wound = nil;
+                                    WMWound *wound = [WMWound MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"%K == %@", WMWoundAttributes.ffUrl, woundFFUrl] inContext:managedObjectContext];
+                                    if (wound) {
+                                        [managedObjectContext MR_deleteObjects:@[wound]];
+                                    }
+                                }
                                 [WMUtilities logError:error];
                             }
                             if (object) {
@@ -1163,16 +1173,13 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
                         block();
                     }
                 } else {
-                    [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                     block();
                 }
             }];
         } else {
-            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             block();
         }
     } else {
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         block();
     }
 }

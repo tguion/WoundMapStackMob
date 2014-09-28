@@ -532,6 +532,8 @@ NSString * const kTextCellIdentifier = @"TextCell";
             }
         }
         // update back end if participant has team
+        WMFatFractal *ff = [WMFatFractal sharedInstance];
+        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         WMParticipant *participant = self.appDelegate.participant;
         if (participant.team) {
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -542,12 +544,12 @@ NSString * const kTextCellIdentifier = @"TextCell";
                     [WMUtilities logError:error];
                 }
                 if (counter == 0 || --counter == 0) {
+                    ffm.postSynchronizationEvents = YES;
                     [managedObjectContext MR_saveToPersistentStoreAndWait];
                     [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     [weakSelf.delegate policyEditorViewControllerDidSave:weakSelf];
                 }
             };
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
             for (id updatedObject in managedObjectContext.updatedObjects) {
                 if (![updatedObject respondsToSelector:@selector(ffUrl)]) {
                     continue;
@@ -647,8 +649,8 @@ NSString * const kTextCellIdentifier = @"TextCell";
 
 - (void)chooseStageViewController:(WMChooseStageViewController *)viewController didSelectNavigationStage:(WMNavigationStage *)navigationStage
 {
-    [self refetchDataForTableView];
     self.navigationStage = navigationStage;
+    [self refetchDataForTableView];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

@@ -12,6 +12,7 @@
 #import "WMNavigationNode.h"
 #import "WMMedicalHistoryItem.h"
 #import "WMParticipant.h"
+#import "WMPatientLocation.h"
 #import "WMPerson.h"
 #import "WMOrganization.h"
 #import "WMTeam.h"
@@ -1349,6 +1350,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         }
         completionHandler(error, patient);
     };
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     FFUserGroup *consultantGroup = patient.consultantGroup;
     // create FFUserGroup that will hold the FFUser instance in team
     FFHttpMethodCompletion createPatientOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -1361,11 +1363,19 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
         }
         block(error);
     };
+    FFHttpMethodCompletion createLocationOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+        if (error) {
+            [WMUtilities logError:error];
+        }
+        patient.location = object;
+        [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:createPatientOnComplete onOffline:createPatientOnComplete];
+    };
     FFHttpMethodCompletion createConsultantGroupOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
-        [ff createObj:patient atUri:[NSString stringWithFormat:@"/%@", [WMPatient entityName]] onComplete:createPatientOnComplete onOffline:createPatientOnComplete];
+        WMPatientLocation *location = [WMPatientLocation MR_createInContext:managedObjectContext];
+        [ff createObj:location atUri:[NSString stringWithFormat:@"/%@", [WMPatientLocation entityName]] onComplete:createLocationOnComplete onOffline:createLocationOnComplete];
     };
     [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:createConsultantGroupOnComplete onOffline:createConsultantGroupOnComplete];
 }

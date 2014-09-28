@@ -575,7 +575,7 @@ typedef enum {
 
 - (BOOL)requireUpdatesFromCloud
 {
-    return NO;
+    return YES;
 }
 
 #pragma mark - FatFractal

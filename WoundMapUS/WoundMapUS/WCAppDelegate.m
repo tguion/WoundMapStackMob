@@ -314,12 +314,23 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // check for data synch
     id content_available = userInfo[@"aps"][@"content-available"];
     if (content_available) {
+        // save the payload
+        
+        // process
         [self downloadFFDataForCollection:userInfo[@"aps"] fetchCompletionHandler:handler];
+        // delete the payload
+        
     } else {
         // no data
         handler(UIBackgroundFetchResultNoData);
     }
 }
+
+// RPN
+//- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
+//{
+//    
+//}
 
 // RPN
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -398,6 +409,11 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 - (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    // save the payload
+    WMUnhandledSilentUpdateNotification *unhandledSilentUpdateNotification = [WMUnhandledSilentUpdateNotification MR_createInContext:managedObjectContext];
+    unhandledSilentUpdateNotification.notification = map;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    // befing processing
     UIBackgroundFetchResult backgroundFetchResult = UIBackgroundFetchResultFailed;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     if (ff.loggedIn) {
@@ -492,7 +508,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 
                 NSString *action = actions[index];
 
-                if ([action isEqualToString:@"DELETE"]) {
+                if ([action isEqualToString:@"D"]) {
                     // fetch object in store
                     Class clazz = NSClassFromString(collection);
                     if (clazz) {
@@ -536,10 +552,9 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
             // no data
             backgroundFetchResult = UIBackgroundFetchResultNoData;
         }
-    } else {
-        // persist and pick up when user logs in
-        WMUnhandledSilentUpdateNotification *unhandledSilentUpdateNotification = [WMUnhandledSilentUpdateNotification MR_createInContext:managedObjectContext];
-        unhandledSilentUpdateNotification.notification = map;
+        // delete the payload
+        [managedObjectContext MR_deleteObjects:@[unhandledSilentUpdateNotification]];
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
     }
     
     // finished

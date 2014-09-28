@@ -999,6 +999,20 @@
 
 - (void)handlePatientRefreshedFromCloud:(NSManagedObjectID *)patientObjectId
 {
+    // check if a wound or woundPhoto was added
+    WMPatient *patient = self.patient;
+    if ([[patient objectID] isEqual:patientObjectId]) {
+        WMNavigationCoordinator *navigationCoordinator = self.appDelegate.navigationCoordinator;
+        if (nil == self.wound) {
+            WMWound *wound = patient.lastActiveWound;
+            if (wound) {
+                navigationCoordinator.wound = wound;
+            }
+        }
+        if (self.wound && nil == self.woundPhoto) {
+            navigationCoordinator.woundPhoto = self.wound.lastWoundPhoto;
+        }
+    }
     // a referral may have come in
     [self updatePatientNodeControls];
     // update toolbar
