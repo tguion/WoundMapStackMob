@@ -207,6 +207,9 @@
             NSDictionary *committedValuesMap = [skinAssessmentValue committedValuesForKeys:@[@"values"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = skinAssessmentValue.value;
+            if (![oldValue isKindOfClass:[NSString class]] && newValue == nil) {
+                continue;
+            }
             if ([oldValue isEqualToString:newValue]) {
                 continue;
             }

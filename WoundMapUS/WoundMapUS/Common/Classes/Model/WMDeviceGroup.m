@@ -221,6 +221,9 @@
             NSDictionary *committedValuesMap = [deviceValue committedValuesForKeys:@[@"values"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = deviceValue.value;
+            if (![oldValue isKindOfClass:[NSString class]] && newValue == nil) {
+                continue;
+            }
             if ([oldValue isEqualToString:newValue]) {
                 continue;
             }

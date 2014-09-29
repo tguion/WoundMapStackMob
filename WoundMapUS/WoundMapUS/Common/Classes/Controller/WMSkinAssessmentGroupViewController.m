@@ -77,6 +77,9 @@
         };
         // values may not have been aquired from back end
         [ffm updateGrabBags:@[WMSkinAssessmentGroupRelationships.values] aggregator:_skinAssessmentGroup ff:ff completionHandler:^(NSError *error) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
             block();

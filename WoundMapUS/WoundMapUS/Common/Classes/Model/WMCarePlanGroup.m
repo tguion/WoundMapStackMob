@@ -267,6 +267,9 @@
             NSDictionary *committedValuesMap = [carePlanValue committedValuesForKeys:@[@"value"]];
             NSString *oldValue = [committedValuesMap objectForKey:@"value"];
             NSString *newValue = carePlanValue.value;
+            if (![oldValue isKindOfClass:[NSString class]] && newValue == nil) {
+                continue;
+            }
             if ([oldValue isEqualToString:newValue]) {
                 continue;
             }

@@ -100,7 +100,9 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    _carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
+    if (nil == _carePlanGroup) {
+        _carePlanGroup = [WMCarePlanGroup activeCarePlanGroup:patient];
+    }
     if (_carePlanGroup.ffUrl) {
         dispatch_block_t block = ^{
             // we want to support cancel, so make sure we have an undoManager
@@ -404,8 +406,8 @@
     dispatch_block_t block = ^{
         if (nil == _parentCategory) {
             ffm.postSynchronizationEvents = YES;
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
         }
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate carePlanGroupViewControllerDidSave:weakSelf];
     };
@@ -430,9 +432,16 @@
             completionHandler();
         }];
     }
+    
+    NSSet *updatedObjects = [managedObjectContext updatedObjects];
+    
     for (WMCarePlanValue *value in _carePlanGroup.values) {
-        ++counter;
         if (value.ffUrl) {
+            // skip if not for this parent category
+            if (![updatedObjects containsObject:value] && value.category != _parentCategory) {
+                continue;
+            }
+            ++counter;
             [ff updateObj:value onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
@@ -445,6 +454,7 @@
                 completionHandler();
             }];
         } else {
+            ++counter;
             [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMCarePlanValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];

@@ -1460,8 +1460,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 2;
             patient.consultantGroup = consultantGroup;
             [patient updateNavigationToTeam:team patient2StageMap:self.appDelegate.patient2StageMap];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
             } onOffline:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (localError) {
+                    [WMUtilities logError:localError];
+                }
                 [ff grabBagAddItemAtFfUrl:patient.ffUrl toObjAtFfUrl:team.ffUrl grabBagName:WMTeamRelationships.patients onComplete:onComplete];
             }];
         }

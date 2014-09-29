@@ -1439,12 +1439,12 @@
     WMNavigationNodeButton *navigationNodeButton = (WMNavigationNodeButton *)sender;
     __weak __typeof(&*self)weakSelf = self;
     WMErrorCallback block = ^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         if (error) {
             [WMUtilities logError:error];
         }
         navigationNodeButton.recentlyClosedCount = [policyManager closeExpiredRecords:navigationNodeButton.navigationNode];
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
     };
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
