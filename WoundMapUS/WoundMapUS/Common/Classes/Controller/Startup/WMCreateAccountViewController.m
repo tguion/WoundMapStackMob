@@ -247,15 +247,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
     return YES;
 }
 
--(void)saveUserCredentialsInKeychain
-{
-    KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
-    [keychainItem setObject:_userNameTextInput forKey:(__bridge id)(kSecAttrAccount)];
-    [keychainItem setObject:_passwordTextInput forKey:(__bridge id)(kSecValueData)];
-    NSLog(@"Successfully saved user %@ to keychain after signup in WMCreateAccountViewController.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
-    
-}
-
 - (void)updateNavigationState
 {
     switch (self.state) {
@@ -333,7 +324,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             weakSelf.state = CreateAccountAccountCreated;
             [weakSelf updateNavigationState];
             [weakSelf.tableView reloadData];
-            [weakSelf saveUserCredentialsInKeychain];
+            [weakSelf.appDelegate saveUserCredentialsInKeychain:_userNameTextInput password:_passwordTextInput];
             // update participant
             participant.user = ffUser;
             participant.guid = ffUser.guid;

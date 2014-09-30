@@ -41,6 +41,7 @@
 #import "WMPatient.h"
 #import "IAPProduct.h"
 #import "WMPaymentTransaction.h"
+#import "WMUnhandledSilentUpdateNotification.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "KeychainItemWrapper.h"
@@ -51,7 +52,7 @@
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
 
-//#define kAddPatientToTeamActionSheetTag 1000
+#define kUpdateSilentNotificationsAlertViewTag 1000
 
 typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateInitial,              // Sign In, Create Account
@@ -61,7 +62,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMWelcomeStateDeferTeam,            // Sign Out | Join Team, Create Team, No Team | Clinical Setting | Patient
 };
 
-@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIActionSheetDelegate, UIWebViewDelegate>
+@interface WMWelcomeToWoundMapViewController () <SignInViewControllerDelegate, CreateAccountDelegate, PersonEditorViewControllerDelegate, OrganizationEditorViewControllerDelegate, WMIAPJoinTeamViewControllerDelegate, CreateTeamViewControllerDelegate, IAPCreateConsultantViewControllerDelegate, ChooseTrackDelegate, PatientDetailViewControllerDelegate, PatientTableViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate, UIWebViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *descHTMLContainerView;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
@@ -560,28 +561,24 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     return YES;
 }
 
-#pragma mark - UIActionSheetDelegate
+#pragma mark - UIAlertViewDelegate
 
-//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    if (actionSheet.tag == kAddPatientToTeamActionSheetTag) {
-//        WMParticipant *participant = self.participant;
-//        WMTeam *team = participant.team;
-//        WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-//        __block NSInteger counter = 0;
-//        __weak __typeof(&*self)weakSelf = self;
-//        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-//        NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
-//        counter = [patients count];
-//        [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
-//        [ffm movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
-//            if (error) {
-//                [WMUtilities logError:error];
-//            }
-//            [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-//        }];
-//    }
-//}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == alertView.cancelButtonIndex) {
+        return;
+    }
+    // else
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Updating team data...";
+    NSArray *notifications = [WMUnhandledSilentUpdateNotification silentUpdateNotificationsForUserName:self.participant.userName managedObjectContext:managedObjectContext];
+    for (WMUnhandledSilentUpdateNotification *notification in notifications) {
+        [self.appDelegate downloadFFDataForCollection:notification.notification fetchCompletionHandler:nil];
+    }
+    [managedObjectContext MR_deleteObjects:notifications];
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
+}
 
 - (NSArray *)ffQuery
 {
@@ -1129,6 +1126,18 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        // synchronize any data that was not handled by silent remote notification
+        NSArray *notifications = [WMUnhandledSilentUpdateNotification silentUpdateNotificationsForUserName:participant.userName managedObjectContext:managedObjectContext];
+        if ([notifications count]) {
+            // let user synchronize now or later
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Team Updates Available"
+                                                                message:@"Team members have updated patient data. Do you want to synchronize with the team now?"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"No Now"
+                                                      otherButtonTitles:@"Update Now", nil];
+            alertView.tag = kUpdateSilentNotificationsAlertViewTag;
+            [alertView show];
+        }
     };
     if ([lastUserName isEqualToString:participant.userName]) {
         // attempt to acquire last patient and wound

@@ -13,7 +13,6 @@
 #import "WMTeam.h"
 #import "WMTeamPolicy.h"
 #import "WMTeamInvitation.h"
-#import "WMUnhandledSilentUpdateNotification.h"
 #import "WMFatFractal.h"
 #import "WMFatFractalManager.h"
 #import "WMUserDefaultsManager.h"
@@ -140,6 +139,7 @@
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         } else {
             FFUser *user = (FFUser *)object;
+            [weakSelf.appDelegate saveUserCredentialsInKeychain:_userNameTextInput password:_passwordTextInput];
             // fetch participant
             __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
                                                                                 create:NO
@@ -174,12 +174,6 @@
                                 [ffm deleteExpiredPhotos:teamPolicy];
                             }
                         }
-                        // synchronize any data that was not handled by silent remote notification
-                        NSArray *notifications = [WMUnhandledSilentUpdateNotification silentUpdateNotificationsForUserName:user.userName managedObjectContext:managedObjectContext];
-                        for (WMUnhandledSilentUpdateNotification *notification in notifications) {
-                            [self.appDelegate downloadFFDataForCollection:notification.notification fetchCompletionHandler:nil];
-                        }
-                        [managedObjectContext MR_deleteObjects:notifications];
                         [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
                     }
                 } else {

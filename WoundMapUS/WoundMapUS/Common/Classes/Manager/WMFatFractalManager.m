@@ -58,7 +58,7 @@
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 
-NSInteger const kNumberFreeMonthsFirstSubscription = 2;
+NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 
 @interface WMSilentUpdateData : NSObject { }
 

@@ -103,8 +103,8 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     [center addObserver:self selector:@selector(observeKeyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
     
     // DEBUG
-    NSInteger groupingLevel = self.managedObjectContext.undoManager.groupingLevel;
-    DLog(@"*** groupingLevel %ld", (long)groupingLevel);
+//    NSInteger groupingLevel = self.managedObjectContext.undoManager.groupingLevel;
+//    DLog(@"*** groupingLevel %ld", (long)groupingLevel);
 }
 
 - (void)viewWillDisappear:(BOOL)animated

@@ -128,36 +128,46 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 #pragma mark - Backend
 
-+ (BOOL)checkForAuthentication
+- (void)saveUserCredentialsInKeychain:(NSString *)userName password:(NSString *)password
 {
-    WCAppDelegate *appDelegate = (WCAppDelegate *)[[UIApplication sharedApplication] delegate];
-    WMFatFractal *ff = [WMFatFractal sharedInstance];
-    if ([ff loggedIn] || ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""])) {
-        NSLog(@"checkForAuthentication: FFUser logged in.");
+    KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
+    [keychainItem setObject:userName forKey:(__bridge id)(kSecAttrAccount)];
+    [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
+    DLog(@"Successfully saved user %@ to keychain after signup.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
+}
+
+- (BOOL)authenticateWithKeychain
+{
+    BOOL success = NO;
+
+    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
         // authenticated - look up participant
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        FFUser *ffUser = (FFUser *)[ff loggedInUser];
-        NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-        WMParticipant *participant = nil;
-        if (ffUser) {
-            participant = [WMParticipant participantForUserName:ffUser.userName create:NO managedObjectContext:managedObjectContext];
-        } else {
-            // keychain says is logged in
-            KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
-            id object = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-            if ([object isKindOfClass:[NSString class]]) {
-                NSString *userName = (NSString *)object;
-                participant = [WMParticipant participantForUserName:userName create:NO managedObjectContext:managedObjectContext];
-            }
+        
+        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
+        
+        NSError *error = nil;
+        
+        // Login with FatFractal by initiating connection with server
+        // Step 1
+        FFUser *ffUser = (FFUser *)[ff loginWithUserName:username andPassword:password error:&error];
+        // Step 2
+        if (error) {
+            DLog(@"Error trying to log in from AppDelegate: %@", [error localizedDescription]);
+            // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
+            // Better error handling can be done in a production application.
+            [_keychainItem resetKeychainItem];
+        } else if (ffUser) {
+            DLog(@"Login from AppDelegate using keychain successful!");
+            success = YES;
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
+            self.participant = [WMParticipant participantForUserName:ffUser.userName create:NO managedObjectContext:managedObjectContext];
         }
-        appDelegate.participant = participant;
-        WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-        userDefaultsManager.lastUserName = participant.userName;
-        return (nil != participant);
+        
     }
-    // else
-    NSLog(@"checkForAuthentication: No user logged in.");
-    return NO;
+
+    return success;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -167,8 +177,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     }
     // initialize Core Data
     [self.coreDataHelper setupCoreData];
-//    // create the KeychainItem singleton
-//    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
+    // create the KeychainItem singleton
+    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
 //    // if Keychain Item exists, attempt login
 //    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
 //        NSLog(@"_keychainItem username exists, attempting login in background.");
@@ -412,10 +422,14 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // save the payload
     WMUnhandledSilentUpdateNotification *unhandledSilentUpdateNotification = [WMUnhandledSilentUpdateNotification MR_createInContext:managedObjectContext];
     unhandledSilentUpdateNotification.notification = map;
+    unhandledSilentUpdateNotification.userNamme = [[WMUserDefaultsManager sharedInstance] lastUserName];
     [managedObjectContext MR_saveToPersistentStoreAndWait];
-    // befing processing
+    // beging processing
     UIBackgroundFetchResult backgroundFetchResult = UIBackgroundFetchResultFailed;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    if (!ff.loggedIn) {
+        [self authenticateWithKeychain];
+    }
     if (ff.loggedIn) {
         NSString *patientGuid = map[@"p"];
         NSString *woundGuid = map[@"w"];

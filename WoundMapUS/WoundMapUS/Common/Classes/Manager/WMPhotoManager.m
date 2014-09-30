@@ -525,7 +525,7 @@
     // set the overlay
     self.imagePickerController.cameraOverlayView = self.overlayView;
     // DEBUG
-    [self performSelector:@selector(delayedPrintViews) withObject:nil afterDelay:2.0];
+//    [self performSelector:@selector(delayedPrintViews) withObject:nil afterDelay:2.0];
 }
 
 - (void)delayedPrintViews

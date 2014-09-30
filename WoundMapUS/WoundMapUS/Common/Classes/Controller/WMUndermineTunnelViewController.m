@@ -376,10 +376,10 @@
 #pragma mark - UITextFieldDelegate
 
 // DEBUG became first responder
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    NSLog(@"depthTextField didBegin: %@", textField == self.depthTextField ? @"YES":@"NO");
-}
+//- (void)textFieldDidBeginEditing:(UITextField *)textField
+//{
+//    NSLog(@"depthTextField didBegin: %@", textField == self.depthTextField ? @"YES":@"NO");
+//}
 
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
 - (void)textFieldDidEndEditing:(UITextField *)textField
