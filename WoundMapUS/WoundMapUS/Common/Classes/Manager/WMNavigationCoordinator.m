@@ -799,10 +799,10 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     [managedObjectContext MR_deleteObjects:@[patient]];
     [managedObjectContext processPendingChanges];
     if (deleteFromBackend) {
-        ++counter;
-        [ff deleteObj:patient.consultantGroup onComplete:httpMethodCompletion];
         NSSet *deletedObjects = managedObjectContext.deletedObjects;
         counter += [deletedObjects count];
+        ++counter;
+        [ff deleteObj:patient.consultantGroup onComplete:httpMethodCompletion];
         for (id object in deletedObjects) {
             [ff deleteObj:object onComplete:httpMethodCompletion];
         }

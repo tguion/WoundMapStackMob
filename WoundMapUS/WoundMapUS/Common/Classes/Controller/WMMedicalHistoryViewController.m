@@ -175,10 +175,7 @@
     }
     // indicate that patient was changed on device
     [self patientNavigationDataChangedOnDevice];
-    // save locally
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    ffm.postSynchronizationEvents = YES;
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
     // update back end
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSArray *medicalHistoryValues = [self.fetchedResultsController fetchedObjects];

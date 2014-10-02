@@ -95,6 +95,10 @@
 		7D01510618EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D01510418EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.m */; };
 		7D01510718EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */; };
 		7D01510A18EEEF7500D5C0A9 /* WMFatFractal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */; };
+		7D03D6CF19DDCA22006A3B4A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D03D6CE19DDCA22006A3B4A /* StoreKit.framework */; };
+		7D03D6D319DDE3F5006A3B4A /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7D03D6D019DDE3F5006A3B4A /* WoundMap.sqlite */; };
+		7D03D6D419DDE3F5006A3B4A /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7D03D6D119DDE3F5006A3B4A /* WoundMap.sqlite-shm */; };
+		7D03D6D519DDE3F5006A3B4A /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7D03D6D219DDE3F5006A3B4A /* WoundMap.sqlite-wal */; };
 		7D0F2F4419058614009F8346 /* WMCarePlanSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4219058614009F8346 /* WMCarePlanSummaryViewController.m */; };
 		7D0F2F4519058614009F8346 /* WMCarePlanSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D0F2F4319058614009F8346 /* WMCarePlanSummaryViewController.xib */; };
 		7D0F2F4A1905B747009F8346 /* WMPatient+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0F2F491905B747009F8346 /* WMPatient+CoreText.m */; };
@@ -385,9 +389,6 @@
 		7D9AA28618B13B2D00C1B698 /* WMPatientTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28418B13B2D00C1B698 /* WMPatientTableViewController.m */; };
 		7D9AA28718B13B2D00C1B698 /* WMPatientTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */; };
 		7D9AA28A18B13F5900C1B698 /* WMPatientTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */; };
-		7D9CB59419DC98C800084668 /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7D9CB59119DC98C800084668 /* WoundMap.sqlite */; };
-		7D9CB59519DC98C800084668 /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7D9CB59219DC98C800084668 /* WoundMap.sqlite-shm */; };
-		7D9CB59619DC98C800084668 /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7D9CB59319DC98C800084668 /* WoundMap.sqlite-wal */; };
 		7D9CB59919DD93D500084668 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D9CB59719DD93D500084668 /* LaunchScreen.xib */; };
 		7DA3C6AD19460E44008DA3DC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7DA3C6AC19460E43008DA3DC /* Settings.bundle */; };
 		7DB2060918A7D3400004DC32 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DB2060818A7D3400004DC32 /* Foundation.framework */; };
@@ -753,6 +754,10 @@
 		7D01510518EC43B400D5C0A9 /* WMCreateTeamInvitationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCreateTeamInvitationViewController.xib; sourceTree = "<group>"; };
 		7D01510818EEEF7500D5C0A9 /* WMFatFractal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFatFractal.h; sourceTree = "<group>"; };
 		7D01510918EEEF7500D5C0A9 /* WMFatFractal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFatFractal.m; sourceTree = "<group>"; };
+		7D03D6CE19DDCA22006A3B4A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7D03D6D019DDE3F5006A3B4A /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
+		7D03D6D119DDE3F5006A3B4A /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
+		7D03D6D219DDE3F5006A3B4A /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
 		7D0F2F4119058614009F8346 /* WMCarePlanSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMCarePlanSummaryViewController.h; sourceTree = "<group>"; };
 		7D0F2F4219058614009F8346 /* WMCarePlanSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMCarePlanSummaryViewController.m; sourceTree = "<group>"; };
 		7D0F2F4319058614009F8346 /* WMCarePlanSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMCarePlanSummaryViewController.xib; sourceTree = "<group>"; };
@@ -1256,9 +1261,6 @@
 		7D9AA28518B13B2D00C1B698 /* WMPatientTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPatientTableViewController.xib; sourceTree = "<group>"; };
 		7D9AA28818B13F5900C1B698 /* WMPatientTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientTableViewCell.h; sourceTree = "<group>"; };
 		7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientTableViewCell.m; sourceTree = "<group>"; };
-		7D9CB59119DC98C800084668 /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
-		7D9CB59219DC98C800084668 /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
-		7D9CB59319DC98C800084668 /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
 		7D9CB59819DD93D500084668 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		7DA3C6AC19460E43008DA3DC /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7DB2060518A7D3400004DC32 /* WoundMapUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoundMapUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1660,6 +1662,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DDA8D9C1925511B00A1AFB7 /* CFNetwork.framework in Frameworks */,
+				7D03D6CF19DDCA22006A3B4A /* StoreKit.framework in Frameworks */,
 				7DDA8D9A1925511000A1AFB7 /* libz.dylib in Frameworks */,
 				7DDA8D96192550B000A1AFB7 /* NMSSH.framework in Frameworks */,
 				7D10CE3418E0CFBD00AD43E3 /* FFEF.framework in Frameworks */,
@@ -2019,9 +2022,9 @@
 		7D864D3D191E5E0800D5973C /* Seed */ = {
 			isa = PBXGroup;
 			children = (
-				7D9CB59119DC98C800084668 /* WoundMap.sqlite */,
-				7D9CB59219DC98C800084668 /* WoundMap.sqlite-shm */,
-				7D9CB59319DC98C800084668 /* WoundMap.sqlite-wal */,
+				7D03D6D019DDE3F5006A3B4A /* WoundMap.sqlite */,
+				7D03D6D119DDE3F5006A3B4A /* WoundMap.sqlite-shm */,
+				7D03D6D219DDE3F5006A3B4A /* WoundMap.sqlite-wal */,
 			);
 			path = Seed;
 			sourceTree = "<group>";
@@ -2068,6 +2071,7 @@
 		7DB2060718A7D3400004DC32 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7D03D6CE19DDCA22006A3B4A /* StoreKit.framework */,
 				7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */,
 				7DDA8D991925511000A1AFB7 /* libz.dylib */,
 				7DDA8D95192550B000A1AFB7 /* NMSSH.framework */,
@@ -3306,6 +3310,11 @@
 				TargetAttributes = {
 					7DB2060418A7D3400004DC32 = {
 						DevelopmentTeam = Y3FBN555LK;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					7DB2063018A7D3400004DC32 = {
 						TestTargetID = 7DB2060418A7D3400004DC32;
@@ -3391,7 +3400,6 @@
 				7D10CE0618DC634800AD43E3 /* WMDevicesSummaryViewController.xib in Resources */,
 				7D674150192CD8EF007DBD1A /* WMNutritionGroupViewController.xib in Resources */,
 				5F67D20318AC3BE000460C37 /* WoundMeasurement.plist in Resources */,
-				7D9CB59419DC98C800084668 /* WoundMap.sqlite in Resources */,
 				5F67D1FA18AC3BE000460C37 /* PsychoSocial.plist in Resources */,
 				5F67D23318AD901600460C37 /* WMPatientDetailViewController.xib in Resources */,
 				7D674153192CEEEE007DBD1A /* NavigationTracksAU.plist in Resources */,
@@ -3411,6 +3419,7 @@
 				7D10CD9318D775E100AD43E3 /* WMSelectWoundOdorViewController.xib in Resources */,
 				5F6DE53718B58BB000E87F7E /* Instructions.plist in Resources */,
 				5F6DE53F18B58BB000E87F7E /* InstructionsSkinAssessment.html in Resources */,
+				7D03D6D319DDE3F5006A3B4A /* WoundMap.sqlite in Resources */,
 				5F6DE53918B58BB000E87F7E /* InstructionsIntroduction.html in Resources */,
 				7DDEE28418F495F900AF9FC6 /* MedicalHistory.plist in Resources */,
 				7D10CD9818DA301100AD43E3 /* WMNoteViewController.xib in Resources */,
@@ -3430,14 +3439,12 @@
 				7D68946519043D1C006DE509 /* WMWoundPhotoSlideShowViewController.xib in Resources */,
 				7D0F2F511905BD97009F8346 /* TemplateTwoColumnsTwoPhotosAssessment.xib in Resources */,
 				7D39DBA218BA8AB20054DDC3 /* WMPlotGraphViewController.xib in Resources */,
-				7D9CB59619DC98C800084668 /* WoundMap.sqlite-wal in Resources */,
 				7D39DBB518BAB2CC0054DDC3 /* WMTransformPhotoViewController.xib in Resources */,
 				7D0F2F571905C120009F8346 /* WMPatientSummaryViewController.xib in Resources */,
 				7DD3EA4618C00E120093E370 /* IAPProducts.plist in Resources */,
 				5F67D1FD18AC3BE000460C37 /* SkinAssessment.plist in Resources */,
 				5F6DE51B18B5885E00E87F7E /* WMInstructionContentViewController.xib in Resources */,
 				5F6DE4FF18B1A8AE00E87F7E /* WMIAPJoinTeamViewController.xib in Resources */,
-				7D9CB59519DC98C800084668 /* WoundMap.sqlite-shm in Resources */,
 				7D0F2F4F1905BD97009F8346 /* TemplateTwoColumnsPlan3.xib in Resources */,
 				7D39DB0118B7E6560054DDC3 /* WMShareViewController.xib in Resources */,
 				5F67D1FE18AC3BE000460C37 /* SkinAssessmentDefinitions.plist in Resources */,
@@ -3455,6 +3462,7 @@
 				7D39DAE818B7E5DD0054DDC3 /* WMSelectWoundViewController.xib in Resources */,
 				5F67D20818AC3BE000460C37 /* WoundTreatment.plist in Resources */,
 				7D674136192BF0F3007DBD1A /* Nutrition.plist in Resources */,
+				7D03D6D519DDE3F5006A3B4A /* WoundMap.sqlite-wal in Resources */,
 				5F67D1F718AC3BE000460C37 /* Medications.plist in Resources */,
 				7D39DB4018B825750054DDC3 /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D39DB3318B823A30054DDC3 /* WMMedicationGroupViewController.xib in Resources */,
@@ -3498,6 +3506,7 @@
 				5F67D1F218AC3BE000460C37 /* CarePlan.plist in Resources */,
 				7D9AA27718B003D600C1B698 /* NavigationTracks.plist in Resources */,
 				7DDEE26E18F1919D00AF9FC6 /* WMManageTeamViewController.xib in Resources */,
+				7D03D6D419DDE3F5006A3B4A /* WoundMap.sqlite-shm in Resources */,
 				7DDA8DAC1927852300A1AFB7 /* WMBarScanViewController.xib in Resources */,
 				7DDE40DA191532C4008DDA3E /* WMParticipantTableViewController.xib in Resources */,
 				5F67D1FB18AC3BE000460C37 /* PsychoSocialDefinitions.plist in Resources */,

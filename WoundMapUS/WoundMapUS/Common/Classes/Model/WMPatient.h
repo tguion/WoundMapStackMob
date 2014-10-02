@@ -8,6 +8,8 @@ extern NSString * const kConsultantGroupName;
 
 @interface WMPatient : _WMPatient <idSource, WMFFManagedObject> {}
 
++ (FFUserGroup *)consultantGroup;
+
 + (NSArray *)toManyRelationshipNames;
 + (NSSet *)relationshipNamesAffectingCompassStatus;
 

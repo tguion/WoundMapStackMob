@@ -265,7 +265,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         // else check if we must issue to insert aggregator
         id<WMFFManagedObject> aggregator = object.aggregator;
         NSString *objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (aggregator && ![guids containsObject:objectGuid]) {
+        if (aggregator && objectGuid && ![guids containsObject:objectGuid]) {
             [actions addObject:@"I"];
             entityName = [[(NSManagedObject *)aggregator entity] name];
             [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
@@ -273,7 +273,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
             [guids addObject:objectGuid];
         }
         objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (![guids containsObject:objectGuid]) {
+        if (objectGuid && ![guids containsObject:objectGuid]) {
             [actions addObject:@"I"];
             entityName = [[(NSManagedObject *)object entity] name];
             [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
@@ -293,7 +293,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         // else check if we must issue to insert aggregator
         id<WMFFManagedObject> aggregator = object.aggregator;
         NSString *objectGuid = [[aggregator.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (aggregator && ![guids containsObject:objectGuid]) {
+        if (aggregator && objectGuid && ![guids containsObject:objectGuid]) {
             [actions addObject:@"U"];
             entityName = [[(NSManagedObject *)aggregator entity] name];
             [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
@@ -301,7 +301,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
             [guids addObject:objectGuid];
         }
         objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
-        if (![guids containsObject:objectGuid]) {
+        if (objectGuid && ![guids containsObject:objectGuid]) {
             [actions addObject:@"U"];
             entityName = [[(NSManagedObject *)object entity] name];
             [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
@@ -317,6 +317,10 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         }
         NSAssert(object.requireUpdatesFromCloud, @"Deleted object should be synchronizable from cloud: %@", object);
         NSString *objectGuid = [[object.ffUrl componentsSeparatedByString:@"/"] lastObject];
+        if (nil == objectGuid) {
+            DLog(@"*** WARNING: objectGuid is nil for %@", [[(NSManagedObject *)object entity] name]);
+            continue;
+        }
         [actions addObject:@"D"];
         entityName = [[(NSManagedObject *)object entity] name];
         [collections addObject:@([sortedEntityNames indexOfObject:entityName])];
@@ -1351,12 +1355,15 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         completionHandler(error, patient);
     };
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
-    FFUserGroup *consultantGroup = patient.consultantGroup;
     // create FFUserGroup that will hold the FFUser instance in team
     FFHttpMethodCompletion createPatientOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
+        // DEBUG
+        NSError *localError = nil;
+        [patient.consultantGroup addUser:self.appDelegate.participant.user error:&localError];
+        // DEBUG
         [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients];
         if (patient.participant.team) {
             [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients];
@@ -1374,9 +1381,11 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         if (error) {
             [WMUtilities logError:error];
         }
+        patient.consultantGroup = object;
         WMPatientLocation *location = [WMPatientLocation MR_createInContext:managedObjectContext];
         [ff createObj:location atUri:[NSString stringWithFormat:@"/%@", [WMPatientLocation entityName]] onComplete:createLocationOnComplete onOffline:createLocationOnComplete];
     };
+    FFUserGroup *consultantGroup = [WMPatient consultantGroup];
     [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:createConsultantGroupOnComplete onOffline:createConsultantGroupOnComplete];
 }
 

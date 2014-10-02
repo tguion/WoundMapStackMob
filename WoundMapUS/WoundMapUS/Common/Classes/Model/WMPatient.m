@@ -144,6 +144,14 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     }
 }
 
++ (FFUserGroup *)consultantGroup
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    FFUserGroup *consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
+    [consultantGroup setGroupName:kConsultantGroupName];
+    return consultantGroup;
+}
+
 // we loose this property when self is faulted
 - (FFUserGroup *)consultantGroup
 {
@@ -166,6 +174,9 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     }
     // else
     _consultantGroup = consultantGroup;
+    if (_consultantGroup && self.ffUrl) {
+        [ffUrl2ConsultingGroupMap setObject:_consultantGroup forKey:self.ffUrl];
+    }
 }
 
 - (NSString *)lastNameFirstName
