@@ -20,7 +20,6 @@ extern NSString * const kUpdatedContentFromCloudNotification;
 
 @interface WCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 
-+ (KeychainItemWrapper *)keychainItem;
 - (void)saveUserCredentialsInKeychain:(NSString *)userName password:(NSString *)password;
 - (BOOL)authenticateWithKeychain;
 

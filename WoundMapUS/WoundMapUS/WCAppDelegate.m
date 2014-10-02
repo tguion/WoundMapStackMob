@@ -37,8 +37,6 @@ NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
 NSInteger const kRemoteNotification = 4002;
 NSInteger const kSessionTimeoutAlertViewTag = 1000;
 
-// Instantiating KeychainItemWrapper class as a singleton through AppDelegate
-static KeychainItemWrapper *_keychainItem;
 // Keychain Identifier
 static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
@@ -50,15 +48,22 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 @property (strong, nonatomic) NSDictionary *remoteNotification;
 @property (strong, nonatomic) UIAlertView *timeOutAlertView;
 @property UIBackgroundTaskIdentifier bgTask;
+@property (strong, nonatomic) KeychainItemWrapper *keychainItem;
+
 
 @end
 
 @implementation WCAppDelegate
 
-#define debug 1
+#define debug 1     // DEBUG
 
-+ (KeychainItemWrapper *)keychainItem
+- (KeychainItemWrapper *)keychainItem
 {
+    if (nil == _keychainItem) {
+        // create the KeychainItem singleton
+        _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
+
+    }
     return _keychainItem;
 }
 
@@ -130,7 +135,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 - (void)saveUserCredentialsInKeychain:(NSString *)userName password:(NSString *)password
 {
-    KeychainItemWrapper *keychainItem = [WCAppDelegate keychainItem];
+    KeychainItemWrapper *keychainItem = self.keychainItem;
     [keychainItem setObject:userName forKey:(__bridge id)(kSecAttrAccount)];
     [keychainItem setObject:password forKey:(__bridge id)(kSecValueData)];
     DLog(@"Successfully saved user %@ to keychain after signup.", [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)]);
@@ -140,24 +145,24 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 {
     BOOL success = NO;
 
-    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
+    KeychainItemWrapper *keychainItem = self.keychainItem;
+    if ([keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
         // authenticated - look up participant
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         
-        NSString *username = [_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
-        NSString *password = [_keychainItem objectForKey:(__bridge id)(kSecValueData)];
+        NSString *username = [keychainItem objectForKey:(__bridge id)(kSecAttrAccount)];
+        NSString *password = [keychainItem objectForKey:(__bridge id)(kSecValueData)];
         
         NSError *error = nil;
         
-        // Login with FatFractal by initiating connection with server
-        // Step 1
+        // Step 1 - Login with FatFractal by initiating connection with server
         FFUser *ffUser = (FFUser *)[ff loginWithUserName:username andPassword:password error:&error];
-        // Step 2
+        // Step 2 - handle response from ff
         if (error) {
             DLog(@"Error trying to log in from AppDelegate: %@", [error localizedDescription]);
             // Probably keychain item is corrupted, reset the keychain and force user to sign up/ login again.
             // Better error handling can be done in a production application.
-            [_keychainItem resetKeychainItem];
+            [keychainItem resetKeychainItem];
         } else if (ffUser) {
             DLog(@"Login from AppDelegate using keychain successful!");
             success = YES;
@@ -173,12 +178,11 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     if (debug==1) {
-        NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+        DLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
+        DLog(@"Document: %@", [self applicationDocumentsDirectory]);
     }
     // initialize Core Data
     [self.coreDataHelper setupCoreData];
-    // create the KeychainItem singleton
-    _keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:keychainIdentifier accessGroup:nil];
 //    // if Keychain Item exists, attempt login
 //    if ([_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] != nil && ![[_keychainItem objectForKey:(__bridge id)(kSecAttrAccount)] isEqual:@""]) {
 //        NSLog(@"_keychainItem username exists, attempting login in background.");

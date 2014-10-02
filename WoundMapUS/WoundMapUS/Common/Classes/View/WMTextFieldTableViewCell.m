@@ -34,14 +34,13 @@
         
         UILabel *textLabel = self.textLabel;
         textLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        textLabel.backgroundColor = [UIColor yellowColor];//DEBUG
         [textLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         [textLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 
         NSDictionary *views = NSDictionaryOfVariableBindings(textLabel, textField);
 
         NSMutableArray *constraints = [NSMutableArray array];
-        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[textLabel]-[textField(>=80)]-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[textLabel]-[textField]-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
         [constraints addObject:[NSLayoutConstraint constraintWithItem:textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
         [contentView addConstraints:constraints];
         

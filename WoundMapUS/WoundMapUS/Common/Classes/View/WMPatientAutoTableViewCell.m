@@ -182,7 +182,7 @@
     }
     _statusLabel.text = patient.patientStatusMessages;
     [self setNeedsUpdateConstraints];
-//    [self performSelector:@selector(debugSubviews) withObject:nil afterDelay:1.0];
+//    [self performSelector:@selector(debugSubviews) withObject:nil afterDelay:1.0]; // DEBUG
     _referralCallback = [referralCallback copy];
     _unarchiveCallback = [unarchiveCallback copy];
 }
@@ -209,8 +209,6 @@
         self.accessoryView = nil;
     }
 }
-
-// DEBUG
 
 - (void)debugSubviews
 {
