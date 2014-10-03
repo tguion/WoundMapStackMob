@@ -13,6 +13,7 @@
 #import "WMPhoto.h"
 #import "WMUtilities.h"
 #import "DictionaryToDataTransformer.h"
+#import "WMFatFractal.h"
 #import "WMNavigationCoordinator.h"
 #import "WMUserDefaultsManager.h"
 #import "WCAppDelegate.h"
@@ -37,6 +38,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;                      // view to hold woundPhoto.thumbnail or woundPhoto.thumbnailLarge
 @property (strong, nonatomic) UIView *tapView;                                      // view that has gesture recognizer
 @property (strong, nonatomic) NSTimer *hideOverlayTimer;                            // timer to hide overlay
+@property (nonatomic) BOOL lastPhotoMissing;
 
 @property (strong, nonatomic) UIImage *image;                                       // image being processed
 @property (readonly, nonatomic) CGSize imageSize;
@@ -444,6 +446,7 @@
         _imagePickerController.sourceType = self.shouldUseCameraForNextPhoto ? UIImagePickerControllerSourceTypeCamera:UIImagePickerControllerSourceTypePhotoLibrary;
         _imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects:(NSString *)kUTTypeImage, nil];
         _imagePickerController.allowsEditing = NO;
+        _imagePickerController.showsCameraControls = YES;
     }
     return _imagePickerController;
 }
@@ -454,6 +457,43 @@
     if (nil == woundPhoto) {
         // check if one exists
         woundPhoto = [self.appDelegate.navigationCoordinator.wound lastWoundPhoto];
+        _lastPhotoMissing = NO;
+        // make sure we have the images
+        if (woundPhoto && nil == woundPhoto.thumbnail) {
+            WMFatFractal *ff = [WMFatFractal sharedInstance];
+            UIView *view = self.imagePickerController.view;
+            NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+            [MBProgressHUD showHUDAddedTo:view animated:NO].labelText = @"Downloading last photo";
+            dispatch_block_t block = ^{
+                [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                    NSData *photoData = [response rawResponseData];
+                    if (response.httpResponse.statusCode > 300) {
+                        DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                        if (response.httpResponse.statusCode == 404) {
+                            _lastPhotoMissing = YES;
+                        }
+                    } else {
+                        woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    }
+                    [MBProgressHUD hideAllHUDsForView:view animated:NO];
+                }];
+            };
+            [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                NSData *photoData = [response rawResponseData];
+                if (response.httpResponse.statusCode > 300) {
+                    DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                    if (response.httpResponse.statusCode == 404) {
+                        _lastPhotoMissing = YES;
+                    }
+                    [MBProgressHUD hideAllHUDsForView:view animated:NO];
+                } else {
+                    woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
+                    [managedObjectContext MR_saveToPersistentStoreAndWait];
+                    block();
+                }
+            }];
+        }
     }
     return woundPhoto;
 }
@@ -461,13 +501,37 @@
 - (UIView *)overlayView
 {
     if (nil == _overlayView) {
-        CGRect aFrame = self.imagePickerController.view.bounds;
-        _overlayView = [[UIView alloc] initWithFrame:aFrame];
+        CGRect frame = CGRectInset(self.imagePickerController.view.bounds, 66.0, 66.0);
+        _overlayView = [[UIView alloc] initWithFrame:frame];
+        _overlayView.translatesAutoresizingMaskIntoConstraints = NO;
         _overlayView.userInteractionEnabled = YES;
         _overlayView.clipsToBounds = NO;
-        _overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [_overlayView addSubview:self.imageView];
-        [_overlayView addSubview:self.tapView];
+        UIImageView *imageView = self.imageView;
+        imageView.frame = _overlayView.bounds;
+        UIView *tapView = self.tapView;
+        tapView.frame = _overlayView.bounds;
+        [_overlayView addSubview:imageView];
+        [_overlayView addSubview:tapView];
+        // add constraints
+        NSDictionary *views = NSDictionaryOfVariableBindings(_overlayView, imageView, tapView);
+        NSMutableArray *constraints = [NSMutableArray array];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:_overlayView
+                                                            attribute:NSLayoutAttributeWidth
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:nil
+                                                            attribute:NSLayoutAttributeNotAnAttribute
+                                                           multiplier:1
+                                                             constant:CGRectGetWidth(frame)]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:_overlayView
+                                                            attribute:NSLayoutAttributeHeight
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:nil
+                                                            attribute:NSLayoutAttributeNotAnAttribute
+                                                           multiplier:1
+                                                             constant:CGRectGetHeight(frame)]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tapView]|" options:NSLayoutFormatAlignAllCenterX metrics:nil views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tapView]|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+        [_overlayView addConstraints:constraints];
     }
     return _overlayView;
 }
@@ -476,8 +540,8 @@
 {
     if (nil == _tapView) {
         _tapView = [[UIView alloc] initWithFrame:CGRectZero];
+        _tapView.translatesAutoresizingMaskIntoConstraints = NO;
         _tapView.userInteractionEnabled = YES;
-        _tapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     return _tapView;
 }
@@ -486,17 +550,34 @@
 {
     if (nil == _imageView) {
         _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _imageView.translatesAutoresizingMaskIntoConstraints = NO;
         _imageView.userInteractionEnabled = NO;
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         _imageView.alpha = 0.5;
         _imageView.hidden = YES;
         WMWoundPhoto *woundPhoto = self.woundPhoto;
-        if (!self.isIPadIdiom && woundPhoto.landscapeOrientation) {
-            _imageView.layer.anchorPoint = CGPointMake(0.5, 0.5);
-            _imageView.transform = CGAffineTransformRotate(self.overlayView.transform, M_PI_2);
-        }
+//        if (!self.isIPadIdiom && woundPhoto.landscapeOrientation) {
+//            _imageView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+//            _imageView.transform = CGAffineTransformRotate(self.overlayView.transform, M_PI_2);
+//        }
         _imageView.image = (self.isIPadIdiom ? woundPhoto.thumbnailLarge:woundPhoto.thumbnail);
-        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        CGRect frame = self.imagePickerController.view.bounds;
+        NSMutableArray *constraints = [NSMutableArray array];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:_imageView
+                                                            attribute:NSLayoutAttributeWidth
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:nil
+                                                            attribute:NSLayoutAttributeNotAnAttribute
+                                                           multiplier:1
+                                                             constant:CGRectGetWidth(frame)]];
+        [constraints addObject:[NSLayoutConstraint constraintWithItem:_imageView
+                                                            attribute:NSLayoutAttributeHeight
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:nil
+                                                            attribute:NSLayoutAttributeNotAnAttribute
+                                                           multiplier:1
+                                                             constant:CGRectGetHeight(frame)]];
+        [_imageView addConstraints:constraints];
     }
     return _imageView;
 }
@@ -504,26 +585,52 @@
 - (void)setupImagePicker
 {
     // user wants to use the camera interface
-    self.imagePickerController.showsCameraControls = YES;
     [self setupOverlay];
 }
 
 - (void)setupOverlay
 {
-    self.overlayView.clipsToBounds = NO;
     // add gesture recognizers
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     [self.tapView addGestureRecognizer:tapGestureRecognizer];
     // set the frame so that it will not obstruct the iOS controls
-    CGRect frame = self.imagePickerController.view.bounds;
-    frame = CGRectInset(frame, 66.0, 66.0);
-    self.overlayView.frame = frame;
-    self.imageView.frame = self.imagePickerController.view.bounds;
-//    self.imageView.center = CGPointMake(CGRectGetMidX(self.overlayView.bounds), CGRectGetMidY(self.overlayView.bounds));
-    self.tapView.frame = self.overlayView.bounds;
-    [self.overlayView bringSubviewToFront:self.tapView];
+    UIView *overlayView = self.overlayView;
+    [overlayView bringSubviewToFront:self.tapView];
     // set the overlay
     self.imagePickerController.cameraOverlayView = self.overlayView;
+    // set up constraints
+    UIView *view = self.overlayView.superview;
+    NSMutableArray *constraints = [NSMutableArray array];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:overlayView
+                                                        attribute:NSLayoutAttributeCenterX
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:view
+                                                        attribute:NSLayoutAttributeCenterX
+                                                       multiplier:1
+                                                         constant:0]];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:overlayView
+                                                        attribute:NSLayoutAttributeCenterY
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:view
+                                                        attribute:NSLayoutAttributeCenterY
+                                                       multiplier:1
+                                                         constant:0]];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:_imageView
+                                                        attribute:NSLayoutAttributeCenterX
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:view
+                                                        attribute:NSLayoutAttributeCenterX
+                                                       multiplier:1
+                                                         constant:0]];
+    [constraints addObject:[NSLayoutConstraint constraintWithItem:_imageView
+                                                        attribute:NSLayoutAttributeCenterY
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:view
+                                                        attribute:NSLayoutAttributeCenterY
+                                                       multiplier:1
+                                                         constant:0]];
+    [view addConstraints:constraints];
+    [view layoutIfNeeded];
     // DEBUG
 //    [self performSelector:@selector(delayedPrintViews) withObject:nil afterDelay:2.0];
 }

@@ -86,7 +86,7 @@
     WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
     photoManager.delegate = self;
     _photoAcquisitionInProgress = YES;
-    [self presentViewController:photoManager.imagePickerController animated:YES completion:^{
+    [self presentViewController:photoManager.imagePickerController animated:NO completion:^{
         // nothing
     }];
 }

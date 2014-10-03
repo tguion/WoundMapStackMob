@@ -3268,7 +3268,7 @@
 				7DB2060118A7D3400004DC32 /* Sources */,
 				7DB2060218A7D3400004DC32 /* Frameworks */,
 				7DB2060318A7D3400004DC32 /* Resources */,
-				7D9CB59C19DDBBAD00084668 /* ShellScript */,
+				7D03D6D619DDEC46006A3B4A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3537,7 +3537,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7D9CB59C19DDBBAD00084668 /* ShellScript */ = {
+		7D03D6D619DDEC46006A3B4A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3548,7 +3548,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildnum=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$PRODUCT_SETTINGS_PATH\")\n\nif [ \"$CONFIGURATION\" = \"Release\" ]; then\nbuildnum=$((buildnum + 1))\necho \"Build number updated to $buildnum\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildnum\" \"$PRODUCT_SETTINGS_PATH\"\nfi;";
+			shellScript = "#!/bin/sh\n\nbuildnum=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$PRODUCT_SETTINGS_PATH\")\n\nif [ \"$CONFIGURATION\" = \"Release\" ]; then\nbuildnum=$((buildnum + 1))\necho \"Build number updated to $buildnum\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildnum\" \"$PRODUCT_SETTINGS_PATH\"\nfi;";
 		};
 /* End PBXShellScriptBuildPhase section */
 

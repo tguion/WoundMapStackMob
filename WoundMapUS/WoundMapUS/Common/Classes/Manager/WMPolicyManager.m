@@ -143,7 +143,7 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
             break;
         }
         case NavigationNodeFrequencyUnit_Weekly: {
-            dateComponents.week = -closeValue;
+            dateComponents.weekOfYear = -closeValue;
             break;
         }
         case NavigationNodeFrequencyUnit_Monthly: {
@@ -401,7 +401,7 @@ NSString *const kTaskDidCompleteNotification = @"TaskDidCompleteNotification";
         dc.day = 1;
         DateComponents[2] = dc;
         dc = [[NSDateComponents alloc] init];
-        dc.week = 1;
+        dc.weekOfYear = 1;
         DateComponents[3] = dc;
         dc = [[NSDateComponents alloc] init];
         dc.month = 1;
