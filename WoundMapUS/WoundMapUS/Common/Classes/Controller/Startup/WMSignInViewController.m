@@ -67,7 +67,7 @@
             _makePasswordFieldFirstResponder = YES;
         }
         // DEBUG
-//        _passwordTextInput = @"WoundMap00";
+        _passwordTextInput = @"WoundMap00";
         // DEBUG END
     }
     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];

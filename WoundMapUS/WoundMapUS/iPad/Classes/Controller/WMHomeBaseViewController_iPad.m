@@ -295,7 +295,7 @@
                          permittedArrowDirections:UIPopoverArrowDirectionAny
                                          animated:YES];
     } else {
-        [self presentViewController:photoManager.imagePickerController animated:YES completion:^{
+        [self presentViewController:photoManager.imagePickerController animated:NO completion:^{
             if (photoManager.shouldUseCameraForNextPhoto) {
                 [photoManager setupImagePicker];
             }

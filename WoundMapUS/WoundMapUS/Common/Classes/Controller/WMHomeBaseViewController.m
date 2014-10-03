@@ -74,11 +74,10 @@
     if (self) {
         __weak __typeof(&*self)weakSelf = self;
         self.refreshCompletionHandler = ^(NSError *error, id object) {
-            // update care plan cell
-            [weakSelf updateCarePlanCell];
+            // track/stage may have changed
+            [weakSelf handleNavigationStageChanged:weakSelf.patient.stage];
+            [weakSelf handlePatientRefreshedFromCloud:[weakSelf.patient objectID]];
             // update nodes
-            WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
-            [policyManager updateRegisteredButtonsInArray:weakSelf.navigationNodeControls];
             [weakSelf.navigationPatientWoundContainerView updatePatientAndWoundNodes];
             [weakSelf performSelector:@selector(delayedScrollTrackAndScopeOffTop) withObject:nil afterDelay:1.0];
         };
@@ -1013,8 +1012,15 @@
             navigationCoordinator.woundPhoto = self.wound.lastWoundPhoto;
         }
     }
-    // a referral may have come in
-    [self updatePatientNodeControls];
+    // track/stage may have changed
+    [self handleNavigationStageChanged:patient.stage];
+    // update nodes
+    [self.navigationPatientWoundContainerView updatePatientAndWoundNodes];
+    // update the stage of care control
+    WMNavigationStage *navigationStage = self.patient.stage;
+    WMNavigationTrack *navigationTrack = navigationStage.track;
+    NSInteger index = [[WMNavigationStage sortedStagesForTrack:navigationTrack] indexOfObject:navigationStage];
+    self.stageSegmentedControl.selectedSegmentIndex = index;
     // update toolbar
     [self updateToolbar];
     // update care plan cell
@@ -1273,6 +1279,11 @@
             break;
         }
     }
+    // save and initiate remote notifications
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    ffm.postSynchronizationEvents = YES;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 - (IBAction)riskAssessmentAction:(id)sender
@@ -2049,7 +2060,11 @@
     // else let navigationCoordinator update patient and defaults
     self.appDelegate.navigationCoordinator.navigationTrack = navigationTrack;
     [self.navigationController popViewControllerAnimated:YES];
-    
+    // save and initiate remote notifications
+    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    ffm.postSynchronizationEvents = YES;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 - (void)chooseTrackViewControllerDidCancel:(WMChooseTrackViewController *)viewController

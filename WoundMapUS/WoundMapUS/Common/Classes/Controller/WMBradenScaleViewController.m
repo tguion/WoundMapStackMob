@@ -59,6 +59,8 @@
     [super viewDidAppear:animated];
     [self.tableView reloadData];
     self.didCancelBradenScaleEdit = NO;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    self.navigationItem.leftBarButtonItem.enabled = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,6 +109,8 @@
 
 - (IBAction)addBradenScaleAction:(id)sender
 {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 	_bradenScale = [WMBradenScale createNewBradenScaleForPatient:self.patient];

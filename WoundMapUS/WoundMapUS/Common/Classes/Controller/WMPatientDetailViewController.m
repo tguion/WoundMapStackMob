@@ -428,6 +428,11 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     return _person;
 }
 
+- (NSArray *)ffQuery
+{
+    return @[[NSString stringWithFormat:@"%@?depthRef=1&depthGb=2", self.patient.ffUrl]];
+}
+
 #pragma mark - Actions
 
 - (IBAction)previousNextAction:(id)sender

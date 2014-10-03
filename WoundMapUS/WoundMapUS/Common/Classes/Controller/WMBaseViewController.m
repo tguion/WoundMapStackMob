@@ -344,6 +344,8 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
         if (0 == count || --count == 0) {
             // we must save here, since we may have picked up changes from cloud
             [managedObjectContext MR_saveToPersistentStoreAndWait];
+            // refresh the tableView
+            [weakSelf.tableView reloadData];
             if (weakSelf.refreshCompletionHandler) {
                 weakSelf.refreshCompletionHandler(error, nil);
             }
@@ -732,7 +734,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)handleContentUpdatedFromCloud:(NSDictionary *)map
 {
-    
+    [self.tableView reloadData];
 }
 
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
