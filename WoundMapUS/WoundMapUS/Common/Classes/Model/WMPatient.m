@@ -28,8 +28,6 @@
 #import "WMUtilities.h"
 #import "WMFatFractal.h"
 
-NSString * const kConsultantGroupName = @"consultantGroup";
-
 typedef enum {
     PatientFlagsFaceDetectionFailed         = 0,
     PatientFlagsFacePhotoTaken              = 1,
@@ -41,9 +39,10 @@ typedef enum {
 @end
 
 
-@implementation WMPatient
+@implementation WMPatient {
+    FFUserGroup *_consultantGroup;
+}
 
-@synthesize consultantGroup=_consultantGroup;
 @dynamic managedObjectContext, objectID;
 
 static NSMutableDictionary *ffUrl2ConsultingGroupMap;
@@ -144,11 +143,11 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     }
 }
 
-+ (FFUserGroup *)consultantGroup
++ (FFUserGroup *)consultantGroup:(NSString *)guid
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFUserGroup *consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
-    [consultantGroup setGroupName:kConsultantGroupName];
+    [consultantGroup setGroupName:guid];
     return consultantGroup;
 }
 
@@ -161,7 +160,7 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
         } else {
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             _consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
-            [_consultantGroup setGroupName:kConsultantGroupName];
+            [_consultantGroup setGroupName:[[NSUUID UUID] UUIDString]];
         }
     }
     return _consultantGroup;

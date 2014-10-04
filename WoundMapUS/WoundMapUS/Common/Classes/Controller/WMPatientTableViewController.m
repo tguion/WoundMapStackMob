@@ -5,8 +5,21 @@
 //  Created by Todd Guion on 2/16/14.
 //  Copyright (c) 2014 MobileHealthWare. All rights reserved.
 //
-//  ISSUE: advanced predicates are not supported on StackMob server at this time.
-//  So we switch to cache only fetch. However, the properties of WMPatient and WMPatientConsult are not being synched on local cache.
+/*
+ // Above ios 8.0
+ float os_version = [[[UIDevice currentDevice] systemVersion] floatValue];
+ if (os_version >= 8.000000)
+ {
+ 　　　//Use UISearchController
+ // self.searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsController];
+ }
+ else
+ {
+ //use UISearchDisaplyController
+ // self.controller = [[UISearchDisplayController alloc]initWithSearchBar:self.searchBar contentsController:self];
+ 
+ }
+ */
 
 #import "WMPatientTableViewController.h"
 #import "WMPatientDetailViewController.h"

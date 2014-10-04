@@ -2,13 +2,11 @@
 #import "WoundCareProtocols.h"
 #import "WMFFManagedObject.h"
 
-extern NSString * const kConsultantGroupName;
-
 @class FFUserGroup;
 
 @interface WMPatient : _WMPatient <idSource, WMFFManagedObject> {}
 
-+ (FFUserGroup *)consultantGroup;
++ (FFUserGroup *)consultantGroup:(NSString *)guid;
 
 + (NSArray *)toManyRelationshipNames;
 + (NSSet *)relationshipNamesAffectingCompassStatus;

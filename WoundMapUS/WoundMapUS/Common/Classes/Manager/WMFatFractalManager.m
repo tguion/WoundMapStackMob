@@ -1360,10 +1360,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         if (error) {
             [WMUtilities logError:error];
         }
-        // DEBUG
-        NSError *localError = nil;
-        [patient.consultantGroup addUser:self.appDelegate.participant.user error:&localError];
-        // DEBUG
         [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.ffUrl grabBagName:WMParticipantRelationships.patients];
         if (patient.participant.team) {
             [ff queueGrabBagAddItemAtUri:patient.ffUrl toObjAtUri:patient.participant.team.ffUrl grabBagName:WMTeamRelationships.patients];
@@ -1385,7 +1381,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
         WMPatientLocation *location = [WMPatientLocation MR_createInContext:managedObjectContext];
         [ff createObj:location atUri:[NSString stringWithFormat:@"/%@", [WMPatientLocation entityName]] onComplete:createLocationOnComplete onOffline:createLocationOnComplete];
     };
-    FFUserGroup *consultantGroup = [WMPatient consultantGroup];
+    FFUserGroup *consultantGroup = [WMPatient consultantGroup:[[NSUUID UUID] UUIDString]];
     [ff createObj:consultantGroup atUri:@"/FFUserGroup" onComplete:createConsultantGroupOnComplete onOffline:createConsultantGroupOnComplete];
 }
 
@@ -1458,8 +1454,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
             if (nil == consultantGroup) {
                 // this should not happen
                 DLog(@"WARNING: consultant group not found: %@", uri);
-                consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
-                [consultantGroup setGroupName:kConsultantGroupName];
+                consultantGroup = [WMPatient consultantGroup:[[NSUUID UUID] UUIDString]];
                 [ff createObj:consultantGroup atUri:@"/FFUserGroup" error:&localError];
                 if (localError) {
                     [WMUtilities logError:localError];
