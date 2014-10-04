@@ -24,7 +24,8 @@ static NSString *sslUrl = @"https://mobilehealthware.fatfractal.com/WoundMapUS";
     static WMFatFractal *SharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
+//        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
+        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:sslUrl];  // DEPLOYMENT
         [self initializeFatFractalInstance:SharedInstance];
     });
     return SharedInstance;

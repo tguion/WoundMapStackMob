@@ -83,7 +83,7 @@
         WMPatient *patient = self.patient;
         _patientReferral = [WMPatientReferral MR_createInContext:managedObjectContext];
         _patientReferral.patient = patient;
-        _didAddPatientToReferral = YES;
+        _didAddPatientToReferral = NO;  // we are adding patient to gb here
         _patientReferral.referrer = participant;
         _didCreateReferral = YES;
         // create on back end
@@ -149,7 +149,7 @@
     // else
     if (_patientReferral.patient) {
         _patient = _patientReferral.patient;
-        return _patientReferral.patient;
+        return _patient;
     }
     // else
     _patient = self.appDelegate.navigationCoordinator.patient;
@@ -282,44 +282,45 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
         if (counter == 0 || --counter == 0) {
-            // RPN push notification to _patientReferral.referrer.guid, _patientReferral.referree.guid, _patientReferral.patient.guid
-            ffm.postSynchronizationEvents = YES;
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            // defer RPN
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             [weakSelf.delegate patientReferralViewControllerDidFinish:weakSelf];
         }
     };
     if (_didChangeReferree) {
+        // mark as not read
         _patientReferral.dateAccepted = nil;
+        // remove previous referree
         ++counter;
         [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
                       fromObjAtFfUrl:_patientReferral.referree.ffUrl
                          grabBagName:WMParticipantRelationships.targetReferrals
                           onComplete:completionHandler];
+        // remove previous referrer
         ++counter;
         [ff grabBagRemoveItemAtFfUrl:_patientReferral.ffUrl
                       fromObjAtFfUrl:_patientReferral.referrer.ffUrl
                          grabBagName:WMParticipantRelationships.sourceReferrals
                           onComplete:completionHandler];
+        // add new referrer
         ++counter;
         [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
                      toObjAtFfUrl:participant.ffUrl
                       grabBagName:WMParticipantRelationships.sourceReferrals
                        onComplete:completionHandler];
     } else {
+        // referree has not changed, but new source of referral
         ++counter;
         [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
                      toObjAtFfUrl:participant.ffUrl
                       grabBagName:WMParticipantRelationships.sourceReferrals
                        onComplete:completionHandler];
     }
-    _patientReferral.referree = _referree;
     if (_didAddPatientToReferral) {
         ++counter;
         self.patientReferral.patient = _patient;
@@ -328,19 +329,17 @@
                       grabBagName:WMPatientRelationships.referrals
                        onComplete:completionHandler];
     }
+    // set the (new) referree
+    _patientReferral.referree = _referree;
+    ++counter;
+    [ff updateObj:_patientReferral onComplete:completionHandler onOffline:completionHandler];
     ++counter;
     [ff grabBagAddItemAtFfUrl:_patientReferral.ffUrl
                  toObjAtFfUrl:_referree.ffUrl
                   grabBagName:WMParticipantRelationships.targetReferrals
-                   onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-       [ff updateObj:_patientReferral onComplete:completionHandler onOffline:completionHandler];
-    }];
+                   onComplete:completionHandler];
     // send notification
     [[NSNotificationCenter defaultCenter] postNotificationName:kRespondedToReferralNotification object:[_patientReferral objectID]];
-    // RPN
 }
 
 - (IBAction)deletePatientReferral:(id)sender

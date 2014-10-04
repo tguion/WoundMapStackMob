@@ -364,6 +364,11 @@ CGFloat kCreditsMargin = 20;
     [self.navigationController popViewControllerAnimated:YES];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:1];
     [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    // RPN push notification
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    ffm.postSynchronizationEvents = YES;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 - (void)patientReferralViewControllerDidCancel:(WMPatientReferralViewController *)viewController

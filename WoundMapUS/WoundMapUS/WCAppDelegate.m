@@ -328,12 +328,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // check for data synch
     id content_available = userInfo[@"aps"][@"content-available"];
     if (content_available) {
-        // save the payload
-        
         // process
         [self downloadFFDataForCollection:userInfo[@"aps"] fetchCompletionHandler:handler];
-        // delete the payload
-        
     } else {
         // no data
         handler(UIBackgroundFetchResultNoData);

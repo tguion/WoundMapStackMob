@@ -344,6 +344,11 @@
         NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:patientReferral.patient];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
+    // RPN push notification
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    ffm.postSynchronizationEvents = YES;
+    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 - (void)patientReferralViewControllerDidCancel:(WMPatientReferralViewController *)viewController
