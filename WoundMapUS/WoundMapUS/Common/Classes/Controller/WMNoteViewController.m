@@ -110,7 +110,7 @@
         return _contentInsets;
     
     // grab our frame in window coordinates
-    CGRect rect = [self.view convertRect:self.view.frame toView:nil];
+    CGRect rect = [self.view convertRect:self.view.bounds toView:nil];
     
     // No value has been assigned, so we need to compute it
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
@@ -131,15 +131,16 @@
     if (!navigationBar.hidden) {
         // During rotation, the navigation bar (and possibly tab bar) doesn't resize immediately. Force it to have it's new size.
         [navigationBar sizeToFit];
-        CGRect frame = navigationBar.frame;
+        CGRect frame = [navigationBar convertRect:navigationBar.bounds toView:nil];
+        
         if (CGRectIntersectsRect(rect, frame))
-            insets.top = CGRectGetMaxY(frame);
+            insets.top += CGRectGetMaxY(frame) - CGRectGetMinY(frame);
     }
     
     if (!tabBar.hidden) {
         // During rotation, the navigation bar (and possibly tab bar) doesn't resize immediately. Force it to have it's new size.
         [tabBar sizeToFit];
-        CGRect frame = tabBar.frame;
+        CGRect frame = [tabBar convertRect:tabBar.bounds toView:nil];
         if (CGRectIntersectsRect(rect, frame))
             insets.bottom = CGRectGetHeight(frame);
     }
@@ -166,6 +167,11 @@
 
 - (void)observeKeyboardWillShowNotification:(NSNotification *)note
 {
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    if (isPad) {
+        return;
+    }
+    
     CGFloat animationDuration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
     CGRect keyboardRect = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
@@ -173,10 +179,10 @@
         return;
     
     // The keyboard rect is WRONG for landscape
-    if (UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-        keyboardRect.origin = CGPointMake(keyboardRect.origin.y, keyboardRect.origin.x);
-        keyboardRect.size = CGSizeMake(keyboardRect.size.height, keyboardRect.size.width);
-    }
+    //    if (UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+    //        keyboardRect.origin = CGPointMake(keyboardRect.origin.y, keyboardRect.origin.x);
+    //        keyboardRect.size = CGSizeMake(keyboardRect.size.height, keyboardRect.size.width);
+    //    }
     
     _keyboardIsShowing = YES;
     
@@ -185,7 +191,7 @@
     _contentInsetsBeforeShowingKeyboard = insets;
     
     UIView *view = self.view;
-    CGRect rect = [view convertRect:view.frame toView:nil];
+    CGRect rect = [view convertRect:view.bounds toView:nil];
     
     // If the keyboard doesn't insersect the view's frame, then there's no need to adjust anything
     if (!CGRectIntersectsRect(keyboardRect, rect))
@@ -205,6 +211,11 @@
 
 - (void)observeKeyboardWillHideNotification:(NSNotification *)note
 {
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    if (isPad) {
+        return;
+    }
+
     CGFloat animationDuration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
     
     if (!_keyboardIsShowing)

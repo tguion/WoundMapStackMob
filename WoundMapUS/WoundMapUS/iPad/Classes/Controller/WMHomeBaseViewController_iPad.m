@@ -104,13 +104,17 @@
         navigationController.delegate = self.appDelegate;
         [navigationController setViewControllers:@[viewController]];
     }
-    if (nil == _navigationNodePopoverController) {
-        _navigationNodePopoverController = [[UIPopoverController alloc] initWithContentViewController:navigationController];
-        _navigationNodePopoverController.delegate = self;
-    } else {
-        _navigationNodePopoverController.contentViewController = navigationController;
+    
+    UIPopoverController *popoverController = _navigationNodePopoverController;
+    if (popoverController && popoverController.isPopoverVisible) {
+        [popoverController setContentViewController:navigationController animated:YES];
+        return popoverController;
     }
-    return _navigationNodePopoverController;
+    
+    popoverController = _navigationNodePopoverController = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+    _navigationNodePopoverController.delegate = self;
+
+    return popoverController;
 }
 
 #pragma mark - Actions
@@ -131,6 +135,16 @@
     }
     [super takePatientPhotoAction:sender];
 
+}
+
+#pragma mark - Keyboard
+
+- (void)observeKeyboardWillShowNotification:(NSNotification *)note
+{
+}
+
+- (void)observeKeyboardWillHideNotification:(NSNotification *)note
+{
 }
 
 #pragma mark - Navigation
