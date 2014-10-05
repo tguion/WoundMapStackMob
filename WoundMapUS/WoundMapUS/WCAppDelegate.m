@@ -217,7 +217,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // set up IAP so it hears notifications
     [IAPManager sharedInstance];
     // account for iOS 8 new notification registration
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         // use registerUserNotificationSettings
         [application registerForRemoteNotifications];
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];

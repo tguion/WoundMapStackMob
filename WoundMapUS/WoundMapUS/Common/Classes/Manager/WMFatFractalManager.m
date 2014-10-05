@@ -1454,14 +1454,14 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
             if (nil == consultantGroup) {
                 // this should not happen
                 DLog(@"WARNING: consultant group not found: %@", uri);
-                consultantGroup = [WMPatient consultantGroup:[[NSUUID UUID] UUIDString]];
-                [ff createObj:consultantGroup atUri:@"/FFUserGroup" error:&localError];
-                if (localError) {
-                    [WMUtilities logError:localError];
-                }
+//                consultantGroup = [WMPatient consultantGroup:[[NSUUID UUID] UUIDString]];
+//                [ff createObj:consultantGroup atUri:@"/FFUserGroup" error:&localError];
+//                if (localError) {
+//                    [WMUtilities logError:localError];
+//                }
             }
-            NSParameterAssert(consultantGroup);
-            patient.consultantGroup = consultantGroup;
+//            NSParameterAssert(consultantGroup);
+//            patient.consultantGroup = consultantGroup;
             [patient updateNavigationToTeam:team patient2StageMap:self.appDelegate.patient2StageMap];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (localError) {
