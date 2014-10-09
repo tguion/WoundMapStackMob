@@ -198,6 +198,7 @@
 		7D13027F18D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027618D08AD500AE33B2 /* WMSkinAssessmentGroup+CoreText.m */; };
 		7D13028018D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */; };
 		7D13028118D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */; };
+		7D13DABD19E6C7950003EB4B /* WMHairlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D13DABC19E6C7950003EB4B /* WMHairlineView.m */; };
 		7D1BA8B518FEEC7C00ED385D /* WMPrintConfigureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */; };
 		7D1BA8B618FEEC7C00ED385D /* WMPrintConfigureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */; };
 		7D1BA8BC18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1BA8BA18FEEE5F00ED385D /* WMSelectWoundPhotoViewController.m */; };
@@ -936,6 +937,8 @@
 		7D13027818D08AD500AE33B2 /* WMWoundMeasurementGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMWoundMeasurementGroup+CoreText.m"; sourceTree = "<group>"; };
 		7D13027918D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WMWoundTreatmentGroup+CoreText.h"; sourceTree = "<group>"; };
 		7D13027A18D08AD500AE33B2 /* WMWoundTreatmentGroup+CoreText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WMWoundTreatmentGroup+CoreText.m"; sourceTree = "<group>"; };
+		7D13DABB19E6C7950003EB4B /* WMHairlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMHairlineView.h; sourceTree = "<group>"; };
+		7D13DABC19E6C7950003EB4B /* WMHairlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMHairlineView.m; sourceTree = "<group>"; };
 		7D1BA8B218FEEC7C00ED385D /* WMPrintConfigureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPrintConfigureViewController.h; sourceTree = "<group>"; };
 		7D1BA8B318FEEC7C00ED385D /* WMPrintConfigureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPrintConfigureViewController.m; sourceTree = "<group>"; };
 		7D1BA8B418FEEC7C00ED385D /* WMPrintConfigureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPrintConfigureViewController.xib; sourceTree = "<group>"; };
@@ -2677,6 +2680,8 @@
 				7D10CDDD18DA3E7800AD43E3 /* WMEventTableViewCell.m */,
 				7D68946619043DA4006DE509 /* WMGridImageViewContainer.h */,
 				7D68946719043DA4006DE509 /* WMGridImageViewContainer.m */,
+				7D13DABB19E6C7950003EB4B /* WMHairlineView.h */,
+				7D13DABC19E6C7950003EB4B /* WMHairlineView.m */,
 				7D6894B319044ACA006DE509 /* WMImageScrollView.h */,
 				7D6894B419044ACA006DE509 /* WMImageScrollView.m */,
 				5F6DE51C18B589B300E87F7E /* WMInstructionTableViewCell.h */,
@@ -2691,6 +2696,8 @@
 				5F6DE4F318AEE00D00E87F7E /* WMNavigationTrackTableViewCell.m */,
 				7D0F2F581906DA12009F8346 /* WMNormalizingView.h */,
 				7D0F2F591906DA12009F8346 /* WMNormalizingView.m */,
+				7D4A3BE5191BC30D00D7CE03 /* WMPatientAutoTableViewCell.h */,
+				7D4A3BE6191BC30D00D7CE03 /* WMPatientAutoTableViewCell.m */,
 				7D9AA28818B13F5900C1B698 /* WMPatientTableViewCell.h */,
 				7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */,
 				5F6DE4F818AEE58900E87F7E /* WMProgressViewHUD.h */,
@@ -2735,8 +2742,6 @@
 				7D68947219044032006DE509 /* WMWoundPhotoCollectionViewCell.m */,
 				7D10CDED18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.h */,
 				7D10CDEE18DA4C1400AD43E3 /* WMWoundTreatmentGroupTableViewCell.m */,
-				7D4A3BE5191BC30D00D7CE03 /* WMPatientAutoTableViewCell.h */,
-				7D4A3BE6191BC30D00D7CE03 /* WMPatientAutoTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3866,6 +3871,7 @@
 				7DB2061718A7D3400004DC32 /* main.m in Sources */,
 				7D10CDEB18DA4B6000AD43E3 /* WMWoundTreatmentGroupHistoryViewController.m in Sources */,
 				7D674146192BF320007DBD1A /* WMNutritionGroup.m in Sources */,
+				7D13DABD19E6C7950003EB4B /* WMHairlineView.m in Sources */,
 				7DB206EF18A839240004DC32 /* _WMTelecom.m in Sources */,
 				7DDAFB0018B62C9C00A05F5D /* WCModelTextKitAtrributes.m in Sources */,
 				7D0F2F561905C120009F8346 /* WMPatientSummaryViewController.m in Sources */,

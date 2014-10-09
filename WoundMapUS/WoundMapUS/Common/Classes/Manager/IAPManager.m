@@ -133,16 +133,20 @@ NSString* _deviceId;
               skProduct.price.floatValue);
     }
     
-    _successHandler(skProducts);
-    _successHandler = nil;
+    if (_successHandler) {
+        _successHandler(skProducts);
+        _successHandler = nil;
+    }
     _failureHandler = nil;
 }
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
     
     DLog(@"Failed to load list of products. - error.description is - %@", error.description);
-    _failureHandler(error);
-    _failureHandler = nil;
+    if (_failureHandler) {
+        _failureHandler(error);
+        _failureHandler = nil;
+    }
     _successHandler = nil;
 }
 

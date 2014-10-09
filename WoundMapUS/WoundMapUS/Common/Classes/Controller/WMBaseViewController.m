@@ -77,17 +77,17 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     DLog(@"%@ %@.viewDidLoad:", self, NSStringFromClass([self class]));
     [super viewDidLoad];
     self.tableView.rowHeight = 44.0;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     // initialize our refresh control and assign the refreshTable method to get called when the refresh is initiated.
     if ([self.ffQuery count]) {
         UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
         [refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
         self.refreshControl = refreshControl;
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     // listen for stuff
     [self registerForNotifications];
     // make sure we have any seed data from back end

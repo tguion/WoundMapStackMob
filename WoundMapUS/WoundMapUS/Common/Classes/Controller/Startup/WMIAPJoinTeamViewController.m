@@ -85,6 +85,7 @@
     [self.view endEditing:YES];
     // check pincode
     if ([_pincodeTextInput integerValue] != self.teamInvitation.passcodeValue) {
+        DLog(@"Entered:%ld, passcodeValue:%d", (long)[_pincodeTextInput integerValue], self.teamInvitation.passcodeValue);
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Incorrect Pincode"
                                                             message:@"The pincode that you entered does not match the invitation pincode"
                                                            delegate:nil

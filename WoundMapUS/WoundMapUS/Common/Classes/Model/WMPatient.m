@@ -378,6 +378,14 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     return [WMUtilities isBitSetForValue:[self.flags intValue] atPosition:PatientFlagsIsDeleting];
 }
 
+- (BOOL)isStageUpdating
+{
+    NSDictionary *committedValuesMap = [self committedValuesForKeys:@[WMPatientRelationships.stage]];
+    id oldValue = [committedValuesMap objectForKey:WMPatientRelationships.stage];
+    id newValue = self.stage;
+    return ![oldValue isEqual:newValue];
+}
+
 - (void)setIsDeleting:(BOOL)isDeleting
 {
     self.flags = @([WMUtilities updateBitForValue:[self.flags intValue] atPosition:PatientFlagsIsDeleting to:isDeleting]);

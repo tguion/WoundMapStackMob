@@ -446,7 +446,9 @@
         _imagePickerController.sourceType = self.shouldUseCameraForNextPhoto ? UIImagePickerControllerSourceTypeCamera:UIImagePickerControllerSourceTypePhotoLibrary;
         _imagePickerController.mediaTypes = [[NSArray alloc] initWithObjects:(NSString *)kUTTypeImage, nil];
         _imagePickerController.allowsEditing = NO;
-        _imagePickerController.showsCameraControls = YES;
+        if (self.shouldUseCameraForNextPhoto) {
+            _imagePickerController.showsCameraControls = YES;
+        }
     }
     return _imagePickerController;
 }

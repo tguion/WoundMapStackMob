@@ -332,6 +332,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         [self downloadFFDataForCollection:userInfo[@"aps"] fetchCompletionHandler:handler];
     } else {
         // no data
+        [self application:application didReceiveRemoteNotification:userInfo];
         handler(UIBackgroundFetchResultNoData);
     }
 }
@@ -343,7 +344,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 //}
 
 // RPN
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
     id alertMsg = nil;
     NSString *otherButton = nil;
     NSString *badge = nil;
@@ -556,10 +558,10 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 // increment index
                 ++index;
             }
-            // save data
-            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
             // notify UI
             [[NSNotificationCenter defaultCenter] postNotificationName:kUpdatedContentFromCloudNotification object:map];
+            // save data
+            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
             // mark as success
             backgroundFetchResult = UIBackgroundFetchResultNewData;
         } else {

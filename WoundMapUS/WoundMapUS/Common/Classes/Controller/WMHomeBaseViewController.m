@@ -36,6 +36,7 @@
 #import "WCAppDelegate.h"
 #import "WMUtilities.h"
 #import <objc/runtime.h>
+#import <AVFoundation/AVFoundation.h>
 
 #define kSignOutActionSheetTag 1000
 
@@ -1013,7 +1014,9 @@
         }
     }
     // track/stage may have changed
-    [self handleNavigationStageChanged:patient.stage];
+    if (patient.isStageUpdating) {
+        [self handleNavigationStageChanged:patient.stage];
+    }
     // update nodes
     [self.navigationPatientWoundContainerView updatePatientAndWoundNodes];
     // update the stage of care control
@@ -1035,14 +1038,11 @@
 
 - (void)handleContentUpdatedFromCloud:(NSDictionary *)map
 {
-    __weak __typeof(&*self)weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [super handleContentUpdatedFromCloud:map];
-        NSString *patientGuid = map[@"p"];
-        NSManagedObjectContext *managedObjectContext = weakSelf.managedObjectContext;
-        WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
-        [weakSelf handlePatientRefreshedFromCloud:[patient objectID]];
-    });
+    [super handleContentUpdatedFromCloud:map];
+    NSString *patientGuid = map[@"p"];
+    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+    WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
+    [self handlePatientRefreshedFromCloud:[patient objectID]];
 }
 
 #pragma mark - Actions
@@ -1510,8 +1510,39 @@
 
 - (IBAction)takePhotoAction:(id)sender
 {
-    self.photoAcquisitionState = PhotoAcquisitionStateAcquireWoundPhoto;
-    [self navigateToTakePhoto:(WMNavigationNodeButton *)sender];
+    __weak __typeof(&*self)weakSelf = self;
+    dispatch_block_t grantedBlock = ^{
+        weakSelf.photoAcquisitionState = PhotoAcquisitionStateAcquireWoundPhoto;
+        [weakSelf navigateToTakePhoto:(WMNavigationNodeButton *)sender];
+    };
+    
+    typedef void (^WMRequestVideoPermissionCallback)(BOOL granted);
+
+    WMRequestVideoPermissionCallback grantedHandler = ^(BOOL granted) {
+        if (granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                grantedBlock();
+            });
+        }
+    };
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if(authStatus == AVAuthorizationStatusAuthorized) {
+        // do your logic
+        grantedBlock();
+    } else if(authStatus == AVAuthorizationStatusDenied){
+        // denied
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo
+                                 completionHandler:grantedHandler];
+    } else if(authStatus == AVAuthorizationStatusRestricted){
+        // restricted, normally won't happen
+    } else if(authStatus == AVAuthorizationStatusNotDetermined){
+        // not determined?!
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo
+                                 completionHandler:grantedHandler];
+    } else {
+        // impossible, unknown authorization status
+    }
 }
 
 // the action depends on parentNavigationNode

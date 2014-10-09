@@ -262,6 +262,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (IBAction)createTeamAction:(id)sender
 {
     [self.view endEditing:YES];
+    if ([_teamNameTextInput length] == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Input"
+                                                            message:@"Please enter the name of your team first."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
     __weak __typeof(&*self)weakSelf = self;
     [self createTeam:^(NSError *error) {
         [weakSelf.delegate createTeamViewController:weakSelf didCreateTeam:weakSelf.team];
@@ -271,6 +280,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (IBAction)createInvitationAction:(id)sender
 {
     [self.view endEditing:YES];
+    if ([_teamNameTextInput length] == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid Input"
+                                                            message:@"Please enter the name of your team first."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Dismiss"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return;
+    }
     __weak __typeof(&*self)weakSelf = self;
     [self createTeam:^(NSError *error) {
         if (error) {

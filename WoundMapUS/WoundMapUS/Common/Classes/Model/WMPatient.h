@@ -36,6 +36,7 @@
 @property (readonly, nonatomic) WMMedicalHistoryGroup *lastActiveMedicalHistoryGroup;
 @property (readonly, nonatomic) BOOL hasPatientDetails;
 @property (nonatomic) BOOL isDeleting;
+@property (nonatomic) BOOL isStageUpdating;
 
 + (WMPatient *)patientForPatientFFURL:(NSString *)ffUrl
                  managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

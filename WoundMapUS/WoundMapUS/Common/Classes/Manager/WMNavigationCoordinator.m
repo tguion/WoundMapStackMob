@@ -593,6 +593,16 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         // else proceed
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:viewController.view animated:NO];
+        // if we don't have the photo, exit
+        if (nil == woundPhoto.thumbnail) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Missing Photo"
+                                                                message:@"The wound photo is missing"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+            [alertView show];
+            return;
+        }
+        // else
         [viewController.navigationController setNavigationBarHidden:NO];
         weakSelf.state = addingPhoto ? NavigationCoordinatorStateMeasureNewPhoto:NavigationCoordinatorStateMeasureExistingPhoto;
         weakSelf.woundPhoto = woundPhoto;
@@ -604,7 +614,8 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
         // else
         weakSelf.initialMeasurePhotoViewController = viewController;
         // adjust image or scale
-        if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto]) {
+        WMWoundPhoto *referenceWoundPhoto = [woundPhoto.wound referenceWoundPhoto:woundPhoto];
+        if (referenceWoundPhoto && referenceWoundPhoto.thumbnail) {
             // adjust image
             WMTransformPhotoViewController *transformPhotoViewController = weakSelf.transformPhotoViewController;
             switch (weakSelf.state) {
@@ -655,33 +666,59 @@ NSString *const kBackendDeletedObjectIDs = @"BackendDeletedObjectIDs";
     ++counter;
     ++counter;
     ++counter;
+    ++counter;
     [ffm updateGrabBags:@[WMWoundRelationships.photos]
              aggregator:woundPhoto.wound
                      ff:[WMFatFractal sharedInstance]
       completionHandler:^(NSError *error) {
-          block(error);
-          // make sure we have downloaded previous photo
-          WMWoundPhoto *referenceWoundPhoto = [woundPhoto.wound referenceWoundPhoto:woundPhoto];
-          if ([woundPhoto.wound hasPreviousWoundPhoto:woundPhoto] && referenceWoundPhoto.thumbnail == nil && !woundPhoto.photoDeletedPerTeamPolicy) {
+          // make sure we have the photo
+          if (nil == woundPhoto.thumbnail) {
               [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
                   NSData *photoData = [response rawResponseData];
                   if (response.httpResponse.statusCode > 300) {
                       DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                  } else {
+                      woundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
                   }
-                  referenceWoundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
-                  block(response.error);
+                  block(response.error);    // counter 2->1
               }];
               [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", woundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
                   NSData *photoData = [response rawResponseData];
                   if (response.httpResponse.statusCode > 300) {
                       DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                  } else {
+                      woundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
                   }
-                  referenceWoundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
-                  block(response.error);
+                  block(response.error);    // counter 1->0
               }];
           } else {
               --counter;
-              block(error);
+              block(error); // counter 1->0
+          }
+          // make sure we have downloaded previous photo
+          WMWoundPhoto *referenceWoundPhoto = [woundPhoto.wound referenceWoundPhoto:woundPhoto];
+          if (referenceWoundPhoto && referenceWoundPhoto.thumbnail == nil && !woundPhoto.photoDeletedPerTeamPolicy) {
+              [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", referenceWoundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnail]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                  NSData *photoData = [response rawResponseData];
+                  if (response.httpResponse.statusCode > 300) {
+                      DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                  } else {
+                      referenceWoundPhoto.thumbnail = [[UIImage alloc] initWithData:photoData];
+                  }
+                  block(response.error);    // counter 2->1
+              }];
+              [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", referenceWoundPhoto.ffUrl, WMWoundPhotoAttributes.thumbnailLarge]] executeAsyncWithBlock:^(FFReadResponse *response) {
+                  NSData *photoData = [response rawResponseData];
+                  if (response.httpResponse.statusCode > 300) {
+                      DLog(@"Attempt to download photo statusCode: %ld", (long)response.httpResponse.statusCode);
+                  } else {
+                      referenceWoundPhoto.thumbnailLarge = [[UIImage alloc] initWithData:photoData];
+                  }
+                  block(response.error);    // counter 1->0
+              }];
+          } else {
+              --counter;
+              block(error); // counter 1->0
           }
       }];
     ++counter;
