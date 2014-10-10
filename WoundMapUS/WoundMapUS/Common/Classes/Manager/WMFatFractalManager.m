@@ -498,7 +498,6 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 - (void)updateParticipant:(WMParticipant *)participant completionHandler:(WMErrorCallback)completionHandler
 {
     __block WMParticipant *localParticipant = participant;
-    NSParameterAssert(localParticipant.person);
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [localParticipant managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;

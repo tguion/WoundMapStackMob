@@ -1016,21 +1016,21 @@
     // track/stage may have changed
     if (patient.isStageUpdating) {
         [self handleNavigationStageChanged:patient.stage];
+        // update the stage of care control
+        WMNavigationStage *navigationStage = self.patient.stage;
+        WMNavigationTrack *navigationTrack = navigationStage.track;
+        NSInteger index = [[WMNavigationStage sortedStagesForTrack:navigationTrack] indexOfObject:navigationStage];
+        self.stageSegmentedControl.selectedSegmentIndex = index;
     }
     // update nodes
     [self.navigationPatientWoundContainerView updatePatientAndWoundNodes];
-    // update the stage of care control
-    WMNavigationStage *navigationStage = self.patient.stage;
-    WMNavigationTrack *navigationTrack = navigationStage.track;
-    NSInteger index = [[WMNavigationStage sortedStagesForTrack:navigationTrack] indexOfObject:navigationStage];
-    self.stageSegmentedControl.selectedSegmentIndex = index;
+    // update displayed nodes
+    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
+    [policyManager updateRegisteredButtonsInArray:_navigationNodeControls];
     // update toolbar
     [self updateToolbar];
     // update care plan cell
     [self updateCarePlanCell];
-    // update displayed nodes
-    WMPolicyManager *policyManager = [WMPolicyManager sharedInstance];
-    [policyManager updateRegisteredButtonsInArray:_navigationNodeControls];
     // inform compass that patient has updated
     [self.compassView updateForPatient:self.patient];
     [self.compassView hidePatientRefreshing];
