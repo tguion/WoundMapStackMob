@@ -1726,8 +1726,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
-// Called when a button is clicked. The view will be automatically dismissed after this call returns
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     __weak __typeof(&*self)weakSelf = self;
     switch (actionSheet.tag) {

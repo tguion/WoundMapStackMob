@@ -956,7 +956,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                 CGRect rect = [self.view convertRect:uiView.frame fromView:uiView.superview];
                 [popoverController presentPopoverFromRect:rect
                                                    inView:self.view
-                                 permittedArrowDirections:UIPopoverArrowDirectionUp
+                                 permittedArrowDirections:UIPopoverArrowDirectionAny
                                                  animated:YES];
                 _iapPopoverController = popoverController;
             } else {

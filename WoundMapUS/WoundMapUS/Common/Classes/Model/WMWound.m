@@ -344,6 +344,11 @@
 {
     NSMutableArray *values = [[NSMutableArray alloc] initWithCapacity:16];
     for (WMWoundPositionValue *positionValue in self.sortedPositionValues) {
+        NSString *title = positionValue.woundPosition.title;
+        if (nil == title) {
+            continue;
+        }
+        // else
         [values addObject:positionValue.woundPosition.title];
     }
     return [values componentsJoinedByString:@","];

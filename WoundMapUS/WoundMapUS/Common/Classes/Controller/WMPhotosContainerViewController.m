@@ -916,8 +916,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
-// Called when a button is clicked. The view will be automatically dismissed after this call returns
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == kDeletePhotoActionSheetTag) {
         if (actionSheet.destructiveButtonIndex == buttonIndex) {

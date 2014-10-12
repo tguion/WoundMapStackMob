@@ -461,9 +461,9 @@ NSString * const kTextCellIdentifier = @"TextCell";
         // else show action sheet
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Save Policy"
                                                                  delegate:self
-                                                        cancelButtonTitle:@"Cancel Changes"
+                                                        cancelButtonTitle:@"Cancel"
                                                    destructiveButtonTitle:@"Save Policy for all Patients"
-                                                        otherButtonTitles:nil];
+                                                        otherButtonTitles:@"Undo Changes", nil];
         actionSheet.tag = kSavePolicyAlertTag;
         [actionSheet showInView:self.view];
     } else {
@@ -515,6 +515,11 @@ NSString * const kTextCellIdentifier = @"TextCell";
 {
     if (actionSheet.tag == kSavePolicyAlertTag) {
         if (actionSheet.cancelButtonIndex == buttonIndex) {
+            return;
+        }
+        // else
+        NSInteger otherButton = actionSheet.firstOtherButtonIndex;
+        if (otherButton == buttonIndex) {
             [self cancelAction:nil];
             return;
         }

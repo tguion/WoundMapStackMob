@@ -513,7 +513,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
 
 #pragma mark - UIActionSheetDelegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == kDeletePhotosActionSheetTag) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {

@@ -637,7 +637,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 - (NSUInteger)navigationControllerSupportedInterfaceOrientations:(UINavigationController *)navigationController
 {
-    return UIInterfaceOrientationMaskPortrait;
+    BOOL isPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    return (isPad ? UIInterfaceOrientationMaskAllButUpsideDown:UIInterfaceOrientationMaskPortrait);
 }
 
 - (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController *)navigationController

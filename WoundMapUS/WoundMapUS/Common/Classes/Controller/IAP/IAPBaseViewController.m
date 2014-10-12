@@ -158,7 +158,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:@"Purchase"
-                                                    otherButtonTitles:nil];
+                                                    otherButtonTitles:@"Decline", nil];
     actionSheet.tag = kPurchaseConfirmActionSheetTag;
     [actionSheet showInView:self.view];
 }
@@ -178,22 +178,23 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
 
 #pragma mark - UIActionSheetDelegate
 
-// Called when a button is clicked. The view will be automatically dismissed after this call returns
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if (actionSheet.cancelButtonIndex == buttonIndex) {
-        [self cancelAction:nil];
-        return;
-    }
-    // else
     if (actionSheet.tag == kPurchaseConfirmActionSheetTag) {
         [_descHTMLContainerView removeFromSuperview];
+        if (actionSheet.cancelButtonIndex == buttonIndex) {
+            return;
+        }
+        // else
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             // IAPManager will post notification with success or error for purchase
             [[IAPManager sharedInstance] buyProduct:self.skProduct];
             return;
         }
+        // else
+        [self cancelAction:nil];
+        return;
     }
 }
 
@@ -329,7 +330,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     IAPManager *iapManager = [IAPManager sharedInstance];
     IAPProduct *iapProduct = self.iapProduct;
     NSManagedObjectContext *managedObjectContext = [iapProduct managedObjectContext];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [iapManager productWithProductId:productId
                       successHandler:^(NSArray *products) {
@@ -345,12 +346,12 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
                                   NSString *message = [[NSString alloc] initWithFormat:@"%@ is unavailable.  Please try again later.", weakSelf.iapProduct.viewTitle];
                                   [weakSelf iapFailureAlert:message];
                               }
-                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+//                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                               [weakSelf reloadData];
                           });
                       } failureHandler:^(NSError *error) {
                           dispatch_async(dispatch_get_main_queue(), ^{
-                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+//                              [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                               NSString* message = [[NSString alloc] initWithFormat:@"%@ Please try again later.", [error localizedDescription]];
                               [weakSelf iapFailureAlert:message];
                               [weakSelf reloadData];

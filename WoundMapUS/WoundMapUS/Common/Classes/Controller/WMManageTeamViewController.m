@@ -24,6 +24,8 @@
 #import "WMNavigationCoordinator.h"
 #import "WCAppDelegate.h"
 
+#define REVOKE_INVITION_BUTTON_INDEX 1
+
 typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRevokeInvitationActionSheetTag,
     kConfirmInvitationActionSheetTag,
@@ -243,9 +245,9 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Confirm Invitation: By tapping Confirm, the invitee will have access to team patient information."
                                                              delegate:self
-                                                    cancelButtonTitle:@"Revoke Invitation"
+                                                    cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:@"Confirm"
-                                                    otherButtonTitles:nil];
+                                                    otherButtonTitles:@"Revoke Invitation", nil];
     actionSheet.tag = kConfirmInvitationActionSheetTag;
     [actionSheet showInView:self.view];
 }
@@ -345,10 +347,8 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 
 #pragma mark - UIActionSheetDelegate
 
-// Called when a button is clicked. The view will be automatically dismissed after this call returns
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    NSManagedObjectContext *managedObjetContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
@@ -382,7 +382,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                         if (error) {
                             [WMUtilities logError:error];
                         }
-                        [managedObjetContext MR_saveToPersistentStoreAndWait];
+                        [managedObjectContext MR_saveToPersistentStoreAndWait];
                         // update regardless of error
                         _teamInvitations = nil;
                         _teamMembers = nil;
@@ -413,7 +413,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 } else {
                     block();
                 }
-            } else if (buttonIndex == actionSheet.cancelButtonIndex) {
+            } else if (buttonIndex == REVOKE_INVITION_BUTTON_INDEX) {
                 // revoke
                 revokeBlock();
             }
