@@ -72,7 +72,7 @@
         _organizationCreated = YES;
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         // create on back end before GRABBAG addresses and ids
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [ff createObj:_organization atUri:[NSString stringWithFormat:@"/%@", [WMOrganization entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -94,7 +94,7 @@
         };
         // make sure we have addresses and ids
         if ([_organization.addresses count] == 0 && [_organization.ids count] == 0) {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             [ffm updateGrabBags:@[WMOrganizationRelationships.addresses, WMOrganizationRelationships.ids]
                      aggregator:_organization
                              ff:ff
@@ -202,7 +202,7 @@
         // update back end
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         [ffm updateOrganization:_organization ff:ff completionHandler:^(NSError *error) {
             [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

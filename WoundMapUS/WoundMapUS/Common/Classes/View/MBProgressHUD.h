@@ -119,6 +119,7 @@ typedef void (^MBProgressHUDCompletionBlock)();
  * @see hideHUDForView:animated:
  * @see animationType
  */
++ (MBProgressHUD *)showHUDAddedToViewController:(UIViewController *)viewController animated:(BOOL)animated;
 + (MBProgressHUD *)showHUDAddedTo:(UIView *)view animated:(BOOL)animated;
 
 /**

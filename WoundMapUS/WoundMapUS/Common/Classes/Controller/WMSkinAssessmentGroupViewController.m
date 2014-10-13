@@ -335,7 +335,7 @@
     // create intervention events before super
     [self.skinAssessmentGroup createEditEventsForParticipant:self.appDelegate.participant];
     // wait for back end calls to complete
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __block NSInteger counter = 1;  // update
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{

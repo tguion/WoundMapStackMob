@@ -139,7 +139,7 @@
 - (void)photoManager:(WMPhotoManager *)photoManager didCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata
 {
     DLog(@"image %@", NSStringFromCGSize(image.size));
-    MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     progressHUD.labelText = @"Processing Photo";
     NSManagedObjectID *objectID = [self.patient objectID];
     WMFatFractal *ff = [WMFatFractal sharedInstance];

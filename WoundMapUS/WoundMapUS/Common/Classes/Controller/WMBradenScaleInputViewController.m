@@ -124,7 +124,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     if (_newBradenScaleFlag) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         // create and save to back end
         NSParameterAssert(_bradenScale);
         NSParameterAssert([_bradenScale.sections count] == 0);

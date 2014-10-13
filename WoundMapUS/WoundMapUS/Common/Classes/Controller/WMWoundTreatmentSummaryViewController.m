@@ -44,7 +44,7 @@
     [self.view layoutSubviews]; // You must call this method here or the system raises an exception
     // make sure we have data
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;

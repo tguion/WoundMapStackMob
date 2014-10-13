@@ -219,7 +219,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Team...";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Building Team...";
     __weak __typeof(&*self)weakSelf = self;
     // hold onto stage/track for each patient
     NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];

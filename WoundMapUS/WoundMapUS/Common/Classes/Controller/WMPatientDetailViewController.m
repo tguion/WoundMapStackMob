@@ -266,7 +266,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     } else {
         _patient = super.patient;
         if (_patient.ffUrl) {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             __weak __typeof(&*self)weakSelf = self;
             WMErrorCallback completionHandler = ^(NSError *error) {
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -411,7 +411,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             _person = [WMPerson MR_createInContext:self.managedObjectContext];
             // create on back end before GRABBAG addresses and ids
             WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             __weak __typeof(&*self)weakSelf = self;
             [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 // request could have timed-out
@@ -492,7 +492,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     // indicate that patient was changed on device
     [self patientNavigationDataChangedOnDevice];
     // save local
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     // update back end
@@ -594,7 +594,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

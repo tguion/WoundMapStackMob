@@ -90,7 +90,7 @@
         _telecoms = [[self.delegate.telecomSource.telecoms allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
         if (_attemptAcquireFromBackEnd) {
             __weak __typeof(&*self)weakSelf = self;
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             [self.delegate.telecomSource telecomsWithRefreshHandler:^{
                 WM_ASSERT_MAIN_THREAD;
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

@@ -368,7 +368,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
             block();
         };
-        [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Acquiring account data";
+        [MBProgressHUD showHUDAddedToViewController:self animated:NO].labelText = @"Acquiring account data";
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:onComplete];
     } else {
         block();
@@ -412,7 +412,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)handlePatientRefreshingFromCloud:(NSManagedObjectID *)patientObjectId
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedToViewController:self animated:NO];
     hud.labelText = @"Updating Patient...";
     hud.detailsLabelText = @"This may take a minute.";
 }
@@ -457,7 +457,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         _welcomeState = WMWelcomeStateTeamSelected;
         [weakSelf.tableView reloadData];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Acquiring Team";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Acquiring Team";
     [ffm updateParticipant:self.participant completionHandler:errorCallback];
 }
 
@@ -566,7 +566,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     }
     // else
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Updating team data...";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Updating team data...";
     NSArray *notifications = [WMUnhandledSilentUpdateNotification silentUpdateNotificationsForUserName:self.participant.userName managedObjectContext:managedObjectContext];
     for (WMUnhandledSilentUpdateNotification *notification in notifications) {
         [self.appDelegate downloadFFDataForCollection:notification.notification fetchCompletionHandler:nil];
@@ -1235,7 +1235,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [ffm updatePerson:person ff:ff completionHandler:^(NSError *error) {
         [self.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
@@ -1266,7 +1266,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         participant.organization = organization;
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [ff updateObj:participant onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -1321,7 +1321,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         __weak __typeof(&*self)weakSelf = self;
         NSArray *patients = [WMPatient MR_findAllInContext:managedObjectContext];
         counter = [patients count];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Adding patients to Team";
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Adding patients to Team";
         [ffm movePatientsForParticipant:participant toTeam:team completionHandler:^(NSError *error) {
             if (error) {
                 [WMUtilities logError:error];

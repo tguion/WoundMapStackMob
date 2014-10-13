@@ -152,7 +152,7 @@
             _wound = [WMWound instanceWithPatient:self.patient];
             // create on back end
             WMFatFractal *ff = [WMFatFractal sharedInstance];
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             [ff createObj:_wound atUri:[NSString stringWithFormat:@"/%@", [WMWound entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (error) {
                     [WMUtilities logError:error];
@@ -289,7 +289,7 @@
     self.wound.locationValue = woundLocationValue;
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [ff createObj:woundLocationValue atUri:[NSString stringWithFormat:@"/%@", [WMWoundLocationValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

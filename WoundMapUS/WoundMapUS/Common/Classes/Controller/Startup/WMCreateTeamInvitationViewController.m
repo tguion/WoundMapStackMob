@@ -175,7 +175,7 @@
         return;
     }
     // see if we can confirm user name
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     [ff getObjFromUri:[NSString stringWithFormat:@"/%@/(userName eq '%@')", [WMParticipant entityName], _userNameTextInput] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -217,9 +217,9 @@
     // add to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [self.managedObjectContext MR_saveToPersistentStoreAndWait];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [ffm createTeamInvitation:_teamInvitation ff:ff completionHandler:^(NSError *error) {
         if (error) {

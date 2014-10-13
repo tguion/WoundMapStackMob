@@ -118,7 +118,7 @@
         return;
     }
     // else
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     hud.labelText = @"Updating Your Account";
     hud.detailsLabelText = @"This may take a minute.";
     WMFatFractal *ff = [WMFatFractal sharedInstance];

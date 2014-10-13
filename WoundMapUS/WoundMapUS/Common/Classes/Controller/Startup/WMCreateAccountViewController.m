@@ -276,7 +276,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 - (IBAction)createAccountAction:(id)sender
 {
     [self.view endEditing:YES];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building account";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Building account";
     [self performSelector:@selector(delayedCreateAccountAction) withObject:nil afterDelay:0.0];
 }
 
@@ -399,7 +399,7 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         // participant has logged in as new user - now push data to backend
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [ffm updateParticipantAfterRegistration:participant ff:ff completionHandler:^(NSError *error) {
             if (error) {
                 [WMUtilities logError:error];

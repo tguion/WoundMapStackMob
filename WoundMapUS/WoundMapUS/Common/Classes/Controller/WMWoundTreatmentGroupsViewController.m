@@ -115,7 +115,7 @@
             return;
         }
         // else
-        [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Checking Encounter Credits";
+        [MBProgressHUD showHUDAddedToViewController:self animated:NO].labelText = @"Checking Encounter Credits";
         [ffm decrementPatientEncounterCreditForPatient:self.patient onComplete:block];
     }
 }

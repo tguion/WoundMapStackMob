@@ -72,7 +72,7 @@
         [managedObjectContext.undoManager beginUndoGrouping];
     };
     if (nil == _medicalHistoryGroup) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         _medicalHistoryGroup = [WMMedicalHistoryGroup medicalHistoryGroupForPatient:patient];
         _medicalHistoryGroupWasCreated = YES;
         FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -174,7 +174,7 @@
     [self patientNavigationDataChangedOnDevice];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     // update back end
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     NSArray *medicalHistoryValues = [self.fetchedResultsController fetchedObjects];
     __weak __typeof(&*self)weakSelf = self;
     NSParameterAssert([_medicalHistoryGroup.ffUrl length]);

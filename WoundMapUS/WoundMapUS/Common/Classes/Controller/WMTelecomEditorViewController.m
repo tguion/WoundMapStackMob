@@ -75,7 +75,7 @@
         block();
     };
     if ([ffm updateTelecomType:ff managedObjectContext:managedObjectContext completionHandler:completionHandler]) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     } else {
         block();
     }

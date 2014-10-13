@@ -131,7 +131,7 @@
     consultingGroup.team = team;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Building Consulting Group...";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Building Consulting Group...";
     __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion onCompleteUpdate = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {

@@ -187,7 +187,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
         }
         // else
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             // IAPManager will post notification with success or error for purchase
             [[IAPManager sharedInstance] buyProduct:self.skProduct];
             return;
@@ -330,7 +330,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     IAPManager *iapManager = [IAPManager sharedInstance];
     IAPProduct *iapProduct = self.iapProduct;
     NSManagedObjectContext *managedObjectContext = [iapProduct managedObjectContext];
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [iapManager productWithProductId:productId
                       successHandler:^(NSArray *products) {

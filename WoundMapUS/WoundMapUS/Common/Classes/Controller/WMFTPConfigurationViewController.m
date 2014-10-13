@@ -166,7 +166,7 @@
     NSString *destinationFilePath = [_pathTextInput stringByAppendingPathComponent:[sourcePath lastPathComponent]];
 
     BOOL success = NO;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Uploading file...";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Uploading file...";
     if (_useSFTP) {
         NMSFTP *sftp = [NMSFTP connectWithSession:session];
         success = [sftp writeFileAtPath:sourcePath toFileAtPath:destinationFilePath];

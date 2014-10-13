@@ -270,7 +270,7 @@ CGFloat kRetartRotationFactor = 5.0;
     UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showResetMenu:)];
     [self.view addGestureRecognizer:longPressGesture];
     // initialize after all animations have completed
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+    [MBProgressHUD showHUDAddedToViewController:self animated:NO];
     [self performSelector:@selector(initializeNormalizingImageView) withObject:nil afterDelay:1.0];
 }
 

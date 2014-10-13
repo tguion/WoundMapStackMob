@@ -1067,7 +1067,7 @@
             }];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMNavigationTrackRelationships.stages]
                                               aggregator:self.appDelegate.navigationCoordinator.navigationTrack
                                                       ff:[WMFatFractal sharedInstance]
@@ -1100,7 +1100,7 @@
                 [weakSelf navigateToManageTeam:sender];
             }
         };
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [ffm updateGrabBags:@[WMTeamRelationships.invitations, WMTeamRelationships.participants, WMTeamRelationships.patients]
                  aggregator:team
                          ff:[WMFatFractal sharedInstance]
@@ -1155,7 +1155,7 @@
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         [weakSelf navigateToPatientDetail:navigationNodeButton];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.medicalHistoryGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1205,7 +1205,7 @@
             [weakSelf navigateToSelectWound:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.wounds]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1245,7 +1245,7 @@
     if (nil == self.wound) {
         block(nil);
     } else {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.photos, WMWoundRelationships.treatmentGroups]
                                                   aggregator:self.wound
                                                           ff:[WMFatFractal sharedInstance]
@@ -1300,7 +1300,7 @@
         weakSelf.parentNavigationNode = navigationNode;
         [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.bradenScales, WMPatientRelationships.deviceGroups, WMPatientRelationships.medicalHistoryGroups, WMPatientRelationships.psychosocialGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1330,7 +1330,7 @@
             [weakSelf navigateToBradenScaleAssessment:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.bradenScales]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1365,7 +1365,7 @@
             [weakSelf navigateToMedicationAssessment:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.medicationGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1388,7 +1388,7 @@
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [weakSelf navigateToDeviceAssessment:navigationNodeButton];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.deviceGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1412,7 +1412,7 @@
             [weakSelf navigateToPsychoSocialAssessment:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.psychosocialGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1436,7 +1436,7 @@
             [weakSelf navigateToNutritionAssessment:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.nutritionGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1458,7 +1458,7 @@
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf navigateToSkinAssessmentForNavigationNode:navigationNodeButton];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.skinAssessmentGroups]
                                              aggregator:self.patient
                                                      ff:[WMFatFractal sharedInstance]
@@ -1484,7 +1484,7 @@
         [weakSelf navigateToPhoto:navigationNode];
         [weakSelf animateNavigationNodeButtonIntoCompassCenter:navigationNodeButton];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]
                                               aggregator:self.wound
                                                       ff:[WMFatFractal sharedInstance]
@@ -1579,7 +1579,7 @@
             [weakSelf navigateToWoundAssessment:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.measurementGroups]
                                               aggregator:self.wound
                                                       ff:[WMFatFractal sharedInstance]
@@ -1603,7 +1603,7 @@
             [weakSelf navigateToWoundTreatment:navigationNodeButton];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMWoundRelationships.treatmentGroups]
                                               aggregator:self.wound
                                                       ff:[WMFatFractal sharedInstance]
@@ -1622,7 +1622,7 @@
         [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [weakSelf navigateToCarePlan];
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [[WMFatFractalManager sharedInstance] updateGrabBags:@[WMPatientRelationships.carePlanGroups]
                                               aggregator:self.patient
                                                       ff:[WMFatFractal sharedInstance]
@@ -1680,7 +1680,7 @@
               completionHandler:block1];
         }
     };
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [ffm updateGrabBags:@[WMWoundRelationships.measurementGroups, WMWoundRelationships.treatmentGroups, WMWoundRelationships.photos]
              aggregator:wound
                      ff:ff
@@ -2173,7 +2173,7 @@
     // commit to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -2287,7 +2287,7 @@
             WMWound *wound = self.wound;
             NSManagedObjectContext *managedObjectContext = [wound managedObjectContext];
             __weak __typeof(&*self)weakSelf = self;
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Processing Photo";
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Processing Photo";
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
 //            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];

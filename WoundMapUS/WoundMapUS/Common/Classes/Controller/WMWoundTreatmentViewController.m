@@ -116,7 +116,7 @@
         self.didCreateGroup = YES;
         // create on back end
         WMWound *wound = self.wound;
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         FFHttpMethodCompletion createCompletionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {
                 [WMUtilities logError:error];
@@ -410,7 +410,7 @@
     // wait for back end calls to complete
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{

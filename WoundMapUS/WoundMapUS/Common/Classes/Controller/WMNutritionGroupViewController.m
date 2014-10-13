@@ -215,7 +215,7 @@
     // create intervention events before super
     [_nutritionGroup createEditEventsForParticipant:self.appDelegate.participant];
     // update backend
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{

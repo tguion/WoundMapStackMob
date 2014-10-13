@@ -114,7 +114,7 @@
                           grabBagName:WMParticipantRelationships.sourceReferrals
                            onComplete:completionHandler];
         };
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [ff createObj:_patientReferral atUri:[NSString stringWithFormat:@"/%@", [WMPatientReferral entityName]] onComplete:createCompletionHandler];
     }
 }
@@ -279,7 +279,7 @@
     [_patientReferral prependMessage:message from:participant];
     // wait for back end calls to complete
     __block NSInteger counter = 0;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion completionHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -346,7 +346,7 @@
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __block NSInteger counter = 0;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];

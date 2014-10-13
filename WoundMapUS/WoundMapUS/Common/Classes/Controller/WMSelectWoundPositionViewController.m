@@ -250,7 +250,7 @@
     // update back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSError *error = nil;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     for (WMWoundPositionValue *woundPositionValue in self.wound.positionValues) {
         if (woundPositionValue.ffUrl) {
             [ff updateObj:woundPositionValue error:&error];

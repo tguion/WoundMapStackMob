@@ -6,6 +6,7 @@
 
 #import "MBProgressHUD.h"
 
+#define WM_ASSERT_MAIN_THREAD NSAssert([NSThread isMainThread], @"This method must be called on the main thread")
 
 #if __has_feature(objc_arc)
 	#define MB_AUTORELEASE(exp) exp
@@ -49,6 +50,8 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 @property (atomic, MB_STRONG) NSTimer *minShowTimer;
 @property (atomic, MB_STRONG) NSDate *showStarted;
 @property (atomic, assign) CGSize size;
+
+@property (nonatomic, strong) NSMutableArray *buttonsToEnableOnCleanup; // added TAG 2014.10.13
 
 @end
 
@@ -96,32 +99,79 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 @synthesize completionBlock;
 #endif
 
+#pragma mark - TAG
+
+- (NSMutableArray *)buttonsToEnableOnCleanup
+{
+    if (nil == _buttonsToEnableOnCleanup) {
+        _buttonsToEnableOnCleanup = [NSMutableArray array];
+    }
+    return _buttonsToEnableOnCleanup;
+}
+
 #pragma mark - Class methods
 
++ (MBProgressHUD *)showHUDAddedToViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    WM_ASSERT_MAIN_THREAD;
+    UIView *view = viewController.view;
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:view];
+    if (hud) {
+        return hud;
+    }
+    // else
+    hud = [MBProgressHUD showHUDAddedTo:view animated:animated];
+    NSArray *buttons = viewController.navigationItem.leftBarButtonItems;
+    for (UIBarButtonItem *button in buttons) {
+        if (button.isEnabled) {
+            button.enabled = NO;
+            [hud.buttonsToEnableOnCleanup addObject:button];
+        }
+    }
+    buttons = viewController.navigationItem.rightBarButtonItems;
+    for (UIBarButtonItem *button in buttons) {
+        if (button.isEnabled) {
+            button.enabled = NO;
+            [hud.buttonsToEnableOnCleanup addObject:button];
+        }
+    }
+    return hud;
+}
+
 + (MBProgressHUD *)showHUDAddedTo:(UIView *)view animated:(BOOL)animated {
-	MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:view];
-	[view addSubview:hud];
-	[hud show:animated];
-	return MB_AUTORELEASE(hud);
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:hud];
+    [hud show:animated];
+    return MB_AUTORELEASE(hud);
 }
 
 + (BOOL)hideHUDForView:(UIView *)view animated:(BOOL)animated {
-	MBProgressHUD *hud = [MBProgressHUD HUDForView:view];
-	if (hud != nil) {
-		hud.removeFromSuperViewOnHide = YES;
-		[hud hide:animated];
-		return YES;
-	}
-	return NO;
+    WM_ASSERT_MAIN_THREAD;
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:view];
+    if (hud != nil) {
+        // TAG
+        for (UIBarButtonItem *button in hud.buttonsToEnableOnCleanup) {
+            button.enabled = YES;
+        }
+        // TAG END
+        hud.removeFromSuperViewOnHide = YES;
+        [hud hide:animated];
+        return YES;
+    }
+    return NO;
 }
 
 + (NSUInteger)hideAllHUDsForView:(UIView *)view animated:(BOOL)animated {
-	NSArray *huds = [self allHUDsForView:view];
-	for (MBProgressHUD *hud in huds) {
-		hud.removeFromSuperViewOnHide = YES;
-		[hud hide:animated];
-	}
-	return [huds count];
+    WM_ASSERT_MAIN_THREAD;
+    NSArray *huds = [self allHUDsForView:view];
+    for (MBProgressHUD *hud in huds) {
+        // TAG
+        for (UIBarButtonItem *button in hud.buttonsToEnableOnCleanup) {
+            button.enabled = YES;
+        }
+        // TAG END
+        [hud hide:animated];
+    }
+    return [huds count];
 }
 
 + (MBProgressHUD *)HUDForView:(UIView *)view {

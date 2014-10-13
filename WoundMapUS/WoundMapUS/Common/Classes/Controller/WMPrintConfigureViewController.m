@@ -111,7 +111,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     // get wounds
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Acquiring latest wound data";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Acquiring latest wound data";
     WMPatient *patient = self.patient;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
@@ -316,7 +316,7 @@
     }
     // else make sure we have the data from back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Updating Patient Data";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Updating Patient Data";
     WMPatient *patient = self.patient;
     WMParticipant *participant = self.appDelegate.participant;
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];

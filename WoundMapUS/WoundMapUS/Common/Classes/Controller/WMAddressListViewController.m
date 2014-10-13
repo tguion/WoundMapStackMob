@@ -105,7 +105,7 @@
         _addresses = [[self.delegate.addressSource.addresses allObjects] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:YES]]];
         if (_attemptAcquireFromBackEnd) {
             __weak __typeof(&*self)weakSelf = self;
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             [self.delegate.addressSource addressesWithRefreshHandler:^{
                 WM_ASSERT_MAIN_THREAD;
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];

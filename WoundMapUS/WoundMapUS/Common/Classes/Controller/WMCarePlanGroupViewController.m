@@ -400,7 +400,7 @@
     // update backend
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __block NSInteger counter = 1;  // update _carePlanGroup
     __weak __typeof(&*self)weakSelf = self;
     dispatch_block_t block = ^{

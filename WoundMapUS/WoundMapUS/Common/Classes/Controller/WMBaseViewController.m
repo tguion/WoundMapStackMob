@@ -102,9 +102,6 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     [center addObserver:self selector:@selector(observeKeyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
     [center addObserver:self selector:@selector(observeKeyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
     
-    // DEBUG
-//    NSInteger groupingLevel = self.managedObjectContext.undoManager.groupingLevel;
-//    DLog(@"*** groupingLevel %ld", (long)groupingLevel);
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -800,7 +797,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 {
     if (backendSeedEntityName && ![self.coreDataHelper isBackendDataAcquiredForEntityName:backendSeedEntityName]) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=1&depthGb=1", backendSeedEntityName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
             if (error) {

@@ -139,7 +139,7 @@
     NSInteger hoursSinceLastPatientListUpdate = userDefaultsManager.hoursSinceLastPatientListUpdate;
     if (hoursSinceLastPatientListUpdate > 24) {
         [userDefaultsManager patientListUpdated];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     }
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
@@ -242,7 +242,7 @@
     [_patientReadOnlyContainerView removeFromSuperview];
     self.appDelegate.navigationCoordinator.patient = _patientToOpen;
     // get data from back end
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES].labelText = @"Loading Patient Data...";
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Loading Patient Data...";
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = [_patientToOpen managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;

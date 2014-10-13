@@ -55,7 +55,7 @@
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     if ([_bradenSection.cells count] == 0) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [WMBradenScale populateBradenSectionCells:_bradenSection];
         __block NSInteger counter = [_bradenSection.cells count];
         FFHttpMethodCompletion createHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {

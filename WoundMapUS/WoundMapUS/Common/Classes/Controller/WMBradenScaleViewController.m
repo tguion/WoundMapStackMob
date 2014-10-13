@@ -90,7 +90,7 @@
     // must make sure the sections and cells are downloaded
     if (self.bradenScale.ffUrl && [self.bradenScale.sections count] == 0) {
         WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         __weak __typeof(&*self)weakSelf = self;
         NSString *uri = [self.bradenScale.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
         [ff getObjFromUri:[NSString stringWithFormat:@"%@?depthGb=2", uri] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -112,7 +112,7 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.navigationItem.leftBarButtonItem.enabled = NO;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
 	_bradenScale = [WMBradenScale createNewBradenScaleForPatient:self.patient];
     __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {

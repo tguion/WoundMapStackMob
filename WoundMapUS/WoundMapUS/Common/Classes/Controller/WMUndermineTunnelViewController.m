@@ -301,7 +301,7 @@
     WMWoundMeasurementGroup *woundMeasurementGroup = self.woundMeasurementGroup;
     __block NSInteger counter = 0;
     __weak __typeof(&*self)weakSelf = self;
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
+    [MBProgressHUD showHUDAddedToViewController:self animated:NO];
     dispatch_block_t block = ^{
         if (_saveToStoreOnSave) {
             ffm.postSynchronizationEvents = YES;
@@ -374,12 +374,6 @@
 }
 
 #pragma mark - UITextFieldDelegate
-
-// DEBUG became first responder
-//- (void)textFieldDidBeginEditing:(UITextField *)textField
-//{
-//    NSLog(@"depthTextField didBegin: %@", textField == self.depthTextField ? @"YES":@"NO");
-//}
 
 // may be called if forced even if shouldEndEditing returns NO (e.g. view removed from window) or endEditing:YES called
 - (void)textFieldDidEndEditing:(UITextField *)textField

@@ -73,7 +73,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
     _acquiringTeamInvitations = YES;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/invitations", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -93,7 +93,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         [weakSelf.tableView reloadData];
     }];
     _acquiringTeamMembers = YES;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/%@/participants", [WMTeam entityName], [self.team.ffUrl lastPathComponent]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
@@ -318,7 +318,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
@@ -421,7 +421,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         }
         case kRemoveParticipantActionSheetTag: {
             if (buttonIndex == actionSheet.destructiveButtonIndex) {
-                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                [MBProgressHUD showHUDAddedToViewController:self animated:YES];
                 [ffm removeParticipant:_teamMemberToDelete fromTeam:self.team ff:ff completionHandler:^(NSError *error) {
                     if (error) {
                         [WMUtilities logError:error];

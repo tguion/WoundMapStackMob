@@ -1116,7 +1116,7 @@
     };
     WMPhoto *photo = woundPhoto.photo;
     if (nil == photo.photo) {
-        [MBProgressHUD showHUDAddedTo:self.view animated:NO].labelText = @"Downloading photo";
+        [MBProgressHUD showHUDAddedToViewController:self animated:NO].labelText = @"Downloading photo";
         [[[ff newReadRequest] prepareGetFromUri:[NSString stringWithFormat:@"%@/%@", photo.ffUrl, WMPhotoAttributes.photo]] executeAsyncWithBlock:^(FFReadResponse *response) {
             NSData *photoData = [response rawResponseData];
             if (response.httpResponse.statusCode > 300) {

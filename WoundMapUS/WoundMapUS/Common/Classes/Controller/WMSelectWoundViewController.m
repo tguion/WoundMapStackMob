@@ -120,7 +120,7 @@
     // check for wound deletions
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [ffm updateGrabBags:@[WMPatientRelationships.wounds] aggregator:self.patient ff:ff completionHandler:^(NSError *error) {
         if (error) {
@@ -163,7 +163,7 @@
     // commit to back end
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
     __weak __typeof(&*self)weakSelf = self;
     [ff updateObj:wound onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {

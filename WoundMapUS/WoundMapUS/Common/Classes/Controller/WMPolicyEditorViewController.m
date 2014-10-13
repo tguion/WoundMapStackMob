@@ -277,7 +277,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
                onComplete:onComplete2
                 onOffline:onComplete2];
         };
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         [ff createObj:teamPolicy
                 atUri:[NSString stringWithFormat:@"/%@", [WMTeamPolicy entityName]]
            onComplete:onComplete onOffline:onComplete];
@@ -538,7 +538,7 @@ NSString * const kTextCellIdentifier = @"TextCell";
         WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
         WMParticipant *participant = self.appDelegate.participant;
         if (participant.team) {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             __weak __typeof(&*self)weakSelf = self;
             __block NSInteger counter = 0;
             FFHttpMethodCompletion block = ^(NSError *error, id object, NSHTTPURLResponse *response) {

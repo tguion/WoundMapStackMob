@@ -62,7 +62,7 @@
                 WMParticipant *participant = weakSelf.participant;
                 if (!weakSelf.buildingAccountFlag && nil == participant.team && [WMNavigationTrack MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"team = nil"] inContext:weakSelf.managedObjectContext] == 0) {
                     weakSelf.buildingAccountFlag = YES;
-                    [MBProgressHUD showHUDAddedTo:weakSelf.view animated:NO].labelText = @"Building account on device";
+                    [MBProgressHUD showHUDAddedToViewController:weakSelf animated:NO].labelText = @"Building account on device";
                     [WMNavigationTrack seedDatabase:managedObjectContext completionHandler:completionHandler];
                 }
             }
@@ -137,7 +137,7 @@
     };
     WMNavigationStage *stage = self.navigationTrack.initialStage;
     if (nil == stage) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         hud.labelText = @"Acquiring policies";
         WMFatFractal *ff = [WMFatFractal sharedInstance];
         [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMNavigationNode entityName]] onComplete:onComplete];
