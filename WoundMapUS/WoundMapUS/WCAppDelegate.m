@@ -55,7 +55,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 @implementation WCAppDelegate
 
-#define debug 0     // DEBUG
+#define debug 1     // DEBUG
 
 - (KeychainItemWrapper *)keychainItem
 {
