@@ -258,8 +258,10 @@
             IAPProduct *iapProduct = [self.sortedOptions objectAtIndex:indexPath.row];
             WMIAPProductOptionTableViewCell *myCell = (WMIAPProductOptionTableViewCell *)cell;
             myCell.iapProduct = iapProduct;
+            myCell.textLabel.text = iapProduct.title;
             myCell.textLabel.font = self.textFont;
             myCell.textLabel.numberOfLines = 0;
+            myCell.detailTextLabel.text = [NSNumberFormatter localizedStringFromNumber:iapProduct.price numberStyle:NSNumberFormatterCurrencyStyle];
             break;
         }
     }

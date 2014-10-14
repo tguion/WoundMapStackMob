@@ -45,8 +45,6 @@
     _iapProduct = iapProduct;
     [self didChangeValueForKey:@"iapProduct"];
     [self setNeedsDisplay];
-//    self.textLabel.text = iapProduct.title;
-    self.detailTextLabel.text = [NSNumberFormatter localizedStringFromNumber:iapProduct.price numberStyle:NSNumberFormatterCurrencyStyle];
 }
 
 - (void)setSelectedFlag:(BOOL)selectedFlag
@@ -55,9 +53,9 @@
         return;
     }
     // else
-    [self willChangeValueForKey:@"xx"];
+    [self willChangeValueForKey:@"selectedFlag"];
     _selectedFlag = selectedFlag;
-    [self didChangeValueForKey:@"xx"];
+    [self didChangeValueForKey:@"selectedFlag"];
     if (selectedFlag) {
         self.imageView.image = [UIImage imageNamed:@"ui_checkmark"];
     } else {
@@ -65,27 +63,27 @@
     }
 }
 
-- (void)drawContentView:(CGRect)rect
-{
-    rect = UIEdgeInsetsInsetRect(rect, self.separatorInset);
-    CGFloat minX = fmaxf(CGRectGetMaxX(self.imageView.frame) + 8.0, CGRectGetMinX(rect));
-    CGFloat maxX = CGRectGetMaxX(rect);
-    CGFloat width = CGRectGetMaxX(rect) - minX;
-    CGFloat height = CGRectGetHeight(rect);
-    NSString *priceString = [NSNumberFormatter localizedStringFromNumber:_iapProduct.price numberStyle:NSNumberFormatterCurrencyStyle];
-    CGSize priceTextSize = [priceString sizeWithAttributes:self.priceAttributes];
-    // draw price
-    CGRect aRect = CGRectMake(maxX - ceilf(priceTextSize.width + 2.0 * kIAPTextVerticalMargin), ceilf((height - priceTextSize.height)/2.0), ceilf(priceTextSize.width), ceilf(priceTextSize.height));
-    [priceString drawInRect:aRect withAttributes:self.priceAttributes];
-    // draw title
-    UITableView *tableView = (UITableView *)self.superview.superview;
-    CGFloat textHeight = [WMIAPProductOptionTableViewCell productOptionTitleTextHeight:_iapProduct
-                                                                     priceAttributes:self.priceAttributes
-                                                                      textAttributes:self.titleAttributes
-                                                                           tableView:tableView];
-    aRect = CGRectMake(minX, (height / 2) - (textHeight / 2) + kIAPTextVerticalMargin, width - ceilf(priceTextSize.width) - 4.0, ceilf(rect.size.height));
-    [_iapProduct.title drawInRect:aRect withAttributes:self.titleAttributes];
-}
+//- (void)drawContentView:(CGRect)rect
+//{
+//    rect = UIEdgeInsetsInsetRect(rect, self.separatorInset);
+//    CGFloat minX = fmaxf(CGRectGetMaxX(self.imageView.frame) + 8.0, CGRectGetMinX(rect));
+//    CGFloat maxX = CGRectGetMaxX(rect);
+//    CGFloat width = CGRectGetMaxX(rect) - minX;
+//    CGFloat height = CGRectGetHeight(rect);
+//    NSString *priceString = [NSNumberFormatter localizedStringFromNumber:_iapProduct.price numberStyle:NSNumberFormatterCurrencyStyle];
+//    CGSize priceTextSize = [priceString sizeWithAttributes:self.priceAttributes];
+//    // draw price
+//    CGRect aRect = CGRectMake(maxX - ceilf(priceTextSize.width + 2.0 * kIAPTextVerticalMargin), ceilf((height - priceTextSize.height)/2.0), ceilf(priceTextSize.width), ceilf(priceTextSize.height));
+//    [priceString drawInRect:aRect withAttributes:self.priceAttributes];
+//    // draw title
+//    UITableView *tableView = (UITableView *)self.superview.superview;
+//    CGFloat textHeight = [WMIAPProductOptionTableViewCell productOptionTitleTextHeight:_iapProduct
+//                                                                     priceAttributes:self.priceAttributes
+//                                                                      textAttributes:self.titleAttributes
+//                                                                           tableView:tableView];
+//    aRect = CGRectMake(minX, (height / 2) - (textHeight / 2) + kIAPTextVerticalMargin, width - ceilf(priceTextSize.width) - 4.0, ceilf(rect.size.height));
+//    [_iapProduct.title drawInRect:aRect withAttributes:self.titleAttributes];
+//}
 
 + (CGFloat) productOptionTitleTextHeight:(IAPProduct *)iapProduct
                          priceAttributes:(NSDictionary *)priceAttributes

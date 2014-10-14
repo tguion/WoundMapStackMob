@@ -375,15 +375,15 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 {
     if ([queuedOperation.queuedObj isKindOfClass:[WMPhoto class]]) {
         WMPhoto *photo = (WMPhoto *)queuedOperation.queuedObj;
-        WMWoundPhoto *woundPhoto = photo.woundPhoto;
         NSManagedObjectContext *managedObjectContext = [photo managedObjectContext];
-        [Faulter faultObjectWithID:[photo objectID]
-                         inContext:managedObjectContext];
-        [Faulter faultObjectWithID:[woundPhoto objectID]
-                         inContext:managedObjectContext];
+        [managedObjectContext performBlockAndWait:^{
+            WMWoundPhoto *woundPhoto = photo.woundPhoto;
+            [Faulter faultObjectWithID:[photo objectID]
+                             inContext:managedObjectContext];
+            [Faulter faultObjectWithID:[woundPhoto objectID]
+                             inContext:managedObjectContext];
+        }];
     }
-//    NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_defaultContext];
-//    [managedObjectContext MR_saveToPersistentStoreAndWait];
 }
 
 #pragma mark - Sign In

@@ -207,9 +207,15 @@ typedef enum {
     }
     // else update our attributes
     NSAssert2([skProduct.productIdentifier isEqualToString:self.identifier], @"IAP product identifier mismatch: %@, %@", skProduct.productIdentifier, self.identifier);
-    self.title = skProduct.localizedTitle;
-    self.desc = skProduct.localizedDescription;
-    self.price = skProduct.price;
+    if ([skProduct.localizedTitle length]) {
+        self.title = skProduct.localizedTitle;
+    }
+    if ([skProduct.localizedDescription length]) {
+        self.desc = skProduct.localizedDescription;
+    }
+    if (skProduct.price) {
+        self.price = skProduct.price;
+    }
 }
 
 - (BOOL)aggregatorFlag

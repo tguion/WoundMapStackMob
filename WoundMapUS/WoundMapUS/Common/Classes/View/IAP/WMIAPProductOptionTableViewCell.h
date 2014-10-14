@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 etreasure consulting LLC. All rights reserved.
 //
 
-#import "APTableViewCell.h"
+#import "WMValue1TableViewCell.h"
 
 @class IAPProduct;
 
-@interface WMIAPProductOptionTableViewCell : APTableViewCell
+@interface WMIAPProductOptionTableViewCell : WMValue1TableViewCell
 
 @property (strong, nonatomic) IAPProduct *iapProduct;
 @property (nonatomic) BOOL selectedFlag;
