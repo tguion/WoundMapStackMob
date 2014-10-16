@@ -50,7 +50,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 @property UIBackgroundTaskIdentifier bgTask;
 @property (strong, nonatomic) KeychainItemWrapper *keychainItem;
 
-
 @end
 
 @implementation WCAppDelegate
@@ -316,10 +315,20 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 #pragma mark - Remote Notifications
 
+- (void)registerDeviceToken
+{
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    NSError *localError = nil;
+    localError = [ff registerNotificationID:[self.devToken description]];
+    if (localError) {
+        [WMUtilities logError:localError];
+    }
+}
+
 // RPN
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken
 {
-    [[WMFatFractal sharedInstance] registerNotificationID:[devToken description]];
+    _devToken = devToken;
 }
 
 // RPN
@@ -558,10 +567,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
                 // increment index
                 ++index;
             }
-            // notify UI
-            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdatedContentFromCloudNotification object:map];
+            // check if patient stage has changed
+            BOOL patientStageChangedFlag = patient.isStageUpdating;
             // save data
             [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+            // notify UI
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUpdatedContentFromCloudNotification object:map userInfo:@{@"patientStageChangedFlag":@(patientStageChangedFlag)}];
             // mark as success
             backgroundFetchResult = UIBackgroundFetchResultNewData;
         } else {

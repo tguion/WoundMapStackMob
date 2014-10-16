@@ -103,7 +103,7 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID;
 - (void)handleTeamMemberAdded:(NSString *)teamGUID;
 - (void)handlePatientReferralUpdated:(NSString *)patientGUID;
-- (void)handleContentUpdatedFromCloud:(NSDictionary *)map;
+- (void)handleContentUpdatedFromCloud:(NSDictionary *)map userInfo:(NSDictionary *)userInfo;
 
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
                                         successBlock:(IAPPresentViewControllerAcceptHandler)successBlock

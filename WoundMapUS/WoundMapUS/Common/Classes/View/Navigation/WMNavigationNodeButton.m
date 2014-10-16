@@ -10,6 +10,7 @@
 #import "WMNavigationNode.h"
 #import "WMPolicyManager.h"
 #import "WMDesignUtilities.h"
+#import "WMUtilities.h"
 #import "WCAppDelegate.h"
 
 @interface WMNavigationNodeButton ()
@@ -230,6 +231,7 @@
     [self willChangeValueForKey:@"complianceDelta"];
     _complianceDelta = complianceDelta;
     [self didChangeValueForKey:@"complianceDelta"];
+    DLog(@"WMNavigationNodeButton %@ complianceDelta->%ld", self.navigationNode.title, (long)complianceDelta);
     self.statusImageView.image = [self.policyManager statusImageForComplianceDelta:complianceDelta];
 }
 

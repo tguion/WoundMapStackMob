@@ -1263,7 +1263,7 @@
 		7D9AA28918B13F5900C1B698 /* WMPatientTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPatientTableViewCell.m; sourceTree = "<group>"; };
 		7D9BA8C919EC89CD00A8A78F /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
 		7D9BA8CA19EC89CD00A8A78F /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
-		7D9BA8CB19EC89CD00A8A78F /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
+		7D9BA8CB19EC89CD00A8A78F /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = text; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
 		7D9CB59819DD93D500084668 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		7DA3C6AC19460E43008DA3DC /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		7DB2060518A7D3400004DC32 /* WoundMapUS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WoundMapUS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4140,8 +4140,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					.,
 					"$(inherited)",

@@ -1013,15 +1013,6 @@
             navigationCoordinator.woundPhoto = self.wound.lastWoundPhoto;
         }
     }
-    // track/stage may have changed
-    if (patient.isStageUpdating) {
-        [self handleNavigationStageChanged:patient.stage];
-        // update the stage of care control
-        WMNavigationStage *navigationStage = self.patient.stage;
-        WMNavigationTrack *navigationTrack = navigationStage.track;
-        NSInteger index = [[WMNavigationStage sortedStagesForTrack:navigationTrack] indexOfObject:navigationStage];
-        self.stageSegmentedControl.selectedSegmentIndex = index;
-    }
     // update nodes
     [self.navigationPatientWoundContainerView updatePatientAndWoundNodes];
     // update displayed nodes
@@ -1036,12 +1027,22 @@
     [self.compassView hidePatientRefreshing];
 }
 
-- (void)handleContentUpdatedFromCloud:(NSDictionary *)map
+- (void)handleContentUpdatedFromCloud:(NSDictionary *)map userInfo:(NSDictionary *)userInfo
 {
-    [super handleContentUpdatedFromCloud:map];
+    [super handleContentUpdatedFromCloud:map userInfo:userInfo];
     NSString *patientGuid = map[@"p"];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     WMPatient *patient = [WMPatient MR_findFirstByAttribute:WMPatientAttributes.ffUrl withValue:[NSString stringWithFormat:@"/ff/resources/WMPatient/%@", patientGuid] inContext:managedObjectContext];
+    // track/stage may have changed
+    if ([userInfo[@"patientStageChangedFlag"] boolValue]) {
+        [self handleNavigationStageChanged:patient.stage];
+        // update the stage of care control
+        WMNavigationStage *navigationStage = self.patient.stage;
+        WMNavigationTrack *navigationTrack = navigationStage.track;
+        NSInteger index = [[WMNavigationStage sortedStagesForTrack:navigationTrack] indexOfObject:navigationStage];
+        self.stageSegmentedControl.selectedSegmentIndex = index;
+    }
+    // do the rest
     [self handlePatientRefreshedFromCloud:[patient objectID]];
 }
 
@@ -1519,11 +1520,18 @@
     typedef void (^WMRequestVideoPermissionCallback)(BOOL granted);
 
     WMRequestVideoPermissionCallback grantedHandler = ^(BOOL granted) {
-        if (granted) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (granted) {
                 grantedBlock();
-            });
-        }
+            } else {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Permission"
+                                                                    message:@"If you want WoundMap to take photos, you must edit the privacy setting for WoundMapUS in the Settings."
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Dismiss"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            }
+        });
     };
     
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];

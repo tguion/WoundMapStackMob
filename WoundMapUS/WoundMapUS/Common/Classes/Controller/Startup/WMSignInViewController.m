@@ -126,7 +126,6 @@
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __weak __typeof(&*self)weakSelf = self;
     [ff loginWithUserName:self.userNameTextInput andPassword:self.passwordTextInput onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-        WM_ASSERT_MAIN_THREAD;
         if (error) {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Failed to Sign in"
                                                                 message:[error localizedDescription]
@@ -138,6 +137,8 @@
         } else {
             FFUser *user = (FFUser *)object;
             [weakSelf.appDelegate saveUserCredentialsInKeychain:_userNameTextInput password:_passwordTextInput];
+            // register for remote notifications
+            [weakSelf.appDelegate registerDeviceToken];
             // fetch participant
             __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
                                                                                 create:NO
@@ -170,6 +171,22 @@
                             WMTeamPolicy *teamPolicy = team.teamPolicy;
                             if (teamPolicy.deletePhotoBlobsValue) {
                                 [ffm deleteExpiredPhotos:teamPolicy];
+                            }
+                            // FIXME: have seen some participant's team relationship drop
+                            for (WMParticipant *member in team.participants) {
+                                if (nil == member.team) {
+                                    // check if we haven't fetched
+                                    NSString *q = [member.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                                    q = [q stringByAppendingString:@"/team"];
+                                    [ff getObjFromUri:q error:&localError];
+                                    if (localError) {
+                                        [WMUtilities logError:error];
+                                    }
+                                    if (nil == member.team) {
+                                        member.team = team;
+                                        [ff updateObj:member error:&localError];
+                                    }
+                                }
                             }
                         }
                         [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];

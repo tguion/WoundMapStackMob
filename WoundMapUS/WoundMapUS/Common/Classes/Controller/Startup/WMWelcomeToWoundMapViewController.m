@@ -434,8 +434,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         if (0 == counter || --counter == 0) {
             [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
         }
     };
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Acquiring Team Information";
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2", [WMTeamInvitation entityName]] onComplete:onComplete];
 }
 

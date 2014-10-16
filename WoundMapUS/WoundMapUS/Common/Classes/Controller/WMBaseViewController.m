@@ -636,8 +636,9 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                                                                       queue:[NSOperationQueue mainQueue]
                                                                  usingBlock:^(NSNotification *notification) {
                                                                      NSDictionary *map = notification.object;
-                                                                     DLog(@"%@ updating from cloud:%@", weakSelf, map);
-                                                                     [weakSelf handleContentUpdatedFromCloud:map];
+                                                                     NSDictionary *userInfo = notification.userInfo;
+                                                                     DLog(@"%@ updating from cloud:%@, userInfo:%@", weakSelf, map, userInfo);
+                                                                     [weakSelf handleContentUpdatedFromCloud:map userInfo:userInfo];
                                                                  }];
         [self.persistantObservers addObject:observer];
     }
@@ -740,7 +741,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     [self.tableView reloadData];
 }
 
-- (void)handleContentUpdatedFromCloud:(NSDictionary *)map
+- (void)handleContentUpdatedFromCloud:(NSDictionary *)map userInfo:(NSDictionary *)userInfo
 {
     [self.tableView reloadData];
 }

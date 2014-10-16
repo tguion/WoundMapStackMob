@@ -325,6 +325,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [weakSelf updateNavigationState];
             [weakSelf.tableView reloadData];
             [weakSelf.appDelegate saveUserCredentialsInKeychain:_userNameTextInput password:_passwordTextInput];
+            // register for remote notifications
+            [weakSelf.appDelegate registerDeviceToken];
             // update participant
             participant.user = ffUser;
             participant.guid = ffUser.guid;
