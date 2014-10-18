@@ -295,13 +295,14 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    // TODO do not go to sign in if in middle of IAP
-    if (nil == self.window.rootViewController) {
-        [self initializeInterface];
-    }
-    // upload any photos
     WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-    [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
+    if (!photoManager.photoUploadInProgress) {
+        // TODO do not go to sign in if in middle of IAP
+        if (nil == self.window.rootViewController) {
+            [self initializeInterface];
+        }
+        [photoManager performSelector:@selector(uploadWoundPhotoBlobsFromObjectIds) withObject:nil afterDelay:1.0];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -1758,7 +1758,7 @@
                     UIView *view = self.view;
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:NO];
                     hud.labelText = @"Photo uploading";
-                    hud.detailsLabelText = @"Please wait...";
+                    hud.detailsLabelText = @"You will be signed out when completed.";
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                         while (!photoManager.hasCompletedPhotoUploads) {
                             // wait until the blobs have uploaded

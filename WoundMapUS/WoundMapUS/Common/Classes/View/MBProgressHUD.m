@@ -116,6 +116,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
     UIView *view = viewController.view;
     MBProgressHUD *hud = [MBProgressHUD HUDForView:view];
     if (hud) {
+        [hud show:animated];
         return hud;
     }
     // else

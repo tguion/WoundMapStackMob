@@ -563,6 +563,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                             localParticipant.teamInvitation = nil;
                             [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                             [managedObjectContext MR_saveToPersistentStoreAndWait];
+                            // TODO: post notification that invitation has been deleted
+
                         }
                         completionHandler(error);
                     }];

@@ -322,12 +322,14 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             [alertView show];
         } else {
             // present controller to enter pin code, and thus accept the team invitation
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
-            [self presentViewController:navigationController
-                               animated:YES
-                             completion:^{
-                                 // nothing
-                             }];
+            [self.navigationController pushViewController:self.iapJoinTeamViewController animated:YES];
+//            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.iapJoinTeamViewController];
+//            navigationController.modalPresentationStyle = UIModalPresentationCurrentContext; // FIXME: causes view to disappear on iPad
+//            [self presentViewController:navigationController
+//                               animated:YES
+//                             completion:^{
+//                                 // nothing
+//                             }];
         }
     } else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Invitation"
@@ -1292,18 +1294,23 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 - (void)iapJoinTeamViewControllerDidPurchase:(WMIAPJoinTeamViewController *)viewController
 {
     _welcomeState = WMWelcomeStateInvitationAccepted;
-    __weak __typeof(&*self)weakSelf = self;
-    [self dismissViewControllerAnimated:YES completion:^{
-        // update table view
-        [weakSelf.tableView reloadData];
-    }];
+    [self.navigationController popViewControllerAnimated:YES];
+    [self.tableView reloadData];
+//    __weak __typeof(&*self)weakSelf = self;
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        // update table view
+//        [weakSelf.tableView reloadData];
+//    }];
 }
 
 - (void)iapJoinTeamViewControllerDidDecline:(WMIAPJoinTeamViewController *)viewController
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        // nothing
-    }];
+    [self.navigationController popViewControllerAnimated:YES];
+//    __weak __typeof(&*self)weakSelf = self;
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        // update table view
+//        [weakSelf.tableView reloadData];
+//    }];
 }
 
 #pragma mark - CreateTeamViewControllerDelegate

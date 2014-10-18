@@ -39,6 +39,7 @@
       completionHandler:(WMObjectCallback)completionHandler;
 
 @property (readonly, nonatomic) BOOL hasPhotosToUpload;
+@property (nonatomic) BOOL photoUploadInProgress;                                   // woundPhotos are uploading
 @property (readonly, nonatomic) BOOL hasCompletedPhotoUploads;
 - (void)uploadPhotoBlobs;
 - (void)persistWoundPhotoObjectIds;

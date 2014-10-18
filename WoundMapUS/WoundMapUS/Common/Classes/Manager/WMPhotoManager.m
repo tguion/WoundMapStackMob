@@ -26,7 +26,6 @@
 @interface WMPhotoManager()
 
 @property UIBackgroundTaskIdentifier bgTask;
-@property (nonatomic) BOOL photoUploadInProgress;                                   // woundPhotos are uploading
 @property (strong, nonatomic) NSMutableSet *woundPhotoObjectIdsToUpload;            // woundPhoto objectIds to upload images to back end
 @property (nonatomic) NSInteger photosUploadingCount;                               // number of photos remaining to be uploaded
 
