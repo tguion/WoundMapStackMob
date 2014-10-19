@@ -209,7 +209,7 @@
         return (WMWoundPhoto *)[[self managedObjectContext] objectWithID:[woundPhotoIDs objectAtIndex:(index - 1)]];
     }
     // else
-    return (WMWoundPhoto *)[[self managedObjectContext] objectWithID:[woundPhotoIDs lastObject]];
+    return nil;
 }
 
 - (BOOL)hasPreviousWoundPhoto:(WMWoundPhoto *)woundPhoto
