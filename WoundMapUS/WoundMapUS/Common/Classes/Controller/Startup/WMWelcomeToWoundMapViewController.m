@@ -445,24 +445,20 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
 
 - (void)handleTeamMemberAdded:(NSString *)teamGUID
 {
-    // do not alert when the team leader is added
-    if (self.participant.isTeamLeader) {
-        return;
-    }
-    // else update the participant
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    __weak __typeof(&*self)weakSelf = self;
-    WMErrorCallback errorCallback = ^(NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
+    [super handleTeamMemberAdded:teamGUID];
+    _welcomeState = WMWelcomeStateTeamSelected;
+    [self.tableView reloadData];
+}
+
+- (void)handleBackendDeletedObjectIds:(NSArray *)objectIDs
+{
+    for (NSManagedObjectID *objectID in objectIDs) {
+        if ([[[objectID entity] name] isEqualToString:[WMTeamInvitation entityName]]) {
+            _teamInvitation = nil;
+            [self.tableView reloadData];
+            break;
         }
-        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-        _welcomeState = WMWelcomeStateTeamSelected;
-        [weakSelf.tableView reloadData];
-    };
-    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Acquiring Team";
-    [ffm updateParticipant:self.participant completionHandler:errorCallback];
+    }
 }
 
 #pragma mark - Actions

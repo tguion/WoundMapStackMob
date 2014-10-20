@@ -559,12 +559,12 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                         }
                         // may have been deleted on back end
                         if (response.statusCode == 404) {
+                            // post notification that invitation has been deleted
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:@[[teamInvitation objectID]]];
                             // it was deleted
                             localParticipant.teamInvitation = nil;
                             [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                             [managedObjectContext MR_saveToPersistentStoreAndWait];
-                            // TODO: post notification that invitation has been deleted
-
                         }
                         completionHandler(error);
                     }];

@@ -504,7 +504,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
             [WMUtilities logError:error];
         }
         ffm.postSynchronizationEvents = YES;
-        [self.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
         [weakSelf.delegate patientDetailViewControllerDidUpdatePatient:weakSelf];
     };

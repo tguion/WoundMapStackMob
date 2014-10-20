@@ -395,10 +395,13 @@
     CGRect frameLeft = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
     placeHolderView = self.rightDataView;
     CGRect frameRight = [self.rootView convertRect:placeHolderView.frame fromView:placeHolderView.superview];
-    [self drawAttributedStringForDataSource:[WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO]
-                                   rectLeft:frameLeft
-                                 rectMiddle:CGRectZero
-                                  rectRight:frameRight];
+    WMWoundMeasurementGroup *woundMeasurementGroup = [WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO];
+    if (woundMeasurementGroup) {
+        [self drawAttributedStringForDataSource:[WMWoundMeasurementGroup woundMeasurementGroupForWoundPhoto:woundPhoto create:NO]
+                                       rectLeft:frameLeft
+                                     rectMiddle:CGRectZero
+                                      rectRight:frameRight];
+    }
     // draw the page header
     [self drawPageHeader:pageNumber];
     // draw footer before we go to new page

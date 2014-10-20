@@ -261,7 +261,8 @@ NSInteger kXPlotOffset = 0;
     x.orthogonalCoordinateDecimal = CPTDecimalFromFloat(self.yMinimum);// CPTDecimalFromFloat(self.yMinimumValue);//CPTDecimalFromFloat(self.yMinimumValue * 0.9f);
     // build the labels and locations CPTAxis.-(CGPoint)viewPointForCoordinateDecimalNumber:(NSDecimal)coordinateDecimalNumber; maybe to determine which labels to skip
     CGFloat width = CGRectGetWidth(self.hostingView.bounds);
-    CGFloat labelWidth = [@"00/00/00" sizeWithAttributes:self.boldSmallAttributes].width;
+    NSDictionary *boldSmallAttributes = self.boldSmallAttributes;
+    CGFloat labelWidth = [@"00/00/00" sizeWithAttributes:boldSmallAttributes].width;
     NSInteger maximumLabelCount = width/labelWidth - 2;
     NSArray *dateStrings = self.dateStrings;
 	CGFloat dateCount = [dateStrings count];
@@ -872,16 +873,14 @@ NSInteger kXPlotOffset = 0;
 {
     static NSArray *KeyColors = nil;
     if (nil == KeyColors) {
-        KeyColors = [[NSArray alloc] initWithObjects:
-                     [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor], [CPTColor cyanColor],
+        KeyColors = @[[CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor], [CPTColor cyanColor],
                      [CPTColor yellowColor], [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor],
                      [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor], [CPTColor cyanColor],
                      [CPTColor yellowColor], [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor],
                      [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor], [CPTColor cyanColor],
                      [CPTColor yellowColor], [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor],
                      [CPTColor redColor], [CPTColor greenColor], [CPTColor blueColor], [CPTColor cyanColor],
-                     [CPTColor yellowColor], [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor],
-                     nil];
+                     [CPTColor yellowColor], [CPTColor orangeColor], [CPTColor purpleColor], [CPTColor brownColor]];
     }
     return KeyColors;
 }
@@ -890,14 +889,12 @@ NSInteger kXPlotOffset = 0;
 {
     static NSArray *KeySymbols = nil;
     if (nil == KeySymbols) {
-        KeySymbols = [NSArray arrayWithObjects:
-                      [CPTPlotSymbol crossPlotSymbol], [CPTPlotSymbol ellipsePlotSymbol], [CPTPlotSymbol rectanglePlotSymbol], [CPTPlotSymbol plusPlotSymbol],
+        KeySymbols = @[[CPTPlotSymbol crossPlotSymbol], [CPTPlotSymbol ellipsePlotSymbol], [CPTPlotSymbol rectanglePlotSymbol], [CPTPlotSymbol plusPlotSymbol],
                       [CPTPlotSymbol starPlotSymbol], [CPTPlotSymbol diamondPlotSymbol], [CPTPlotSymbol trianglePlotSymbol], [CPTPlotSymbol trianglePlotSymbol],
                       [CPTPlotSymbol pentagonPlotSymbol], [CPTPlotSymbol hexagonPlotSymbol], [CPTPlotSymbol dashPlotSymbol], [CPTPlotSymbol snowPlotSymbol],
                       [CPTPlotSymbol crossPlotSymbol], [CPTPlotSymbol ellipsePlotSymbol], [CPTPlotSymbol rectanglePlotSymbol], [CPTPlotSymbol plusPlotSymbol],
                       [CPTPlotSymbol starPlotSymbol], [CPTPlotSymbol diamondPlotSymbol], [CPTPlotSymbol trianglePlotSymbol], [CPTPlotSymbol trianglePlotSymbol],
-                      [CPTPlotSymbol pentagonPlotSymbol], [CPTPlotSymbol hexagonPlotSymbol], [CPTPlotSymbol dashPlotSymbol], [CPTPlotSymbol snowPlotSymbol],
-                      nil];
+                      [CPTPlotSymbol pentagonPlotSymbol], [CPTPlotSymbol hexagonPlotSymbol], [CPTPlotSymbol dashPlotSymbol], [CPTPlotSymbol snowPlotSymbol]];
     }
     return KeySymbols;
 }
@@ -1085,13 +1082,12 @@ NSInteger kXPlotOffset = 0;
 - (CGFloat)drawPatientHeaderInRect:(CGRect)rect
 {
     // size headings
-    NSArray *headings = [NSArray arrayWithObjects:
-                         @"Patient:",
+    NSArray *headings = @[@"Patient:",
                          @"DOB:",
                          @"Identifier:",
                          @"Initiated:",
                          @"Wounds/Photos:",
-                         @"Braden Scale:", nil];
+                         @"Braden Scale:"];
     WMBradenScale *bradenScale = [WMBradenScale latestBradenScale:self.patient create:NO];
     NSString *bradenScaleValue = @"Missing";
     if (nil != bradenScale) {
@@ -1111,8 +1107,9 @@ NSInteger kXPlotOffset = 0;
     CGFloat y = CGRectGetMinY(aFrame);
     CGFloat valueX = 0.0;
     CGSize aSize = CGSizeZero;
+    NSDictionary *boldSmallAttributes = self.boldSmallAttributes;
     for (NSString *string in headings) {
-        aSize = [string sizeWithAttributes:self.boldSmallAttributes];
+        aSize = [string sizeWithAttributes:boldSmallAttributes];
         CGFloat xx = (x + aSize.width);
         if (xx > valueX) {
             valueX = xx;
@@ -1122,9 +1119,9 @@ NSInteger kXPlotOffset = 0;
     valueX = ceilf(valueX);
     CGFloat valueWidth = CGRectGetMaxX(aFrame) - valueX;
     NSInteger index = 0;
-    for (NSString *heading in headings) {
-        aSize = [heading sizeWithAttributes:self.boldSmallAttributes];
-        [heading drawAtPoint:CGPointMake(x, y) withAttributes:self.boldSmallAttributes];
+    for (NSString *string in headings) {
+        aSize = [string sizeWithAttributes:boldSmallAttributes];
+        [string drawAtPoint:CGPointMake(x, y) withAttributes:boldSmallAttributes];
         NSString *value = [values objectAtIndex:index++];
         if ([value isKindOfClass:[NSNull class]]) {
             y += aSize.height;
@@ -1172,20 +1169,18 @@ NSInteger kXPlotOffset = 0;
     CGFloat x = CGRectGetMinX(aFrame);
     CGFloat y = CGRectGetMinY(aFrame);
     // size headings
-    NSArray *headings = [NSArray arrayWithObjects:
-                         @"Patient:",
+    NSArray *headings = @[@"Patient:",
                          @"Wound:",
                          @"Type:",
-                         @"Location:", nil];
+                         @"Location:"];
     NSString *identifierEMR = [[[_patient valueForKeyPath:@"ids.extension"] allObjects] componentsJoinedByString:@","];
-    NSArray *values = [NSArray arrayWithObjects:
-                       [NSString stringWithFormat:@"%@, DOB: %@, ID: %@",
+    NSArray *values = @[[NSString stringWithFormat:@"%@, DOB: %@, ID: %@",
                         self.patient.lastNameFirstName,
                         nil == self.patient.dateOfBirth ? @" ":[NSDateFormatter localizedStringFromDate:self.patient.dateOfBirth dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle],
                         nil == identifierEMR ? @" ":identifierEMR],
                        wound.shortName,
                        (nil == wound.woundType ? @"Unspecified":[wound.woundTypeForDisplay componentsJoinedByString:@", "]),
-                       (nil == wound.locationValue ? @"Unspecified":wound.woundLocationAndPositionForDisplay),  nil];
+                       (nil == wound.locationValue ? @"Unspecified":wound.woundLocationAndPositionForDisplay)];
     CGFloat valueX = 0.0;
     CGSize aSize= CGSizeZero;
     for (NSString *string in headings) {
@@ -1228,17 +1223,16 @@ NSInteger kXPlotOffset = 0;
     CGFloat actualY = minY;
     CGFloat height = CGRectGetHeight(aFrame);
     // size headings
-    NSArray *headings = [NSArray arrayWithObjects:
-                         @"Wound:",
+    NSArray *headings = @[@"Wound:",
                          @"Type:",
-                         @"Location:", nil];
-    NSArray *values = [NSArray arrayWithObjects:
-                       wound.shortName,
+                         @"Location:"];
+    NSArray *values = @[wound.shortName,
                        (nil == wound.woundType ? @"Unspecified":[wound.woundTypeForDisplay componentsJoinedByString:@", "]),
-                       (nil == wound.locationValue ? @"Unspecified":wound.woundLocationAndPositionForDisplay),  nil];
+                       (nil == wound.locationValue ? @"Unspecified":wound.woundLocationAndPositionForDisplay)];
     CGFloat valueX = 0.0;
+    NSDictionary *boldSmallAttributes = self.boldSmallAttributes;
     for (NSString *string in headings) {
-        CGSize aSize = [string sizeWithAttributes:self.boldSmallAttributes];
+        CGSize aSize = [string sizeWithAttributes:boldSmallAttributes];
         valueX = MAX(valueX, minX + aSize.width);
     }
     valueX += 8.0;
@@ -1247,7 +1241,7 @@ NSInteger kXPlotOffset = 0;
     NSInteger i = 0;
     for (NSString *heading in headings) {
         if (draw) {
-            [heading drawAtPoint:CGPointMake(minX, minY) withAttributes:self.boldSmallAttributes];
+            [heading drawAtPoint:CGPointMake(minX, minY) withAttributes:boldSmallAttributes];
         }
         NSString *value = [values objectAtIndex:i++];
         CGRect boundingRect = [value boundingRectWithSize:aFrame.size
