@@ -9,6 +9,7 @@
 #import "WCAppDelegate.h"
 #import "WMWelcomeToWoundMapViewController.h"
 #import "WMWelcomeToWoundMapViewController_iPad.h"
+#import "MBProgressHUD.h"
 #import "WMUserDefaultsManager.h"
 #import "WMNavigationCoordinator.h"
 #import "WMNavigationCoordinator_iPad.h"
@@ -369,7 +370,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
     self.remoteNotification = userInfo;
     // user already saw the alert and started up the app that way. don't show it to them again.
-    if (([application respondsToSelector:@selector(applicationState)]) && ([application applicationState] == UIApplicationStateInactive)) {
+    if ([application applicationState] == UIApplicationStateInactive) {
         [self processRemoteNotification];
         return;
     }
@@ -597,13 +598,47 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     NSString *patientGuid = self.remoteNotification[@"patientGuid"];        // WMPatient guid
     NSString *invitationGuid = self.remoteNotification[@"invitationGuid"];  // WMTeamInvitation guid
     NSString *teamGuid = self.remoteNotification[@"teamGuid"];              // WMTeam guid
+    
+    WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
+    if (!ff.loggedIn) {
+        [self authenticateWithKeychain];
+    }
+    
+    WMParticipant *participant = self.participant;
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    UIViewController *viewController = self.window.rootViewController;
+    BOOL isViewLoaded = viewController.isViewLoaded;
+    UIView *view = viewController.view;
+    
     if (patientGuid) {
         [center postNotificationName:kPatientReferralNotification object:patientGuid];
     } else if (invitationGuid) {
         [center postNotificationName:kTeamInvitationNotification object:invitationGuid];
     } else if (teamGuid) {
-        [center postNotificationName:kTeamMemberAddedNotification object:teamGuid];
+        // get data now
+        if (ff.loggedIn && participant) {
+            // do not alert when the team leader is added
+            if (participant.isTeamLeader) {
+                return;
+            }
+            // else update the participant
+            WMErrorCallback errorCallback = ^(NSError *error) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                if (isViewLoaded) {
+                    [MBProgressHUD hideAllHUDsForView:view animated:NO];
+                    [center postNotificationName:kTeamMemberAddedNotification object:teamGuid];
+                }
+            };
+            if (isViewLoaded) {
+                [MBProgressHUD showHUDAddedToViewController:viewController animated:YES].labelText = @"Acquiring Team";
+            }
+            [ffm updateParticipant:participant completionHandler:errorCallback];
+        }
     }
 }
 

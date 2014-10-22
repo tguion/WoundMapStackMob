@@ -753,24 +753,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)handleTeamMemberAdded:(NSString *)teamGUID
 {
-    WMParticipant *participant = self.appDelegate.participant;
-    // do not alert when the team leader is added
-    if (participant.isTeamLeader) {
-        return;
-    }
-    // else update the participant
-    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-    __weak __typeof(&*self)weakSelf = self;
-    WMErrorCallback errorCallback = ^(NSError *error) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
-        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
-        [weakSelf.tableView reloadData];
-    };
-    [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Acquiring Team";
-    [ffm updateParticipant:participant completionHandler:errorCallback];
+    [self.tableView reloadData];
 }
 
 - (void)handlePatientReferralUpdated:(NSString *)patientGUID

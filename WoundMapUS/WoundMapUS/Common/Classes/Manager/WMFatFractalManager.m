@@ -522,7 +522,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                             // move any patients track to team track
                             [weakSelf movePatientsForParticipant:localParticipant toTeam:team completionHandler:^(NSError *error) {
                                 if (teamInvitation && ![team.invitations containsObject:teamInvitation]) {
-                                    // may have been deleted on back end
+                                    // may have been deleted on back end -- TODO post notification of delete
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:@[[teamInvitation objectID]]];
                                     localParticipant.teamInvitation = nil;
                                     [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                                     [managedObjectContext MR_saveToPersistentStoreAndWait];
@@ -1134,6 +1135,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                                if (error) {
                                    [WMUtilities logError:error];
                                }
+                               [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:@[[teamInvitation objectID]]];
                                [managedObjectContext MR_deleteObjects:@[teamInvitation]];
                                // do not move patients to team here - new team member will do on next sign in
                                completionHandler(error);
