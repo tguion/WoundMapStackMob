@@ -313,10 +313,15 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)handleTeamInvitationUpdated:(NSString *)teamInvitationGUID
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    [MBProgressHUD showHUDAddedToViewController:self animated:YES];
+    __weak __typeof(&*self)weakSelf = self;
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
+        [weakSelf.managedObjectContext MR_saveToPersistentStoreAndWait];
+        [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:YES];
+        [weakSelf.tableView reloadData];
     };
     [ff getArrayFromUri:[NSString stringWithFormat:@"/%@?depthRef=2&depthGb=2", [WMTeam entityName]] onComplete:onComplete];
 }

@@ -66,7 +66,7 @@
         if ([_userNameTextInput length]) {
             _makePasswordFieldFirstResponder = YES;
         }
-        _passwordTextInput = @"WoundMap00"; // DEBUG
+//        _passwordTextInput = @"WoundMap00"; // DEBUG
     }
     WMSeedDatabaseManager *seedDatabaseManager = [WMSeedDatabaseManager sharedInstance];
     [seedDatabaseManager seedLocalData:self.managedObjectContext];
@@ -222,7 +222,9 @@
                 }
                 // upload any woundPhoto blobs that were not uploaded
                 WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
-                [photoManager uploadWoundPhotoBlobsFromObjectIds];
+                if (!photoManager.photoUploadInProgress) {
+                    [photoManager uploadWoundPhotoBlobsFromObjectIds];
+                }
             };
             if (nil == participant) {
                 // must be on back end

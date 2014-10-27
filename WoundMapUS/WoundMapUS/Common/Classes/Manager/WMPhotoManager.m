@@ -385,21 +385,28 @@
     if (!self)
         return nil;
     
+    self.bgTask = UIBackgroundTaskInvalid;
+    
     __weak __typeof(&*self)weakSelf = self;
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
                                                       object:nil
                                                        queue:[NSOperationQueue mainQueue]
                                                   usingBlock:^(NSNotification *notification) {
-                                                      [weakSelf persistWoundPhotoObjectIds];
-                                                      [weakSelf beginUploadPhotoBackgroundTask];
+                                                      WMFatFractal *ff = [WMFatFractal sharedInstance];
+                                                      if (ff.loggedIn && weakSelf.bgTask == UIBackgroundTaskInvalid) {
+                                                          [weakSelf persistWoundPhotoObjectIds];
+                                                          [weakSelf beginUploadPhotoBackgroundTask];
+                                                      }
                                                   }];
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification
                                                       object:nil
                                                        queue:[NSOperationQueue mainQueue]
                                                   usingBlock:^(NSNotification *notification) {
-                                                      UIApplication *application = [UIApplication sharedApplication];
-                                                      [application endBackgroundTask:_bgTask];
-                                                      _bgTask = UIBackgroundTaskInvalid;
+                                                      if (weakSelf.bgTask != UIBackgroundTaskInvalid) {
+                                                          UIApplication *application = [UIApplication sharedApplication];
+                                                          [application endBackgroundTask:_bgTask];
+                                                          weakSelf.bgTask = UIBackgroundTaskInvalid;
+                                                      }
                                                   }];
     
     return self;
@@ -422,8 +429,10 @@
             // wait until the blobs have uploaded
             [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
         }
-        [application endBackgroundTask:_bgTask];
-        _bgTask = UIBackgroundTaskInvalid;
+        if (weakSelf.bgTask != UIBackgroundTaskInvalid) {
+            [application endBackgroundTask:_bgTask];
+            _bgTask = UIBackgroundTaskInvalid;
+        }
     });
 
 }
