@@ -1025,6 +1025,8 @@
     // inform compass that patient has updated
     [self.compassView updateForPatient:self.patient];
     [self.compassView hidePatientRefreshing];
+    // rotate compass
+    [self rotateCompassToRecommendedTask];
 }
 
 - (void)handleContentUpdatedFromCloud:(NSDictionary *)map userInfo:(NSDictionary *)userInfo
@@ -1754,6 +1756,9 @@
                 };
                 // wait for photos to complete upload
                 WMPhotoManager *photoManager = [WMPhotoManager sharedInstance];
+                if (photoManager.hasPhotosToUpload) {
+                    [photoManager beginUploadPhotoBackgroundTask];
+                }
                 if (!photoManager.hasCompletedPhotoUploads) {
                     UIView *view = self.view;
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:NO];

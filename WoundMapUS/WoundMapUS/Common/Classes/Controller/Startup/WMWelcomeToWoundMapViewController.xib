@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WMWelcomeToWoundMapViewController">
@@ -91,10 +91,10 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="EoF-Be-SrG" secondAttribute="bottom" constant="20" id="DK7-26-y4l"/>
                 <constraint firstItem="EoF-Be-SrG" firstAttribute="top" secondItem="Oj0-Xy-8fE" secondAttribute="bottom" constant="8" symbolic="YES" id="F3I-Yc-XWo"/>
+                <constraint firstAttribute="centerX" secondItem="EoF-Be-SrG" secondAttribute="centerX" id="ISI-ID-pWe"/>
                 <constraint firstItem="Oj0-Xy-8fE" firstAttribute="top" secondItem="qUA-2o-JBm" secondAttribute="top" constant="20" symbolic="YES" id="LIm-wW-nwA"/>
                 <constraint firstAttribute="trailing" secondItem="Oj0-Xy-8fE" secondAttribute="trailing" constant="20" symbolic="YES" id="aVa-SR-Zyz"/>
                 <constraint firstItem="Oj0-Xy-8fE" firstAttribute="leading" secondItem="qUA-2o-JBm" secondAttribute="leading" constant="20" symbolic="YES" id="ewY-HA-lFP"/>
-                <constraint firstItem="EoF-Be-SrG" firstAttribute="leading" secondItem="qUA-2o-JBm" secondAttribute="leading" constant="20" symbolic="YES" id="jXd-jo-NR5"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
         </view>

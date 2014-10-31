@@ -332,7 +332,7 @@
 
 - (NSArray *)sortedWoundTreatments
 {
-    return [self sortedWoundMeasurementsAscending:YES];
+    return [self sortedWoundTreatmentsAscending:YES];
 }
 
 - (NSArray *)sortedWoundTreatmentsAscending:(BOOL)ascending

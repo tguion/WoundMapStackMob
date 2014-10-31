@@ -616,9 +616,15 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 
 - (void)fetchPatientsShallow:(NSManagedObjectContext *)managedObjectContext ff:(WMFatFractal *)ff completionHandler:(WMErrorCallback)completionHandler
 {
+    NSMutableSet *patientReferrals = [NSMutableSet setWithArray:[WMPatientReferral MR_findAllInContext:managedObjectContext]];
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
+        }
+        if ([object isKindOfClass:[NSArray class]]) {
+            NSSet *patientReferralsInCloud = [NSSet setWithArray:object];
+            [patientReferrals minusSet:patientReferralsInCloud];
+            [managedObjectContext MR_deleteObjects:patientReferrals];
         }
         completionHandler(nil);
     };
