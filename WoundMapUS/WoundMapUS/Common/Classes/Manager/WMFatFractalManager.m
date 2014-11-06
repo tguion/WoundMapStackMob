@@ -69,6 +69,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 @property (strong, nonatomic) NSArray *objectGuids;
 @property (strong, nonatomic) NSArray *actions;
 @property (strong, nonatomic) NSArray *userGuids;
+@property (strong, nonatomic) NSString *deviceId;
 
 - (instancetype)initWithPatientGuid:(NSString *)patientGuid
                           woundGuid:(NSString *)woundGuid
@@ -76,7 +77,8 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                         collections:(NSArray *)collections
                         objectGuids:(NSArray *)objectGuids
                             actions:(NSArray *)actions
-                          userGuids:(NSArray *)userGuids;
+                          userGuids:(NSArray *)userGuids
+                           deviceId:(NSString *)deviceId;
 
 @end
 
@@ -89,6 +91,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                         objectGuids:(NSArray *)objectGuids
                             actions:(NSArray *)actions
                           userGuids:(NSArray *)userGuids
+                           deviceId:(NSString *)deviceId
 {
     self = [super init];
     if (!self)
@@ -101,6 +104,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
     _objectGuids = objectGuids;
     _actions = actions;
     _userGuids = userGuids;
+    _deviceId = deviceId;
     
     return self;
 }
@@ -112,7 +116,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 @property (readonly, nonatomic) WCAppDelegate *appDelegate;
 
 @property (nonatomic) NSMutableDictionary *lastRefreshTimeMap;      // map of objectID or collection to refresh times
-@property (strong, nonatomic) NSMutableArray *teamUsers;            // team users
+@property (strong, nonatomic) NSArray *teamUsers;                   // team users
 
 @end
 
@@ -203,13 +207,11 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
     }
     if (nil == _teamUsers) {
         NSError *error = nil;
-        _teamUsers = [[team.participantGroup getUsersWithError:&error] mutableCopy];
+        _teamUsers = [team.participantGroup getUsersWithError:&error];
         if (error) {
             [WMUtilities logError:error];
             return;
         }
-        // else
-        [_teamUsers removeObject:participant.user];
         // else just guids
         _teamUsers = [_teamUsers valueForKeyPath:@"guid"];
     }
@@ -226,13 +228,15 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
     NSString *woundGuid = [[navigationCoordinator.wound.ffUrl componentsSeparatedByString:@"/"] lastObject];
     NSString *woundPhotoGuid = [[navigationCoordinator.woundPhoto.ffUrl componentsSeparatedByString:@"/"] lastObject];
     
+    NSString *deviceId = [[IAPManager sharedInstance] getIAPDeviceGuid];
     WMSilentUpdateData *silentUpdateData = [[WMSilentUpdateData alloc] initWithPatientGuid:patientGuid
                                                                                  woundGuid:woundGuid
                                                                             woundPhotoGuid:woundPhotoGuid
-                                                                                collections:nil
-                                                                                objectGuids:nil
-                                                                                    actions:nil
-                                                                                 userGuids:_teamUsers];
+                                                                               collections:nil
+                                                                               objectGuids:nil
+                                                                                   actions:nil
+                                                                                 userGuids:_teamUsers
+                                                                                  deviceId:deviceId];
 
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     

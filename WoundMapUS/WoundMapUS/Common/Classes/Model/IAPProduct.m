@@ -53,7 +53,11 @@ typedef enum {
     IAPProduct *iapProduct = nil;
     id object = [dictionary objectForKey:@"identifier"];
     if ([object isKindOfClass:[NSString class]]) {
-        iapProduct = [self productForIdentifier:object create:YES managedObjectContext:managedObjectContext];
+        NSString *identifier = (NSString *)object;
+        if (TERRITORY_SUFFIX) {
+            identifier = [identifier stringByAppendingString:TERRITORY_SUFFIX];
+        }
+        iapProduct = [self productForIdentifier:identifier create:YES managedObjectContext:managedObjectContext];
     }
     iapProduct.parent = parent;
     object = [dictionary objectForKey:@"title"];

@@ -90,8 +90,8 @@
 {
     // read the plist
     NSString *filename = @"Devices";
-    if (kSeedFileSuffix) {
-        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    if (TERRITORY_SUFFIX) {
+        filename = [filename stringByAppendingString:TERRITORY_SUFFIX];
     }
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];
 	if (nil == fileURL) {

@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:WoundMapAU/WoundMapAU.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:WoundMapUS/WoundMapUS.xcodeproj">
    </FileRef>
 </Workspace>

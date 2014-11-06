@@ -34,7 +34,6 @@ NSString * const kTeamInvitationNotification = @"TeamInvitationNotification";
 NSString * const kTeamMemberAddedNotification = @"TeamMemberAddedNotification";
 NSString * const kUpdatedContentFromCloudNotification = @"UpdatedContentFromCloudNotification";
 
-NSString * const kSeedFileSuffix = nil;//@"AU"; DEPLOYMENT
 NSInteger const kRemoteNotification = 4002;
 NSInteger const kSessionTimeoutAlertViewTag = 1000;
 
@@ -55,7 +54,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 
 @implementation WCAppDelegate
 
-#define debug 0     // DEBUG
+#define debug 1     // DEBUG
 
 - (KeychainItemWrapper *)keychainItem
 {
@@ -220,7 +219,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         // use registerUserNotificationSettings
         [application registerForRemoteNotifications];
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil]];
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
     } else {
         // use registerForRemoteNotifications
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -407,6 +406,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 // RPN
 - (void)downloadFFDataForCollection:(NSDictionary *)map fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
+    // bail if from same device
+    NSString *deviceId = [[IAPManager sharedInstance] getIAPDeviceGuid];
+    if ([deviceId isEqualToString:map[@"d"]]) {
+        return;
+    }
+    // else
     NSManagedObjectContext *managedObjectContext = [NSManagedObjectContext MR_contextForCurrentThread];
     // save the payload
     WMUnhandledSilentUpdateNotification *unhandledSilentUpdateNotification = [WMUnhandledSilentUpdateNotification MR_createInContext:managedObjectContext];

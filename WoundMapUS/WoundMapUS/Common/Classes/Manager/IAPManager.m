@@ -22,16 +22,16 @@
 #import "WCAppDelegate.h"
 #import "CoreDataHelper.h"
 
-NSString *const kSharePdfReport5Feature = @"com.mobilehealthware.woundmap.cad.print5.token";
-NSString *const kSharePdfReport10Feature = @"com.mobilehealthware.woundmap.cad.print10.token";
-NSString *const kSharePdfReport25Feature = @"com.mobilehealthware.woundmap.cad.print25.token";
+NSString *const kSharePdfReport5Feature = IAP_PDF5;
+NSString *const kSharePdfReport10Feature = IAP_PDF10;
+NSString *const kSharePdfReport25Feature = IAP_PDF25;
 
-NSString *const kPatientCredit5Feature = @"com.mobilehealthware.woundmap.patient.credit5.token";
-NSString *const kPatientCredit25Feature = @"com.mobilehealthware.woundmap.patient.credit25.token";
-NSString *const kPatientCredit100Feature = @"com.mobilehealthware.woundmap.patient.credit100.token";
+NSString *const kPatientCredit5Feature = IAP_PATIENT5;
+NSString *const kPatientCredit25Feature = IAP_PATIENT25;
+NSString *const kPatientCredit100Feature = IAP_PATIENT100;
 
-NSString *const kTeamMemberProductIdentifier = @"com.mobilehealthware.woundmap.team.teamMember";
-NSString *const kCreateConsultingGroupProductIdentifier = @"com.mobilehealthware.woundcare.woundmap.consultGroup.create";
+NSString *const kTeamMemberProductIdentifier = IAP_TEAM;
+NSString *const kCreateConsultingGroupProductIdentifier = IAP_CONSULT;
 
 NSString *const kIAPManagerProductPurchasedNotification = @"IAPHelperProductPurchasedNotification";
 NSString *const kIAPPurchaseError = @"IAPPurchaseError";

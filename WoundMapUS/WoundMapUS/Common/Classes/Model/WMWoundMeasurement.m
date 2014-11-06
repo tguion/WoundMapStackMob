@@ -217,8 +217,8 @@ NSMutableDictionary *MeasurementTitle2MinimumMaximumValues = nil;
 {
     // read the plist
     NSString *filename = @"WoundMeasurement";
-    if (kSeedFileSuffix) {
-        filename = [filename stringByAppendingString:kSeedFileSuffix];
+    if (TERRITORY_SUFFIX) {
+        filename = [filename stringByAppendingString:TERRITORY_SUFFIX];
     }
     // read the plist
 	NSURL *fileURL = [[NSBundle mainBundle] URLForResource:filename withExtension:@"plist"];

@@ -13,8 +13,6 @@
 
 #endif
 
-extern NSString * const kSeedFileSuffix;
-
 typedef void (^WMProcessCallback)(NSError *error, NSArray *objectIDs, NSString *collection);
 typedef void (^WMProcessCallbackWithCallback)(NSError *error, NSArray *objectIDs, NSString *collection, dispatch_block_t callBack);
 
