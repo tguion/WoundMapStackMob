@@ -1290,6 +1290,8 @@
 		<integer>110</integer>
 		<key>inputTypeCode</key>
 		<integer>5</integer>
+		<key>allowMultipleChildSelection</key>
+		<true/>
 		<key>measurements</key>
 		<array>
 			<dict>

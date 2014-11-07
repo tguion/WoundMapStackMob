@@ -139,10 +139,21 @@
             [weakSelf.appDelegate saveUserCredentialsInKeychain:_userNameTextInput password:_passwordTextInput];
             // register for remote notifications
             [weakSelf.appDelegate registerDeviceToken];
+            // remove cache
+            __block WMParticipant *participant = nil;
+            WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+            NSString *lastUserName = userDefaultsManager.lastUserName;
+            if (lastUserName && ![lastUserName isEqualToString:user.userName]) {
+                // participant on this device has changed
+                weakSelf.appDelegate.participant = nil;
+                [WMParticipant MR_truncateAllInContext:managedObjectContext];
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+            }
+            userDefaultsManager.lastUserName = user.userName;
             // fetch participant
-            __block WMParticipant *participant = [WMParticipant participantForUserName:user.userName
-                                                                                create:NO
-                                                                  managedObjectContext:managedObjectContext];
+            participant = [WMParticipant participantForUserName:user.userName
+                                                         create:NO
+                                           managedObjectContext:managedObjectContext];
             dispatch_block_t block = ^{
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 // update participant
@@ -151,7 +162,6 @@
                 if (localError) {
                     [WMUtilities logError:localError];
                 }
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 // handle team invitation confirmation
                 WMTeam *team = participant.team;
                 if (team) {
@@ -165,6 +175,7 @@
                                                                   otherButtonTitles:nil];
                         alertView.tag = kSubscriptionExpiredAlertViewTag;
                         [alertView show];
+                        [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                     } else {
                         // delete photos
                         if (participant.isTeamLeader) {
@@ -195,7 +206,7 @@
                     __block WMTeamInvitation *teamInvitation = participant.teamInvitation;
                     if (nil == teamInvitation) {
                         // look for team invitation
-                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], participant.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        [ff getArrayFromUri:[NSString stringWithFormat:@"/%@/(inviteeUserName eq '%@')", [WMTeamInvitation entityName], user.userName] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                             if (error) {
                                 [WMUtilities logError:error];
                             }

@@ -41,6 +41,10 @@
                                                                         inContext:managedObjectContext];
         for (WMMedicalHistoryValue *medicalHistoryValue in medicalHistoryValues) {
             key = medicalHistoryValue.medicalHistoryItem.title;
+            if (nil == key) {
+                NSAssert(false, @"item is nil for WMMedicalHistoryValue %@", medicalHistoryValue);
+                continue;
+            }
             switch (medicalHistoryValue.medicalHistoryItem.valueTypeCodeValue) {
                 case GroupValueTypeCodeNoImageInlineSwitch: {
                     value = [medicalHistoryValue.value boolValue] ? @"Yes":@"No";

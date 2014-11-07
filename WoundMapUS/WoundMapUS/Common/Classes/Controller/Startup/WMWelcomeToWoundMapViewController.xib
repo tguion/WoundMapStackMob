@@ -24,8 +24,11 @@
         <view clipsSubviews="YES" contentMode="scaleToFill" id="I3M-PC-M0i">
             <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d5d-pl-pHi">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d5d-pl-pHi">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="7Tp-wP-7kP"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Enter WoundMAP">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -34,8 +37,11 @@
                         <action selector="enterWoundMapAction:" destination="-1" eventType="touchUpInside" id="YmA-rQ-8tx"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzm-VL-tWV">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzm-VL-tWV">
                     <rect key="frame" x="0.0" y="44" width="320" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="ipp-6r-Gkf"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="View Instructions">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -54,9 +60,17 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="hzm-VL-tWV" firstAttribute="top" secondItem="d5d-pl-pHi" secondAttribute="bottom" id="55N-XR-PMx"/>
+                <constraint firstItem="hzm-VL-tWV" firstAttribute="leading" secondItem="I3M-PC-M0i" secondAttribute="leading" id="HxD-D1-spc"/>
+                <constraint firstAttribute="centerX" secondItem="d5d-pl-pHi" secondAttribute="centerX" id="JfH-SL-5iO"/>
                 <constraint firstAttribute="centerY" secondItem="3sT-Jn-C9X" secondAttribute="centerY" id="KG7-eh-f2V"/>
                 <constraint firstAttribute="trailing" secondItem="3sT-Jn-C9X" secondAttribute="trailing" id="SUb-50-haJ"/>
                 <constraint firstItem="3sT-Jn-C9X" firstAttribute="leading" secondItem="I3M-PC-M0i" secondAttribute="leading" id="VbK-Sz-dwS"/>
+                <constraint firstAttribute="trailing" secondItem="hzm-VL-tWV" secondAttribute="trailing" id="c7a-mL-ZW9"/>
+                <constraint firstItem="d5d-pl-pHi" firstAttribute="leading" secondItem="I3M-PC-M0i" secondAttribute="leading" id="ekh-qd-buU"/>
+                <constraint firstAttribute="trailing" secondItem="d5d-pl-pHi" secondAttribute="trailing" id="gOl-Ul-6Ue"/>
+                <constraint firstItem="d5d-pl-pHi" firstAttribute="top" secondItem="I3M-PC-M0i" secondAttribute="top" id="otR-js-Sm3"/>
+                <constraint firstAttribute="centerX" secondItem="hzm-VL-tWV" secondAttribute="centerX" id="xR0-zg-Stb"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

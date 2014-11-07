@@ -129,13 +129,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
         _person = [WMPerson MR_createInContext:self.managedObjectContext];
         _person.nameFamily = _lastNameTextInput;
         _person.nameGiven = _firstNameTextInput;
-        // create back end
-        WMFatFractal *ff = [WMFatFractal sharedInstance];
-        [ff createObj:_person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-        }];
     }
     return _person;
 }
@@ -277,11 +270,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
 {
     [self.view endEditing:YES];
     [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Building account";
-    [self performSelector:@selector(delayedCreateAccountAction) withObject:nil afterDelay:0.0];
-}
-
-- (IBAction)delayedCreateAccountAction
-{
     if (![self checkForMatchingPasswords]) {
         [MBProgressHUD hideHUDForView:self.view animated:NO];
         return;
@@ -322,8 +310,6 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
             [alertView show];
         } else {
             weakSelf.state = CreateAccountAccountCreated;
-            [weakSelf updateNavigationState];
-            [weakSelf.tableView reloadData];
             [weakSelf.appDelegate saveUserCredentialsInKeychain:_userNameTextInput password:_passwordTextInput];
             // register for remote notifications
             [weakSelf.appDelegate registerDeviceToken];
@@ -337,7 +323,24 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                 }
                 // save now, no longer able to cancel
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
+                [weakSelf updateNavigationState];
+                [weakSelf.tableView reloadData];
                 [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+            };
+            FFHttpMethodCompletion createPersonOnComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                // save now, no longer able to cancel
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                // attach the person to participant
+                participant.person = weakSelf.person;
+                [ff getArrayFromExtension:[NSString stringWithFormat:@"createPolicies?userGuid=%@", ffUser.guid] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                    if (error) {
+                        [WMUtilities logError:error];
+                    }
+                    [ff updateObj:participant onComplete:createPoliciesOnComplete onOffline:createPoliciesOnComplete];
+                }];
             };
             dispatch_block_t participantBlock = ^{
                 // create participant on back end
@@ -366,14 +369,8 @@ typedef NS_ENUM(NSInteger, WMCreateAccountState) {
                             [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
                         }];
                     }
-                    [ff getArrayFromExtension:[NSString stringWithFormat:@"createPolicies?userGuid=%@", ffUser.guid] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                        if (error) {
-                            [WMUtilities logError:error];
-                        }
-                        // attach the person to participant
-                        participant.person = weakSelf.person;
-                        [ff updateObj:participant onComplete:createPoliciesOnComplete onOffline:createPoliciesOnComplete];
-                    }];
+                    // create person and attach to participant
+                    [ff createObj:self.person atUri:[NSString stringWithFormat:@"/%@", [WMPerson entityName]] onComplete:createPersonOnComplete];
                 }];
             };
             [ffm truncateStoreForSignIn:participant completionHandler:participantBlock];

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6248" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
@@ -564,16 +564,16 @@
         </attribute>
         <attribute name="updatedAt" attributeType="Date" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatientConsultant" inverseName="consultant" inverseEntity="WMPatientConsultant" syncable="YES"/>
+        <relationship name="acquiredConsults" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientConsultant" inverseName="consultant" inverseEntity="WMPatientConsultant" syncable="YES"/>
         <relationship name="interventionEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMInterventionEvent" inverseName="participant" inverseEntity="WMInterventionEvent" syncable="YES"/>
-        <relationship name="organization" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMOrganization" inverseName="participants" inverseEntity="WMOrganization" syncable="YES"/>
+        <relationship name="organization" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMOrganization" inverseName="participants" inverseEntity="WMOrganization" syncable="YES"/>
         <relationship name="participantType" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipantType" inverseName="participants" inverseEntity="WMParticipantType" syncable="YES"/>
-        <relationship name="patients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WMPatient" inverseName="participant" inverseEntity="WMPatient" syncable="YES"/>
-        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMPerson" inverseName="participant" inverseEntity="WMPerson" syncable="YES"/>
+        <relationship name="patients" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatient" inverseName="participant" inverseEntity="WMPatient" syncable="YES"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMPerson" inverseName="participant" inverseEntity="WMPerson" syncable="YES"/>
         <relationship name="sourceReferrals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientReferral" inverseName="referrer" inverseEntity="WMPatientReferral" syncable="YES"/>
         <relationship name="targetReferrals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WMPatientReferral" inverseName="referree" inverseEntity="WMPatientReferral" syncable="YES"/>
-        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeam" inverseName="participants" inverseEntity="WMTeam" syncable="YES"/>
-        <relationship name="teamInvitation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMTeamInvitation" inverseName="invitee" inverseEntity="WMTeamInvitation" syncable="YES"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMTeam" inverseName="participants" inverseEntity="WMTeam" syncable="YES"/>
+        <relationship name="teamInvitation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="WMTeamInvitation" inverseName="invitee" inverseEntity="WMTeamInvitation" syncable="YES"/>
     </entity>
     <entity name="WMParticipantType" representedClassName="WMParticipantType" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -1289,7 +1289,7 @@
         <element name="WMNutritionItem" positionX="18" positionY="153" width="128" height="223"/>
         <element name="WMNutritionValue" positionX="27" positionY="162" width="128" height="163"/>
         <element name="WMOrganization" positionX="0" positionY="0" width="128" height="163"/>
-        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="433"/>
+        <element name="WMParticipant" positionX="0" positionY="0" width="128" height="435"/>
         <element name="WMParticipantType" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMPatient" positionX="0" positionY="0" width="128" height="523"/>
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="30"/>
@@ -1310,6 +1310,7 @@
         <element name="WMTeamPolicy" positionX="18" positionY="153" width="128" height="148"/>
         <element name="WMTelecom" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WMTelecomType" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="WMUnhandledSilentUpdateNotification" positionX="18" positionY="153" width="128" height="73"/>
         <element name="WMWound" positionX="0" positionY="0" width="128" height="300"/>
         <element name="WMWoundLocation" positionX="0" positionY="0" width="128" height="270"/>
         <element name="WMWoundLocationPositionJoin" positionX="0" positionY="0" width="128" height="148"/>
@@ -1325,6 +1326,5 @@
         <element name="WMWoundTreatmentGroup" positionX="0" positionY="0" width="128" height="210"/>
         <element name="WMWoundTreatmentValue" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WMWoundType" positionX="0" positionY="0" width="128" height="450"/>
-        <element name="WMUnhandledSilentUpdateNotification" positionX="18" positionY="153" width="128" height="73"/>
     </elements>
 </model>

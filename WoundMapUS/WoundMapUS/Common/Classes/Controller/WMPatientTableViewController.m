@@ -212,7 +212,7 @@
 
 - (IBAction)doneAction:(id)sender
 {
-    if (nil == _patientToOpen) {
+    if (nil == _patientToOpen && self.fetchedResultsController.fetchedObjects.count > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Action Required"
                                                             message:@"Please select a patient"
                                                            delegate:nil
