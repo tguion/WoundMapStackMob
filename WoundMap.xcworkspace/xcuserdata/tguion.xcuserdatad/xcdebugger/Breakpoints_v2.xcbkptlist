@@ -163,12 +163,12 @@
                   symbolName = "__53-[WMCreateAccountViewController createAccountAction:]_block_invoke234"
                   moduleName = "WoundMapAU"
                   urlString = "file:///Users/tguion/Documents/Projects/MobileHealthWare/WoundMapTeam/WoundMapUS/WoundMapUS/Common/Classes/Controller/Startup/WMCreateAccountViewController.m"
-                  timestampString = "437078298.39574"
+                  timestampString = "437238719.725751"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "347"
                   endingLineNumber = "347"
-                  offsetFromSymbolStart = "34">
+                  offsetFromSymbolStart = "20">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -177,12 +177,12 @@
                   symbolName = "__53-[WMCreateAccountViewController createAccountAction:]_block_invoke_2235"
                   moduleName = "WoundMapAU"
                   urlString = "file:///Users/tguion/Documents/Projects/MobileHealthWare/WoundMapTeam/WoundMapUS/WoundMapUS/Common/Classes/Controller/Startup/WMCreateAccountViewController.m"
-                  timestampString = "437078298.395926"
+                  timestampString = "437238719.725952"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "347"
                   endingLineNumber = "347"
-                  offsetFromSymbolStart = "62">
+                  offsetFromSymbolStart = "39">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -280,6 +280,54 @@
             startingLineNumber = "65"
             endingLineNumber = "65"
             landmarkName = "-updateTextViewContraints"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/View/WMAssessmentTableViewCell.m"
+            timestampString = "437238302.62407"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "957"
+            endingLineNumber = "957"
+            landmarkName = "-handleTapGesture:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBuildGroupViewController.m"
+            timestampString = "437238391.882393"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "-selectionCountImageTapped:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBuildGroupViewController.m"
+            timestampString = "437238397.424763"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1002"
+            endingLineNumber = "1002"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -93,6 +93,12 @@ NSString *const kGroupOpenHeightKey = @"GroupOpenHeightKey";
 
 #pragma mark - Actions
 
+// passed up from table view cell selection count image
+- (IBAction)selectionCountImageTapped:(id)sender
+{
+    [self tableView:self.tableView didSelectRowAtIndexPath:[self.tableView indexPathForCell:sender]];
+}
+
 // inline switch for YES/NO
 - (IBAction)switchValueChangedAction:(id)sender
 {

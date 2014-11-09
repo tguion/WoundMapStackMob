@@ -953,7 +953,12 @@ NSDictionary * kAssessmentTableViewCellSubtextAttributes;
 
 - (IBAction)handleTapGesture:(UITapGestureRecognizer *)gestureRecognizer
 {
-    [self.delegate handleWillOpenOrClose:!self.openFlag forCell:self width:(CGRectGetWidth(self.customContentView.bounds) - kSelectionIconInset)];
+    // send action if <=1 selection
+    if (_selectionCount == NSNotFound || _selectionCount <=1) {
+        [[UIApplication sharedApplication] sendAction:@selector(selectionCountImageTapped:) to:nil from:self forEvent:nil];
+    } else {
+        [self.delegate handleWillOpenOrClose:!self.openFlag forCell:self width:(CGRectGetWidth(self.customContentView.bounds) - kSelectionIconInset)];
+    }
 }
 
 #pragma mark - UIView

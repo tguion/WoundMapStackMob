@@ -63,10 +63,8 @@
     self.image = self.imageForSelectionCount;
     if (NSNotFound == self.selectionCount || 0 == self.selectionCount || 1 == self.selectionCount) {
         disclosureLayer.hidden = YES;
-        self.userInteractionEnabled = NO;
     } else {
         disclosureLayer.hidden = NO;
-        self.userInteractionEnabled = YES;
     }
 }
 
@@ -84,6 +82,7 @@
         // Initialization code
         [self addDisclosureLayer];
         [self updateForSelectionCount];
+        self.userInteractionEnabled = YES;
     }
     return self;
 }
