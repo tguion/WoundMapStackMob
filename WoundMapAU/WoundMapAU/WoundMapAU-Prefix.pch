@@ -16,7 +16,6 @@
     #import <CoreData/CoreData.h>
     #import <SystemConfiguration/SystemConfiguration.h>
     #import <MobileCoreServices/MobileCoreServices.h>
-    #define MR_SHORTHAND
     #define TERRITORY_SUFFIX @"AU"
     #define BASE_URL_DEV @"http://192.168.1.149:8080/WoundMapAU"
     #define SSL_URL_DEV @"https://192.168.1.149:8443/WoundMapAU"

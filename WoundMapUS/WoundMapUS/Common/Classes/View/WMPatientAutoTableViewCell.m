@@ -166,11 +166,15 @@
     if (patient.archivedFlagValue) {
         if (nil == _unarchiveButton.superview) {
             self.accessoryView = _unarchiveButton;
+        } else {
+            self.accessoryView = nil;
         }
     }
     if (patientReferral) {
         if (nil == _referralButton.superview) {
             self.accessoryView = _referralButton;
+        } else {
+            self.accessoryView = nil;
         }
     }
     [_thumbnailImageView updateForPatient:patient];

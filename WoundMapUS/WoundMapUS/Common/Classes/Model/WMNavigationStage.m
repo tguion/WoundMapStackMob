@@ -26,7 +26,7 @@ NSString *const kDischargeStageTitle = @"Discharge";
 
 + (NSInteger)navigationStageCount:(NSManagedObjectContext *)managedObjectContext
 {
-    return [WMNavigationStage countOfEntitiesWithContext:managedObjectContext];
+    return [WMNavigationStage MR_countOfEntitiesWithContext:managedObjectContext];
 }
 
 - (NSArray *)rootNavigationNodes

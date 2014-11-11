@@ -74,7 +74,7 @@
 
 - (void)updateUIForPatientList
 {
-    if ([self.fetchedResultsController.fetchedObjects count] > 0) {
+    if ([self.fetchedResultsController.fetchedObjects count] > 0 && !self.isSearchActive) {
         self.navigationItem.leftBarButtonItem = self.editButtonItem;
     } else {
         self.navigationItem.leftBarButtonItem = nil;
@@ -436,7 +436,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                            target:self
                                                                                            action:@selector(doneAction:)];
-    [self performSelector:@selector(refetchDataForCoreTableView) withObject:nil afterDelay:0.1];
+    [self performSelector:@selector(refetchDataForCoreTableView) withObject:nil afterDelay:0.25];
 }
 
 #pragma mark - UISearchDisplayDelegate

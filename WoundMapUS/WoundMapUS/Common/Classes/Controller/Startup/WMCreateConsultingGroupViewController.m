@@ -146,7 +146,7 @@
         }
         [ff updateObj:team onComplete:onCompleteUpdate onOffline:onCompleteUpdate];
     };
-    [managedObjectContext saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    [managedObjectContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {
             [WMUtilities logError:error];
         } else {
