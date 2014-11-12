@@ -170,7 +170,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
             insets.top += CGRectGetMaxY(frame) - CGRectGetMinY(frame);
     }
     
-    if (!tabBar.hidden) {
+    if (tabBar && !tabBar.hidden) {
         // During rotation, the navigation bar (and possibly tab bar) doesn't resize immediately. Force it to have it's new size.
         [tabBar sizeToFit];
         CGRect frame = [tabBar convertRect:tabBar.bounds toView:nil];
@@ -1108,7 +1108,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView beginUpdates];
+    [self.activeTableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
@@ -1118,11 +1118,11 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     sectionIndex = [self sectionIndexFetchedResultsControllerToTable:sectionIndex];
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
+            [self.activeTableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
+            [self.activeTableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
             break;
     }
 }
@@ -1135,7 +1135,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     indexPath = [self indexPathFetchedResultsControllerToTable:indexPath];
     newIndexPath = [self indexPathFetchedResultsControllerToTable:newIndexPath];
 
-    UITableView *tableView = self.tableView;
+    UITableView *tableView = self.activeTableView;
     
     switch(type) {
         case NSFetchedResultsChangeInsert:
@@ -1159,7 +1159,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    [self.activeTableView endUpdates];
 }
 
 /*

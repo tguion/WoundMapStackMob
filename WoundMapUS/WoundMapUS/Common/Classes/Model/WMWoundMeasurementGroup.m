@@ -287,6 +287,15 @@ NSString * const kDimensionUndermineTunnelMeasurementTitle = @"Undermining & Tun
     return [woundMeasurementsForValues intersectsSet:woundMeasurements];
 }
 
+- (NSInteger)valuesCountForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
+{
+    NSMutableSet *woundMeasurements = [[NSMutableSet alloc] initWithCapacity:32];
+    [woundMeasurement aggregateWoundMeasurements:woundMeasurements];
+    NSMutableSet *woundMeasurementsForValues = [[self.values valueForKeyPath:WMWoundMeasurementValueRelationships.woundMeasurement] mutableCopy];
+    [woundMeasurementsForValues intersectSet:woundMeasurements];
+    return [woundMeasurementsForValues count];
+}
+
 - (WMWoundMeasurementValue *)woundMeasurementValueForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
                                                                create:(BOOL)create
                                                                 value:(id)value

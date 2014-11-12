@@ -275,12 +275,12 @@
 {
     NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     patient.archivedFlagValue = NO;
-    [managedObjectContext MR_saveToPersistentStoreAndWait];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
         if (error) {
             [WMUtilities logError:error];
         }
+        [managedObjectContext MR_saveToPersistentStoreAndWait];
     };
     [ff updateObj:patient onComplete:onComplete onOffline:onComplete];
 }

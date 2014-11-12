@@ -26,6 +26,8 @@ extern NSString * const kDimensionUndermineTunnelMeasurementTitle;
 + (NSInteger)woundMeasurementGroupsCountForWound:(WMWound *)wound;
 + (NSInteger)woundMeasurementGroupsInactiveCountForWound:(WMWound *)wound;
 
+- (NSInteger)valuesCountForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement;
+
 - (BOOL)hasWoundMeasurementValuesForWoundMeasurementAndChildren:(WMWoundMeasurement *)woundMeasurement;
 - (WMWoundMeasurementValue *)woundMeasurementValueForWoundMeasurement:(WMWoundMeasurement *)woundMeasurement
                                                                create:(BOOL)create
