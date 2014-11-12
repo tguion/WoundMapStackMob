@@ -599,6 +599,7 @@
 		7DC75E661A09649500E81D85 /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7DC75E631A09649500E81D85 /* WoundMap.sqlite */; };
 		7DC75E671A09649500E81D85 /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7DC75E641A09649500E81D85 /* WoundMap.sqlite-shm */; };
 		7DC75E681A09649500E81D85 /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7DC75E651A09649500E81D85 /* WoundMap.sqlite-wal */; };
+		7DE4B7461A13B32700420BB9 /* LaunchScreenAU.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DE4B7441A13B32700420BB9 /* LaunchScreenAU.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1647,6 +1648,7 @@
 		7DC75E631A09649500E81D85 /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
 		7DC75E641A09649500E81D85 /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
 		7DC75E651A09649500E81D85 /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
+		7DE4B7451A13B32700420BB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreenAU.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2769,6 +2771,7 @@
 		7D55FEAE1A041C5E00FE7DEC /* WoundMapAU */ = {
 			isa = PBXGroup;
 			children = (
+				7DE4B7441A13B32700420BB9 /* LaunchScreenAU.xib */,
 				7D5505911A04211700FE7DEC /* Frameworks */,
 				7D5502F01A041F4400FE7DEC /* MagicalRecord */,
 				7D55FEF11A041F4200FE7DEC /* Common */,
@@ -3463,6 +3466,7 @@
 				7D5503591A041F4400FE7DEC /* WMWelcomeToWoundMapViewController.xib in Resources */,
 				7D5503E01A041F4400FE7DEC /* WMSkinAssessmentGroupViewController.xib in Resources */,
 				7D55035F1A041F4400FE7DEC /* WMBarScanViewController.xib in Resources */,
+				7DE4B7461A13B32700420BB9 /* LaunchScreenAU.xib in Resources */,
 				7D5503771A041F4400FE7DEC /* WMDevicesSummaryViewController.xib in Resources */,
 				7D5505391A041F4400FE7DEC /* InstructionsPhotoAndMeasurement.html in Resources */,
 				7D5503DA1A041F4400FE7DEC /* WMShareViewController.xib in Resources */,
@@ -4031,6 +4035,14 @@
 				7D55FEED1A041F0E00FE7DEC /* Base */,
 			);
 			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		7DE4B7441A13B32700420BB9 /* LaunchScreenAU.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7DE4B7451A13B32700420BB9 /* Base */,
+			);
+			name = LaunchScreenAU.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
