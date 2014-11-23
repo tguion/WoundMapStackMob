@@ -282,6 +282,9 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                 if (error) {
                     [WMUtilities logError:error];
                 }
+                if (object) {
+                    _patient.consultantGroup = object;
+                }
                 [ffm updatePatient:_patient ff:ff completionHandler:completionHandler];
             }];
         }
@@ -421,6 +424,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
                         // what to do
                     }
                 }
+                _person = object;
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
             }];
         }

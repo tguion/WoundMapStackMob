@@ -39,10 +39,9 @@ typedef enum {
 @end
 
 
-@implementation WMPatient {
-    FFUserGroup *_consultantGroup;
-}
+@implementation WMPatient
 
+@synthesize consultantGroup=_consultantGroup;
 @dynamic managedObjectContext, objectID;
 
 static NSMutableDictionary *ffUrl2ConsultingGroupMap;
@@ -157,6 +156,18 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     if (nil == _consultantGroup) {
         if (self.ffUrl) {
             _consultantGroup = [ffUrl2ConsultingGroupMap objectForKey:self.ffUrl];
+            if (nil == _consultantGroup) {
+                WMFatFractal *ff = [WMFatFractal sharedInstance];
+                NSString *uri = [self.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
+                NSError *error = nil;
+                FFUserGroup *consultantGroup = [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] error:&error];
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                if (consultantGroup) {
+                    self.consultantGroup = consultantGroup;
+                }
+            }
         } else {
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             _consultantGroup = [[FFUserGroup alloc] initWithFF:ff];
@@ -175,6 +186,14 @@ static NSMutableDictionary *ffUrl2ConsultingGroupMap;
     _consultantGroup = consultantGroup;
     if (_consultantGroup && self.ffUrl) {
         [ffUrl2ConsultingGroupMap setObject:_consultantGroup forKey:self.ffUrl];
+    }
+}
+
+- (void)registerConsultantGroup
+{
+    FFUserGroup *consultantGroup = self.consultantGroup;
+    if (self.ffUrl && consultantGroup) {
+        [ffUrl2ConsultingGroupMap setObject:consultantGroup forKey:self.ffUrl];
     }
 }
 

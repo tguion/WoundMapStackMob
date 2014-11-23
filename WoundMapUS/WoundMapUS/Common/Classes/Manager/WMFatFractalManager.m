@@ -715,7 +715,12 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
             } else {
                 for (WMPatient *patient in patients) {
                     NSString *uri = [patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-                    [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] onComplete:onComplete];
+                    [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                        if (object) {
+                            patient.consultantGroup = object;
+                        }
+                        onComplete(error, object, response);
+                    }];
                 }
             }
         }
@@ -1472,9 +1477,9 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 //                if (localError) {
 //                    [WMUtilities logError:localError];
 //                }
+            } else {
+                patient.consultantGroup = consultantGroup;
             }
-//            NSParameterAssert(consultantGroup);
-//            patient.consultantGroup = consultantGroup;
             [patient updateNavigationToTeam:team patient2StageMap:self.appDelegate.patient2StageMap];
             [ff updateObj:patient onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                 if (localError) {

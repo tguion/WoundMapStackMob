@@ -512,7 +512,6 @@
 		7D55052D1A041F4400FE7DEC /* WoundType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502A11A041F4400FE7DEC /* WoundType.plist */; };
 		7D55052E1A041F4400FE7DEC /* WoundTypeDefinitions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502A21A041F4400FE7DEC /* WoundTypeDefinitions.plist */; };
 		7D55052F1A041F4400FE7DEC /* ConsultantGroupIAPDesc.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502A91A041F4400FE7DEC /* ConsultantGroupIAPDesc.html */; };
-		7D5505301A041F4400FE7DEC /* IAPProducts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502AA1A041F4400FE7DEC /* IAPProducts.plist */; };
 		7D5505311A041F4400FE7DEC /* PatientReadOnlyExplanation.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502AB1A041F4400FE7DEC /* PatientReadOnlyExplanation.html */; };
 		7D5505321A041F4400FE7DEC /* RequestConsultIntroduction.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502AC1A041F4400FE7DEC /* RequestConsultIntroduction.html */; };
 		7D5505331A041F4400FE7DEC /* TeamMemberIAPDesc.html in Resources */ = {isa = PBXBuildFile; fileRef = 7D5502AD1A041F4400FE7DEC /* TeamMemberIAPDesc.html */; };
@@ -596,6 +595,7 @@
 		7D55FEE51A041EC500FE7DEC /* WCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D55FEE21A041EC500FE7DEC /* WCAppDelegate.m */; };
 		7D55FEE61A041EC500FE7DEC /* WoundMapUS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D55FEE31A041EC500FE7DEC /* WoundMapUS.xcdatamodeld */; };
 		7D55FEEE1A041F0E00FE7DEC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D55FEE81A041F0E00FE7DEC /* LaunchScreen.xib */; };
+		7D9765A91A22667F00D68691 /* IAPProducts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D9765A81A22667F00D68691 /* IAPProducts.plist */; };
 		7DC75E661A09649500E81D85 /* WoundMap.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 7DC75E631A09649500E81D85 /* WoundMap.sqlite */; };
 		7DC75E671A09649500E81D85 /* WoundMap.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 7DC75E641A09649500E81D85 /* WoundMap.sqlite-shm */; };
 		7DC75E681A09649500E81D85 /* WoundMap.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 7DC75E651A09649500E81D85 /* WoundMap.sqlite-wal */; };
@@ -1270,7 +1270,6 @@
 		7D5502A11A041F4400FE7DEC /* WoundType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = WoundType.plist; sourceTree = "<group>"; };
 		7D5502A21A041F4400FE7DEC /* WoundTypeDefinitions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = WoundTypeDefinitions.plist; sourceTree = "<group>"; };
 		7D5502A91A041F4400FE7DEC /* ConsultantGroupIAPDesc.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ConsultantGroupIAPDesc.html; sourceTree = "<group>"; };
-		7D5502AA1A041F4400FE7DEC /* IAPProducts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = IAPProducts.plist; sourceTree = "<group>"; };
 		7D5502AB1A041F4400FE7DEC /* PatientReadOnlyExplanation.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = PatientReadOnlyExplanation.html; sourceTree = "<group>"; };
 		7D5502AC1A041F4400FE7DEC /* RequestConsultIntroduction.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = RequestConsultIntroduction.html; sourceTree = "<group>"; };
 		7D5502AD1A041F4400FE7DEC /* TeamMemberIAPDesc.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TeamMemberIAPDesc.html; sourceTree = "<group>"; };
@@ -1645,6 +1644,7 @@
 		7D55FFFD1A041F4200FE7DEC /* WMPsychoSocialSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WMPsychoSocialSummaryViewController.xib; sourceTree = "<group>"; };
 		7D55FFFE1A041F4200FE7DEC /* WMRequestConsultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMRequestConsultViewController.h; sourceTree = "<group>"; };
 		7D55FFFF1A041F4200FE7DEC /* WMRequestConsultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMRequestConsultViewController.m; sourceTree = "<group>"; };
+		7D9765A81A22667F00D68691 /* IAPProducts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = IAPProducts.plist; path = WoundMapAU/IAP/IAPProducts.plist; sourceTree = SOURCE_ROOT; };
 		7DC75E631A09649500E81D85 /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
 		7DC75E641A09649500E81D85 /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
 		7DC75E651A09649500E81D85 /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
@@ -2420,8 +2420,8 @@
 		7D5502A81A041F4400FE7DEC /* IAP */ = {
 			isa = PBXGroup;
 			children = (
+				7D9765A81A22667F00D68691 /* IAPProducts.plist */,
 				7D5502A91A041F4400FE7DEC /* ConsultantGroupIAPDesc.html */,
-				7D5502AA1A041F4400FE7DEC /* IAPProducts.plist */,
 				7D5502AB1A041F4400FE7DEC /* PatientReadOnlyExplanation.html */,
 				7D5502AC1A041F4400FE7DEC /* RequestConsultIntroduction.html */,
 				7D5502AD1A041F4400FE7DEC /* TeamMemberIAPDesc.html */,
@@ -3387,7 +3387,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D5503921A041F4400FE7DEC /* WMMedicationSummaryViewController.xib in Resources */,
-				7D5505301A041F4400FE7DEC /* IAPProducts.plist in Resources */,
 				7D5503421A041F4400FE7DEC /* IAPAggregatorViewController.xib in Resources */,
 				7D55052A1A041F4400FE7DEC /* WoundPositionDefinitions.plist in Resources */,
 				7DC75E661A09649500E81D85 /* WoundMap.sqlite in Resources */,
@@ -3506,6 +3505,7 @@
 				7D5503D21A041F4400FE7DEC /* WMSelectWoundPhotoViewController.xib in Resources */,
 				7D55036B1A041F4400FE7DEC /* WMCarePlanGroupViewController.xib in Resources */,
 				7D55037E1A041F4400FE7DEC /* WMIdEditorViewController.xib in Resources */,
+				7D9765A91A22667F00D68691 /* IAPProducts.plist in Resources */,
 				7D5503F41A041F4400FE7DEC /* WMWoundMeasurementSummaryViewController.xib in Resources */,
 				7D5503AC1A041F4400FE7DEC /* WMPhotoDepthViewController.xib in Resources */,
 				7D5503981A041F4400FE7DEC /* WMNutritionSummaryViewController.xib in Resources */,

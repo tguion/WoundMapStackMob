@@ -27,7 +27,7 @@
     #define IAP_PATIENT5 @"com.mobilehealthware.woundmap.patient.credit5.token"
     #define IAP_PATIENT25 @"com.mobilehealthware.woundmap.patient.credit25.token"
     #define IAP_PATIENT100 @"com.mobilehealthware.woundmap.patient.credit100.token"
-    #define IAP_TEAM @"com.mobilehealthware.woundmap.team.teamMemberAU"
+    #define IAP_TEAM @"com.mobilehealthware.woundmap.team.teamMember"
     #define IAP_CONSULT @"com.mobilehealthware.woundcare.woundmap.consultGroup.create"
     #import "CoreData+MagicalRecord.h"
     #import <FFEF/FatFractal.h>

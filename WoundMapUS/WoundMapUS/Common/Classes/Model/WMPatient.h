@@ -13,6 +13,7 @@
 
 // add FFUsers to this group when a consultant acquires the patient
 @property (strong, nonatomic) FFUserGroup *consultantGroup;
+- (void)registerConsultantGroup;
 
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext;
 + (NSInteger)patientCount:(NSManagedObjectContext *)managedObjectContext onDevice:(NSString *)deviceId;
