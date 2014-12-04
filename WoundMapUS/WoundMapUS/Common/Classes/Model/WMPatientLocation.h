@@ -2,5 +2,7 @@
 #import "WMFFManagedObject.h"
 
 @interface WMPatientLocation : _WMPatientLocation <WMFFManagedObject> {}
-// Custom logic goes here.
+
+@property (readonly, nonatomic) NSString *locationForDisplay;
+
 @end

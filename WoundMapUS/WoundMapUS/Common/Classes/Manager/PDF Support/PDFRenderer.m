@@ -8,6 +8,7 @@
 
 #import "PDFRenderer.h"
 #import "WMPatient.h"
+#import "WMPatientLocation.h"
 #import "WMBradenScale.h"
 #import "WMWound.h"
 #import "WMWoundPhoto.h"
@@ -1087,7 +1088,8 @@ NSInteger kXPlotOffset = 0;
                          @"Identifier:",
                          @"Initiated:",
                          @"Wounds/Photos:",
-                         @"Braden Scale:"];
+                         @"Braden Scale:",
+                          @"Location:"];
     WMBradenScale *bradenScale = [WMBradenScale latestBradenScale:self.patient create:NO];
     NSString *bradenScaleValue = @"Missing";
     if (nil != bradenScale) {
@@ -1101,6 +1103,7 @@ NSInteger kXPlotOffset = 0;
     [values addObject:(nil == self.patient.createdAt ? [NSNull null]:[NSDateFormatter localizedStringFromDate:self.patient.createdAt dateStyle:NSDateFormatterMediumStyle timeStyle:NSDateFormatterMediumStyle])];
     [values addObject:[NSString stringWithFormat:@"%ld/%ld", (long)self.patient.woundCount, (long)self.patient.photosCount]];
     [values addObject:bradenScaleValue];
+    [values addObject:self.patient.location.locationForDisplay];
     UIView *placeholderView = self.patientDataSummaryView;
     CGRect aFrame = [self.rootView convertRect:placeholderView.frame fromView:placeholderView.superview];
     CGFloat x = CGRectGetMinX(aFrame);
