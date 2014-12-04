@@ -87,6 +87,16 @@
         woundPhotoCount += [[self.printConfiguration sortedWoundPhotosForWound:wound] count];
     }
     // photos and assessments
+    if (0 == woundPhotoCount) {
+        // draw the page header
+        [self drawPageHeader:pageNumber];
+        // draw footer before we go to new page
+        [self drawPageFooter:pageNumber];
+        // draw patient data
+        UIView *placeholderView = self.patientHeaderView;
+        CGRect aFrame = [self.rootView convertRect:placeholderView.frame fromView:placeholderView.superview];
+        [self drawPatientHeaderInRect:aFrame];
+    }
     for (WMWound *wound in wounds) {
         self.wound = wound;
         // photos

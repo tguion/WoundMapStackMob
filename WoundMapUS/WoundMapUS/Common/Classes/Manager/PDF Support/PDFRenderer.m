@@ -838,7 +838,7 @@ NSInteger kXPlotOffset = 0;
 - (NSArray *)graphableMeasurementTitles
 {
     if (nil == _graphableMeasurementTitles) {
-        _graphableMeasurementTitles = [[[WMWoundMeasurement sortedRootGraphableWoundMeasurements:[self.wound managedObjectContext]] valueForKeyPath:@"title"] arrayByAddingObject:kBradenScaleTitle];
+        _graphableMeasurementTitles = [[[WMWoundMeasurement sortedRootGraphableWoundMeasurements:[self.patient managedObjectContext]] valueForKeyPath:@"title"] arrayByAddingObject:kBradenScaleTitle];
     }
     return _graphableMeasurementTitles;
 }

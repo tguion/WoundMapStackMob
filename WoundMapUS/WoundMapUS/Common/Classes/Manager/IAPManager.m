@@ -122,12 +122,12 @@ NSString* _deviceId;
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
 {
-    DLog(@"Loaded list of products...");
+    NSLog(@"Loaded list of products...");
     _productsRequest = nil;
     
     NSArray *skProducts = [response.products copy];
     for (SKProduct *skProduct in skProducts) {
-        DLog(@"Found product: %@ %@ %0.2f",
+        NSLog(@"Found product: %@ %@ %0.2f",
               skProduct.productIdentifier,
               skProduct.localizedTitle,
               skProduct.price.floatValue);
@@ -142,7 +142,7 @@ NSString* _deviceId;
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error{
     
-    DLog(@"Failed to load list of products. - error.description is - %@", error.description);
+    NSLog(@"Failed to load list of products. - error.description is - %@", error.description);
     if (_failureHandler) {
         _failureHandler(error);
         _failureHandler = nil;
@@ -155,13 +155,13 @@ NSString* _deviceId;
 // Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
-    DLog(@"Failed to restore transactions. - error.description is - %@", error.description);
+    NSLog(@"Failed to restore transactions. - error.description is - %@", error.description);
 }
 
 // Sent when all transactions from the user's purchase history have successfully been added back to the queue.
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
-    DLog(@"Succeeded to restore transactions.");
+    NSLog(@"Succeeded to restore transactions.");
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
@@ -253,14 +253,14 @@ NSString* _deviceId;
 
 - (void)buyProduct:(SKProduct *)product
 {
-    DLog(@"Buying %@...", product.productIdentifier);
+    NSLog(@"Buying %@...", product.productIdentifier);
     SKMutablePayment *muty = [SKMutablePayment paymentWithProduct:product];
     [[SKPaymentQueue defaultQueue] addPayment:muty];
 }
 
 - (void)completeTransaction:(SKPaymentTransaction *)transaction
 {
-    DLog(@"completeTransaction...");
+    NSLog(@"completeTransaction...");
     
     [self provideContentForProductIdentifier:transaction];
     [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
@@ -271,7 +271,7 @@ NSString* _deviceId;
 
 - (void)restoreTransaction:(SKPaymentTransaction *)transaction
 {
-    DLog(@"restoreTransaction...");
+    NSLog(@"restoreTransaction...");
     
     [self provideContentForProductIdentifier:transaction.originalTransaction];
     [[NSNotificationCenter defaultCenter] postNotificationName:kIAPManagerProductPurchasedNotification
@@ -282,11 +282,11 @@ NSString* _deviceId;
 
 - (void)failedTransaction:(SKPaymentTransaction *)transaction
 {
-    DLog(@"failedTransaction...");
+    NSLog(@"failedTransaction...");
     NSDictionary *userErrorInfo = nil;
     if (transaction.error.code != SKErrorPaymentCancelled)
     {
-        DLog(@"Transaction error: %@", transaction.error.localizedDescription);
+        NSLog(@"Transaction error: %@", transaction.error.localizedDescription);
         [self diagTranslateTxnErrorCode:transaction.error.code];
         userErrorInfo = [NSDictionary dictionaryWithObjectsAndKeys:transaction.error, kIAPPurchaseError, nil];
     } else {
@@ -325,7 +325,7 @@ NSString* _deviceId;
             errorText = @"SK does not know!";
             break;
     }
-    DLog(@"SKPaymentTransaction.error.code xlates to %@", errorText);
+    NSLog(@"SKPaymentTransaction.error.code xlates to %@", errorText);
 }
 
 - (void)provideContentForPDFReportProductIdentifier:(SKPaymentTransaction *)transaction
@@ -454,7 +454,7 @@ NSString* _deviceId;
 
 - (void)resetTokenCount
 {
-    DLog(@"resetTokenCount called");
+    NSLog(@"resetTokenCount called");
     
 //    [self resetSeededCredits];
     [self.managedObjectContext performBlockAndWait:^{
@@ -707,15 +707,15 @@ NSString* _deviceId;
     }
     switch (reason) {
         case NSUbiquitousKeyValueStoreServerChange: {
-            DLog(@"handleExternalChangeNotification: reason: NSUbiquitousKeyValueStoreServerChange");
+            NSLog(@"handleExternalChangeNotification: reason: NSUbiquitousKeyValueStoreServerChange");
             break;
         }
         case NSUbiquitousKeyValueStoreInitialSyncChange: {
-            DLog(@"handleExternalChangeNotification: reason: NSUbiquitousKeyValueStoreInitialSyncChange");
+            NSLog(@"handleExternalChangeNotification: reason: NSUbiquitousKeyValueStoreInitialSyncChange");
             break;
         }
         case NSUbiquitousKeyValueStoreQuotaViolationChange: {
-            DLog(@"handleExternalChangeNotification: reason: NSUbiquitousKeyValueStoreQuotaViolationChange");
+            NSLog(@"handleExternalChangeNotification: reason: NSUbiquitousKeyValueStoreQuotaViolationChange");
             break;
         }
     }

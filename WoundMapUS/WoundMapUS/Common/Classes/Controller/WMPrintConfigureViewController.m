@@ -64,8 +64,6 @@
     BOOL nextButtonEnabled = YES;
     if (!self.hasSelectedWounds) {
         nextButtonEnabled = NO;
-    } else if (0 == [self.selectedWoundPhotosMap count]) {
-        nextButtonEnabled = NO;
     }
     if ([self.selectedWounds count] < [self.patient.wounds count]) {
         self.selectAllWoundsSwitch.on = NO;

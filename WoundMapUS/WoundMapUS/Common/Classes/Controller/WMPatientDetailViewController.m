@@ -239,6 +239,11 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         // set state
         self.modalInPopover = YES;
         self.preferredContentSize = CGSizeMake(320.0, 460.0);
+        // update after refresh
+        __weak __typeof(&*self)weakSelf = self;
+        self.refreshCompletionHandler = ^(NSError *error, id object) {
+            [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
+        };
     }
     return self;
 }
@@ -267,26 +272,7 @@ typedef NS_ENUM(NSInteger, WMMedicalHistoryViewControllerNoteSource) {
         _patient = super.patient;
         if (_patient.ffUrl) {
             [MBProgressHUD showHUDAddedToViewController:self animated:YES];
-            __weak __typeof(&*self)weakSelf = self;
-            WMErrorCallback completionHandler = ^(NSError *error) {
-                [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                [weakSelf.tableView reloadData];
-            };
-            WMFatFractal *ff = [WMFatFractal sharedInstance];
-            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-            NSString *uri = [_patient.ffUrl stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-            [ff getObjFromUri:[NSString stringWithFormat:@"%@/consultantGroup", uri] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-                if (error) {
-                    [WMUtilities logError:error];
-                }
-                if (object) {
-                    _patient.consultantGroup = object;
-                }
-                [ffm updatePatient:_patient ff:ff completionHandler:completionHandler];
-            }];
+            [self refreshTable];
         }
     }
     // support for bar code reading http://www.infragistics.com/community/blogs/torrey-betts/archive/2013/10/10/scanning-barcodes-with-ios-7-objective-c.aspx
