@@ -41,6 +41,7 @@ extern NSString *const kIAPDeviceTransactionAggregate;
 
 - (BOOL)isProductPurchased:(IAPProduct *)iapProduct;
 - (void)buyProduct:(SKProduct *)product;
+- (void)buyProduct:(SKProduct *)product quantity:(NSInteger)quantity;
 
 - (void)productWithProductId:(NSString *)productId
               successHandler:(IAPSuccessHandler)successHandler

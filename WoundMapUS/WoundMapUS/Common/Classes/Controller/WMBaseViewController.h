@@ -111,6 +111,11 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
                                           withObject:(id)object;
 - (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
                                         successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
+                                       proceedAlways:(BOOL)proceedAlways
+                                          withObject:(id)object
+                                            quantity:(NSInteger)quantity;
+- (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
+                                        successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
                                           withObject:(id)object;
 
 @end

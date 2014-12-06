@@ -70,10 +70,10 @@ NSString *localStoreFilename = @"WoundMapLocal.sqlite";
     }
     // else don't show this on start up
     if (_blockNetworkReachabiltyAlert) {
+        _blockNetworkReachabiltyAlert = NO;
         return;
     }
     // else
-    _blockNetworkReachabiltyAlert = NO;
     NSString *title = @"Network reachability changed";
     NSString *message = nil;
     switch (status) {

@@ -42,6 +42,10 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
     self.tableView.separatorInset = UIEdgeInsetsMake(0.0, 15.0, 0.0, 0.0);
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
+    
+    if (_quantity == 0) {
+        _quantity = 1;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -189,7 +193,7 @@ NSInteger const kPurchaseConfirmActionSheetTag = 1000;
         if (actionSheet.destructiveButtonIndex == buttonIndex) {
             [MBProgressHUD showHUDAddedToViewController:self animated:YES];
             // IAPManager will post notification with success or error for purchase
-            [[IAPManager sharedInstance] buyProduct:self.skProduct];
+            [[IAPManager sharedInstance] buyProduct:self.skProduct quantity:self.quantity];
             return;
         }
         // else

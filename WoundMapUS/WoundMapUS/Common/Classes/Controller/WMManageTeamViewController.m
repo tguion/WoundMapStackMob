@@ -25,6 +25,7 @@
 #import "WCAppDelegate.h"
 
 #define REVOKE_INVITION_BUTTON_INDEX 1
+#define kExtendTeamMemberSubscriptionAlertViewTag 1000
 
 typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kRevokeInvitationActionSheetTag,
@@ -34,7 +35,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     kPurchasePatientCreditsActionSheetTag
 };
 
-@interface WMManageTeamViewController () <CreateTeamInvitationViewControllerDelegate, UIActionSheetDelegate>
+@interface WMManageTeamViewController () <CreateTeamInvitationViewControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic) BOOL removeUndoManagerWhenDone;
 @property (readonly, nonatomic) WMParticipant *participant;
@@ -198,13 +199,14 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     [actionSheet showInView:self.view];
 }
 
-- (void)initiateUpdateSubscriptionTeamMember:(UIView *)view
+// TODO: offer number of months to update
+- (void)initiateUpdateSubscriptionTeamMember:(UIView *)view numberOfMonths:(NSInteger)numberOfMonths
 {
     __weak __typeof(&*self)weakSelf = self;
     [self presentIAPViewControllerForProductIdentifier:kTeamMemberProductIdentifier
                                                          successBlock:^(SKPaymentTransaction *transaction) {
                                                              WMParticipant *participant = _teamMemberToUpdateSubscription;
-                                                             participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonthToDate:participant.dateTeamSubscriptionExpires];
+                                                             participant.dateTeamSubscriptionExpires = [WMUtilities dateByAddingMonths:numberOfMonths toDate:participant.dateTeamSubscriptionExpires];
                                                              WMTeam *team = participant.team;
                                                              NSManagedObjectContext *managedObjectContext = [team managedObjectContext];
                                                              // mark WMPaymentTransaction as applied
@@ -238,7 +240,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                                  }
                                                              }];
                                                              [weakSelf.tableView reloadData];
-                                                         } proceedAlways:YES withObject:view];
+                                                         } proceedAlways:YES withObject:view quantity:numberOfMonths];
 }
 
 - (void)initiateConfirmInvitation
@@ -343,6 +345,24 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
 - (void)createTeamInvitationViewControllerDidCancel:(WMCreateTeamInvitationViewController *)viewController
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (alertView.tag) {
+        case kExtendTeamMemberSubscriptionAlertViewTag: {
+            if (buttonIndex == alertView.cancelButtonIndex) {
+                return;
+            }
+            // else
+            NSInteger numberOfMonths = (buttonIndex - alertView.firstOtherButtonIndex + 1);
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.teamMembers indexOfObject:_teamMemberToUpdateSubscription] inSection:2];
+            [self initiateUpdateSubscriptionTeamMember:[self.tableView cellForRowAtIndexPath:indexPath] numberOfMonths:numberOfMonths];
+            break;
+        }
+    }
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -598,7 +618,14 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
         case 2: {
             // participants - update
             _teamMemberToUpdateSubscription = [self.teamMembers objectAtIndex:indexPath.row];
-            [self initiateUpdateSubscriptionTeamMember:[tableView cellForRowAtIndexPath:indexPath]];
+            // inquire number of months
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Extend Subscription"
+                                                                message:[NSString stringWithFormat:@"You are extending the subscription for participant %@. Please indicate the number of months to extend the subscription.", _teamMemberToUpdateSubscription.name]
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Cancel"
+                                                      otherButtonTitles:@"1 Month", @"2 Months", @"3 Months", nil];
+            alertView.tag = kExtendTeamMemberSubscriptionAlertViewTag;
+            [alertView show];
             break;
         }
         case 3: {
@@ -716,15 +743,14 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
             cell.detailTextLabel.text = [NSString stringWithFormat:@"Expires %@", [NSDateFormatter localizedStringFromDate:teamMember.dateTeamSubscriptionExpires dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
             NSDate *fiveDaysAgo = [WMUtilities dateByAddingDays:-5 toDate:teamMember.dateTeamSubscriptionExpires];
+            UIColor *backgroundColor = [UIColor whiteColor];
             if ([[NSDate date] compare:fiveDaysAgo] == NSOrderedDescending) {
-                NSString *imageName = @"alert_yellow_iPhone";
+                backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.25];
                 if ([teamMember.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedDescending) {
-                    imageName = @"alert_red_iPhone";
+                    backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.25];
                 }
-                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
-            } else {
-                cell.accessoryView = nil;
             }
+            cell.backgroundColor = backgroundColor;
             break;
         }
         case 3: {

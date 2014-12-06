@@ -219,6 +219,10 @@ NSString* _deviceId;
             }
             [managedObjectContext MR_saveToPersistentStoreAndWait];
             switch (transaction.transactionState) {
+                case SKPaymentTransactionStatePurchasing:
+                    break;
+                case SKPaymentTransactionStateDeferred:
+                    break;
                 case SKPaymentTransactionStatePurchased:
                     [weakSelf completeTransaction:transaction];
                     break;
@@ -253,8 +257,14 @@ NSString* _deviceId;
 
 - (void)buyProduct:(SKProduct *)product
 {
+    [self buyProduct:product quantity:1];
+}
+
+- (void)buyProduct:(SKProduct *)product quantity:(NSInteger)quantity
+{
     NSLog(@"Buying %@...", product.productIdentifier);
     SKMutablePayment *muty = [SKMutablePayment paymentWithProduct:product];
+    muty.quantity = quantity;
     [[SKPaymentQueue defaultQueue] addPayment:muty];
 }
 

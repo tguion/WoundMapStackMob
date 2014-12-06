@@ -27,6 +27,7 @@ extern CGFloat const kIAPTextVerticalMargin;
 
 @property (strong, nonatomic) IAPProduct *iapProduct;
 @property (strong, nonatomic) SKProduct *skProduct;
+@property (nonatomic) NSInteger quantity;
 @property (strong, nonatomic) UIFont *textFont;
 @property (strong, nonatomic) NSDictionary *textAttributes;
 @property (strong, nonatomic) IAPPresentViewControllerAcceptHandler acceptHandler;

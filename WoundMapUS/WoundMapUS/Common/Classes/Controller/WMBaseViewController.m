@@ -871,6 +871,20 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                                        proceedAlways:(BOOL)proceedAlways
                                           withObject:(id)object
 {
+    return [self presentIAPViewControllerForProductIdentifier:productIdentifier
+                                                 successBlock:successBlock
+                                                proceedAlways:proceedAlways
+                                                   withObject:object
+                                                     quantity:1];
+}
+
+- (BOOL)presentIAPViewControllerForProductIdentifier:(NSString *)productIdentifier
+                                        successBlock:(IAPPresentViewControllerAcceptHandler)successBlock
+                                       proceedAlways:(BOOL)proceedAlways
+                                          withObject:(id)object
+                                            quantity:(NSInteger)quantity
+{
+
     // check if this is constrained to wound type
     IAPProduct *iapProduct = [IAPProduct productForIdentifier:productIdentifier
                                                        create:NO
@@ -906,6 +920,7 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
                 viewController = [[IAPNonConsumableViewController alloc] initWithNibName:@"IAPNonConsumableViewController" bundle:nil];
             }
             viewController.iapProduct = iapProduct;
+            viewController.quantity = quantity;
             
             __weak __typeof(&*self)weakSelf = self;
             viewController.acceptHandler = ^(SKPaymentTransaction *transaction) {
