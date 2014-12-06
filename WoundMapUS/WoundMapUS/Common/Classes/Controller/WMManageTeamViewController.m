@@ -357,7 +357,10 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                 return;
             }
             // else
-            NSInteger numberOfMonths = (buttonIndex - alertView.firstOtherButtonIndex + 1);
+            NSInteger numberOfMonths = 3*(buttonIndex - alertView.firstOtherButtonIndex);
+            if (0 == numberOfMonths) {
+                numberOfMonths = 1;
+            }
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.teamMembers indexOfObject:_teamMemberToUpdateSubscription] inSection:2];
             [self initiateUpdateSubscriptionTeamMember:[self.tableView cellForRowAtIndexPath:indexPath] numberOfMonths:numberOfMonths];
             break;
@@ -623,7 +626,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
                                                                 message:[NSString stringWithFormat:@"You are extending the subscription for participant %@. Please indicate the number of months to extend the subscription.", _teamMemberToUpdateSubscription.name]
                                                                delegate:self
                                                       cancelButtonTitle:@"Cancel"
-                                                      otherButtonTitles:@"1 Month", @"2 Months", @"3 Months", nil];
+                                                      otherButtonTitles:@"1 Month", @"3 Months", @"6 Months", nil];
             alertView.tag = kExtendTeamMemberSubscriptionAlertViewTag;
             [alertView show];
             break;
