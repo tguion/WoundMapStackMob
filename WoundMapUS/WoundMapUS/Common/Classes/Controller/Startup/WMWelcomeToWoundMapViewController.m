@@ -1134,6 +1134,10 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
             alertView.tag = kUpdateSilentNotificationsAlertViewTag;
             [alertView show];
         }
+        if (participant.isTeamLeader && [participant.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedAscending) {
+            // navigate to team
+            [self presentTeamManagementController];
+        }
     };
     if ([lastUserName isEqualToString:participant.userName]) {
         // attempt to acquire last patient and wound

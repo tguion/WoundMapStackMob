@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="IAPProduct" representedClassName="IAPProduct" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descHTML" optional="YES" attributeType="String" syncable="YES"/>
@@ -662,7 +662,7 @@
         <relationship name="referrer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WMParticipant" inverseName="sourceReferrals" inverseEntity="WMParticipant" syncable="YES"/>
     </entity>
     <entity name="WMPaymentTransaction" representedClassName="WMPaymentTransaction" syncable="YES">
-        <attribute name="appliedFlag" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="appliedFlag" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="errorCode" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="errorMessage" optional="YES" attributeType="String" syncable="YES"/>
@@ -1295,7 +1295,7 @@
         <element name="WMPatientConsultant" positionX="0" positionY="0" width="128" height="30"/>
         <element name="WMPatientLocation" positionX="18" positionY="153" width="128" height="178"/>
         <element name="WMPatientReferral" positionX="18" positionY="153" width="128" height="178"/>
-        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="253"/>
+        <element name="WMPaymentTransaction" positionX="45" positionY="180" width="128" height="255"/>
         <element name="WMPerson" positionX="0" positionY="0" width="128" height="223"/>
         <element name="WMPhoto" positionX="0" positionY="0" width="128" height="178"/>
         <element name="WMPsychoSocialGroup" positionX="0" positionY="0" width="128" height="195"/>

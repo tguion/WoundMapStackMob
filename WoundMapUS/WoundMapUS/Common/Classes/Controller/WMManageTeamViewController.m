@@ -119,7 +119,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
     for (WMParticipant *participant in self.teamMembers) {
         NSDate *fiveDaysAgo = [WMUtilities dateByAddingDays:-5 toDate:participant.dateTeamSubscriptionExpires];
         if ([now compare:fiveDaysAgo] == NSOrderedDescending) {
-            [namesExpiring addObject:participant.firstName];
+            [namesExpiring addObject:participant.name];
         }
     }
     if ([namesExpiring count]) {
@@ -749,7 +749,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             UIColor *backgroundColor = [UIColor whiteColor];
             if ([[NSDate date] compare:fiveDaysAgo] == NSOrderedDescending) {
                 backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.25];
-                if ([teamMember.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedDescending) {
+                if ([teamMember.dateTeamSubscriptionExpires compare:[NSDate date]] == NSOrderedAscending) {
                     backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.25];
                 }
             }
@@ -764,8 +764,7 @@ typedef NS_ENUM(NSUInteger, WMCreateTeamActionSheetTag) {
             int purchasedPatientCount = team.purchasedPatientCountValue;
             if (purchasedPatientCount < 3) {
                 // warn
-                UIImage *image = [UIImage imageNamed:@"alert_yellow_iPhone"];
-                cell.accessoryView = [[UIImageView alloc] initWithImage:image];
+                cell.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.25];
             }
             break;
         }

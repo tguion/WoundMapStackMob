@@ -358,7 +358,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         alertMsg = @"{no alert message in dictionary}";
     }
     
-    if (userInfo[@"aps"][@"badge"] != NULL) {
+    if (userInfo[@"aps"][@"badge"]) {
         badge = userInfo[@"aps"][@"badge"];
 		[application setApplicationIconBadgeNumber:[badge integerValue]];
     }

@@ -176,6 +176,9 @@
                         alertView.tag = kSubscriptionExpiredAlertViewTag;
                         [alertView show];
                         [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                        if (participant.isTeamLeader) {
+                            [weakSelf.delegate signInViewController:weakSelf didSignInParticipant:participant];
+                        }
                     } else {
                         // delete photos
                         if (participant.isTeamLeader) {
