@@ -114,6 +114,11 @@
     return @[[NSString stringWithFormat:@"%@/%@", self.patient.ffUrl, WMPatientRelationships.medicationGroups]];
 }
 
+- (id)aggregator
+{
+    return self.patient;
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return @"WMMedicationGroup";

@@ -17,8 +17,8 @@
     #import <SystemConfiguration/SystemConfiguration.h>
     #import <MobileCoreServices/MobileCoreServices.h>
     #define TERRITORY_SUFFIX @"AU"
-    #define BASE_URL_DEV @"http://192.168.1.149:8080/WoundMapAU"
-    #define SSL_URL_DEV @"https://192.168.1.149:8443/WoundMapAU"
+    #define BASE_URL_DEV @"http://192.168.1.142:8080/WoundMapAU"
+    #define SSL_URL_DEV @"https://192.168.1.142:8443/WoundMapAU"
     #define BASE_URL @"http://mobilehealthware.fatfractal.com/WoundMapAU"
     #define SSL_URL @"https://mobilehealthware.fatfractal.com/WoundMapAU"
     #define IAP_PDF5 @"com.mobilehealthware.woundmap.cad.print5.tokenAU"

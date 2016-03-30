@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 2/9/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 
 #import "WCAppDelegate.h"
@@ -178,7 +178,12 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 {
     if (debug==1) {
         DLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
-        DLog(@"Document: %@", [self applicationDocumentsDirectory]);
+        NSString *documentDirectory = [[self applicationDocumentsDirectory] description];
+        DLog(@"Documents: %@", documentDirectory);
+        documentDirectory = [documentDirectory stringByReplacingOccurrencesOfString:@"Documents/" withString:@""];
+        DLog(@"Database: %@Library/Application Support/WoundMapUS/WoundMap.sqlite", documentDirectory);
+
+        
     }
     // initialize Core Data
     [self.coreDataHelper setupCoreData];
@@ -296,6 +301,7 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
 {
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSError *localError = nil;
+    NSLog(@"devToken: %@", [self.devToken description]);
     localError = [ff registerNotificationID:[self.devToken description]];
     if (localError) {
         [WMUtilities logError:localError];

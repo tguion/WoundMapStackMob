@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 2/21/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 //  If datasetSelection represents a WCWoundMeasurement, we need to allow the user to select the plots to include in the graph.
 //  For example, if datasetSelection = "Margins/Edges", we need to user to select one or more of the following:

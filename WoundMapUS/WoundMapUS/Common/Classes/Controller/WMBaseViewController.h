@@ -3,13 +3,24 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 2/12/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //  NS_DESIGNATED_INITIALIZER
 
 #import "WMFatFractalManager.h"
 #import <StoreKit/StoreKit.h>
 
 extern BOOL const kPresentIAPController;    // DEPLOYMENT
+
+/* DEPLOYMENT
+ remove from both info.plist files
+ 
+ <key>NSAppTransportSecurity</key>
+ <dict>
+ <key>NSAllowsArbitraryLoads</key>
+ <true/>
+ </dict> 
+ 
+ */
 
 typedef void (^IAPPresentViewControllerAcceptHandler)(SKPaymentTransaction *transaction);
 typedef void (^IAPPresentViewControllerDeclineHandler)(void);
@@ -70,6 +81,7 @@ typedef void (^IAPPresentViewControllerDeclineHandler)(void);
 - (void)refetchDataForTableView;                                            // nil the reference _fetchedResultsController and reload activeTableView
 - (void)refreshTable;                                                       // refetch using FatFractal
 @property (readonly, nonatomic) NSArray *ffQuery;                           // query string that fetches same as predicate from FatFractal
+@property (readonly, nonatomic) id aggregator;                              // e.g. for device view controller, would be the WMDeviceGroup, for medication view controller, would be WMMedicationGroup
 @property (strong, nonatomic) WMObjectCallback refreshCompletionHandler;    // block to call after table auto refreshes
 
 // adjustments to conform NSFetchedResultsController to UITableViewDelegate/Datasource

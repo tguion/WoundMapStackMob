@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 5/21/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 
 #import "WMNutritionGroupViewController.h"
@@ -396,6 +396,11 @@
     }
     // else
     return @[[NSString stringWithFormat:@"%@/%@", self.nutritionGroup.ffUrl, WMNutritionGroupRelationships.values]];
+}
+
+- (id)aggregator
+{
+    return _nutritionGroup;
 }
 
 - (NSArray *)backendSeedEntityNames

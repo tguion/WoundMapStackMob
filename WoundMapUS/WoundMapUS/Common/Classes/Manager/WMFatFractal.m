@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 4/4/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 
 #import "WMFatFractal.h"
@@ -12,9 +12,9 @@
 
 //static NSString *baseUrl = @"http://localhost:8080/WoundMapUS";                   // Development
 //static NSString *sslUrl = @"https://localhost:8443/WoundMapUS";
-//static NSString *baseUrl = @"http://192.168.1.149:8080/WoundMapUS";                 // Development
-//static NSString *sslUrl = @"https://192.168.1.149:8443/WoundMapUS";
-//static NSString *baseUrl = BASE_URL_DEV;    // Deployment
+//static NSString *baseUrl = @"http://192.168.1.142:8080/WoundMapUS";                 // Development
+//static NSString *sslUrl = @"http://192.168.1.142:8443/WoundMapUS";
+//static NSString *baseUrl = BASE_URL_DEV;    // Development
 //static NSString *sslUrl = SSL_URL_DEV;
 static NSString *baseUrl = BASE_URL;
 static NSString *sslUrl = SSL_URL;        // DEPLOYMENT
@@ -26,8 +26,8 @@ static NSString *sslUrl = SSL_URL;        // DEPLOYMENT
     static WMFatFractal *SharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-//        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
-        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:sslUrl];  // DEPLOYMENT
+        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl sslUrl:sslUrl];
+//        SharedInstance = [[WMFatFractal alloc] initWithBaseUrl:baseUrl];  // DEPLOYMENT
         [self initializeFatFractalInstance:SharedInstance];
     });
     return SharedInstance;
@@ -42,13 +42,13 @@ static NSString *sslUrl = SSL_URL;        // DEPLOYMENT
 
 + (void)initializeFatFractalInstance:(WMFatFractal *)ff
 {
-    ff.debug = NO;//DEPLOYMENT
+    ff.debug = YES;//DEPLOYMENT
     ff.localStorage = [[FFLocalStorageSQLite alloc] initWithDatabaseKey:@"WoundMapFFStorage"];
     // must load blobs explicitely
     ff.autoLoadBlobs = NO;
     ff.autoLoadRefs = YES;
     ff.queueDelegate = [WMFatFractalManager sharedInstance];
-    [FFHttpDelegate addTrustedHost:@"192.168.1.149"];
+    [FFHttpDelegate addTrustedHost:@"192.168.1.142"];    // DEVELOPMENT
 }
 
 - (id)findExistingObjectWithClass:(Class)clazz

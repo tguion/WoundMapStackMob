@@ -127,6 +127,11 @@
     return @[[NSString stringWithFormat:@"%@/%@", self.wound.ffUrl, WMWoundRelationships.measurementGroups]];
 }
 
+- (id)aggregator
+{
+    return self.wound;
+}
+
 - (NSString *)fetchedResultsControllerEntityName
 {
 	return [WMWoundMeasurementGroup entityName];

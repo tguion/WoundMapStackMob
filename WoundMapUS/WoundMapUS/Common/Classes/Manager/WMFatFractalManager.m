@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 3/13/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 
 #import "WMFatFractalManager.h"
@@ -743,6 +743,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
     for (NSString *grabBagName in grabBagNames) {
         NSMutableSet *localGrabBagObjects = [[aggregator valueForKey:grabBagName] mutableCopy];
         [ff grabBagGetAllForObj:aggregator grabBagName:grabBagName onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            NSMutableArray *destinationObjects = (NSMutableArray *)[object mutableCopy];
             if (error) {
                 [WMUtilities logError:error];
             }
@@ -755,23 +756,23 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                 NSRelationshipDescription *relationshipDescription = [entityDescription relationshipsByName][grabBagName];
                 NSEntityDescription *destinationEntity = relationshipDescription.destinationEntity;
                 NSString *entityName = [destinationEntity name];
-                if (![coreDataHelper isBackendDataAcquiredForEntityName:entityName]) {
-                    NSSet *remoteGrabBag = [NSSet setWithArray:object];
-                    [localGrabBagObjects minusSet:remoteGrabBag];
-                    if ([localGrabBagObjects count]) {
-                        // filter out any objects where ffUrl is nil
-                        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ffUrl != nil"];
-                        [localGrabBagObjects filterUsingPredicate:predicate];
-                        if ([localGrabBagObjects count]) {
-                            DLog(@"Will delete %@", localGrabBagObjects);
-                            for (id localGrabBagObject in localGrabBagObjects) {
-                                [ff forgetObj:localGrabBagObject];
-                            }
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:[localGrabBagObjects valueForKeyPath:@"objectID"]];
-                            [managedObjectContext MR_deleteObjects:localGrabBagObjects];
+                NSSet *remoteGrabBag = [NSSet setWithArray:destinationObjects];
+                [localGrabBagObjects minusSet:remoteGrabBag];
+                if ([localGrabBagObjects count]) {
+                    // filter out any objects where ffUrl is nil
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ffUrl != nil"];
+                    [localGrabBagObjects filterUsingPredicate:predicate];
+                    if (![coreDataHelper isBackendDataAcquiredForEntityName:entityName] && [localGrabBagObjects count]) {
+                        DLog(@"Will delete %@", localGrabBagObjects);
+                        for (id localGrabBagObject in localGrabBagObjects) {
+                            [ff forgetObj:localGrabBagObject];
+                            [destinationObjects removeObject:localGrabBagObject];
                         }
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kBackendDeletedObjectIDs object:[localGrabBagObjects valueForKeyPath:@"objectID"]];
+                        [managedObjectContext MR_deleteObjects:localGrabBagObjects];
                     }
                 }
+                [aggregator setValue:[NSSet setWithArray:destinationObjects] forKey:grabBagName];
                 [managedObjectContext MR_saveToPersistentStoreAndWait];
                 // post notification for WMWoundPhoto fetch from back end
                 if ([grabBagName isEqualToString:WMWoundRelationships.photos] && [object isKindOfClass:[NSArray class]]) {

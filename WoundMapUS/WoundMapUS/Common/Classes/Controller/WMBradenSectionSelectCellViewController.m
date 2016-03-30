@@ -131,6 +131,11 @@
     return nil;
 }
 
+- (id)aggregator
+{
+    return _bradenSection;
+}
+
 #pragma mark - UITableViewDataSource
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:

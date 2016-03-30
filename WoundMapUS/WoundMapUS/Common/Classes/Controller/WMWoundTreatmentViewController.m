@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 2/21/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 //  2014.06.20 TODO update for offline
 
@@ -799,6 +799,11 @@
     }
     // else
     return @[[NSString stringWithFormat:@"%@/%@", self.woundTreatmentGroup.ffUrl, WMWoundTreatmentGroupRelationships.values]];
+}
+
+- (id)aggregator
+{
+    return _woundTreatmentGroup;
 }
 
 - (NSArray *)backendSeedEntityNames

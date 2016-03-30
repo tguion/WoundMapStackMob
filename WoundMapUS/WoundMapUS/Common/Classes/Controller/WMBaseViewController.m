@@ -3,7 +3,7 @@
 //  WoundMapUS
 //
 //  Created by Todd Guion on 2/12/14.
-//  Copyright (c) 2014 MobileHealthWare. All rights reserved.
+//  Copyright (c) 2014-2016 2016 etreasure software. All rights reserved.
 //
 
 #import "WMBaseViewController.h"
@@ -27,7 +27,7 @@
 #import "UIView+Custom.h"
 #import "WCAppDelegate.h"
 
-BOOL const kPresentIAPController = YES;  // DEPLOYMENT
+BOOL const kPresentIAPController = NO;  // DEPLOYMENT
 
 @interface WMBaseViewController ()
 
@@ -341,29 +341,36 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
     if (0 == [queries count]) {
         return;
     }
-    // else
+    // else query looks like this: /ff/resources/WMMedicationGroup/dt0q2wQE-g8ZJxuS_9nEh5/medications
     __weak __typeof(&*self)weakSelf = self;
     WMFatFractal *ff = [WMFatFractal sharedInstance];
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     __block NSInteger count = [queries count];
-    FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {
-        if (error) {
-            [WMUtilities logError:error];
-        }
-        if (0 == count || --count == 0) {
-            // we must save here, since we may have picked up changes from cloud
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
-            // refresh the tableView
-            [weakSelf.tableView reloadData];
-            if (weakSelf.refreshCompletionHandler) {
-                weakSelf.refreshCompletionHandler(error, nil);
-            }
-            [weakSelf.refreshControl endRefreshing];
-        }
-    };
     for (NSString *query in queries) {
         NSString *q = [query stringByReplacingOccurrencesOfString:@"/ff/resources/" withString:@"/"];
-        [ff getArrayFromUri:q onComplete:onComplete];
+        NSArray *components = [q componentsSeparatedByString:@"/"];
+        [ff getArrayFromUri:q onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+            if (error) {
+                [WMUtilities logError:error];
+            }
+            if (0 == count || --count == 0) {
+                // update the array if there is an aggregator
+                if (self.aggregator) {
+                    NSString *destinationKey = [components lastObject];
+                    if (destinationKey) {
+                        [self.aggregator setValue:[NSSet setWithArray:object] forKey:destinationKey];
+                    }
+                }
+                // we must save here, since we may have picked up changes from cloud
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
+                // refresh the tableView
+                [weakSelf.tableView reloadData];
+                if (weakSelf.refreshCompletionHandler) {
+                    weakSelf.refreshCompletionHandler(error, nil);
+                }
+                [weakSelf.refreshControl endRefreshing];
+            }
+        }];
     }
 }
 
@@ -1115,6 +1122,11 @@ BOOL const kPresentIAPController = YES;  // DEPLOYMENT
 }
 
 - (NSArray *)ffQuery
+{
+    return nil;
+}
+
+- (id)aggregator
 {
     return nil;
 }

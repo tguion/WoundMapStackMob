@@ -848,6 +848,11 @@
     return @[[NSString stringWithFormat:@"%@/%@", self.woundMeasurementGroup.ffUrl, WMWoundMeasurementGroupRelationships.values]];
 }
 
+- (id)aggregator
+{
+    return _woundMeasurementGroup;
+}
+
 - (NSArray *)backendSeedEntityNames
 {
     return @[];

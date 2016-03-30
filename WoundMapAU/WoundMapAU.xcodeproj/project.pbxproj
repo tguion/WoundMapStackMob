@@ -1646,7 +1646,7 @@
 		7D55FFFF1A041F4200FE7DEC /* WMRequestConsultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMRequestConsultViewController.m; sourceTree = "<group>"; };
 		7D9765A81A22667F00D68691 /* IAPProducts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = IAPProducts.plist; path = WoundMapAU/IAP/IAPProducts.plist; sourceTree = SOURCE_ROOT; };
 		7DC75E631A09649500E81D85 /* WoundMap.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = WoundMap.sqlite; sourceTree = "<group>"; };
-		7DC75E641A09649500E81D85 /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
+		7DC75E641A09649500E81D85 /* WoundMap.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = text; path = "WoundMap.sqlite-shm"; sourceTree = "<group>"; };
 		7DC75E651A09649500E81D85 /* WoundMap.sqlite-wal */ = {isa = PBXFileReference; lastKnownFileType = file; path = "WoundMap.sqlite-wal"; sourceTree = "<group>"; };
 		7DE4B7451A13B32700420BB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreenAU.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
