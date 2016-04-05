@@ -136,6 +136,7 @@
             }
             if (counter == 0 || --counter == 0) {
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
+                [weakSelf.tableView reloadData];
             }
         };
         FFHttpMethodCompletion grabBagHandler = ^(NSError *error, id object, NSHTTPURLResponse *response) {
@@ -196,8 +197,6 @@
     [self willChangeValueForKey:@"bradenScale"];
     _bradenScale = bradenScale;
     [self didChangeValueForKey:@"bradenScale"];
-    // update the header view
-    self.bradenScaleTableViewHeader.bradenScale = bradenScale;
 }
 
 #pragma mark - Actions

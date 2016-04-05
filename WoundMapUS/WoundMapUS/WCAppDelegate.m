@@ -182,8 +182,6 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
         DLog(@"Documents: %@", documentDirectory);
         documentDirectory = [documentDirectory stringByReplacingOccurrencesOfString:@"Documents/" withString:@""];
         DLog(@"Database: %@Library/Application Support/WoundMapUS/WoundMap.sqlite", documentDirectory);
-
-        
     }
     // initialize Core Data
     [self.coreDataHelper setupCoreData];
@@ -223,8 +221,8 @@ static NSString *keychainIdentifier = @"WoundMapUSKeychain";
     // account for iOS 8 new notification registration
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         // use registerUserNotificationSettings
-        [application registerForRemoteNotifications];
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [application registerForRemoteNotifications];
     } else {
         // use registerForRemoteNotifications
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];

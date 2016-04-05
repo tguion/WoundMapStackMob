@@ -43,8 +43,8 @@
         // Initialization code
         UIView *contentView = self.contentView;
         
-        [contentView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-        [contentView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//        [contentView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+//        [contentView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         
         _thumbnailImageView = [[WMPatientPhotoImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 57.0, 57.0)];
         _thumbnailImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -76,13 +76,21 @@
         [_referralButton setTitle:@"Referral" forState:UIControlStateNormal];
         [_referralButton sizeToFit];
         [_referralButton addTarget:self action:@selector(referralAction:) forControlEvents:UIControlEventTouchUpInside];
-        
+        _referralButton.hidden = YES;
+        [contentView addSubview:_referralButton];
+        [_referralButton setContentCompressionResistancePriority:(UILayoutPriorityDefaultHigh + 1) forAxis:UILayoutConstraintAxisHorizontal];
+        [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_referralButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
         _unarchiveButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _unarchiveButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_unarchiveButton setTitle:@"Unarchive" forState:UIControlStateNormal];
         [_unarchiveButton sizeToFit];
         [_unarchiveButton addTarget:self action:@selector(unarchiveAction:) forControlEvents:UIControlEventTouchUpInside];
-        
+        _unarchiveButton.hidden = YES;
+        [contentView addSubview:_unarchiveButton];
+        [_unarchiveButton setContentCompressionResistancePriority:(UILayoutPriorityDefaultHigh + 1) forAxis:UILayoutConstraintAxisHorizontal];
+        [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_unarchiveButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+
         _topSpacerView = [[UIView alloc] initWithFrame:CGRectZero];
         _topSpacerView.translatesAutoresizingMaskIntoConstraints = NO;
         [contentView addSubview:_topSpacerView];
@@ -91,9 +99,17 @@
         _bottomSpacerView.translatesAutoresizingMaskIntoConstraints = NO;
         [contentView addSubview:_bottomSpacerView];
         
-        [NSLayoutConstraint constraintWithItem:_thumbnailImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+        [contentView addConstraint:[NSLayoutConstraint constraintWithItem:_thumbnailImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
         [_thumbnailImageView addConstraint:[NSLayoutConstraint constraintWithItem:_thumbnailImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:57.0]];
         [_thumbnailImageView addConstraint:[NSLayoutConstraint constraintWithItem:_thumbnailImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:57.0]];
+
+        _labelsConstraints = [NSMutableArray array];
+        NSDictionary *views = NSDictionaryOfVariableBindings(_titleLabel, _identifierLabel, _statusLabel);
+        [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_titleLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+        [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_identifierLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+        [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_statusLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+        [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleLabel][_identifierLabel][_statusLabel]-(>=8)-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
+        [_labelContainerView addConstraints:_labelsConstraints];
 
     }
     return self;
@@ -107,27 +123,26 @@
     _unarchiveCallback = nil;
 }
 
-- (void)setNeedsUpdateConstraints
+//- (void)setNeedsUpdateConstraints
+//{
+//    if (_constraints) {
+//        [self.contentView removeConstraints:_constraints];
+//        [_labelContainerView removeConstraints:_labelsConstraints];
+//    }
+//    _constraints = nil;
+//    _labelsConstraints = nil;
+//    [super setNeedsUpdateConstraints];
+//}
+
+- (void)refreshConstraintsForPatient:(WMPatient *)patient withReferral:(BOOL)referral
 {
+    UIView *contentView = self.contentView;
+
     if (_constraints) {
         [self.contentView removeConstraints:_constraints];
-        [_labelContainerView removeConstraints:_labelsConstraints];
-    }
-    _constraints = nil;
-    _labelsConstraints = nil;
-    [super setNeedsUpdateConstraints];
-}
-
-- (void)updateConstraints
-{
-    if (_constraints) {
-        [super updateConstraints];
-        return;
     }
     
-    UIView *contentView = self.contentView;
-    
-    NSDictionary *views = NSDictionaryOfVariableBindings(_topSpacerView, _thumbnailImageView, _labelContainerView, _bottomSpacerView);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_topSpacerView, _thumbnailImageView, _labelContainerView, _bottomSpacerView, _unarchiveButton, _referralButton);
     NSDictionary *metrics = @{
                               @"Left" : @(self.separatorInset.left),
                               @"Right" : @(8),
@@ -139,22 +154,21 @@
 
     [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topSpacerView]|" options:NSLayoutFormatAlignAllTop metrics:nil views:views]];
     [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomSpacerView]|" options:NSLayoutFormatAlignAllTop metrics:nil views:views]];
-    [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView][_labelContainerView]|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
-    [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topSpacerView][_labelContainerView][_bottomSpacerView(_topSpacerView)]|" options:NSLayoutFormatAlignAllRight metrics:metrics views:views]];
+    if (patient.archivedFlagValue) {
+        _unarchiveButton.hidden = NO;
+        [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView][_labelContainerView]-[_unarchiveButton]-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
+    } else if (referral) {
+        _referralButton.hidden = NO;
+        [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView][_labelContainerView]-[_referralButton]-|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
+    } else {
+        _unarchiveButton.hidden = YES;
+        _referralButton.hidden = YES;
+        [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-Left-[_thumbnailImageView][_labelContainerView]|" options:NSLayoutFormatAlignAllTop metrics:metrics views:views]];
+    }
+    [_constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topSpacerView][_labelContainerView][_bottomSpacerView(_topSpacerView)]|" options:0 metrics:metrics views:views]];
     
     [contentView addConstraints:_constraints];
     
-    _labelsConstraints = [NSMutableArray array];
-    
-    views = NSDictionaryOfVariableBindings(_titleLabel, _identifierLabel, _statusLabel);
-    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_titleLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_identifierLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_statusLabel]-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-    [_labelsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleLabel][_identifierLabel][_statusLabel]-(>=8)-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:views]];
-    [_labelContainerView addConstraints:_labelsConstraints];
-
-    
-    [super updateConstraints];
     [_thumbnailImageView setNeedsDisplay];
 }
 
@@ -163,20 +177,6 @@
         referralCallback:(WMPatientReferralCallback)referralCallback
        unarchiveCallback:(WMPatientUnarchiveCallback)unarchiveCallback
 {
-    if (patient.archivedFlagValue) {
-        if (nil == _unarchiveButton.superview) {
-            self.accessoryView = _unarchiveButton;
-        } else {
-            self.accessoryView = nil;
-        }
-    }
-    if (patientReferral) {
-        if (nil == _referralButton.superview) {
-            self.accessoryView = _referralButton;
-        } else {
-            self.accessoryView = nil;
-        }
-    }
     [_thumbnailImageView updateForPatient:patient];
     _titleLabel.text = patient.lastNameFirstName;
     if ([patient.identifierEMR length]) {
@@ -185,7 +185,8 @@
         _identifierLabel.text = @"No identifier";
     }
     _statusLabel.text = patient.patientStatusMessages;
-    [self setNeedsUpdateConstraints];
+    [self refreshConstraintsForPatient:patient withReferral:(patientReferral != nil)];
+    [self layoutIfNeeded];
 //    [self performSelector:@selector(debugSubviews) withObject:nil afterDelay:1.0]; // DEBUG
     _referralCallback = [referralCallback copy];
     _unarchiveCallback = [unarchiveCallback copy];
