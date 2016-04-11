@@ -212,8 +212,8 @@ NSInteger const kBradenSectionCount = 6;
     for (WMBradenSection *bradenSection in sections) {
         score += [bradenSection.selectedCell.value intValue];
     }
-    self.scoreValue = score;
     self.completeFlag = @(self.isScoredCalculated);
+    self.scoreValue = score;
 }
 
 - (NSArray *)sortedSections

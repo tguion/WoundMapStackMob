@@ -9,38 +9,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleInputViewController.m"
-            timestampString = "481478343.007503"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
-            landmarkName = "-viewDidLoad"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleInputViewController.m"
-            timestampString = "481575433.329707"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
-            landmarkName = "-viewDidLoad"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "WoundMapUS/WoundMapUS/Common/Classes/Model/WMBradenScale.m"
             timestampString = "481476991.474074"
             startingColumnNumber = "9223372036854775807"
@@ -74,12 +42,12 @@
                   moduleName = "WoundMapUS"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/tguion/Documents/Projects/MobileHealthWare/WoundMapTeam/WoundMapUS/WoundMapUS/Common/Classes/Model/WMBradenScale.m"
-                  timestampString = "481902943.784432"
+                  timestampString = "482094540.184703"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
                   endingLineNumber = "39"
-                  offsetFromSymbolStart = "432">
+                  offsetFromSymbolStart = "440">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -89,12 +57,12 @@
                   moduleName = "WoundMapUS"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/tguion/Documents/Projects/MobileHealthWare/WoundMapTeam/WoundMapUS/WoundMapUS/Common/Classes/Model/WMBradenScale.m"
-                  timestampString = "481902943.784594"
+                  timestampString = "482094540.184911"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
                   endingLineNumber = "39"
-                  offsetFromSymbolStart = "505">
+                  offsetFromSymbolStart = "548">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -102,16 +70,128 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBaseViewController.m"
+            timestampString = "482087536.181488"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1006"
+            endingLineNumber = "1006"
+            landmarkName = "-tableView:numberOfRowsInSection:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481902086.821399"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBaseViewController.m"
+            timestampString = "482089570.183735"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "421"
-            endingLineNumber = "421"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "353"
+            endingLineNumber = "353"
+            landmarkName = "-refreshTable"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/View/WMBradenScaleTableHeaderView.m"
+            timestampString = "482089928.063667"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Model/machine/_WMBradenScale.m"
+            timestampString = "482089986.866898"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "-setCompleteFlagValue:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/WCAppDelegate.m"
+            timestampString = "482091076.829772"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "589"
+            endingLineNumber = "589"
+            landmarkName = "-processRemoteNotification"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482091642.665591"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "-bradenScaleInputController:didFinishWithBradenScale:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482091507.26831"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "-bradenScaleInputController:didFinishWithBradenScale:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482091632.986725"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "-bradenScaleInputController:didFinishWithBradenScale:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -122,12 +202,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481902943.70973"
+            timestampString = "482091827.727749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "458"
-            endingLineNumber = "458"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "-postSynchronizationEventsForNotification:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -138,12 +218,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481902943.70973"
+            timestampString = "482091926.987135"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "465"
-            endingLineNumber = "465"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
+            landmarkName = "-postSynchronizationEventsForNotification:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -154,12 +234,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481902943.70973"
+            timestampString = "482092070.906687"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "607"
-            endingLineNumber = "607"
-            landmarkName = "-acquireParticipantForUser:completionHandler:"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "-postSynchronizationEventsForNotification:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -169,13 +249,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMUserDefaultsManager.m"
-            timestampString = "481902515.947453"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482093988.370222"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "-setLastUserName:"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "-addBradenScaleAction:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -185,13 +265,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMUserDefaultsManager.m"
-            timestampString = "481902536.446304"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482093991.643914"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "-setLastTeamName:"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "-addBradenScaleAction:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -201,13 +281,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481902704.76573"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482094018.274726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "434"
-            endingLineNumber = "434"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "-navigateToBradenScaleEditor:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -217,13 +297,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481903194.902543"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleInputViewController.m"
+            timestampString = "482094034.924018"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "473"
-            endingLineNumber = "473"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -233,13 +313,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481903201.800101"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482094110.220505"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "478"
-            endingLineNumber = "478"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "-bradenScaleInputControllerDidCancel:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -249,13 +329,125 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
-            timestampString = "481903223.815095"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482094176.687788"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
-            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "-navigateToBradenScaleEditor:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482094179.483597"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "-navigateToBradenScaleEditor:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleInputViewController.m"
+            timestampString = "482094226.327505"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleInputViewController.m"
+            timestampString = "482094256.358127"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBaseViewController.m"
+            timestampString = "482094345.356259"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1103"
+            endingLineNumber = "1103"
+            landmarkName = "-fetchedResultsControllerDidFetch"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBaseViewController.m"
+            timestampString = "482094417.206816"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleViewController.m"
+            timestampString = "482094516.490292"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "-bradenScaleInputControllerDidCancel:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Controller/WMBradenScaleInputViewController.m"
+            timestampString = "482094547.518716"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
+            landmarkName = "-ffQuery"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

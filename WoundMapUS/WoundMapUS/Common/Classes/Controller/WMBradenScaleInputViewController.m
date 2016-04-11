@@ -11,6 +11,7 @@
 #import "WMBradenSectionSelectCellViewController.h"
 #import "MBProgressHUD.h"
 #import "WMBradenCellTableViewCell.h"
+#import "WMPatient.h"
 #import "WMBradenSection.h"
 #import "WMBradenScale.h"
 #import "WMBradenCell.h"
@@ -121,9 +122,27 @@
 	WMBradenScaleTableHeaderView *aView = [[WMBradenScaleTableHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.bounds), 64.0)];
 	self.tableView.tableHeaderView = aView;
     // update from back end or create new data
+    WMPatient *patient = self.patient;
+    NSManagedObjectContext *managedObjectContext = [patient managedObjectContext];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
+    WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
     __weak __typeof(&*self)weakSelf = self;
-    if (_newBradenScaleFlag) {
+    if (!_newBradenScaleFlag) {
+        dispatch_block_t block = ^{
+            // we want to support cancel, so make sure we have an undoManager
+            if (nil == managedObjectContext.undoManager) {
+                managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+                _removeUndoManagerWhenDone = YES;
+            }
+            [managedObjectContext.undoManager beginUndoGrouping];
+        };
+        // values may not have been aquired from back end
+        [ffm updateGrabBags:@[WMBradenScaleRelationships.sections] aggregator:_bradenScale ff:ff completionHandler:^(NSError *error) {
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+            [weakSelf.tableView reloadData];
+            block();
+        }];
+    } else {
         [MBProgressHUD showHUDAddedToViewController:self animated:YES];
         // create and save to back end
         NSParameterAssert(_bradenScale);
@@ -135,6 +154,7 @@
                 [WMUtilities logError:error];
             }
             if (counter == 0 || --counter == 0) {
+                [managedObjectContext MR_saveToPersistentStoreAndWait];
                 [MBProgressHUD hideHUDForView:weakSelf.view animated:NO];
                 [weakSelf.tableView reloadData];
             }
@@ -154,14 +174,6 @@
                onComplete:grabBagHandler
                 onOffline:grabBagHandler];
         }
-    } else {
-        // make sure we have the data from back end will be handled by fetchedResultsControllerDidFetch
-        // we want to support cancel, so make sure we have an undoManager
-        if (nil == self.managedObjectContext.undoManager) {
-            self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-            _removeUndoManagerWhenDone = YES;
-        }
-        [self.managedObjectContext.undoManager beginUndoGrouping];
     }
 }
 
@@ -275,7 +287,7 @@
 
 - (NSArray *)ffQuery
 {
-    if (_bradenScale.ffUrl) {
+    if (!_newBradenScaleFlag && _bradenScale.ffUrl) {
         return @[[NSString stringWithFormat:@"%@/%@", _bradenScale.ffUrl, WMBradenScaleRelationships.sections]];
     }
     // else
