@@ -43,9 +43,6 @@
         // Initialization code
         UIView *contentView = self.contentView;
         
-//        [contentView setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-//        [contentView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-        
         _thumbnailImageView = [[WMPatientPhotoImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 57.0, 57.0)];
         _thumbnailImageView.translatesAutoresizingMaskIntoConstraints = NO;
         _thumbnailImageView.image = [WMPatient missingThumbnailImage];
@@ -122,17 +119,6 @@
     _referralCallback = nil;
     _unarchiveCallback = nil;
 }
-
-//- (void)setNeedsUpdateConstraints
-//{
-//    if (_constraints) {
-//        [self.contentView removeConstraints:_constraints];
-//        [_labelContainerView removeConstraints:_labelsConstraints];
-//    }
-//    _constraints = nil;
-//    _labelsConstraints = nil;
-//    [super setNeedsUpdateConstraints];
-//}
 
 - (void)refreshConstraintsForPatient:(WMPatient *)patient withReferral:(BOOL)referral
 {

@@ -74,7 +74,7 @@
                   moduleName = "WoundMapUS"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/tguion/Documents/Projects/MobileHealthWare/WoundMapTeam/WoundMapUS/WoundMapUS/Common/Classes/Model/WMBradenScale.m"
-                  timestampString = "481576357.047471"
+                  timestampString = "481902943.784432"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
@@ -89,7 +89,7 @@
                   moduleName = "WoundMapUS"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/tguion/Documents/Projects/MobileHealthWare/WoundMapTeam/WoundMapUS/WoundMapUS/Common/Classes/Model/WMBradenScale.m"
-                  timestampString = "481576357.047647"
+                  timestampString = "481902943.784594"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
@@ -105,13 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/View/WMPatientAutoTableViewCell.m"
-            timestampString = "481576351.160803"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481902086.821399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "-refreshConstraintsForPatient:withReferral:"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -121,13 +121,141 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WoundMapUS/WoundMapUS/Common/Classes/View/WMPatientAutoTableViewCell.m"
-            timestampString = "481576351.160803"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481902943.70973"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
-            landmarkName = "-refreshConstraintsForPatient:withReferral:"
+            startingLineNumber = "458"
+            endingLineNumber = "458"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481902943.70973"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "465"
+            endingLineNumber = "465"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481902943.70973"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "607"
+            endingLineNumber = "607"
+            landmarkName = "-acquireParticipantForUser:completionHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMUserDefaultsManager.m"
+            timestampString = "481902515.947453"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "-setLastUserName:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMUserDefaultsManager.m"
+            timestampString = "481902536.446304"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "-setLastTeamName:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481902704.76573"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "434"
+            endingLineNumber = "434"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481903194.902543"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "473"
+            endingLineNumber = "473"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481903201.800101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "478"
+            endingLineNumber = "478"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WoundMapUS/WoundMapUS/Common/Classes/Manager/WMFatFractalManager.m"
+            timestampString = "481903223.815095"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "493"
+            endingLineNumber = "493"
+            landmarkName = "-truncateStoreForSignIn:completionHandler:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -141,15 +141,14 @@
             [weakSelf.appDelegate registerDeviceToken];
             // remove cache
             __block WMParticipant *participant = nil;
-            WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
-            NSString *lastUserName = userDefaultsManager.lastUserName;
-            if (lastUserName && ![lastUserName isEqualToString:user.userName]) {
-                // participant on this device has changed
-                weakSelf.appDelegate.participant = nil;
-                [WMParticipant MR_truncateAllInContext:managedObjectContext];
-                [managedObjectContext MR_saveToPersistentStoreAndWait];
-            }
-            userDefaultsManager.lastUserName = user.userName;
+//            WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+//            NSString *lastUserName = userDefaultsManager.lastUserName;
+//            if (lastUserName && ![lastUserName isEqualToString:user.userName]) {
+//                // participant on this device has changed
+//                weakSelf.appDelegate.participant = nil;
+//                [WMParticipant MR_truncateAllInContext:managedObjectContext];
+//                [managedObjectContext MR_saveToPersistentStoreAndWait];
+//            }
             // fetch participant
             participant = [WMParticipant participantForUserName:user.userName
                                                          create:NO

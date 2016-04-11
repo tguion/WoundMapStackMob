@@ -418,20 +418,25 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
 {
     CoreDataHelper *coreDataHelper = [CoreDataHelper sharedInstance];
     WMFatFractal *ff = [WMFatFractal sharedInstance];
-    WMTeam *team = participant.team;
-    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     WMUserDefaultsManager *userDefaultsManager = [WMUserDefaultsManager sharedInstance];
+    WMTeam *team = participant.team;
+    NSString *participantTeamFFURL = team.ffUrl;
+    NSString *lastTeamFFURL = userDefaultsManager.lastTeamName;
+    NSManagedObjectContext *managedObjectContext = [participant managedObjectContext];
     __weak __typeof(&*self)weakSelf = self;
     NSString *lastUserName = userDefaultsManager.lastUserName;
     BOOL participantHasChangedOnDevice = NO;
     if (lastUserName && ![lastUserName isEqualToString:participant.userName]) {
-        // participant on this device has changed
+        // participant on this device has changed, check if team has changed
         participantHasChangedOnDevice = YES;
-        [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
-        [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
-        [WMPatient MR_truncateAllInContext:managedObjectContext];
-        [WMTeamInvitation MR_truncateAllInContext:managedObjectContext];
-        [managedObjectContext MR_saveToPersistentStoreAndWait];
+        if (lastTeamFFURL && ![lastTeamFFURL isEqualToString:participantTeamFFURL]) {
+            // team has changed - dump the policy objects that are associated with last team
+            [WMNavigationNode MR_truncateAllInContext:managedObjectContext];
+            [WMNavigationTrack MR_truncateAllInContext:managedObjectContext];
+            [WMPatient MR_truncateAllInContext:managedObjectContext];
+            [WMTeamInvitation MR_truncateAllInContext:managedObjectContext];
+            [managedObjectContext MR_saveToPersistentStoreAndWait];
+        }
     }
     // determine if we need to move patients to team
     NSInteger nodeCount = [WMNavigationNode MR_countOfEntitiesWithContext:managedObjectContext];

@@ -1123,6 +1123,7 @@ typedef NS_ENUM(NSInteger, WMWelcomeState) {
         }
         [weakSelf.tableView reloadData];
         userDefaultsManager.lastUserName = participant.userName;
+        userDefaultsManager.lastTeamName = participant.team.ffUrl;
         [managedObjectContext MR_saveToPersistentStoreAndWait];
         _enterWoundMapButton.enabled = weakSelf.setupConfigurationComplete;
         [MBProgressHUD hideAllHUDsForView:weakSelf.view animated:NO];
