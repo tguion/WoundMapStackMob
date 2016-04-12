@@ -2303,7 +2303,6 @@
             [MBProgressHUD showHUDAddedToViewController:self animated:YES].labelText = @"Processing Photo";
             WMFatFractal *ff = [WMFatFractal sharedInstance];
             WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
-//            WMFatFractalManager *ffm = [WMFatFractalManager sharedInstance];
             // have photoManager start the process
             __block NSInteger counter = 2;
             FFHttpMethodCompletion onComplete = ^(NSError *error, id object, NSHTTPURLResponse *response) {

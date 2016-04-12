@@ -67,7 +67,7 @@
                          [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                        target:nil
                                                                        action:nil],
-                         [[UIBarButtonItem alloc] initWithTitle:@"Continue as Planned"
+                         [[UIBarButtonItem alloc] initWithTitle:@"Continue"
                                                           style:UIBarButtonItemStyleBordered
                                                          target:self
                                                          action:@selector(continueAction:)],
