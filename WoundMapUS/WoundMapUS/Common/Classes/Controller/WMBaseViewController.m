@@ -1099,9 +1099,9 @@ BOOL const kPresentIAPController = NO;  // DEPLOYMENT
 
 - (void)fetchedResultsControllerDidFetch
 {
-    if ([self.fetchedResultsController.fetchedObjects count] == 0 && self.activeTableView == self.tableView) {
-        [self refreshTable];
-    }
+//    if ([self.fetchedResultsController.fetchedObjects count] == 0 && self.activeTableView == self.tableView) {
+//        [self refreshTable];
+//    }
 }
 
 - (void)nilFetchedResultsController

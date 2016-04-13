@@ -114,7 +114,6 @@
         };
         // values may not have been aquired from back end
         [ffm updateGrabBags:@[WMCarePlanGroupRelationships.values] aggregator:_carePlanGroup ff:ff completionHandler:^(NSError *error) {
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
             block();
         }];

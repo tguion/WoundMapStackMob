@@ -76,7 +76,6 @@
             if (error) {
                 [WMUtilities logError:error];
             }
-            [managedObjectContext MR_saveToPersistentStoreAndWait];
             [weakSelf.tableView reloadData];
             block();
         }];

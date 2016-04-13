@@ -546,7 +546,7 @@ NSInteger const kNumberFreeMonthsFirstSubscription = 1;
                         }
                     };
                     // do we need to fetch team here?
-                    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=0&depthRef=0",[WMTeam entityName], [team.ffUrl lastPathComponent]];
+                    NSString *queryString = [NSString stringWithFormat:@"/%@/%@?depthGb=1&depthRef=1",[WMTeam entityName], [team.ffUrl lastPathComponent]];
                     [ff getObjFromUrl:queryString onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
                         if (error) {
                             [WMUtilities logError:error];
