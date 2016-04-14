@@ -472,7 +472,6 @@
 		7DDA01451940AE9E00E8F65E /* TeamIntroduction.html in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA01441940AE9E00E8F65E /* TeamIntroduction.html */; };
 		7DDA0153194344E800E8F65E /* SplashReadInstructions.html in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA0152194344E800E8F65E /* SplashReadInstructions.html */; };
 		7DDA015519436EE500E8F65E /* InstructionPatientReferral.html in Resources */ = {isa = PBXBuildFile; fileRef = 7DDA015419436EE500E8F65E /* InstructionPatientReferral.html */; };
-		7DDA8D96192550B000A1AFB7 /* NMSSH.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D95192550B000A1AFB7 /* NMSSH.framework */; };
 		7DDA8D9A1925511000A1AFB7 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D991925511000A1AFB7 /* libz.dylib */; };
 		7DDA8D9C1925511B00A1AFB7 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */; };
 		7DDA8DA01925544C00A1AFB7 /* WMFTPConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDA8D9E1925544C00A1AFB7 /* WMFTPConfigurationViewController.m */; };
@@ -543,6 +542,8 @@
 		7DDFD68B18B7C0B900041927 /* WMHomeBaseViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DDFD68918B7C0B900041927 /* WMHomeBaseViewController_iPad.xib */; };
 		7DDFD69118B7C2C000041927 /* WMNavigationPatientWoundContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD68E18B7C2C000041927 /* WMNavigationPatientWoundContainerView.m */; };
 		7DDFD69218B7C2C000041927 /* WMNavigationPatientWoundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DDFD69018B7C2C000041927 /* WMNavigationPatientWoundView.m */; };
+		7DE04C061CBFF4E800CA7BDE /* NMSSH.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DE04C021CBFD31C00CA7BDE /* NMSSH.framework */; };
+		7DE04C081CBFF53E00CA7BDE /* NMSSH.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7DE04C021CBFD31C00CA7BDE /* NMSSH.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7DE617D119940429000839E6 /* _WMPatientLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE617D019940429000839E6 /* _WMPatientLocation.m */; };
 		7DE617D619940436000839E6 /* WMPatientLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE617D519940436000839E6 /* WMPatientLocation.m */; };
 		7DF4E8E418C22EEC000A3F5B /* _WMCarePlanCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4E8B918C22EEC000A3F5B /* _WMCarePlanCategory.m */; };
@@ -630,6 +631,20 @@
 			remoteInfo = "CorePlot-CocoaTouch";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7DE04C091CBFF53E00CA7BDE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				7DE04C081CBFF53E00CA7BDE /* NMSSH.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5F67D1B018AC2FEF00460C37 /* WMWelcomeToWoundMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMWelcomeToWoundMapViewController.h; sourceTree = "<group>"; };
@@ -1410,7 +1425,6 @@
 		7DDA01441940AE9E00E8F65E /* TeamIntroduction.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TeamIntroduction.html; sourceTree = "<group>"; };
 		7DDA0152194344E800E8F65E /* SplashReadInstructions.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = SplashReadInstructions.html; sourceTree = "<group>"; };
 		7DDA015419436EE500E8F65E /* InstructionPatientReferral.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = InstructionPatientReferral.html; sourceTree = "<group>"; };
-		7DDA8D95192550B000A1AFB7 /* NMSSH.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NMSSH.framework; sourceTree = "<group>"; };
 		7DDA8D991925511000A1AFB7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		7DDA8D9D1925544C00A1AFB7 /* WMFTPConfigurationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFTPConfigurationViewController.h; sourceTree = "<group>"; };
@@ -1534,6 +1548,7 @@
 		7DDFD68E18B7C2C000041927 /* WMNavigationPatientWoundContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationPatientWoundContainerView.m; sourceTree = "<group>"; };
 		7DDFD68F18B7C2C000041927 /* WMNavigationPatientWoundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMNavigationPatientWoundView.h; sourceTree = "<group>"; };
 		7DDFD69018B7C2C000041927 /* WMNavigationPatientWoundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMNavigationPatientWoundView.m; sourceTree = "<group>"; };
+		7DE04C021CBFD31C00CA7BDE /* NMSSH.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NMSSH.framework; sourceTree = "<group>"; };
 		7DE617CF19940429000839E6 /* _WMPatientLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _WMPatientLocation.h; sourceTree = "<group>"; };
 		7DE617D019940429000839E6 /* _WMPatientLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _WMPatientLocation.m; sourceTree = "<group>"; };
 		7DE617D419940436000839E6 /* WMPatientLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPatientLocation.h; sourceTree = "<group>"; };
@@ -1664,10 +1679,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DE04C061CBFF4E800CA7BDE /* NMSSH.framework in Frameworks */,
 				7DDA8D9C1925511B00A1AFB7 /* CFNetwork.framework in Frameworks */,
 				7D03D6CF19DDCA22006A3B4A /* StoreKit.framework in Frameworks */,
 				7DDA8D9A1925511000A1AFB7 /* libz.dylib in Frameworks */,
-				7DDA8D96192550B000A1AFB7 /* NMSSH.framework in Frameworks */,
 				7D10CE3418E0CFBD00AD43E3 /* FFEF.framework in Frameworks */,
 				7DF4E9D918C4CF58000A3F5B /* libCorePlot-CocoaTouch.a in Frameworks */,
 				7DB2068818A7D4320004DC32 /* CoreLocation.framework in Frameworks */,
@@ -2074,10 +2089,10 @@
 		7DB2060718A7D3400004DC32 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7DE04C021CBFD31C00CA7BDE /* NMSSH.framework */,
 				7D03D6CE19DDCA22006A3B4A /* StoreKit.framework */,
 				7DDA8D9B1925511B00A1AFB7 /* CFNetwork.framework */,
 				7DDA8D991925511000A1AFB7 /* libz.dylib */,
-				7DDA8D95192550B000A1AFB7 /* NMSSH.framework */,
 				7D10CE3318E0CFBD00AD43E3 /* FFEF.framework */,
 				7DB2068418A7D4320004DC32 /* CoreLocation.framework */,
 				7DB2068518A7D4320004DC32 /* MobileCoreServices.framework */,
@@ -3274,6 +3289,7 @@
 				7DB2060218A7D3400004DC32 /* Frameworks */,
 				7DB2060318A7D3400004DC32 /* Resources */,
 				7D03D6D619DDEC46006A3B4A /* ShellScript */,
+				7DE04C091CBFF53E00CA7BDE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4053,7 +4069,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4068,7 +4084,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
@@ -4095,7 +4111,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: MobileHealthWare LLC (Y3FBN555LK)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: MobileHealthWare LLC (Y3FBN555LK)";
 				COPY_PHASE_STRIP = YES;
-				ENABLE_BITCODE = NO;
+				ENABLE_BITCODE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -4104,7 +4120,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4132,6 +4148,7 @@
 					"${PROJECT_DIR}/framework/**",
 				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
@@ -4161,6 +4178,7 @@
 					"${PROJECT_DIR}/framework/**",
 				);
 				INFOPLIST_FILE = "WoundMapUS/WoundMapUS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";

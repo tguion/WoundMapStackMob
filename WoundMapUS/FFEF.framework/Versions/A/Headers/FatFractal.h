@@ -32,7 +32,7 @@
 extern NSString * const FF_SCRIPT_AUTH_SERVICE_FACEBOOK;
 extern NSString * const FF_SCRIPT_AUTH_SERVICE_TWITTER;
 
-static NSString * const SDK_VERSION = @"R1.4.3.RC3_R2947";
+static NSString * const SDK_VERSION = @"R1.5.0_R3100";
 
 /** \brief The FFQueueDelegate protocol. */
 /**
@@ -142,10 +142,16 @@ typedef NS_ENUM(NSInteger, FFUrlType) {
 @property (strong, nonatomic, readonly)   NSString              *loggedInSessionId;
 
 /**
- The #debug property (BOOL) is the Boolean representation of debug mode for the FatFractal 
+ The #debug property (BOOL) is the Boolean representation of debug mode for the FatFractal
  class.  Set the debug property to true for verbose NSLog output. The default value is false.
  */
 @property (nonatomic)                   BOOL                    debug;
+
+/**
+ When true, a log line will be written every time a HTTP request is made, even if 'debug' is false.
+ The default value is false.
+ */
+@property (nonatomic)                   BOOL                    logHttpRequests;
 
 /**
  When true, referred objects are automatically loaded when retrieving from the application's backend. Default is true.
