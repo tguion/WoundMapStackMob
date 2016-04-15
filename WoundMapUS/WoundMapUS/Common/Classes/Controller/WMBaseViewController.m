@@ -355,10 +355,10 @@ BOOL const kPresentIAPController = NO;  // DEPLOYMENT
             }
             if (0 == count || --count == 0) {
                 // update the array if there is an aggregator
-                if (self.aggregator) {
+                if (weakSelf.aggregator) {
                     NSString *destinationKey = [components lastObject];
                     if (destinationKey) {
-                        [self.aggregator setValue:[NSSet setWithArray:object] forKey:destinationKey];
+                        [weakSelf.aggregator setValue:[NSSet setWithArray:object] forKey:destinationKey];
                     }
                 }
                 // we must save here, since we may have picked up changes from cloud

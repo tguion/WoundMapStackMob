@@ -73,15 +73,6 @@
 
 #pragma mark - View
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -171,12 +162,6 @@
 }
 
 #pragma mark - Memory
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (void)clearViewReferences
 {
@@ -411,7 +396,7 @@
     }
     // else
     BOOL hasValues = [_psychoSocialGroup.values count] > 0;
-    if (!hasValues) {
+    if (!hasValues || !self.managedObjectContext.hasChanges) {
         [self cancelAction:sender];
         return;
     }
@@ -467,12 +452,16 @@
     }
     for (WMPsychoSocialValue *value in _psychoSocialGroup.values) {
         ++counter;
-        [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
-            if (error) {
-                [WMUtilities logError:error];
-            }
-            [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_psychoSocialGroup.ffUrl grabBagName:WMPsychoSocialGroupRelationships.values onComplete:completionHandler];
-        }];
+        if (value.ffUrl) {
+            [ff updateObj:value onComplete:completionHandler];
+        } else {
+            [ff createObj:value atUri:[NSString stringWithFormat:@"/%@", [WMPsychoSocialValue entityName]] onComplete:^(NSError *error, id object, NSHTTPURLResponse *response) {
+                if (error) {
+                    [WMUtilities logError:error];
+                }
+                [ff grabBagAddItemAtFfUrl:value.ffUrl toObjAtFfUrl:_psychoSocialGroup.ffUrl grabBagName:WMPsychoSocialGroupRelationships.values onComplete:completionHandler];
+            }];
+        }
     }
     ++counter;
     [ff updateObj:_psychoSocialGroup onComplete:completionHandler];
